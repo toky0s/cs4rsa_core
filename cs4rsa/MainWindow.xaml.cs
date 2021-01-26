@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using cs4rsa.Crawler;
 
 namespace cs4rsa
 {
@@ -23,6 +25,10 @@ namespace cs4rsa
         public MainWindow()
         {
             InitializeComponent();
+            HomeCourseSearch h = new HomeCourseSearch();
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + "cs4rsa_disciplines.json";
+            string gesturefile = System.IO.Path.Combine(Environment.CurrentDirectory, path);
+            h.DisciplineDatasToJsonFile(gesturefile);
         }
 
         private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
