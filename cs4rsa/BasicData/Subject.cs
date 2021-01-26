@@ -11,7 +11,6 @@ namespace cs4rsa.BasicData
     {
         private string name;
         private string subjectCode;
-        private string registerCode;
         private string studyUnit;
         private string studyUnitType;
         private string semester;
@@ -21,13 +20,12 @@ namespace cs4rsa.BasicData
 
         private string rawSoup;
 
-        public Subject(string name, string subjectCode, string registerCode, string studyUnit, 
+        public Subject(string name, string subjectCode, string studyUnit, 
             string studyUnitType, string semester, List<string> mustStudySubject, List<string> parallelSubject,
             string description, string rawSoup)
         {
             this.name = name;
             this.subjectCode = subjectCode;
-            this.registerCode = registerCode;
             this.studyUnit = studyUnit;
             this.studyUnitType = studyUnitType;
             this.semester = semester;

@@ -21,15 +21,5 @@ namespace cs4rsa.BasicData
         {
             return true;
         }
-
-        public DateTime start()
-        {
-            return null;
-        }
-
-        public DateTime end()
-        {
-            return null;
-        }
     }
 }
