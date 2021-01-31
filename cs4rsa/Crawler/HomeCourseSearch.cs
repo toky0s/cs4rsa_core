@@ -4,32 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Fizzler.Systems.HtmlAgilityPack;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
+using cs4rsa.BasicData;
+using cs4rsa.Helper;
 
 namespace cs4rsa.Crawler
 {
-    class HomeCourseSearch
+    /// <summary>
+    /// <para>Class này bao gồm các method liên quan đến tìm kiếm thông tin Học Kỳ, Năm học và Thông tin môn học được Crawl từ web.</para>
+    /// </summary>
+    public class HomeCourseSearch
     {
-        private readonly string currentYearValue;
-        private readonly string currentYearInfo;
-        private readonly string currentSemesterValue;
-        private readonly string currentSemesterInfo;
-
-        
-        public HomeCourseSearch()
-        {
-            HtmlWeb htmlWeb = new HtmlWeb();
-            string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
-            HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
-            currentYearValue = getCurrentValue(document);
-            currentYearInfo = getCurrentInfo(document);
-
-            string URL_SEMESTER_COMBOBOX = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}",currentYearValue);
-            document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
-            currentSemesterValue = getCurrentValue(document);
-            currentSemesterInfo = getCurrentInfo(document);
-        }
+        private static string currentYearValue;
+        private static string currentYearInfo;
+        private static string currentSemesterValue;
+        private static string currentSemesterInfo;
 
         public string CurrentYearValue
         {
@@ -51,10 +43,58 @@ namespace cs4rsa.Crawler
             get { return currentSemesterInfo; }
         }
 
-        private string GetTime()
+        private const string DISCIPLINES_JSON_FILE_NAME = "cs4rsa_disciplines.json";
+
+        public HomeCourseSearch()
         {
-            long fromUnixEpoche = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
-            return fromUnixEpoche.ToString();
+            HtmlWeb htmlWeb = new HtmlWeb();
+            string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
+            HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
+            currentYearValue = GetCurrentValue(document);
+            currentYearInfo = GetCurrentInfo(document);
+
+            string URL_SEMESTER_COMBOBOX = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}",currentYearValue);
+            document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
+            currentSemesterValue = GetCurrentValue(document);
+            currentSemesterInfo = GetCurrentInfo(document);
+        }
+
+        /// <summary>
+        /// Lấy ra tên của môn môn học theo mã môn từ file JSON.
+        /// </summary>
+        /// <param name="subjectCode">Mã môn học, ví dụ: CS 414</param>
+        /// <returns></returns>
+        public static string GetSubjectName(string subjectCode)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + DISCIPLINES_JSON_FILE_NAME;
+            JObject jsonObject = JObject.Parse(File.ReadAllText(path));
+            Dictionary<string, Dictionary<string, string>> data = jsonObject.ToObject<Dictionary<string, Dictionary<string, string>>>();
+            Dictionary<string, string> subjectData = data[subjectCode];
+            return subjectData["subject_name"];
+        }
+
+        /// <summary>
+        /// Lấy ra courseId của môn môn học theo mã môn từ file JSON.
+        /// </summary>
+        /// <param name="subjectCode">Mã môn học, ví dụ: CS 414</param>
+        /// <returns></returns>
+        public static string GetCourseId(string subjectCode)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + DISCIPLINES_JSON_FILE_NAME;
+            JObject jsonObject = JObject.Parse(File.ReadAllText(path));
+            Dictionary<string, Dictionary<string, string>> data = jsonObject.ToObject<Dictionary<string, Dictionary<string, string>>>();
+            Dictionary<string, string> subjectData = data[subjectCode];
+            return subjectData["course_id"];
+        }
+
+        /// <summary>
+        /// Lưu file Discipline JSON.
+        /// </summary>
+        /// <param name="path">Đường dẫn.</param>
+        public void DisciplineDatasToJsonFile(string path)
+        {
+            string jsonData = GetDisciplineSubjectJson();
+            File.WriteAllText(path, jsonData);
         }
 
         private string GetCurrentValue(HtmlDocument document)
@@ -74,7 +114,7 @@ namespace cs4rsa.Crawler
             string URL = String.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}", 
                 currentSemesterValue, 
-                GetTime());
+                Helper.Helper.getTimeFromEpoch());
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load(URL);
@@ -87,7 +127,7 @@ namespace cs4rsa.Crawler
                 HtmlNode[] tdTags = trTag.Descendants("td").ToArray();
 
                 HtmlNode disciplineAnchorTag = tdTags[0].Element("a");
-                string courseId = GetCourseId(disciplineAnchorTag.Attributes["href"].Value);
+                string courseId = GetCourseIdFromHref(disciplineAnchorTag.Attributes["href"].Value);
                 string discipline = disciplineAnchorTag.InnerText.Trim();
 
                 HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
@@ -101,19 +141,10 @@ namespace cs4rsa.Crawler
             return JsonConvert.SerializeObject(disciplines);
         }
 
-        public void DisciplineDatasToJsonFile(string path)
-        {
-            string jsonData = getDisciplineSubjectJson();
-            File.WriteAllText(path, jsonData);
-            Console.WriteLine("OK");
-        }
-
-        private string GetCourseId(string hrefValue)
+        private string GetCourseIdFromHref(string hrefValue)
         {
             string[] hrefValueSlides = hrefValue.Split('&');
             return hrefValueSlides[1].Split('=')[1];
         }
-
-
     }
 }
