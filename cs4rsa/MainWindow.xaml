@@ -7,16 +7,224 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock 
-            Text="CS4RSA"
-            FontSize="20"
-            FontFamily="Segoe UI"
-            ToolTip="Chào mừng đến với CS4RSA" MouseUp="TextBlock_MouseUp"
-            Name="label_title"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            MouseEnter="enterLabel"
-            TextWrapping="NoWrap"
-            />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <DockPanel>
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="_File">
+                        <MenuItem Header="_Open"/>
+                        <MenuItem Header="_Close"/>
+                        <MenuItem Header="_Save"/>
+                    </MenuItem>
+                    <MenuItem Header="_Setting">
+                    </MenuItem>
+                    <MenuItem Header="_Help">
+                    </MenuItem>
+                </Menu>
+                <StackPanel></StackPanel>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="5"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Search"
+                           Grid.Row="0"
+                           Background="#696969"
+                           Foreground="White">
+
+                </TextBlock>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Row="0" Grid.Column="0"></ComboBox>
+                    <ComboBox Grid.Row="0" Grid.Column="1"></ComboBox>
+                    <Button Content="Add" Grid.Row="0" Grid.Column="2"></Button>
+                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Disciplines"></TextBox>
+                    <Button Grid.Row="1" Grid.Column="2" Content="Add"></Button>
+                </Grid>
+                <ListBox Grid.Row="2">
+                    <ListBoxItem Content="OK"></ListBoxItem>
+                    <ListBoxItem Content="NOT"></ListBoxItem>
+                    <ListBoxItem Content="BOOL"></ListBoxItem>
+                </ListBox>
+                <CheckBox Grid.Row="3" Content="Refreshing continuously"></CheckBox>
+                <Button Content="Import" Grid.Row="4"></Button>
+
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Have not chosen any subjects"
+                           Grid.Row="0"
+                           Background="#7D7D7D"
+                           Foreground="White"
+                           x:Name="textbox_col2_title">
+                </TextBlock>
+                <ListBox Grid.Row="1">
+                    <ListBoxItem Content="SubejectA1"></ListBoxItem>
+                    <ListBoxItem Content="SubejectA2"></ListBoxItem>
+                    <ListBoxItem Content="SubejectA3"></ListBoxItem>
+                </ListBox>
+                <TextBlock Text="Filters" 
+                           Grid.Row="2"
+                           Background="{Binding Path=Background, ElementName=textbox_col2_title}"
+                           Foreground="White"></TextBlock>
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Thứ"
+                               Grid.Row="0"
+                               Grid.ColumnSpan="4">
+                    </TextBlock>
+                    <CheckBox Content="T2" Grid.Row="1" Grid.Column="0"></CheckBox>
+                    <CheckBox Content="T3" Grid.Row="1" Grid.Column="1"></CheckBox>
+                    <CheckBox Content="T4" Grid.Row="1" Grid.Column="2"></CheckBox>
+                    <CheckBox Content="T5" Grid.Row="1" Grid.Column="3"></CheckBox>
+                    <CheckBox Content="T6" Grid.Row="2" Grid.Column="0"></CheckBox>
+                    <CheckBox Content="T7" Grid.Row="2" Grid.Column="1"></CheckBox>
+                    <CheckBox Content="CN" Grid.Row="2" Grid.Column="2"></CheckBox>
+                </Grid>
+                <WrapPanel Grid.Row="4" Orientation="Horizontal">
+                    <CheckBox Content="Sáng"></CheckBox>
+                    <CheckBox Content="Chiều"></CheckBox>
+                    <CheckBox Content="Tối"></CheckBox>
+                </WrapPanel>
+                <TextBlock Text="Giảng viên" Grid.Row="5"></TextBlock>
+                <ComboBox Grid.Row="6"></ComboBox>
+                <Grid Grid.Row="7">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Giai đoạn" Grid.Row="0" Grid.ColumnSpan="2"></TextBlock>
+                    <CheckBox Content="Giai đoạn 1" Grid.Row="1" Grid.Column="0"></CheckBox>
+                    <CheckBox Content="Giai đoạn 2" Grid.Row="1" Grid.Column="1"></CheckBox>
+                </Grid>
+                <Grid Grid.Row="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Nơi học" Grid.Row="0" Grid.ColumnSpan="2"></TextBlock>
+                    <CheckBox Content="Quang Trung" Grid.Row="1" Grid.Column="0"></CheckBox>
+                    <CheckBox Content="Phan Thanh/NVL" Grid.Row="1" Grid.Column="1"></CheckBox>
+                    <CheckBox Content="Việt Tin" Grid.Row="2" Grid.Column="0"></CheckBox>
+                    <CheckBox Content="Hoà Khánh" Grid.Row="2" Grid.Column="1"></CheckBox>
+                </Grid>
+            </Grid>
+            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"></GridSplitter>
+            <Grid Grid.Column="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Schedules" Grid.Row="0"></TextBlock>
+                <TextBlock Text="Giai đoạn 1 (1-9)" Grid.Row="1"></TextBlock>
+                <DataGrid Grid.Row="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="T2"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T3"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T4"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T5"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T6"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T7"></DataGridTextColumn>
+                        <DataGridTextColumn Header="CN"></DataGridTextColumn>
+
+                    </DataGrid.Columns>
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="200"/>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                </DataGrid>
+                <TextBlock Text="Giai đoạn 2 (10-18)" Grid.Row="3"></TextBlock>
+                <DataGrid Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="T2"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T3"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T4"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T5"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T6"></DataGridTextColumn>
+                        <DataGridTextColumn Header="T7"></DataGridTextColumn>
+                        <DataGridTextColumn Header="CN"></DataGridTextColumn>
+
+                    </DataGrid.Columns>
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="200"/>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                </DataGrid>
+
+            </Grid>
+            <GridSplitter Grid.Column="5" Width="5" HorizontalAlignment="Stretch"></GridSplitter>
+            <Grid Grid.Column="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+            </Grid>
+        </Grid>
     </Grid>
+
 </Window>

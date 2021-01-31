@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using cs4rsa.Crawler;
+using HtmlAgilityPack;
 
 namespace cs4rsa
 {
@@ -24,11 +25,9 @@ namespace cs4rsa
     {
         public MainWindow()
         {
+            Console.OutputEncoding = Encoding.UTF8;
             InitializeComponent();
             HomeCourseSearch h = new HomeCourseSearch();
-            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + "cs4rsa_disciplines.json";
-            string gesturefile = System.IO.Path.Combine(Environment.CurrentDirectory, path);
-            h.DisciplineDatasToJsonFile(gesturefile);
         }
 
         private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
@@ -40,6 +39,10 @@ namespace cs4rsa
         {
             var labelTitle = sender as TextBlock;
             labelTitle.Text = "Truong A Xin";
+        }
+
+        private void Button_ok_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
