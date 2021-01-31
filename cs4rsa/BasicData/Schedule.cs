@@ -10,7 +10,7 @@ namespace cs4rsa.BasicData
     //<sumary>Class này đại diện cho thời gian học của một SchoolClass trong một Tuần.</sumary>
     class Schedule
     {
-        private Hashtable schedule;
+        private List<Dictionary<string, List<string>>> schedule;
         public string[] Week = {"T2", "T3", "T4", "T5", "T6", "T7", "CN"};
 
         public const string Monday = "T2";
@@ -21,7 +21,7 @@ namespace cs4rsa.BasicData
         public const string Saturday = "T7";
         public const string Sunday = "CN";
         
-        public Schedule(Hashtable schedule)
+        public Schedule(List<Dictionary<string, List<string>>> schedule)
         {
             this.schedule = schedule;
         }
