@@ -69,10 +69,53 @@ namespace cs4rsa.BasicData
             HtmlNode[] classGroupTrTags = trTags
                                         .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop")
                                         .ToArray();
-            string[] classGroupNames = classGroupTrTags
-                                        .Select(node => node.InnerText.Trim())
-                                        .ToArray();
+            string[] classGroupNames = classGroupTrTags.Select(node => node.InnerText.Trim()).ToArray();
             return classGroupNames;
+        }
+
+        //public ClassGroup[] GetClassGroups()
+        //{
+        //    List<ClassGroup> classGroups = new List<ClassGroup>();
+        //    HtmlNode[] trTags = GetListTrTagInCalendar();
+
+        //}
+
+        //public SchoolClass[] GetSchoolClasses()
+        //{
+        //    return ;
+        //}
+
+        /// <summary>
+        /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
+        /// </summary>
+        /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
+        /// <returns></returns>
+        public void GetSchoolClass(HtmlNode trTagClassLop)
+        {
+            HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
+            HtmlNode aTag = tdTags[0].SelectSingleNode("a");
+            string classGroupName = aTag.InnerText.Trim();
+            string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
+            string studyType = tdTags[2].InnerText.Trim();
+            string emptySeat = tdTags[3].InnerText.Trim();
+
+            string[] separatingStrings = { " ", "\n", "\r" };
+            string[] registrationTerm = tdTags[4].InnerText.Trim().Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
+            string registrationTermStart = registrationTerm[0];
+            string registrationTermEnd = registrationTerm[1];
+
+            string studyWeekString = tdTags[5].InnerText.Trim();
+            StudyWeek studyWeek = new StudyWeek(studyWeekString);
+
+            Schedule schedule = new Schedule(tdTags[6]);
+        }
+
+        public HtmlNode[] GetTrTagsWithClassLop()
+        {
+            HtmlNode[] trTags = GetListTrTagInCalendar();
+            HtmlNode[] trTagsWithClassLop = trTags
+                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit").ToArray();
+            return trTagsWithClassLop;
         }
 
         public HtmlNode[] GetListTrTagInCalendar()
@@ -84,19 +127,6 @@ namespace cs4rsa.BasicData
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             HtmlNode[] trTags = bodyCalendar.Descendants("tr").ToArray();
             return trTags;
-        }
-
-        public void ShowInfo()
-        {
-            Console.WriteLine(name);
-            Console.WriteLine(subjectCode);
-            Console.WriteLine(studyUnit);
-            Console.WriteLine(studyUnitType);
-            Console.WriteLine(studyType);
-            Console.WriteLine(semester);
-            Console.WriteLine(mustStudySubject);
-            Console.WriteLine(parallelSubject);
-            Console.WriteLine(description);
         }
     }
 }

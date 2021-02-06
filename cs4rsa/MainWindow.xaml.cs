@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using cs4rsa.Crawler;
 using HtmlAgilityPack;
+using cs4rsa.BasicData;
 
 namespace cs4rsa
 {
@@ -27,7 +28,10 @@ namespace cs4rsa
         {
             Console.OutputEncoding = Encoding.UTF8;
             InitializeComponent();
-            HomeCourseSearch h = new HomeCourseSearch();
+            SubjectCrawler cr = new SubjectCrawler("CS 414");
+            Subject subject = cr.ToSubject();
+            HtmlNode trtag = subject.GetTrTagsWithClassLop()[0];
+            subject.GetSchoolClass(trtag);
         }
 
         private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
