@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using cs4rsa.Crawler;
 using cs4rsa.BasicData;
+using HtmlAgilityPack;
 
 namespace cs4rsaTest.Crawler
 {
     [TestFixture]
     class TestSubjectCrawler
     {
-        SubjectCrawler subjectCrawler;
+        public SubjectCrawler subjectCrawler;
 
         [SetUp]
         public void Setup()
@@ -48,5 +49,21 @@ namespace cs4rsaTest.Crawler
             string classGroupName = sj.GetClassGroupNames()[0];
             Assert.AreEqual("CS 414 B", classGroupName);
         }
+
+        [Test]
+        public void GetTrTagsWithClassLop()
+        {
+            Subject sj = subjectCrawler.ToSubject();
+            var schoolClasses = sj.GetTrTagsWithClassLop();
+            Assert.AreEqual(14, schoolClasses.Count());
+        }
+
+        //[Test]
+        //public void GetSchoolClassesSecondItem()
+        //{
+        //    Subject subject = subjectCrawler.ToSubject();
+        //    SchoolClass[] schoolClasses = subject.GetSchoolClasses();
+        //    Assert.AreEqual("CS 414 B1", schoolClasses[1].Name);
+        //}
     }
 }
