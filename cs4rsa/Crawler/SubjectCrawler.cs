@@ -30,10 +30,15 @@ namespace cs4rsa.Crawler
             this.subjectCode = discipline + " " + keyword1;
         }
 
+        /// <summary>
+        /// Nhận vào một mã môn học.
+        /// </summary>
+        /// <param name="subjectCode">Mã môn học, ví dụ CS414</param>
         public SubjectCrawler(string subjectCode)
         {
             this.subjectCode = subjectCode;
         }
+
 
         public Subject ToSubject()
         {
