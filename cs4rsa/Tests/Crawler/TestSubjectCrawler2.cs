@@ -1,45 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using NUnit.Framework;
-using cs4rsa.Crawler;
 using cs4rsa.BasicData;
-using HtmlAgilityPack;
+using cs4rsa.Crawler;
 
-namespace cs4rsaTest.Crawler
+namespace cs4rsa.Tests.Crawler
 {
     [TestFixture]
-    class TestSubjectCrawler
+    class TestSubjectCrawler2
     {
         public SubjectCrawler subjectCrawler;
 
         [SetUp]
         public void Setup()
         {
-            subjectCrawler = new SubjectCrawler("CS", "414");
+            subjectCrawler = new SubjectCrawler("CR", "250");
         }
 
         [Test]
         public void GetSubject()
         {
             Subject sj = subjectCrawler.ToSubject();
-            Assert.AreEqual("CS 414", sj.SubjectCode);
+            Assert.AreEqual("CR 250", sj.SubjectCode);
         }
 
         [Test]
         public void GetListTrTagInCalendar()
         {
             Subject sj = subjectCrawler.ToSubject();
-            Assert.AreEqual(21, sj.GetListTrTagInCalendar().Count());
+            Assert.AreEqual(2, sj.GetListTrTagInCalendar().Count());
         }
 
         [Test]
         public void GetListTrTagClassGroup()
         {
             Subject sj = subjectCrawler.ToSubject();
-            Assert.AreEqual(7, sj.GetClassGroupNames().Count());
+            Assert.AreEqual(1, sj.GetClassGroupNames().Count());
         }
 
         [Test]
@@ -47,7 +42,7 @@ namespace cs4rsaTest.Crawler
         {
             Subject sj = subjectCrawler.ToSubject();
             string classGroupName = sj.GetClassGroupNames()[0];
-            Assert.AreEqual("CS 414 B", classGroupName);
+            Assert.AreEqual("CR 250 B", classGroupName);
         }
 
         [Test]
@@ -55,15 +50,7 @@ namespace cs4rsaTest.Crawler
         {
             Subject sj = subjectCrawler.ToSubject();
             var schoolClasses = sj.GetTrTagsWithClassLop();
-            Assert.AreEqual(14, schoolClasses.Count());
+            Assert.AreEqual(1, schoolClasses.Count());
         }
-
-        //[Test]
-        //public void GetSchoolClassesSecondItem()
-        //{
-        //    Subject subject = subjectCrawler.ToSubject();
-        //    SchoolClass[] schoolClasses = subject.GetSchoolClasses();
-        //    Assert.AreEqual("CS 414 B1", schoolClasses[1].Name);
-        //}
     }
 }

@@ -5,24 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using cs4rsa.Crawler;
+using cs4rsa.BasicData;
 
-namespace cs4rsa.Tests.Crawler
+namespace cs4rsa.Tests.BasicData
 {
     [TestFixture]
-    class TestScheduleParser
+    class TestConflict
     {
-        public ScheduleParser scheduleParser;
-        
-
         [SetUp]
         public void Setup()
         {
-            scheduleParser = new ScheduleParser();
-        }
+            SubjectCrawler sjc1 = new SubjectCrawler("CS", "414");
+            SubjectCrawler sjc2 = new SubjectCrawler("CR", "250");
 
-        [Test]
-        public void ToSchedule()
-        {
         }
     }
 }
