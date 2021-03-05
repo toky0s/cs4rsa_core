@@ -26,18 +26,19 @@ namespace cs4rsa.BasicData
     /// <summary>
     /// Đại diện cho thời gian học của một SchoolClass.
     /// </summary>
-    class Schedule
+    public class Schedule
     {
-        private Dictionary<WeekDate, List<StudyTime>> schedule;
+        private Dictionary<WeekDate, List<StudyTime>> scheduleTime;
+        public Dictionary<WeekDate, List<StudyTime>> ScheduleTime { get { return scheduleTime; } }
 
         public Schedule()
         {
 
         }
         
-        public Schedule(Dictionary<WeekDate, List<StudyTime>> schedule)
+        public Schedule(Dictionary<WeekDate, List<StudyTime>> scheduleTime)
         {
-            this.schedule = schedule;
+            this.scheduleTime = scheduleTime;
         }
 
         public Schedule(HtmlNode tdTag)
@@ -45,7 +46,7 @@ namespace cs4rsa.BasicData
             string[] dataFromTrTag = ExtractDataFromTrTag(tdTag);
             string[] times = CleanTimeItem(dataFromTrTag);
             // Convert to generic data;
-            schedule = new Dictionary<WeekDate, List<StudyTime>>();
+            scheduleTime = new Dictionary<WeekDate, List<StudyTime>>();
             Regex regexDate = new Regex(@"^T[2-7]:$|^CN:$");
             Regex regexTime = new Regex(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
@@ -71,10 +72,15 @@ namespace cs4rsa.BasicData
             {
                 List<string> timeStrings = item.Value;
                 List<StudyTime> studyTimes = TimeStringsToListStudyTime(timeStrings);
-                schedule[item.Key] = studyTimes;
+                scheduleTime[item.Key] = studyTimes;
             }
         }
 
+        /// <summary>
+        /// Chuyển một chuỗi thời gian thành một StudyTime.
+        /// </summary>
+        /// <param name="timeStrings">Time string phải match với pattern ^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$</param>
+        /// <returns></returns>
         public List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
             List<StudyTime> studyTimes = new List<StudyTime>();
@@ -156,12 +162,29 @@ namespace cs4rsa.BasicData
         
         public List<WeekDate> GetSchoolDays()
         {
-            return schedule.Keys.ToList();
+            return scheduleTime.Keys.ToList();
         }
 
         public List<StudyTime> GetStudyTimesAtDay(WeekDate weekDate)
         {
-            return schedule[weekDate];
+            return scheduleTime[weekDate];
+        }
+    }
+
+
+    /// <summary>
+    /// Class này bao gồm các phương thức để thao tác với Schedule.
+    /// </summary>
+    public class ScheduleManipulation
+    {
+
+        /// <summary>
+        /// Giao hai các thứ của hai Schedule. Dùng để phát hiện xung đột giữa hai Schedule.
+        /// </summary>
+        /// <returns>Trả về WeekDate mà cả hai Schedule cùng có.</returns>
+        public static List<WeekDate> GetIntersectDate(Schedule schedule1, Schedule schedule2)
+        {
+            return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays()).ToList();
         }
     }
 }

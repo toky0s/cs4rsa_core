@@ -13,24 +13,38 @@ namespace cs4rsa.BasicData
 
     public class StudyWeek
     {
-        private int startWeek;
+        private readonly int startWeek;
         private int endWeek;
 
         public int StartWeek { get { return startWeek; } }
-        public int EndWeek { get { return endWeek; } }
+        public int EndWeek { get { return endWeek; } set { endWeek = value; } }
 
+        /// <summary>
+        /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
+        /// </summary>
+        /// <param name="startWeek">Tuần bắt đầu.</param>
+        /// <param name="endWeek">Tuần kết thúc.</param>
         public StudyWeek(int startWeek, int endWeek)
         {
             this.startWeek = startWeek;
             this.endWeek = endWeek;
         }
 
+        /// <summary>
+        /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
+        /// </summary>
+        /// <param name="studyWeek">Một chuỗi như match với pattern ^[1-9]*--[1-9]*$</param>
         public StudyWeek(string studyWeek)
         {
             string[] separatingStrings = { "--" };
             string[] startAndEnd = studyWeek.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
             startWeek = int.Parse(startAndEnd[0]);
             endWeek = int.Parse(startAndEnd[1]);
+        }
+
+        public StudyWeek(int startWeek)
+        {
+            this.startWeek = startWeek;
         }
 
         /// <summary>

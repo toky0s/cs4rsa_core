@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
+using cs4rsa.Helper;
+
 
 namespace cs4rsa.BasicData
 {
@@ -56,13 +59,6 @@ namespace cs4rsa.BasicData
             return String.Format("<Subject {0} {1}>", SubjectCode, Name);
         }
 
-        public void getClassGroups()
-        {
-            HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(rawSoup);
-
-        }
-
         public string[] GetClassGroupNames()
         {
             HtmlNode[] trTags = GetListTrTagInCalendar();
@@ -73,24 +69,50 @@ namespace cs4rsa.BasicData
             return classGroupNames;
         }
 
-        //public ClassGroup[] GetClassGroups()
-        //{
-        //    List<ClassGroup> classGroups = new List<ClassGroup>();
-        //    HtmlNode[] trTags = GetListTrTagInCalendar();
 
-        //}
+        /// <summary>
+        /// Trả về danh sách các nhóm lớp.
+        /// </summary>
+        /// <returns>List các ClassGroup.</returns>
+        public List<ClassGroup> GetClassGroups()
+        {
+            List<ClassGroup> classGroups = new List<ClassGroup>();
+            List<SchoolClass> schoolClasses = GetSchoolClasses();
+            foreach (string classGroupName in GetClassGroupNames())
+            {
+                ClassGroup classGroup = new ClassGroup();
+                
+                string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
+                Regex regexName = new Regex(pattern);
+                for(int i=0; i<schoolClasses.Count(); i++)
+                {
+                    if (regexName.IsMatch(schoolClasses[i].ClassGroupName))
+                    {
+                        classGroup.AddSchoolClass(schoolClasses[i]);
+                    }
+                }
+                classGroups.Add(classGroup);
+            }
+            return classGroups;
+        }
 
-        //public SchoolClass[] GetSchoolClasses()
-        //{
-        //    return ;
-        //}
+        public List<SchoolClass> GetSchoolClasses()
+        {
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (HtmlNode trTag in GetTrTagsWithClassLop())
+            {
+                SchoolClass schoolClass = GetSchoolClass(trTag);
+                schoolClasses.Add(schoolClass);
+            }
+            return schoolClasses;
+        }
 
         /// <summary>
         /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
         /// </summary>
         /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
         /// <returns></returns>
-        public void GetSchoolClass(HtmlNode trTagClassLop)
+        public SchoolClass GetSchoolClass(HtmlNode trTagClassLop)
         {
             HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
@@ -99,8 +121,7 @@ namespace cs4rsa.BasicData
             string studyType = tdTags[2].InnerText.Trim();
             string emptySeat = tdTags[3].InnerText.Trim();
 
-            string[] separatingStrings = { " ", "\n", "\r" };
-            string[] registrationTerm = tdTags[4].InnerText.Trim().Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] registrationTerm = StringHelper.SplitAndRemoveAllSpace(tdTags[4].InnerText);
             string registrationTermStart = registrationTerm[0];
             string registrationTermEnd = registrationTerm[1];
 
@@ -108,6 +129,23 @@ namespace cs4rsa.BasicData
             StudyWeek studyWeek = new StudyWeek(studyWeekString);
 
             Schedule schedule = new Schedule(tdTags[6]);
+
+            string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
+
+            Regex regexSpace = new Regex(@"^ *$");
+            string[] locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText);
+            // remove space in locations
+            locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToArray();
+            locations = locations.Select(item => item.Trim()).Distinct().ToArray();
+
+            string teacher = String.Join(" ",StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
+            string registrationStatus = tdTags[10].InnerText.Trim();
+            string implementationStatus = tdTags[11].InnerText.Trim();
+
+            SchoolClass schoolClass = new SchoolClass(subjectCode, classGroupName, name, registerCode, studyType,
+                                        emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
+                                        rooms, locations, teacher, registrationStatus, implementationStatus);
+            return schoolClass;
         }
 
         public HtmlNode[] GetTrTagsWithClassLop()
@@ -123,7 +161,6 @@ namespace cs4rsa.BasicData
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(rawSoup);
             HtmlNode tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
-            Console.WriteLine(tableTbCalendar.InnerHtml);
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             HtmlNode[] trTags = bodyCalendar.Descendants("tr").ToArray();
             return trTags;
