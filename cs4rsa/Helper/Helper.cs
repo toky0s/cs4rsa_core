@@ -16,6 +16,11 @@ namespace cs4rsa.Helper
             long fromUnixEpoch = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             return fromUnixEpoch.ToString();
         }
+
+        public static string GetFilePathAtApp(string fileName)
+        {
+            return AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName;
+        }
     }
 
     class ScheduleHelper
@@ -29,6 +34,26 @@ namespace cs4rsa.Helper
         public static DateTime TimeStringToDateTime(string time)
         {
             return DateTime.ParseExact(time, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+        }
+    }
+
+    class StringHelper
+    {
+        public static string CleanString(string text)
+        {
+            return text.Trim();
+        }
+
+        public static string[] SplitAndRemoveAllSpace(string text)
+        {
+            string[] separatingStrings = { " ", "\n", "\r" };
+            return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static string [] SplitAndRemoveNewLine(string text)
+        {
+            string[] separatingStrings = { "\n", "\r" };
+            return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
