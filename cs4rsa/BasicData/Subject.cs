@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using cs4rsa.Helper;
+using cs4rsa.Helpers;
 
 
 namespace cs4rsa.BasicData

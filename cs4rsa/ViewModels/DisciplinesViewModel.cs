@@ -38,7 +38,8 @@ namespace cs4rsa.ViewModels
 
         public DisciplinesViewModel()
         {
-            List<string> disciplines = HomeCourseSearch.GetDisciplines();
+            DisciplineData disciplineData = new DisciplineData();
+            List<string> disciplines = disciplineData.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
         }

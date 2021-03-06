@@ -9,13 +9,12 @@
              d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Text="Subjects"
                    Grid.Row="0"></TextBlock>
         <ListBox x:Name="DownloadSubjects"
-                 Loaded="DownloadSubjects_Loaded"
                  Grid.Row="1"></ListBox>
     </Grid>
 </UserControl>

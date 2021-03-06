@@ -39,7 +39,8 @@ namespace cs4rsa.ViewModels
         }
         public DisciplineKeywordViewModel(string discipline)
         {
-            List<DisciplineKeywordInfo> disciplineKeywordInfos = HomeCourseSearch.GetDisciplineKeywordInfos(discipline);
+            DisciplineData disciplineData = new DisciplineData();
+            List<DisciplineKeywordInfo> disciplineKeywordInfos = disciplineData.GetDisciplineKeywordInfos(discipline);
             this.disciplineKeywordModels = new ObservableCollection<DisciplineKeywordModel>();
             foreach(DisciplineKeywordInfo disciplineKeywordInfo in disciplineKeywordInfos)
             {

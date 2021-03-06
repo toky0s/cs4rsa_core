@@ -14,6 +14,7 @@ namespace cs4rsa.Crawler
     {
 
         private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+        private DisciplineData disciplineData = new DisciplineData();
         private string subjectCode;
         private string SubjectCode
         {
@@ -42,7 +43,7 @@ namespace cs4rsa.Crawler
 
         public Subject ToSubject()
         {
-            string courseId = HomeCourseSearch.GetCourseId(this.subjectCode);
+            string courseId = disciplineData.GetCourseId(this.subjectCode);
             string semesterId = homeCourseSearch.CurrentSemesterValue;
 
             string url = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={0}&semesterid={1}&timespan=71", courseId, semesterId);
@@ -51,7 +52,7 @@ namespace cs4rsa.Crawler
             HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
             HtmlNode[] trTags = table.Descendants("tr").ToArray();
             string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
-            string name = HomeCourseSearch.GetSubjectName(subjectCode);
+            string name = disciplineData.GetSubjectName(subjectCode);
 
             string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
             string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
-using cs4rsa.Helper;
+using cs4rsa.Helpers;
 
 
 namespace cs4rsa.Tests.BasicData

@@ -9,11 +9,5 @@ using cs4rsa.Crawler;
 
 namespace cs4rsa.Tests.BasicData
 {
-    [TestFixture]
-    class TestSubject
-    {
-        public Subject subject;
 
-
-    }
 }

@@ -61,20 +61,11 @@ namespace cs4rsa.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to cs4rsa_disciplines.json.
+        ///   Looks up a localized string similar to cs4rsa_disciplines.
         /// </summary>
         public static string cs4rsa_json_discipline_path {
             get {
                 return ResourceManager.GetString("cs4rsa_json_discipline_path", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to cs4rsa_disciplines_refactor.json.
-        /// </summary>
-        public static string cs4rsa_refactor_json_discipline_path {
-            get {
-                return ResourceManager.GetString("cs4rsa_refactor_json_discipline_path", resourceCulture);
             }
         }
     }

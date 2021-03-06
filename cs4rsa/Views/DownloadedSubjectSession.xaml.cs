@@ -26,9 +26,5 @@ namespace cs4rsa.Views
             InitializeComponent();
         }
 
-        private void DownloadSubjects_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -77,12 +77,13 @@ namespace cs4rsa.BasicData
         }
 
         /// <summary>
-        /// Chuyển một chuỗi thời gian thành một StudyTime.
+        /// Chuyển một chuỗi thời gian thành một List StudyTime.
         /// </summary>
         /// <param name="timeStrings">Time string phải match với pattern ^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$</param>
         /// <returns></returns>
         public List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
+            timeStrings = timeStrings.Distinct().ToList();
             List<StudyTime> studyTimes = new List<StudyTime>();
             int i = 0;
             while (i<timeStrings.Count())

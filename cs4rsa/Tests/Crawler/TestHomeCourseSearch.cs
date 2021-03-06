@@ -43,18 +43,5 @@ namespace cs4rsa.Tests.Crawler
         {
             Assert.AreEqual("Năm Học 2020-2021", hcs.CurrentYearInfo);
         }
-
-        [Test]
-        public void GetDiscipline()
-        {
-            Assert.AreEqual("ACC", HomeCourseSearch.GetDisciplines()[0]);
-        }
-
-        [Test]
-        public void GetFirstKeyword1s()
-        {
-            string firstDiscipline = HomeCourseSearch.GetDisciplines()[0];
-            Assert.AreEqual("201", HomeCourseSearch.GetKeyword1s(firstDiscipline)[0]);
-        }
     }
 }
