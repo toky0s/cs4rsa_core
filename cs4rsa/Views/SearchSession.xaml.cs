@@ -22,6 +22,7 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class SearchSession : UserControl
     {
+        DisciplinesViewModel disciplinesViewModel = new DisciplinesViewModel();
         public SearchSession()
         {
             InitializeComponent();
@@ -29,14 +30,12 @@ namespace cs4rsa.Views
 
         private void DisciplineComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-            DisciplinesViewModel disciplinesViewModel = new DisciplinesViewModel();
-            DisciplineComboBox.DataContext = disciplinesViewModel;
+            this.DataContext = disciplinesViewModel;
         }
 
         private void DisciplineComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            DisciplineKeywordViewModel disciplineKeywordViewModel = new DisciplineKeywordViewModel(DisciplineComboBox.SelectedValue.ToString());
-            Keyword1ComboxBox.DataContext = disciplineKeywordViewModel;
+            disciplinesViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
     }
 }

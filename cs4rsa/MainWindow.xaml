@@ -89,25 +89,9 @@
             <Grid Grid.Column="0"
                   Margin="11px">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Search"
-                           Grid.Row="0"></TextBlock>
-                <view:SearchSession Grid.Row="1"></view:SearchSession>
-                <view:DownloadedSubjectSession Grid.Row="2"></view:DownloadedSubjectSession>
-                <TextBlock Text="Total credits"
-                           Grid.Row="3"></TextBlock>
-                <CheckBox Grid.Row="4"
-                          Content="Refreshing continuously"
-                          Margin="0, 10, 0, 0"></CheckBox>
-                <Button Content="Import"
-                        Grid.Row="5"
-                        Margin="0, 11, 0, 0"></Button>
+                <view:SearchSession Grid.Row="0"></view:SearchSession>
             </Grid>
             <Grid Grid.Column="1"
                   Margin="11px">
