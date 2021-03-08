@@ -1,19 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using cs4rsa.BaseClasses;
 using cs4rsa.Crawler;
 using cs4rsa.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace cs4rsa.ViewModels
 {
-    public class DisciplinesViewModel: INotifyPropertyChanged
+    /// <summary>
+    /// ViewModel này đại diện cho phần Search Môn học.
+    /// </summary>
+    public class DisciplinesViewModel : INotifyPropertyChanged
     {
-        private string selectedDiscipline;
-        public string SelectedDiscipline
+        //Add button
+        public MyICommand AddCommand { get; set; }
+
+        //ComboBox discipline
+        private DisciplineInfomationModel selectedDiscipline;
+        public DisciplineInfomationModel SelectedDiscipline
         {
             get
             {
@@ -23,6 +30,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedDiscipline = value;
+                AddCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged("SelectedDiscipline");
             }
         }
@@ -36,16 +44,116 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        //ComboxBox keyword
+        private DisciplineKeywordModel selectedKeyword;
+        public DisciplineKeywordModel SelectedKeyword
+        {
+            get
+            {
+                return selectedKeyword;
+            }
+            set
+            {
+                selectedKeyword = value;
+                AddCommand.RaiseCanExecuteChanged();
+                RaisePropertyChanged("SelectedKeyword");
+            }
+        }
+
+        private ObservableCollection<DisciplineKeywordModel> disciplineKeywordModels = new ObservableCollection<DisciplineKeywordModel>();
+        public ObservableCollection<DisciplineKeywordModel> DisciplineKeywordModels
+        {
+            get
+            {
+                return disciplineKeywordModels;
+            }
+            set
+            {
+                disciplineKeywordModels = value;
+                RaisePropertyChanged("DisciplineKeywordModels");
+            }
+        }
+
+        //ListBox downloaded subjects
+        private ObservableCollection<SubjectModel> subjectModels =  new ObservableCollection<SubjectModel>();
+        public ObservableCollection<SubjectModel> SubjectModels
+        {
+            get
+            {
+                return subjectModels;
+            }
+            set
+            {
+                subjectModels = value;
+                RaisePropertyChanged("SubjectModels");
+            }
+        }
+
+        private int totalSubject = 0;
+        public int TotalSubject
+        {
+            get
+            {
+                return totalSubject;
+            }
+            set
+            {
+                totalSubject = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         public DisciplinesViewModel()
         {
             DisciplineData disciplineData = new DisciplineData();
             List<string> disciplines = disciplineData.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
+            AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
+
+            //foreach (var item in App.Current.Windows)
+            //{
+            //    var mywindow = (SearchSession)item;
+            //    var datacontext = mywindow.DataContext as SemesterInfoViewModel;
+            //    datacontext.CurrentSemesterInfo = "ok";
+            //}
+        }
+
+        /// <summary>
+        /// Load Keyword sau khi chọn discipline.
+        /// </summary>
+        /// <param name="discipline">Discipline.</param>
+        public void LoadDisciplineKeyword(string discipline)
+        {
+            disciplineKeywordModels.Clear();
+            DisciplineData disciplineData = new DisciplineData();
+            List<DisciplineKeywordInfo> disciplineKeywordInfos = disciplineData.GetDisciplineKeywordInfos(discipline);
+            foreach (DisciplineKeywordInfo disciplineKeywordInfo in disciplineKeywordInfos)
+            {
+                disciplineKeywordModels.Add(new DisciplineKeywordModel(disciplineKeywordInfo));
+            }
+        }
+
+        private void OnAddSubject()
+        {
+            SubjectCrawler subjectCrawler = new SubjectCrawler(selectedDiscipline.Discipline, selectedKeyword.Keyword1);
+            SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
+            subjectModels.Add(subjectModel);
+            TotalSubject = subjectModels.Count();
+        }
+
+        private bool CanAddSubject()
+        {
+            if (selectedDiscipline != null && selectedKeyword != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string property)
+        private void RaisePropertyChanged([CallerMemberName] string property = null)
         {
             if (PropertyChanged != null)
             {
