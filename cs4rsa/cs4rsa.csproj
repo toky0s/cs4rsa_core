@@ -83,6 +83,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -102,8 +104,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseClasses\MyICommand.cs" />
+    <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="BasicData\StudyWeek.cs" />
     <Compile Include="Crawler\DisciplineData.cs" />
+    <Compile Include="Models\ClassGroupModel.cs" />
     <Compile Include="Models\DisciplineInfomationModel.cs" />
     <Compile Include="Models\DisciplineKeywordModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
@@ -118,8 +122,12 @@
     <Compile Include="Tests\Crawler\TestScheduleParser.cs" />
     <Compile Include="Tests\Crawler\TestSubjectCrawler1.cs" />
     <Compile Include="Tests\Crawler\TestSubjectCrawler2.cs" />
+    <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\DisciplinesViewModel.cs" />
     <Compile Include="ViewModels\SemesterInfoViewModel.cs" />
+    <Compile Include="Views\ClassGroupSession.xaml.cs">
+      <DependentUpon>ClassGroupSession.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SearchSession.xaml.cs">
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
@@ -145,6 +153,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ClassGroupSession.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SearchSession.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -193,7 +205,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag2.html" />
+    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag3.html" />
+    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag4.html" />
+    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag1.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

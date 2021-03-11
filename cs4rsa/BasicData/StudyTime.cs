@@ -13,6 +13,23 @@ namespace cs4rsa.BasicData
         public DateTime Start {get { return start; } set { start = value; }}
         public DateTime End { get { return end; } set { end = value; } }
 
+        private readonly string startAsString;
+        private readonly string endAsString;
+        public string StartAsString
+        {
+            get
+            {
+                return startAsString;
+            }
+        }
+        public string EndAsString
+        {
+            get
+            {
+                return endAsString;
+            }
+        }
+
         public StudyTime()
         {
 
@@ -26,6 +43,8 @@ namespace cs4rsa.BasicData
 
         public StudyTime(string start, string end)
         {
+            startAsString = start;
+            endAsString = end;
             this.start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             this.end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
         }

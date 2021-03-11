@@ -16,9 +16,13 @@ namespace cs4rsa.Crawler
         private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
         private DisciplineData disciplineData = new DisciplineData();
         private string subjectCode;
-        private string SubjectCode
+        public string SubjectCode
         {
             get { return subjectCode; }
+            set
+            {
+                subjectCode = value;
+            }
         }
 
         /// <summary>
@@ -39,7 +43,6 @@ namespace cs4rsa.Crawler
         {
             this.subjectCode = subjectCode;
         }
-
 
         public Subject ToSubject()
         {

@@ -11,7 +11,7 @@ namespace cs4rsa.Helpers
     /// </summary>
     public class Helpers
     {
-        public static string getTimeFromEpoch()
+        public static string GetTimeFromEpoch()
         {
             long fromUnixEpoch = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             return fromUnixEpoch.ToString();

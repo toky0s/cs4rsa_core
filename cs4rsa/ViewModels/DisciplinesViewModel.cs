@@ -1,6 +1,8 @@
 ﻿using cs4rsa.BaseClasses;
 using cs4rsa.Crawler;
 using cs4rsa.Models;
+using cs4rsa.ViewModels;
+using cs4rsa.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,7 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class DisciplinesViewModel : INotifyPropertyChanged
+    public class DisciplinesViewModel : NotifyPropertyChangedBase
     {
         //Add button
         public MyICommand AddCommand { get; set; }
@@ -46,6 +48,7 @@ namespace cs4rsa.ViewModels
 
         //ComboxBox keyword
         private DisciplineKeywordModel selectedKeyword;
+
         public DisciplineKeywordModel SelectedKeyword
         {
             get
@@ -103,6 +106,19 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private SubjectModel selectedSubjectModel;
+        public SubjectModel SelectedSubjectModel
+        {
+            get
+            {
+                return selectedSubjectModel;
+            }
+            set
+            {
+                selectedSubjectModel = value;
+                ClassGroupViewModel.SelectedSubjectChanged(value, new EventArgs());
+            }
+        }
 
         public DisciplinesViewModel()
         {
@@ -111,13 +127,6 @@ namespace cs4rsa.ViewModels
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
-
-            //foreach (var item in App.Current.Windows)
-            //{
-            //    var mywindow = (SearchSession)item;
-            //    var datacontext = mywindow.DataContext as SemesterInfoViewModel;
-            //    datacontext.CurrentSemesterInfo = "ok";
-            //}
         }
 
         /// <summary>
@@ -150,15 +159,6 @@ namespace cs4rsa.ViewModels
                 return true;
             }
             return false;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged([CallerMemberName] string property = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
         }
     }
 }

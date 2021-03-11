@@ -61,7 +61,7 @@ namespace cs4rsa.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to cs4rsa_disciplines.
+        ///   Looks up a localized string similar to cs4rsa_disciplines.json.
         /// </summary>
         public static string cs4rsa_json_discipline_path {
             get {

@@ -73,7 +73,7 @@ namespace cs4rsa.Crawler
     class DisciplineData
     {
         public HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
-        public string DISCIPLINE_JSON_PATH = Helpers.Helpers.GetFilePathAtApp(Resources.cs4rsa_json_discipline_path)+".json";
+        public string DISCIPLINE_JSON_PATH = Helpers.Helpers.GetFilePathAtApp(Resources.cs4rsa_json_discipline_path);
 
         /// <summary>
         /// Lấy ra tên của môn môn học theo mã môn từ file JSON.
@@ -200,7 +200,7 @@ namespace cs4rsa.Crawler
             string URL = String.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
                 homeCourseSearch.CurrentSemesterValue,
-                Helpers.Helpers.getTimeFromEpoch());
+                Helpers.Helpers.GetTimeFromEpoch());
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load(URL);

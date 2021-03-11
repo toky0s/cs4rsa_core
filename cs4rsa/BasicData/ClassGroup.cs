@@ -11,7 +11,14 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class ClassGroup
     {
-        private string name;
+        private readonly string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
         private string subjectCode;
         private readonly List<SchoolClass> schoolClasses = new List<SchoolClass>();
         public List<SchoolClass> SchoolClasses { get { return schoolClasses; } }

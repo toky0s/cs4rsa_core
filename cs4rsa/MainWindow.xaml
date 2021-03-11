@@ -88,76 +88,11 @@
             </Grid.Resources>
             <Grid Grid.Column="0"
                   Margin="11px">
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <view:SearchSession Grid.Row="0"></view:SearchSession>
+                <view:SearchSession></view:SearchSession>
             </Grid>
             <Grid Grid.Column="1"
                   Margin="11px">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Class Groups"
-                           Grid.Row="0"
-                           x:Name="textbox_col2_title"></TextBlock>
-                <ListBox Grid.Row="1"></ListBox>
-                <StackPanel Grid.Row="2"
-                            Orientation="Vertical"
-                            VerticalAlignment="Bottom">
-                    <TextBlock Text="Filters"></TextBlock>
-                    <TextBlock Text="Days"
-                               Margin="0, 10, 0, 5"></TextBlock>
-                    <WrapPanel>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T2"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T3"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T4"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T5"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T6"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="T7"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 5"
-                                  Content="CN"></CheckBox>
-                    </WrapPanel>
-                    <TextBlock Text="Sessions"
-                               Margin="0,10,0,5"></TextBlock>
-                    <WrapPanel Orientation="Horizontal">
-                        <CheckBox Margin="0, 0, 10, 0"
-                                  Content="Morning"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 0"
-                                  Content="Afternoon"></CheckBox>
-                        <CheckBox Margin="0, 0, 10, 0"
-                                  Content="Night"></CheckBox>
-                    </WrapPanel>
-                    <TextBlock Text="Teachers"
-                               Margin="0, 10, 0, 5"></TextBlock>
-                    <ComboBox></ComboBox>
-                    <TextBlock Text="Phases"
-                               Margin="0, 10, 0, 5"></TextBlock>
-                    <WrapPanel>
-                        <CheckBox Content="Phase 1"></CheckBox>
-                        <CheckBox Content="Phase 2"></CheckBox>
-                    </WrapPanel>
-                    <TextBlock Text="Places"
-                               Margin="0, 10, 0, 5"></TextBlock>
-                    <WrapPanel>
-                        <CheckBox Margin="0, 0, 5, 10"
-                                  Content="Quang Trung"></CheckBox>
-                        <CheckBox Margin="0, 0, 5, 10"
-                                  Content="Phan Thanh/NVL"></CheckBox>
-                        <CheckBox Margin="0, 0, 5, 10"
-                                  Content="Việt Tin"></CheckBox>
-                        <CheckBox Margin="0, 0, 5, 10"
-                                  Content="Hoà Khánh"></CheckBox>
-                    </WrapPanel>
-                </StackPanel>
+                <view:ClassGroupSession></view:ClassGroupSession>
             </Grid>
             <Grid Grid.Column="2"
                   Margin="11px">

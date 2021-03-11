@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using cs4rsa.Crawler;
+using cs4rsa.BaseClasses;
 
 namespace cs4rsa.ViewModels
 {
-    public class SemesterInfoViewModel: INotifyPropertyChanged
+    public class SemesterInfoViewModel: NotifyPropertyChangedBase
     {
         private string currentYearInfo;
         private string currentSemesterInfo;
@@ -44,16 +45,6 @@ namespace cs4rsa.ViewModels
             HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
             this.CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
             this.CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
         }
     }
 }

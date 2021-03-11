@@ -7,6 +7,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using cs4rsa.Helpers;
+using cs4rsa.Crawler;
 
 
 namespace cs4rsa.BasicData
@@ -80,7 +81,7 @@ namespace cs4rsa.BasicData
             List<SchoolClass> schoolClasses = GetSchoolClasses();
             foreach (string classGroupName in GetClassGroupNames())
             {
-                ClassGroup classGroup = new ClassGroup();
+                ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
                 
                 string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
                 Regex regexName = new Regex(pattern);
@@ -128,7 +129,7 @@ namespace cs4rsa.BasicData
             string studyWeekString = tdTags[5].InnerText.Trim();
             StudyWeek studyWeek = new StudyWeek(studyWeekString);
 
-            Schedule schedule = new Schedule(tdTags[6]);
+            Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
 
             string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
 
