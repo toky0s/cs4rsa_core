@@ -73,11 +73,14 @@
                  Grid.ColumnSpan="3"
                  x:Name="DownloadSubjects"
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 ItemsSource="{Binding SubjectModels}">
+                 ItemsSource="{Binding SubjectModels}"
+                 SelectionChanged="DownloadSubjects_SelectionChanged"
+                 SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
@@ -85,6 +88,11 @@
                                    Text="{Binding SubjectCode}"></TextBlock>
                         <TextBlock Grid.Row="1"
                                    Text="{Binding SubjectName}"></TextBlock>
+                        <Button Grid.Row="2"
+                                Command="{Binding GotoPageCommand}"
+                                Content="Go to Page"
+                                Width="80"
+                                HorizontalAlignment="Left"></Button>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

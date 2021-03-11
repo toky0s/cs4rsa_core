@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="cs4rsa.Views.ClassGroupSession"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:cs4rsa.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Class Groups"
+                   Grid.Row="0"
+                   x:Name="textbox_col2_title"></TextBlock>
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding ClassGroupModels}"
+                 SelectedItem="{Binding SelectedClassGroup}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2"
+                    Orientation="Vertical"
+                    VerticalAlignment="Bottom">
+            <TextBlock Text="Filters"></TextBlock>
+            <TextBlock Text="Days"
+                       Margin="0, 10, 0, 5"></TextBlock>
+            <WrapPanel>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T2"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T3"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T4"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T5"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T6"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="T7"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 5"
+                          Content="CN"></CheckBox>
+            </WrapPanel>
+            <TextBlock Text="Sessions"
+                       Margin="0,10,0,5"></TextBlock>
+            <WrapPanel Orientation="Horizontal">
+                <CheckBox Margin="0, 0, 10, 0"
+                          Content="Morning"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 0"
+                          Content="Afternoon"></CheckBox>
+                <CheckBox Margin="0, 0, 10, 0"
+                          Content="Night"></CheckBox>
+            </WrapPanel>
+            <TextBlock Text="Teachers"
+                       Margin="0, 10, 0, 5"></TextBlock>
+            <ComboBox></ComboBox>
+            <TextBlock Text="Phases"
+                       Margin="0, 10, 0, 5"></TextBlock>
+            <WrapPanel>
+                <CheckBox Content="Phase 1"></CheckBox>
+                <CheckBox Content="Phase 2"></CheckBox>
+            </WrapPanel>
+            <TextBlock Text="Places"
+                       Margin="0, 10, 0, 5"></TextBlock>
+            <WrapPanel>
+                <CheckBox Margin="0, 0, 5, 10"
+                          Content="Quang Trung"></CheckBox>
+                <CheckBox Margin="0, 0, 5, 10"
+                          Content="Phan Thanh/NVL"></CheckBox>
+                <CheckBox Margin="0, 0, 5, 10"
+                          Content="Việt Tin"></CheckBox>
+                <CheckBox Margin="0, 0, 5, 10"
+                          Content="Hoà Khánh"></CheckBox>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

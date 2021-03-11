@@ -37,5 +37,10 @@ namespace cs4rsa.Views
         {
             disciplinesViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
+
+        private void DownloadSubjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
     }
 }
