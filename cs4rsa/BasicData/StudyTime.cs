@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.BasicData
 {
+    public enum Session
+    {
+        MORNING, AFTERNOON, NIGHT
+    }
+
     public class StudyTime
     {
-        private DateTime start;
-        private DateTime end;
-        public DateTime Start {get { return start; } set { start = value; }}
-        public DateTime End { get { return end; } set { end = value; } }
+        private readonly DateTime start;
+        private readonly DateTime end;
+        public DateTime Start {get { return start; }}
+        public DateTime End { get { return end; }}
 
         private readonly string startAsString;
         private readonly string endAsString;
@@ -47,6 +52,63 @@ namespace cs4rsa.BasicData
             endAsString = end;
             this.start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             this.end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public double TotalHours()
+        {
+            return (end - start).TotalHours;
+        }
+
+        public Session GetSession()
+        {
+            if (!IsInMorning())
+            {
+                if (!IsInAfternoon())
+                {
+                    return Session.NIGHT;
+                }
+                return Session.AFTERNOON;
+            }
+            return Session.MORNING;
+        }
+
+        private bool IsInMorning()
+        {
+            DateTime[] morningTime =  {
+                DateTime.ParseExact("07:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("11:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+            };
+            if (start <= morningTime[1])
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsInAfternoon()
+        {
+            DateTime[] afternoonTime =  {
+                DateTime.ParseExact("13:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("17:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+            };
+            if (start >= afternoonTime[0] && start <= afternoonTime[1])
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsInNight()
+        {
+            DateTime[] nightTime =  {
+                DateTime.ParseExact("17:45", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("21:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+            };
+            if (start >= nightTime[0] && end <= nightTime[1])
+            {
+                return true;
+            }
+            return false;
         }
     }
 

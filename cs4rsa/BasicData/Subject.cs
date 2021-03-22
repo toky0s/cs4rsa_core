@@ -1,13 +1,10 @@
-﻿using System;
+﻿using cs4rsa.Crawler;
+using cs4rsa.Helpers;
+using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
 using System.Text.RegularExpressions;
-using HtmlAgilityPack;
-using cs4rsa.Helpers;
-using cs4rsa.Crawler;
 
 
 namespace cs4rsa.BasicData
@@ -30,6 +27,13 @@ namespace cs4rsa.BasicData
 
         public string Name { get { return name; } set { name = value; } }
         public string SubjectCode { get { return subjectCode; } set { subjectCode = value; } }
+        public int StudyUnit
+        {
+            get
+            {
+                return int.Parse(studyUnit);
+            }
+        }
 
         private readonly string rawSoup;
         public string RawSoup
@@ -37,7 +41,7 @@ namespace cs4rsa.BasicData
             get { return rawSoup; }
         }
 
-        public Subject(string name, string subjectCode, string studyUnit, 
+        public Subject(string name, string subjectCode, string studyUnit,
             string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,
             string description, string rawSoup)
         {
@@ -82,10 +86,10 @@ namespace cs4rsa.BasicData
             foreach (string classGroupName in GetClassGroupNames())
             {
                 ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
-                
+
                 string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
                 Regex regexName = new Regex(pattern);
-                for(int i=0; i<schoolClasses.Count(); i++)
+                for (int i = 0; i < schoolClasses.Count(); i++)
                 {
                     if (regexName.IsMatch(schoolClasses[i].ClassGroupName))
                     {
@@ -113,7 +117,7 @@ namespace cs4rsa.BasicData
         /// </summary>
         /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
         /// <returns></returns>
-        public SchoolClass GetSchoolClass(HtmlNode trTagClassLop)
+        private SchoolClass GetSchoolClass(HtmlNode trTagClassLop)
         {
             HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
@@ -139,7 +143,7 @@ namespace cs4rsa.BasicData
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToArray();
             locations = locations.Select(item => item.Trim()).Distinct().ToArray();
 
-            string teacher = String.Join(" ",StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
+            string teacher = String.Join(" ", StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
@@ -165,6 +169,19 @@ namespace cs4rsa.BasicData
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             HtmlNode[] trTags = bodyCalendar.Descendants("tr").ToArray();
             return trTags;
+        }
+
+        public List<string> GetTeachers()
+        {
+            List<string> teachers = new List<string>();
+            foreach (HtmlNode trTag in GetTrTagsWithClassLop())
+            {
+                HtmlNode[] tdTags = trTag.SelectNodes("td").ToArray();
+                string teacher = String.Join(" ", StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
+                teachers.Add(teacher);
+            }
+            teachers.Distinct().ToList<string>();
+            return teachers;
         }
     }
 }

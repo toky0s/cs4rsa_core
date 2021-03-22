@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using cs4rsa.BasicData;
 
 namespace cs4rsa.BasicData
 {
@@ -19,7 +21,16 @@ namespace cs4rsa.BasicData
                 return name;
             }
         }
-        private string subjectCode;
+
+        private readonly string subjectCode;
+        public string SubjectCode
+        {
+            get
+            {
+                return subjectCode;
+            }
+        }
+
         private readonly List<SchoolClass> schoolClasses = new List<SchoolClass>();
         public List<SchoolClass> SchoolClasses { get { return schoolClasses; } }
 
@@ -59,6 +70,16 @@ namespace cs4rsa.BasicData
             return schoolClasses[0].StudyWeek.GetPhase();
         }
 
+        public List<string> GetTeachers()
+        {
+            List<string> teachers = new List<string>();
+            foreach(SchoolClass schoolClass in schoolClasses)
+            {
+                teachers.Add(schoolClass.Teacher);
+            }
+            return teachers;
+        }
+
         /// <summary>
         /// Hợp nhất hai StudyWeek của các SchoolClass trong ClassGroup này.
         /// </summary>
@@ -82,5 +103,36 @@ namespace cs4rsa.BasicData
     public class ClassGroupManipulation
     {
 
+    }
+
+    public class ClassGroupFilter
+    {
+        private WeekDate[] weekDates = new WeekDate[7];
+        
+        private ObservableCollection<ClassGroup> classGroups;
+        public ClassGroupFilter(ObservableCollection<ClassGroup> classGroups)
+        {
+            this.classGroups = classGroups;
+        }
+
+        public void DayFilter(List<WeekDate> weekDates)
+        {
+
+        }
+
+        public void TeacherFilter(List<Teacher> teachers)
+        {
+
+        }
+
+        public void PhaseFilter(List<Phase> phases)
+        {
+
+        }
+
+        public ObservableCollection<ClassGroup> GetClassGroupCollection()
+        {
+            return null;
+        }
     }
 }

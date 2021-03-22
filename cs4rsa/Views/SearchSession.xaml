@@ -97,7 +97,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="Total credits"
+        <TextBlock Text="{Binding TotalCredits, StringFormat={}Total Credit ({0})}"
                    Grid.Row="5"
                    Grid.ColumnSpan="3"></TextBlock>
         <CheckBox Grid.Row="6"

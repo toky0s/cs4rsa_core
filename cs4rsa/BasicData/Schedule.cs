@@ -45,6 +45,23 @@ namespace cs4rsa.BasicData
         {
             return scheduleTime[weekDate];
         }
+
+        /// <summary>
+        /// Tổng thời gian học.
+        /// </summary>
+        /// <returns></returns>
+        public double TotalHours()
+        {
+            double total = 0;
+            foreach(List<StudyTime> studyTimes in scheduleTime.Values)
+            {
+                foreach(StudyTime studyTime in studyTimes)
+                {
+                    total += studyTime.TotalHours();
+                }
+            }
+            return total;
+        }
     }
 
     /// <summary>

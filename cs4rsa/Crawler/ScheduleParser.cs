@@ -15,13 +15,6 @@ namespace cs4rsa.Crawler
     public class ScheduleParser
     {
         private readonly HtmlNode tdTag;
-        public HtmlNode TdTag
-        {
-            get
-            {
-                return tdTag;
-            }
-        }
         public ScheduleParser(HtmlNode tdTag)
         {
             this.tdTag = tdTag;
@@ -33,7 +26,7 @@ namespace cs4rsa.Crawler
         /// </summary>
         /// <param name="tdTag">tdTag chứa thông tin thời gian học.</param>
         /// <returns></returns>
-        public void CleanTdTag()
+        private void CleanTdTag()
         {
             HtmlNode needRemoveNode = tdTag.SelectSingleNode("//div[contains(@style, 'color: red; padding-top: 2px; text-align: center; position: relative')]");
             if (needRemoveNode == null)
@@ -83,7 +76,7 @@ namespace cs4rsa.Crawler
         /// Trả về array text được tách ra từ thẻ Td của thời gian học.
         /// </summary>
         /// <param name="trTag"></param>
-        public string[] ExtractDataFromTrTag(HtmlNode tdTag)
+        private string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
             string[] separatingStrings = { " ", "\n", "\r", "-", "," };
             string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
@@ -95,7 +88,7 @@ namespace cs4rsa.Crawler
         /// </summary>
         /// <param name="tdTagSplitDatas"></param>
         /// <returns>Trả về array time item đã được clean.</returns>
-        public string[] CleanTimeItem(string[] tdTagSplitDatas)
+        private string[] CleanTimeItem(string[] tdTagSplitDatas)
         {
             Regex timeRegex = new Regex(@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
             string[] times = tdTagSplitDatas.Where(item => timeRegex.IsMatch(item)).ToArray();
@@ -107,7 +100,7 @@ namespace cs4rsa.Crawler
         /// </summary>
         /// <param name="timeStrings">Time string phải match với pattern ^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$</param>
         /// <returns></returns>
-        public List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
+        private List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
             timeStrings = timeStrings.Distinct().ToList();
             List<StudyTime> studyTimes = new List<StudyTime>();
@@ -141,7 +134,7 @@ namespace cs4rsa.Crawler
         }
 
         /// <summary>
-        /// Nhận vào một chuỗi đại diện cho một Thứ trong Tuần.
+        /// Nhận vào một chuỗi đại diện cho một Thứ trong Tuần. Trả về một enum cho hôm đó.
         /// </summary>
         /// <param name="date">T2: T4: T5: T6: T7: CN:</param>
         /// <returns>Enum Week.</returns>

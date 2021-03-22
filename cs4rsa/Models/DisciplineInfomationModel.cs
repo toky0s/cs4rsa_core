@@ -10,7 +10,6 @@ namespace cs4rsa.Models
     public class DisciplineInfomationModel: INotifyPropertyChanged
     {
         private string discipline;
-
         public string Discipline
         {
             get
@@ -23,6 +22,7 @@ namespace cs4rsa.Models
                 RaisePropertyChanged("Discipline");
             }
         }
+
         public DisciplineInfomationModel(string discipline)
         {
             this.discipline = discipline;

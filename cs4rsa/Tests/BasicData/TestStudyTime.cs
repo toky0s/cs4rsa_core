@@ -19,6 +19,7 @@ namespace cs4rsa.Tests.BasicData
         public StudyTime studyTime5;
         public StudyTime studyTime6;
         public StudyTime studyTime7;
+        public StudyTime studyTime8;
         List<StudyTime> studyTimes;
 
         [SetUp]
@@ -31,6 +32,7 @@ namespace cs4rsa.Tests.BasicData
             studyTime5 = new StudyTime("17:45", "21:00");
             studyTime6 = new StudyTime("07:00", "10:15");
             studyTime7 = new StudyTime("07:00", "11:15");
+            studyTime8 = new StudyTime("16:15", "18:45");
 
             studyTimes = new List<StudyTime>
             {
@@ -81,6 +83,54 @@ namespace cs4rsa.Tests.BasicData
             List<Tuple<StudyTime, StudyTime>> tuples = StudyTimeManipulation.PairStudyTimes(studyTimes);
             List<StudyTimeIntersect> timeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(tuples);
             Assert.AreEqual(5, timeIntersects.Count());
+        }
+
+        [Test]
+        public void TestGetSession1()
+        {
+            Assert.AreEqual(Session.AFTERNOON, studyTime1.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession2()
+        {
+            Assert.AreEqual(Session.MORNING, studyTime2.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession3()
+        {
+            Assert.AreEqual(Session.MORNING, studyTime3.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession4()
+        {
+            Assert.AreEqual(Session.AFTERNOON, studyTime4.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession5()
+        {
+            Assert.AreEqual(Session.NIGHT, studyTime5.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession6()
+        {
+            Assert.AreEqual(Session.MORNING, studyTime6.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession7()
+        {
+            Assert.AreEqual(Session.MORNING, studyTime7.GetSession());
+        }
+
+        [Test]
+        public void TestGetSession8()
+        {
+            Assert.AreEqual(Session.AFTERNOON, studyTime8.GetSession());
         }
     }
 }

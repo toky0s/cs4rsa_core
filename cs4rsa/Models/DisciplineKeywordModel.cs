@@ -51,6 +51,13 @@ namespace cs4rsa.Models
             this.subjectName = disciplineKeywordInfo.SubjectName;
             this.keyword1 = disciplineKeywordInfo.Keyword1;
         }
+
+        public DisciplineKeywordModel(string courseId, string subjectName, string keyword1)
+        {
+            this.courseId = courseId;
+            this.subjectName = subjectName;
+            this.keyword1 = keyword1;
+        }
     }
 }
 

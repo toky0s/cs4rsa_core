@@ -11,7 +11,14 @@ namespace cs4rsa.Models
     public class SubjectModel
     {
         private Subject subject;
-        private readonly List<ClassGroupModel> classGroupModels;
+        public List<string> Teachers
+        {
+            get
+            {
+                return subject.GetTeachers();
+            }
+        }
+
         public List<ClassGroupModel> ClassGroupModels
         {
             get
@@ -24,6 +31,7 @@ namespace cs4rsa.Models
                 return classGroupModels;
             }
         }
+
         public string SubjectName
         {
             get
@@ -36,6 +44,14 @@ namespace cs4rsa.Models
             get
             {
                 return subject.SubjectCode;
+            }
+        }
+
+        public int StudyUnit
+        {
+            get
+            {
+                return subject.StudyUnit;
             }
         }
 

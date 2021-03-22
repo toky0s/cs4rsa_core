@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using cs4rsa.BasicData;
+﻿using cs4rsa.BaseClasses;
 using cs4rsa.Models;
-using cs4rsa.BaseClasses;
-using cs4rsa.ViewModels;
-using System.Runtime.CompilerServices;
+using System;
+using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
 {
@@ -45,6 +37,32 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private ObservableCollection<string> teachers = new ObservableCollection<string>();
+        public ObservableCollection<string> Teachers
+        {
+            get
+            {
+                return teachers;
+            }
+            set
+            {
+                teachers = value;
+            }
+        }
+
+        private string selectedTeacher;
+        public string SelectedTeacher
+        {
+            get
+            {
+                return selectedTeacher;
+            }
+            set
+            {
+                selectedTeacher = value;
+            }
+        }
+
         public ClassGroupViewModel()
         {
             SelectedSubjectChanged += OnSelectedSubjectChanged;
@@ -54,9 +72,17 @@ namespace cs4rsa.ViewModels
         {
             SubjectModel subjectModel = (SubjectModel)sender;
             classGroupModels.Clear();
-            foreach(ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
+            foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
             {
                 classGroupModels.Add(classGroupModel);
+            }
+
+            foreach (string teacher in subjectModel.Teachers)
+            {
+                if (!teachers.Contains(teacher) && teacher.Trim() != "")
+                {
+                    teachers.Add(teacher);
+                }
             }
         }
     }

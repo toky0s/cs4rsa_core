@@ -53,10 +53,6 @@ namespace cs4rsa.Tests.Crawler
             scheduleParser4 = new ScheduleParser(td4);
         }
 
-        [Test]
-        public void ToSchedule()
-        {
-        }
 
         [Test]
         public void TestGetStudyTime1()

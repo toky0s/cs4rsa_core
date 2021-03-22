@@ -29,6 +29,7 @@ namespace cs4rsa.BasicData
         public string ClassGroupName { get { return classGroupName; } }
         public Schedule Schedule { get { return schedule; } }
         public StudyWeek StudyWeek { get { return studyWeek; } }
+        public string Teacher { get { return teacher; } }
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 

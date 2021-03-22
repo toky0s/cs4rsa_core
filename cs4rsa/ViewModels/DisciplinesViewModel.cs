@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using cs4rsa.Database;
 
 namespace cs4rsa.ViewModels
 {
@@ -17,6 +18,7 @@ namespace cs4rsa.ViewModels
     /// </summary>
     public class DisciplinesViewModel : NotifyPropertyChangedBase
     {
+        private Cs4rsaData cs4rsaData = new Cs4rsaData();
         //Add button
         public MyICommand AddCommand { get; set; }
 
@@ -120,10 +122,25 @@ namespace cs4rsa.ViewModels
             }
         }
 
+
+        //Total Credits
+        private int totalCredits = 0;
+        public int TotalCredits
+        {
+            get
+            {
+                return totalCredits;
+            }
+            set
+            {
+                totalCredits = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public DisciplinesViewModel()
         {
-            DisciplineData disciplineData = new DisciplineData();
-            List<string> disciplines = disciplineData.GetDisciplines();
+            List<string> disciplines = cs4rsaData.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
@@ -136,11 +153,9 @@ namespace cs4rsa.ViewModels
         public void LoadDisciplineKeyword(string discipline)
         {
             disciplineKeywordModels.Clear();
-            DisciplineData disciplineData = new DisciplineData();
-            List<DisciplineKeywordInfo> disciplineKeywordInfos = disciplineData.GetDisciplineKeywordInfos(discipline);
-            foreach (DisciplineKeywordInfo disciplineKeywordInfo in disciplineKeywordInfos)
+            foreach(DisciplineKeywordModel item in cs4rsaData.GetDisciplineKeywordModels(discipline))
             {
-                disciplineKeywordModels.Add(new DisciplineKeywordModel(disciplineKeywordInfo));
+                disciplineKeywordModels.Add(item);
             }
         }
 
@@ -150,6 +165,12 @@ namespace cs4rsa.ViewModels
             SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
             subjectModels.Add(subjectModel);
             TotalSubject = subjectModels.Count();
+            //total credit
+            TotalCredits = 0;
+            foreach(SubjectModel subject in subjectModels)
+            {
+                TotalCredits += subject.StudyUnit;
+            }
         }
 
         private bool CanAddSubject()

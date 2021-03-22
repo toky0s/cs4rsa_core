@@ -58,7 +58,8 @@
             </WrapPanel>
             <TextBlock Text="Teachers"
                        Margin="0, 10, 0, 5"></TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{Binding Teachers}"
+                      SelectedItem="{Binding SelectedTeacher}"></ComboBox>
             <TextBlock Text="Phases"
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel>
