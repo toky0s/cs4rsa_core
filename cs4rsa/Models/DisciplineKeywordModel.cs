@@ -9,6 +9,7 @@ namespace cs4rsa.Models
     {
         private string courseId;
         private string subjectName;
+        private string discipline;
         private string keyword1;
 
         public string CourseID
@@ -45,17 +46,11 @@ namespace cs4rsa.Models
             }
         }
 
-        public DisciplineKeywordModel(DisciplineKeywordInfo disciplineKeywordInfo)
-        {
-            this.courseId = disciplineKeywordInfo.CourseID;
-            this.subjectName = disciplineKeywordInfo.SubjectName;
-            this.keyword1 = disciplineKeywordInfo.Keyword1;
-        }
-
-        public DisciplineKeywordModel(string courseId, string subjectName, string keyword1)
+        public DisciplineKeywordModel(string courseId, string subjectName, string discipline, string keyword1)
         {
             this.courseId = courseId;
             this.subjectName = subjectName;
+            this.discipline = discipline;
             this.keyword1 = keyword1;
         }
     }

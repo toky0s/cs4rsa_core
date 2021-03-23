@@ -59,23 +59,5 @@ namespace cs4rsa.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\truon\source\repos\cs4rsa\cs4rsa\cs4rsadatabase.mdf;Integrated Security=True.
-        /// </summary>
-        public static string cs4rsa_database_connection_string {
-            get {
-                return ResourceManager.GetString("cs4rsa_database_connection_string", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to cs4rsa_disciplines.json.
-        /// </summary>
-        public static string cs4rsa_json_discipline_path {
-            get {
-                return ResourceManager.GetString("cs4rsa_json_discipline_path", resourceCulture);
-            }
-        }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using cs4rsa.BasicData;
 using HtmlAgilityPack;
 using cs4rsa.Crawler;
+using cs4rsa.Database;
 
 
 namespace cs4rsa.Crawler
@@ -14,7 +15,7 @@ namespace cs4rsa.Crawler
     {
 
         private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
-        private DisciplineData disciplineData = new DisciplineData();
+        private Cs4rsaData cs4RsaData = new Cs4rsaData();
         private string subjectCode;
         public string SubjectCode
         {
@@ -25,6 +26,9 @@ namespace cs4rsa.Crawler
             }
         }
 
+        private string discipline;
+        private string keyword1;
+
         /// <summary>
         /// Get a Subject of DTU.
         /// </summary>
@@ -33,20 +37,13 @@ namespace cs4rsa.Crawler
         public SubjectCrawler(string discipline, string keyword1)
         {
             this.subjectCode = discipline + " " + keyword1;
-        }
-
-        /// <summary>
-        /// Nhận vào một mã môn học.
-        /// </summary>
-        /// <param name="subjectCode">Mã môn học, ví dụ CS414</param>
-        public SubjectCrawler(string subjectCode)
-        {
-            this.subjectCode = subjectCode;
+            this.discipline = discipline;
+            this.keyword1 = keyword1;
         }
 
         public Subject ToSubject()
         {
-            string courseId = disciplineData.GetCourseId(this.subjectCode);
+            string courseId = cs4RsaData.GetSingleDisciplineKeywordModel(discipline, keyword1).CourseID;
             string semesterId = homeCourseSearch.CurrentSemesterValue;
 
             string url = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={0}&semesterid={1}&timespan=71", courseId, semesterId);
@@ -55,7 +52,7 @@ namespace cs4rsa.Crawler
             HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
             HtmlNode[] trTags = table.Descendants("tr").ToArray();
             string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
-            string name = disciplineData.GetSubjectName(subjectCode);
+            string name = cs4RsaData.GetSingleDisciplineKeywordModel(discipline, keyword1).SubjectName;
 
             string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
             string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
