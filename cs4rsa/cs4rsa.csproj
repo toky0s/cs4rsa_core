@@ -131,10 +131,12 @@
     <Compile Include="Crawler\DisciplineData.cs" />
     <Compile Include="Crawler\TeacherCrawler.cs" />
     <Compile Include="Database\Cs4rsaData.cs" />
+    <Compile Include="Helpers\ClassGroupFilter.cs" />
     <Compile Include="Models\ClassGroupModel.cs" />
     <Compile Include="Models\DisciplineInfomationModel.cs" />
     <Compile Include="Models\DisciplineKeywordModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
+    <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="Tests\BasicData\TestClassGroup.cs" />
     <Compile Include="Tests\BasicData\TestConflict.cs" />
     <Compile Include="Tests\BasicData\TestSchedule.cs" />

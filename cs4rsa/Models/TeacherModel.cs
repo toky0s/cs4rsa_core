@@ -1,6 +1,13 @@
-﻿namespace cs4rsa.BasicData
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using cs4rsa.BasicData;
+
+namespace cs4rsa.Models
 {
-    public class Teacher
+    public class TeacherModel
     {
         private readonly string id;
         private readonly string name;
@@ -84,35 +91,18 @@
             }
         }
 
-        public Teacher(string id, string name, string sex, string place,
-            string degree, string workUnit, string position, string subject,
-            string form, string[] teachedSubjects)
+        public TeacherModel(Teacher teacher)
         {
-            this.id = id;
-            this.name = name;
-            this.sex = sex;
-            this.place = place;
-            this.degree = degree;
-            this.workUnit = workUnit;
-            this.position = position;
-            this.subject = subject;
-            this.form = form;
-            this.teachedSubjects = teachedSubjects;
-        }
-
-        public override bool Equals(object obj)
-        {
-            var teacher = obj as Teacher;
-            if (teacher == null)
-            {
-                return false;
-            }
-            return this.id == teacher.id;
-        }
-
-        public override int GetHashCode()
-        {
-            return this.id.GetHashCode();
+            this.id = teacher.Id;
+            this.name = teacher.Name;
+            this.sex = teacher.Sex;
+            this.place = teacher.Place;
+            this.degree = teacher.Degree;
+            this.workUnit = teacher.WorkUnit;
+            this.position = teacher.Position;
+            this.subject = teacher.Subject;
+            this.form = teacher.Form;
+            this.teachedSubjects = teacher.TeachedSubjects;
         }
     }
 }

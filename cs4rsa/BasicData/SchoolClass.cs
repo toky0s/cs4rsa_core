@@ -20,7 +20,7 @@ namespace cs4rsa.BasicData
         private Schedule schedule;
         private string[] rooms;
         private string[] places;
-        private string teacher;
+        private Teacher teacher;
         private string registrationStatus;
         private string implementationStatus;
 
@@ -29,11 +29,11 @@ namespace cs4rsa.BasicData
         public string ClassGroupName { get { return classGroupName; } }
         public Schedule Schedule { get { return schedule; } }
         public StudyWeek StudyWeek { get { return studyWeek; } }
-        public string Teacher { get { return teacher; } }
+        public Teacher Teacher { get { return teacher; } }
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 
-            string[] rooms, string[] places, string teacher, string registrationStatus, string implementationStatus)
+            string[] rooms, string[] places, Teacher teacher, string registrationStatus, string implementationStatus)
         {
             this.subjectCode = subjectCode;
             this.classGroupName = classGroupName;

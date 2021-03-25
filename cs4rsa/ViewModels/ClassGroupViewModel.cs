@@ -37,8 +37,8 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<string> teachers = new ObservableCollection<string>();
-        public ObservableCollection<string> Teachers
+        private ObservableCollection<TeacherModel> teachers = new ObservableCollection<TeacherModel>();
+        public ObservableCollection<TeacherModel> Teachers
         {
             get
             {
@@ -77,12 +77,10 @@ namespace cs4rsa.ViewModels
                 classGroupModels.Add(classGroupModel);
             }
 
-            foreach (string teacher in subjectModel.Teachers)
+            teachers.Clear();
+            foreach (TeacherModel teacher in subjectModel.Teachers)
             {
-                if (!teachers.Contains(teacher) && teacher.Trim() != "")
-                {
-                    teachers.Add(teacher);
-                }
+                teachers.Add(teacher);
             }
         }
     }

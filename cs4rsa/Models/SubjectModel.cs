@@ -11,11 +11,14 @@ namespace cs4rsa.Models
     public class SubjectModel
     {
         private Subject subject;
-        public List<string> Teachers
+        public List<TeacherModel> Teachers
         {
             get
             {
-                return subject.GetTeachers();
+                List<TeacherModel> teacherModels = subject.Teachers
+                    .Select(teacher => new TeacherModel(teacher))
+                    .ToList<TeacherModel>();
+                return teacherModels;
             }
         }
 
@@ -24,7 +27,7 @@ namespace cs4rsa.Models
             get
             {
                 List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
-                foreach(ClassGroup classGroup in subject.GetClassGroups())
+                foreach(ClassGroup classGroup in subject.ClassGroups)
                 {
                     classGroupModels.Add(new ClassGroupModel(classGroup));
                 }

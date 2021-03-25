@@ -17,7 +17,7 @@ namespace cs4rsa.Tests.BasicData
         {
             SubjectCrawler subjectCrawler = new SubjectCrawler("CS","414");
             Subject subject = subjectCrawler.ToSubject();
-            List<ClassGroup> classGroups = subject.GetClassGroups();
+            List<ClassGroup> classGroups = subject.ClassGroups;
             ClassGroup classGroup1 = classGroups[0];
             ClassGroup classGroup2 = classGroups[1];
         }

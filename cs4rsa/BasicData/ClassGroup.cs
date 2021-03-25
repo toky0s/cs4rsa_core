@@ -8,8 +8,16 @@ using cs4rsa.BasicData;
 
 namespace cs4rsa.BasicData
 {
+    public enum Place
+    {
+        QUANGTRUNG,
+        VIETTIN,
+        PHANTHANH,
+        HOAKHANH
+    }
+
     /// <summary>
-    /// 
+    /// Đại diện cho một nhóm lớp của một môn nào đó, thường sẽ bao gồm các lớp học LEC và LAB.
     /// </summary>
     public class ClassGroup
     {
@@ -70,14 +78,19 @@ namespace cs4rsa.BasicData
             return schoolClasses[0].StudyWeek.GetPhase();
         }
 
-        public List<string> GetTeachers()
+        public List<Teacher> GetTeachers()
         {
-            List<string> teachers = new List<string>();
+            List<Teacher> teachers = new List<Teacher>();
             foreach(SchoolClass schoolClass in schoolClasses)
             {
                 teachers.Add(schoolClass.Teacher);
             }
             return teachers;
+        }
+
+        public bool HaveThisTeacher(Teacher teacher)
+        {
+            return true;
         }
 
         /// <summary>
@@ -103,36 +116,5 @@ namespace cs4rsa.BasicData
     public class ClassGroupManipulation
     {
 
-    }
-
-    public class ClassGroupFilter
-    {
-        private WeekDate[] weekDates = new WeekDate[7];
-        
-        private ObservableCollection<ClassGroup> classGroups;
-        public ClassGroupFilter(ObservableCollection<ClassGroup> classGroups)
-        {
-            this.classGroups = classGroups;
-        }
-
-        public void DayFilter(List<WeekDate> weekDates)
-        {
-
-        }
-
-        public void TeacherFilter(List<Teacher> teachers)
-        {
-
-        }
-
-        public void PhaseFilter(List<Phase> phases)
-        {
-
-        }
-
-        public ObservableCollection<ClassGroup> GetClassGroupCollection()
-        {
-            return null;
-        }
     }
 }

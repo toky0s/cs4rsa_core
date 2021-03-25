@@ -74,7 +74,6 @@
                  x:Name="DownloadSubjects"
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ItemsSource="{Binding SubjectModels}"
-                 SelectionChanged="DownloadSubjects_SelectionChanged"
                  SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.ItemTemplate>
                 <DataTemplate>

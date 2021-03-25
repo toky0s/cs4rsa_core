@@ -24,22 +24,18 @@ namespace cs4rsa.BasicData
         private string mustStudySubject;
         private string parallelSubject;
         private string description;
+        private readonly string rawSoup;
+
+        // pre-load
+        private List<Teacher> teachers = new List<Teacher>();
+        private List<ClassGroup> classGroups = new List<ClassGroup>();
 
         public string Name { get { return name; } set { name = value; } }
         public string SubjectCode { get { return subjectCode; } set { subjectCode = value; } }
-        public int StudyUnit
-        {
-            get
-            {
-                return int.Parse(studyUnit);
-            }
-        }
-
-        private readonly string rawSoup;
-        public string RawSoup
-        {
-            get { return rawSoup; }
-        }
+        public int StudyUnit => int.Parse(studyUnit);
+        public string RawSoup => rawSoup;
+        public List<Teacher> Teachers => teachers;
+        public List<ClassGroup> ClassGroups => classGroups;
 
         public Subject(string name, string subjectCode, string studyUnit,
             string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,
@@ -56,12 +52,8 @@ namespace cs4rsa.BasicData
             this.description = description;
 
             this.rawSoup = rawSoup;
-        }
-
-        override
-        public string ToString()
-        {
-            return String.Format("<Subject {0} {1}>", SubjectCode, Name);
+            GetTeachers();
+            GetClassGroups();
         }
 
         public string[] GetClassGroupNames()
@@ -79,26 +71,27 @@ namespace cs4rsa.BasicData
         /// Trả về danh sách các nhóm lớp.
         /// </summary>
         /// <returns>List các ClassGroup.</returns>
-        public List<ClassGroup> GetClassGroups()
+        public void GetClassGroups()
         {
-            List<ClassGroup> classGroups = new List<ClassGroup>();
-            List<SchoolClass> schoolClasses = GetSchoolClasses();
-            foreach (string classGroupName in GetClassGroupNames())
+            if (classGroups.Count() == 0)
             {
-                ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
-
-                string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
-                Regex regexName = new Regex(pattern);
-                for (int i = 0; i < schoolClasses.Count(); i++)
+                List<SchoolClass> schoolClasses = GetSchoolClasses();
+                foreach (string classGroupName in GetClassGroupNames())
                 {
-                    if (regexName.IsMatch(schoolClasses[i].ClassGroupName))
+                    ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
+
+                    string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
+                    Regex regexName = new Regex(pattern);
+                    for (int i = 0; i < schoolClasses.Count(); i++)
                     {
-                        classGroup.AddSchoolClass(schoolClasses[i]);
+                        if (regexName.IsMatch(schoolClasses[i].ClassGroupName))
+                        {
+                            classGroup.AddSchoolClass(schoolClasses[i]);
+                        }
                     }
+                    classGroups.Add(classGroup);
                 }
-                classGroups.Add(classGroup);
             }
-            return classGroups;
         }
 
         public List<SchoolClass> GetSchoolClasses()
@@ -121,6 +114,11 @@ namespace cs4rsa.BasicData
         {
             HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
+
+            string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
+            string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
+            Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
+
             string classGroupName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
             string studyType = tdTags[2].InnerText.Trim();
@@ -143,7 +141,6 @@ namespace cs4rsa.BasicData
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToArray();
             locations = locations.Select(item => item.Trim()).Distinct().ToArray();
 
-            string teacher = String.Join(" ", StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
@@ -153,7 +150,31 @@ namespace cs4rsa.BasicData
             return schoolClass;
         }
 
-        public HtmlNode[] GetTrTagsWithClassLop()
+        /// <summary>
+        /// Phương thức này sẽ tự động chạy ngay sau khi Subject được khởi tạo
+        /// nhằm load thông tin của Teacher vào ComboBox giúp trải nghiệm người dùng
+        /// được cải thiện hơn.
+        /// </summary>
+        /// <returns></returns>
+        private void GetTeachers()
+        {
+            if (teachers.Count() == 0)
+            {
+                foreach (HtmlNode trTag in GetTrTagsWithClassLop())
+                {
+                    HtmlNode tdTag = trTag.SelectSingleNode("td");
+                    HtmlNode aTag = tdTag.SelectSingleNode("a");
+
+                    string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
+                    string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
+                    Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
+                    teachers.Add(teacher);
+                    teachers = teachers.Distinct().ToList<Teacher>();
+                }
+            }
+        }
+
+        private HtmlNode[] GetTrTagsWithClassLop()
         {
             HtmlNode[] trTags = GetListTrTagInCalendar();
             HtmlNode[] trTagsWithClassLop = trTags
@@ -161,7 +182,7 @@ namespace cs4rsa.BasicData
             return trTagsWithClassLop;
         }
 
-        public HtmlNode[] GetListTrTagInCalendar()
+        private HtmlNode[] GetListTrTagInCalendar()
         {
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(rawSoup);
@@ -171,17 +192,17 @@ namespace cs4rsa.BasicData
             return trTags;
         }
 
-        public List<string> GetTeachers()
+        private string GetTeacherInfoPageURL(string urlSubjectDetailPage)
         {
-            List<string> teachers = new List<string>();
-            foreach (HtmlNode trTag in GetTrTagsWithClassLop())
-            {
-                HtmlNode[] tdTags = trTag.SelectNodes("td").ToArray();
-                string teacher = String.Join(" ", StringHelper.SplitAndRemoveAllSpace(tdTags[9].InnerHtml));
-                teachers.Add(teacher);
-            }
-            teachers.Distinct().ToList<string>();
-            return teachers;
+            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlDocument htmlDocument = htmlWeb.Load(urlSubjectDetailPage);
+            HtmlNode aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
+            return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+        }
+
+        private string GetSubjectDetailPageURL(HtmlNode aTag)
+        {
+            return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
     }
 }

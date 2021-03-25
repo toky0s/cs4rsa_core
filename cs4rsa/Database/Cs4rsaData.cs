@@ -138,7 +138,8 @@ namespace cs4rsa.Database
                 DisciplineKeywordModel disciplineKeywordModel = null;
                 string sql = $@"SELECT course_id, subject_name, name, keyword1 from keyword, discipline
                             where keyword1 = '{keyword1}' and
-                            name ='{discipline}'";
+                            name ='{discipline}'
+                            and discipline_id = (SELECT id from discipline where name = '{discipline}') ";
                 SQLiteCommand command = new SQLiteCommand(sql, connection);
                 connection.Open();
                 SQLiteDataReader reader = command.ExecuteReader();
