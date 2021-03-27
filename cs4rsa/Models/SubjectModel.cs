@@ -11,6 +11,7 @@ namespace cs4rsa.Models
     public class SubjectModel
     {
         private Subject subject;
+
         public List<TeacherModel> Teachers
         {
             get
@@ -35,28 +36,10 @@ namespace cs4rsa.Models
             }
         }
 
-        public string SubjectName
-        {
-            get
-            {
-                return subject.Name;
-            }
-        }
-        public string SubjectCode
-        {
-            get
-            {
-                return subject.SubjectCode;
-            }
-        }
-
-        public int StudyUnit
-        {
-            get
-            {
-                return subject.StudyUnit;
-            }
-        }
+        public string SubjectName => subject.Name;
+        public string SubjectCode => subject.SubjectCode;
+        public int StudyUnit => subject.StudyUnit;
+        public string CourseId => subject.CourseId;
 
         public SubjectModel(Subject subject)
         {

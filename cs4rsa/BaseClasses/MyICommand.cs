@@ -4,7 +4,6 @@ using System.Windows.Input;
 
 namespace cs4rsa.BaseClasses
 {
-
     public class MyICommand : ICommand
     {
         Action _TargetExecuteMethod;

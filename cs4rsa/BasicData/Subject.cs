@@ -25,6 +25,7 @@ namespace cs4rsa.BasicData
         private string parallelSubject;
         private string description;
         private readonly string rawSoup;
+        private string courseId;
 
         // pre-load
         private List<Teacher> teachers = new List<Teacher>();
@@ -32,6 +33,7 @@ namespace cs4rsa.BasicData
 
         public string Name { get { return name; } set { name = value; } }
         public string SubjectCode { get { return subjectCode; } set { subjectCode = value; } }
+        public string CourseId => courseId;
         public int StudyUnit => int.Parse(studyUnit);
         public string RawSoup => rawSoup;
         public List<Teacher> Teachers => teachers;
@@ -39,7 +41,7 @@ namespace cs4rsa.BasicData
 
         public Subject(string name, string subjectCode, string studyUnit,
             string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,
-            string description, string rawSoup)
+            string description, string rawSoup, string courseId)
         {
             this.name = name;
             this.subjectCode = subjectCode;
@@ -50,8 +52,8 @@ namespace cs4rsa.BasicData
             this.mustStudySubject = mustStudySubject;
             this.parallelSubject = parallelSubject;
             this.description = description;
-
             this.rawSoup = rawSoup;
+            this.courseId = courseId;
             GetTeachers();
             GetClassGroups();
         }

@@ -22,6 +22,20 @@ namespace cs4rsa.ViewModels
         //Add button
         public MyICommand AddCommand { get; set; }
 
+        private bool canRunAddCommand = true;
+        public bool CanRunAddCommand
+        {
+            get
+            {
+                return canRunAddCommand;
+            }
+            set
+            {
+                canRunAddCommand = value;
+                RaisePropertyChanged("CanRunAddCommand");
+            }
+        }
+
         //ComboBox discipline
         private DisciplineInfomationModel selectedDiscipline;
         public DisciplineInfomationModel SelectedDiscipline
@@ -50,7 +64,6 @@ namespace cs4rsa.ViewModels
 
         //ComboxBox keyword
         private DisciplineKeywordModel selectedKeyword;
-
         public DisciplineKeywordModel SelectedKeyword
         {
             get
@@ -61,6 +74,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedKeyword = value;
                 AddCommand.RaiseCanExecuteChanged();
+                CheckCanRunAddCommand();
                 RaisePropertyChanged("SelectedKeyword");
             }
         }
@@ -161,25 +175,62 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject()
         {
+            BackgroundWorker backgroundWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,  
+            };
+            backgroundWorker.DoWork += WorkerDownloadSubject;
+            //backgroundWorker.ProgressChanged += WorkerProcessChanged;
+            backgroundWorker.RunWorkerCompleted += WorkerComplete;
             SubjectCrawler subjectCrawler = new SubjectCrawler(selectedDiscipline.Discipline, selectedKeyword.Keyword1);
+            backgroundWorker.RunWorkerAsync(subjectCrawler);
+        }
+
+        private bool CanAddSubject()
+        {
+            if (selectedDiscipline != null &&
+                selectedKeyword != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void WorkerDownloadSubject(object sender, DoWorkEventArgs e)
+        {
+            SubjectCrawler subjectCrawler = (SubjectCrawler)e.Argument;
             SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
-            subjectModels.Add(subjectModel);
+            e.Result = subjectModel;
+        }
+
+        private void WorkerComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            subjectModels.Add((SubjectModel)e.Result);
+            CheckCanRunAddCommand();
             TotalSubject = subjectModels.Count();
+
             //total credit
             TotalCredits = 0;
-            foreach(SubjectModel subject in subjectModels)
+            foreach (SubjectModel subject in subjectModels)
             {
                 TotalCredits += subject.StudyUnit;
             }
         }
 
-        private bool CanAddSubject()
+        private void CheckCanRunAddCommand()
         {
-            if (selectedDiscipline != null && selectedKeyword != null)
+            List<string> courseIds = subjectModels.Select(item => item.CourseId).ToList();
+            if (selectedKeyword != null)
             {
-                return true;
+                if (courseIds.Contains(selectedKeyword.CourseID))
+                {
+                    CanRunAddCommand = false;
+                }
+                else
+                {
+                    CanRunAddCommand = true;
+                }
             }
-            return false;
         }
     }
 }

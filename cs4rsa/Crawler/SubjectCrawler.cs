@@ -66,7 +66,7 @@ namespace cs4rsa.Crawler
 
             string rawSoup = htmlDocument.DocumentNode.OuterHtml;
             return new Subject(name, subjectCode, studyUnit, studyUnitType,
-                       studyType, semester, mustStudySubject, parallelSubject, description, rawSoup);
+                       studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId);
         }
     }
 }
