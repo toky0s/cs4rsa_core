@@ -62,6 +62,17 @@ namespace cs4rsa.BasicData
             }
             return total;
         }
+
+        public List<Session> GetSessions()
+        {
+            List<Session> sessions = new List<Session>();
+            foreach(List<StudyTime> studyTimes in scheduleTime.Values)
+            {
+                sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
+            }
+            sessions = sessions.Distinct().ToList();
+            return sessions;
+        }
     }
 
     /// <summary>

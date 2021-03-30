@@ -50,8 +50,8 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private string selectedTeacher;
-        public string SelectedTeacher
+        private TeacherModel selectedTeacher;
+        public TeacherModel SelectedTeacher
         {
             get
             {
@@ -60,6 +60,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedTeacher = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -82,6 +83,7 @@ namespace cs4rsa.ViewModels
             {
                 teachers.Add(teacher);
             }
+            SelectedTeacher = teachers[0];
         }
     }
 }

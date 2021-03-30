@@ -88,9 +88,50 @@ namespace cs4rsa.BasicData
             return teachers;
         }
 
+        public List<WeekDate> GetWeekDates()
+        {
+            List<WeekDate> weekDates = new List<WeekDate>();
+            foreach(WeekDate weekDate in weekDates)
+            {
+                if (!weekDates.Contains(weekDate))
+                {
+                    weekDates.Add(weekDate);
+                }
+            }
+            return weekDates;
+        }
+
+        public List<Session> GetSession()
+        {
+            List<Session> sessions = new List<Session>();
+            foreach(SchoolClass schoolClass in schoolClasses)
+            {
+                sessions.AddRange(schoolClass.Schedule.GetSessions());
+            }
+            sessions = sessions.Distinct().ToList();
+            return sessions;
+        }
+
+        public List<Place> GetPlaces()
+        {
+            List<Place> places = new List<Place>();
+            foreach(SchoolClass schoolClass in schoolClasses)
+            {
+                places.AddRange(schoolClass.Places);
+            }
+            return places.Distinct().ToList();
+        }
+
         public bool HaveThisTeacher(Teacher teacher)
         {
             return true;
+        }
+
+        public bool HaveThisPhase(Phase phase)
+        {
+            if (GetPhase() == phase)
+                return true;
+            return false;
         }
 
         /// <summary>

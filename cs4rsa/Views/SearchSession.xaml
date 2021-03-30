@@ -76,6 +76,7 @@
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ItemsSource="{Binding SubjectModels}"
                  SelectedItem="{Binding SelectedSubjectModel}">
+
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -88,11 +89,6 @@
                                    Text="{Binding SubjectCode}"></TextBlock>
                         <TextBlock Grid.Row="1"
                                    Text="{Binding SubjectName}"></TextBlock>
-                        <Button Grid.Row="2"
-                                Command="{Binding GotoPageCommand}"
-                                Content="Go to Page"
-                                Width="80"
-                                HorizontalAlignment="Left"></Button>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

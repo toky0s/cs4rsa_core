@@ -8,7 +8,7 @@ namespace cs4rsa.BasicData
 {
     public enum Phase
     {
-        FIRST, SECOND, ALL
+        NON, FIRST, SECOND, ALL
     }
 
     public class StudyWeek

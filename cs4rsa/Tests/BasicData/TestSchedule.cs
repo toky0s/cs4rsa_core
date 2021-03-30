@@ -14,7 +14,6 @@ namespace cs4rsa.Tests.BasicData
     [TestFixture]
     class TestSchedule
     {
-        public Schedule schedule;
         public Subject subject;
         public SubjectCrawler subjectCrawler;
 

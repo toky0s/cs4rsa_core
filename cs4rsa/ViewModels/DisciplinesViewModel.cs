@@ -158,6 +158,7 @@ namespace cs4rsa.ViewModels
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
+            SelectedDiscipline = this.disciplines[0];
         }
 
         /// <summary>
@@ -171,6 +172,7 @@ namespace cs4rsa.ViewModels
             {
                 disciplineKeywordModels.Add(item);
             }
+            SelectedKeyword = disciplineKeywordModels[0];
         }
 
         private void OnAddSubject()
@@ -180,7 +182,6 @@ namespace cs4rsa.ViewModels
                 WorkerReportsProgress = true,  
             };
             backgroundWorker.DoWork += WorkerDownloadSubject;
-            //backgroundWorker.ProgressChanged += WorkerProcessChanged;
             backgroundWorker.RunWorkerCompleted += WorkerComplete;
             SubjectCrawler subjectCrawler = new SubjectCrawler(selectedDiscipline.Discipline, selectedKeyword.Keyword1);
             backgroundWorker.RunWorkerAsync(subjectCrawler);
@@ -198,6 +199,7 @@ namespace cs4rsa.ViewModels
 
         private void WorkerDownloadSubject(object sender, DoWorkEventArgs e)
         {
+            CanRunAddCommand = false;
             SubjectCrawler subjectCrawler = (SubjectCrawler)e.Argument;
             SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
             e.Result = subjectModel;

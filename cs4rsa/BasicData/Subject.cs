@@ -54,8 +54,8 @@ namespace cs4rsa.BasicData
             this.description = description;
             this.rawSoup = rawSoup;
             this.courseId = courseId;
-            GetTeachers();
             GetClassGroups();
+            teachers = teachers.Distinct().ToList();
         }
 
         public string[] GetClassGroupNames()
@@ -120,6 +120,7 @@ namespace cs4rsa.BasicData
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
             string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
             Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
+            teachers.Add(teacher);
 
             string classGroupName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
@@ -142,13 +143,15 @@ namespace cs4rsa.BasicData
             // remove space in locations
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToArray();
             locations = locations.Select(item => item.Trim()).Distinct().ToArray();
+            List<Place> places = new List<Place>();
+            places = locations.Select(item => BasicDataConverter.ToPlace(item)).ToList();
 
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
             SchoolClass schoolClass = new SchoolClass(subjectCode, classGroupName, name, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, locations, teacher, registrationStatus, implementationStatus);
+                                        rooms, places, teacher, registrationStatus, implementationStatus);
             return schoolClass;
         }
 
@@ -169,6 +172,10 @@ namespace cs4rsa.BasicData
 
                     string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
                     string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
+                    if (teacherDetailPageURL==null)
+                    {
+                        return;
+                    }
                     Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
                     teachers.Add(teacher);
                     teachers = teachers.Distinct().ToList<Teacher>();
@@ -199,6 +206,10 @@ namespace cs4rsa.BasicData
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument htmlDocument = htmlWeb.Load(urlSubjectDetailPage);
             HtmlNode aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
+            if (aTag == null)
+            {
+                return null;
+            }
             return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
 

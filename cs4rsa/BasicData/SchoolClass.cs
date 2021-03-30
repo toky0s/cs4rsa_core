@@ -19,21 +19,22 @@ namespace cs4rsa.BasicData
         private StudyWeek studyWeek;
         private Schedule schedule;
         private string[] rooms;
-        private string[] places;
+        private List<Place> places;
         private Teacher teacher;
         private string registrationStatus;
         private string implementationStatus;
 
-        public string Name { get { return name; } }
-        public string SubjectCode { get { return subjectCode; } }
-        public string ClassGroupName { get { return classGroupName; } }
-        public Schedule Schedule { get { return schedule; } }
-        public StudyWeek StudyWeek { get { return studyWeek; } }
-        public Teacher Teacher { get { return teacher; } }
+        public string Name => name;
+        public string SubjectCode => subjectCode;
+        public string ClassGroupName => classGroupName;
+        public Schedule Schedule => schedule;
+        public StudyWeek StudyWeek => studyWeek;
+        public Teacher Teacher => teacher;
+        public List<Place> Places => places;
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 
-            string[] rooms, string[] places, Teacher teacher, string registrationStatus, string implementationStatus)
+            string[] rooms, List<Place> places, Teacher teacher, string registrationStatus, string implementationStatus)
         {
             this.subjectCode = subjectCode;
             this.classGroupName = classGroupName;

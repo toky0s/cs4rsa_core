@@ -16,6 +16,7 @@
                    Grid.Row="0"
                    x:Name="textbox_col2_title"></TextBlock>
         <ListBox Grid.Row="1"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ItemsSource="{Binding ClassGroupModels}"
                  SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.ItemTemplate>
@@ -64,8 +65,10 @@
             <TextBlock Text="Phases"
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel>
-                <CheckBox Content="Phase 1"></CheckBox>
-                <CheckBox Content="Phase 2"></CheckBox>
+                <RadioButton Content="All"></RadioButton>
+                <RadioButton Content="Phase 1"></RadioButton>
+                <RadioButton Content="Phase 2"></RadioButton>
+                <RadioButton Content="Both"></RadioButton>
             </WrapPanel>
             <TextBlock Text="Places"
                        Margin="0, 10, 0, 5"></TextBlock>

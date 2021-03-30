@@ -13,7 +13,6 @@ namespace cs4rsa.Tests.Crawler
     [TestFixture]
     class TestScheduleParser
     {
-        public ScheduleParser scheduleParser;
         public string path1 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa\Tests\Crawler\HtmlTdTags\HTMLPagetdTag1.html";
         public string path2 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa\Tests\Crawler\HtmlTdTags\HTMLPagetdTag2.html";
         public string path3 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa\Tests\Crawler\HtmlTdTags\HTMLPagetdTag3.html";
