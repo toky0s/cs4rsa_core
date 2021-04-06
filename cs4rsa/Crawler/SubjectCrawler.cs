@@ -15,7 +15,7 @@ namespace cs4rsa.Crawler
     {
 
         private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
-        private Cs4rsaData cs4RsaData = new Cs4rsaData();
+        private Cs4rsaData cs4RsaData;
         private string subjectCode;
         public string SubjectCode
         {
@@ -36,6 +36,7 @@ namespace cs4rsa.Crawler
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
         public SubjectCrawler(string discipline, string keyword1)
         {
+            cs4RsaData = new Cs4rsaData();
             this.subjectCode = discipline + " " + keyword1;
             this.discipline = discipline;
             this.keyword1 = keyword1;

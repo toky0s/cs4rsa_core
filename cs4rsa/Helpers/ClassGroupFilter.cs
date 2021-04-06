@@ -96,10 +96,10 @@ namespace cs4rsa.Helpers
             return classGroups;
         }
 
-        //public List<ClassGroup> Reset()
-        //{
-        //    return baseClassGroup;
-        //}
+        public List<ClassGroup> Reset()
+        {
+            return baseClassGroups;
+        }
 
     }
 }

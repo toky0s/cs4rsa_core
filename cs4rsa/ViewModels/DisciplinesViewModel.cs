@@ -10,6 +10,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using cs4rsa.Database;
+using LightMessageBus;
+using cs4rsa.Messages;
+
 
 namespace cs4rsa.ViewModels
 {
@@ -132,7 +135,8 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedSubjectModel = value;
-                ClassGroupViewModel.SelectedSubjectChanged(value, new EventArgs());
+                //ClassGroupViewModel.SelectedSubjectChanged(value, new EventArgs());
+                MessageBus.Default.Publish(new SelectedSubjectChangeMessage(this));
             }
         }
 

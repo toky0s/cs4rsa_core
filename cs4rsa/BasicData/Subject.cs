@@ -73,7 +73,7 @@ namespace cs4rsa.BasicData
         /// Trả về danh sách các nhóm lớp.
         /// </summary>
         /// <returns>List các ClassGroup.</returns>
-        public void GetClassGroups()
+        private void GetClassGroups()
         {
             if (classGroups.Count() == 0)
             {

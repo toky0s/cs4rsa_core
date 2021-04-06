@@ -30,6 +30,7 @@ namespace cs4rsa.Database
         {
             if (!File.Exists(databaseName))
             {
+                System.Console.WriteLine("Tao database");
                 SQLiteConnection.CreateFile(databaseName);
                 connectString = $"Data Source={databaseName};Version=3;";
                 CreateTable(SQL_DISCIPLINE_TABLE);
@@ -39,6 +40,25 @@ namespace cs4rsa.Database
             {
                 connectString = $"Data Source={databaseName};Version=3;";
             }
+        }
+
+        public void CreateDatabaseIfNotExist()
+        {
+            if (IsDatabaseExist())
+            {
+                SQLiteConnection.CreateFile(databaseName);
+                CreateTable(SQL_DISCIPLINE_TABLE);
+                CreateTable(SQL_KEYWORD_TABLE);
+            }
+        }
+
+        private bool IsDatabaseExist()
+        {
+            if (!File.Exists(databaseName))
+            {
+                return false;
+            }
+            return true;
         }
 
         private void CreateTable(string sqlString)

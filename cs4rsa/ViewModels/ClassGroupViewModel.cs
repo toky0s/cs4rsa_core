@@ -1,11 +1,14 @@
 ﻿using cs4rsa.BaseClasses;
 using cs4rsa.Models;
+using LightMessageBus.Interfaces;
 using System;
 using System.Collections.ObjectModel;
+using cs4rsa.Messages;
+using LightMessageBus;
 
 namespace cs4rsa.ViewModels
 {
-    public class ClassGroupViewModel : NotifyPropertyChangedBase
+    public class ClassGroupViewModel : NotifyPropertyChangedBase, IMessageHandler<SelectedSubjectChangeMessage>
     {
         public static EventHandler SelectedSubjectChanged;
 
@@ -66,12 +69,30 @@ namespace cs4rsa.ViewModels
 
         public ClassGroupViewModel()
         {
-            SelectedSubjectChanged += OnSelectedSubjectChanged;
+            //SelectedSubjectChanged += OnSelectedSubjectChanged;
+            MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
         }
 
         private void OnSelectedSubjectChanged(object sender, EventArgs e)
         {
             SubjectModel subjectModel = (SubjectModel)sender;
+            classGroupModels.Clear();
+            foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
+            {
+                classGroupModels.Add(classGroupModel);
+            }
+
+            teachers.Clear();
+            foreach (TeacherModel teacher in subjectModel.Teachers)
+            {
+                teachers.Add(teacher);
+            }
+            SelectedTeacher = teachers[0];
+        }
+
+        public void Handle(SelectedSubjectChangeMessage message)
+        {
+            SubjectModel subjectModel = (message.Source as DisciplinesViewModel).SelectedSubjectModel;
             classGroupModels.Clear();
             foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
             {
