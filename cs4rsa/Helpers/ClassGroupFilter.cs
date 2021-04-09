@@ -12,7 +12,7 @@ namespace cs4rsa.Helpers
 
         private Teacher teacher;
         private Phase phase = Phase.NON;
-        private List<WeekDate> weekDates = new List<WeekDate>();
+        private List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>();
         private List<Session> sessions = new List<Session>();
         private List<Place> places = new List<Place>();
 
@@ -23,7 +23,7 @@ namespace cs4rsa.Helpers
 
         public void AddTeacher(Teacher teacher) => this.teacher = teacher;
 
-        public void AddWeekDate(WeekDate weekDate) => weekDates.Add(weekDate);
+        public void AddDayOfWeek(DayOfWeek DayOfWeek) => DayOfWeeks.Add(DayOfWeek);
 
         public void AddSession(Session session) => sessions.Add(session);
 
@@ -36,9 +36,9 @@ namespace cs4rsa.Helpers
             teacher = null;
         }
 
-        public void RemoveWeekDate(WeekDate weekDate)
+        public void RemoveDayOfWeek(DayOfWeek DayOfWeek)
         {
-            weekDates.Remove(weekDate);
+            DayOfWeeks.Remove(DayOfWeek);
         }
 
         public void RemoveSession(Session session)
@@ -69,12 +69,12 @@ namespace cs4rsa.Helpers
             {
                 classGroups = classGroups.Where(classGroup => classGroup.GetPhase() == phase).ToList();
             }
-            //WeekDate
-            if (weekDates.Count != 0)
+            //DayOfWeek
+            if (DayOfWeeks.Count != 0)
             {
                 classGroups = classGroups.Where(
                     classGroup => 
-                    Checker.ThisSetInThatSet<WeekDate>(classGroup.GetWeekDates(), weekDates)
+                    Checker.ThisSetInThatSet<DayOfWeek>(classGroup.GetDayOfWeeks(), DayOfWeeks)
                 )
                 .ToList();
             }

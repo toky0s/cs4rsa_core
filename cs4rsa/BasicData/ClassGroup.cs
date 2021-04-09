@@ -42,11 +42,6 @@ namespace cs4rsa.BasicData
         private readonly List<SchoolClass> schoolClasses = new List<SchoolClass>();
         public List<SchoolClass> SchoolClasses { get { return schoolClasses; } }
 
-        public ClassGroup()
-        {
-
-        }
-
         public ClassGroup(string name, string subjectCode)
         {
             this.name = name;
@@ -64,12 +59,12 @@ namespace cs4rsa.BasicData
         /// <returns>Trả về một Schedule.</returns>
         public Schedule GetSchedule()
         {
-            Dictionary<WeekDate, List<StudyTime>> weekDateStudyTimePairs = new Dictionary<WeekDate, List<StudyTime>>();
+            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
             foreach(SchoolClass schoolClass in schoolClasses)
             {
-                schoolClass.Schedule.ScheduleTime.ToList().ForEach(pair => weekDateStudyTimePairs.Add(pair.Key, pair.Value));
+                schoolClass.Schedule.ScheduleTime.ToList().ForEach(pair => DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value));
             }
-            Schedule schedule = new Schedule(weekDateStudyTimePairs);
+            Schedule schedule = new Schedule(DayOfWeekStudyTimePairs);
             return schedule;
         }
 
@@ -88,17 +83,17 @@ namespace cs4rsa.BasicData
             return teachers;
         }
 
-        public List<WeekDate> GetWeekDates()
+        public List<DayOfWeek> GetDayOfWeeks()
         {
-            List<WeekDate> weekDates = new List<WeekDate>();
-            foreach(WeekDate weekDate in weekDates)
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>();
+            foreach(DayOfWeek DayOfWeek in DayOfWeeks)
             {
-                if (!weekDates.Contains(weekDate))
+                if (!DayOfWeeks.Contains(DayOfWeek))
                 {
-                    weekDates.Add(weekDate);
+                    DayOfWeeks.Add(DayOfWeek);
                 }
             }
-            return weekDates;
+            return DayOfWeeks;
         }
 
         public List<Session> GetSession()
@@ -122,12 +117,12 @@ namespace cs4rsa.BasicData
             return places.Distinct().ToList();
         }
 
-        public bool HaveThisTeacher(Teacher teacher)
+        public bool IsHaveThisTeacher(Teacher teacher)
         {
             return true;
         }
 
-        public bool HaveThisPhase(Phase phase)
+        public bool IsHaveThisPhase(Phase phase)
         {
             if (GetPhase() == phase)
                 return true;

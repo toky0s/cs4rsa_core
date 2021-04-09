@@ -29,15 +29,15 @@ namespace cs4rsa.BasicData
 
         // pre-load
         private List<Teacher> teachers = new List<Teacher>();
+        public List<Teacher> Teachers => teachers;
         private List<ClassGroup> classGroups = new List<ClassGroup>();
+        public List<ClassGroup> ClassGroups => classGroups;
 
         public string Name { get { return name; } set { name = value; } }
         public string SubjectCode { get { return subjectCode; } set { subjectCode = value; } }
         public string CourseId => courseId;
         public int StudyUnit => int.Parse(studyUnit);
         public string RawSoup => rawSoup;
-        public List<Teacher> Teachers => teachers;
-        public List<ClassGroup> ClassGroups => classGroups;
 
         public Subject(string name, string subjectCode, string studyUnit,
             string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,
@@ -58,7 +58,7 @@ namespace cs4rsa.BasicData
             teachers = teachers.Distinct().ToList();
         }
 
-        public string[] GetClassGroupNames()
+        private string[] GetClassGroupNames()
         {
             HtmlNode[] trTags = GetListTrTagInCalendar();
             HtmlNode[] classGroupTrTags = trTags
@@ -67,7 +67,6 @@ namespace cs4rsa.BasicData
             string[] classGroupNames = classGroupTrTags.Select(node => node.InnerText.Trim()).ToArray();
             return classGroupNames;
         }
-
 
         /// <summary>
         /// Trả về danh sách các nhóm lớp.
@@ -96,7 +95,7 @@ namespace cs4rsa.BasicData
             }
         }
 
-        public List<SchoolClass> GetSchoolClasses()
+        private List<SchoolClass> GetSchoolClasses()
         {
             List<SchoolClass> schoolClasses = new List<SchoolClass>();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())

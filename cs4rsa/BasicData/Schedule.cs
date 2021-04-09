@@ -9,41 +9,28 @@ using System.Text.RegularExpressions;
 
 namespace cs4rsa.BasicData
 {
-    /// <summary>
-    /// Đại diện cho các thứ trong một tuần học.
-    /// </summary>
-    public enum WeekDate
-    {
-        MONDAY,
-        TUSEDAY,
-        WEDNESDAY,
-        THURDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
-    }
 
     /// <summary>
     /// Đại diện cho thời gian học của một SchoolClass.
     /// </summary>
     public class Schedule
     {
-        private Dictionary<WeekDate, List<StudyTime>> scheduleTime;
-        public Dictionary<WeekDate, List<StudyTime>> ScheduleTime { get { return scheduleTime; } }
+        private Dictionary<DayOfWeek, List<StudyTime>> scheduleTime;
+        public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime { get { return scheduleTime; } }
         
-        public Schedule(Dictionary<WeekDate, List<StudyTime>> scheduleTime)
+        public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
         {
             this.scheduleTime = scheduleTime;
         }
         
-        public List<WeekDate> GetSchoolDays()
+        public List<DayOfWeek> GetSchoolDays()
         {
             return scheduleTime.Keys.ToList();
         }
 
-        public List<StudyTime> GetStudyTimesAtDay(WeekDate weekDate)
+        public List<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
         {
-            return scheduleTime[weekDate];
+            return scheduleTime[DayOfWeek];
         }
 
         /// <summary>
@@ -84,8 +71,8 @@ namespace cs4rsa.BasicData
         /// <summary>
         /// Giao hai các thứ của hai Schedule. Dùng để phát hiện xung đột giữa hai Schedule.
         /// </summary>
-        /// <returns>Trả về WeekDate mà cả hai Schedule cùng có.</returns>
-        public static List<WeekDate> GetIntersectDate(Schedule schedule1, Schedule schedule2)
+        /// <returns>Trả về DayOfWeek mà cả hai Schedule cùng có.</returns>
+        public static List<DayOfWeek> GetIntersectDate(Schedule schedule1, Schedule schedule2)
         {
             return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays()).ToList();
         }

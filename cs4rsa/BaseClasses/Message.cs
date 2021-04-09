@@ -7,11 +7,11 @@ using LightMessageBus.Interfaces;
 
 namespace cs4rsa.BaseClasses
 {
-    public class Message : IMessage
+    public class Cs4rsaMessage : IMessage
     {
         public object Source { get; set; }
 
-        public Message(object source)
+        public Cs4rsaMessage(object source)
         {
             Source = source;
         }

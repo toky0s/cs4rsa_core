@@ -8,7 +8,7 @@ using cs4rsa.BaseClasses;
 
 namespace cs4rsa.Messages
 {
-    public class SelectedSubjectChangeMessage : Message
+    public class SelectedSubjectChangeMessage : Cs4rsaMessage
     {
         public SelectedSubjectChangeMessage(object source) : base(source)
         {

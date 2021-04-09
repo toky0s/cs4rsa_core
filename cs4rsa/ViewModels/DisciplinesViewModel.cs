@@ -1,18 +1,13 @@
 ﻿using cs4rsa.BaseClasses;
 using cs4rsa.Crawler;
+using cs4rsa.Database;
+using cs4rsa.Messages;
 using cs4rsa.Models;
-using cs4rsa.ViewModels;
-using cs4rsa.Views;
-using System;
+using LightMessageBus;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using cs4rsa.Database;
-using LightMessageBus;
-using cs4rsa.Messages;
-
 
 namespace cs4rsa.ViewModels
 {
@@ -24,8 +19,7 @@ namespace cs4rsa.ViewModels
         private Cs4rsaData cs4rsaData = new Cs4rsaData();
         //Add button
         public MyICommand AddCommand { get; set; }
-
-        private bool canRunAddCommand = true;
+        private bool canRunAddCommand = false;
         public bool CanRunAddCommand
         {
             get
@@ -35,9 +29,10 @@ namespace cs4rsa.ViewModels
             set
             {
                 canRunAddCommand = value;
-                RaisePropertyChanged("CanRunAddCommand");
+                RaisePropertyChanged();
             }
         }
+        public MyICommand DeleteCommand { get; set; }
 
         //ComboBox discipline
         private DisciplineInfomationModel selectedDiscipline;
@@ -51,7 +46,6 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedDiscipline = value;
-                AddCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged("SelectedDiscipline");
             }
         }
@@ -77,7 +71,6 @@ namespace cs4rsa.ViewModels
             {
                 selectedKeyword = value;
                 AddCommand.RaiseCanExecuteChanged();
-                CheckCanRunAddCommand();
                 RaisePropertyChanged("SelectedKeyword");
             }
         }
@@ -97,7 +90,7 @@ namespace cs4rsa.ViewModels
         }
 
         //ListBox downloaded subjects
-        private ObservableCollection<SubjectModel> subjectModels =  new ObservableCollection<SubjectModel>();
+        private ObservableCollection<SubjectModel> subjectModels = new ObservableCollection<SubjectModel>();
         public ObservableCollection<SubjectModel> SubjectModels
         {
             get
@@ -135,6 +128,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedSubjectModel = value;
+                DeleteCommand.RaiseCanExecuteChanged();
                 MessageBus.Default.Publish(new SelectedSubjectChangeMessage(this));
             }
         }
@@ -161,7 +155,18 @@ namespace cs4rsa.ViewModels
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
+            DeleteCommand = new MyICommand(OnDeleteSubject, CanDeleteSubject);
             SelectedDiscipline = this.disciplines[0];
+        }
+
+        private bool CanDeleteSubject()
+        {
+            return selectedSubjectModel != null;
+        }
+
+        private void OnDeleteSubject()
+        {
+            System.Console.WriteLine(selectedSubjectModel.SubjectCode);
         }
 
         /// <summary>
@@ -171,7 +176,7 @@ namespace cs4rsa.ViewModels
         public void LoadDisciplineKeyword(string discipline)
         {
             disciplineKeywordModels.Clear();
-            foreach(DisciplineKeywordModel item in cs4rsaData.GetDisciplineKeywordModels(discipline))
+            foreach (DisciplineKeywordModel item in cs4rsaData.GetDisciplineKeywordModels(discipline))
             {
                 disciplineKeywordModels.Add(item);
             }
@@ -180,9 +185,10 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject()
         {
+            CanRunAddCommand = false; 
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
-                WorkerReportsProgress = true,  
+                WorkerReportsProgress = true,
             };
             backgroundWorker.DoWork += WorkerDownloadSubject;
             backgroundWorker.RunWorkerCompleted += WorkerComplete;
@@ -192,17 +198,27 @@ namespace cs4rsa.ViewModels
 
         private bool CanAddSubject()
         {
-            if (selectedDiscipline != null &&
-                selectedKeyword != null)
+            List<string> courseIds = subjectModels.Select(item => item.CourseId).ToList();
+            if (SelectedKeyword == null)
             {
                 return true;
             }
-            return false;
+            if (courseIds.Contains(SelectedKeyword.CourseID))
+            {
+                CanRunAddCommand = false;
+                return false;
+            }
+
+            else
+            {
+                CanRunAddCommand = true;
+                return true;
+            }
+
         }
 
         private void WorkerDownloadSubject(object sender, DoWorkEventArgs e)
         {
-            CanRunAddCommand = false;
             SubjectCrawler subjectCrawler = (SubjectCrawler)e.Argument;
             SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
             e.Result = subjectModel;
@@ -210,27 +226,13 @@ namespace cs4rsa.ViewModels
 
         private void WorkerComplete(object sender, RunWorkerCompletedEventArgs e)
         {
+            CanRunAddCommand = false;
             subjectModels.Add((SubjectModel)e.Result);
-            CheckCanRunAddCommand();
             TotalSubject = subjectModels.Count();
-
-            //total credit
             TotalCredits = 0;
             foreach (SubjectModel subject in subjectModels)
             {
                 TotalCredits += subject.StudyUnit;
-            }
-        }
-
-        private void CheckCanRunAddCommand()
-        {
-            List<string> courseIds = subjectModels.Select(item => item.CourseId).ToList();
-            if (selectedKeyword != null)
-            {
-                if (courseIds.Contains(selectedKeyword.CourseID))
-                    CanRunAddCommand = false;
-                else
-                    CanRunAddCommand = true;
             }
         }
     }

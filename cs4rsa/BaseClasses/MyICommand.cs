@@ -33,11 +33,10 @@ namespace cs4rsa.BaseClasses
                 return _TargetCanExecuteMethod();
             }
 
-            if (_TargetExecuteMethod != null)
+            if (_TargetExecuteMethod == null)
             {
                 return true;
             }
-
             return false;
         }
 		

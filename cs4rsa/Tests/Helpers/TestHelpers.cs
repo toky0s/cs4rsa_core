@@ -15,85 +15,85 @@ namespace cs4rsa.Tests.Helpers
         [Test]
         public void TestThisSetInThatSet1()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.FRIDAY,
-                WeekDate.MONDAY
+                DayOfWeek.Friday,
+                DayOfWeek.Monday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>
             {
-                WeekDate.MONDAY,
-                WeekDate.THURDAY,
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
+                DayOfWeek.Monday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
             };
-            Assert.AreEqual(false, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            Assert.AreEqual(false, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet2()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.FRIDAY,
-                WeekDate.MONDAY
+                DayOfWeek.Friday,
+                DayOfWeek.Monday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>
             {
-                WeekDate.MONDAY,
-                WeekDate.THURDAY,
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.FRIDAY
+                DayOfWeek.Monday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Friday
             };
-            Assert.AreEqual(false, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            Assert.AreEqual(false, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet3()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>
             {
-                WeekDate.MONDAY,
-                WeekDate.THURDAY,
-                WeekDate.FRIDAY
+                DayOfWeek.Monday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Friday
             };
-            Assert.AreEqual(false, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            Assert.AreEqual(false, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet4()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.THURDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>
             {
-                WeekDate.THURDAY,
-                WeekDate.WEDNESDAY
+                DayOfWeek.Thursday,
+                DayOfWeek.Wednesday
             };
-            Assert.AreEqual(true, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            Assert.AreEqual(true, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet5()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.THURDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>();
-            Assert.AreEqual(true, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>();
+            Assert.AreEqual(true, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
@@ -110,40 +110,40 @@ namespace cs4rsa.Tests.Helpers
         [Test]
         public void TestThisSetInThatSet7()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.THURDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>();
-            Assert.AreEqual(true, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>();
+            Assert.AreEqual(true, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet8()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.THURDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>();
-            Assert.AreEqual(true, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>();
+            Assert.AreEqual(true, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
 
         [Test]
         public void TestThisSetInThatSet9()
         {
-            List<WeekDate> weekDates = new List<WeekDate>
+            List<DayOfWeek> DayOfWeeks = new List<DayOfWeek>
             {
-                WeekDate.TUSEDAY,
-                WeekDate.WEDNESDAY,
-                WeekDate.THURDAY
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday
             };
-            List<WeekDate> weekDates2 = new List<WeekDate>();
-            Assert.AreEqual(true, Checker.ThisSetInThatSet<WeekDate>(weekDates, weekDates2));
+            List<DayOfWeek> DayOfWeeks2 = new List<DayOfWeek>();
+            Assert.AreEqual(true, Checker.ThisSetInThatSet<DayOfWeek>(DayOfWeeks, DayOfWeeks2));
         }
     }
 }

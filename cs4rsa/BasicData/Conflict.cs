@@ -9,22 +9,22 @@ namespace cs4rsa.BasicData
 
     /// <summary>
     /// ConflictTime đại diện cho một khoảng thời gian xung đột giữa hai ClassGroup.
-    /// ConflictTime sẽ bao gồm các một Dict với các key là các WeekDate có xung đột
+    /// ConflictTime sẽ bao gồm các một Dict với các key là các DayOfWeek có xung đột
     /// và các value là StudyTimeIntersect đại diện cho khoảng thời gian gây xung đột trong thứ đó.
     /// </summary>
     class ConflictTime
     {
-        private readonly Dictionary<WeekDate, List<StudyTimeIntersect>> conflictTimes = new Dictionary<WeekDate, List<StudyTimeIntersect>>();
-        public Dictionary<WeekDate, List<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
+        private readonly Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new Dictionary<DayOfWeek, List<StudyTimeIntersect>>();
+        public Dictionary<DayOfWeek, List<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
 
-        public ConflictTime(Dictionary<WeekDate, List<StudyTimeIntersect>> conflictTimes)
+        public ConflictTime(Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes)
         {
             this.conflictTimes = conflictTimes;
         }
 
-        public List<StudyTimeIntersect> GetStudyTimeIntersects(WeekDate weekDate)
+        public List<StudyTimeIntersect> GetStudyTimeIntersects(DayOfWeek DayOfWeek)
         {
-            return conflictTimes[weekDate];
+            return conflictTimes[DayOfWeek];
         }
     }
 
@@ -49,20 +49,20 @@ namespace cs4rsa.BasicData
             {
                 Schedule scheduleClassGroup1 = classGroup1.GetSchedule();
                 Schedule scheduleClassGroup2 = classGroup2.GetSchedule();
-                List<WeekDate> weekDates = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
+                List<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
                 // Check date
-                if (weekDates.Count > 0)
+                if (DayOfWeeks.Count > 0)
                 {
-                    Dictionary<WeekDate, List<StudyTimeIntersect>> conflictTimes = new Dictionary<WeekDate, List<StudyTimeIntersect>>();
+                    Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new Dictionary<DayOfWeek, List<StudyTimeIntersect>>();
                     //check time
-                    foreach(WeekDate weekDate in weekDates)
+                    foreach(DayOfWeek DayOfWeek in DayOfWeeks)
                     {
-                        List<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(weekDate);
-                        List<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(weekDate);
+                        List<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(DayOfWeek);
+                        List<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(DayOfWeek);
                         studyTimesClassGroup1.Concat(studyTimesClassGroup2);
                         List<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimesClassGroup1);
                         List<StudyTimeIntersect> studyTimeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(studyTimePairs);
-                        conflictTimes.Add(weekDate, studyTimeIntersects);
+                        conflictTimes.Add(DayOfWeek, studyTimeIntersects);
                     }
                     return new ConflictTime(conflictTimes);
                 }

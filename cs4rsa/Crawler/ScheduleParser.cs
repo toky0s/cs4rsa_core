@@ -41,24 +41,24 @@ namespace cs4rsa.Crawler
             string[] dataFromTrTag = ExtractDataFromTrTag(tdTag);
             string[] times = CleanTimeItem(dataFromTrTag);
             // Convert to generic data;
-            Dictionary<WeekDate, List<StudyTime>>  scheduleTime = new Dictionary<WeekDate, List<StudyTime>>();
+            Dictionary<DayOfWeek, List<StudyTime>>  scheduleTime = new Dictionary<DayOfWeek, List<StudyTime>>();
             Regex regexDate = new Regex(@"^T[2-7]:$|^CN:$");
             Regex regexTime = new Regex(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
             int i = 0;
-            WeekDate weekDate = new WeekDate();
-            Dictionary<WeekDate, List<string>> dateTimeStringPairs = new Dictionary<WeekDate, List<string>>();
+            DayOfWeek dayOfWeek = DayOfWeek.Sunday;
+            Dictionary<DayOfWeek, List<string>> dateTimeStringPairs = new Dictionary<DayOfWeek, List<string>>();
             while (i < times.Length)
             {
                 if (regexDate.IsMatch(times[i]))
                 {
-                    weekDate = DateToDateWeek(times[i]);
+                    dayOfWeek = DateToDateWeek(times[i]);
                     List<string> timeStrings = new List<string>();
-                    dateTimeStringPairs.Add(weekDate, timeStrings);
+                    dateTimeStringPairs.Add(dayOfWeek, timeStrings);
                 }
                 if (regexTime.IsMatch(times[i]))
                 {
-                    dateTimeStringPairs[weekDate].Add(times[i]);
+                    dateTimeStringPairs[dayOfWeek].Add(times[i]);
                 }
                 i++;
             }
@@ -119,7 +119,7 @@ namespace cs4rsa.Crawler
         /// </summary>
         /// <param name="times">{"T2:", "15:15", "17:15", "T5:", "15:15", "17:15"}</param>
         /// <returns>Một list các index của chuỗi date.</returns>
-        private List<int> IndexWeekDate(string[] times)
+        private List<int> IndexDayOfWeek(string[] times)
         {
             Regex regex = new Regex(@"^T[2-7]:$|^CN:$");
             List<int> output = new List<int>();
@@ -138,24 +138,24 @@ namespace cs4rsa.Crawler
         /// </summary>
         /// <param name="date">T2: T4: T5: T6: T7: CN:</param>
         /// <returns>Enum Week.</returns>
-        private WeekDate DateToDateWeek(string date)
+        private DayOfWeek DateToDateWeek(string date)
         {
             switch (date)
             {
                 case "T2:":
-                    return WeekDate.MONDAY;
+                    return DayOfWeek.Monday;
                 case "T3:":
-                    return WeekDate.TUSEDAY;
+                    return DayOfWeek.Tuesday;
                 case "T4:":
-                    return WeekDate.WEDNESDAY;
+                    return DayOfWeek.Wednesday;
                 case "T5:":
-                    return WeekDate.THURDAY;
+                    return DayOfWeek.Thursday;
                 case "T6:":
-                    return WeekDate.FRIDAY;
+                    return DayOfWeek.Friday;
                 case "T7:":
-                    return WeekDate.SATURDAY;
+                    return DayOfWeek.Saturday;
             }
-            return WeekDate.SUNDAY;
+            return DayOfWeek.Sunday;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace cs4rsa.Tests.Crawler
         public void TestGetStudyTime1()
         {
             Schedule sd1 = scheduleParser1.ToSchedule();
-            StudyTime std1 = sd1.GetStudyTimesAtDay(WeekDate.MONDAY)[0];
+            StudyTime std1 = sd1.GetStudyTimesAtDay(DayOfWeek.Monday)[0];
             Assert.AreEqual("13:00", std1.StartAsString);
             Assert.AreEqual("15:00", std1.EndAsString);
         }
@@ -66,7 +66,7 @@ namespace cs4rsa.Tests.Crawler
         public void TestGetStudyTime2()
         {
             Schedule sd2 = scheduleParser2.ToSchedule();
-            StudyTime std2 = sd2.GetStudyTimesAtDay(WeekDate.THURDAY)[0];
+            StudyTime std2 = sd2.GetStudyTimesAtDay(DayOfWeek.Thursday)[0];
             Assert.AreEqual("15:15", std2.StartAsString);
             Assert.AreEqual("17:15", std2.EndAsString);
         }
@@ -75,7 +75,7 @@ namespace cs4rsa.Tests.Crawler
         public void TestGetStudyTime3()
         {
             Schedule sd3 = scheduleParser3.ToSchedule();
-            StudyTime std3 = sd3.GetStudyTimesAtDay(WeekDate.WEDNESDAY)[0];
+            StudyTime std3 = sd3.GetStudyTimesAtDay(DayOfWeek.Wednesday)[0];
             Assert.AreEqual("15:15", std3.StartAsString);
             Assert.AreEqual("17:15", std3.EndAsString);
         }
@@ -84,7 +84,7 @@ namespace cs4rsa.Tests.Crawler
         public void TestGetStudyTime4Start()
         {
             Schedule sd4 = scheduleParser4.ToSchedule();
-            StudyTime std4 = sd4.GetStudyTimesAtDay(WeekDate.WEDNESDAY)[0];
+            StudyTime std4 = sd4.GetStudyTimesAtDay(DayOfWeek.Wednesday)[0];
             Assert.AreEqual("13:00", std4.StartAsString);
         }
 
@@ -92,7 +92,7 @@ namespace cs4rsa.Tests.Crawler
         public void TestGetStudyTime4End()
         {
             Schedule sd4 = scheduleParser4.ToSchedule();
-            StudyTime std4 = sd4.GetStudyTimesAtDay(WeekDate.WEDNESDAY)[0];
+            StudyTime std4 = sd4.GetStudyTimesAtDay(DayOfWeek.Wednesday)[0];
             Assert.AreEqual("15:00", std4.EndAsString);
         }
     }

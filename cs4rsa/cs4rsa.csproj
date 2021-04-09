@@ -295,6 +295,7 @@
     <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag1.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Commands\" />
     <Folder Include="Tests\Database\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

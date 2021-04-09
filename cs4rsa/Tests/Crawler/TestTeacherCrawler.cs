@@ -13,14 +13,6 @@ namespace cs4rsa.Tests.Crawler
     class TestTeacherCrawler
     {
         [Test]
-        public void GetID()
-        {
-            string url = @"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=010132007&classid=139631&academicleveltypeid=&curriculumid=";
-            TeacherCrawler teacherCrawler = new TeacherCrawler(url);
-            Assert.AreEqual("010132007", teacherCrawler.ToTeacher().Id);
-        }
-
-        [Test]
         public void GetTeacher1()
         {
             string intructionId = "171111012";
