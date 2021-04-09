@@ -157,6 +157,10 @@
     <Compile Include="BaseClasses\Message.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Database\Cs4rsaDatabase.cs" />
+    <Compile Include="Database\TeacherDatabase.cs" />
+    <Compile Include="Implements\TeacherSaver.cs" />
+    <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
     <Compile Include="BasicData\StudyWeek.cs" />
     <Compile Include="BasicData\Teacher.cs" />
@@ -188,9 +192,16 @@
     <Compile Include="Tests\Helpers\TestHelpers.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\DisciplinesViewModel.cs" />
+    <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
     <Compile Include="ViewModels\SemesterInfoViewModel.cs" />
+    <Compile Include="Views\ChoicedSession.xaml.cs">
+      <DependentUpon>ChoicedSession.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ClassGroupSession.xaml.cs">
       <DependentUpon>ClassGroupSession.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ScheduleTable.xaml.cs">
+      <DependentUpon>ScheduleTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchSession.xaml.cs">
       <DependentUpon>SearchSession.xaml</DependentUpon>
@@ -217,7 +228,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ChoicedSession.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ClassGroupSession.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ScheduleTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

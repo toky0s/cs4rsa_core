@@ -73,23 +73,6 @@ namespace cs4rsa.ViewModels
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
         }
 
-        private void OnSelectedSubjectChanged(object sender, EventArgs e)
-        {
-            SubjectModel subjectModel = (SubjectModel)sender;
-            classGroupModels.Clear();
-            foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
-            {
-                classGroupModels.Add(classGroupModel);
-            }
-
-            teachers.Clear();
-            foreach (TeacherModel teacher in subjectModel.Teachers)
-            {
-                teachers.Add(teacher);
-            }
-            SelectedTeacher = teachers[0];
-        }
-
         public void Handle(SelectedSubjectChangeMessage message)
         {
             SubjectModel subjectModel = (message.Source as DisciplinesViewModel).SelectedSubjectModel;

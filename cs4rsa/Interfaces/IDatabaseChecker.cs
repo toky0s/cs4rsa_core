@@ -8,5 +8,6 @@ namespace cs4rsa.Interfaces
 {
     interface IDatabaseChecker
     {
+        bool IsExist();
     }
 }

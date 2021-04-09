@@ -135,7 +135,6 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedSubjectModel = value;
-                //ClassGroupViewModel.SelectedSubjectChanged(value, new EventArgs());
                 MessageBus.Default.Publish(new SelectedSubjectChangeMessage(this));
             }
         }
@@ -229,13 +228,9 @@ namespace cs4rsa.ViewModels
             if (selectedKeyword != null)
             {
                 if (courseIds.Contains(selectedKeyword.CourseID))
-                {
                     CanRunAddCommand = false;
-                }
                 else
-                {
                     CanRunAddCommand = true;
-                }
             }
         }
     }

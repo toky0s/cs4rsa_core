@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cs4rsa.BasicData;
+﻿using cs4rsa.BasicData;
 
 namespace cs4rsa.Models
 {
@@ -93,16 +88,19 @@ namespace cs4rsa.Models
 
         public TeacherModel(Teacher teacher)
         {
-            this.id = teacher.Id;
-            this.name = teacher.Name;
-            this.sex = teacher.Sex;
-            this.place = teacher.Place;
-            this.degree = teacher.Degree;
-            this.workUnit = teacher.WorkUnit;
-            this.position = teacher.Position;
-            this.subject = teacher.Subject;
-            this.form = teacher.Form;
-            this.teachedSubjects = teacher.TeachedSubjects;
+            if (teacher != null)
+            {
+                this.id = teacher.Id;
+                this.name = teacher.Name;
+                this.sex = teacher.Sex;
+                this.place = teacher.Place;
+                this.degree = teacher.Degree;
+                this.workUnit = teacher.WorkUnit;
+                this.position = teacher.Position;
+                this.subject = teacher.Subject;
+                this.form = teacher.Form;
+                this.teachedSubjects = teacher.TeachedSubjects;
+            }
         }
     }
 }

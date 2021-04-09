@@ -1,30 +1,64 @@
-﻿using System;
+﻿using cs4rsa.BasicData;
+using cs4rsa.Database;
+using cs4rsa.Interfaces;
+using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
-using cs4rsa.BasicData;
-using cs4rsa.Helpers;
 
 namespace cs4rsa.Crawler
 {
     public class TeacherCrawler
     {
+        private Cs4rsaDatabase cs4RsaDatabase;
+        private bool SaveDatabase = false;
+        private bool IsGetTeacherFromDataBase = false;
+        private string intructorId;
+        private ITeacherSaver teacherSaver;
+        public ITeacherSaver TeacherSaver
+        {
+            get
+            {
+                return teacherSaver;
+            }
+            set
+            {
+                SaveDatabase = true;
+                teacherSaver = value;
+            }
+        }
+
         //http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=010132007&classid=139631&academicleveltypeid=&curriculumid=
         private HtmlDocument document;
         public TeacherCrawler(string url)
         {
-            HtmlWeb web = new HtmlWeb();
-            if (url==null)
+            if (url != null)
             {
-                return;
+                intructorId = GetIntructorId(url);
+                cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.connectString);
+                if (ThisTeacherIsNotInDatabase(intructorId))
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    document = web.Load(url);
+                }
+                else
+                {
+                    IsGetTeacherFromDataBase = true;
+                }
             }
+        }
+
+        public TeacherCrawler(string semesterValue, string intructorId)
+        {
+            HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan={semesterValue}&intructorid={intructorId}";
+            HtmlWeb web = new HtmlWeb();
             document = web.Load(url);
         }
 
         public Teacher ToTeacher()
         {
+            Teacher teacher;
             if (document != null)
             {
                 List<HtmlNode> infoNodes = document.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]").ToList();
@@ -40,9 +74,37 @@ namespace cs4rsa.Crawler
                 string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
                 List<HtmlNode> liNodes = document.DocumentNode.SelectNodes(xpathLiNode).ToList();
                 string[] teachedSubjects = liNodes.Select(item => item.InnerText).ToArray();
-                return new Teacher(id, name, sex, place, degree, workUnit, position, subject, form, teachedSubjects);
+                teacher = new Teacher(id, name, sex, place, degree, workUnit, position, subject, form, teachedSubjects);
+                if (SaveDatabase)
+                {
+                    teacherSaver.Save(teacher);
+                }
+                return teacher;
+            }
+            if (IsGetTeacherFromDataBase)
+            {
+                TeacherDatabase teacherDatabase = new TeacherDatabase(intructorId);
+                teacher = teacherDatabase.ToTeacher();
+                return teacher;
             }
             return null;
-        } 
+        }
+
+        private string GetIntructorId(string url)
+        {
+            string[] slideChars = { "&" };
+            string[] separatingStrings = { "=" };
+            string intructorIdParam = url.Split(slideChars, StringSplitOptions.RemoveEmptyEntries)[2];
+            return intructorIdParam.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)[1];
+        }
+
+        private bool ThisTeacherIsNotInDatabase(string intructorId)
+        {
+            string countQueryString = $@"SELECT count(id) from teacher WHERE id like {intructorId}";
+            long result = cs4RsaDatabase.CountSomething(countQueryString);
+            if (result == 0)
+                return true;
+            return false;
+        }
     }
 }

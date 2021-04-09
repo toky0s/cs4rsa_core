@@ -7,8 +7,8 @@ namespace cs4rsa.Database
 {
     public class Cs4rsaData
     {
-        private readonly string databaseName = "cs4rsadb.db";
-        private readonly string connectString;
+        private static readonly string databaseName = "cs4rsadb.db";
+        public static readonly string connectString = $"Data Source={databaseName};Version=3;";
 
         private readonly string SQL_DISCIPLINE_TABLE =
             @"create table IF NOT EXISTS discipline (
@@ -26,20 +26,37 @@ namespace cs4rsa.Database
                 FOREIGN KEY (discipline_id) REFERENCES discipline (id)
             );";
 
+        private readonly string SQL_TEACHER_TABLE =
+            @"create table if not exists teacher (
+                id text primary key,
+                name text,
+                sex text,
+                place text,
+                academic_rank text,
+                unit text,
+                position text,
+                subject text,
+                form text
+            )";
+
+        private readonly string SQL_TEACHER_DETAIL_TABLE =
+            @"create table if not exists teacher_detail (
+                id integer primary key,
+                teacher_id text,
+                subject_name text,
+                FOREIGN KEY (teacher_id) REFERENCES teacher (id)
+            )";
+
         public Cs4rsaData()
         {
             if (!File.Exists(databaseName))
             {
-                System.Console.WriteLine("Tao database");
                 SQLiteConnection.CreateFile(databaseName);
-                connectString = $"Data Source={databaseName};Version=3;";
-                CreateTable(SQL_DISCIPLINE_TABLE);
-                CreateTable(SQL_KEYWORD_TABLE);
             }
-            else
-            {
-                connectString = $"Data Source={databaseName};Version=3;";
-            }
+            CreateTable(SQL_DISCIPLINE_TABLE);
+            CreateTable(SQL_KEYWORD_TABLE);
+            CreateTable(SQL_TEACHER_TABLE);
+            CreateTable(SQL_TEACHER_DETAIL_TABLE);
         }
 
         public void CreateDatabaseIfNotExist()

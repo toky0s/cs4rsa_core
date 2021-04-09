@@ -1,11 +1,11 @@
-﻿using cs4rsa.Crawler;
-using cs4rsa.Helpers;
-using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using cs4rsa.Crawler;
+using cs4rsa.Helpers;
+using cs4rsa.Implements;
+using HtmlAgilityPack;
 
 namespace cs4rsa.BasicData
 {
@@ -119,7 +119,9 @@ namespace cs4rsa.BasicData
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
             string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
-            Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
+            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL);
+            teacherCrawler.TeacherSaver = new TeacherSaver();
+            Teacher teacher = teacherCrawler.ToTeacher();
             teachers.Add(teacher);
 
             string classGroupName = aTag.InnerText.Trim();
@@ -153,34 +155,6 @@ namespace cs4rsa.BasicData
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teacher, registrationStatus, implementationStatus);
             return schoolClass;
-        }
-
-        /// <summary>
-        /// Phương thức này sẽ tự động chạy ngay sau khi Subject được khởi tạo
-        /// nhằm load thông tin của Teacher vào ComboBox giúp trải nghiệm người dùng
-        /// được cải thiện hơn.
-        /// </summary>
-        /// <returns></returns>
-        private void GetTeachers()
-        {
-            if (teachers.Count() == 0)
-            {
-                foreach (HtmlNode trTag in GetTrTagsWithClassLop())
-                {
-                    HtmlNode tdTag = trTag.SelectSingleNode("td");
-                    HtmlNode aTag = tdTag.SelectSingleNode("a");
-
-                    string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
-                    string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
-                    if (teacherDetailPageURL==null)
-                    {
-                        return;
-                    }
-                    Teacher teacher = new TeacherCrawler(teacherDetailPageURL).ToTeacher();
-                    teachers.Add(teacher);
-                    teachers = teachers.Distinct().ToList<Teacher>();
-                }
-            }
         }
 
         private HtmlNode[] GetTrTagsWithClassLop()
