@@ -118,8 +118,10 @@ namespace cs4rsa.BasicData
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
             string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
-            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL);
-            teacherCrawler.TeacherSaver = new TeacherSaver();
+            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL)
+            {
+                TeacherSaver = new TeacherSaver()
+            };
             Teacher teacher = teacherCrawler.ToTeacher();
             teachers.Add(teacher);
 

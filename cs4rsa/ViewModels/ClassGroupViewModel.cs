@@ -1,10 +1,10 @@
 ﻿using cs4rsa.BaseClasses;
+using cs4rsa.Messages;
 using cs4rsa.Models;
+using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
 using System.Collections.ObjectModel;
-using cs4rsa.Messages;
-using LightMessageBus;
 
 namespace cs4rsa.ViewModels
 {
@@ -37,6 +37,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedClassGroup = value;
                 RaisePropertyChanged();
+                MessageBus.Default.Publish(new ClassGroupAddedMessage(this));
             }
         }
 
@@ -69,7 +70,6 @@ namespace cs4rsa.ViewModels
 
         public ClassGroupViewModel()
         {
-            //SelectedSubjectChanged += OnSelectedSubjectChanged;
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
         }
 
@@ -77,17 +77,20 @@ namespace cs4rsa.ViewModels
         {
             SubjectModel subjectModel = (message.Source as DisciplinesViewModel).SelectedSubjectModel;
             classGroupModels.Clear();
-            foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
-            {
-                classGroupModels.Add(classGroupModel);
-            }
-
             teachers.Clear();
-            foreach (TeacherModel teacher in subjectModel.Teachers)
+            if (subjectModel != null)
             {
-                teachers.Add(teacher);
+                foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
+                {
+                    classGroupModels.Add(classGroupModel);
+                }
+
+                foreach (TeacherModel teacher in subjectModel.Teachers)
+                {
+                    teachers.Add(teacher);
+                }
+                SelectedTeacher = teachers[0];
             }
-            SelectedTeacher = teachers[0];
         }
     }
 }

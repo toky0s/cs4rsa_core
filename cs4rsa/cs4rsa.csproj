@@ -173,6 +173,7 @@
     <Compile Include="Interfaces\IDisciplineSaver.cs" />
     <Compile Include="Interfaces\ITeacherSaver.cs" />
     <Compile Include="Models\ClassGroupModel.cs" />
+    <Compile Include="Models\ConflictModel.cs" />
     <Compile Include="Models\DisciplineInfomationModel.cs" />
     <Compile Include="Models\DisciplineKeywordModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Tests\Helpers\TestBasicDataConverter.cs" />
     <Compile Include="Tests\Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Tests\Helpers\TestHelpers.cs" />
+    <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\DisciplinesViewModel.cs" />
     <Compile Include="ViewModels\ScheduleTableViewModel.cs" />

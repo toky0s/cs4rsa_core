@@ -85,7 +85,6 @@ namespace cs4rsa.ViewModels
             set
             {
                 disciplineKeywordModels = value;
-                RaisePropertyChanged("DisciplineKeywordModels");
             }
         }
 
@@ -100,7 +99,6 @@ namespace cs4rsa.ViewModels
             set
             {
                 subjectModels = value;
-                RaisePropertyChanged("SubjectModels");
             }
         }
 
@@ -166,7 +164,10 @@ namespace cs4rsa.ViewModels
 
         private void OnDeleteSubject()
         {
-            System.Console.WriteLine(selectedSubjectModel.SubjectCode);
+            subjectModels.Remove(selectedSubjectModel);
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
+            AddCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject()
         {
-            CanRunAddCommand = false; 
+            CanRunAddCommand = false;
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -214,7 +215,6 @@ namespace cs4rsa.ViewModels
                 CanRunAddCommand = true;
                 return true;
             }
-
         }
 
         private void WorkerDownloadSubject(object sender, DoWorkEventArgs e)
@@ -228,7 +228,18 @@ namespace cs4rsa.ViewModels
         {
             CanRunAddCommand = false;
             subjectModels.Add((SubjectModel)e.Result);
-            TotalSubject = subjectModels.Count();
+            TotalSubject = subjectModels.Count;
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
+        }
+
+        private void UpdateSubjectAmount()
+        {
+            TotalSubject = subjectModels.Count;
+        }
+
+        private void UpdateCreditTotal()
+        {
             TotalCredits = 0;
             foreach (SubjectModel subject in subjectModels)
             {

@@ -18,6 +18,14 @@ namespace cs4rsa.Models
             }
         }
 
+        public string SubjectCode
+        {
+            get
+            {
+                return classGroup.SubjectCode;
+            }
+        }
+
         public ClassGroupModel(ClassGroup classGroup)
         {
             this.classGroup = classGroup;

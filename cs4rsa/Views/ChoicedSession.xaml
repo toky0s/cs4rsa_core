@@ -17,7 +17,15 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Choiced"
                            Grid.Row="0"></TextBlock>
-        <ListBox Grid.Row="1"></ListBox>
+        <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding ClassGroupModels}"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <TextBlock Text="Conflicts"
                            Grid.Row="2"></TextBlock>
         <ListBox Grid.Row="3"></ListBox>

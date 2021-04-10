@@ -30,7 +30,7 @@ namespace cs4rsa.Views
 
         private void DisciplineComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = disciplinesViewModel;
+            DataContext = disciplinesViewModel;
         }
 
         private void DisciplineComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

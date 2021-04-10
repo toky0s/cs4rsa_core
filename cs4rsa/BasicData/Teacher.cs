@@ -102,8 +102,7 @@
 
         public override bool Equals(object obj)
         {
-            var teacher = obj as Teacher;
-            if (teacher == null)
+            if (!(obj is Teacher teacher))
             {
                 return false;
             }

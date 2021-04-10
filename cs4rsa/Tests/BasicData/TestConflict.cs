@@ -17,7 +17,6 @@ namespace cs4rsa.Tests.BasicData
         {
             SubjectCrawler sjc1 = new SubjectCrawler("CS", "414");
             SubjectCrawler sjc2 = new SubjectCrawler("CR", "250");
-
         }
     }
 }
