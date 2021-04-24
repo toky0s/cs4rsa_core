@@ -159,6 +159,7 @@
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
+    <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Tests\Helpers\TestBasicDataConverter.cs" />
     <Compile Include="Tests\Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Tests\Helpers\TestHelpers.cs" />
+    <Compile Include="Tests\Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\DisciplinesViewModel.cs" />
