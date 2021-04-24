@@ -154,13 +154,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BaseClasses\Message.cs" />
+    <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
+    <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
     <Compile Include="BasicData\StudyWeek.cs" />
     <Compile Include="BasicData\Teacher.cs" />
