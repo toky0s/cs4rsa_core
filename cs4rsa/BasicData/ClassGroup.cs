@@ -145,12 +145,4 @@ namespace cs4rsa.BasicData
             return studyWeek;
         }
     }
-
-    /// <summary>
-    /// Class này bao gồm các phương thức thao tác với các ClassGroup.
-    /// </summary>
-    public class ClassGroupManipulation
-    {
-
-    }
 }

@@ -15,91 +15,31 @@ namespace cs4rsa.Models
         private readonly string form;
         private readonly string[] teachedSubjects;
 
-        public string Id
-        {
-            get
-            {
-                return id;
-            }
-        }
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-        }
-        public string Sex
-        {
-            get
-            {
-                return sex;
-            }
-        }
-        public string Place
-        {
-            get
-            {
-                return place;
-            }
-        }
-        public string Degree
-        {
-            get
-            {
-                return degree;
-            }
-        }
-        public string WorkUnit
-        {
-            get
-            {
-                return workUnit;
-            }
-        }
-        public string Position
-        {
-            get
-            {
-                return position;
-            }
-        }
-        public string Subject
-        {
-            get
-            {
-                return subject;
-            }
-        }
-        public string Form
-        {
-            get
-            {
-                return form;
-            }
-        }
-        public string[] TeachedSubjects
-        {
-            get
-            {
-                return teachedSubjects;
-            }
-        }
+        public string Id => id;
+        public string Name => name;
+        public string Sex => sex;
+        public string Place => place;
+        public string Degree => degree;
+        public string WorkUnit => workUnit;
+        public string Position => position;
+        public string Subject => subject;
+        public string Form => form;
+        public string[] TeachedSubjects => teachedSubjects;
 
         public TeacherModel(Teacher teacher)
         {
             if (teacher != null)
             {
-                this.id = teacher.Id;
-                this.name = teacher.Name;
-                this.sex = teacher.Sex;
-                this.place = teacher.Place;
-                this.degree = teacher.Degree;
-                this.workUnit = teacher.WorkUnit;
-                this.position = teacher.Position;
-                this.subject = teacher.Subject;
-                this.form = teacher.Form;
-                this.teachedSubjects = teacher.TeachedSubjects;
+                id = teacher.Id;
+                name = teacher.Name;
+                sex = teacher.Sex;
+                place = teacher.Place;
+                degree = teacher.Degree;
+                workUnit = teacher.WorkUnit;
+                position = teacher.Position;
+                subject = teacher.Subject;
+                form = teacher.Form;
+                teachedSubjects = teacher.TeachedSubjects;
             }
         }
     }

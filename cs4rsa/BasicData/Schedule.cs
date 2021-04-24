@@ -60,6 +60,21 @@ namespace cs4rsa.BasicData
             sessions = sessions.Distinct().ToList();
             return sessions;
         }
+
+
+        /// <summary>
+        /// Lấy ra tất cả StudyTime bất kế DayOfWeek.
+        /// </summary>
+        /// <returns></returns>
+        public List<StudyTime> GetStudyTimes()
+        {
+            List<StudyTime> studyTimes = new List<StudyTime>();
+            foreach (List<StudyTime> item in scheduleTime.Values)
+            {
+                studyTimes.AddRange(item);
+            }
+            return studyTimes.Distinct().ToList();
+        }
     }
 
     /// <summary>

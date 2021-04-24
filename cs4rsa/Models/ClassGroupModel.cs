@@ -9,18 +9,16 @@ namespace cs4rsa.Models
 {
     public class ClassGroupModel
     {
-        private readonly ClassGroup classGroup;
+        private ClassGroup classGroup;
 
-        public readonly string Name;
-        public readonly string SubjectCode;
-        public readonly Phase Phase;
+        public string Name => classGroup.Name;
+        public string SubjectCode => classGroup.SubjectCode;
+        public Phase Phase => classGroup.GetPhase();
+        public Schedule Schedule => classGroup.GetSchedule();
 
         public ClassGroupModel(ClassGroup classGroup)
         {
             this.classGroup = classGroup;
-            Name = classGroup.Name;
-            SubjectCode = classGroup.SubjectCode;
-            Phase = classGroup.GetPhase();
         }
     }
 }
