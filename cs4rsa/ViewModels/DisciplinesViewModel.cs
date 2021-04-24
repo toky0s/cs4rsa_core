@@ -164,6 +164,7 @@ namespace cs4rsa.ViewModels
 
         private void OnDeleteSubject()
         {
+            MessageBus.Default.Publish<DeleteSubjectMessage>(new DeleteSubjectMessage(selectedSubjectModel));
             subjectModels.Remove(selectedSubjectModel);
             UpdateCreditTotal();
             UpdateSubjectAmount();

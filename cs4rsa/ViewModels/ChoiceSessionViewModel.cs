@@ -8,7 +8,9 @@ using System.Collections;
 
 namespace cs4rsa.ViewModels
 {
-    class ChoiceSessionViewModel : NotifyPropertyChangedBase, IMessageHandler<ClassGroupAddedMessage>
+    class ChoiceSessionViewModel : NotifyPropertyChangedBase, 
+        IMessageHandler<ClassGroupAddedMessage>,
+        IMessageHandler<DeleteSubjectMessage>
     {
         private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
@@ -26,6 +28,7 @@ namespace cs4rsa.ViewModels
         public ChoiceSessionViewModel()
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
         }
 
         public void Handle(ClassGroupAddedMessage message)
@@ -56,6 +59,19 @@ namespace cs4rsa.ViewModels
             {
                 if (classGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
                     classGroupModels[i] = classGroupModel;
+            }
+        }
+
+        public void Handle(DeleteSubjectMessage message)
+        {
+            SubjectModel subjectModel = message.Source;
+            foreach(ClassGroupModel classGroupModel in classGroupModels)
+            {
+                if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
+                {
+                    classGroupModels.Remove(classGroupModel);
+                    return;
+                }
             }
         }
     }
