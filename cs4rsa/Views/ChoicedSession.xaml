@@ -28,7 +28,15 @@
         </ListBox>
         <TextBlock Text="Conflicts"
                            Grid.Row="2"></TextBlock>
-        <ListBox Grid.Row="3"></ListBox>
+        <ListBox Grid.Row="3"
+                 ItemsSource="{Binding ConflictModels}"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <TextBlock Text="Statistics"
                            Grid.Row="4"></TextBlock>
         <ListBox Grid.Row="5"></ListBox>

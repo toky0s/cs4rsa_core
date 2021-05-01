@@ -22,14 +22,14 @@
                   x:Name="DataGridFirstPhase"
                   ItemsSource="{Binding}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Times\Days"></DataGridTextColumn>
-                <DataGridTextColumn Header="T2"></DataGridTextColumn>
-                <DataGridTextColumn Header="T3"></DataGridTextColumn>
-                <DataGridTextColumn Header="T4"></DataGridTextColumn>
-                <DataGridTextColumn Header="T5"></DataGridTextColumn>
-                <DataGridTextColumn Header="T6"></DataGridTextColumn>
-                <DataGridTextColumn Header="T7"></DataGridTextColumn>
-                <DataGridTextColumn Header="CN"></DataGridTextColumn>
+                <DataGridTextColumn Header="Times\Days" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T5" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Text="Phase 2 (10-18)"
@@ -38,14 +38,14 @@
                   x:Name="DataGridSecondPhase"
                   ItemsSource="{Binding}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Times\Days"></DataGridTextColumn>
-                <DataGridTextColumn Header="T2"></DataGridTextColumn>
-                <DataGridTextColumn Header="T3"></DataGridTextColumn>
-                <DataGridTextColumn Header="T4"></DataGridTextColumn>
-                <DataGridTextColumn Header="T5"></DataGridTextColumn>
-                <DataGridTextColumn Header="T6"></DataGridTextColumn>
-                <DataGridTextColumn Header="T7"></DataGridTextColumn>
-                <DataGridTextColumn Header="CN"></DataGridTextColumn>
+                <DataGridTextColumn Header="Times\Days" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T5" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

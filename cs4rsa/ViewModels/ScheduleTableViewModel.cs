@@ -17,6 +17,7 @@ namespace cs4rsa.ViewModels
     {
         public ClassGroupModel ClassGroupModel { get; set; }
         public string ColorCodeLocation { get; set; }
+        public string ColorClassGroup { get; set; }
     }
 
     class ScheduleTableViewModel: NotifyPropertyChangedBase
@@ -97,9 +98,11 @@ namespace cs4rsa.ViewModels
         private void ReloadSchedule()
         {
             DivideClassGroupsByPhases();
-
         }
 
         private void AddStudyBlock()
+        {
+
+        }
     }
 }

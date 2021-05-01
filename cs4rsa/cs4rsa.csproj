@@ -161,6 +161,7 @@
     <Compile Include="Database\TeacherDatabase.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
+    <Compile Include="Interfaces\IMessageService.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />

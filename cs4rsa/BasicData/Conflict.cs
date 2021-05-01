@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cs4rsa.Models;
 
 namespace cs4rsa.BasicData
 {
@@ -42,10 +43,16 @@ namespace cs4rsa.BasicData
             this.classGroup2 = classGroup2;
         }
 
+        public Conflict(ClassGroupModel classGroupModel1, ClassGroupModel classGroupModel2)
+        {
+            classGroup1 = classGroupModel1.classGroup;
+            classGroup2 = classGroupModel2.classGroup;
+        }
+
         public ConflictTime GetConflictTime()
         {
             // Check phase
-            if (classGroup1.GetPhase() == classGroup2.GetPhase())
+            if (CanConflictPhase(classGroup1.GetPhase(), classGroup2.GetPhase()))
             {
                 Schedule scheduleClassGroup1 = classGroup1.GetSchedule();
                 Schedule scheduleClassGroup2 = classGroup2.GetSchedule();
@@ -59,16 +66,25 @@ namespace cs4rsa.BasicData
                     {
                         List<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(DayOfWeek);
                         List<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(DayOfWeek);
-                        studyTimesClassGroup1.Concat(studyTimesClassGroup2);
-                        List<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimesClassGroup1);
+                        List<StudyTime> studyTimeJoin = studyTimesClassGroup1.Concat(studyTimesClassGroup2).ToList();
+                        List<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimeJoin);
                         List<StudyTimeIntersect> studyTimeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(studyTimePairs);
-                        conflictTimes.Add(DayOfWeek, studyTimeIntersects);
+                        if (studyTimeIntersects.Count != 0)
+                            conflictTimes.Add(DayOfWeek, studyTimeIntersects);
                     }
-                    return new ConflictTime(conflictTimes);
+                    if (conflictTimes.Count != 0)
+                        return new ConflictTime(conflictTimes);
+                    return null;
                 }
                 return null;
             }
             return null;
+        }
+
+        private bool CanConflictPhase(Phase phase1, Phase phase2)
+        {
+            if (phase1 == Phase.ALL || phase2 == Phase.ALL) return true;
+            return phase1 == phase2;
         }
     }
 }

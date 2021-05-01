@@ -9,7 +9,7 @@ namespace cs4rsa.Models
 {
     public class ClassGroupModel
     {
-        private ClassGroup classGroup;
+        public ClassGroup classGroup;
 
         public string Name => classGroup.Name;
         public string SubjectCode => classGroup.SubjectCode;
