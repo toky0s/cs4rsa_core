@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cs4rsa.Helpers
 {
-    public class ShortedTime
+    public class ShortedTime: IComparable<ShortedTime>
     {
         public readonly DateTime RawTime;
         public readonly DateTime NewTime;
@@ -14,6 +11,25 @@ namespace cs4rsa.Helpers
         {
             RawTime = raw;
             NewTime = converted;
+        }
+
+        public int CompareTo(ShortedTime other)
+        {
+            return RawTime.CompareTo(other.RawTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ShortedTime shortedTime))
+            {
+                return false;
+            }
+            return this.RawTime == shortedTime.RawTime;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.RawTime.GetHashCode();
         }
     }
 
@@ -36,6 +52,8 @@ namespace cs4rsa.Helpers
 
         public ShortedTime Convert(DateTime time)
         {
+            if (!DuyTanStudyTimes.ContainsKey(time))
+                return new ShortedTime(time, time);
             DateTime converted = DuyTanStudyTimes[time];
             if (converted != null)
                 return new ShortedTime(time, converted);
@@ -46,7 +64,7 @@ namespace cs4rsa.Helpers
         {
             DateTime now = DateTime.Now;
             DuyTanStudyTimes.Add(
-                new DateTime(now.Year, now.Month, now.Day, rawHour, rawMinute, 0), 
+                new DateTime(now.Year, now.Month, now.Day, rawHour, rawMinute, 0),
                 new DateTime(now.Year, now.Month, now.Day, newHour, newMinute, 0)
             );
         }

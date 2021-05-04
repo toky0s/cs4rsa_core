@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using cs4rsa.Models;
 using cs4rsa.BaseClasses;
+using cs4rsa.Models;
 
 namespace cs4rsa.Messages
 {
-    public class SelectedSubjectChangeMessage : Cs4rsaMessage
+    class ChoicesAddChangedMessage : Cs4rsaMessage
     {
-        public new SubjectModel Source;
-        public SelectedSubjectChangeMessage(SubjectModel source) : base(source)
+        public new List<ClassGroupModel> Source;
+        public ChoicesAddChangedMessage(List<ClassGroupModel> source) : base(source)
         {
             Source = source;
         }

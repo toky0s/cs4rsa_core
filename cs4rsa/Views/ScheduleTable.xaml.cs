@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using cs4rsa.ViewModels;
 
 namespace cs4rsa.Views
 {
@@ -20,9 +21,12 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class ScheduleTable : UserControl
     {
+        private ScheduleTableViewModel scheduleTableViewModel = new ScheduleTableViewModel();
         public ScheduleTable()
         {
             InitializeComponent();
+            DataGridFirstPhase.DataContext = scheduleTableViewModel.Phase1Schedule.DefaultView;
+            DataGridSecondPhase.DataContext = scheduleTableViewModel.Phase2Schedule.DefaultView;
         }
     }
 }

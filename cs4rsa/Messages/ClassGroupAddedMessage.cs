@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
+using cs4rsa.Models;
 
 namespace cs4rsa.Messages
 {
@@ -12,9 +14,10 @@ namespace cs4rsa.Messages
     /// </summary>
     class ClassGroupAddedMessage : Cs4rsaMessage
     {
-        public ClassGroupAddedMessage(object source) : base(source)
+        public new ClassGroupModel Source;
+        public ClassGroupAddedMessage(ClassGroupModel source) : base(source)
         {
-
+            Source = source;
         }
     }
 }

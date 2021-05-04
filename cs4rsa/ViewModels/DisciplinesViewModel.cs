@@ -127,7 +127,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedSubjectModel = value;
                 DeleteCommand.RaiseCanExecuteChanged();
-                MessageBus.Default.Publish(new SelectedSubjectChangeMessage(this));
+                MessageBus.Default.Publish(new SelectedSubjectChangeMessage(value));
             }
         }
 

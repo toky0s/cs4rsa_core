@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using cs4rsa.BasicData;
 
 namespace cs4rsa.BasicData
 {
@@ -54,7 +50,7 @@ namespace cs4rsa.BasicData
         }
 
         /// <summary>
-        /// Hợp nhất và duy nhất các Schedule của các SchoolClass trong ClassGroup này.
+        /// Hợp nhất Schedule của các SchoolClass trong ClassGroup này thành một.
         /// </summary>
         /// <returns>Trả về một Schedule.</returns>
         public Schedule GetSchedule()
@@ -62,7 +58,12 @@ namespace cs4rsa.BasicData
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
             foreach(SchoolClass schoolClass in schoolClasses)
             {
-                schoolClass.Schedule.ScheduleTime.ToList().ForEach(pair => DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value));
+                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
+                foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
+                {
+                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                }
             }
             Schedule schedule = new Schedule(DayOfWeekStudyTimePairs);
             return schedule;

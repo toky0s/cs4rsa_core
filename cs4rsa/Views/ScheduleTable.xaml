@@ -21,8 +21,8 @@
         <DataGrid Grid.Row="2"
                   x:Name="DataGridFirstPhase"
                   ItemsSource="{Binding}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Times\Days" Width="auto"></DataGridTextColumn>
+            <!--<DataGrid.Columns>
+                <DataGridTextColumn Header="Times" Width="auto"></DataGridTextColumn>
                 <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
@@ -30,15 +30,15 @@
                 <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
-            </DataGrid.Columns>
+            </DataGrid.Columns>-->
         </DataGrid>
         <TextBlock Text="Phase 2 (10-18)"
                            Grid.Row="3"></TextBlock>
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"
                   ItemsSource="{Binding}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Times\Days" Width="auto"></DataGridTextColumn>
+            <!--<DataGrid.Columns>
+                <DataGridTextColumn Header="Times" Width="auto"></DataGridTextColumn>
                 <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
@@ -46,7 +46,7 @@
                 <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
-            </DataGrid.Columns>
+            </DataGrid.Columns>-->
         </DataGrid>
     </Grid>
 </UserControl>

@@ -72,7 +72,7 @@
                 </Style>
             </Grid.Resources>
             <Grid Grid.Column="0"
-                  Margin="11px">
+                  Margin="10, 10, 0, 0">
                 <view:SearchSession></view:SearchSession>
             </Grid>
             <Grid Grid.Column="1"
@@ -90,8 +90,10 @@
         </Grid>
         <TextBlock x:Name="SemesterInfo"
                    Grid.Row="2"
-                   Margin="11, 6"
-                   Loaded="SemesterInfo_Loaded">
+                   Margin="0, 2, 10, 2"
+                   Loaded="SemesterInfo_Loaded"
+                   HorizontalAlignment="Right"
+                   FontSize="10">
             <Run>Hiện tại là </Run>
             <Run Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSemesterInfo}"></Run>
             <Run> của </Run>

@@ -5,6 +5,7 @@ using cs4rsa.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 
 namespace cs4rsa.ViewModels
@@ -47,7 +48,7 @@ namespace cs4rsa.ViewModels
 
         public void Handle(ClassGroupAddedMessage message)
         {
-            ClassGroupModel classGroupModel = (message.Source as ClassGroupViewModel).SelectedClassGroup;
+            ClassGroupModel classGroupModel = message.Source;
             if (classGroupModel != null)
             {
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
@@ -55,6 +56,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels[ClassGroupModelIndex] = classGroupModel;
                 else
                     classGroupModels.Add(classGroupModel);
+                MessageBus.Default.Publish<ChoicesAddChangedMessage>(new ChoicesAddChangedMessage(ClassGroupModels.ToList()));
             }
             UpdateConflictModelCollection();
         }
@@ -88,9 +90,9 @@ namespace cs4rsa.ViewModels
             UpdateConflictModelCollection();
         }
 
-
         /// <summary>
-        /// Thực hiện bắt cặp tất cả các ClassGroupModel có trong Collection để phát hiện các Conflict.
+        /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
+        /// trong Collection để phát hiện các Conflict.
         /// </summary>
         /// <returns>Danh sách các Conflict</returns>
         private void UpdateConflictModelCollection()

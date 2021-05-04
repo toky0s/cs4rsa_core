@@ -10,9 +10,30 @@ using cs4rsa.BaseClasses;
 using cs4rsa.BasicData;
 using cs4rsa.Models;
 using cs4rsa.Helpers;
+using cs4rsa.Messages;
+using LightMessageBus;
+using LightMessageBus.Interfaces;
 
 namespace cs4rsa.ViewModels
 {
+
+    public class ScheduleRow
+    {
+        public string Time { get; set; }
+        public string[] DayAndClassGroups = new string[7];
+
+        public void AddClassGroupModel(ClassGroupModel classGroupModel)
+        {
+            Schedule schedule = classGroupModel.Schedule;
+            
+            foreach(DayOfWeek day in schedule.GetSchoolDays())
+            {
+                int dayIndex = (int)day;
+                DayAndClassGroups[dayIndex] = classGroupModel.Name;
+            }
+        }
+    }
+
     class StudyBlock
     {
         public ClassGroupModel ClassGroupModel { get; set; }
@@ -20,24 +41,46 @@ namespace cs4rsa.ViewModels
         public string ColorClassGroup { get; set; }
     }
 
-    class ScheduleTableViewModel: NotifyPropertyChangedBase
+    class ScheduleTableViewModel : NotifyPropertyChangedBase,
+        IMessageHandler<ChoicesAddChangedMessage>
     {
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
 
-        public DataTable Phase1Schedule = new DataTable();
-        public DataTable Phase2Schedule = new DataTable();
+        public ObservableCollection<ScheduleRow> Phase1Schedule;
+        public ObservableCollection<ScheduleRow> Phase2Schedule;
 
         public ScheduleTableViewModel()
         {
+            MessageBus.Default.FromAny().Where<ChoicesAddChangedMessage>().Notify(this);
+            Phase1Schedule = RenderDataTable();
+            Phase2Schedule = RenderDataTable();
         }
 
-        private void AddClassGroup(ClassGroupModel classGroupModel)
+        private DataTable RenderDataTable()
         {
-            classGroupModels.Add(classGroupModel);
-            ReloadSchedule();
+            DataTable table = new DataTable();
+            DataColumn time = new DataColumn("Times", typeof(string));
+            DataColumn T2 = new DataColumn("T2", typeof(string));
+            DataColumn T3 = new DataColumn("T3", typeof(string));
+            DataColumn T4 = new DataColumn("T4", typeof(string));
+            DataColumn T5 = new DataColumn("T5", typeof(string));
+            DataColumn T6 = new DataColumn("T6", typeof(string));
+            DataColumn T7 = new DataColumn("T7", typeof(string));
+            DataColumn CN = new DataColumn("CN", typeof(string));
+
+            table.Columns.Add(time);
+            table.Columns.Add(T2);
+            table.Columns.Add(T3);
+            table.Columns.Add(T4);
+            table.Columns.Add(T5);
+            table.Columns.Add(T6);
+            table.Columns.Add(T7);
+            table.Columns.Add(CN);
+
+            return table;
         }
 
         private void DeleteClassGroup(ClassGroupModel classGroupModel)
@@ -48,7 +91,7 @@ namespace cs4rsa.ViewModels
 
         private void DivideClassGroupsByPhases()
         {
-            foreach(ClassGroupModel classGroupModel in classGroupModels)
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 switch (classGroupModel.Phase)
                 {
@@ -70,11 +113,26 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private void PaintTimeStringToTable(List<ClassGroupModel> source, DataTable destination)
+        {
+            List<string> timeString = GetTimeString(source);
+            foreach (string time in timeString)
+            {
+                DataRow row = destination.NewRow();
+                row[0] = time;
+                destination.Rows.Add(row);
+            }
+        }
+
         private List<string> GetTimeString(List<ClassGroupModel> classGroupModels)
         {
-            return GetShortedTimes(classGroupModels)
-                .Select(item => item.NewTime.ToString("HH:mm"))
-                .ToList();
+            List<string> timeStrings = new List<string>();
+            foreach (ShortedTime item in GetShortedTimes(classGroupModels))
+            {
+                string timeString = item.NewTime.ToString("HH:mm");
+                timeStrings.Add(timeString);
+            }
+            return timeStrings;
         }
 
         private List<ShortedTime> GetShortedTimes(List<ClassGroupModel> classGroupModels)
@@ -87,22 +145,43 @@ namespace cs4rsa.ViewModels
                 foreach (StudyTime studyTime in studyTimes)
                 {
                     ShortedTime shortedTimeStart = converter.Convert(studyTime.Start);
+                    if (!shortedTimes.Contains(shortedTimeStart))
+                        shortedTimes.Add(shortedTimeStart);
+
                     ShortedTime shortedTimeEnd = converter.Convert(studyTime.End);
-                    shortedTimes.Add(shortedTimeStart);
-                    shortedTimes.Add(shortedTimeEnd);
+                    if (!shortedTimes.Contains(shortedTimeEnd))
+                        shortedTimes.Add(shortedTimeEnd);
                 }
             }
+            shortedTimes.Sort();
             return shortedTimes;
         }
 
         private void ReloadSchedule()
         {
+            CleanPhase();
+            CleanSchedules();
             DivideClassGroupsByPhases();
+            PaintTimeStringToTable(Phase1, Phase1Schedule);
+            PaintTimeStringToTable(Phase2, Phase2Schedule);
         }
 
-        private void AddStudyBlock()
+        public void Handle(ChoicesAddChangedMessage message)
         {
+            classGroupModels = message.Source;
+            ReloadSchedule();
+        }
 
+        private void CleanSchedules()
+        {
+            Phase1Schedule.Clear();
+            Phase2Schedule.Clear();
+        }
+
+        private void CleanPhase()
+        {
+            Phase1.Clear();
+            Phase2.Clear();
         }
     }
 }

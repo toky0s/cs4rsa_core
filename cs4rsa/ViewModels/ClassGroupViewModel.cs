@@ -37,7 +37,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedClassGroup = value;
                 RaisePropertyChanged();
-                MessageBus.Default.Publish(new ClassGroupAddedMessage(this));
+                MessageBus.Default.Publish(new ClassGroupAddedMessage(value));
             }
         }
 
@@ -75,7 +75,7 @@ namespace cs4rsa.ViewModels
 
         public void Handle(SelectedSubjectChangeMessage message)
         {
-            SubjectModel subjectModel = (message.Source as DisciplinesViewModel).SelectedSubjectModel;
+            SubjectModel subjectModel = message.Source;
             classGroupModels.Clear();
             teachers.Clear();
             if (subjectModel != null)
