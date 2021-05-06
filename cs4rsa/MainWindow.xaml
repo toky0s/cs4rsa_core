@@ -62,29 +62,20 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <Style TargetType="ColumnDefinition"
-                       x:Key="col__margin"></Style>
-                <Style TargetType="CheckBox"
-                       x:Key="checkbox__margin">
-                    <Setter Property="Margin"
-                            Value="0, 0, 10, 5"></Setter>
-                </Style>
-            </Grid.Resources>
             <Grid Grid.Column="0"
                   Margin="10, 10, 0, 0">
                 <view:SearchSession></view:SearchSession>
             </Grid>
             <Grid Grid.Column="1"
-                  Margin="11px">
+                  Margin="10, 10, 0, 0">
                 <view:ClassGroupSession></view:ClassGroupSession>
             </Grid>
             <Grid Grid.Column="2"
-                  Margin="11px">
+                  Margin="10, 10, 0, 0">
                 <view:ChoicedSession></view:ChoicedSession>
             </Grid>
             <Grid Grid.Column="3"
-                  Margin="11px">
+                  Margin="10, 10, 10, 0">
                 <view:ScheduleTable></view:ScheduleTable>
             </Grid>
         </Grid>
@@ -94,9 +85,7 @@
                    Loaded="SemesterInfo_Loaded"
                    HorizontalAlignment="Right"
                    FontSize="10">
-            <Run>Hiện tại là </Run>
-            <Run Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentSemesterInfo}"></Run>
-            <Run> của </Run>
-            <Run Text="{Binding UpdateSourceTrigger=PropertyChanged, Path=CurrentYearInfo}"></Run></TextBlock>
+            <Run Text="{Binding CurrentSemesterInfo}"></Run>
+            <Run Text="{Binding CurrentYearInfo}"></Run></TextBlock>
     </Grid>
 </Window>

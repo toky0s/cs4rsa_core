@@ -4,8 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:cs4rsa.Views"
+             xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter">
+
+        </converter:ShortedTimeViewConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -20,33 +26,33 @@
                            Grid.Row="1"></TextBlock>
         <DataGrid Grid.Row="2"
                   x:Name="DataGridFirstPhase"
-                  ItemsSource="{Binding}">
-            <!--<DataGrid.Columns>
-                <DataGridTextColumn Header="Times" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T5" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
-            </DataGrid.Columns>-->
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Monday" Binding="{Binding Path=Monday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Tuseday" Binding="{Binding Path=Tuseday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Wednessday" Binding="{Binding Path=Wednessday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Thursday" Binding="{Binding Path=Thursday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Friday" Binding="{Binding Path=Friday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Saturday" Binding="{Binding Path=Saturday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Sunday" Binding="{Binding Path=Sunday}" Width="*"></DataGridTextColumn>
+            </DataGrid.Columns>
         </DataGrid>
         <TextBlock Text="Phase 2 (10-18)"
                            Grid.Row="3"></TextBlock>
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"
-                  ItemsSource="{Binding}">
-            <!--<DataGrid.Columns>
-                <DataGridTextColumn Header="Times" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="T2" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T3" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T4" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T5" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T6" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="T7" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="CN" Width="*"></DataGridTextColumn>
-            </DataGrid.Columns>-->
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Monday" Binding="{Binding Path=Monday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Tuseday" Binding="{Binding Path=Tuseday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Wednessday" Binding="{Binding Path=Wednessday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Thursday" Binding="{Binding Path=Thursday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Friday" Binding="{Binding Path=Friday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Saturday" Binding="{Binding Path=Saturday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Sunday" Binding="{Binding Path=Sunday}" Width="*"></DataGridTextColumn>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>

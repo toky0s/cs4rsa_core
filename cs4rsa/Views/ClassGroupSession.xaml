@@ -51,11 +51,29 @@
                        Margin="0,10,0,5"></TextBlock>
             <WrapPanel Orientation="Horizontal">
                 <CheckBox Margin="0, 0, 10, 0"
-                          Content="Morning"></CheckBox>
+                          Content="Morning">
+                    <CheckBox.ToolTip>
+                        <ToolTip>
+                            7:00 - 9:00
+                        </ToolTip>
+                    </CheckBox.ToolTip>
+                </CheckBox>
                 <CheckBox Margin="0, 0, 10, 0"
-                          Content="Afternoon"></CheckBox>
+                          Content="Afternoon">
+                    <CheckBox.ToolTip>
+                        <ToolTip>
+                            13:00 - 17:00
+                        </ToolTip>
+                    </CheckBox.ToolTip>
+                </CheckBox>
                 <CheckBox Margin="0, 0, 10, 0"
-                          Content="Night"></CheckBox>
+                          Content="Night">
+                    <CheckBox.ToolTip>
+                        <ToolTip>
+                            18:00 - 21:00
+                        </ToolTip>
+                    </CheckBox.ToolTip>
+                </CheckBox>
             </WrapPanel>
             <TextBlock Text="Teachers"
                        Margin="0, 10, 0, 5"></TextBlock>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using cs4rsa.Crawler;
+﻿using cs4rsa.Crawler;
 using cs4rsa.BaseClasses;
 
 namespace cs4rsa.ViewModels
@@ -23,7 +17,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 currentYearInfo = value;
-                RaisePropertyChanged("CurrentYearInfo");
+                RaisePropertyChanged();
             }
         }
 
@@ -36,15 +30,15 @@ namespace cs4rsa.ViewModels
             set
             {
                 currentSemesterInfo = value;
-                RaisePropertyChanged("CurrentSemesterInfo");
+                RaisePropertyChanged();
             }
         }
 
-        public void LoadSemesterInfo()
+        public SemesterInfoViewModel()
         {
             HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
-            this.CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
-            this.CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
+            CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
+            CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
         }
     }
 }

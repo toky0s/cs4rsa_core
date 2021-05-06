@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using cs4rsa.ViewModels;
+using cs4rsa.Helpers;
 
 namespace cs4rsa.Views
 {
@@ -25,8 +27,25 @@ namespace cs4rsa.Views
         public ScheduleTable()
         {
             InitializeComponent();
-            DataGridFirstPhase.DataContext = scheduleTableViewModel.Phase1Schedule.DefaultView;
-            DataGridSecondPhase.DataContext = scheduleTableViewModel.Phase2Schedule.DefaultView;
+            DataGridFirstPhase.ItemsSource = scheduleTableViewModel.Phase1Schedule;
+            DataGridSecondPhase.ItemsSource = scheduleTableViewModel.Phase2Schedule;
+        }
+    }
+}
+
+namespace cs4rsa.Converters
+{
+    public class ShortedTimeViewConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            ShortedTime shortedTime = value as ShortedTime;
+            return shortedTime.NewTime.ToString("HH:mm");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

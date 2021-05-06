@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cs4rsa.BasicData;
+using System;
 using System.Collections.Generic;
 
 namespace cs4rsa.Helpers
@@ -67,6 +68,22 @@ namespace cs4rsa.Helpers
                 new DateTime(now.Year, now.Month, now.Day, rawHour, rawMinute, 0),
                 new DateTime(now.Year, now.Month, now.Day, newHour, newMinute, 0)
             );
+        }
+
+        public List<ShortedTime> ToShortedTime(List<StudyTime> studyTimes)
+        {
+            List<ShortedTime> shortedTimes = new List<ShortedTime>();
+            foreach (StudyTime studyTime in studyTimes)
+            {
+                ShortedTime shortedTimeStart = Convert(studyTime.Start);
+                if (!shortedTimes.Contains(shortedTimeStart))
+                    shortedTimes.Add(shortedTimeStart);
+
+                ShortedTime shortedTimeEnd = Convert(studyTime.End);
+                if (!shortedTimes.Contains(shortedTimeEnd))
+                    shortedTimes.Add(shortedTimeEnd);
+            }
+            return shortedTimes;
         }
     }
 }

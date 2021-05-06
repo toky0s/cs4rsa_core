@@ -16,11 +16,32 @@ using LightMessageBus.Interfaces;
 
 namespace cs4rsa.ViewModels
 {
+    /// <summary>
+    /// Đại diện cho một ô trong ScheduleRow bao gồm các thuộc tính về giao diện.
+    /// </summary>
+    public class TimeBlock
+    {
+        public string BackgroundColor { get; set; }
+        public string Name { get; set; }
+    }
+
 
     public class ScheduleRow
     {
-        public string Time { get; set; }
-        public string[] DayAndClassGroups = new string[7];
+        public ShortedTime Time { get; set; }
+        private string[] DayAndClassGroups = new string[7];
+        public string Sunday => DayAndClassGroups[0];
+        public string Monday => DayAndClassGroups[1];
+        public string Tuseday => DayAndClassGroups[2];
+        public string Wednessday => DayAndClassGroups[3];
+        public string Thursday => DayAndClassGroups[4];
+        public string Friday => DayAndClassGroups[5];
+        public string Saturday => DayAndClassGroups[6];
+
+        public ScheduleRow(ShortedTime time)
+        {
+            Time = time;
+        }
 
         public void AddClassGroupModel(ClassGroupModel classGroupModel)
         {
@@ -34,13 +55,6 @@ namespace cs4rsa.ViewModels
         }
     }
 
-    class StudyBlock
-    {
-        public ClassGroupModel ClassGroupModel { get; set; }
-        public string ColorCodeLocation { get; set; }
-        public string ColorClassGroup { get; set; }
-    }
-
     class ScheduleTableViewModel : NotifyPropertyChangedBase,
         IMessageHandler<ChoicesAddChangedMessage>
     {
@@ -49,38 +63,12 @@ namespace cs4rsa.ViewModels
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
 
-        public ObservableCollection<ScheduleRow> Phase1Schedule;
-        public ObservableCollection<ScheduleRow> Phase2Schedule;
+        public ObservableCollection<ScheduleRow> Phase1Schedule = new ObservableCollection<ScheduleRow>();
+        public ObservableCollection<ScheduleRow> Phase2Schedule = new ObservableCollection<ScheduleRow>();
 
         public ScheduleTableViewModel()
         {
             MessageBus.Default.FromAny().Where<ChoicesAddChangedMessage>().Notify(this);
-            Phase1Schedule = RenderDataTable();
-            Phase2Schedule = RenderDataTable();
-        }
-
-        private DataTable RenderDataTable()
-        {
-            DataTable table = new DataTable();
-            DataColumn time = new DataColumn("Times", typeof(string));
-            DataColumn T2 = new DataColumn("T2", typeof(string));
-            DataColumn T3 = new DataColumn("T3", typeof(string));
-            DataColumn T4 = new DataColumn("T4", typeof(string));
-            DataColumn T5 = new DataColumn("T5", typeof(string));
-            DataColumn T6 = new DataColumn("T6", typeof(string));
-            DataColumn T7 = new DataColumn("T7", typeof(string));
-            DataColumn CN = new DataColumn("CN", typeof(string));
-
-            table.Columns.Add(time);
-            table.Columns.Add(T2);
-            table.Columns.Add(T3);
-            table.Columns.Add(T4);
-            table.Columns.Add(T5);
-            table.Columns.Add(T6);
-            table.Columns.Add(T7);
-            table.Columns.Add(CN);
-
-            return table;
         }
 
         private void DeleteClassGroup(ClassGroupModel classGroupModel)
@@ -162,8 +150,43 @@ namespace cs4rsa.ViewModels
             CleanPhase();
             CleanSchedules();
             DivideClassGroupsByPhases();
-            PaintTimeStringToTable(Phase1, Phase1Schedule);
-            PaintTimeStringToTable(Phase2, Phase2Schedule);
+            Render(ref Phase1Schedule, ref Phase1);
+            Render(ref Phase2Schedule, ref Phase2);
+            DumpClassGroupModel(ref Phase1Schedule, ref Phase1);
+            DumpClassGroupModel(ref Phase2Schedule, ref Phase2);
+        }
+
+
+        private void Render(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
+        {
+            List<ShortedTime> shortedTimes = GetShortedTimes(classGroupModels);
+            // render schedule rows
+            foreach (ShortedTime shortedTime in shortedTimes)
+            {
+                ScheduleRow scheduleRow = new ScheduleRow(shortedTime);
+                schedule.Add(scheduleRow);
+            }
+        }
+
+        private void DumpClassGroupModel(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
+        {
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            {
+                AddClassGroup(ref schedule, classGroupModel);
+            }
+        }
+
+        private void AddClassGroup(ref ObservableCollection<ScheduleRow> schedule, ClassGroupModel classGroupModel)
+        {
+            ShortedTimeConverter converter = new ShortedTimeConverter();
+            List<StudyTime> studyTimes = classGroupModel.Schedule.GetStudyTimes();
+            foreach (ScheduleRow scheduleRow in schedule)
+            {
+                if (converter.ToShortedTime(studyTimes).Contains(scheduleRow.Time))
+                {
+                    scheduleRow.AddClassGroupModel(classGroupModel);
+                }
+            }
         }
 
         public void Handle(ChoicesAddChangedMessage message)
