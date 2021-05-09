@@ -8,10 +8,10 @@ using cs4rsa.Models;
 
 namespace cs4rsa.Messages
 {
-    class ChoicesAddChangedMessage : Cs4rsaMessage
+    class ChoicesChangedMessage : Cs4rsaMessage
     {
         public new List<ClassGroupModel> Source;
-        public ChoicesAddChangedMessage(List<ClassGroupModel> source) : base(source)
+        public ChoicesChangedMessage(List<ClassGroupModel> source) : base(source)
         {
             Source = source;
         }

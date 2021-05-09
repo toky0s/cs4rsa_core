@@ -32,6 +32,16 @@ namespace cs4rsa.Helpers
         {
             return this.RawTime.GetHashCode();
         }
+
+        public static bool operator >=(ShortedTime left, ShortedTime right)
+        {
+            return left.RawTime > right.RawTime || left.RawTime == right.RawTime;
+        }
+
+        public static bool operator <=(ShortedTime left, ShortedTime right)
+        {
+            return left.RawTime < right.RawTime || left.RawTime == right.RawTime;
+        }
     }
 
     public class ShortedTimeConverter

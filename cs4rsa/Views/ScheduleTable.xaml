@@ -9,8 +9,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter">
-
         </converter:ShortedTimeViewConverter>
+        <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,32 +26,34 @@
                            Grid.Row="1"></TextBlock>
         <DataGrid Grid.Row="2"
                   x:Name="DataGridFirstPhase"
-                  AutoGenerateColumns="False">
+                  AutoGenerateColumns="False"
+                  FontSize="12">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Monday" Binding="{Binding Path=Monday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Tuseday" Binding="{Binding Path=Tuseday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Wednessday" Binding="{Binding Path=Wednessday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Thursday" Binding="{Binding Path=Thursday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Friday" Binding="{Binding Path=Friday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Saturday" Binding="{Binding Path=Saturday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Sunday" Binding="{Binding Path=Sunday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Cn" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Text="Phase 2 (10-18)"
                            Grid.Row="3"></TextBlock>
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"
-                  AutoGenerateColumns="False">
+                  AutoGenerateColumns="False"
+                  FontSize="12">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Monday" Binding="{Binding Path=Monday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Tuseday" Binding="{Binding Path=Tuseday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Wednessday" Binding="{Binding Path=Wednessday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Thursday" Binding="{Binding Path=Thursday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Friday" Binding="{Binding Path=Friday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Saturday" Binding="{Binding Path=Saturday}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="Sunday" Binding="{Binding Path=Sunday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Cn" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

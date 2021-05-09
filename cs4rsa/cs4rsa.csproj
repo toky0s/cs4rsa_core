@@ -162,7 +162,7 @@
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
-    <Compile Include="Messages\ChoicesAddChangedMessage.cs" />
+    <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />

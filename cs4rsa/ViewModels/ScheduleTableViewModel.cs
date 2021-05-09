@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Data;
-using cs4rsa.BaseClasses;
+﻿using cs4rsa.BaseClasses;
 using cs4rsa.BasicData;
-using cs4rsa.Models;
 using cs4rsa.Helpers;
 using cs4rsa.Messages;
+using cs4rsa.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
 {
@@ -29,46 +24,41 @@ namespace cs4rsa.ViewModels
     public class ScheduleRow
     {
         public ShortedTime Time { get; set; }
-        private string[] DayAndClassGroups = new string[7];
-        public string Sunday => DayAndClassGroups[0];
-        public string Monday => DayAndClassGroups[1];
-        public string Tuseday => DayAndClassGroups[2];
-        public string Wednessday => DayAndClassGroups[3];
-        public string Thursday => DayAndClassGroups[4];
-        public string Friday => DayAndClassGroups[5];
-        public string Saturday => DayAndClassGroups[6];
+        private ClassGroupModel[] DayAndClassGroups = new ClassGroupModel[7];
+        public ClassGroupModel Sunday => DayAndClassGroups[0];
+        public ClassGroupModel Monday => DayAndClassGroups[1];
+        public ClassGroupModel Tuseday => DayAndClassGroups[2];
+        public ClassGroupModel Wednessday => DayAndClassGroups[3];
+        public ClassGroupModel Thursday => DayAndClassGroups[4];
+        public ClassGroupModel Friday => DayAndClassGroups[5];
+        public ClassGroupModel Saturday => DayAndClassGroups[6];
 
         public ScheduleRow(ShortedTime time)
         {
             Time = time;
         }
 
-        public void AddClassGroupModel(ClassGroupModel classGroupModel)
+        public void AddClassGroupModelToDayOfWeek(ClassGroupModel classGroupModel, DayOfWeek day)
         {
-            Schedule schedule = classGroupModel.Schedule;
-            
-            foreach(DayOfWeek day in schedule.GetSchoolDays())
-            {
-                int dayIndex = (int)day;
-                DayAndClassGroups[dayIndex] = classGroupModel.Name;
-            }
+            int dayIndex = (int)day;
+            DayAndClassGroups[dayIndex] = classGroupModel;
         }
     }
 
     class ScheduleTableViewModel : NotifyPropertyChangedBase,
-        IMessageHandler<ChoicesAddChangedMessage>
+        IMessageHandler<ChoicesChangedMessage>
     {
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
 
-        public ObservableCollection<ScheduleRow> Phase1Schedule = new ObservableCollection<ScheduleRow>();
-        public ObservableCollection<ScheduleRow> Phase2Schedule = new ObservableCollection<ScheduleRow>();
+        public ObservableCollection<ScheduleRow> Schedule1 = new ObservableCollection<ScheduleRow>();
+        public ObservableCollection<ScheduleRow> Schedule2 = new ObservableCollection<ScheduleRow>();
 
         public ScheduleTableViewModel()
         {
-            MessageBus.Default.FromAny().Where<ChoicesAddChangedMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
         }
 
         private void DeleteClassGroup(ClassGroupModel classGroupModel)
@@ -101,28 +91,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private void PaintTimeStringToTable(List<ClassGroupModel> source, DataTable destination)
-        {
-            List<string> timeString = GetTimeString(source);
-            foreach (string time in timeString)
-            {
-                DataRow row = destination.NewRow();
-                row[0] = time;
-                destination.Rows.Add(row);
-            }
-        }
-
-        private List<string> GetTimeString(List<ClassGroupModel> classGroupModels)
-        {
-            List<string> timeStrings = new List<string>();
-            foreach (ShortedTime item in GetShortedTimes(classGroupModels))
-            {
-                string timeString = item.NewTime.ToString("HH:mm");
-                timeStrings.Add(timeString);
-            }
-            return timeStrings;
-        }
-
         private List<ShortedTime> GetShortedTimes(List<ClassGroupModel> classGroupModels)
         {
             ShortedTimeConverter converter = new ShortedTimeConverter();
@@ -150,12 +118,11 @@ namespace cs4rsa.ViewModels
             CleanPhase();
             CleanSchedules();
             DivideClassGroupsByPhases();
-            Render(ref Phase1Schedule, ref Phase1);
-            Render(ref Phase2Schedule, ref Phase2);
-            DumpClassGroupModel(ref Phase1Schedule, ref Phase1);
-            DumpClassGroupModel(ref Phase2Schedule, ref Phase2);
+            Render(ref Schedule1, ref Phase1);
+            Render(ref Schedule2, ref Phase2);
+            DumpClassGroupModel(ref Schedule1, ref Phase1);
+            DumpClassGroupModel(ref Schedule2, ref Phase2);
         }
-
 
         private void Render(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
         {
@@ -170,26 +137,31 @@ namespace cs4rsa.ViewModels
 
         private void DumpClassGroupModel(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
         {
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            foreach (ClassGroupModel cgm in classGroupModels)
             {
-                AddClassGroup(ref schedule, classGroupModel);
+                AddClassGroup(ref schedule, cgm);
             }
         }
 
         private void AddClassGroup(ref ObservableCollection<ScheduleRow> schedule, ClassGroupModel classGroupModel)
         {
             ShortedTimeConverter converter = new ShortedTimeConverter();
-            List<StudyTime> studyTimes = classGroupModel.Schedule.GetStudyTimes();
-            foreach (ScheduleRow scheduleRow in schedule)
+            foreach (DayOfWeek day in classGroupModel.Schedule.GetSchoolDays())
             {
-                if (converter.ToShortedTime(studyTimes).Contains(scheduleRow.Time))
+                List<StudyTime> studyTimes = classGroupModel.Schedule.GetStudyTimesAtDay(day);
+                foreach (StudyTime time in studyTimes)
                 {
-                    scheduleRow.AddClassGroupModel(classGroupModel);
+                    foreach (ScheduleRow scheduleRow in schedule)
+                    {
+                        if (scheduleRow.Time >= converter.Convert(time.Start) &&
+                            scheduleRow.Time <= converter.Convert(time.End))
+                            scheduleRow.AddClassGroupModelToDayOfWeek(classGroupModel, day);
+                    }
                 }
             }
         }
 
-        public void Handle(ChoicesAddChangedMessage message)
+        public void Handle(ChoicesChangedMessage message)
         {
             classGroupModels = message.Source;
             ReloadSchedule();
@@ -197,8 +169,8 @@ namespace cs4rsa.ViewModels
 
         private void CleanSchedules()
         {
-            Phase1Schedule.Clear();
-            Phase2Schedule.Clear();
+            Schedule1.Clear();
+            Schedule2.Clear();
         }
 
         private void CleanPhase()

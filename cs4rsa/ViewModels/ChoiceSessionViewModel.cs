@@ -56,9 +56,9 @@ namespace cs4rsa.ViewModels
                     classGroupModels[ClassGroupModelIndex] = classGroupModel;
                 else
                     classGroupModels.Add(classGroupModel);
-                MessageBus.Default.Publish(new ChoicesAddChangedMessage(ClassGroupModels.ToList()));
             }
             UpdateConflictModelCollection();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
         }
 
         /// <summary>
@@ -88,6 +88,7 @@ namespace cs4rsa.ViewModels
                 }
             }
             UpdateConflictModelCollection();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
         }
 
         /// <summary>

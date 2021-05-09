@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:cs4rsa.Views"
+             xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:PhaseConverter x:Key="PhaseConverter"></converter:PhaseConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -21,7 +25,18 @@
                  SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}">
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Path=Phase, Mode=OneWay, Converter={StaticResource ResourceKey=PhaseConverter}}">
+                                        </TextBlock>
+                                    </StackPanel>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -33,7 +48,10 @@
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel>
                 <CheckBox Margin="0, 0, 10, 5"
-                          Content="T2"></CheckBox>
+                          Content="T2"
+                          x:Name="Monday"
+                          Checked="Monday_Checked"
+                          Unchecked="Monday_Checked"></CheckBox>
                 <CheckBox Margin="0, 0, 10, 5"
                           Content="T3"></CheckBox>
                 <CheckBox Margin="0, 0, 10, 5"

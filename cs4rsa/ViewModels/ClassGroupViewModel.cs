@@ -5,6 +5,9 @@ using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace cs4rsa.ViewModels
 {
@@ -87,7 +90,8 @@ namespace cs4rsa.ViewModels
 
                 foreach (TeacherModel teacher in subjectModel.Teachers)
                 {
-                    teachers.Add(teacher);
+                    if (!teachers.Contains(teacher) && teacher != null)
+                        teachers.Add(teacher);
                 }
                 SelectedTeacher = teachers[0];
             }
