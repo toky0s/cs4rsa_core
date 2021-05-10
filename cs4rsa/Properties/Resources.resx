@@ -117,4 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="HoaKhanhColorCode" xml:space="preserve">
+    <value />
+    <comment>Là mã màu tại Hoà Khánh</comment>
+  </data>
+  <data name="PhanThanhColorCode" xml:space="preserve">
+    <value />
+    <comment>Đai diện cho mã màu tại Phan Thanh</comment>
+  </data>
+  <data name="QuangTrungColorCode" xml:space="preserve">
+    <value />
+    <comment>Đại diện cho mã màu tại Quang Trung</comment>
+  </data>
+  <data name="ViettinColorCode" xml:space="preserve">
+    <value />
+    <comment>Đại diện cho mã màu tại Việt Tin</comment>
+  </data>
 </root>

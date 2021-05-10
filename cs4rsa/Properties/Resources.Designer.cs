@@ -59,5 +59,41 @@ namespace cs4rsa.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string HoaKhanhColorCode {
+            get {
+                return ResourceManager.GetString("HoaKhanhColorCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string PhanThanhColorCode {
+            get {
+                return ResourceManager.GetString("PhanThanhColorCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string QuangTrungColorCode {
+            get {
+                return ResourceManager.GetString("QuangTrungColorCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ViettinColorCode {
+            get {
+                return ResourceManager.GetString("ViettinColorCode", resourceCulture);
+            }
+        }
     }
 }

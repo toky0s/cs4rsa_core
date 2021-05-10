@@ -29,7 +29,14 @@
                   AutoGenerateColumns="False"
                   FontSize="12">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="Yellow">
+                            </Setter>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"></DataGridTextColumn>
