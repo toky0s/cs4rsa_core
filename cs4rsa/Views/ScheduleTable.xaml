@@ -8,8 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter">
-        </converter:ShortedTimeViewConverter>
+        <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter"></converter:ShortedTimeViewConverter>
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
     </UserControl.Resources>
     <Grid>
@@ -20,16 +19,18 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Schedules"
+        <TextBlock Text="Lịch mô phỏng"
                            Grid.Row="0"></TextBlock>
-        <TextBlock Text="Phase 1 (1-9)"
+        <TextBlock Text="Giai đoạn 1 (Từ tuần 1 - 9)"
                            Grid.Row="1"></TextBlock>
         <DataGrid Grid.Row="2"
                   x:Name="DataGridFirstPhase"
                   AutoGenerateColumns="False"
-                  FontSize="12">
+                  FontSize="10"
+                  GridLinesVisibility="None">
+            
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto">
+                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="Yellow">
@@ -46,14 +47,15 @@
                 <DataGridTextColumn IsReadOnly="True" Header="Cn" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Text="Phase 2 (10-18)"
+        <TextBlock Text="Giai đoạn 2 (Từ tuần 10 - 18)"
                            Grid.Row="3"></TextBlock>
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"
                   AutoGenerateColumns="False"
-                  FontSize="12">
+                  FontSize="10"
+                  GridLinesVisibility="None">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Times" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"></DataGridTextColumn>
                 <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"></DataGridTextColumn>

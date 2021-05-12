@@ -11,11 +11,12 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Choiced"
+        <TextBlock Text="Đã chọn"
                            Grid.Row="0"></TextBlock>
         <ListBox Grid.Row="1" 
                  ItemsSource="{Binding ClassGroupModels}"
@@ -26,9 +27,12 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="Conflicts"
-                           Grid.Row="2"></TextBlock>
-        <ListBox Grid.Row="3"
+        <WrapPanel Grid.Row="2">
+            <Button Content="Lưu"></Button>
+        </WrapPanel>
+        <TextBlock Text="Xung đột"
+                           Grid.Row="3"></TextBlock>
+        <ListBox Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
                  ScrollViewer.VerticalScrollBarVisibility="Visible">
             <ListBox.ItemTemplate>
@@ -37,8 +41,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="Statistics"
-                           Grid.Row="4"></TextBlock>
-        <ListBox Grid.Row="5"></ListBox>
+        <TextBlock Text="Phân tích"
+                           Grid.Row="5"></TextBlock>
+        <ListBox Grid.Row="6"></ListBox>
     </Grid>
 </UserControl>

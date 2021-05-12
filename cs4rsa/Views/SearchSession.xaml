@@ -24,7 +24,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Search"
+        <TextBlock Text="Tìm kiếm"
                    Grid.Row="0"></TextBlock>
         <ComboBox Grid.Row="1"
                   Grid.Column="0"
@@ -52,7 +52,7 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Button Content="Add"
+        <Button Content="Thêm"
                 Grid.Row="1"
                 Grid.Column="2"
                 Margin="0, 5, 0, 0"
@@ -67,10 +67,10 @@
         <Button Grid.Row="2"
                 Grid.Column="2"
                 Margin="0, 10, 0, 0"
-                Content="Add"></Button>
+                Content="Thêm"></Button>
         <TextBlock Grid.Row="3"
                    Grid.ColumnSpan="3"
-                   Text="{Binding TotalSubject, StringFormat={}Subjects ({0})}"></TextBlock>
+                   Text="{Binding TotalSubject, StringFormat={}Các môn ({0})}"></TextBlock>
         <ListBox Grid.Row="4"
                  Grid.ColumnSpan="3"
                  x:Name="DownloadSubjects"
@@ -95,18 +95,18 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel FlowDirection="LeftToRight" Grid.ColumnSpan="3" Grid.Row="5">
-            <Button Content="Delete"
+            <Button Content="Xoá"
                     Command="{Binding DeleteCommand}">
             </Button>
         </StackPanel>
-        <TextBlock Text="{Binding TotalCredits, StringFormat={}Total Credit ({0})}"
+        <TextBlock Text="{Binding TotalCredits, StringFormat={}Tổng số tín chỉ ({0})}"
                    Grid.Row="6"
                    Grid.ColumnSpan="3"></TextBlock>
         <CheckBox Grid.Row="7"
-                  Content="Refreshing continuously"
+                  Content="Cập nhật liên tục"
                   Margin="0, 10, 0, 0"
                   Grid.ColumnSpan="3"></CheckBox>
-        <Button Content="Import"
+        <Button Content="Nhập"
                 Grid.Row="8"
                 Margin="0, 11, 0, 0"
                 Grid.ColumnSpan="3"></Button>

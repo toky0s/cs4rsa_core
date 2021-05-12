@@ -16,7 +16,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Class Groups"
+        <TextBlock Text="Nhóm lớp"
                    Grid.Row="0"
                    x:Name="textbox_col2_title"></TextBlock>
         <ListBox Grid.Row="1"
@@ -43,8 +43,8 @@
         <StackPanel Grid.Row="2"
                     Orientation="Vertical"
                     VerticalAlignment="Bottom">
-            <TextBlock Text="Filters"></TextBlock>
-            <TextBlock Text="Days"
+            <TextBlock Text="Bộ lọc"></TextBlock>
+            <TextBlock Text="Thứ"
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel x:Name="CheckBoxContainer_DayOfWeek">
                 <CheckBox Margin="0, 0, 10, 5"
@@ -83,7 +83,7 @@
                           IsChecked="False"
                           x:Name="CheckBox_Sunday"></CheckBox>
             </WrapPanel>
-            <TextBlock Text="Sessions"
+            <TextBlock Text="Buổi"
                        Margin="0,10,0,5"></TextBlock>
             <WrapPanel Orientation="Horizontal">
                 <CheckBox Margin="0, 0, 10, 0"
@@ -117,7 +117,7 @@
                     </CheckBox.ToolTip>
                 </CheckBox>
             </WrapPanel>
-            <TextBlock Text="Teachers"
+            <TextBlock Text="Giảng viên"
                        Margin="0, 10, 0, 5"></TextBlock>
             <ComboBox 
                 ItemsSource="{Binding Teachers}"
@@ -126,7 +126,7 @@
                 SelectionChanged="ReloadClassGroupCollection"
                 x:Name="ComboxBox_Teachers">
             </ComboBox>
-            <TextBlock Text="Phases"
+            <TextBlock Text="Giai đoạn"
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel x:Name="RadioButtonContainer_Phase">
                 <RadioButton Name="all" Checked="ReloadClassGroupCollection" Content="All" IsChecked="True"></RadioButton>
@@ -134,7 +134,7 @@
                 <RadioButton Name="second" Checked="ReloadClassGroupCollection" Content="Phase 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
                 <RadioButton Name="both" Checked="ReloadClassGroupCollection" Content="Both" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
             </WrapPanel>
-            <TextBlock Text="Places"
+            <TextBlock Text="Nơi học"
                        Margin="0, 10, 0, 5"></TextBlock>
             <WrapPanel x:Name="CheckBoxContainer_Place">
                 <CheckBox Margin="0, 0, 5, 10"
