@@ -42,5 +42,18 @@ namespace cs4rsa.Models
                 teachedSubjects = teacher.TeachedSubjects;
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is TeacherModel teacher))
+            {
+                return false;
+            }
+            return id == teacher.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
     }
 }

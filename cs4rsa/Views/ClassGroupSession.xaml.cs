@@ -37,7 +37,19 @@ namespace cs4rsa.Views
         private bool ClassGroupFilter(object obj)
         {
             ClassGroupModel classGroupModel = obj as ClassGroupModel;
-            return CheckDayOfWeek(classGroupModel) && CheckSession(classGroupModel);
+            return CheckDayOfWeek(classGroupModel) && 
+                CheckSession(classGroupModel) &&
+                CheckTeacher(classGroupModel) &&
+                CheckPhase(classGroupModel) &&
+                CheckPlace(classGroupModel);
+        }
+
+        private bool CheckTeacher(ClassGroupModel classGroupModel)
+        {
+            TeacherModel currentTeacher = (TeacherModel)ComboxBox_Teachers.SelectedItem;
+            if (currentTeacher == null || currentTeacher.Id == "0")
+                return true;
+            return classGroupModel.GetTeacherModels().Contains(currentTeacher);
         }
 
         private bool CheckDayOfWeek(ClassGroupModel classGroupModel)
@@ -87,17 +99,51 @@ namespace cs4rsa.Views
 
             Dictionary<CheckBox, Session> checkSessions = new Dictionary<CheckBox, Session>
             {
-                { CheckBox_Morning, Session.MORNING},
+                { CheckBox_Morning, Session.MORNING },
                 { CheckBox_Afternoon, Session.AFTERNOON },
                 { CheckBox_Night, Session.NIGHT }
             };
 
-            checkSessions = checkSessions.Where(pair => (bool)pair.Key.IsChecked)
+            checkSessions = checkSessions.Where(pair => pair.Key.IsChecked.Value)
                 .ToDictionary(p => p.Key, p => p.Value);
 
             foreach (Session session in checkSessions.Values)
             {
                 if (!classGroupModel.Schedule.GetSessions().Contains(session))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool CheckPhase(ClassGroupModel classGroupModel)
+        {
+            RadioButton checkedRadioButton = RadioButtonContainer_Phase.Children
+                .OfType<RadioButton>()
+                .FirstOrDefault(r => r.IsChecked.Value);
+            string value = checkedRadioButton.Name;
+            if (value == "all") return true;
+            Phase phase = BasicDataConverter.ToPhase(value);
+            return classGroupModel.Phase == phase;
+        }
+
+        private bool CheckPlace(ClassGroupModel classGroupModel)
+        {
+            List<CheckBox> checkedPlaces = CheckBoxContainer_Place.Children.OfType<CheckBox>()
+                .Where(c => c.IsChecked.Value)
+                .ToList();
+            if (checkedPlaces.Count == 0) return true;
+            Dictionary<CheckBox, Place> checkboxAndPlace = new Dictionary<CheckBox, Place>()
+            {
+                {CheckBox_quantrung, Place.QUANGTRUNG },
+                {CheckBox_hoakhanh, Place.HOAKHANH },
+                {CheckBox_phanthanh, Place.PHANTHANH },
+                {CheckBox_viettin, Place.VIETTIN }
+            };
+            checkboxAndPlace = checkboxAndPlace.Where(pair => pair.Key.IsChecked.Value)
+                .ToDictionary(p => p.Key, p => p.Value);
+            foreach (Place place in checkboxAndPlace.Values)
+            {
+                if (!classGroupModel.Places.Contains(place))
                     return false;
             }
             return true;

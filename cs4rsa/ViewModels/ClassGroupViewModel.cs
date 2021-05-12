@@ -1,13 +1,11 @@
 ﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Messages;
 using cs4rsa.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.ComponentModel;
-using System.Windows.Data;
 
 namespace cs4rsa.ViewModels
 {
@@ -87,7 +85,9 @@ namespace cs4rsa.ViewModels
                 {
                     classGroupModels.Add(classGroupModel);
                 }
-
+                Teacher teacherAll = new Teacher("TẤT CẢ");
+                teacherAll.Id = "0";
+                teachers.Add(new TeacherModel(teacherAll));
                 foreach (TeacherModel teacher in subjectModel.Teachers)
                 {
                     if (!teachers.Contains(teacher) && teacher != null)

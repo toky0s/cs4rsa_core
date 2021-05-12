@@ -2,7 +2,7 @@
 {
     public class Teacher
     {
-        private readonly string id;
+        private string id;
         private readonly string name;
         private readonly string sex;
         private readonly string place;
@@ -18,6 +18,10 @@
             get
             {
                 return id;
+            }
+            set
+            {
+                id = value;
             }
         }
         public string Name
@@ -82,6 +86,11 @@
             {
                 return teachedSubjects;
             }
+        }
+
+        public Teacher(string name)
+        {
+            this.name = name;
         }
 
         public Teacher(string id, string name, string sex, string place,

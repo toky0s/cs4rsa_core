@@ -24,12 +24,20 @@ namespace cs4rsa.Helpers
             string[] slideds = place.Split(splitChars);
             if (slideds.Contains("03"))
                 return Place.QUANGTRUNG;
-            if (slideds.Contains("Hoà"))
+            if (slideds.Contains("Nam"))
                 return Place.HOAKHANH;
-            if (slideds.Contains("254"))
+            if (slideds.Contains("209"))
                 return Place.PHANTHANH;
             else
                 return Place.VIETTIN;
+        }
+
+        public static Phase ToPhase(string phase)
+        {
+            if (phase == "both") return Phase.ALL;
+            if (phase == "first") return Phase.FIRST;
+            if (phase == "second") return Phase.SECOND;
+            return Phase.NON;
         }
     }
 }

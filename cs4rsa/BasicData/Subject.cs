@@ -55,7 +55,7 @@ namespace cs4rsa.BasicData
             this.rawSoup = rawSoup;
             this.courseId = courseId;
             GetClassGroups();
-            teachers = teachers.Distinct().ToList();
+
         }
 
         private string[] GetClassGroupNames()
@@ -117,13 +117,10 @@ namespace cs4rsa.BasicData
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
-            string teacherDetailPageURL = GetTeacherInfoPageURL(urlToSubjectDetailPage);
-            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL)
-            {
-                TeacherSaver = new TeacherSaver()
-            };
-            Teacher teacher = teacherCrawler.ToTeacher();
-            teachers.Add(teacher);
+
+            //teacher parser
+            Teacher teacher = GetTeacherFromURL(urlToSubjectDetailPage);
+            //teacher parser
 
             string classGroupName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
@@ -191,6 +188,24 @@ namespace cs4rsa.BasicData
         private string GetSubjectDetailPageURL(HtmlNode aTag)
         {
             return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+        }
+
+        /// <summary>
+        /// Nạp Teacher mới (nếu chưa có) vào Subject này thông qua url đồng thời trả về một teacher vừa mới được parse.
+        /// </summary>
+        /// <param name="url">Chuỗi url tới trang chi tiết nhóm lớp.</param>
+        /// <returns></returns>
+        private Teacher GetTeacherFromURL(string url)
+        {
+            string teacherDetailPageURL = GetTeacherInfoPageURL(url);
+            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL)
+            {
+                TeacherSaver = new TeacherSaver()
+            };
+            Teacher teacher = teacherCrawler.ToTeacher();
+            if (teacher != null && !teachers.Contains(teacher))
+                teachers.Add(teacher);
+            return teacher;
         }
     }
 }
