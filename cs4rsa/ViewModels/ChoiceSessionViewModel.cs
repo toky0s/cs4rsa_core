@@ -58,7 +58,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
         /// <summary>
@@ -84,11 +84,11 @@ namespace cs4rsa.ViewModels
                 if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
                 {
                     classGroupModels.Remove(classGroupModel);
-                    return;
+                    break;
                 }
             }
             UpdateConflictModelCollection();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
         /// <summary>
