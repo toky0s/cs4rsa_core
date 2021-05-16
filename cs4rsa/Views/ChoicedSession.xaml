@@ -20,7 +20,8 @@
                            Grid.Row="0"></TextBlock>
         <ListBox Grid.Row="1" 
                  ItemsSource="{Binding ClassGroupModels}"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Style="{StaticResource Cs4rsaListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"></TextBlock>

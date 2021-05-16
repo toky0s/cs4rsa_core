@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <DockPanel>
-                <Menu IsMainMenu="True">
-                    <MenuItem Header="_File">
+                <Menu IsMainMenu="True" Height="26">
+                    <MenuItem Header="_File" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="Save">
                         </MenuItem>
                         <MenuItem Header="Save As.." />
@@ -46,7 +46,7 @@
                             <MenuItem Header="Ice Cream" />
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="_Help">
+                    <MenuItem Header="_Help" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="User manual">
                         </MenuItem>
                         <MenuItem Header="About me">
@@ -57,10 +57,10 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="1.5*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0"
                   Margin="10, 10, 0, 0">

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:cs4rsa.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -12,16 +13,13 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <TextBlock Text="Tìm kiếm"
                    Grid.Row="0"></TextBlock>
@@ -41,42 +39,36 @@
                   x:Name="Keyword1ComboxBox"
                   ItemsSource="{Binding DisciplineKeywordModels}"
                   SelectedItem="{Binding SelectedKeyword}"
-                  SelectedValuePath="Keyword1">
+                  SelectedValuePath="Keyword1"
+                  ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}"
+                  materialDesign:ComboBoxAssist.ShowSelectedItem="{Binding ElementName=DisplaySelectedItemCheckBox, Path=IsChecked}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
                         <Run Text="{Binding Keyword1}"></Run>
                         <Run Text=" - "></Run>
-                        <Run Text="{Binding SubjectName}"></Run></TextBlock>
+                        <Run Text="{Binding SubjectName}"></Run>
+                    </TextBlock>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Button Content="Thêm"
-                Grid.Row="1"
-                Grid.Column="2"
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 Margin="0, 5, 0, 0"
                 x:Name="DisciplineKeywordButton"
                 Command="{Binding AddCommand}"
                 IsEnabled="{Binding CanRunAddCommand}"></Button>
-        <TextBox Grid.Row="2"
+        <ListBox Grid.Row="3"
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
-                 Margin="0, 10, 5, 0"
-                 TextWrapping="Wrap" />
-        <Button Grid.Row="2"
-                Grid.Column="2"
-                Margin="0, 10, 0, 0"
-                Content="Thêm"></Button>
-        <TextBlock Grid.Row="3"
-                   Grid.ColumnSpan="3"
-                   Text="{Binding TotalSubject, StringFormat={}Các môn ({0})}"></TextBlock>
-        <ListBox Grid.Row="4"
-                 Grid.ColumnSpan="3"
+                 Margin="0, 10, 0, 0"
                  x:Name="DownloadSubjects"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ItemsSource="{Binding SubjectModels}"
-                 SelectedItem="{Binding SelectedSubjectModel}">
-
+                 SelectedItem="{Binding SelectedSubjectModel}"
+                 Style="{StaticResource Cs4rsaListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -93,20 +85,30 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <WrapPanel Grid.ColumnSpan="3" Grid.Row="5">
-            <Button Content="Xoá"
+        <Grid Grid.ColumnSpan="2"
+                    Grid.Row="4" 
+                    Grid.Column="0"
+              Margin="0, 10, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="Xoá"
                     Command="{Binding DeleteCommand}"
-                    Width="auto">
+                    Margin="0, 0, 5, 0">
             </Button>
-            <Button Content="Nhập"
-                Width="auto"></Button>
-        </WrapPanel>
-        <TextBlock Text="{Binding TotalCredits, StringFormat={}Tổng số tín chỉ ({0})}"
-                   Grid.Row="6"
-                   Grid.ColumnSpan="3"></TextBlock>
-        <CheckBox Grid.Row="7"
-                  Content="Cập nhật liên tục"
-                  Margin="0, 10, 0, 0"
-                  Grid.ColumnSpan="3"></CheckBox>
+            <Button Grid.Column="1" 
+                    Content="Nhập"
+                    Margin="5, 0, 0, 0"></Button>
+        </Grid>
+        <TextBlock Grid.Row="5"
+                   Grid.ColumnSpan="2">
+            <Run>Có </Run>
+            <Run Text="{Binding TotalSubject}"></Run>
+            <Run> môn với </Run>
+            <Run Text="{Binding TotalCredits}"></Run>
+            <Run> tín chỉ</Run>
+        </TextBlock>
     </Grid>
 </UserControl>

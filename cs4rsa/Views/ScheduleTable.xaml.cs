@@ -1,21 +1,12 @@
-﻿using System;
+﻿using cs4rsa.Helpers;
+using cs4rsa.Models;
+using cs4rsa.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using cs4rsa.ViewModels;
-using cs4rsa.Models;
-using cs4rsa.Helpers;
 
 namespace cs4rsa.Views
 {
@@ -30,6 +21,16 @@ namespace cs4rsa.Views
             InitializeComponent();
             DataGridFirstPhase.ItemsSource = scheduleTableViewModel.Schedule1;
             DataGridSecondPhase.ItemsSource = scheduleTableViewModel.Schedule2;
+        }
+
+        /// <summary>
+        /// Phương thức này thực hiện tô màu cho bảng sau khi render xong dữ liệu
+        /// </summary>
+        /// <param name="scheduleRows"></param>
+        /// <param name="dataGrid"></param>
+        private void PaintColor(ObservableCollection<ScheduleRow> scheduleRows, DataGrid dataGrid)
+        {
+
         }
     }
 }

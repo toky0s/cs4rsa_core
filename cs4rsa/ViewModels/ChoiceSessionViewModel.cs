@@ -2,6 +2,7 @@
 using cs4rsa.BasicData;
 using cs4rsa.Messages;
 using cs4rsa.Models;
+using cs4rsa.Helpers;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.ObjectModel;
@@ -49,8 +50,12 @@ namespace cs4rsa.ViewModels
         public void Handle(ClassGroupAddedMessage message)
         {
             ClassGroupModel classGroupModel = message.Source;
+            //TODO: add color
+            string color = ColorGenerator.GetColor();
+            
             if (classGroupModel != null)
             {
+                classGroupModel.AddColor(color);
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (ClassGroupModelIndex != -1)
                     classGroupModels[ClassGroupModelIndex] = classGroupModel;

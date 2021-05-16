@@ -22,7 +22,7 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class SearchSession : UserControl
     {
-        DisciplinesViewModel disciplinesViewModel = new DisciplinesViewModel();
+        SearchViewModel disciplinesViewModel = new SearchViewModel();
         public SearchSession()
         {
             InitializeComponent();

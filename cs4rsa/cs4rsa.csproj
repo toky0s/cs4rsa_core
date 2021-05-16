@@ -61,6 +61,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ColorHelper, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ColorHelper.1.4.0\lib\netstandard2.0\ColorHelper.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net45\CommonServiceLocator.dll</HintPath>
     </Reference>
@@ -159,6 +162,7 @@
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
+    <Compile Include="Helpers\ColorGenerator.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
@@ -198,7 +202,7 @@
     <Compile Include="Tests\Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
-    <Compile Include="ViewModels\DisciplinesViewModel.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
     <Compile Include="ViewModels\SemesterInfoViewModel.cs" />
     <Compile Include="Views\ChoicedSession.xaml.cs">

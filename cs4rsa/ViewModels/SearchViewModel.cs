@@ -14,7 +14,7 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class DisciplinesViewModel : NotifyPropertyChangedBase
+    public class SearchViewModel : NotifyPropertyChangedBase
     {
         private Cs4rsaData cs4rsaData = new Cs4rsaData();
         //Add button
@@ -147,7 +147,7 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public DisciplinesViewModel()
+        public SearchViewModel()
         {
             List<string> disciplines = cs4rsaData.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();

@@ -15,14 +15,17 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Text="Nhóm lớp"
                    Grid.Row="0"
-                   x:Name="textbox_col2_title"></TextBlock>
+                   Style="{StaticResource Header1}"></TextBlock>
         <ListBox Grid.Row="1"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 Grid.Column="0"
+                 ScrollViewer.VerticalScrollBarVisibility="auto"
                  ItemsSource="{Binding ClassGroupModels}"
-                 SelectedItem="{Binding SelectedClassGroup}">
+                 SelectedItem="{Binding SelectedClassGroup}"
+                 Background="#f5f5f5">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -40,120 +43,130 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="2"
+        <TextBlock Grid.Row="2" 
+                   Grid.Column="0" 
+                   Text="Bộ lọc"
+                   Style="{StaticResource Header2}"></TextBlock>
+        <Grid Grid.Row="3" >
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Grid.Row="1"
+                    Grid.Column="0"
                     Orientation="Vertical"
-                    VerticalAlignment="Bottom">
-            <TextBlock Text="Bộ lọc"></TextBlock>
-            <TextBlock Text="Thứ"
+                    VerticalAlignment="Bottom"
+                            >
+                    <TextBlock Text="Thứ"
                        Margin="0, 10, 0, 5"></TextBlock>
-            <WrapPanel x:Name="CheckBoxContainer_DayOfWeek">
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T2"
+                    <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
+                        <CheckBox 
+                          Content="Thứ Hai"
                           x:Name="CheckBox_Monday"
                           IsChecked="False"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T3"
+                        <CheckBox 
+                          Content="Thứ Ba"
                           x:Name="CheckBox_Tuseday"
                           IsChecked="False"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T4" 
+                        <CheckBox
+                          Content="Thứ Tư" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Wednessday"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T5" 
+                        <CheckBox 
+                          Content="Thứ Năm" 
                           Click="ReloadClassGroupCollection" 
                           IsChecked="False"
                           x:Name="CheckBox_Thursday"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T6" 
+                        <CheckBox 
+                          Content="Thứ Sáu" 
                           Click="ReloadClassGroupCollection" 
                           IsChecked="False"
                           x:Name="CheckBox_Friday"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="T7" 
+                        <CheckBox
+                          Content="Thứ Bảy" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Saturday"></CheckBox>
-                <CheckBox Margin="0, 0, 10, 5"
-                          Content="CN" 
+                        <CheckBox
+                          Content="Chủ Nhật" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Sunday"></CheckBox>
-            </WrapPanel>
-            <TextBlock Text="Buổi"
+                    </StackPanel>
+                    <TextBlock Text="Buổi"
                        Margin="0,10,0,5"></TextBlock>
-            <WrapPanel Orientation="Horizontal">
-                <CheckBox Margin="0, 0, 10, 0"
-                          Content="Morning"
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox
+                          Content="Sáng"
                           x:Name="CheckBox_Morning"
                           Click="ReloadClassGroupCollection">
-                    <CheckBox.ToolTip>
-                        <ToolTip>
-                            7:00 - 9:00
-                        </ToolTip>
-                    </CheckBox.ToolTip>
-                </CheckBox>
-                <CheckBox Margin="0, 0, 10, 0"
-                          Content="Afternoon"
+                            <CheckBox.ToolTip>
+                                <ToolTip>
+                                    7:00 - 9:00
+                                </ToolTip>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+                        <CheckBox
+                          Content="Chiều"
                           x:Name="CheckBox_Afternoon"
                           Click="ReloadClassGroupCollection">
-                    <CheckBox.ToolTip>
-                        <ToolTip>
-                            13:00 - 17:00
-                        </ToolTip>
-                    </CheckBox.ToolTip>
-                </CheckBox>
-                <CheckBox Margin="0, 0, 10, 0"
-                          Content="Night"
+                            <CheckBox.ToolTip>
+                                <ToolTip>
+                                    13:00 - 17:00
+                                </ToolTip>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+                        <CheckBox
+                          Content="Tối"
                           x:Name="CheckBox_Night"
                           Click="ReloadClassGroupCollection">
-                    <CheckBox.ToolTip>
-                        <ToolTip>
-                            18:00 - 21:00
-                        </ToolTip>
-                    </CheckBox.ToolTip>
-                </CheckBox>
-            </WrapPanel>
-            <TextBlock Text="Giảng viên"
+                            <CheckBox.ToolTip>
+                                <ToolTip>
+                                    18:00 - 21:00
+                                </ToolTip>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+                    </StackPanel>
+                    <TextBlock Text="Giảng viên"
                        Margin="0, 10, 0, 5"></TextBlock>
-            <ComboBox 
+                    <ComboBox 
                 ItemsSource="{Binding Teachers}"
                 SelectedItem="{Binding SelectedTeacher}"
                 DisplayMemberPath="Name"
                 SelectionChanged="ReloadClassGroupCollection"
                 x:Name="ComboxBox_Teachers">
-            </ComboBox>
-            <TextBlock Text="Giai đoạn"
+                    </ComboBox>
+                    <TextBlock Text="Giai đoạn"
                        Margin="0, 10, 0, 5"></TextBlock>
-            <WrapPanel x:Name="RadioButtonContainer_Phase">
-                <RadioButton Name="all" Checked="ReloadClassGroupCollection" Content="All" IsChecked="True"></RadioButton>
-                <RadioButton Name="first" Checked="ReloadClassGroupCollection" Content="Phase 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
-                <RadioButton Name="second" Checked="ReloadClassGroupCollection" Content="Phase 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
-                <RadioButton Name="both" Checked="ReloadClassGroupCollection" Content="Both" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
-            </WrapPanel>
-            <TextBlock Text="Nơi học"
+                    <StackPanel x:Name="RadioButtonContainer_Phase">
+                        <RadioButton  Name="all" Checked="ReloadClassGroupCollection" Content="Tất cả" IsChecked="True"></RadioButton>
+                        <RadioButton  Name="first" Checked="ReloadClassGroupCollection" Content="Giai đoạn 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
+                        <RadioButton  Name="second" Checked="ReloadClassGroupCollection" Content="Giai đoạn 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
+                        <RadioButton  Name="both" Checked="ReloadClassGroupCollection" Content="Hai giai đoạn" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
+                    </StackPanel>
+                    <TextBlock Text="Nơi học"
                        Margin="0, 10, 0, 5"></TextBlock>
-            <WrapPanel x:Name="CheckBoxContainer_Place">
-                <CheckBox Margin="0, 0, 5, 10"
+                    <StackPanel x:Name="CheckBoxContainer_Place">
+                        <CheckBox
                           Content="Quang Trung"
                           x:Name="CheckBox_quantrung"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                <CheckBox Margin="0, 0, 5, 10"
+                        <CheckBox
                           Content="Phan Thanh"
                           x:Name="CheckBox_phanthanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                <CheckBox Margin="0, 0, 5, 10"
+                        <CheckBox
                           Content="Việt Tin"
                           x:Name="CheckBox_viettin"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                <CheckBox Margin="0, 0, 5, 10"
+                        <CheckBox
                           Content="Hoà Khánh"
                           x:Name="CheckBox_hoakhanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
-            </WrapPanel>
-        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>
