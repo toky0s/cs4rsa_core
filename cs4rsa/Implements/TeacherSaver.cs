@@ -9,7 +9,7 @@ namespace cs4rsa.Implements
         private Cs4rsaDatabase cs4RsaDatabase;
         public TeacherSaver()
         {
-            string connectString = Cs4rsaData.connectString;
+            string connectString = Cs4rsaData.ConnectString;
             cs4RsaDatabase = new Cs4rsaDatabase(connectString);
         }
 

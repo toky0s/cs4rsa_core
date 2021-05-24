@@ -15,7 +15,6 @@ namespace cs4rsa.Crawler
     {
 
         private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
-        private Cs4rsaData cs4RsaData;
         private string subjectCode;
         public string SubjectCode
         {
@@ -36,15 +35,14 @@ namespace cs4rsa.Crawler
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
         public SubjectCrawler(string discipline, string keyword1)
         {
-            cs4RsaData = new Cs4rsaData();
-            this.subjectCode = discipline + " " + keyword1;
+            subjectCode = discipline + " " + keyword1;
             this.discipline = discipline;
             this.keyword1 = keyword1;
         }
 
         public Subject ToSubject()
         {
-            string courseId = cs4RsaData.GetSingleDisciplineKeywordModel(discipline, keyword1).CourseID;
+            string courseId = Cs4rsaDataView.GetSingleDisciplineKeywordModel(discipline, keyword1).CourseID;
             string semesterId = homeCourseSearch.CurrentSemesterValue;
 
             string url = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={0}&semesterid={1}&timespan=71", courseId, semesterId);
@@ -53,7 +51,7 @@ namespace cs4rsa.Crawler
             HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
             HtmlNode[] trTags = table.Descendants("tr").ToArray();
             string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
-            string name = cs4RsaData.GetSingleDisciplineKeywordModel(discipline, keyword1).SubjectName;
+            string name = Cs4rsaDataView.GetSingleDisciplineKeywordModel(discipline, keyword1).SubjectName;
 
             string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
             string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();

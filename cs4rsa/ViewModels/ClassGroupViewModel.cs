@@ -85,8 +85,10 @@ namespace cs4rsa.ViewModels
                 {
                     classGroupModels.Add(classGroupModel);
                 }
-                Teacher teacherAll = new Teacher("TẤT CẢ");
-                teacherAll.Id = "0";
+                Teacher teacherAll = new Teacher("TẤT CẢ")
+                {
+                    Id = "0"
+                };
                 teachers.Add(new TeacherModel(teacherAll));
                 foreach (TeacherModel teacher in subjectModel.Teachers)
                 {

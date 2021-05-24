@@ -149,7 +149,7 @@ namespace cs4rsa.ViewModels
 
         public SearchViewModel()
         {
-            List<string> disciplines = cs4rsaData.GetDisciplines();
+            List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
@@ -178,7 +178,7 @@ namespace cs4rsa.ViewModels
         public void LoadDisciplineKeyword(string discipline)
         {
             disciplineKeywordModels.Clear();
-            foreach (DisciplineKeywordModel item in cs4rsaData.GetDisciplineKeywordModels(discipline))
+            foreach (DisciplineKeywordModel item in Cs4rsaDataView.GetDisciplineKeywordModels(discipline))
             {
                 disciplineKeywordModels.Add(item);
             }

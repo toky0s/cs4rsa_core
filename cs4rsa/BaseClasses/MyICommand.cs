@@ -44,10 +44,7 @@ namespace cs4rsa.BaseClasses
 
         void ICommand.Execute(object parameter)
         {
-            if (_TargetExecuteMethod != null)
-            {
-                _TargetExecuteMethod();
-            }
+            _TargetExecuteMethod?.Invoke();
         }
     }
 }

@@ -53,8 +53,10 @@ namespace cs4rsa.ViewModels
 
         private void OpenSaveDialog()
         {
-            SaveDialog saveDialog = new SaveDialog();
-            saveDialog.DataContext = new SaveDialogViewModel(ClassGroupModels);
+            SaveDialog saveDialog = new SaveDialog
+            {
+                DataContext = new SaveDialogViewModel(ClassGroupModels)
+            };
             saveDialog.ShowDialog();
         }
 

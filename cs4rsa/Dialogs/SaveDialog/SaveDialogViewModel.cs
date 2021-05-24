@@ -69,7 +69,7 @@ namespace cs4rsa.Dialogs.SaveDialog
         public SaveDialogViewModel(ObservableCollection<ClassGroupModel> classGroupModels)
         {
             _classGroupModels = classGroupModels;
-            _cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.connectString);
+            _cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
             SaveCommand = new MyICommand(Save, CanSave);
             GetListCurrentSession();
         }

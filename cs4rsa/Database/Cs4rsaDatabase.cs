@@ -8,14 +8,15 @@ using System.Data;
 
 namespace cs4rsa.Database
 {
+    /// <summary>
+    /// Class này chứa các phương thức thao tác với database
+    /// </summary>
     class Cs4rsaDatabase
     {
-        private string connectString;
         private SQLiteConnection connection;
 
         public Cs4rsaDatabase(string connectString)
         {
-            this.connectString = connectString;
             connection = new SQLiteConnection(connectString);
         }
 

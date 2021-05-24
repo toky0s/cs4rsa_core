@@ -19,7 +19,7 @@ namespace cs4rsa.Crawler
         public void GetDisciplineAndKeywordDatabase()
         {
             Cs4rsaData cs4RsaData = new Cs4rsaData();
-            string URL = String.Format(
+            string URL = string.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
                 homeCourseSearch.CurrentSemesterValue,
                 Helpers.Helpers.GetTimeFromEpoch());
@@ -48,14 +48,14 @@ namespace cs4rsa.Crawler
                 {
                     currentDiscipline = discipline;
                     disciplineId++;
-                    cs4RsaData.AddDiscipline(currentDiscipline);
+                    Cs4rsaDataEdit.AddDiscipline(currentDiscipline);
                 }
 
                 if (discipline == currentDiscipline)
                 {
                     HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
                     string subjectName = subjectNameAnchorTag.InnerText.Trim();
-                    cs4RsaData.AddKeyword(keyword1, courseId, disciplineId, subjectName);
+                    Cs4rsaDataEdit.AddKeyword(keyword1, courseId, disciplineId, subjectName);
                 }
             }
         }
