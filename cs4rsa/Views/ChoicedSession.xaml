@@ -28,14 +28,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <WrapPanel Grid.Row="2">
+        <StackPanel Grid.Row="2">
             <Button Content="Lưu" Command="{Binding SaveCommand}"></Button>
-        </WrapPanel>
+        </StackPanel>
         <TextBlock Text="Xung đột"
                            Grid.Row="3"></TextBlock>
         <ListBox Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Style="{StaticResource Cs4rsaListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"></TextBlock>
@@ -44,6 +45,7 @@
         </ListBox>
         <TextBlock Text="Phân tích"
                            Grid.Row="5"></TextBlock>
-        <ListBox Grid.Row="6"></ListBox>
+        <ListBox Grid.Row="6"
+                 Style="{StaticResource Cs4rsaListBox}"></ListBox>
     </Grid>
 </UserControl>
