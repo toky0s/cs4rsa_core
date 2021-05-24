@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:cs4rsa"
         xmlns:view="clr-namespace:cs4rsa.Views"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Background="#FFFAFAFA"
         Title="CS4RSA"
         Height="600"

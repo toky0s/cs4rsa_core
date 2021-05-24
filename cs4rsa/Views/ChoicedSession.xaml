@@ -29,13 +29,13 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <WrapPanel Grid.Row="2">
-            <Button Content="Lưu"></Button>
+            <Button Content="Lưu" Command="{Binding SaveCommand}"></Button>
         </WrapPanel>
         <TextBlock Text="Xung đột"
                            Grid.Row="3"></TextBlock>
         <ListBox Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"></TextBlock>

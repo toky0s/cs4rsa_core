@@ -15,9 +15,9 @@ namespace cs4rsa.Helpers
             do
             {
                 Random random = new Random();
-                int red = random.Next(256) / 2;
-                int green = random.Next(256) / 2;
-                int blue = random.Next(256) / 2;
+                int red = (random.Next(256) + 255) / 2;
+                int green = (random.Next(256) + 255) / 2;
+                int blue = (random.Next(256) + 255) / 2;
 
                 color = $"#{red:X2}{green:X2}{blue:X2}";
             }

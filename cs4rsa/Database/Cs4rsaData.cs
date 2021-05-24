@@ -47,6 +47,22 @@ namespace cs4rsa.Database
                 FOREIGN KEY (teacher_id) REFERENCES teacher (id)
             )";
 
+        private readonly string SQL_SESSION =
+            @"create table if not exists session (
+                id integer primary key AUTOINCREMENT,
+                name text,
+                save_date text
+            )";
+
+        private readonly string SQL_SESSION_DETAIL =
+            @"create table if not exists session_detail (
+                id integer primary key AUTOINCREMENT,
+                session_id integer,
+                subject_code text,
+                class_group text,
+                foreign key (session_id) references session(id)
+            )";
+
         public Cs4rsaData()
         {
             if (!File.Exists(databaseName))
@@ -57,6 +73,8 @@ namespace cs4rsa.Database
             CreateTable(SQL_KEYWORD_TABLE);
             CreateTable(SQL_TEACHER_TABLE);
             CreateTable(SQL_TEACHER_DETAIL_TABLE);
+            CreateTable(SQL_SESSION);
+            CreateTable(SQL_SESSION_DETAIL);
         }
 
         public void CreateDatabaseIfNotExist()

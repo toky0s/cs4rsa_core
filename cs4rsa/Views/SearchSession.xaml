@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="2.5*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <TextBlock Text="Tìm kiếm"
                    Grid.Row="0"></TextBlock>
@@ -35,13 +35,12 @@
                   SelectedValuePath="Discipline"></ComboBox>
         <ComboBox Grid.Row="1"
                   Grid.Column="1"
-                  Margin="0, 5, 5, 0"
+                  Margin="0, 5, 0, 0"
                   x:Name="Keyword1ComboxBox"
                   ItemsSource="{Binding DisciplineKeywordModels}"
                   SelectedItem="{Binding SelectedKeyword}"
                   SelectedValuePath="Keyword1"
-                  ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}"
-                  materialDesign:ComboBoxAssist.ShowSelectedItem="{Binding ElementName=DisplaySelectedItemCheckBox, Path=IsChecked}">
+                  ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
