@@ -63,12 +63,9 @@ namespace cs4rsa.ViewModels
         public void Handle(ClassGroupAddedMessage message)
         {
             ClassGroupModel classGroupModel = message.Source;
-            //TODO: add color
-            string color = ColorGenerator.GetColor();
             
             if (classGroupModel != null)
             {
-                classGroupModel.AddColor(color);
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (ClassGroupModelIndex != -1)
                     classGroupModels[ClassGroupModelIndex] = classGroupModel;

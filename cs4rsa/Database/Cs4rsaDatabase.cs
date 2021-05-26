@@ -46,11 +46,11 @@ namespace cs4rsa.Database
             return dataTable;
         }
 
-        public long CountSomething(string countQueryString)
+        public T GetScalar<T>(string countQueryString)
         {
             OpenConnection();
             SQLiteCommand command = new SQLiteCommand(countQueryString, connection);
-            long result = (long)command.ExecuteScalar();
+            T result = (T)command.ExecuteScalar();
             CloseConnection();
             return result;
         }

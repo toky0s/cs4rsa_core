@@ -26,7 +26,7 @@ namespace cs4rsa.Helpers
                 return Place.QUANGTRUNG;
             if (slideds.Contains("Nam"))
                 return Place.HOAKHANH;
-            if (slideds.Contains("209"))
+            if (slideds.Contains("209") || slideds.Contains("254"))
                 return Place.PHANTHANH;
             else
                 return Place.VIETTIN;

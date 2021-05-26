@@ -8,9 +8,6 @@ using cs4rsa.Models;
 
 namespace cs4rsa.Database
 {
-    /// <summary>
-    /// new Cs4rsa Data
-    /// </summary>
     class Cs4rsaDataView
     {
         /// <summary>
@@ -93,6 +90,22 @@ namespace cs4rsa.Database
                 reader.Close();
                 return disciplineKeywordModel;
             }
+        }
+
+        public static bool IsHaveSubjectColor(string color)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sqlString = $@"SELECT count(color) from keyword where color = '{color}'";
+            long result = cs4RsaDatabase.GetScalar<long>(sqlString);
+            if (result >= 1) return true;
+            return false;
+        }
+
+        public static string GetColorWithCourseId(string courseId)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sqlString = $@"select color from keyword where course_id = {courseId}";
+            return cs4RsaDatabase.GetScalar<string>(sqlString);
         }
     }
 }

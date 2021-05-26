@@ -18,7 +18,7 @@ namespace cs4rsa.Models
             {
                 List<TeacherModel> teacherModels = subject.Teachers
                     .Select(teacher => new TeacherModel(teacher))
-                    .ToList<TeacherModel>();
+                    .ToList();
                 return teacherModels;
             }
         }
@@ -40,6 +40,7 @@ namespace cs4rsa.Models
         public string SubjectCode => subject.SubjectCode;
         public int StudyUnit => subject.StudyUnit;
         public string CourseId => subject.CourseId;
+        public string Color { get; set; }
 
         public SubjectModel(Subject subject)
         {

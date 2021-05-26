@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using cs4rsa.Database;
+using cs4rsa.Crawler;
 
 namespace cs4rsa
 {
@@ -13,5 +15,12 @@ namespace cs4rsa
     /// </summary>
     public partial class App : Application
     {
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            // Khởi tạo database
+            Cs4rsaData cs4RsaData = new Cs4rsaData();
+        }
     }
 }

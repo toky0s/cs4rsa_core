@@ -18,7 +18,7 @@ namespace cs4rsa.Implements
 
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacher.Id}";
-            long result = cs4RsaDatabase.CountSomething(countQueryString);
+            long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
             if (result > 0)
                 return true;
             return false;
@@ -28,7 +28,7 @@ namespace cs4rsa.Implements
         {
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacherId}";
-            long result = cs4RsaDatabase.CountSomething(countQueryString);
+            long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
             if (result > 0)
                 return true;
             return false;
@@ -57,7 +57,7 @@ namespace cs4rsa.Implements
         private bool IsHaveOnlyOneCourseIdWithSubject(string subjectName)
         {
             string countString = $@"select count(course_id) FROM keyword where subject_name like '{subjectName}'";
-            long count = cs4RsaDatabase.CountSomething(countString);
+            long count = cs4RsaDatabase.GetScalar<long>(countString);
             if (count == 1)
                 return true;
             return false;
@@ -67,7 +67,7 @@ namespace cs4rsa.Implements
         {
             foreach (string subjectName in teacher.TeachedSubjects)
             {
-                long currentId = cs4RsaDatabase.CountSomething("select count(id) from teacher_detail")+1;
+                long currentId = cs4RsaDatabase.GetScalar<long>("select count(id) from teacher_detail")+1;
                 string updateDetailSQLString = $@"insert into teacher_detail values('{currentId}','{teacher.Id}', '{subjectName}')";
                 cs4RsaDatabase.DoSomething(updateDetailSQLString);
             }

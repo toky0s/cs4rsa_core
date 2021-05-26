@@ -55,7 +55,6 @@ namespace cs4rsa.BasicData
             this.rawSoup = rawSoup;
             this.courseId = courseId;
             GetClassGroups();
-
         }
 
         private string[] GetClassGroupNames()

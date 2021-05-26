@@ -13,7 +13,6 @@ namespace cs4rsa.Models
         public Phase Phase => classGroup.GetPhase();
         public Schedule Schedule => classGroup.GetSchedule();
         public List<Place> Places => classGroup.GetPlaces();
-        public string Color { get; set; }
 
         public ClassGroupModel(ClassGroup classGroup)
         {
@@ -26,11 +25,6 @@ namespace cs4rsa.Models
             foreach (Teacher teacher in classGroup.GetTeachers())
                 teacherModels.Add(new TeacherModel(teacher));
             return teacherModels;
-        }
-
-        public void AddColor(string color)
-        {
-            Color = color;
         }
     }
 }

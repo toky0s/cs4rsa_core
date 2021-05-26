@@ -53,9 +53,10 @@ namespace cs4rsa.Crawler
 
                 if (discipline == currentDiscipline)
                 {
+                    string color = ColorGenerator.GenerateColor();
                     HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
                     string subjectName = subjectNameAnchorTag.InnerText.Trim();
-                    Cs4rsaDataEdit.AddKeyword(keyword1, courseId, disciplineId, subjectName);
+                    Cs4rsaDataEdit.AddKeyword(keyword1, courseId, disciplineId, subjectName, color);
                 }
             }
         }

@@ -66,7 +66,7 @@ namespace cs4rsa.Helpers
         }
     }
 
-    class Checker
+    public class Checker
     {
         /// <summary>
         /// Kiểm tra một List<T> có 

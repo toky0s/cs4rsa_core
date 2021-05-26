@@ -43,9 +43,11 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="Phân tích"
+        <TextBlock Text="Tính năng khác"
                            Grid.Row="5"></TextBlock>
-        <ListBox Grid.Row="6"
-                 Style="{StaticResource Cs4rsaListBox}"></ListBox>
+        <StackPanel Grid.Row="6">
+            <Button Content="Phân tích"></Button>
+            <Button Content="Tự động xếp lịch"></Button>
+        </StackPanel>
     </Grid>
 </UserControl>

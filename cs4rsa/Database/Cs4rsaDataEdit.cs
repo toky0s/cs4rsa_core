@@ -22,10 +22,10 @@ namespace cs4rsa.Database
             }
         }
 
-        public static void AddKeyword(string keyword1, string courseId, int discipline_id, string subjectName)
+        public static void AddKeyword(string keyword1, string courseId, int discipline_id, string subjectName, string color=null)
         {
-            string sqlCommand = $@"insert into keyword (keyword1, course_id, discipline_id, subject_name)
-                                    values ('{keyword1}',{courseId},{discipline_id},'{subjectName}')";
+            string sqlCommand = $@"insert into keyword (keyword1, course_id, discipline_id, subject_name, color)
+                                    values ('{keyword1}',{courseId},{discipline_id},'{subjectName}', '{color}')";
             using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
             {
                 connection.Open();
