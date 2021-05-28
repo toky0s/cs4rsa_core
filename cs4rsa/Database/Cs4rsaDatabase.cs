@@ -46,10 +46,10 @@ namespace cs4rsa.Database
             return dataTable;
         }
 
-        public T GetScalar<T>(string countQueryString)
+        public T GetScalar<T>(string queryString)
         {
             OpenConnection();
-            SQLiteCommand command = new SQLiteCommand(countQueryString, connection);
+            SQLiteCommand command = new SQLiteCommand(queryString, connection);
             T result = (T)command.ExecuteScalar();
             CloseConnection();
             return result;

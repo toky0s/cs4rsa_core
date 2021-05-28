@@ -3,12 +3,14 @@ using cs4rsa.BasicData;
 using cs4rsa.Messages;
 using cs4rsa.Models;
 using cs4rsa.Helpers;
+using cs4rsa.Dialogs;
 using cs4rsa.Dialogs.SaveDialog;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System;
+using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
@@ -42,22 +44,24 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public MyICommand SaveCommand { get; set; }
+        public RelayCommand SaveCommand { get; set; }
 
         public ChoiceSessionViewModel()
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
-            SaveCommand = new MyICommand(OpenSaveDialog, ()=>true);
+            SaveCommand = new RelayCommand(OpenSaveDialog, ()=>true);
         }
 
-        private void OpenSaveDialog()
+        private void OpenSaveDialog(object parameter)
         {
-            SaveDialog saveDialog = new SaveDialog
-            {
-                DataContext = new SaveDialogViewModel(ClassGroupModels)
-            };
-            saveDialog.ShowDialog();
+            //SaveDialog saveDialog = new SaveDialog
+            //{
+            //    DataContext = new SaveDialogViewModel(ClassGroupModels)
+            //};
+            //saveDialog.ShowDialog();
+            DialogYesNoViewModel dialogYesNoViewModel = new DialogYesNoViewModel("Lưu?");
+            DialogResult result = DialogService.OpenDialog(dialogYesNoViewModel, parameter as Window);
         }
 
         public void Handle(ClassGroupAddedMessage message)

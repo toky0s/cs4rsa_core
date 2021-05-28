@@ -130,6 +130,11 @@ namespace cs4rsa.BasicData
             return false;
         }
 
+        public string GetRegisterCode()
+        {
+            return schoolClasses[0].RegisterCode;
+        }
+
         /// <summary>
         /// Hợp nhất hai StudyWeek của các SchoolClass trong ClassGroup này.
         /// </summary>

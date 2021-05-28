@@ -12,6 +12,13 @@ namespace cs4rsa.Database
             "#111111"
         };
 
+        public static string GetColor(string courseId)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sql = $@"SELECT color from keyword WHERE course_id = {courseId}";
+            return cs4RsaDatabase.GetScalar<string>(sql);
+        }
+
         public static string GenerateColor()
         {
             string color;
@@ -29,7 +36,11 @@ namespace cs4rsa.Database
 
         private static bool IsHasColor(string color)
         {
-            return Cs4rsaDataView.IsHaveSubjectColor(color);
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sqlString = $@"SELECT count(color) from keyword where color = '{color}'";
+            long result = cs4RsaDatabase.GetScalar<long>(sqlString);
+            if (result >= 1) return true;
+            return false;
         }
     }
 }

@@ -22,35 +22,18 @@
             <DockPanel>
                 <Menu IsMainMenu="True" Height="26">
                     <MenuItem Header="_File" Height="20" Margin="0, 3, 0, 0">
-                        <MenuItem Header="Save">
+                        <MenuItem Header="Open"
+                                  InputGestureText="Ctrl+O"></MenuItem>
+                        <MenuItem Header="Save"
+                                  InputGestureText="Ctrl+S">
                         </MenuItem>
-                        <MenuItem Header="Save As.." />
-                        <MenuItem Header="Exit"
-                                  InputGestureText="Ctrl+E">
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="Excellent"
-                                  IsCheckable="True"
-                                  IsChecked="True" />
-                        <MenuItem Header="Rubbish"
-                                  IsCheckable="True" />
-                        <MenuItem Header="Dig Deeper"
-                                  InputGestureText="Ctrl+D">
-                            <MenuItem Header="Enlightenment?"
-                                      IsCheckable="True" />
-                            <MenuItem Header="Disappointment"
-                                      IsCheckable="True" />
-                        </MenuItem>
-                        <MenuItem Header="Look Deeper"
-                                  InputGestureText="Ctrl+D">
-                            <MenuItem Header="Plain" />
-                            <MenuItem Header="Ice Cream" />
-                        </MenuItem>
+                        <MenuItem Header="Save As.." 
+                                  InputGestureText="Ctrl+Shift+S"/>
                     </MenuItem>
                     <MenuItem Header="_Help" Height="20" Margin="0, 3, 0, 0">
-                        <MenuItem Header="User manual">
+                        <MenuItem Header="Hướng dẫn sử dụng">
                         </MenuItem>
-                        <MenuItem Header="About me">
+                        <MenuItem Header="Thông tin">
                         </MenuItem>
                     </MenuItem>
                 </Menu>
@@ -80,13 +63,37 @@
                 <view:ScheduleTable></view:ScheduleTable>
             </Grid>
         </Grid>
-        <TextBlock x:Name="SemesterInfo"
-                   Grid.Row="2"
-                   Margin="0, 2, 10, 2"
-                   Loaded="SemesterInfo_Loaded"
-                   HorizontalAlignment="Right"
-                   FontSize="10">
-            <Run Text="{Binding CurrentSemesterInfo}"></Run>
-            <Run Text="{Binding CurrentYearInfo}"></Run></TextBlock>
+        <StatusBar Grid.Row="2" >
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock x:Name="SemesterInfo"
+                       Margin="0, 2, 10, 2"
+                       HorizontalAlignment="Right"
+                       FontSize="10">
+                    <Run Text="{Binding CurrentSemesterInfo}"></Run>
+                    <Run Text="{Binding CurrentYearInfo}"></Run>
+                </TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <TextBlock FontSize="10">
+                    <Run>Có </Run>
+                    <Run Text="{Binding TotalSubject}"></Run>
+                    <Run> môn với </Run>
+                    <Run Text="{Binding TotalCredit}"></Run>
+                    <Run> tín chỉ</Run>
+                </TextBlock>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

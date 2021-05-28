@@ -33,7 +33,7 @@
                             <TextBlock.ToolTip>
                                 <ToolTip>
                                     <StackPanel>
-                                        <TextBlock Text="{Binding Path=Phase, Mode=OneWay, Converter={StaticResource ResourceKey=PhaseConverter}}">
+                                        <TextBlock Text="{Binding RegisterCode}">
                                         </TextBlock>
                                     </StackPanel>
                                 </ToolTip>
@@ -52,99 +52,117 @@
                 <StackPanel Grid.Row="1"
                     Grid.Column="0"
                     Orientation="Vertical"
-                    VerticalAlignment="Bottom"
-                            >
-                    <TextBlock Text="Thứ"
+                    VerticalAlignment="Bottom">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Thứ"
                        Margin="0, 10, 0, 5"></TextBlock>
-                    <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
-                        <CheckBox 
+                            <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
+                                <CheckBox 
                           Content="Thứ Hai"
                           x:Name="CheckBox_Monday"
                           IsChecked="False"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                        <CheckBox 
+                                <CheckBox 
                           Content="Thứ Ba"
                           x:Name="CheckBox_Tuseday"
                           IsChecked="False"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                        <CheckBox
+                                <CheckBox
                           Content="Thứ Tư" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Wednessday"></CheckBox>
-                        <CheckBox 
+                                <CheckBox 
                           Content="Thứ Năm" 
                           Click="ReloadClassGroupCollection" 
                           IsChecked="False"
                           x:Name="CheckBox_Thursday"></CheckBox>
-                        <CheckBox 
+                                <CheckBox 
                           Content="Thứ Sáu" 
                           Click="ReloadClassGroupCollection" 
                           IsChecked="False"
                           x:Name="CheckBox_Friday"></CheckBox>
-                        <CheckBox
+                                <CheckBox
                           Content="Thứ Bảy" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Saturday"></CheckBox>
-                        <CheckBox
+                                <CheckBox
                           Content="Chủ Nhật" 
                           Click="ReloadClassGroupCollection"
                           IsChecked="False"
                           x:Name="CheckBox_Sunday"></CheckBox>
-                    </StackPanel>
-                    <TextBlock Text="Buổi"
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="Buổi"
                        Margin="0,10,0,5"></TextBlock>
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox
                           Content="Sáng"
                           x:Name="CheckBox_Morning"
                           Click="ReloadClassGroupCollection">
-                            <CheckBox.ToolTip>
-                                <ToolTip>
-                                    7:00 - 9:00
-                                </ToolTip>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
-                        <CheckBox
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            7:00 - 9:00
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                                <CheckBox
                           Content="Chiều"
                           x:Name="CheckBox_Afternoon"
                           Click="ReloadClassGroupCollection">
-                            <CheckBox.ToolTip>
-                                <ToolTip>
-                                    13:00 - 17:00
-                                </ToolTip>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
-                        <CheckBox
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            13:00 - 17:00
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                                <CheckBox
                           Content="Tối"
                           x:Name="CheckBox_Night"
                           Click="ReloadClassGroupCollection">
-                            <CheckBox.ToolTip>
-                                <ToolTip>
-                                    18:00 - 21:00
-                                </ToolTip>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
-                    </StackPanel>
-                    <TextBlock Text="Giảng viên"
+                                    <CheckBox.ToolTip>
+                                        <ToolTip>
+                                            18:00 - 21:00
+                                        </ToolTip>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                            <TextBlock Text="Giảng viên"
                        Margin="0, 10, 0, 5"></TextBlock>
-                    <ComboBox 
+                            <ComboBox 
                 ItemsSource="{Binding Teachers}"
                 SelectedItem="{Binding SelectedTeacher}"
                 DisplayMemberPath="Name"
                 SelectionChanged="ReloadClassGroupCollection"
                 x:Name="ComboxBox_Teachers">
-                    </ComboBox>
-                    <TextBlock Text="Giai đoạn"
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Text="Giai đoạn"
                        Margin="0, 10, 0, 5"></TextBlock>
-                    <StackPanel x:Name="RadioButtonContainer_Phase">
-                        <RadioButton  Name="all" Checked="ReloadClassGroupCollection" Content="Tất cả" IsChecked="True"></RadioButton>
-                        <RadioButton  Name="first" Checked="ReloadClassGroupCollection" Content="Giai đoạn 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
-                        <RadioButton  Name="second" Checked="ReloadClassGroupCollection" Content="Giai đoạn 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
-                        <RadioButton  Name="both" Checked="ReloadClassGroupCollection" Content="Hai giai đoạn" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
-                    </StackPanel>
-                    <TextBlock Text="Nơi học"
+                            <StackPanel x:Name="RadioButtonContainer_Phase">
+                                <RadioButton  Name="all" Checked="ReloadClassGroupCollection" Content="Tất cả" IsChecked="True"></RadioButton>
+                                <RadioButton  Name="first" Checked="ReloadClassGroupCollection" Content="Giai đoạn 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
+                                <RadioButton  Name="second" Checked="ReloadClassGroupCollection" Content="Giai đoạn 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
+                                <RadioButton  Name="both" Checked="ReloadClassGroupCollection" Content="Hai giai đoạn" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1">
+                                                <TextBlock Text="Nơi học"
                        Margin="0, 10, 0, 5"></TextBlock>
                     <StackPanel x:Name="CheckBoxContainer_Place">
                         <CheckBox
@@ -164,8 +182,15 @@
                           x:Name="CheckBox_hoakhanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
                     </StackPanel>
-                </StackPanel>
+                        </StackPanel>
+                    </Grid>
 
+
+
+
+
+
+                </StackPanel>
             </ScrollViewer>
         </Grid>
     </Grid>

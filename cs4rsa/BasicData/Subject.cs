@@ -38,6 +38,7 @@ namespace cs4rsa.BasicData
         public string CourseId => courseId;
         public int StudyUnit => int.Parse(studyUnit);
         public string RawSoup => rawSoup;
+        public string Color { get; private set; }
 
         public Subject(string name, string subjectCode, string studyUnit,
             string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,

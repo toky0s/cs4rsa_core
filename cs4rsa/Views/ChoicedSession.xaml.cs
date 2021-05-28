@@ -21,11 +21,17 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class ChoicedSession : UserControl
     {
-        private ChoiceSessionViewModel ChoiceSessionViewModel = new ChoiceSessionViewModel();
+        private ChoiceSessionViewModel _choiceSessionViewModel = new ChoiceSessionViewModel();
         public ChoicedSession()
         {
-            DataContext = ChoiceSessionViewModel;
             InitializeComponent();
+            DataContext = _choiceSessionViewModel;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            string registerCode = _choiceSessionViewModel.ClassGroupModels[Listbox_Choiced.SelectedIndex].RegisterCode;
+            Clipboard.SetData(DataFormats.Text, registerCode);
         }
     }
 }

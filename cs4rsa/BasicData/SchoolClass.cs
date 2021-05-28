@@ -8,7 +8,7 @@ namespace cs4rsa.BasicData
 {
     public class SchoolClass
     {
-        private string subjectCode;
+        private readonly string subjectCode;
         private string classGroupName;
         private string name;
         private string registerCode;
@@ -27,6 +27,7 @@ namespace cs4rsa.BasicData
         public string Name => name;
         public string SubjectCode => subjectCode;
         public string ClassGroupName => classGroupName;
+        public string RegisterCode => registerCode;
         public Schedule Schedule => schedule;
         public StudyWeek StudyWeek => studyWeek;
         public Teacher Teacher => teacher;

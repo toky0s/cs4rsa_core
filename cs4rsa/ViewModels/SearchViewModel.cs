@@ -16,7 +16,6 @@ namespace cs4rsa.ViewModels
     /// </summary>
     public class SearchViewModel : NotifyPropertyChangedBase
     {
-        private Cs4rsaData cs4rsaData = new Cs4rsaData();
         //Add button
         public MyICommand AddCommand { get; set; }
         private bool canRunAddCommand = false;
@@ -144,6 +143,7 @@ namespace cs4rsa.ViewModels
             {
                 totalCredits = value;
                 RaisePropertyChanged();
+
             }
         }
 
@@ -228,17 +228,26 @@ namespace cs4rsa.ViewModels
         private void WorkerComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             CanRunAddCommand = false;
-            subjectModels.Add((SubjectModel)e.Result);
+            SubjectModel subjectModel = (SubjectModel)e.Result;
+            subjectModel.Color = ColorGenerator.GetColor(subjectModel.CourseId);
+            subjectModels.Add(subjectModel);
             TotalSubject = subjectModels.Count;
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }
 
+        /// <summary>
+        /// Cập nhật tổng số môn học.
+        /// </summary>
         private void UpdateSubjectAmount()
         {
             TotalSubject = subjectModels.Count;
+            MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
         }
 
+        /// <summary>
+        /// Cập nhật tổng số tín chỉ.
+        /// </summary>
         private void UpdateCreditTotal()
         {
             TotalCredits = 0;
@@ -246,6 +255,7 @@ namespace cs4rsa.ViewModels
             {
                 TotalCredits += subject.StudyUnit;
             }
+            MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
         }
     }
 }

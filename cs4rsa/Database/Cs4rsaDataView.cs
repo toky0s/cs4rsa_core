@@ -92,15 +92,6 @@ namespace cs4rsa.Database
             }
         }
 
-        public static bool IsHaveSubjectColor(string color)
-        {
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
-            string sqlString = $@"SELECT count(color) from keyword where color = '{color}'";
-            long result = cs4RsaDatabase.GetScalar<long>(sqlString);
-            if (result >= 1) return true;
-            return false;
-        }
-
         public static string GetColorWithCourseId(string courseId)
         {
             Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);

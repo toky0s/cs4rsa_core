@@ -26,12 +26,8 @@ namespace cs4rsa
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void SemesterInfo_Loaded(object sender, RoutedEventArgs e)
-        {
             SemesterInfoViewModel semesterInfoViewModel = new SemesterInfoViewModel();
-            SemesterInfo.DataContext = semesterInfoViewModel;
+            DataContext = semesterInfoViewModel;
         }
     }
 }

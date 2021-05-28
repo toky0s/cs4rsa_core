@@ -15,7 +15,6 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -74,13 +73,26 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0"
-                                   Text="{Binding SubjectCode}"></TextBlock>
-                        <TextBlock Grid.Row="1"
-                                   Text="{Binding SubjectName}"></TextBlock>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Canvas Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.RowSpan="2"
+                                Width="20" Height="20" >
+                            <Rectangle
+                                Width="20"
+                                Height="20"
+                                Fill="{Binding Color}"/>
+                        </Canvas>
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="1"
+                                    Orientation="Vertical">
+                            <TextBlock Grid.Row="0" Text="{Binding SubjectCode}" Margin="5,0,0,0"></TextBlock>
+                            <TextBlock Grid.Row="1" Text="{Binding SubjectName}" Margin="5,0,0,0"></TextBlock>
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -102,13 +114,5 @@
                     Content="Nhập"
                     Margin="5, 0, 0, 0"></Button>
         </Grid>
-        <TextBlock Grid.Row="5"
-                   Grid.ColumnSpan="2">
-            <Run>Có </Run>
-            <Run Text="{Binding TotalSubject}"></Run>
-            <Run> môn với </Run>
-            <Run Text="{Binding TotalCredits}"></Run>
-            <Run> tín chỉ</Run>
-        </TextBlock>
     </Grid>
 </UserControl>

@@ -30,7 +30,9 @@ namespace cs4rsa.Models
                 List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
                 foreach(ClassGroup classGroup in subject.ClassGroups)
                 {
-                    classGroupModels.Add(new ClassGroupModel(classGroup));
+                    ClassGroupModel classGroupModel = new ClassGroupModel(classGroup);
+                    classGroupModel.Color = Color;
+                    classGroupModels.Add(classGroupModel);
                 }
                 return classGroupModels;
             }

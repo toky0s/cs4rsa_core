@@ -10,9 +10,11 @@ namespace cs4rsa.Models
 
         public string Name => classGroup.Name;
         public string SubjectCode => classGroup.SubjectCode;
+        public string RegisterCode => classGroup.GetRegisterCode();
         public Phase Phase => classGroup.GetPhase();
         public Schedule Schedule => classGroup.GetSchedule();
         public List<Place> Places => classGroup.GetPlaces();
+        public string Color { get; set; }
 
         public ClassGroupModel(ClassGroup classGroup)
         {

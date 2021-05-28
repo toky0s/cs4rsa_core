@@ -14,25 +14,39 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Text="Đã chọn"
-                           Grid.Row="0"></TextBlock>
-        <ListBox Grid.Row="1" 
+                   Grid.Row="0"
+                   Style="{StaticResource Header1}"></TextBlock>
+        <ListBox Grid.Row="1"
+                 x:Name="Listbox_Choiced"
                  ItemsSource="{Binding ClassGroupModels}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Style="{StaticResource Cs4rsaListBox}">
+            <ListBox.Resources>
+                <ContextMenu x:Key="listViewContextMenu">
+                    <MenuItem Header="Sao chép mã" Click="MenuItem_Click"/>
+                </ContextMenu>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"></TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="ContextMenu" Value="{StaticResource listViewContextMenu}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
         <StackPanel Grid.Row="2">
-            <Button Content="Lưu" Command="{Binding SaveCommand}"></Button>
+            <Button Content="Lưu" 
+                    Command="{Binding SaveCommand}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
         </StackPanel>
         <TextBlock Text="Xung đột"
-                           Grid.Row="3"></TextBlock>
+                   Style="{StaticResource Header2}"
+                   Grid.Row="3"></TextBlock>
         <ListBox Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -43,9 +57,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="Tính năng khác"
-                           Grid.Row="5"></TextBlock>
-        <StackPanel Grid.Row="6">
+        <StackPanel Grid.Row="5">
             <Button Content="Phân tích"></Button>
             <Button Content="Tự động xếp lịch"></Button>
         </StackPanel>
