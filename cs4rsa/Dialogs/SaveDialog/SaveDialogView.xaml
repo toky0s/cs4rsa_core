@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" 
                    Text="Danh sách phiên"
-                   Margin="7"></TextBlock>
+                   Style="{StaticResource Header1}"></TextBlock>
         <ListBox Grid.Row="1" 
                  SelectedValue="{Binding SelectedScheduleSession}" 
                  ItemsSource="{Binding ScheduleSessions}"

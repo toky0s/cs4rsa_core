@@ -9,6 +9,7 @@ using cs4rsa.Database;
 using cs4rsa.BaseClasses;
 using System.Data;
 using System.Globalization;
+using cs4rsa.Interfaces;
 
 namespace cs4rsa.Dialogs.SaveDialog
 {
@@ -62,15 +63,16 @@ namespace cs4rsa.Dialogs.SaveDialog
             set
             {
                 _name = value;
-                SaveCommand.RaiseCanExecuteChanged();
             }
         }
+
+        public IMessageService messageService;
 
         public SaveDialogViewModel(ObservableCollection<ClassGroupModel> classGroupModels)
         {
             _classGroupModels = classGroupModels;
             _cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
-            SaveCommand = new MyICommand(Save, CanSave);
+            SaveCommand = new MyICommand(Save, () => true);
             GetListCurrentSession();
         }
 
@@ -89,14 +91,19 @@ namespace cs4rsa.Dialogs.SaveDialog
             }
         }
 
-        private bool CanSave()
-        {
-            return Name != "";
-        }
-
         private void Save()
         {
-            
+            if (!IsValidSaveName(_name)) messageService.ShowMessage("Tên nhập vào không hợp lệ!");
+            else
+            {
+                string sql = $@"";
+                _cs4RsaDatabase.DoSomething(sql);
+            }
+        }
+
+        private bool IsValidSaveName(string name)
+        {
+            return name != null;
         }
     }
 }
