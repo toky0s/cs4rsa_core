@@ -56,20 +56,20 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tests\BasicData\TestClassGroup.cs" />
-    <Compile Include="Tests\BasicData\TestConflict.cs" />
-    <Compile Include="Tests\BasicData\TestSchedule.cs" />
-    <Compile Include="Tests\BasicData\TestStudyTime.cs" />
-    <Compile Include="Tests\BasicData\TestStudyWeek.cs" />
-    <Compile Include="Tests\BasicData\TestSubject.cs" />
-    <Compile Include="Tests\Crawler\TestDisciplineData.cs" />
-    <Compile Include="Tests\Crawler\TestHomeCourseSearch.cs" />
-    <Compile Include="Tests\Crawler\TestScheduleParser.cs" />
-    <Compile Include="Tests\Crawler\TestTeacherCrawler.cs" />
-    <Compile Include="Tests\Helpers\TestBasicDataConverter.cs" />
-    <Compile Include="Tests\Helpers\TestClassGroupFilter.cs" />
-    <Compile Include="Tests\Helpers\TestHelpers.cs" />
-    <Compile Include="Tests\Helpers\TestShortedTimeConverter.cs" />
+    <Compile Include="BasicData\TestClassGroup.cs" />
+    <Compile Include="BasicData\TestConflict.cs" />
+    <Compile Include="BasicData\TestSchedule.cs" />
+    <Compile Include="BasicData\TestStudyTime.cs" />
+    <Compile Include="BasicData\TestStudyWeek.cs" />
+    <Compile Include="BasicData\TestSubject.cs" />
+    <Compile Include="Crawler\TestDisciplineData.cs" />
+    <Compile Include="Crawler\TestHomeCourseSearch.cs" />
+    <Compile Include="Crawler\TestScheduleParser.cs" />
+    <Compile Include="Crawler\TestTeacherCrawler.cs" />
+    <Compile Include="Helpers\TestBasicDataConverter.cs" />
+    <Compile Include="Helpers\TestClassGroupFilter.cs" />
+    <Compile Include="Helpers\TestHelpers.cs" />
+    <Compile Include="Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,13 +77,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag1.html" />
-    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag2.html" />
-    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag3.html" />
-    <Content Include="Tests\Crawler\HtmlTdTags\HTMLPagetdTag4.html" />
+    <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag1.html" />
+    <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag2.html" />
+    <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag3.html" />
+    <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag4.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Tests\Database\" />
+    <Folder Include="Database\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cs4rsa\cs4rsa.csproj">
