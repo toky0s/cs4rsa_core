@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace cs4rsa.Dialogs
+namespace cs4rsa.Dialogs.Implements
 {
     /// <summary>
-    /// Interaction logic for DialogWindow.xaml
+    /// Interaction logic for SaveDialogWindow.xaml
     /// </summary>
-    public partial class DialogWindow : Window
+    public partial class SaveDialogWindow : Window
     {
-        public DialogWindow()
+        public SaveDialogWindow()
         {
             InitializeComponent();
         }

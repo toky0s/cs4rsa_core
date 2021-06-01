@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cs4rsa.Dialogs
+namespace cs4rsa.Dialogs.DialogResults
 {
-    public enum DialogResult
+    class SaveResult
     {
-        Undefined,
-        Yes,
-        No
+       public string Name { get; set; }
     }
 }
