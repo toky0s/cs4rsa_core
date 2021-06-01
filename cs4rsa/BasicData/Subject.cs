@@ -127,9 +127,20 @@ namespace cs4rsa.BasicData
             string studyType = tdTags[2].InnerText.Trim();
             string emptySeat = tdTags[3].InnerText.Trim();
 
+            // Hạn bắt đầu và kết thúc đăng ký (đôi lúc nó sẽ không có nên mình sẽ check null đoạn này)
+            string registrationTermStart;
+            string registrationTermEnd;
             string[] registrationTerm = StringHelper.SplitAndRemoveAllSpace(tdTags[4].InnerText);
-            string registrationTermStart = registrationTerm[0];
-            string registrationTermEnd = registrationTerm[1];
+            if (registrationTerm.Count() == 0)
+            {
+                registrationTermStart = null;
+                registrationTermEnd = null;
+            }
+            else
+            {
+                registrationTermStart = registrationTerm[0];
+                registrationTermEnd = registrationTerm[1];
+            }
 
             string studyWeekString = tdTags[5].InnerText.Trim();
             StudyWeek studyWeek = new StudyWeek(studyWeekString);

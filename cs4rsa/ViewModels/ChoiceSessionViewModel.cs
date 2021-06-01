@@ -2,15 +2,16 @@
 using cs4rsa.BasicData;
 using cs4rsa.Messages;
 using cs4rsa.Models;
-using cs4rsa.Helpers;
-using cs4rsa.Dialogs;
-using cs4rsa.Dialogs.SaveDialog;
+using cs4rsa.Dialogs.DialogService;
+using cs4rsa.Dialogs.DialogResults;
+using cs4rsa.Dialogs.Implements;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 using System.Windows;
+using cs4rsa.Dialogs.MessageBoxService;
 
 namespace cs4rsa.ViewModels
 {
@@ -18,6 +19,21 @@ namespace cs4rsa.ViewModels
         IMessageHandler<ClassGroupAddedMessage>,
         IMessageHandler<DeleteSubjectMessage>
     {
+
+        private bool _canSave;
+        public bool CanSave
+        {
+            get
+            {
+                return _canSave;
+            }
+            set
+            {
+                _canSave = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
         {
@@ -50,18 +66,15 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
-            SaveCommand = new RelayCommand(OpenSaveDialog, ()=>true);
+            SaveCommand = new RelayCommand(OpenSaveDialog, () => true);
         }
 
         private void OpenSaveDialog(object parameter)
         {
-            //SaveDialog saveDialog = new SaveDialog
-            //{
-            //    DataContext = new SaveDialogViewModel(ClassGroupModels)
-            //};
-            //saveDialog.ShowDialog();
-            DialogYesNoViewModel dialogYesNoViewModel = new DialogYesNoViewModel("Lưu?");
-            DialogResult result = DialogService.OpenDialog(dialogYesNoViewModel, parameter as Window);
+            Dialogs.MessageBoxService.Cs4rsaMessageBox errorMessageBox = new Dialogs.MessageBoxService.Cs4rsaMessageBox();
+            SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, classGroupModels.ToList());
+            SaveDialogWindow dialogWindow = new SaveDialogWindow();
+            SaveResult result = DialogService<SaveResult>.OpenDialog(saveDialogViewModel, dialogWindow, parameter as Window);
         }
 
         public void Handle(ClassGroupAddedMessage message)
@@ -77,6 +90,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
+            CanSaveChange();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -107,6 +121,7 @@ namespace cs4rsa.ViewModels
                 }
             }
             UpdateConflictModelCollection();
+            CanSaveChange();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -131,6 +146,11 @@ namespace cs4rsa.ViewModels
                     }
                 }
             }
+        }
+
+        private void CanSaveChange()
+        {
+            CanSave = classGroupModels.Count > 0;
         }
     }
 }

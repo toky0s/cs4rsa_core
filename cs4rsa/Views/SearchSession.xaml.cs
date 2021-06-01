@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using cs4rsa.ViewModels;
 using System.ComponentModel;
+using cs4rsa.Dialogs.MessageBoxService;
 
 namespace cs4rsa.Views
 {
@@ -22,20 +23,19 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class SearchSession : UserControl
     {
-        SearchViewModel disciplinesViewModel = new SearchViewModel();
+        private SearchViewModel searchViewModel = new SearchViewModel();
+        
         public SearchSession()
         {
             InitializeComponent();
+            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
+            searchViewModel.MessageBox = cs4RsaMessageBox;
+            DataContext = searchViewModel;
         }
 
-        private void DisciplineComboBox_Loaded(object sender, RoutedEventArgs e)
+        private void DisciplineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataContext = disciplinesViewModel;
-        }
-
-        private void DisciplineComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            disciplinesViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
+            searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
     }
 }

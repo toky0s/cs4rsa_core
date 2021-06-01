@@ -40,9 +40,11 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
         <StackPanel Grid.Row="2">
-            <Button Content="Lưu" 
+            <Button Content="Lưu"></Button>
+            <Button Content="Lưu mới" 
                     Command="{Binding SaveCommand}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    IsEnabled="{Binding CanSave}"></Button>
         </StackPanel>
         <TextBlock Text="Xung đột"
                    Style="{StaticResource Header2}"

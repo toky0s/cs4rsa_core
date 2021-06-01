@@ -39,8 +39,6 @@ namespace cs4rsa.Crawler
             get { return currentSemesterInfo; }
         }
 
-
-
         public HomeCourseSearch()
         {
             HtmlWeb htmlWeb = new HtmlWeb();
@@ -49,7 +47,7 @@ namespace cs4rsa.Crawler
             currentYearValue = GetCurrentValue(document);
             currentYearInfo = GetCurrentInfo(document);
 
-            string URL_SEMESTER_COMBOBOX = String.Format("http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}", currentYearValue);
+            string URL_SEMESTER_COMBOBOX = string.Format("http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}", currentYearValue);
             document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
             currentSemesterValue = GetCurrentValue(document);
             currentSemesterInfo = GetCurrentInfo(document);

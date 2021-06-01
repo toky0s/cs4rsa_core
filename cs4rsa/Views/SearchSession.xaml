@@ -28,7 +28,6 @@
                   Grid.Column="0"
                   Margin="0, 0, 5, 0"
                   x:Name="DisciplineComboBox"
-                  Loaded="DisciplineComboBox_Loaded"
                   SelectionChanged="DisciplineComboBox_SelectionChanged"
                   ItemsSource="{Binding Disciplines}"
                   SelectedItem="{Binding SelectedDiscipline}"

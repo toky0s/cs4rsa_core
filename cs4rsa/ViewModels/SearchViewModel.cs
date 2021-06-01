@@ -1,6 +1,8 @@
 ﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Database;
+using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Messages;
 using cs4rsa.Models;
 using LightMessageBus;
@@ -18,7 +20,7 @@ namespace cs4rsa.ViewModels
     {
         //Add button
         public MyICommand AddCommand { get; set; }
-        private bool canRunAddCommand = false;
+        private bool canRunAddCommand = true;
         public bool CanRunAddCommand
         {
             get
@@ -69,7 +71,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedKeyword = value;
-                AddCommand.RaiseCanExecuteChanged();
+                CanAddSubjectChange();
                 RaisePropertyChanged("SelectedKeyword");
             }
         }
@@ -147,12 +149,14 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        public IMessageBox MessageBox;
+
         public SearchViewModel()
         {
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
-            AddCommand = new MyICommand(OnAddSubject, CanAddSubject);
+            AddCommand = new MyICommand(OnAddSubject, ()=> true);
             DeleteCommand = new MyICommand(OnDeleteSubject, CanDeleteSubject);
             SelectedDiscipline = this.disciplines[0];
         }
@@ -187,7 +191,7 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject()
         {
-            CanRunAddCommand = false;
+            CanAddSubjectChange(false);
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -198,42 +202,33 @@ namespace cs4rsa.ViewModels
             backgroundWorker.RunWorkerAsync(subjectCrawler);
         }
 
-        private bool CanAddSubject()
-        {
-            List<string> courseIds = subjectModels.Select(item => item.CourseId).ToList();
-            if (SelectedKeyword == null)
-            {
-                return true;
-            }
-            if (courseIds.Contains(SelectedKeyword.CourseID))
-            {
-                CanRunAddCommand = false;
-                return false;
-            }
-
-            else
-            {
-                CanRunAddCommand = true;
-                return true;
-            }
-        }
-
         private void WorkerDownloadSubject(object sender, DoWorkEventArgs e)
         {
             SubjectCrawler subjectCrawler = (SubjectCrawler)e.Argument;
-            SubjectModel subjectModel = new SubjectModel(subjectCrawler.ToSubject());
-            e.Result = subjectModel;
+            Subject subject = subjectCrawler.ToSubject();
+            if (subject != null)
+            {
+                SubjectModel subjectModel = new SubjectModel(subject);
+                e.Result = subjectModel;
+            }
         }
 
         private void WorkerComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            CanRunAddCommand = false;
-            SubjectModel subjectModel = (SubjectModel)e.Result;
-            subjectModel.Color = ColorGenerator.GetColor(subjectModel.CourseId);
-            subjectModels.Add(subjectModel);
-            TotalSubject = subjectModels.Count;
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
+            if (e.Result != null)
+            {
+                SubjectModel subjectModel = (SubjectModel)e.Result;
+                subjectModel.Color = ColorGenerator.GetColor(subjectModel.CourseId);
+                subjectModels.Add(subjectModel);
+                TotalSubject = subjectModels.Count;
+                CanAddSubjectChange();
+                UpdateCreditTotal();
+                UpdateSubjectAmount();
+            }
+            else
+            {
+                MessageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này");
+            }
         }
 
         /// <summary>
@@ -256,6 +251,27 @@ namespace cs4rsa.ViewModels
                 TotalCredits += subject.StudyUnit;
             }
             MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
+        }
+
+        private void CanAddSubjectChange(bool? value=null)
+        {
+            if (value == null)
+            {
+                List<string> courseIds = subjectModels.Select(item => item.CourseId).ToList();
+                if (selectedKeyword == null)
+                {
+                    CanRunAddCommand = true;
+                    return;
+                }
+                if (courseIds.Contains(SelectedKeyword.CourseID))
+                    CanRunAddCommand = false;
+                else
+                    CanRunAddCommand = true;
+            }
+            else
+            {
+                CanRunAddCommand = value.Value;
+            }
         }
     }
 }
