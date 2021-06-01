@@ -132,22 +132,21 @@
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
+    <Compile Include="BasicData\Semester.cs" />
     <Compile Include="Database\ColorGenerator.cs" />
     <Compile Include="Database\Cs4rsaDataEdit.cs" />
     <Compile Include="Database\Cs4rsaDataView.cs" />
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
-    <Compile Include="Dialogs\DialogResult.cs" />
-    <Compile Include="Dialogs\DialogService.cs" />
-    <Compile Include="Dialogs\DialogViewModelBase.cs" />
-    <Compile Include="Dialogs\DialogWindow.xaml.cs">
-      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
+    <Compile Include="Dialogs\DialogService\DialogService.cs" />
+    <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
+    <Compile Include="Dialogs\Implements\SaveDialogWindow.xaml.cs">
+      <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogYesNoViewModel.cs" />
-    <Compile Include="Dialogs\SaveDialog\SaveDialogView.xaml.cs">
-      <DependentUpon>SaveDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\SaveDialog\SaveDialogViewModel.cs" />
+    <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
+    <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
@@ -192,11 +191,7 @@
     <Compile Include="Views\SearchSession.xaml.cs">
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\DialogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\SaveDialog\SaveDialogView.xaml">
+    <Page Include="Dialogs\Implements\SaveDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,6 +276,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MessageBox\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

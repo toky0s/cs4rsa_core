@@ -80,11 +80,7 @@ namespace cs4rsa
         /// </summary>
         public void RaiseCanExecuteChanged()
         {
-            var handler = this.CanExecuteChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
