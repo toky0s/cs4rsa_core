@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using cs4rsa.Models;
+using System.Data;
 
 namespace cs4rsa.Database
 {
@@ -98,5 +99,25 @@ namespace cs4rsa.Database
             string sqlString = $@"select color from keyword where course_id = {courseId}";
             return cs4RsaDatabase.GetScalar<string>(sqlString);
         }
+
+        public static List<ScheduleSession> GetScheduleSessions()
+        {
+            List<ScheduleSession> scheduleSessions = new List<ScheduleSession>();
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sql = $@"select name, save_date  from session";
+            DataTable table = cs4RsaDatabase.GetDataTable(sql);
+            foreach (DataRow item in table.Rows)
+            {
+                string name = item["name"].ToString();
+                DateTime saveDate = DateTime.Parse(item["save_date"].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                ScheduleSession session = new ScheduleSession()
+                {
+                    Name = name,
+                    SaveDate = saveDate
+                };
+                scheduleSessions.Add(session);
+            }
+            return scheduleSessions;
+        } 
     }
 }
