@@ -227,7 +227,11 @@ namespace cs4rsa.ViewModels
             }
             else
             {
-                MessageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này");
+                MessageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này",
+                    "Thông báo",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+                CanAddSubjectChange();
             }
         }
 

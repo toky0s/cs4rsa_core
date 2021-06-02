@@ -18,17 +18,17 @@ namespace cs4rsa.Dialogs.MessageBoxService
 
         public MessageBoxResult ShowMessage(string message, string caption)
         {
-            throw new NotImplementedException();
+            return MessageBox.Show(message, caption);
         }
 
         public MessageBoxResult ShowMessage(string message, string caption, MessageBoxButton button)
         {
-            throw new NotImplementedException();
+            return MessageBox.Show(message, caption, button);
         }
 
         public MessageBoxResult ShowMessage(string message, string caption, MessageBoxButton button, MessageBoxImage icon)
         {
-            throw new NotImplementedException();
+            return MessageBox.Show(message, caption, button, icon);
         }
     }
 }
