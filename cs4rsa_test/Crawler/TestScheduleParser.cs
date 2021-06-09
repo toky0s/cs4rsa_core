@@ -13,10 +13,10 @@ namespace cs4rsa.Tests.Crawler
     [TestFixture]
     class TestScheduleParser
     {
-        public string path1 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Tests\Crawler\HtmlTdTags\HTMLPagetdTag1.html";
-        public string path2 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Tests\Crawler\HtmlTdTags\HTMLPagetdTag2.html";
-        public string path3 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Tests\Crawler\HtmlTdTags\HTMLPagetdTag3.html";
-        public string path4 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Tests\Crawler\HtmlTdTags\HTMLPagetdTag4.html";
+        public string path1 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Crawler\HtmlTdTags\HTMLPagetdTag1.html";
+        public string path2 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Crawler\HtmlTdTags\HTMLPagetdTag2.html";
+        public string path3 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Crawler\HtmlTdTags\HTMLPagetdTag3.html";
+        public string path4 = @"C:\Users\truon\source\repos\cs4rsa\cs4rsa_test\Crawler\HtmlTdTags\HTMLPagetdTag4.html";
 
         public HtmlDocument docs1 = new HtmlDocument();
         public HtmlDocument docs2 = new HtmlDocument();

@@ -23,7 +23,7 @@ namespace cs4rsa.Tests.Crawler
         [Test]
         public void GetCurrentSemesterValue()
         {
-            Assert.AreEqual("71", hcs.CurrentSemesterValue);
+            Assert.AreEqual("73", hcs.CurrentSemesterValue);
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace cs4rsa.Tests.Crawler
         [Test]
         public void GetCurrentSemesterInfo()
         {
-            Assert.AreEqual("Học Kỳ II", hcs.CurrentSemesterInfo);
+            Assert.AreEqual("Học Kỳ Hè", hcs.CurrentSemesterInfo);
         }
 
         [Test]
