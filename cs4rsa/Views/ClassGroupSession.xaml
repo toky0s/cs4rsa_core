@@ -181,6 +181,10 @@
                           Content="Hoà Khánh"
                           x:Name="CheckBox_hoakhanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
+                        <CheckBox
+                          Content="137 NVL"
+                          x:Name="CheckBox_137_nvl"
+                          Click="ReloadClassGroupCollection"></CheckBox>
                     </StackPanel>
                         </StackPanel>
                     </Grid>

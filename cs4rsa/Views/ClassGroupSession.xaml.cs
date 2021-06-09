@@ -137,7 +137,8 @@ namespace cs4rsa.Views
                 {CheckBox_quantrung, Place.QUANGTRUNG },
                 {CheckBox_hoakhanh, Place.HOAKHANH },
                 {CheckBox_phanthanh, Place.PHANTHANH },
-                {CheckBox_viettin, Place.VIETTIN }
+                {CheckBox_viettin, Place.VIETTIN },
+                {CheckBox_137_nvl, Place.NVL_137 }
             };
             checkboxAndPlace = checkboxAndPlace.Where(pair => pair.Key.IsChecked.Value)
                 .ToDictionary(p => p.Key, p => p.Value);

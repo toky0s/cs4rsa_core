@@ -19,8 +19,14 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Lịch mô phỏng"
-                           Grid.Row="0"></TextBlock>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Lịch mô phỏng"
+                        Style="{StaticResource Header1}"></TextBlock>
+            <Button Content="Cài đặt hiển thị..."
+                    Margin="7,0,0,0"
+                    MinWidth="100"
+                    Command="{Binding}"></Button>
+        </StackPanel>
         <TextBlock Text="Giai đoạn 1 (Từ tuần 1 - 9)"
                            Grid.Row="1"></TextBlock>
         <DataGrid Grid.Row="2"
@@ -139,5 +145,15 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <!--<StackPanel Grid.Row="5" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Content="Hiển thị động"></RadioButton>
+                <RadioButton Content="Hiển thị đầy đủ"></RadioButton>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Content="Hiển thị màu phân buổi"></CheckBox>
+                <CheckBox Content="Hiển thị màu phân nơi"></CheckBox>
+            </StackPanel>
+        </StackPanel>-->
     </Grid>
 </UserControl>
