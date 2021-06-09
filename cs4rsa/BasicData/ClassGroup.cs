@@ -9,7 +9,9 @@ namespace cs4rsa.BasicData
         QUANGTRUNG,
         VIETTIN,
         PHANTHANH,
-        HOAKHANH
+        HOAKHANH,
+        NVL_254,
+        NVL_137
     }
 
     /// <summary>
