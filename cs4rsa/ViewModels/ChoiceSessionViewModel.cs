@@ -5,6 +5,8 @@ using cs4rsa.Models;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.Implements;
+using cs4rsa.Helpers;
+using cs4rsa.Crawler;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.ObjectModel;
@@ -12,6 +14,7 @@ using System.Linq;
 using System;
 using System.Windows;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Dialogs.DialogViews;
 
 namespace cs4rsa.ViewModels
 {
@@ -71,7 +74,7 @@ namespace cs4rsa.ViewModels
 
         private void OpenSaveDialog(object parameter)
         {
-            Dialogs.MessageBoxService.Cs4rsaMessageBox errorMessageBox = new Dialogs.MessageBoxService.Cs4rsaMessageBox();
+            Cs4rsaMessageBox errorMessageBox = new Cs4rsaMessageBox();
             SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, classGroupModels.ToList());
             SaveDialogWindow dialogWindow = new SaveDialogWindow();
             SaveResult result = DialogService<SaveResult>.OpenDialog(saveDialogViewModel, dialogWindow, parameter as Window);
@@ -90,7 +93,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
-            CanSaveChange();
+            CanNewSaveChange();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -121,7 +124,7 @@ namespace cs4rsa.ViewModels
                 }
             }
             UpdateConflictModelCollection();
-            CanSaveChange();
+            CanNewSaveChange();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -148,9 +151,28 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private void CanSaveChange()
+        /// <summary>
+        /// Kiểm tra lại xem nút Lưu Mới có thể nhấn được hay không.
+        /// </summary>
+        private void CanNewSaveChange()
         {
             CanSave = classGroupModels.Count > 0;
+        }
+
+        public string GetShareString()
+        {
+            HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+            string subjectCode = "";
+            string registerCode = "";
+            string cs4rsaHashCode = "";
+            string replaceChar = "%";
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            {
+                subjectCode = classGroupModel.SubjectCode;
+                registerCode = classGroupModel.RegisterCode;
+                cs4rsaHashCode = cs4rsaHashCode + subjectCode + replaceChar + registerCode;
+            }
+            return StringHelper.SuperCleanString($"#cs4rsa!{homeCourseSearch.CurrentSemesterValue}!{classGroupModels.Count}!{cs4rsaHashCode}#cs4rsa");
         }
     }
 }
