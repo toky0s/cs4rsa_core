@@ -28,8 +28,10 @@ namespace cs4rsa.Helpers
                 return Place.HOAKHANH;
             if (slideds.Contains("209") || slideds.Contains("254"))
                 return Place.PHANTHANH;
-            else
+            if (slideds.Contains("334/4"))
                 return Place.VIETTIN;
+            else
+                return Place.NVL_137;
         }
 
         public static Phase ToPhase(string phase)
@@ -38,6 +40,17 @@ namespace cs4rsa.Helpers
             if (phase == "first") return Phase.FIRST;
             if (phase == "second") return Phase.SECOND;
             return Phase.NON;
+        }
+
+        public static DayOfWeek ToDayOfWeek(string day)
+        {
+            if (day.Contains("2") || day.Contains("Hai") || day.Contains("hai")) return DayOfWeek.Monday;
+            if (day.Contains("3") || day.Contains("Ba") || day.Contains("ba")) return DayOfWeek.Tuesday;
+            if (day.Contains("4") || day.Contains("Tư") || day.Contains("tư")) return DayOfWeek.Wednesday;
+            if (day.Contains("5") || day.Contains("Năm") || day.Contains("năm")) return DayOfWeek.Thursday;
+            if (day.Contains("6") || day.Contains("Sáu") || day.Contains("sáu")) return DayOfWeek.Friday;
+            if (day.Contains("7") || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
+            return DayOfWeek.Sunday;
         }
     }
 }
