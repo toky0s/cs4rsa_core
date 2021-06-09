@@ -6,7 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using cs4rsa.Database;
-using cs4rsa.Crawler;
+using System.Net.NetworkInformation;
+using System.Net;
+using cs4rsa.Dialogs.MessageBoxService;
 
 namespace cs4rsa
 {
@@ -20,6 +22,7 @@ namespace cs4rsa
         {
             base.OnStartup(e);
             // Khởi tạo database
+            Helpers.ConnectInternetChecker.Check(new Cs4rsaMessageBox());
             Cs4rsaData cs4RsaData = new Cs4rsaData();
         }
     }
