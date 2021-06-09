@@ -24,11 +24,17 @@
                     <MenuItem Header="_File" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="Open"
                                   InputGestureText="Ctrl+O"></MenuItem>
-                        <MenuItem Header="Save"
+                        <MenuItem Header="Lưu"
                                   InputGestureText="Ctrl+S">
                         </MenuItem>
-                        <MenuItem Header="Save As.." 
+                        <MenuItem Header="Lưu mới..." 
                                   InputGestureText="Ctrl+Shift+S"/>
+                        <Separator></Separator>
+                        <MenuItem Header="Xuất dưới JSON..."></MenuItem>
+                        <MenuItem Header="Xuất dưới CS4RSA String..."></MenuItem>
+                        <Separator></Separator>
+                        <MenuItem Header="Quản lý phiên..."
+                                  Command="{Binding SessionManagerCommand}"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="_Help" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="Hướng dẫn sử dụng">
