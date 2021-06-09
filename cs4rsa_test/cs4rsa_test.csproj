@@ -64,6 +64,7 @@
     <Compile Include="BasicData\TestSubject.cs" />
     <Compile Include="Crawler\TestDisciplineData.cs" />
     <Compile Include="Crawler\TestHomeCourseSearch.cs" />
+    <Compile Include="Crawler\TestMetaDataCrawler.cs" />
     <Compile Include="Crawler\TestScheduleParser.cs" />
     <Compile Include="Crawler\TestTeacherCrawler.cs" />
     <Compile Include="Helpers\TestBasicDataConverter.cs" />
