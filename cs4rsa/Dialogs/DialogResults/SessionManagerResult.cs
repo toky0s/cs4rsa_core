@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Dialogs.DialogResults
 {
-    public class SaveResult
+    public enum SessionManagerResult
     {
-       public string Name { get; set; }
+        CLOSE
     }
 }

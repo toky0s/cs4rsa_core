@@ -1,0 +1,53 @@
+﻿<Window x:Class="cs4rsa.Dialogs.DialogViews.SessionManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        mc:Ignorable="d"
+        Title="SessionManagerWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Danh sách phiên"
+                   Grid.ColumnSpan="2"></TextBlock>
+        <ListView Grid.Row="1"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  ItemsSource="{Binding ScheduleSessions}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="2"
+                Grid.Column="0"
+                Content="Nhap"></Button>
+        <Button Grid.Row="2"
+                Grid.Column="1"
+                Content="Xoa"></Button>
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   >
+            <Run Text="Danh sách nhóm lớp của phiên"></Run>
+            <Run Text="{Binding SelectedSesion.Name}"></Run>
+        </TextBlock>
+        <ListView Grid.Row="4"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"></ListView>
+    </Grid>
+</Window>

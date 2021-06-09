@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace cs4rsa.Dialogs.Implements
+namespace cs4rsa.Dialogs.DialogViews
 {
     /// <summary>
     /// Interaction logic for SaveDialogWindow.xaml
