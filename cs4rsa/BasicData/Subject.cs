@@ -81,7 +81,7 @@ namespace cs4rsa.BasicData
                 {
                     ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
 
-                    string pattern = String.Format(@"^({0})[0-9]*$", classGroupName);
+                    string pattern = string.Format(@"^({0})[0-9]*$", classGroupName);
                     Regex regexName = new Regex(pattern);
                     for (int i = 0; i < schoolClasses.Count(); i++)
                     {
@@ -121,6 +121,10 @@ namespace cs4rsa.BasicData
             //teacher parser
             Teacher teacher = GetTeacherFromURL(urlToSubjectDetailPage);
             //teacher parser
+
+            //meta data
+            DayPlaceMetaData metaData = new MetaDataCrawler(urlToSubjectDetailPage).ToDayPlaceMetaData();
+            //meta data
 
             string classGroupName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
@@ -162,7 +166,7 @@ namespace cs4rsa.BasicData
 
             SchoolClass schoolClass = new SchoolClass(subjectCode, classGroupName, name, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, teacher, registrationStatus, implementationStatus);
+                                        rooms, places, teacher, registrationStatus, implementationStatus, metaData);
             return schoolClass;
         }
 
@@ -214,8 +218,12 @@ namespace cs4rsa.BasicData
                 TeacherSaver = new TeacherSaver()
             };
             Teacher teacher = teacherCrawler.ToTeacher();
+
+            // add vào list teacher
             if (teacher != null && !teachers.Contains(teacher))
                 teachers.Add(teacher);
+            // add vào list teacher
+
             return teacher;
         }
     }

@@ -51,6 +51,11 @@ namespace cs4rsa.BasicData
             schoolClasses.Add(schoolClass);
         }
 
+        public DayPlaceMetaData GetDayPlaceMetaData()
+        {
+            return schoolClasses[0].DayPlaceMetaData;
+        }
+
         /// <summary>
         /// Hợp nhất Schedule của các SchoolClass trong ClassGroup này thành một.
         /// </summary>

@@ -23,6 +23,7 @@ namespace cs4rsa.BasicData
         private Teacher teacher;
         private string registrationStatus;
         private string implementationStatus;
+        private DayPlaceMetaData dayPlaceMetaData;
 
         public string Name => name;
         public string SubjectCode => subjectCode;
@@ -32,10 +33,11 @@ namespace cs4rsa.BasicData
         public StudyWeek StudyWeek => studyWeek;
         public Teacher Teacher => teacher;
         public List<Place> Places => places;
+        public DayPlaceMetaData DayPlaceMetaData => dayPlaceMetaData;
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 
-            string[] rooms, List<Place> places, Teacher teacher, string registrationStatus, string implementationStatus)
+            string[] rooms, List<Place> places, Teacher teacher, string registrationStatus, string implementationStatus, DayPlaceMetaData dayPlaceMetaData)
         {
             this.subjectCode = subjectCode;
             this.classGroupName = classGroupName;
@@ -52,6 +54,7 @@ namespace cs4rsa.BasicData
             this.teacher = teacher;
             this.registrationStatus = registrationStatus;
             this.implementationStatus = implementationStatus;
+            this.dayPlaceMetaData = dayPlaceMetaData;
         }
     }
 }
