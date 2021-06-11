@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using cs4rsa.Crawler;
 using cs4rsa.Helpers;
 using cs4rsa.Implements;
@@ -15,17 +15,17 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class Subject
     {
-        private string name;
-        private string subjectCode;
-        private string studyUnit;
-        private string studyUnitType;
-        private string studyType;
-        private string semester;
-        private string mustStudySubject;
-        private string parallelSubject;
-        private string description;
+        private readonly string name;
+        private readonly string subjectCode;
+        private readonly string studyUnit;
+        private readonly string studyUnitType;
+        private readonly string studyType;
+        private readonly string semester;
+        private readonly string[] mustStudySubject;
+        private readonly string[] parallelSubject;
+        private readonly string description;
         private readonly string rawSoup;
-        private string courseId;
+        private readonly string courseId;
 
         // pre-load
         private List<Teacher> teachers = new List<Teacher>();
@@ -33,16 +33,18 @@ namespace cs4rsa.BasicData
         private List<ClassGroup> classGroups = new List<ClassGroup>();
         public List<ClassGroup> ClassGroups => classGroups;
 
-        public string Name { get { return name; } set { name = value; } }
-        public string SubjectCode { get { return subjectCode; } set { subjectCode = value; } }
+        public string Name => name;
+        public string SubjectCode => subjectCode;
         public string CourseId => courseId;
         public int StudyUnit => int.Parse(studyUnit);
+        public string[] MustStudySubject => mustStudySubject;
+        public string[] ParallelSubject => parallelSubject;
         public string RawSoup => rawSoup;
-        public string Color { get; private set; }
 
         public Subject(string name, string subjectCode, string studyUnit,
-            string studyUnitType, string studyType, string semester, string mustStudySubject, string parallelSubject,
-            string description, string rawSoup, string courseId)
+                        string studyUnitType, string studyType, string semester, 
+                        string mustStudySubject, string parallelSubject,
+                        string description, string rawSoup, string courseId)
         {
             this.name = name;
             this.subjectCode = subjectCode;
@@ -50,8 +52,8 @@ namespace cs4rsa.BasicData
             this.studyUnitType = studyUnitType;
             this.studyType = studyType;
             this.semester = semester;
-            this.mustStudySubject = mustStudySubject;
-            this.parallelSubject = parallelSubject;
+            this.mustStudySubject = SubjectSpliter(mustStudySubject);
+            this.parallelSubject = SubjectSpliter(parallelSubject);
             this.description = description;
             this.rawSoup = rawSoup;
             this.courseId = courseId;
@@ -225,6 +227,23 @@ namespace cs4rsa.BasicData
             // add vào list teacher
 
             return teacher;
+        }
+
+        /// <summary>
+        /// Tách mã môn từ một chuỗi, nếu không phát hiện nó trả về null.
+        /// </summary>
+        /// <returns>Mã môn (CS 414)</returns>
+        private string[] SubjectSpliter(string text)
+        {
+            if (text.Equals("(Không có Môn học Tiên quyết)") ||
+                text.Equals("(Không có Môn học Song hành)"))
+                return null;
+            Regex regex = new Regex(@"(?<=\()(.*?)(?=\))");
+            MatchCollection matchSubject = regex.Matches(text);
+            string[] subjects = new string[matchSubject.Count];
+            for(int i=0; i<matchSubject.Count; ++i)
+                subjects[i] = matchSubject[i].Value;
+            return subjects;
         }
     }
 }
