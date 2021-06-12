@@ -1,10 +1,9 @@
 ## Chào mừng đến với CS4RSA
 
-You can use the [editor on GitHub](https://github.com/toky0s/cs4rsa/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực mình vì web trường điều hướng quá củ chuối, máy của bạn không có excel, bạn không biết phải đăng ký môn nào
+ tiếp theo,...Và hàng tỷ tỷ vấn đề khác về đăng ký môn học tại Đại học Duy Tân nhưng bạn đừng lo, vì đã có CS4RSA. Một ứng dụng mạnh mẽ giúp bạn lựa chọn, phân tích, đánh giá, sắp xếp lịch học một cách nhanh chóng và hoàn toàn miễn phí, bạn không nhầm đâu HOÀN TOÀN MIỄN PHÍ.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
+### Hướng dẫn sử dụng
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
