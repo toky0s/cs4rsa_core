@@ -5,7 +5,10 @@ Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực 
 
 ### Hướng dẫn sử dụng
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+#### Chọn môn bạn muốn học
+CS4RSA có một hệ thống thu thập dữ liệu đủ thông minh để biết bạn đã ở học kỳ nào. Vì thế hãy yên tâm tìm kiếm môn học
+ưa thích của mình thông qua bộ chọn mã ngành và mã môn, sau đó nhấn Tìm kiếm và chờ một chút (thường thì sẽ rất nhanh).
+Với 3 click chuột bạn có thể tìm được môn học của mình.
 
 ```markdown
 Syntax highlighted code block
