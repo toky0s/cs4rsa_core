@@ -9,28 +9,57 @@ namespace cs4rsa.Models
 {
     class ConflictModel
     {
-        public readonly ClassGroup ClassGroup1;
-        public readonly ClassGroup ClassGroup2;
-        public readonly ConflictTime ConflictTime;
-        public string Name
+        private ClassGroup _classGroup1;
+        private ClassGroup _classGroup2;
+        private ConflictTime _conflictTime;
+
+        public ClassGroup ClassGroup1
         {
             get
             {
-                return ClassGroup1.Name + " - " + ClassGroup2.Name;
+                return _classGroup1;
+            }
+            set
+            {
+                _classGroup1 = value;
             }
         }
+        public ClassGroup ClassGroup2
+        {
+            get
+            {
+                return _classGroup2;
+            }
+            set
+            {
+                _classGroup2 = value;
+            }
+        }
+
+        public ConflictTime ConflictTime
+        {
+            get
+            {
+                return _conflictTime;
+            }
+            set
+            {
+                _conflictTime = value;
+            }
+        }
+
         public ConflictModel(Conflict conflict)
         {
-            ClassGroup1 = conflict.ClassGroupFirst;
-            ClassGroup2 = conflict.ClassGroupSecond;
-            ConflictTime = conflict.GetConflictTime();
+            _classGroup1 = conflict.ClassGroupFirst;
+            _classGroup2 = conflict.ClassGroupSecond;
+            _conflictTime = conflict.GetConflictTime();
         }
 
         public ConflictModel(Conflict conflict, ConflictTime conflictTime)
         {
-            ClassGroup1 = conflict.ClassGroupFirst;
-            ClassGroup2 = conflict.ClassGroupSecond;
-            ConflictTime = conflictTime;
+            _classGroup1 = conflict.ClassGroupFirst;
+            _classGroup2 = conflict.ClassGroupSecond;
+            _conflictTime = conflictTime;
         }
     }
 }

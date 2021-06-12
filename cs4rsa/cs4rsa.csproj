@@ -134,6 +134,8 @@
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
     <Compile Include="BasicData\Semester.cs" />
+    <Compile Include="Converters\ClassGroupModelConverter.cs" />
+    <Compile Include="Converters\ConflictModelConverter.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Database\ColorGenerator.cs" />
     <Compile Include="Database\Cs4rsaDataEdit.cs" />
@@ -156,10 +158,12 @@
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
+    <Compile Include="Helpers\Subjectidentifier.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
+    <Compile Include="Reply\RequestChoicedClassGroupModel.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
     <Compile Include="BasicData\StudyWeek.cs" />
     <Compile Include="BasicData\Teacher.cs" />

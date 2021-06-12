@@ -18,7 +18,7 @@ namespace cs4rsa.ViewModels
     /// </summary>
     public class SearchViewModel : NotifyPropertyChangedBase
     {
-        //Add button
+        #region Commands
         public MyICommand AddCommand { get; set; }
         private bool canRunAddCommand = true;
         public bool CanRunAddCommand
@@ -34,7 +34,9 @@ namespace cs4rsa.ViewModels
             }
         }
         public MyICommand DeleteCommand { get; set; }
+        #endregion
 
+        #region DI Properties
         //ComboBox discipline
         private DisciplineInfomationModel selectedDiscipline;
         public DisciplineInfomationModel SelectedDiscipline
@@ -132,7 +134,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-
         //Total Credits
         private int totalCredits = 0;
         public int TotalCredits
@@ -148,8 +149,11 @@ namespace cs4rsa.ViewModels
 
             }
         }
+        #endregion
 
+        #region DI
         public IMessageBox MessageBox;
+        #endregion
 
         public SearchViewModel()
         {

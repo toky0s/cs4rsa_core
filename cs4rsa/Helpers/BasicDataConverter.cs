@@ -52,5 +52,12 @@ namespace cs4rsa.Helpers
             if (day.Contains("7") || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
             return DayOfWeek.Sunday;
         }
+
+        public static string ToDayOfWeekText(DayOfWeek day)
+        {
+            if (day == DayOfWeek.Sunday)
+                return "Chủ Nhật";
+            return $"Thứ {(int)day+1}";
+        }
     }
 }
