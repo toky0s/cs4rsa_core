@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:cs4rsa.Views"
+             xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:ConflictModelConverter x:Key="ConflictInfoConverter"></converter:ConflictModelConverter>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -55,7 +59,11 @@
                  Style="{StaticResource Cs4rsaListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                    <TextBlock ToolTipService.ToolTip="{Binding ConflictTime, Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
+                        <Run Text="{Binding ClassGroup1.Name, Mode=OneWay}"></Run>
+                        <Run Text=" và "></Run>
+                        <Run Text="{Binding ClassGroup2.Name, Mode=OneWay}"></Run>
+                    </TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
