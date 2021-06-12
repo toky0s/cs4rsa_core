@@ -53,7 +53,7 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<DisciplineInfomationModel> disciplines;
+        private readonly ObservableCollection<DisciplineInfomationModel> disciplines;
         public ObservableCollection<DisciplineInfomationModel> Disciplines
         {
             get
@@ -174,6 +174,7 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.Publish(new DeleteSubjectMessage(selectedSubjectModel));
             subjectModels.Remove(selectedSubjectModel);
+            CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.RaiseCanExecuteChanged();
