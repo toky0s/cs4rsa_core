@@ -24,7 +24,7 @@ namespace cs4rsa.ViewModels
     public class ScheduleRow
     {
         public ShortedTime Time { get; set; }
-        private ClassGroupModel[] DayAndClassGroups = new ClassGroupModel[7];
+        public ClassGroupModel[] DayAndClassGroups = new ClassGroupModel[7];
         public ClassGroupModel Sunday => DayAndClassGroups[0];
         public ClassGroupModel Monday => DayAndClassGroups[1];
         public ClassGroupModel Tuseday => DayAndClassGroups[2];
@@ -113,6 +113,9 @@ namespace cs4rsa.ViewModels
             return shortedTimes;
         }
 
+        /// <summary>
+        /// Main
+        /// </summary>
         private void ReloadSchedule()
         {
             CleanPhase();
@@ -161,12 +164,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public void Handle(ChoicesChangedMessage message)
-        {
-            classGroupModels = message.Source;
-            ReloadSchedule();
-        }
-
         private void CleanSchedules()
         {
             Schedule1.Clear();
@@ -177,6 +174,12 @@ namespace cs4rsa.ViewModels
         {
             Phase1.Clear();
             Phase2.Clear();
+        }
+
+        public void Handle(ChoicesChangedMessage message)
+        {
+            classGroupModels = message.Source;
+            ReloadSchedule();
         }
     }
 }
