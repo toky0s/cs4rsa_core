@@ -9,6 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:PhaseConverter x:Key="PhaseConverter"></converter:PhaseConverter>
+        <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter"></converter:EmptySeatCheckerConverter>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,10 +27,36 @@
                  ItemsSource="{Binding ClassGroupModels}"
                  SelectedItem="{Binding SelectedClassGroup}"
                  Background="#f5f5f5">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EmptySeat, 
+                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                            ConverterParameter=5}" Value="True">
+                            <Setter Property="Foreground" Value="Yellow"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding EmptySeat, 
+                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                            ConverterParameter=0}" Value="True">
+                            <Setter Property="Foreground" Value="Red"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}">
+                    <StackPanel Orientation="Horizontal">
+                        <Canvas Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.RowSpan="2"
+                                Width="10" Height="10" >
+                            <Rectangle
+                                Width="10"
+                                Height="10"
+                                Fill="{Binding Color}"/>
+                        </Canvas>
+                        <TextBlock Text="{Binding Name}"
+                                   Margin="7, 0, 0, 0">
                             <TextBlock.ToolTip>
                                 <ToolTip>
                                     <StackPanel>

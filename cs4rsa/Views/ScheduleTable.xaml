@@ -10,6 +10,27 @@
     <UserControl.Resources>
         <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter"></converter:ShortedTimeViewConverter>
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
+        <Style x:Key="CellT2" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Monday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellT3" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Tuseday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellT4" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Wednessday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellT5" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Thursday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellT6" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Friday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellT7" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Saturday.Color}"></Setter>
+        </Style>
+        <Style x:Key="CellCN" TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding Sunday.Color}"></Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,55 +56,13 @@
                   FontSize="10">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Monday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Tuseday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Wednessday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Thursday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Friday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Saturday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Sunday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Text="Giai đoạn 2 (Từ tuần 10 - 18)"
@@ -94,66 +73,14 @@
                   FontSize="10">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Monday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Tuseday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Wednessday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Thursday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Friday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Saturday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*">
-                    <DataGridTextColumn.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="Background" Value="{Binding Sunday.Color}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
-        <!--<StackPanel Grid.Row="5" Orientation="Horizontal">
-            <StackPanel Orientation="Horizontal">
-                <RadioButton Content="Hiển thị động"></RadioButton>
-                <RadioButton Content="Hiển thị đầy đủ"></RadioButton>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Hiển thị màu phân buổi"></CheckBox>
-                <CheckBox Content="Hiển thị màu phân nơi"></CheckBox>
-            </StackPanel>
-        </StackPanel>-->
     </Grid>
 </UserControl>
