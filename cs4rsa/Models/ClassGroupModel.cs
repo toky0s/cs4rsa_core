@@ -8,6 +8,7 @@ namespace cs4rsa.Models
     {
         public ClassGroup classGroup;
 
+        public int EmptySeat => classGroup.GetEmptySeat();
         public string Name => classGroup.Name;
         public string SubjectCode => classGroup.SubjectCode;
         public string RegisterCode => classGroup.GetRegisterCode();
