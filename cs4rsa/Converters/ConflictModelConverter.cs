@@ -16,7 +16,7 @@ namespace cs4rsa.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             ConflictTime conflictTime = value as ConflictTime;
-            string resultTime = "";
+            List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, List<StudyTimeIntersect>> item in conflictTime.ConflictTimes)
             {
                 string day = BasicDataConverter.ToDayOfWeekText(item.Key);
@@ -27,9 +27,9 @@ namespace cs4rsa.Converters
                     times.Add(time);
                 }
                 string timeString = string.Join("\n", times);
-                resultTime += day + "\n" + timeString;
+                resultTimes.Add(day + "\n" + timeString);
             }
-            return resultTime;
+            return string.Join("\n", resultTimes);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
