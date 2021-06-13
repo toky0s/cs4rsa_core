@@ -66,7 +66,7 @@ namespace cs4rsa.ViewModels
 
         public SemesterInfoViewModel()
         {
-            HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
             CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);

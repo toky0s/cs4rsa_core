@@ -14,32 +14,22 @@ namespace cs4rsa.Crawler
     /// </summary>
     public class HomeCourseSearch
     {
+        private static readonly HomeCourseSearch instance = new HomeCourseSearch();
+
         private static string currentYearValue;
         private static string currentYearInfo;
         private static string currentSemesterValue;
         private static string currentSemesterInfo;
 
-        public string CurrentYearValue
-        {
-            get { return currentYearValue; }
-        }
+        public string CurrentYearValue => currentYearValue;
 
-        public string CurrentYearInfo
-        {
-            get { return currentYearInfo; }
-        }
+        public string CurrentYearInfo => currentYearInfo;
 
-        public string CurrentSemesterValue
-        {
-            get { return currentSemesterValue; }
-        }
+        public string CurrentSemesterValue => currentSemesterValue;
 
-        public string CurrentSemesterInfo
-        {
-            get { return currentSemesterInfo; }
-        }
+        public string CurrentSemesterInfo => currentSemesterInfo;
 
-        public HomeCourseSearch()
+        private HomeCourseSearch()
         {
             HtmlWeb htmlWeb = new HtmlWeb();
             string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
@@ -53,13 +43,18 @@ namespace cs4rsa.Crawler
             currentSemesterInfo = GetCurrentInfo(document);
         }
 
-        private string GetCurrentValue(HtmlDocument document)
+        public static HomeCourseSearch GetInstance()
+        {
+            return instance;
+        }
+
+        private static string GetCurrentValue(HtmlDocument document)
         {
             var optionElements = document.DocumentNode.Descendants().Where(n => n.Name == "option");
             return optionElements.Last().Attributes["value"].Value;
         }
 
-        private string GetCurrentInfo(HtmlDocument document)
+        private static string GetCurrentInfo(HtmlDocument document)
         {
             var optionElements = document.DocumentNode.Descendants().Where(node => node.Name == "option");
             return optionElements.Last().InnerText.Trim();

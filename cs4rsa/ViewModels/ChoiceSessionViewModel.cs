@@ -161,7 +161,7 @@ namespace cs4rsa.ViewModels
 
         public string GetShareString()
         {
-            HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             string subjectCode = "";
             string registerCode = "";
             string cs4rsaHashCode = "";

@@ -50,7 +50,7 @@ namespace cs4rsa.Crawler
 
         public TeacherCrawler(string semesterValue, string intructorId)
         {
-            HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan={semesterValue}&intructorid={intructorId}";
             HtmlWeb web = new HtmlWeb();
             document = web.Load(url);

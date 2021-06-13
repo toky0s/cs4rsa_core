@@ -14,7 +14,7 @@ namespace cs4rsa.Crawler
     public class SubjectCrawler
     {
 
-        private HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+        private HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
         private string subjectCode;
         public string SubjectCode
         {

@@ -14,7 +14,7 @@ namespace cs4rsa.Crawler
 {
     class DisciplineData
     {
-        public HomeCourseSearch homeCourseSearch = new HomeCourseSearch();
+        public HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
 
         public void GetDisciplineAndKeywordDatabase()
         {
