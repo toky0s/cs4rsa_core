@@ -1,12 +1,14 @@
 ﻿using cs4rsa.Database;
+using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
+using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
 using System;
 using System.Collections.ObjectModel;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    class SessionManagerViewModel : DialogViewModelBase<bool>
+    class ImportDialogViewModel : DialogViewModelBase<SessionManagerResult>
     {
         private ObservableCollection<ScheduleSession> _scheduleSessions;
         public ObservableCollection<ScheduleSession> ScheduleSessions
@@ -57,11 +59,15 @@ namespace cs4rsa.Dialogs.Implements
         public RelayCommand DeleteCommand;
         public RelayCommand ImportCommand;
 
-        public SessionManagerViewModel()
+        public ImportDialogViewModel()
         {
             DeleteCommand = new RelayCommand(OnDelete, () => true);
             ImportCommand = new RelayCommand(OnImport, () => true);
             LoadScheduleSession();
+        }
+        public ImportDialogViewModel(IMessageBox messageBox)
+        {
+
         }
 
         private void LoadScheduleSession()

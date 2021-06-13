@@ -6,19 +6,14 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="Lưu phiên" Height="485" Width="300">
+        Title="Lưu phiên" Height="300" Width="485">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" 
-                   Text="Danh sách phiên"
-                   Margin="7, 0, 7, 0"
-                   Style="{StaticResource Header1}"></TextBlock>
-        <ListView Grid.Row="1"
+        <ListView Grid.Row="0"
                   Margin="7, 0, 7, 0"
                   ItemsSource="{Binding ScheduleSessions}">
             <ListView.View>
@@ -28,7 +23,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="1"
               Margin="7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -40,7 +35,7 @@
                      Text="{Binding Name}"></TextBox>
         </Grid>
 
-        <StackPanel Grid.Row="3" 
+        <StackPanel Grid.Row="2" 
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Margin="0, 0, 7, 7">

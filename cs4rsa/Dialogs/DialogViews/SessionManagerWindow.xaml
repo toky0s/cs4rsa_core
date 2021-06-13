@@ -5,49 +5,70 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
-        Title="SessionManagerWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0"
+        Title="Nhập Môn học" Height="450" Width="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical">
+            <Expander Header="Từ cơ sở dữ liệu"
+                  IsExpanded="True">
+                <Grid Height="300">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Text="Danh sách phiên"
                    Grid.ColumnSpan="2"></TextBlock>
-        <ListView Grid.Row="1"
+                    <ListView Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="2"
                   ItemsSource="{Binding ScheduleSessions}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button Grid.Row="2"
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Grid.Row="2"
                 Grid.Column="0"
-                Content="Nhap"></Button>
-        <Button Grid.Row="2"
+                Content="Nhập"></Button>
+                    <Button Grid.Row="2"
                 Grid.Column="1"
-                Content="Xoa"></Button>
-        <TextBlock Grid.Row="3"
+                Content="Xoá"></Button>
+                    <TextBlock Grid.Row="3"
                    Grid.Column="0"
                    Grid.ColumnSpan="2"
                    >
             <Run Text="Danh sách nhóm lớp của phiên"></Run>
             <Run Text="{Binding SelectedSesion.Name}"></Run>
-        </TextBlock>
-        <ListView Grid.Row="4"
+                    </TextBlock>
+                    <ListView Grid.Row="4"
                   Grid.Column="0"
                   Grid.ColumnSpan="2"></ListView>
-    </Grid>
+                </Grid>
+            </Expander>
+            <Expander Header="Từ Share String">
+                <StackPanel Orientation="Vertical">
+                    <DockPanel Dock="Top">
+                        <TextBlock Text="Share String:"></TextBlock>
+                        <TextBox></TextBox>
+                    </DockPanel>
+                    <Button Content="Nhập"
+                        Width="100"
+                        HorizontalAlignment="Right"
+                        Margin="0, 7, 0, 0"></Button>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+
+
 </Window>
