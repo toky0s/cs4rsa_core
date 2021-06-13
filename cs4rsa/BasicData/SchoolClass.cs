@@ -29,6 +29,7 @@ namespace cs4rsa.BasicData
         public string SubjectCode => subjectCode;
         public string ClassGroupName => classGroupName;
         public string RegisterCode => registerCode;
+        public string EmptySeat => emptySeat;
         public Schedule Schedule => schedule;
         public StudyWeek StudyWeek => studyWeek;
         public Teacher Teacher => teacher;

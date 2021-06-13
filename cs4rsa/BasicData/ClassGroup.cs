@@ -157,5 +157,16 @@ namespace cs4rsa.BasicData
             StudyWeek studyWeek = new StudyWeek(studyWeekValues.Min(), studyWeekValues.Max());
             return studyWeek;
         }
+
+        /// <summary>
+        /// Chỗ còn trống.
+        /// </summary>
+        /// <returns></returns>
+        public int GetEmptySeat()
+        {
+            if (schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
+                return 0;
+            return int.Parse(schoolClasses[0].EmptySeat);
+        }
     }
 }
