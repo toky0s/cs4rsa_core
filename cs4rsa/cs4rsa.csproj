@@ -136,6 +136,7 @@
     <Compile Include="BasicData\Semester.cs" />
     <Compile Include="Converters\ClassGroupModelConverter.cs" />
     <Compile Include="Converters\ConflictModelConverter.cs" />
+    <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Database\ColorGenerator.cs" />
     <Compile Include="Database\Cs4rsaDataEdit.cs" />
@@ -150,7 +151,7 @@
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
       <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Implements\SessionManagerViewModel.cs" />
+    <Compile Include="Dialogs\Implements\ImportDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SessionManagerWindow.xaml.cs">
       <DependentUpon>SessionManagerWindow.xaml</DependentUpon>
     </Compile>

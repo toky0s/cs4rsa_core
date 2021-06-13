@@ -2,14 +2,20 @@
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Database;
+using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Dialogs.DialogViews;
+using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Messages;
 using cs4rsa.Models;
 using LightMessageBus;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using cs4rsa.Dialogs.DialogService;
+using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
@@ -34,6 +40,7 @@ namespace cs4rsa.ViewModels
             }
         }
         public MyICommand DeleteCommand { get; set; }
+        public RelayCommand ImportDialogCommand { get; set; }
         #endregion
 
         #region DI Properties
@@ -162,7 +169,16 @@ namespace cs4rsa.ViewModels
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             AddCommand = new MyICommand(OnAddSubject, ()=> true);
             DeleteCommand = new MyICommand(OnDeleteSubject, CanDeleteSubject);
+            ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
             SelectedDiscipline = this.disciplines[0];
+        }
+
+        private void OnOpenImportDialog(object obj)
+        {
+            Cs4rsaMessageBox messageBoxService = new Cs4rsaMessageBox();
+            ImportDialogViewModel vm = new ImportDialogViewModel(messageBoxService);
+            SessionManagerWindow dialogWindow = new SessionManagerWindow();
+            SessionManagerResult result = DialogService<SessionManagerResult>.OpenDialog(vm, dialogWindow, obj as Window);
         }
 
         private bool CanDeleteSubject()
