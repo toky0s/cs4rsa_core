@@ -132,10 +132,16 @@
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
+    <Compile Include="BasicData\BetweenPoint.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
+    <Compile Include="BasicData\GoRange.cs" />
+    <Compile Include="BasicData\PlaceConflict.cs" />
+    <Compile Include="BasicData\PlaceConflictFinder.cs" />
     <Compile Include="BasicData\Semester.cs" />
+    <Compile Include="BasicData\StudyTimePoint.cs" />
     <Compile Include="Converters\ClassGroupModelConverter.cs" />
     <Compile Include="Converters\ConflictModelConverter.cs" />
+    <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Database\ColorGenerator.cs" />
