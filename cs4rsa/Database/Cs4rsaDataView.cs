@@ -17,7 +17,7 @@ namespace cs4rsa.Database
         /// <returns></returns>
         public static List<string> GetDisciplines()
         {
-            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
+            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaDatabase.ConnectString))
             {
                 List<string> disciplines = new List<string>();
                 SQLiteCommand command = new SQLiteCommand
@@ -43,7 +43,7 @@ namespace cs4rsa.Database
 
         public static List<DisciplineKeywordModel> GetDisciplineKeywordModels(string discipline)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
+            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaDatabase.ConnectString))
             {
                 List<DisciplineKeywordModel> disciplineKeywordInfos = new List<DisciplineKeywordModel>();
                 string sql = $@"SELECT course_id, subject_name, name, keyword1 from keyword, discipline
@@ -69,7 +69,7 @@ namespace cs4rsa.Database
 
         public static DisciplineKeywordModel GetSingleDisciplineKeywordModel(string discipline, string keyword1)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
+            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaDatabase.ConnectString))
             {
                 DisciplineKeywordModel disciplineKeywordModel = null;
                 string sql = $@"SELECT course_id, subject_name, name, keyword1 from keyword, discipline
@@ -95,7 +95,7 @@ namespace cs4rsa.Database
 
         public static string GetColorWithCourseId(string courseId)
         {
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sqlString = $@"select color from keyword where course_id = {courseId}";
             return cs4RsaDatabase.GetScalar<string>(sqlString);
         }
@@ -103,7 +103,7 @@ namespace cs4rsa.Database
         public static List<ScheduleSession> GetScheduleSessions()
         {
             List<ScheduleSession> scheduleSessions = new List<ScheduleSession>();
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sql = $@"select id, name, save_date, semester, year from sessionx";
             DataTable table = cs4RsaDatabase.GetDataTable(sql);
             foreach (DataRow item in table.Rows)
@@ -129,7 +129,7 @@ namespace cs4rsa.Database
         public static List<ScheduleSessionDetail> GetSessionDetail(string id)
         {
             List<ScheduleSessionDetail> result = new List<ScheduleSessionDetail>();
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sql = $@"select s.subject_code, k.subject_name, s.class_group
                             from discipline as d, keyword as k, session_detail as s 
                             WHERE k.discipline_id = d.id and s.subject_code = d.name || ' ' ||k.keyword1 and session_id ={id}";

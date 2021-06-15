@@ -16,29 +16,21 @@ namespace cs4rsa.Database
         {
             string sqlCommand = $@"INSERT INTO discipline (name)
                                   VALUES('{discipline}');";
-            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
-            {
-                connection.Open();
-                SQLiteCommand command = new SQLiteCommand(sqlCommand, connection);
-                command.ExecuteNonQuery();
-            }
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            cs4RsaDatabase.DoSomething(sqlCommand);
         }
 
         public static void AddKeyword(string keyword1, string courseId, int discipline_id, string subjectName, string color=null)
         {
             string sqlCommand = $@"insert into keyword (keyword1, course_id, discipline_id, subject_name, color)
                                     values ('{keyword1}',{courseId},{discipline_id},'{subjectName}', '{color}')";
-            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaData.ConnectString))
-            {
-                connection.Open();
-                SQLiteCommand command = new SQLiteCommand(sqlCommand, connection);
-                command.ExecuteNonQuery();
-            }
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            cs4RsaDatabase.DoSomething(sqlCommand);
         }
 
         public static void AddSession(string name, string saveDate, List<ClassGroupModel> classGroupModels)
         {
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
             string yearValue = HomeCourseSearch.GetInstance().CurrentYearValue;
             string sql = $@"insert into sessionx(name, save_date, semester, year) values ('{name}', '{saveDate}','{semesterValue}',{yearValue})";
@@ -52,6 +44,18 @@ namespace cs4rsa.Database
                         VALUES ({id}, '{item.SubjectCode}', '{item.Name}')";
                 cs4RsaDatabase.DoSomething(sql);
             }
+        }
+
+        public static int DeleteSession(string id)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            string sqlSessionDetail = $@"delete from session_detail
+                            where session_id = {id}";
+            string sqlSessionx = $@"delete from sessionx
+                            where id = {id}";
+            cs4RsaDatabase.DoSomething(sqlSessionDetail);
+            int result = cs4RsaDatabase.DoSomething(sqlSessionx);
+            return result;
         }
     }
 }

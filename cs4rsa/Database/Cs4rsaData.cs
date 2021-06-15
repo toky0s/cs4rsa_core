@@ -13,7 +13,6 @@ namespace cs4rsa.Database
     public class Cs4rsaData
     {
         private static readonly string databaseName = "cs4rsadb.db";
-        public static readonly string ConnectString = $"Data Source={databaseName};Version=3;";
 
         private readonly string SQL_DISCIPLINE_TABLE =
             @"create table IF NOT EXISTS discipline (
@@ -104,12 +103,8 @@ namespace cs4rsa.Database
 
         private void CreateTable(string sqlString)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(ConnectString))
-            {
-                connection.Open();
-                SQLiteCommand command = new SQLiteCommand(sqlString, connection);
-                command.ExecuteNonQuery();
-            }
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            cs4RsaDatabase.DoSomething(sqlString);
         }
     }
 }

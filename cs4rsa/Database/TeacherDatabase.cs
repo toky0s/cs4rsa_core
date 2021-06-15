@@ -19,7 +19,7 @@ namespace cs4rsa.Database
 
         public Teacher ToTeacher()
         {
-            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sqlQuery = $@"select * from teacher where id like {_teacherId}";
             DataTable teacherTable = cs4RsaDatabase.GetDataTable(sqlQuery);
             string sqlTeacherDetail = $@"select subject_name from teacher_detail where teacher_id like {_teacherId}";

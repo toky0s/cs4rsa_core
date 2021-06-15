@@ -35,7 +35,7 @@ namespace cs4rsa.Crawler
             if (url != null)
             {
                 intructorId = GetIntructorId(url);
-                cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+                cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
                 if (ThisTeacherIsNotInDatabase(intructorId))
                 {
                     HtmlWeb web = new HtmlWeb();

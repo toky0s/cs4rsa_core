@@ -13,11 +13,20 @@ namespace cs4rsa.Database
     /// </summary>
     class Cs4rsaDatabase
     {
-        private SQLiteConnection connection;
+        private static readonly string databaseName = "cs4rsadb.db";
+        public static readonly string ConnectString = $"Data Source={databaseName};Version=3;";
 
-        public Cs4rsaDatabase(string connectString)
+        private static readonly Cs4rsaDatabase instance = new Cs4rsaDatabase();
+        private static SQLiteConnection connection;
+
+        private Cs4rsaDatabase()
         {
-            connection = new SQLiteConnection(connectString);
+            connection = new SQLiteConnection(ConnectString);
+        }
+
+        public static Cs4rsaDatabase GetInstance()
+        {
+            return instance;
         }
 
         private void OpenConnection()
