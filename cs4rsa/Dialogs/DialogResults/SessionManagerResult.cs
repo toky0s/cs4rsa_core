@@ -9,7 +9,7 @@ namespace cs4rsa.Dialogs.DialogResults
     public class SubjectInfoData
     {
         public string SubjectCode { get; set; }
-        public string RegisterCode { get; set; }
+        public string ClassGroup { get; set; }
     }
 
     public class SessionManagerResult

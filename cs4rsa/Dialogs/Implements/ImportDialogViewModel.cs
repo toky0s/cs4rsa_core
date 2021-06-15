@@ -4,13 +4,15 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace cs4rsa.Dialogs.Implements
 {
     class ImportDialogViewModel : DialogViewModelBase<SessionManagerResult>
     {
-        private ObservableCollection<ScheduleSession> _scheduleSessions;
+        private ObservableCollection<ScheduleSession> _scheduleSessions =  new ObservableCollection<ScheduleSession>();
         public ObservableCollection<ScheduleSession> ScheduleSessions
         {
             get
@@ -23,7 +25,7 @@ namespace cs4rsa.Dialogs.Implements
             }
         }
 
-        private ObservableCollection<ScheduleSessionDetail> _scheduleSessionDetails;
+        private ObservableCollection<ScheduleSessionDetail> _scheduleSessionDetails = new ObservableCollection<ScheduleSessionDetail>();
         public ObservableCollection<ScheduleSessionDetail> ScheduleSessionDetails
         {
             get
@@ -53,21 +55,19 @@ namespace cs4rsa.Dialogs.Implements
 
         private void LoadScheduleSessionDetail(ScheduleSession value)
         {
-            throw new NotImplementedException();
+            var details = Cs4rsaDataView.GetSessionDetail(value.ID);
+            foreach (ScheduleSessionDetail item in details)
+                ScheduleSessionDetails.Add(item);
         }
 
         public RelayCommand DeleteCommand;
         public RelayCommand ImportCommand;
 
-        public ImportDialogViewModel()
+        public ImportDialogViewModel(IMessageBox messageBox)
         {
             DeleteCommand = new RelayCommand(OnDelete, () => true);
             ImportCommand = new RelayCommand(OnImport, () => true);
             LoadScheduleSession();
-        }
-        public ImportDialogViewModel(IMessageBox messageBox)
-        {
-
         }
 
         private void LoadScheduleSession()
@@ -79,7 +79,18 @@ namespace cs4rsa.Dialogs.Implements
 
         private void OnImport(object obj)
         {
-            Console.WriteLine("Nhap");
+            List<SubjectInfoData> subjectInfoDatas = new List<SubjectInfoData>();
+            foreach (ScheduleSessionDetail item in _scheduleSessionDetails)
+            {
+                SubjectInfoData data = new SubjectInfoData()
+                {
+                    SubjectCode = item.SubjectCode,
+                    ClassGroup = item.ClassGroup
+                };
+                subjectInfoDatas.Add(data);
+            } 
+            SessionManagerResult result = new SessionManagerResult(subjectInfoDatas);
+            CloseDialogWithResult(obj as Window, result);
         }
 
         private void OnDelete(object obj)

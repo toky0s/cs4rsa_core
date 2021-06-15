@@ -4,68 +4,140 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
         mc:Ignorable="d"
-        Title="Nhập Môn học" Height="450" Width="800">
+        WindowStartupLocation="CenterOwner"
+        Title="Nhập Môn học"
+        Height="356"
+        Width="800"
+        Background="#FFFAFAFA">
+    <Window.Resources>
+        <Style x:Key="HeaderExpander" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="Foreground" Value="Black"></Setter>
+        </Style>
+        <Style x:Key="Expander" TargetType="Expander">
+
+        </Style>
+        <converter:ExpiryConverter x:Key="ExpiryConverter"></converter:ExpiryConverter>
+    </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical">
-            <Expander Header="Từ cơ sở dữ liệu"
-                  IsExpanded="True">
-                <Grid Height="300">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Text="Từ cơ sở dữ liệu"
+                               Style="{StaticResource HeaderExpander}"></TextBlock>
+                </Expander.Header>
+                <Grid x:Uid="GridSessions" Height="215">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Text="Danh sách phiên"
-                   Grid.ColumnSpan="2"></TextBlock>
-                    <ListView Grid.Row="1"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="2"
-                  ItemsSource="{Binding ScheduleSessions}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
-                                <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button Grid.Row="2"
-                Grid.Column="0"
-                Content="Nhập"></Button>
-                    <Button Grid.Row="2"
-                Grid.Column="1"
-                Content="Xoá"></Button>
-                    <TextBlock Grid.Row="3"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   >
-            <Run Text="Danh sách nhóm lớp của phiên"></Run>
-            <Run Text="{Binding SelectedSesion.Name}"></Run>
-                    </TextBlock>
-                    <ListView Grid.Row="4"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="2"></ListView>
+                    <StackPanel Orientation="Vertical"
+                                Grid.Column="0">
+                        <ListView
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Height="200"
+                            ItemsSource="{Binding ScheduleSessions}"
+                            SelectedItem="{Binding SelectedScheduleSession}"
+                            Margin="7,7,7,0" 
+                            Grid.RowSpan="2">
+                            <ListView.Resources>
+                                <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Value="1">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource ExpiryConverter}">
+                                                    <Binding Path="Semester"></Binding>
+                                                    <Binding Path="Year"></Binding>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Text" Value="Có thể sử dụng"></Setter>
+                                            <Setter Property="Foreground" Value="LightGreen"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Value="0">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource ExpiryConverter}">
+                                                    <Binding Path="Semester"></Binding>
+                                                    <Binding Path="Year"></Binding>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Text" Value="Đã lỗi thời"></Setter>
+                                            <Setter Property="Foreground" Value="Red"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
+                                    <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
+                                    <GridViewColumn Header="Hiệu lực" Width="auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource ExpiryConverterStyle}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"
+                                Orientation="Vertical">
+                        <ListView Grid.Row="4"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Height="200"
+                                  Margin="0,7,7,0"
+                                  ItemsSource="{Binding ScheduleSessionDetails}"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Mã môn" Width="auto" DisplayMemberBinding="{Binding SubjectCode}" />
+                                    <GridViewColumn Header="Tên môn" Width="auto" DisplayMemberBinding="{Binding SubjectName}" />
+                                    <GridViewColumn Header="Nhóm lớp" Width="auto" DisplayMemberBinding="{Binding ClassGroup}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2"
+                                Orientation="Vertical"
+                                Margin="0,7,7,0">
+                        <Button Grid.Row="2"
+                                Grid.Column="0"
+                                Content="Nhập"></Button>
+                        <Button Grid.Row="2"
+                                Grid.Column="1"
+                                Content="Xoá"></Button>
+                    </StackPanel>
+
+
                 </Grid>
             </Expander>
-            <Expander Header="Từ Share String">
-                <StackPanel Orientation="Vertical">
-                    <DockPanel Dock="Top">
-                        <TextBlock Text="Share String:"></TextBlock>
-                        <TextBox></TextBox>
-                    </DockPanel>
-                    <Button Content="Nhập"
-                        Width="100"
-                        HorizontalAlignment="Right"
-                        Margin="0, 7, 0, 0"></Button>
-                </StackPanel>
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Text="Từ ShareString"
+                               Style="{StaticResource HeaderExpander}">
+                    </TextBlock>
+                </Expander.Header>
+                <Grid Margin="7,7,7,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="Share String:"
+                               FontStyle="Italic"></TextBlock>
+                    <TextBox Grid.Column="1"></TextBox>
+                    <Button
+                        Grid.Column="2"
+                        Content="Nhập"
+                        Width="100"></Button>
+                </Grid>
             </Expander>
         </StackPanel>
     </ScrollViewer>
