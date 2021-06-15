@@ -108,10 +108,13 @@
                                 Margin="0,7,7,0">
                         <Button Grid.Row="2"
                                 Grid.Column="0"
-                                Content="Nhập"></Button>
+                                Content="Nhập"
+                                Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                         <Button Grid.Row="2"
                                 Grid.Column="1"
-                                Content="Xoá"></Button>
+                                Content="Xoá"
+                                Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"></Button>
                     </StackPanel>
 
 

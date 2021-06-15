@@ -12,6 +12,7 @@ using cs4rsa.Models;
 using cs4rsa.BaseClasses;
 using System.Collections.ObjectModel;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -44,27 +45,18 @@ namespace cs4rsa.Dialogs.Implements
             {
                 name = value;
                 RaisePropertyChanged();
+                SaveCommand.RaiseCanExecuteChanged();
             }
         }
 
-        private ICommand okCommand = null;
-        public ICommand SaveCommand
-        {
-            get { return okCommand; }
-            set { okCommand = value; }
-        }
+        public RelayCommand SaveCommand { get; set; }
 
-        private ICommand cancelCommand = null;
-        public ICommand CancelCommand
-        {
-            get { return cancelCommand; }
-            set { cancelCommand = value; }
-        }
+        public RelayCommand CancelCommand { get; set; }
         
         public SaveDialogViewModel(IMessageBox messageBox, List<ClassGroupModel> classGroupModels)
         {
-            SaveCommand = new RelayCommand(Save); 
-            CancelCommand = new RelayCommand(Cancle);
+            SaveCommand = new RelayCommand(Save, ()=> true); 
+            CancelCommand = new RelayCommand(Cancle, ()=> true);
             _messageBox = messageBox;
             _classGroupModels = classGroupModels;
             LoadScheduleSessions();

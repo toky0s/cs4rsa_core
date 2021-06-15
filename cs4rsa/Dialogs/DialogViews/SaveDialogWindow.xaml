@@ -31,7 +31,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0"
                        Text="Tên Phiên:"></TextBlock>
-            <TextBox Grid.Column="1"
+            <TextBox x:Name="txtName" Grid.Column="1"
                      Text="{Binding Name}"></TextBox>
         </Grid>
 
@@ -43,8 +43,9 @@
                     Margin="0,0,10,0"
                     IsDefault="True"
                 Content="Lưu" 
-                Command="{Binding SaveCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+                Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}"></Button>
             <Button MinWidth="60"
                     IsCancel="True"
                 Content="Thoát" 
