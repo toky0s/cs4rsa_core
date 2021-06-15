@@ -104,20 +104,47 @@ namespace cs4rsa.Database
         {
             List<ScheduleSession> scheduleSessions = new List<ScheduleSession>();
             Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
-            string sql = $@"select name, save_date  from session";
+            string sql = $@"select id, name, save_date, semester, year from sessionx";
             DataTable table = cs4RsaDatabase.GetDataTable(sql);
             foreach (DataRow item in table.Rows)
             {
+                string id = item["id"].ToString();
                 string name = item["name"].ToString();
                 DateTime saveDate = DateTime.Parse(item["save_date"].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                string semester = item["semester"].ToString();
+                string year = item["year"].ToString();
                 ScheduleSession session = new ScheduleSession()
                 {
+                    ID = id,
                     Name = name,
-                    SaveDate = saveDate
+                    SaveDate = saveDate,
+                    Semester = semester,
+                    Year = year
                 };
                 scheduleSessions.Add(session);
             }
             return scheduleSessions;
-        } 
+        }
+
+        public static List<ScheduleSessionDetail> GetSessionDetail(string id)
+        {
+            List<ScheduleSessionDetail> result = new List<ScheduleSessionDetail>();
+            Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
+            string sql = $@"select s.subject_code, k.subject_name, s.class_group
+                            from discipline as d, keyword as k, session_detail as s 
+                            WHERE k.discipline_id = d.id and s.subject_code = d.name || ' ' ||k.keyword1 and session_id ={id}";
+            DataTable table = cs4RsaDatabase.GetDataTable(sql);
+            foreach (DataRow item in table.Rows)
+            {
+                ScheduleSessionDetail detail = new ScheduleSessionDetail()
+                {
+                    SubjectCode = item["subject_code"].ToString(),
+                    SubjectName = item["subject_name"].ToString(),
+                    ClassGroup = item["class_group"].ToString(),
+                };
+                result.Add(detail);
+            }
+            return result;
+        }
     }
 }

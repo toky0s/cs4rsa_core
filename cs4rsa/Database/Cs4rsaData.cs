@@ -54,10 +54,12 @@ namespace cs4rsa.Database
             )";
 
         private readonly string SQL_SESSION =
-            @"create table if not exists session (
+            @"create table if not exists sessionx (
                 id integer primary key AUTOINCREMENT,
                 name text,
-                save_date text
+                save_date text,
+                semester text,
+                year text
             )";
 
         private readonly string SQL_SESSION_DETAIL =
@@ -66,7 +68,7 @@ namespace cs4rsa.Database
                 session_id integer,
                 subject_code text,
                 class_group text,
-                foreign key (session_id) references session(id)
+                foreign key (session_id) references sessionx(id)
             )";
 
         public Cs4rsaData()
@@ -96,7 +98,6 @@ namespace cs4rsa.Database
 
         private void DumpData()
         {
-            Console.WriteLine("DumpData");
             DisciplineData disciplineData = new DisciplineData();
             disciplineData.GetDisciplineAndKeywordDatabase();
         }

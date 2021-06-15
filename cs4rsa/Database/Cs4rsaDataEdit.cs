@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using cs4rsa.Database;
 using cs4rsa.Models;
+using cs4rsa.Crawler;
 
 namespace cs4rsa.Database
 {
@@ -38,9 +39,12 @@ namespace cs4rsa.Database
         public static void AddSession(string name, string saveDate, List<ClassGroupModel> classGroupModels)
         {
             Cs4rsaDatabase cs4RsaDatabase = new Cs4rsaDatabase(Cs4rsaData.ConnectString);
-            string sql = $@"insert into session(name, save_date) values ('{name}', '{saveDate}')";
+            string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
+            string yearValue = HomeCourseSearch.GetInstance().CurrentYearValue;
+            string sql = $@"insert into sessionx(name, save_date, semester, year) values ('{name}', '{saveDate}','{semesterValue}',{yearValue})";
             cs4RsaDatabase.DoSomething(sql);
-            string sqlGetId = "select id from session ORDER by id desc LIMIT 1";
+
+            string sqlGetId = "select id from sessionx ORDER by id desc LIMIT 1";
             long id = cs4RsaDatabase.GetScalar<long>(sqlGetId);
             foreach (ClassGroupModel item in classGroupModels)
             {
