@@ -17,7 +17,7 @@ namespace cs4rsa.Tests.Crawler
         [SetUp]
         public void Setup()
         {
-            hcs = new HomeCourseSearch();
+            hcs = HomeCourseSearch.GetInstance();
         }
 
         [Test]
