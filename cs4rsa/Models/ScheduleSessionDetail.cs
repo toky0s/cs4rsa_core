@@ -8,5 +8,8 @@ namespace cs4rsa.Models
 {
     class ScheduleSessionDetail
     {
+        public string SubjectCode { get; set; }
+        public string SubjectName { get; set; }
+        public string ClassGroup { get; set; }
     }
 }
