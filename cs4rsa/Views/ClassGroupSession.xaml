@@ -42,6 +42,9 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
+                <ToolTip x:Key="ItemToolTipStyle">
+                        <TextBlock Text="{Binding RegisterCode}"></TextBlock>
+                    </ToolTip>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -57,18 +60,15 @@
                         </Canvas>
                         <TextBlock Text="{Binding Name}"
                                    Margin="7, 0, 0, 0">
-                            <TextBlock.ToolTip>
-                                <ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding RegisterCode}">
-                                        </TextBlock>
-                                    </StackPanel>
-                                </ToolTip>
-                            </TextBlock.ToolTip>
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="ToolTip" Value="{StaticResource ItemToolTipStyle}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
         <TextBlock Grid.Row="2" 
                    Grid.Column="0" 

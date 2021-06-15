@@ -22,21 +22,6 @@ namespace cs4rsa.ViewModels
         IMessageHandler<ClassGroupAddedMessage>,
         IMessageHandler<DeleteSubjectMessage>
     {
-
-        private bool _canSave;
-        public bool CanSave
-        {
-            get
-            {
-                return _canSave;
-            }
-            set
-            {
-                _canSave = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
         {
@@ -69,7 +54,12 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
-            SaveCommand = new RelayCommand(OpenSaveDialog, () => true);
+            SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
+        }
+
+        private bool CanSave()
+        {
+            return classGroupModels.Count > 0;
         }
 
         private void OpenSaveDialog(object parameter)
@@ -93,7 +83,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
-            CanNewSaveChange();
+            SaveCommand.RaiseCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -124,7 +114,7 @@ namespace cs4rsa.ViewModels
                 }
             }
             UpdateConflictModelCollection();
-            CanNewSaveChange();
+            SaveCommand.RaiseCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
@@ -149,14 +139,6 @@ namespace cs4rsa.ViewModels
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Kiểm tra lại xem nút Lưu Mới có thể nhấn được hay không.
-        /// </summary>
-        private void CanNewSaveChange()
-        {
-            CanSave = classGroupModels.Count > 0;
         }
 
         public string GetShareString()

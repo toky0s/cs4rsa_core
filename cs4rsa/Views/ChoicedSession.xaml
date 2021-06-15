@@ -48,7 +48,7 @@
             <Button Content="Lưu mới" 
                     Command="{Binding SaveCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                    IsEnabled="{Binding CanSave}"></Button>
+                    ></Button>
         </StackPanel>
         <TextBlock Text="Xung đột"
                    Style="{StaticResource Header2}"
