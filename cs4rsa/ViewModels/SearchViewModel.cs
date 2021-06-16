@@ -2,19 +2,19 @@
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Database;
+using cs4rsa.Dialogs.DialogResults;
+using cs4rsa.Dialogs.DialogService;
+using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
-using cs4rsa.Dialogs.DialogViews;
-using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Messages;
 using cs4rsa.Models;
 using LightMessageBus;
-using System;
+using LightMessageBus.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using cs4rsa.Dialogs.DialogService;
 using System.Windows;
 
 namespace cs4rsa.ViewModels
@@ -22,10 +22,12 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class SearchViewModel : NotifyPropertyChangedBase
+    public class SearchViewModel : NotifyPropertyChangedBase,
+        IMessageHandler<AddSubjectsRequest>,
+        IMessageHandler<CleanSubjectModelsRequest>
     {
         #region Commands
-        public MyICommand AddCommand { get; set; }
+        public RelayCommand AddCommand { get; set; }
         private bool canRunAddCommand = true;
         public bool CanRunAddCommand
         {
@@ -39,7 +41,7 @@ namespace cs4rsa.ViewModels
                 RaisePropertyChanged();
             }
         }
-        public MyICommand DeleteCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportDialogCommand { get; set; }
         #endregion
 
@@ -56,7 +58,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedDiscipline = value;
-                RaisePropertyChanged("SelectedDiscipline");
+                RaisePropertyChanged();
             }
         }
 
@@ -81,7 +83,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedKeyword = value;
                 CanAddSubjectChange();
-                RaisePropertyChanged("SelectedKeyword");
+                RaisePropertyChanged();
             }
         }
 
@@ -164,11 +166,13 @@ namespace cs4rsa.ViewModels
 
         public SearchViewModel()
         {
+            MessageBus.Default.FromAny().Where<AddSubjectsRequest>().Notify(this);
+
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
-            AddCommand = new MyICommand(OnAddSubject, ()=> true);
-            DeleteCommand = new MyICommand(OnDeleteSubject, CanDeleteSubject);
+            AddCommand = new RelayCommand(OnAddSubject);
+            DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
             SelectedDiscipline = this.disciplines[0];
         }
@@ -179,6 +183,12 @@ namespace cs4rsa.ViewModels
             ImportDialogViewModel vm = new ImportDialogViewModel(messageBoxService);
             SessionManagerWindow dialogWindow = new SessionManagerWindow();
             SessionManagerResult result = DialogService<SessionManagerResult>.OpenDialog(vm, dialogWindow, obj as Window);
+            if (result != null)
+            {
+                SubjectImporter subjectImporterVm = new SubjectImporter(result, messageBoxService);
+                SubjectImporterWindow subjectImporterWindow = new SubjectImporterWindow();
+                ImportResult importResult = DialogService<ImportResult>.OpenDialog(subjectImporterVm, subjectImporterWindow, obj as Window);
+            }
         }
 
         private bool CanDeleteSubject()
@@ -186,7 +196,7 @@ namespace cs4rsa.ViewModels
             return selectedSubjectModel != null;
         }
 
-        private void OnDeleteSubject()
+        private void OnDeleteSubject(object obj)
         {
             MessageBus.Default.Publish(new DeleteSubjectMessage(selectedSubjectModel));
             subjectModels.Remove(selectedSubjectModel);
@@ -210,7 +220,7 @@ namespace cs4rsa.ViewModels
             SelectedKeyword = disciplineKeywordModels[0];
         }
 
-        private void OnAddSubject()
+        private void OnAddSubject(object obj)
         {
             CanAddSubjectChange(false);
             BackgroundWorker backgroundWorker = new BackgroundWorker
@@ -278,7 +288,7 @@ namespace cs4rsa.ViewModels
             MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
         }
 
-        private void CanAddSubjectChange(bool? value=null)
+        private void CanAddSubjectChange(bool? value = null)
         {
             if (value == null)
             {
@@ -297,6 +307,26 @@ namespace cs4rsa.ViewModels
             {
                 CanRunAddCommand = value.Value;
             }
+        }
+
+        public void Handle(AddSubjectsRequest message)
+        {
+            subjectModels.Clear();
+            foreach (SubjectModel subject in message.Source)
+            {
+                subjectModels.Add(subject);
+            }
+            TotalSubject = subjectModels.Count;
+            CanAddSubjectChange();
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
+        }
+
+        public void Handle(CleanSubjectModelsRequest message)
+        {
+            subjectModels.Clear();
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
         }
     }
 }
