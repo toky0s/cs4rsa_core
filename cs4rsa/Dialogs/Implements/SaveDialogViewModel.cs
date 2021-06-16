@@ -86,8 +86,7 @@ namespace cs4rsa.Dialogs.Implements
                 return;
             }
             Cs4rsaDataEdit.AddSession(name, DateTime.Now.ToString(), _classGroupModels);
-            SaveResult result = new SaveResult();
-            result.Name = name;
+            SaveResult result = new SaveResult() { Name = name};
             CloseDialogWithResult(obj as Window, result);
         }
     }

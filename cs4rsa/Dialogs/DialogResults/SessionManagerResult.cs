@@ -6,34 +6,41 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Dialogs.DialogResults
 {
+    /// <summary>
+    /// Là một item trong kết quả trả về của trình quản lý phiên.
+    /// </summary>
     public class SubjectInfoData
     {
         public string SubjectCode { get; set; }
         public string ClassGroup { get; set; }
+        public string SubjectName { get; set; }
     }
 
+    /// <summary>
+    /// Là kết quả trả về của trình quản lý phiên.
+    /// </summary>
     public class SessionManagerResult
     {
-        private List<SubjectInfoData> _subjects;
-        public List<SubjectInfoData> Subjects
+        private List<SubjectInfoData> _subjectInfoDatas;
+        public List<SubjectInfoData> SubjectInfoDatas
         {
             get
             {
-                return _subjects;
+                return _subjectInfoDatas;
             }
             set
             {
-                _subjects = value;
+                _subjectInfoDatas = value;
             }
         }
-        public SessionManagerResult(List<SubjectInfoData> subjects)
+        public SessionManagerResult(List<SubjectInfoData> subjectInfoDatas)
         {
-            _subjects = subjects;
+            _subjectInfoDatas = subjectInfoDatas;
         }
 
         public void Add(SubjectInfoData subjectInfo)
         {
-            _subjects.Add(subjectInfo);
+            _subjectInfoDatas.Add(subjectInfo);
         }
     }
 }

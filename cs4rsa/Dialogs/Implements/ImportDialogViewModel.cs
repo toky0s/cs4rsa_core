@@ -95,7 +95,7 @@ namespace cs4rsa.Dialogs.Implements
         private void LoadScheduleSession()
         {
             ScheduleSessions.Clear();
-            var sessions = Cs4rsaDataView.GetScheduleSessions();
+            List<ScheduleSession> sessions = Cs4rsaDataView.GetScheduleSessions();
             foreach (ScheduleSession item in sessions)
                 ScheduleSessions.Add(item);
         }
@@ -108,7 +108,8 @@ namespace cs4rsa.Dialogs.Implements
                 SubjectInfoData data = new SubjectInfoData()
                 {
                     SubjectCode = item.SubjectCode,
-                    ClassGroup = item.ClassGroup
+                    ClassGroup = item.ClassGroup,
+                    SubjectName = item.SubjectName
                 };
                 subjectInfoDatas.Add(data);
             }
