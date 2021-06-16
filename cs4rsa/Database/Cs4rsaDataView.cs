@@ -93,6 +93,30 @@ namespace cs4rsa.Database
             }
         }
 
+        public static DisciplineKeywordModel GetSingleDisciplineKeywordModel(string courseId)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(Cs4rsaDatabase.ConnectString))
+            {
+                DisciplineKeywordModel disciplineKeywordModel = null;
+                string sql = $@"SELECT course_id, subject_name, name, keyword1 from keyword k, discipline d
+                            where course_id = '{courseId}' and d.id = k.discipline_id";
+                SQLiteCommand command = new SQLiteCommand(sql, connection);
+                connection.Open();
+                SQLiteDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        disciplineKeywordModel = new DisciplineKeywordModel(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                        break;
+                    }
+                }
+                reader.Close();
+                return disciplineKeywordModel;
+            }
+        }
+
         public static string GetColorWithCourseId(string courseId)
         {
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
@@ -145,6 +169,14 @@ namespace cs4rsa.Database
                 result.Add(detail);
             }
             return result;
+        }
+
+        public static string GetCourseId(string subjectCode)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            string sql = $@"select course_id from discipline d, keyword k
+                            where d.id = k.discipline_id and d.name || ' ' || k.keyword1 = '{subjectCode}'";
+            return cs4RsaDatabase.GetScalar<string>(sql);
         }
     }
 }
