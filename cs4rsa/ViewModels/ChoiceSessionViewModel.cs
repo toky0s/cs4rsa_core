@@ -140,21 +140,5 @@ namespace cs4rsa.ViewModels
                 }
             }
         }
-
-        public string GetShareString()
-        {
-            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
-            string subjectCode = "";
-            string registerCode = "";
-            string cs4rsaHashCode = "";
-            string replaceChar = "%";
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
-            {
-                subjectCode = classGroupModel.SubjectCode;
-                registerCode = classGroupModel.RegisterCode;
-                cs4rsaHashCode = cs4rsaHashCode + subjectCode + replaceChar + registerCode;
-            }
-            return StringHelper.SuperCleanString($"#cs4rsa!{homeCourseSearch.CurrentSemesterValue}!{classGroupModels.Count}!{cs4rsaHashCode}#cs4rsa");
-        }
     }
 }

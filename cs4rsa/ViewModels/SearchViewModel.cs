@@ -9,6 +9,7 @@ using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Messages;
 using cs4rsa.Models;
+using cs4rsa.ViewModelFunctions;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.Generic;
@@ -164,8 +165,6 @@ namespace cs4rsa.ViewModels
 
         public SearchViewModel()
         {
-            MessageBus.Default.FromAny().Where<AddSubjectsRequest>().Notify(this);
-
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
@@ -187,6 +186,7 @@ namespace cs4rsa.ViewModels
                 SubjectImporterWindow subjectImporterWindow = new SubjectImporterWindow();
                 ImportResult importResult = DialogService<ImportResult>.OpenDialog(subjectImporterVm, subjectImporterWindow, obj as Window);
                 ImportSubjects(importResult.SubjectModels);
+                ClassGroupChoicer.Start(importResult.SubjectModels, result.SubjectInfoDatas);
             }
         }
 
@@ -308,9 +308,11 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public void ImportSubjects(List<SubjectModel> importSubjects)
+        private void ImportSubjects(List<SubjectModel> importSubjects)
         {
             subjectModels.Clear();
+            foreach(SubjectModel subject in importSubjects)
+                MessageBus.Default.Publish(new DeleteSubjectMessage(subject));
             foreach (SubjectModel subject in importSubjects)
             {
                 subjectModels.Add(subject);

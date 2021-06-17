@@ -50,5 +50,21 @@ namespace cs4rsa.Models
         {
             this.subject = subject;
         }
+
+        /// <summary>
+        /// Trả về ClassGroupModel theo tên được truyền vào, nếu không tồn tại ClassGroupModel
+        /// theo tên đã truyền vào trả về null.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public ClassGroupModel GetClassGroupModelWithName(string name)
+        {
+            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            {
+                if (classGroupModel.Name.Equals(name))
+                    return classGroupModel;
+            }
+            return null;
+        }
     }
 }

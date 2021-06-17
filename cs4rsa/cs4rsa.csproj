@@ -169,6 +169,7 @@
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
+    <Compile Include="Helpers\ShareString.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Helpers\Subjectidentifier.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
+    <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
