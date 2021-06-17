@@ -47,6 +47,19 @@ namespace cs4rsa.Dialogs.Implements
                 RaisePropertyChanged();
             }
         }
+        private bool? _result;
+        public bool? Result
+        {
+            get
+            {
+                return _result;
+            }
+            set
+            {
+                _result = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private IMessageBox _messageBox;
         public SubjectImporter(SessionManagerResult sessionManagerResult, IMessageBox messageBox)
@@ -106,8 +119,10 @@ namespace cs4rsa.Dialogs.Implements
             {
                 subject.Color = ColorGenerator.GetColor(subject.CourseId);
             }
-            MessageBus.Default.Publish<AddSubjectsRequest>(new AddSubjectsRequest(subjectModels));
-            CloseDialogWithResult(null, new ImportResult { Success=subjectModels.Count });
+            //MessageBus.Default.Publish<AddSubjectsRequest>(new AddSubjectsRequest(subjectModels));
+            UserDialogResult = new ImportResult() { SubjectModels = subjectModels };
+            CloseDialogWithResult(null, UserDialogResult);
+            Result = true;
         }
     }
 }

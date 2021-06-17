@@ -4,11 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="SubjectImporterWindow"
-        Height="372"
-        Width="602"
-        WindowStartupLocation="CenterOwner">
+        Height="272"
+        Width="440"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <Grid>
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Danh sách môn" 
