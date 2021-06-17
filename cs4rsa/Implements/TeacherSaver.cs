@@ -48,20 +48,6 @@ namespace cs4rsa.Implements
             SaveDetail(teacher);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="subjectName"></param>
-        /// <returns></returns>
-        private bool IsHaveOnlyOneCourseIdWithSubject(string subjectName)
-        {
-            string countString = $@"select count(course_id) FROM keyword where subject_name like '{subjectName}'";
-            long count = cs4RsaDatabase.GetScalar<long>(countString);
-            if (count == 1)
-                return true;
-            return false;
-        }
-
         private void SaveDetail(Teacher teacher)
         {
             foreach (string subjectName in teacher.TeachedSubjects)
