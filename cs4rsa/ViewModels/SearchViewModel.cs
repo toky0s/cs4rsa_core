@@ -22,9 +22,7 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class SearchViewModel : NotifyPropertyChangedBase,
-        IMessageHandler<AddSubjectsRequest>,
-        IMessageHandler<CleanSubjectModelsRequest>
+    public class SearchViewModel : NotifyPropertyChangedBase
     {
         #region Commands
         public RelayCommand AddCommand { get; set; }
@@ -188,6 +186,7 @@ namespace cs4rsa.ViewModels
                 SubjectImporter subjectImporterVm = new SubjectImporter(result, messageBoxService);
                 SubjectImporterWindow subjectImporterWindow = new SubjectImporterWindow();
                 ImportResult importResult = DialogService<ImportResult>.OpenDialog(subjectImporterVm, subjectImporterWindow, obj as Window);
+                ImportSubjects(importResult.SubjectModels);
             }
         }
 
@@ -309,22 +308,15 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public void Handle(AddSubjectsRequest message)
+        public void ImportSubjects(List<SubjectModel> importSubjects)
         {
             subjectModels.Clear();
-            foreach (SubjectModel subject in message.Source)
+            foreach (SubjectModel subject in importSubjects)
             {
                 subjectModels.Add(subject);
             }
             TotalSubject = subjectModels.Count;
             CanAddSubjectChange();
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
-        }
-
-        public void Handle(CleanSubjectModelsRequest message)
-        {
-            subjectModels.Clear();
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }

@@ -157,6 +157,7 @@
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
       <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
       <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
