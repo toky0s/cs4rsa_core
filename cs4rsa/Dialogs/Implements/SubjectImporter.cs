@@ -62,8 +62,11 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         private IMessageBox _messageBox;
+        private BackgroundWorker _backgroundWorker;
+
         public SubjectImporter(SessionManagerResult sessionManagerResult, IMessageBox messageBox)
         {
+            _messageBox = messageBox;
             foreach (SubjectInfoData item in sessionManagerResult.SubjectInfoDatas)
             {
                 SubjectInfoDatas.Add(item);
@@ -78,15 +81,15 @@ namespace cs4rsa.Dialogs.Implements
 
         private void Run(List<SubjectCrawler> subjectCrawlers)
         {
-            BackgroundWorker backgroundWorker = new BackgroundWorker
+            _backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-            backgroundWorker.DoWork += BackgroundWorker_DoWork; ;
-            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-            backgroundWorker.RunWorkerCompleted += WorkerComplete;
-            backgroundWorker.RunWorkerAsync(subjectCrawlers);
+            _backgroundWorker.DoWork += BackgroundWorker_DoWork; ;
+            _backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
+            _backgroundWorker.RunWorkerCompleted += WorkerComplete;
+            _backgroundWorker.RunWorkerAsync(subjectCrawlers);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -119,7 +122,6 @@ namespace cs4rsa.Dialogs.Implements
             {
                 subject.Color = ColorGenerator.GetColor(subject.CourseId);
             }
-            //MessageBus.Default.Publish<AddSubjectsRequest>(new AddSubjectsRequest(subjectModels));
             UserDialogResult = new ImportResult() { SubjectModels = subjectModels };
             CloseDialogWithResult(null, UserDialogResult);
             Result = true;

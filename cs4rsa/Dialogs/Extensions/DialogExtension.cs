@@ -18,8 +18,7 @@ namespace cs4rsa.Dialogs.Extensions
 
         private static void DialogResultChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var window = d as Window;
-            if (window != null && window.IsVisible)
+            if (d is Window window && window.IsVisible)
             {
                 window.DialogResult = e.NewValue as bool?;
             }
