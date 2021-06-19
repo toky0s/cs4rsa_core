@@ -168,5 +168,10 @@ namespace cs4rsa.BasicData
                 return 0;
             return int.Parse(schoolClasses[0].EmptySeat);
         }
+
+        public MetaDataMap GetMetaDataMap()
+        {
+            return new MetaDataMap(GetSchedule(), GetDayPlaceMetaData());
+        }
     }
 }
