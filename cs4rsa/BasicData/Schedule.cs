@@ -84,7 +84,7 @@ namespace cs4rsa.BasicData
     {
 
         /// <summary>
-        /// Giao hai các thứ của hai Schedule. Dùng để phát hiện xung đột giữa hai Schedule.
+        /// Giao các thứ của hai Schedule. Dùng để phát hiện xung đột giữa hai Schedule.
         /// </summary>
         /// <returns>Trả về DayOfWeek mà cả hai Schedule cùng có.</returns>
         public static List<DayOfWeek> GetIntersectDate(Schedule schedule1, Schedule schedule2)
