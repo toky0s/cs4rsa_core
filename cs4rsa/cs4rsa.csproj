@@ -132,9 +132,7 @@
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
-    <Compile Include="BasicData\BetweenPoint.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
-    <Compile Include="BasicData\GoRange.cs" />
     <Compile Include="BasicData\PlaceConflict.cs" />
     <Compile Include="BasicData\PlaceConflictFinder.cs" />
     <Compile Include="BasicData\Semester.cs" />
@@ -171,13 +169,12 @@
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
     <Compile Include="Helpers\ShareString.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Subjectidentifier.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Dialogs\Implements\SubjectImporter.cs" />
-    <Compile Include="Messages\AddSubjectsRequest.cs" />
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
-    <Compile Include="Messages\CleanSubjectModelsRequest.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Reply\RequestChoicedClassGroupModel.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
@@ -314,9 +311,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Importer\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

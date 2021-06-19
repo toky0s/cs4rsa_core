@@ -24,7 +24,20 @@ namespace cs4rsa.Helpers
         }
     }
 
-    class ScheduleHelper
+    public class LinkTink
+    {
+        /// <summary>
+        /// Chuyển chuỗi dạng "HH:mm" sang DateTime.
+        /// </summary>
+        /// <param name="time">Có dạng "HH:mm", ví dụ "12:30".</param>
+        /// <returns></returns>
+        public static DateTime GetDateTimeFromString(string time)
+        {
+            return DateTime.ParseExact(time, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+        }
+    }
+
+    public class ScheduleHelper
     {
         /// <summary>
         /// Chuyển một chuỗi thời gian match với đoạn regex sau @"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
