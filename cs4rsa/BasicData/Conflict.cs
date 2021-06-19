@@ -81,7 +81,7 @@ namespace cs4rsa.BasicData
             return null;
         }
 
-        private bool CanConflictPhase(Phase phase1, Phase phase2)
+        public static bool CanConflictPhase(Phase phase1, Phase phase2)
         {
             if (phase1 == Phase.ALL || phase2 == Phase.ALL) return true;
             return phase1 == phase2;
