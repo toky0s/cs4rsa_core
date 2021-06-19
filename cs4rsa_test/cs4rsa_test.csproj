@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="BasicData\TestClassGroup.cs" />
     <Compile Include="BasicData\TestConflict.cs" />
+    <Compile Include="BasicData\TestPlaceMap.cs" />
     <Compile Include="BasicData\TestSchedule.cs" />
     <Compile Include="BasicData\TestStudyTime.cs" />
     <Compile Include="BasicData\TestStudyWeek.cs" />

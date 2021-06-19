@@ -18,7 +18,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140631&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.NVL_137, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Tuesday));
+            Assert.AreEqual(Place.NVL_137, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Tuesday));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140631&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.NVL_137, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Thursday));
+            Assert.AreEqual(Place.NVL_137, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Thursday));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140216&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.QUANGTRUNG, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Tuesday));
+            Assert.AreEqual(Place.QUANGTRUNG, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Tuesday));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140216&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.QUANGTRUNG, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Friday));
+            Assert.AreEqual(Place.QUANGTRUNG, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Friday));
         }
 
 
@@ -55,7 +55,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140603&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.HOAKHANH, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Wednesday));
+            Assert.AreEqual(Place.HOAKHANH, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Wednesday));
         }
 
 
@@ -65,7 +65,7 @@ namespace cs4rsa_test.Crawler
             string url = "http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listclassdetail&timespan=73&semesterid=73&classid=140603&academicleveltypeid=&curriculumid=";
             MetaDataCrawler metaDataCrawler = new MetaDataCrawler(url);
             DayPlaceMetaData dayPlaceMetaData = metaDataCrawler.ToDayPlaceMetaData();
-            Assert.AreEqual(Place.VIETTIN, dayPlaceMetaData.GetPlaceAddDay(DayOfWeek.Saturday));
+            Assert.AreEqual(Place.VIETTIN, dayPlaceMetaData.GetPlaceAtDay(DayOfWeek.Saturday));
         }
 
     }
