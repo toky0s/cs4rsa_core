@@ -129,11 +129,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseClasses\BaseConflict.cs" />
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
-    <Compile Include="BasicData\PlaceConflict.cs" />
+    <Compile Include="BasicData\ConflictPlace.cs" />
     <Compile Include="BasicData\PlaceConflictFinder.cs" />
     <Compile Include="BasicData\Semester.cs" />
     <Compile Include="BasicData\StudyTimePoint.cs" />
@@ -176,6 +177,9 @@
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
+    <Compile Include="Enums\ConflictType.cs" />
+    <Compile Include="Models\Interfaces\IConflictModel.cs" />
+    <Compile Include="Models\PlaceConflictFinderModel.cs" />
     <Compile Include="Reply\RequestChoicedClassGroupModel.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
     <Compile Include="BasicData\StudyWeek.cs" />

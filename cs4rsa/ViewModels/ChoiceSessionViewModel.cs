@@ -15,6 +15,7 @@ using System;
 using System.Windows;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Dialogs.DialogViews;
+using cs4rsa.Models.Interfaces;
 
 namespace cs4rsa.ViewModels
 {
@@ -35,8 +36,21 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<ConflictModel> conflictModels = new ObservableCollection<ConflictModel>();
-        public ObservableCollection<ConflictModel> ConflictModels
+        private ClassGroupModel _selectedClassGroupModel;
+        public ClassGroupModel SelectedClassGroupModel
+        {
+            get
+            {
+                return _selectedClassGroupModel;
+            }
+            set
+            {
+                _selectedClassGroupModel = value;
+            }
+        }
+
+        private ObservableCollection<IConflictModel> conflictModels = new ObservableCollection<IConflictModel>();
+        public ObservableCollection<IConflictModel> ConflictModels
         {
             get
             {
@@ -49,12 +63,20 @@ namespace cs4rsa.ViewModels
         }
 
         public RelayCommand SaveCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
 
         public ChoiceSessionViewModel()
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
+            DeleteCommand = new RelayCommand(OnDelete);
+        }
+
+        private void OnDelete(object obj)
+        {
+            classGroupModels.Remove(_selectedClassGroupModel);
+            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
         private bool CanSave()
@@ -122,7 +144,6 @@ namespace cs4rsa.ViewModels
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict.
         /// </summary>
-        /// <returns>Danh sách các Conflict</returns>
         private void UpdateConflictModelCollection()
         {
             conflictModels.Clear();
@@ -134,8 +155,15 @@ namespace cs4rsa.ViewModels
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
-                        ConflictModel conflictModel = new ConflictModel(conflict, conflictTime);
+                        IConflictModel conflictModel = new ConflictModel(conflict);
                         conflictModels.Add(conflictModel);
+                    }
+                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(classGroupModels[i], classGroupModels[k]);
+                    ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
+                    if (conflictPlace != null)
+                    {
+                        IConflictModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
+                        conflictModels.Add(placeConflictModel);
                     }
                 }
             }

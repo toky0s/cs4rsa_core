@@ -59,5 +59,24 @@ namespace cs4rsa.Helpers
                 return "Chủ Nhật";
             return $"Thứ {(int)day+1}";
         }
+
+        public static string ToStringFromPlace(Place place)
+        {
+            switch (place)
+            {
+                case Place.HOAKHANH:
+                    return "Hoà Khánh Nam";
+                case Place.NVL_137:
+                    return "137 Nguyễn Văn Linh";
+                case Place.NVL_254:
+                    return "254 Nguyễn Văn Linh";
+                case Place.PHANTHANH:
+                    return "Phan Thanh";
+                case Place.QUANGTRUNG:
+                    return "03 Quang Trung";
+                default:
+                    return "334/4 Nguyễn Văn Linh (Việt Tin)";
+            }
+        }
     }
 }
