@@ -33,5 +33,11 @@ namespace cs4rsa.Views
             string registerCode = _choiceSessionViewModel.ClassGroupModels[Listbox_Choiced.SelectedIndex].RegisterCode;
             Clipboard.SetData(DataFormats.Text, registerCode);
         }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
+        }
     }
 }

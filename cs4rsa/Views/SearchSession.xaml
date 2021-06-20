@@ -61,7 +61,7 @@
         <ListBox Grid.Row="3"
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
-                 Margin="0, 10, 0, 0"
+                 Margin="0, 5, 0, 0"
                  x:Name="DownloadSubjects"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ItemsSource="{Binding SubjectModels}"
@@ -109,7 +109,7 @@
         <Grid Grid.ColumnSpan="2"
                     Grid.Row="4" 
                     Grid.Column="0"
-              Margin="0, 10, 0, 0">
+              Margin="0, 5, 0, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -117,11 +117,11 @@
             <Button Grid.Column="0"
                     Content="Xoá"
                     Command="{Binding DeleteCommand}"
-                    Margin="0, 0, 5, 0">
+                    Margin="0, 0, 2.5, 0">
             </Button>
             <Button Grid.Column="1" 
                     Content="Nhập..."
-                    Margin="5, 0, 0, 0"
+                    Margin="2.5, 0, 0, 0"
                     Command="{Binding ImportDialogCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
         </Grid>

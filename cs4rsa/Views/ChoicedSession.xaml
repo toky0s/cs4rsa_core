@@ -17,7 +17,6 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Text="Đã chọn"
                    Grid.Row="0"
@@ -25,11 +24,13 @@
         <ListBox Grid.Row="1"
                  x:Name="Listbox_Choiced"
                  ItemsSource="{Binding ClassGroupModels}"
+                 SelectedItem="{Binding SelectedClassGroupModel}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Style="{StaticResource Cs4rsaListBox}">
             <ListBox.Resources>
-                <ContextMenu x:Key="listViewContextMenu">
+                <ContextMenu x:Key="listViewContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem Header="Sao chép mã" Click="MenuItem_Click"/>
+                    <MenuItem Header="Bỏ chọn" Command="{Binding DeleteCommand}"/>
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
@@ -44,7 +45,6 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
         <StackPanel Grid.Row="2">
-            <Button Content="Lưu"></Button>
             <Button Content="Lưu mới" 
                     Command="{Binding SaveCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
@@ -59,17 +59,13 @@
                  Style="{StaticResource Cs4rsaListBox}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock ToolTipService.ToolTip="{Binding ConflictTime, Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
-                        <Run Text="{Binding ClassGroup1.Name, Mode=OneWay}"></Run>
+                    <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
+                        <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
                         <Run Text=" và "></Run>
-                        <Run Text="{Binding ClassGroup2.Name, Mode=OneWay}"></Run>
+                        <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
                     </TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="5">
-            <Button Content="Phân tích"></Button>
-            <Button Content="Tự động xếp lịch"></Button>
-        </StackPanel>
     </Grid>
 </UserControl>
