@@ -118,6 +118,16 @@ namespace cs4rsa.BasicData
         {
             return _dayPlacePairs[day].Place;
         }
+
+        public List<Place> GetPlaces()
+        {
+            List<Place> places = new List<Place>();
+            foreach (DayPlacePair pair in _dayPlacePairs.Values)
+            {
+                places.Add(pair.Place);
+            }
+            return places.Distinct().ToList();
+        }
     }
 
 
@@ -243,15 +253,17 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class PlaceAdjacent
     {
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        private DateTime _start { get; set; }
+        private DateTime _end { get; set; }
+        public string Start { get { return _start.ToString("HH:mm"); } }
+        public string End { get { return _end.ToString("HH:mm"); } }
         public Place PlaceStart { get; set; }
         public Place PlaceEnd { get; set; }
 
         public PlaceAdjacent(DateTime start, DateTime end, Place placeStart, Place placeEnd)
         {
-            Start = start;
-            End = end;
+            _start = start;
+            _end = end;
             PlaceStart = placeStart;
             PlaceEnd = placeEnd;
         }

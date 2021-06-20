@@ -118,16 +118,16 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class StudyTimeIntersect
     {
-        private readonly DateTime start;
-        private readonly DateTime end;
+        private readonly DateTime _start;
+        private readonly DateTime _end;
 
-        public string Start { get { return start.ToString("HH:mm"); } }
-        public string End { get { return end.ToString("HH:mm"); } }
+        public string Start { get { return _start.ToString("HH:mm"); } }
+        public string End { get { return _end.ToString("HH:mm"); } }
 
         public StudyTimeIntersect(DateTime start, DateTime end)
         {
-            this.start = start;
-            this.end = end;
+            _start = start;
+            _end = end;
         }
     }
 

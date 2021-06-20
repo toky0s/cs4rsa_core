@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cs4rsa.BaseClasses;
 using cs4rsa.Models;
 
 namespace cs4rsa.BasicData
@@ -29,33 +30,23 @@ namespace cs4rsa.BasicData
         }
     }
 
-    class Conflict
+    class Conflict: BaseConflict
     {
-        private readonly ClassGroup classGroup1;
-        private readonly ClassGroup classGroup2;
-
-        public ClassGroup ClassGroupFirst { get { return classGroup1; } }
-        public ClassGroup ClassGroupSecond { get { return classGroup2; } }
-
-        public Conflict(ClassGroup classGroup1, ClassGroup classGroup2)
+        public Conflict(ClassGroup classGroup1, ClassGroup classGroup2) : base(classGroup1, classGroup2)
         {
-            this.classGroup1 = classGroup1;
-            this.classGroup2 = classGroup2;
         }
 
-        public Conflict(ClassGroupModel classGroupModel1, ClassGroupModel classGroupModel2)
+        public Conflict(ClassGroupModel classGroup1, ClassGroupModel classGroup2) : base(classGroup1, classGroup2)
         {
-            classGroup1 = classGroupModel1.classGroup;
-            classGroup2 = classGroupModel2.classGroup;
         }
 
         public ConflictTime GetConflictTime()
         {
             // Check phase
-            if (CanConflictPhase(classGroup1.GetPhase(), classGroup2.GetPhase()))
+            if (CanConflictPhase(_classGroup1.GetPhase(), _classGroup2.GetPhase()))
             {
-                Schedule scheduleClassGroup1 = classGroup1.GetSchedule();
-                Schedule scheduleClassGroup2 = classGroup2.GetSchedule();
+                Schedule scheduleClassGroup1 = _classGroup1.GetSchedule();
+                Schedule scheduleClassGroup2 = _classGroup2.GetSchedule();
                 List<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
                 // Check date
                 if (DayOfWeeks.Count > 0)
@@ -79,12 +70,6 @@ namespace cs4rsa.BasicData
                 return null;
             }
             return null;
-        }
-
-        public static bool CanConflictPhase(Phase phase1, Phase phase2)
-        {
-            if (phase1 == Phase.ALL || phase2 == Phase.ALL) return true;
-            return phase1 == phase2;
         }
     }
 }
