@@ -9,7 +9,8 @@ using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
 {
-    public class ClassGroupViewModel : NotifyPropertyChangedBase, IMessageHandler<SelectedSubjectChangeMessage>
+    public class ClassGroupViewModel : NotifyPropertyChangedBase, 
+        IMessageHandler<SelectedSubjectChangeMessage>
     {
         public static EventHandler SelectedSubjectChanged;
 
