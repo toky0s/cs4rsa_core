@@ -15,7 +15,8 @@
         </Grid.RowDefinitions>
         <ListView Grid.Row="0"
                   Margin="7, 0, 7, 0"
-                  ItemsSource="{Binding ScheduleSessions}">
+                  ItemsSource="{Binding ScheduleSessions}"
+                  Style="{StaticResource Cs4rsaListView}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />

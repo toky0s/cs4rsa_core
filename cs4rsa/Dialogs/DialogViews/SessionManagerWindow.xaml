@@ -13,7 +13,7 @@
         Background="#FFFAFAFA">
     <Window.Resources>
         <Style x:Key="HeaderExpander" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontWeight" Value="Regular"></Setter>
             <Setter Property="FontSize" Value="20"></Setter>
             <Setter Property="Foreground" Value="Black"></Setter>
         </Style>
@@ -42,8 +42,9 @@
                             Height="200"
                             ItemsSource="{Binding ScheduleSessions}"
                             SelectedItem="{Binding SelectedScheduleSession}"
-                            Margin="7,7,7,0" 
-                            Grid.RowSpan="2">
+                            Margin="5,5,5,0" 
+                            Grid.RowSpan="2"
+                            Style="{StaticResource Cs4rsaListView}">
                             <ListView.Resources>
                                 <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
                                     <Style.Triggers>
@@ -88,10 +89,11 @@
                     <StackPanel Grid.Column="1"
                                 Orientation="Vertical">
                         <ListView Grid.Row="4"
+                                  Style="{StaticResource Cs4rsaListView}"
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"
                                   Height="200"
-                                  Margin="0,7,7,0"
+                                  Margin="0,5,5,0"
                                   ItemsSource="{Binding ScheduleSessionDetails}"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <ListView.View>
@@ -114,6 +116,7 @@
                         <Button Grid.Row="2"
                                 Grid.Column="1"
                                 Content="Xoá"
+                                Margin="0,5,0,0"
                                 Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"></Button>
                     </StackPanel>
 
@@ -134,8 +137,10 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="Share String:"
-                               FontStyle="Italic"></TextBlock>
-                    <TextBox Grid.Column="1"></TextBox>
+                               FontStyle="Italic"
+                               Margin="0,0,5,0"></TextBlock>
+                    <TextBox Grid.Column="1"
+                             Margin="0,0,5,0"></TextBox>
                     <Button
                         Grid.Column="2"
                         Content="Nhập"
