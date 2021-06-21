@@ -57,5 +57,12 @@ namespace cs4rsa.Database
             int result = cs4RsaDatabase.DoSomething(sqlSessionx);
             return result;
         }
+
+        private static int DeleteTable(string tableName)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            string sql = $"delete from {tableName}";
+            return cs4RsaDatabase.DoSomething(sql);
+        }
     }
 }

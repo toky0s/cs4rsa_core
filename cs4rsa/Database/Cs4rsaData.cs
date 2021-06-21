@@ -85,16 +85,6 @@ namespace cs4rsa.Database
             }
         }
 
-        /// <summary>
-        /// Thao tác update sẽ được người dùng chạy khi cơ sỡ dữ liệu đã lỗi thời.
-        /// </summary>
-        private void UpdateDatabase()
-        {
-            // TODO: Drop tất cả các record của discipline và keyword.
-            // TODO: Thực hiện đổ lại data.
-            Console.WriteLine("Update data");
-        }
-
         private void DumpData()
         {
             DisciplineData disciplineData = new DisciplineData();
