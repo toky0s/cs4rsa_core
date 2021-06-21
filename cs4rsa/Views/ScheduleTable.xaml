@@ -43,10 +43,6 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Lịch mô phỏng"
                         Style="{StaticResource Header1}"></TextBlock>
-            <Button Content="Cài đặt hiển thị..."
-                    Margin="7,0,0,0"
-                    MinWidth="100"
-                    Command="{Binding}"></Button>
         </StackPanel>
         <TextBlock Text="Giai đoạn 1 (Từ tuần 1 - 9)"
                            Grid.Row="1"></TextBlock>

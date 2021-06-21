@@ -35,7 +35,20 @@
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <Canvas Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.RowSpan="2"
+                                Width="10" Height="10" >
+                            <Rectangle
+                                Width="10"
+                                Height="10"
+                                Fill="{Binding Color}"/>
+                        </Canvas>
+                        <TextBlock Text="{Binding Name}"
+                                   Margin="7, 0, 0, 0">
+                        </TextBlock>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
@@ -45,7 +58,8 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
         <StackPanel Grid.Row="2">
-            <Button Content="Lưu mới" 
+            <Button Content="Lưu mới"
+                    Margin="0,5,0,0"
                     Command="{Binding SaveCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     ></Button>
