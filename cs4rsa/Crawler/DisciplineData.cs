@@ -1,23 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Resources;
-using System.IO;
+﻿using cs4rsa.Database;
 using HtmlAgilityPack;
-using cs4rsa.Crawler;
-using cs4rsa.Database;
-using cs4rsa.Properties;
+using System.ComponentModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace cs4rsa.Crawler
 {
-    class DisciplineData
+    public class DisciplineData
     {
         public HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
 
-        public void GetDisciplineAndKeywordDatabase()
+        /// <summary>
+        /// Cào data từ Course DTU và lưu vào database.
+        /// </summary>
+        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker=null, int numberOfSubjects=0)
         {
+            int reportValue = 0;
+            int jump = 0;
+            if (numberOfSubjects != 0)
+            {
+                jump = 100 / numberOfSubjects;
+                reportValue = jump;
+            }
+                
             Cs4rsaData cs4RsaData = new Cs4rsaData();
             string URL = string.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
@@ -58,6 +63,13 @@ namespace cs4rsa.Crawler
                     string subjectName = subjectNameAnchorTag.InnerText.Trim();
                     Cs4rsaDataEdit.AddKeyword(keyword1, courseId, disciplineId, subjectName, color);
                 }
+
+                // report work progress
+                if (backgroundWorker != null)
+                {
+                    backgroundWorker.ReportProgress(reportValue);
+                    reportValue += reportValue + jump;
+                }
             }
         }
 
@@ -65,6 +77,30 @@ namespace cs4rsa.Crawler
         {
             string[] hrefValueSlides = hrefValue.Split('&');
             return hrefValueSlides[1].Split('=')[1];
+        }
+
+
+        /// <summary>
+        /// Lấy ra số lượng môn học hiện có trong học kỳ hiện tại.
+        /// </summary>
+        /// <returns>Số lượng môn học hiện có.</returns>
+        public static int GetNumberOfSubjects()
+        {
+            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
+            string URL = string.Format(
+            "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
+            homeCourseSearch.CurrentSemesterValue,
+            Helpers.Helpers.GetTimeFromEpoch());
+
+            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlDocument document = htmlWeb.Load(URL);
+
+            HtmlNode node = document.DocumentNode;
+            HtmlNode result = node.SelectSingleNode("/div/table/thead/tr/th");
+            string innerText = result.InnerText;
+            Regex numberMatchingRegex = new Regex("([0-9][0-9][0-9])");
+            Match match = numberMatchingRegex.Match(innerText);
+            return int.Parse(match.Value);
         }
     }
 }
