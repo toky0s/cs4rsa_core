@@ -35,7 +35,8 @@ namespace cs4rsa.Views
 
         private void DisciplineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
+            if (searchViewModel.SelectedDiscipline!=null)
+                searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)

@@ -23,9 +23,12 @@
                 <Menu IsMainMenu="True" Height="26">
                     <MenuItem Header="Thao tác" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="Cài đặt..."
-                                  Command="{Binding OpenSettingCommand}"></MenuItem>
+                                  Command="{Binding OpenSettingCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        </MenuItem>
                         <MenuItem Header="Cập nhật cơ sở dữ liệu môn học"
-                                  Command="{Binding OpenUpdateWindowCommand}"></MenuItem>
+                                  Command="{Binding OpenUpdateWindowCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
                         <Separator></Separator>
                         <MenuItem Header="Xuất dưới JSON..."
                                   InputGestureText="Ctrl+Z"></MenuItem>
