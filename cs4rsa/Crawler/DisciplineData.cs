@@ -13,13 +13,13 @@ namespace cs4rsa.Crawler
         /// <summary>
         /// Cào data từ Course DTU và lưu vào database.
         /// </summary>
-        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker=null, int numberOfSubjects=0)
+        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker=null, double numberOfSubjects =0)
         {
-            int reportValue = 0;
-            int jump = 0;
+            double reportValue = 0;
+            double jump = 0;
             if (numberOfSubjects != 0)
             {
-                jump = 100 / numberOfSubjects;
+                jump = 1000 / numberOfSubjects;
                 reportValue = jump;
             }
                 
@@ -67,8 +67,8 @@ namespace cs4rsa.Crawler
                 // report work progress
                 if (backgroundWorker != null)
                 {
-                    backgroundWorker.ReportProgress(reportValue);
-                    reportValue += reportValue + jump;
+                    backgroundWorker.ReportProgress((int)reportValue);
+                    reportValue += jump;
                 }
             }
         }
