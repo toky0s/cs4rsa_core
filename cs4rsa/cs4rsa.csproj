@@ -151,6 +151,7 @@
     <Compile Include="Dialogs\DialogResults\ImportResult.cs" />
     <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
     <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
+    <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
     <Compile Include="Dialogs\DialogService\DialogService.cs" />
     <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
@@ -168,6 +169,7 @@
     <Compile Include="Dialogs\DialogViews\SessionManagerWindow.xaml.cs">
       <DependentUpon>SessionManagerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Enums\ConflictType.cs" />
+    <Compile Include="Messages\UpdateSuccessMessage.cs" />
     <Compile Include="Models\Interfaces\IConflictModel.cs" />
     <Compile Include="Models\PlaceConflictFinderModel.cs" />
     <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
