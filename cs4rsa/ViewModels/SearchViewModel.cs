@@ -23,7 +23,8 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class SearchViewModel : NotifyPropertyChangedBase
+    public class SearchViewModel : NotifyPropertyChangedBase,
+        IMessageHandler<UpdateSuccessMessage>
     {
         #region Commands
         public RelayCommand AddCommand { get; set; }
@@ -44,7 +45,6 @@ namespace cs4rsa.ViewModels
         public RelayCommand ImportDialogCommand { get; set; }
         #endregion
 
-        #region DI Properties
         //ComboBox discipline
         private DisciplineInfomationModel selectedDiscipline;
         public DisciplineInfomationModel SelectedDiscipline
@@ -61,7 +61,7 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private readonly ObservableCollection<DisciplineInfomationModel> disciplines;
+        private ObservableCollection<DisciplineInfomationModel> disciplines;
         public ObservableCollection<DisciplineInfomationModel> Disciplines
         {
             get
@@ -157,7 +157,6 @@ namespace cs4rsa.ViewModels
 
             }
         }
-        #endregion
 
         #region DI
         public IMessageBox MessageBox;
@@ -165,13 +164,30 @@ namespace cs4rsa.ViewModels
 
         public SearchViewModel()
         {
+            MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
+            SelectedDiscipline = this.disciplines[0];
             AddCommand = new RelayCommand(OnAddSubject);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
+        }
+
+
+        /// <summary>
+        /// Load lại data môn học từ cơ sở dữ liệu lên
+        /// </summary>
+        private void ReloadDisciplineAndKeyWord()
+        {
+            List<string> disciplines = Cs4rsaDataView.GetDisciplines();
+            List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
+            foreach (DisciplineInfomationModel item in disciplineInfomationModels)
+            {
+                this.disciplines.Add(item);
+            }
             SelectedDiscipline = this.disciplines[0];
+            LoadDisciplineKeyword(selectedDiscipline.Discipline);
         }
 
         private void OnOpenImportDialog(object obj)
@@ -259,8 +275,8 @@ namespace cs4rsa.ViewModels
             {
                 MessageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này",
                     "Thông báo",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 CanAddSubjectChange();
             }
         }
@@ -321,6 +337,13 @@ namespace cs4rsa.ViewModels
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
+        }
+
+        public void Handle(UpdateSuccessMessage message)
+        {
+            DisciplineKeywordModels.Clear();
+            Disciplines.Clear();
+            ReloadDisciplineAndKeyWord();
         }
     }
 }

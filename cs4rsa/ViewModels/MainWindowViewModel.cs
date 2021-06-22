@@ -6,6 +6,10 @@ using cs4rsa.Messages;
 using System.Windows;
 using System;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Dialogs.DialogService;
+using cs4rsa.Dialogs.DialogViews;
+using cs4rsa.Dialogs.Implements;
+using cs4rsa.Dialogs.DialogResults;
 
 namespace cs4rsa.ViewModels
 {
@@ -87,13 +91,11 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenUpdateWindow(object obj)
         {
-            string message = "Thao tác cập nhật cơ sở dữ liệu sẽ cập nhật lại toàn bộ dữ liệu môn học. Sẽ mất một chút thời gian!";
-            string caption = "Cập nhật";
-            MessageBoxResult result = _messageBox.ShowMessage(message, caption, MessageBoxButton.OKCancel, MessageBoxImage.Asterisk);
-            if (result == MessageBoxResult.OK)
-            {
-                _messageBox.ShowMessage("Start Update");
-            }
+            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
+            UpdateWindow updateWindow = new UpdateWindow();
+            UpdateViewModel updateViewModel = new UpdateViewModel(cs4RsaMessageBox);
+            UpdateResult result = DialogService<UpdateResult>.OpenDialog(updateViewModel, updateWindow, obj as Window);
+            MessageBus.Default.Publish(new UpdateSuccessMessage(null));
         }
 
         public void Handle(SubjectItemChangeMessage message)
