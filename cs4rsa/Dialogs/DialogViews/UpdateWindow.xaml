@@ -4,22 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="Cập nhật"
-        Height="135" 
+        Height="203" 
         Width="415"
-        WindowStartupLocation="CenterOwner">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <Grid>
         <StackPanel>
-            <TextBlock Text="Cập nhật đang diễn ra"
+            <TextBlock Text="Cảnh báo cập nhật"
                        Margin="5,0,5,0"
                        Style="{StaticResource Header1}"></TextBlock>
+            <TextBlock TextWrapping="Wrap"
+                       Margin="5">
+                <TextBlock.Text>
+                    Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian (dưới 10 giây). 
+                    Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật."
+                </TextBlock.Text>
+            </TextBlock>
             <TextBlock Margin="5,0,5,0">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Text" Value="Sẽ rất nhanh"></Setter>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="100">
+                            <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="1000">
                                 <Setter Property="Text" Value="Cập nhật thành công"></Setter>
                             </DataTrigger>
                         </Style.Triggers>
@@ -29,11 +39,17 @@
             <ProgressBar Height="30"
                          Margin="5,5,5,0"
                          x:Name="ProgressBar"
+                         Maximum="1000"
                          Value="{Binding ProgressValue}"></ProgressBar>
-            <Button Content="OK"
-                    Width="77"
-                    Margin="0,5,5,5"
-                    HorizontalAlignment="Right"></Button>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Bắt đầu"
+                        Width="77"
+                        Margin="0,5,5,5"
+                        Command="{Binding StartUpdateCommand}">
+                </Button>
+            </StackPanel>
+
         </StackPanel>
     </Grid>
 </Window>
