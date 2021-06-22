@@ -64,5 +64,15 @@ namespace cs4rsa.Database
             string sql = $"delete from {tableName}";
             return cs4RsaDatabase.DoSomething(sql);
         }
+
+        public static int DeleteDataInTableDiscipline()
+        {
+            return DeleteTable("discipline");
+        }
+
+        public static int DeleteDataInTableKeyword()
+        {
+            return DeleteTable("keyword");
+        }
     }
 }
