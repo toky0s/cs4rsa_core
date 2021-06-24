@@ -7,7 +7,7 @@ using NUnit.Framework;
 using cs4rsa.Crawler;
 using cs4rsa.BasicData;
 
-namespace cs4rsa.Tests.Crawler
+namespace cs4rsa_test.Crawler
 {
     [TestFixture]
     class TestTeacherCrawler

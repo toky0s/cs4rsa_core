@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using cs4rsa.Helpers;
 
-namespace cs4rsa.Tests.Helpers
+namespace cs4rsa_test.Helpers
 {
     [TestFixture]
     class TestShortedTimeConverter

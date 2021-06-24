@@ -67,12 +67,16 @@
     <Compile Include="Crawler\TestHomeCourseSearch.cs" />
     <Compile Include="Crawler\TestMetaDataCrawler.cs" />
     <Compile Include="Crawler\TestScheduleParser.cs" />
+    <Compile Include="Crawler\TestSpecialStringCrawler.cs" />
+    <Compile Include="Crawler\TestStudentProgramCrawler.cs" />
     <Compile Include="Crawler\TestTeacherCrawler.cs" />
     <Compile Include="Helpers\TestBasicDataConverter.cs" />
     <Compile Include="Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Helpers\TestHelpers.cs" />
     <Compile Include="Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\TestSettingReader.cs" />
+    <Compile Include="Settings\TestSettingWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
