@@ -70,6 +70,12 @@ namespace cs4rsa.Database
                 foreign key (session_id) references sessionx(id)
             )";
 
+        private readonly string SQL_USER_SETTINGS =
+            @"create table if not exists user_settings (
+                key text primary key,
+                value text
+            )";
+
         public Cs4rsaData()
         {
             if (!File.Exists(databaseName))
@@ -81,6 +87,7 @@ namespace cs4rsa.Database
                 CreateTable(SQL_TEACHER_DETAIL_TABLE);
                 CreateTable(SQL_SESSION);
                 CreateTable(SQL_SESSION_DETAIL);
+                CreateTable(SQL_USER_SETTINGS);
                 DumpData();
             }
         }
