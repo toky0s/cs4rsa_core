@@ -326,9 +326,9 @@ namespace cs4rsa.ViewModels
 
         private void ImportSubjects(List<SubjectModel> importSubjects)
         {
-            subjectModels.Clear();
-            foreach(SubjectModel subject in importSubjects)
+            foreach(SubjectModel subject in subjectModels)
                 MessageBus.Default.Publish(new DeleteSubjectMessage(subject));
+            subjectModels.Clear();
             foreach (SubjectModel subject in importSubjects)
             {
                 subjectModels.Add(subject);

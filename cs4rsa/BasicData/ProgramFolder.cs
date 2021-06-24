@@ -20,7 +20,7 @@ namespace cs4rsa.BasicData
         NonDefine
     }
 
-    class ProgramFolder
+    public class ProgramFolder
     {
         private string _name;
         private List<ProgramFolder> _childProgramFolders;

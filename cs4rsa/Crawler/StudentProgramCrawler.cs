@@ -84,6 +84,7 @@ namespace cs4rsa.Crawler
                 string name = GetNameFolderNode(htmlNode);
 
             }
+            return null;
         }
 
         private string GetNameFolderNode(HtmlNode folderNode)
