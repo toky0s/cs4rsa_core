@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Models
 {
+    /// <summary>
+    /// Class này đại diện cho một Session được lưu trong database.
+    /// </summary>
     class ScheduleSession
     {
         public string ID { get; set; }

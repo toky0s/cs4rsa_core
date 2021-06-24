@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Models
 {
+    /// <summary>
+    /// Mỗi session sẽ có nhiều class group được chọn, class này đại diện cho các class group đó.
+    /// </summary>
     class ScheduleSessionDetail
     {
         public string SubjectCode { get; set; }
