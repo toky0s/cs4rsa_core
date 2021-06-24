@@ -36,7 +36,8 @@
                                   InputGestureText="Ctrl+X"></MenuItem>
                         <Separator></Separator>
                         <MenuItem Header="Phân tích"></MenuItem>
-                        <MenuItem Header="Tự động xếp lịch"></MenuItem>
+                        <MenuItem Header="Tự động xếp lịch"
+                                  Command="{Binding OpenAutoScheduling}"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="Thông tin" Height="20" Margin="0, 3, 0, 0">
                         <MenuItem Header="Hướng dẫn sử dụng">
