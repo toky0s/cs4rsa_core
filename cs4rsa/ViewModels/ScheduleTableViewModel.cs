@@ -17,7 +17,8 @@ namespace cs4rsa.ViewModels
     public class TimeBlock
     {
         public string BackgroundColor { get; set; }
-        public string Name { get; set; }
+        public string Foreground { get; set; }
+        public string Text { get; set; }
     }
 
 

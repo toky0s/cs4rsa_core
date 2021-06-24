@@ -75,6 +75,7 @@ namespace cs4rsa.ViewModels
 
         public RelayCommand OpenSettingCommand { get; set; }
         public RelayCommand OpenUpdateWindowCommand { get; set; }
+        public RelayCommand OpenAutoScheduling { get; set; }
 
         public MainWindowViewModel(IMessageBox messageBox)
         {
@@ -85,8 +86,19 @@ namespace cs4rsa.ViewModels
             CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
             OpenSettingCommand = new RelayCommand(OnOpenSetting, () => true);
+            OpenAutoScheduling = new RelayCommand(OnOpenAutoScheduling, () => true);
             TotalCredit = 0;
             TotalSubject = 0;
+        }
+
+
+        /// <summary>
+        /// Mở chức năng tự động xếp lịch
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnOpenAutoScheduling(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnOpenUpdateWindow(object obj)
