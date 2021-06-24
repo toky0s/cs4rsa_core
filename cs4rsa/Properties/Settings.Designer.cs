@@ -22,41 +22,5 @@ namespace cs4rsa.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SpecialString {
-            get {
-                return ((string)(this["SpecialString"]));
-            }
-            set {
-                this["SpecialString"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DynamicSchedule {
-            get {
-                return ((bool)(this["DynamicSchedule"]));
-            }
-            set {
-                this["DynamicSchedule"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowPlaceColor {
-            get {
-                return ((bool)(this["ShowPlaceColor"]));
-            }
-            set {
-                this["ShowPlaceColor"] = value;
-            }
-        }
     }
 }
