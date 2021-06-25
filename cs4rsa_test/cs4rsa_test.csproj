@@ -64,6 +64,7 @@
     <Compile Include="BasicData\TestStudyWeek.cs" />
     <Compile Include="BasicData\TestSubject.cs" />
     <Compile Include="Crawler\TestDisciplineData.cs" />
+    <Compile Include="Crawler\TestDTUSubjectCrawler.cs" />
     <Compile Include="Crawler\TestHomeCourseSearch.cs" />
     <Compile Include="Crawler\TestMetaDataCrawler.cs" />
     <Compile Include="Crawler\TestScheduleParser.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Helpers\TestHelpers.cs" />
     <Compile Include="Helpers\TestShortedTimeConverter.cs" />
+    <Compile Include="Helpers\TestSubjectCodeParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\TestSettingReader.cs" />
     <Compile Include="Settings\TestSettingWriter.cs" />

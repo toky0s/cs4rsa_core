@@ -11,10 +11,11 @@ namespace cs4rsa_test.Crawler
     [TestFixture]
     class TestSpecialStringCrawler
     {
+        private string sessionId = "mjtb13tex0zcguf4iyrlcpur";
         [Test]
         public void GetMyName()
         {
-            SpecialStringCrawler specialStringCrawler = new SpecialStringCrawler("4qsekl50amdo1dhyvrdq0kt1");
+            SpecialStringCrawler specialStringCrawler = new SpecialStringCrawler(sessionId);
             string result = SpecialStringCrawler.GetSpecialString();
             Assert.AreEqual("ppxdPtQCkOX2+rc5tqBFhg==", result);
         }
