@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using cs4rsa.Helpers;
 
 namespace cs4rsa.Crawler
 {
@@ -47,7 +48,8 @@ namespace cs4rsa.Crawler
 
         public static string GetSpecialString()
         {
-            string html = GetHtml(_sessionId);
+            string urlAddress = "https://mydtu.duytan.edu.vn/sites/index.aspx?p=home_studyingwarning&functionid=113";
+            string html = DTUPageCrawler.GetHtml(_sessionId, urlAddress);
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
