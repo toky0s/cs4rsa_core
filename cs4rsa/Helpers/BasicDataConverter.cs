@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.BasicData;
+using cs4rsa.Enums;
 using cs4rsa.Helpers;
 
 namespace cs4rsa.Helpers
@@ -51,6 +52,15 @@ namespace cs4rsa.Helpers
             if (day.Contains("6") || day.Contains("Sáu") || day.Contains("sáu")) return DayOfWeek.Friday;
             if (day.Contains("7") || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
             return DayOfWeek.Sunday;
+        }
+
+        public static StudyUnitType ToStudyUnitType(string text)
+        {
+            switch (text)
+            {
+                default:
+                    return StudyUnitType.Credit;
+            }
         }
 
         public static string ToDayOfWeekText(DayOfWeek day)
