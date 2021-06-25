@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using cs4rsa.Enums;
+using cs4rsa.Interfaces;
+using System.Collections.Generic;
 
 namespace cs4rsa.BasicData
 {
@@ -17,27 +19,48 @@ namespace cs4rsa.BasicData
     /// Đại diện cho một Row của trong bảng chương trình học.
     /// Chứa thông tin cơ bản của Môn có trong chương trình.
     /// </summary>
-    public class ProgramSubject
+    public class ProgramSubject: IProgramNode
     {
+        private string _id;
+        private string _childOfNode;
         private string _subjectCode;
         private string _subjectName;
         private string _studyUnit;
-        private string _studyUnitType;
+        private StudyUnitType _studyUnitType;
         // Lần lượt là các môn tiên quyết và song hành
-        private List<ProgramSubject> _prerequisiteSubjects;
-        private List<ProgramSubject> _parallelSubject;
+        private List<string> _prerequisiteSubjects;
+        private List<string> _parallelSubjects;
         private StudyState _studyState;
 
-        public ProgramSubject(string subjectCode, string subjectName, string studyUnit, string studyUnitType,
-            List<ProgramSubject> prerequisiteSubjects, List<ProgramSubject> parallelSubject, StudyState studyState)
+        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, string studyUnit, StudyUnitType studyUnitType,
+            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState)
         {
+            _id = id;
+            _childOfNode = childOfNode;
             _subjectCode = subjectCode;
             _subjectName = subjectName;
             _studyUnit = studyUnit;
             _studyUnitType = studyUnitType;
             _prerequisiteSubjects = prerequisiteSubjects;
-            _parallelSubject = parallelSubject;
+            _parallelSubjects = parallelSubject;
             _studyState = studyState;
+        }
+
+        public string GetChildOfNode()
+        {
+            return _childOfNode;
+        }
+
+        public string GetIdNode()
+        {
+            return _id;
+        }
+
+        public bool IsCompleted()
+        {
+            if (_studyState != StudyState.UnLearned)
+                return true;
+            return false;
         }
     }
 }

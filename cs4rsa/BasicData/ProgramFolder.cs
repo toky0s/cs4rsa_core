@@ -1,8 +1,5 @@
-﻿using System;
+﻿using cs4rsa.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cs4rsa.BasicData
 {
@@ -20,18 +17,20 @@ namespace cs4rsa.BasicData
         NonDefine
     }
 
-    public class ProgramFolder
+    public class ProgramFolder : IProgramNode
     {
+        private string _id;
+        private string _childOfNode;
         private string _name;
-        private List<ProgramFolder> _childProgramFolders;
-        private List<ProgramSubject> _programSubject;
+        private List<IProgramNode> _childProgramFolders;
+        private List<IProgramNode> _programSubjects;
         private bool _isRoot;
         private string _rawHtml;
         private StudyMode _studyMode;
 
         public string Name { get => _name; private set => _name = value; }
-        public List<ProgramFolder> ChildProgramFolder { get => _childProgramFolders; private set => _childProgramFolders = value; }
-        public List<ProgramSubject> ProgramSubjects { get => _programSubject; private set => _programSubject = value; }
+        public List<IProgramNode> ChildProgramFolder { get => _childProgramFolders; private set => _childProgramFolders = value; }
+        public List<IProgramNode> ProgramSubjects { get => _programSubjects; private set => _programSubjects = value; }
         public bool IsRoot { get => _isRoot; private set => _isRoot = value; }
         public StudyMode StudyMode { get => _studyMode; private set => _studyMode = value; }
 
@@ -44,23 +43,14 @@ namespace cs4rsa.BasicData
         /// <param name="nodeId">Id node.</param>
         /// <param name="childOfNode">Id của node cha.</param>
         /// <param name="rawHtml">Html gốc.</param>
-        public ProgramFolder(string name, StudyMode studyMode, bool isRoot, string nodeId, string childOfNode,string rawHtml)
+        public ProgramFolder(string name, StudyMode studyMode, bool isRoot, string nodeId, string childOfNode, string rawHtml)
         {
+            _id = nodeId;
+            _childOfNode = childOfNode;
             _name = name;
             _studyMode = studyMode;
             _isRoot = isRoot;
             _rawHtml = rawHtml;
-        }
-
-        /// <summary>
-        /// Kiểm tra folder này đã hoàn tất hay chưa,
-        /// folder này hoàn tất hay không phụ thuộc hoàn thoàn vào
-        /// việc các môn và các folder bên trong đã hoàn tất hay chưa.
-        /// </summary>
-        /// <returns></returns>
-        private bool IsComplete()
-        {
-            return false;
         }
 
         /// <summary>
@@ -72,6 +62,24 @@ namespace cs4rsa.BasicData
         public bool IsExistsSubject(string subjectCode)
         {
             return false;
+        }
+
+        public string GetIdNode()
+        {
+            return _id;
+        }
+
+        public string GetChildOfNode()
+        {
+            return _childOfNode;
+        }
+
+        public void AddNode(IProgramNode node)
+        {
+            if (node is ProgramSubject)
+                _programSubjects.Add(node);
+            else
+                _childProgramFolders.Add(node);
         }
     }
 }
