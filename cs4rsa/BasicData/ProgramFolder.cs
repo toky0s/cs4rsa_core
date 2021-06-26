@@ -17,22 +17,23 @@ namespace cs4rsa.BasicData
         NonDefine
     }
 
-    public class ProgramFolder : IProgramNode
+    public class ProgramFolder : IProgramNode, IComparer<ProgramFolder>
     {
         private string _id;
         private string _childOfNode;
         private string _name;
-        private List<IProgramNode> _childProgramFolders;
-        private List<IProgramNode> _programSubjects;
-        private bool _isRoot;
+        private List<ProgramFolder> _childProgramFolders = new List<ProgramFolder>();
+        private List<ProgramSubject> _childProgramSubjects = new List<ProgramSubject>();
         private string _rawHtml;
         private StudyMode _studyMode;
 
+        public string Id => _id;
+        public string ChildOfNode => _childOfNode;
         public string Name { get => _name; private set => _name = value; }
-        public List<IProgramNode> ChildProgramFolder { get => _childProgramFolders; private set => _childProgramFolders = value; }
-        public List<IProgramNode> ProgramSubjects { get => _programSubjects; private set => _programSubjects = value; }
-        public bool IsRoot { get => _isRoot; private set => _isRoot = value; }
-        public StudyMode StudyMode { get => _studyMode; private set => _studyMode = value; }
+        public List<ProgramFolder> ChildProgramFolders => _childProgramFolders;
+        public List<ProgramSubject> ChildProgramSubjects => _childProgramSubjects;
+        public StudyMode StudyMode => _studyMode;
+        public string RawHtml => _rawHtml;
 
         /// <summary>
         /// 
@@ -43,14 +44,29 @@ namespace cs4rsa.BasicData
         /// <param name="nodeId">Id node.</param>
         /// <param name="childOfNode">Id của node cha.</param>
         /// <param name="rawHtml">Html gốc.</param>
-        public ProgramFolder(string name, StudyMode studyMode, bool isRoot, string nodeId, string childOfNode, string rawHtml)
+        public ProgramFolder(string name, StudyMode studyMode, string nodeId, string childOfNode, string rawHtml)
         {
             _id = nodeId;
             _childOfNode = childOfNode;
             _name = name;
             _studyMode = studyMode;
-            _isRoot = isRoot;
             _rawHtml = rawHtml;
+        }
+
+
+        /// <summary>
+        /// Copy
+        /// </summary>
+        /// <param name="folderNode"></param>
+        public ProgramFolder(ProgramFolder folderNode)
+        {
+            _id = folderNode.Id;
+            _childOfNode = folderNode.ChildOfNode;
+            _name = folderNode.Name;
+            _childProgramFolders = folderNode.ChildProgramFolders;
+            _childProgramSubjects = folderNode.ChildProgramSubjects;
+            _studyMode = folderNode.StudyMode;
+            _rawHtml = folderNode.RawHtml;
         }
 
         /// <summary>
@@ -77,9 +93,38 @@ namespace cs4rsa.BasicData
         public void AddNode(IProgramNode node)
         {
             if (node is ProgramSubject)
-                _programSubjects.Add(node);
+                _childProgramSubjects.Add(node as ProgramSubject);
             else
-                _childProgramFolders.Add(node);
+                _childProgramFolders.Add(node as ProgramFolder);
+        }
+
+        public void AddNodes(List<IProgramNode> nodes)
+        {
+            foreach (IProgramNode node in nodes)
+            {
+                AddNode(node);
+            }
+        }
+
+        public void AddNodes(List<ProgramSubject> nodes)
+        {
+            _childProgramSubjects.AddRange(nodes);
+        }
+
+        public int Compare(ProgramFolder x, ProgramFolder y)
+        {
+            return x.ChildOfNode.CompareTo(y.ChildOfNode);
+        }
+
+        public override bool Equals(object obj)
+        {
+            ProgramFolder folder = obj as ProgramFolder;
+            return _id.Equals(folder.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return _id.GetHashCode();
         }
     }
 }
