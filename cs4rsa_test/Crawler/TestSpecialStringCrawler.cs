@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.Crawler;
 using NUnit.Framework;
+using cs4rsa_test.Crawler;
 
 namespace cs4rsa_test.Crawler
 {
     [TestFixture]
     class TestSpecialStringCrawler
     {
-        private string sessionId = "mjtb13tex0zcguf4iyrlcpur";
         [Test]
         public void GetMyName()
         {
-            SpecialStringCrawler specialStringCrawler = new SpecialStringCrawler(sessionId);
+            SpecialStringCrawler specialStringCrawler = new SpecialStringCrawler(InfoForTest.sessionId);
             string result = SpecialStringCrawler.GetSpecialString();
             Assert.AreEqual("ppxdPtQCkOX2+rc5tqBFhg==", result);
         }
