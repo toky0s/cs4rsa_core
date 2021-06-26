@@ -18,8 +18,10 @@ namespace cs4rsa.Crawler
     {
         private string _courseId;
         private string _sessionId;
-        public List<string> PrerequisiteSubjects { get; private set; }
-        public List<string> ParallelSubjects { get; private set; }
+        private List<string> _prerequisiteSubjects = new List<string>();
+        private List<string> _parallelSubjects = new List<string>();
+        public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
+        public List<string> ParallelSubjects => _parallelSubjects;
 
         public DTUSubjectCrawler(string sessionId, string courseId)
         {
@@ -31,13 +33,17 @@ namespace cs4rsa.Crawler
         private void Run()
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/CourseClassResultForStudent.aspx?courseid={_courseId}";
-            string html = DTUPageCrawler.GetHtml(_sessionId, url);
+            string html = DtuPageCrawler.GetHtml(_sessionId, url);
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(html);
             HtmlNode prerequisite = document.DocumentNode.SelectSingleNode("//tr[4]/td[2]/font");
             HtmlNode parallel = document.DocumentNode.SelectSingleNode("//tr[5]/td[2]/font");
-            PrerequisiteSubjects = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText);
-            ParallelSubjects = SubjectCodeParser.GetSubjectCodes(parallel.InnerText);
+            var pre = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText);
+            var par = SubjectCodeParser.GetSubjectCodes(parallel.InnerText);
+            if (pre != null)
+                _prerequisiteSubjects = pre;
+            if (par != null)
+                _parallelSubjects = par;
         }
     }
 }

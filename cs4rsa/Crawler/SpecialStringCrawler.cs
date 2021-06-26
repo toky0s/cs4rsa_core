@@ -49,7 +49,7 @@ namespace cs4rsa.Crawler
         public static string GetSpecialString()
         {
             string urlAddress = "https://mydtu.duytan.edu.vn/sites/index.aspx?p=home_studyingwarning&functionid=113";
-            string html = DTUPageCrawler.GetHtml(_sessionId, urlAddress);
+            string html = DtuPageCrawler.GetHtml(_sessionId, urlAddress);
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
