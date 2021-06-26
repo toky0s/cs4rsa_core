@@ -76,7 +76,7 @@ namespace cs4rsa.Crawler
             {
                 if (folder.GetIdNode() == childOfNodeId)
                 {
-                    return new ProgramFolder(folder);
+                    return folder;
                 }
             }
             return null;
@@ -98,6 +98,13 @@ namespace cs4rsa.Crawler
             return programFolders;
         }
 
+
+        /// <summary>
+        /// Lấy ra tất cả các subject con thuộc folder.
+        /// </summary>
+        /// <param name="parrent">Một folder node.</param>
+        /// <param name="subjects">Danh sách các subject node.</param>
+        /// <returns></returns>
         private List<ProgramSubject> GetChildProgramSubject(ProgramFolder parrent, List<ProgramSubject> subjects)
         {
             List<ProgramSubject> childSubjects = new List<ProgramSubject>();
@@ -148,6 +155,10 @@ namespace cs4rsa.Crawler
             List<ProgramFolder> programFolders = new List<ProgramFolder>();
             foreach (HtmlNode htmlNode in folderNodes)
             {
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlNode.InnerHtml);
+                HtmlNode docNode = doc.DocumentNode;
+
                 string idValue = htmlNode.Attributes["id"].Value;
                 string classValue = htmlNode.Attributes["class"].Value;
                 string childOfNode;
@@ -157,7 +168,7 @@ namespace cs4rsa.Crawler
                 else
                     childOfNode = classValue.Split(new char[] { '-' })[3];
 
-                HtmlNode studyModeSpanNode = htmlNode.SelectSingleNode("//span/span");
+                HtmlNode studyModeSpanNode = docNode.SelectSingleNode("//span/span");
                 StudyMode studyMode;
                 if (studyModeSpanNode != null)
                 {
@@ -168,7 +179,7 @@ namespace cs4rsa.Crawler
                         studyMode = StudyMode.AllowSelection;
                 }
                 else
-                    studyMode = StudyMode.NonDefine;
+                    studyMode = StudyMode.Compulsory;
 
                 string name = GetNameFolderNode(htmlNode);
 

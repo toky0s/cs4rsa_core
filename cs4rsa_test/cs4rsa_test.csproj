@@ -78,8 +78,6 @@
     <Compile Include="Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="Helpers\TestSubjectCodeParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\TestSettingReader.cs" />
-    <Compile Include="Settings\TestSettingWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -93,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
+    <Folder Include="Settings\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cs4rsa\cs4rsa.csproj">

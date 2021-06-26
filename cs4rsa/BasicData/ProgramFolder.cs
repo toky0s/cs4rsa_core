@@ -1,5 +1,6 @@
 ﻿using cs4rsa.Interfaces;
 using System.Collections.Generic;
+using HtmlAgilityPack;
 
 namespace cs4rsa.BasicData
 {
@@ -8,16 +9,14 @@ namespace cs4rsa.BasicData
     /// có thể là Chọn n trong k môn có trong folder.
     /// Compulisory: Bắt buộc
     /// AllowSelection: Cho phép chọn n trong k môn
-    /// NonDefine: Không có định nghĩa về phần này
     /// </summary>
     public enum StudyMode
     {
         Compulsory,
-        AllowSelection,
-        NonDefine
+        AllowSelection
     }
 
-    public class ProgramFolder : IProgramNode, IComparer<ProgramFolder>
+    public class ProgramFolder : IProgramNode
     {
         private string _id;
         private string _childOfNode;
@@ -53,22 +52,6 @@ namespace cs4rsa.BasicData
             _rawHtml = rawHtml;
         }
 
-
-        /// <summary>
-        /// Copy
-        /// </summary>
-        /// <param name="folderNode"></param>
-        public ProgramFolder(ProgramFolder folderNode)
-        {
-            _id = folderNode.Id;
-            _childOfNode = folderNode.ChildOfNode;
-            _name = folderNode.Name;
-            _childProgramFolders = folderNode.ChildProgramFolders;
-            _childProgramSubjects = folderNode.ChildProgramSubjects;
-            _studyMode = folderNode.StudyMode;
-            _rawHtml = folderNode.RawHtml;
-        }
-
         /// <summary>
         /// Kiểm tra một mã môn có tồn tại trong folder này hay không.
         /// Nó sẽ đệ quy qua tất cả các folder con bên trong.
@@ -78,6 +61,92 @@ namespace cs4rsa.BasicData
         public bool IsExistsSubject(string subjectCode)
         {
             return false;
+        }
+
+        public bool IsCompleted()
+        {
+            bool flag = true;
+            List<IProgramNode> allChilds = GetAllChildNodes();
+            int mustComplete;
+            if (AllChildIsProgramSubject(allChilds))
+            {
+                mustComplete = MustComplete();
+                return ThisProgramSubjectIsCompleted(allChilds, mustComplete);
+            }
+
+            foreach (IProgramNode item in allChilds)
+            {
+                if (item is ProgramSubject)
+                {
+                    ProgramSubject subject = item as ProgramSubject;
+                    flag = flag && subject.IsCompleted();
+                }
+                else
+                {
+                    ProgramFolder folder = item as ProgramFolder;
+                    flag = flag && folder.IsCompleted();
+                }
+            }
+            return flag;
+        }
+
+        private static bool ThisProgramSubjectIsCompleted(List<IProgramNode> subjects, int mustLearn)
+        {
+            foreach (ProgramSubject item in subjects)
+            {
+                if (item.IsCompleted())
+                    mustLearn--;
+            }
+            if (mustLearn == 0) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Kiểm tra xem danh sách các IProgramNode truyền vào có phải
+        /// toàn là ProgramSubject hay không.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        private bool AllChildIsProgramSubject(List<IProgramNode> nodes)
+        {
+            foreach (IProgramNode item in nodes)
+            {
+                if (!(item is ProgramSubject))
+                    return false;
+            }
+            return true;
+        }
+
+        public List<IProgramNode> GetAllChildNodes()
+        {
+            List<IProgramNode> nodes = new List<IProgramNode>();
+            nodes.AddRange(_childProgramFolders);
+            nodes.AddRange(_childProgramSubjects);
+            return nodes;
+        }
+
+        /// <summary>
+        /// Trả về số lượng môn học hoặc thư mục bên trong buộc phải hoàn tất
+        /// để xác định rằng folder cha này đã hoàn tất hay chưa.
+        /// </summary>
+        /// <returns></returns>
+        public int MustComplete()
+        {
+            if (StudyMode == StudyMode.AllowSelection)
+            {
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(_rawHtml);
+                HtmlNode docNode = doc.DocumentNode;
+                HtmlNode span = docNode.SelectSingleNode("//span/span");
+                string spanContent = span.InnerHtml;
+                string[] spanContentSlices = Helpers.StringHelper.SplitAndRemoveAllSpace(spanContent);
+                int mustComplete = int.Parse(spanContentSlices[1]);
+                return mustComplete;
+            }
+            else
+            {
+                return _childProgramFolders.Count + _childProgramSubjects.Count;
+            }
         }
 
         public string GetIdNode()
@@ -109,11 +178,6 @@ namespace cs4rsa.BasicData
         public void AddNodes(List<ProgramSubject> nodes)
         {
             _childProgramSubjects.AddRange(nodes);
-        }
-
-        public int Compare(ProgramFolder x, ProgramFolder y)
-        {
-            return x.ChildOfNode.CompareTo(y.ChildOfNode);
         }
 
         public override bool Equals(object obj)
