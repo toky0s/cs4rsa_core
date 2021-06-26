@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Helpers
 {
-    public class DTUPageCrawler
+    public class DtuPageCrawler
     {
         /// <summary>
         /// Lấy ra trang HTML của một trang MyDTU.
