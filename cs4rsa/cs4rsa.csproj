@@ -59,6 +59,26 @@
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -154,6 +174,7 @@
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
     <Compile Include="BasicData\ConflictPlace.cs" />
     <Compile Include="BasicData\PlaceConflictFinder.cs" />
+    <Compile Include="BasicData\ProgramDiagram.cs" />
     <Compile Include="BasicData\ProgramFolder.cs" />
     <Compile Include="BasicData\Semester.cs" />
     <Compile Include="BasicData\StudyTimePoint.cs" />
@@ -162,6 +183,7 @@
     <Compile Include="Converters\ConflictModelConverter.cs" />
     <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
+    <Compile Include="Crawler\DTUSubjectCrawler.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Crawler\SpecialStringCrawler.cs" />
     <Compile Include="Crawler\StudentProgramCrawler.cs" />
@@ -194,13 +216,17 @@
     <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
+    <Compile Include="Enums\StudyUnitType.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
+    <Compile Include="Helpers\DtuPageCrawler.cs" />
     <Compile Include="Helpers\ShareString.cs" />
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\Subjectidentifier.cs" />
+    <Compile Include="Helpers\SubjectCodeParser.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Dialogs\Implements\SubjectImporter.cs" />
+    <Compile Include="Interfaces\IProgramNode.cs" />
+    <Compile Include="Interfaces\IProgramSubjectSaver.cs" />
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
