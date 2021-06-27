@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+﻿using cs4rsa.BasicData;
 using cs4rsa.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.SQLite;
+using System.Globalization;
 
 namespace cs4rsa.Database
 {
     class Cs4rsaDataView
     {
+        private static Cs4rsaDatabase _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
         /// <summary>
         /// Lấy ra danh sách mã ngành.
         /// </summary>
@@ -177,6 +177,38 @@ namespace cs4rsa.Database
             string sql = $@"select course_id from discipline d, keyword k
                             where d.id = k.discipline_id and d.name || ' ' || k.keyword1 = '{subjectCode}'";
             return cs4RsaDatabase.GetScalar<string>(sql);
+        }
+
+        public static bool IsStudentExists(string specialString)
+        {
+            string sql = $"SELECT * from student WHERE specialString = '{specialString}'";
+            long result = _cs4RsaDatabase.GetScalar<long>(sql);
+            return result == 1 ? true : false;
+        }
+
+        public static List<StudentInfo> GetStudentInfos()
+        {
+            List<StudentInfo> result = new List<StudentInfo>();
+            string sql = $@"SELECT * from student";
+            DataTable table = _cs4RsaDatabase.GetDataTable(sql);
+            string format = "dd/mm/yyyy";
+            foreach (DataRow item in table.Rows)
+            {
+                StudentInfo info = new StudentInfo()
+                {
+                    Name = item["name"].ToString(),
+                    StudentId = item["studentID"].ToString(),
+                    SpecialString = item["specialString"].ToString(),
+                    Birthday = item["birthDay"].ToString(),
+                    CMND = item["cmnd"].ToString(),
+                    Email = item["email"].ToString(),
+                    PhoneNumber = item["phoneNumber"].ToString(),
+                    Address = item["address"].ToString(),
+                    Image = item["image"].ToString(),
+                };
+                result.Add(info);
+            }
+            return result;
         }
     }
 }

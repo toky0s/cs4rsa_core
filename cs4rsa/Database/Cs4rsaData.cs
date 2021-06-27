@@ -76,6 +76,19 @@ namespace cs4rsa.Database
                 value text
             )";
 
+        private readonly string SQL_STUDENT =
+            @"create table if not exists student (
+                studentId text,
+                specialString text,
+                name text,
+                birthDay text,
+                cmnd text,
+                email text,
+                phoneNumber text,
+                address text,
+                image text
+            )";
+
         public Cs4rsaData()
         {
             if (!File.Exists(databaseName))
@@ -88,6 +101,7 @@ namespace cs4rsa.Database
                 CreateTable(SQL_SESSION);
                 CreateTable(SQL_SESSION_DETAIL);
                 CreateTable(SQL_USER_SETTINGS);
+                CreateTable(SQL_STUDENT);
                 DumpData();
             }
         }

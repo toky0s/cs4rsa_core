@@ -7,11 +7,13 @@ using System.Data.SQLite;
 using cs4rsa.Database;
 using cs4rsa.Models;
 using cs4rsa.Crawler;
+using cs4rsa.BasicData;
 
 namespace cs4rsa.Database
 {
     class Cs4rsaDataEdit
     {
+        private static Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
         public static void AddDiscipline(string discipline)
         {
             string sqlCommand = $@"INSERT INTO discipline (name)
@@ -73,6 +75,29 @@ namespace cs4rsa.Database
         public static int DeleteDataInTableKeyword()
         {
             return DeleteTable("keyword");
+        }
+
+        public static int AddStudent(StudentInfo studentInfo)
+        {
+            string sql = $@"insert into student
+                           VALUES('{studentInfo.StudentId}', '{studentInfo.SpecialString}', '{studentInfo.Name}',
+                           '{studentInfo.Birthday}', '{studentInfo.CMND}', 
+                           '{studentInfo.Email}', '{studentInfo.PhoneNumber}', '{studentInfo.Address}', '{studentInfo.Image}')";
+            return cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int UpdateStudent(StudentInfo studentInfo)
+        {
+            string sql = $@"update student
+                            SET name = '{studentInfo.Name}',
+                            birthDay = '{studentInfo.Birthday}',
+                            cmnd = '{studentInfo.CMND}',
+                            email = '{studentInfo.Email}',
+                            phoneNumber = '{studentInfo.PhoneNumber}',
+                            address = '{studentInfo.Address}',
+                            image = '{studentInfo.Image}'
+                            WHERE specialString = '{studentInfo.SpecialString}'";
+            return cs4RsaDatabase.DoSomething(sql);
         }
     }
 }
