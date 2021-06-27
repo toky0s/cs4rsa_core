@@ -93,12 +93,14 @@ namespace cs4rsa.ViewModels
 
 
         /// <summary>
-        /// Mở chức năng tự động xếp lịch
+        /// Mở hộp thoại chọn tài khoản.
         /// </summary>
         /// <param name="obj"></param>
         private void OnOpenAutoScheduling(object obj)
         {
-            throw new NotImplementedException();
+            LoginWindow loginWindow = new LoginWindow();
+            LoginViewModel loginViewModel = new LoginViewModel();
+            DialogService<LoginResult>.OpenDialog(loginViewModel, loginWindow, obj as Window);
         }
 
         private void OnOpenUpdateWindow(object obj)
