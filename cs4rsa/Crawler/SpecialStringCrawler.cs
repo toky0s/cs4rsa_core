@@ -12,12 +12,6 @@ namespace cs4rsa.Crawler
     /// </summary>
     public class SpecialStringCrawler
     {
-        private static string _sessionId;
-        public SpecialStringCrawler(string sessionId)
-        {
-            _sessionId = sessionId;
-        }
-
         private static string GetHtml(string sessionId)
         {
             string urlAddress = "https://mydtu.duytan.edu.vn/sites/index.aspx?p=home_studyingwarning&functionid=113";
@@ -46,10 +40,10 @@ namespace cs4rsa.Crawler
             return null;
         }
 
-        public static string GetSpecialString()
+        public static string GetSpecialString(string sessionId)
         {
             string urlAddress = "https://mydtu.duytan.edu.vn/sites/index.aspx?p=home_studyingwarning&functionid=113";
-            string html = DtuPageCrawler.GetHtml(_sessionId, urlAddress);
+            string html = DtuPageCrawler.GetHtml(sessionId, urlAddress);
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 

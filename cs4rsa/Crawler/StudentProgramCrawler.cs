@@ -229,7 +229,7 @@ namespace cs4rsa.Crawler
                 StudyUnitType studyUnitType = Helpers.BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
 
                 //prerequisiteSubjects and parallelSubjects
-                DTUSubjectCrawler crawler = new DTUSubjectCrawler(_sessionId, courseId);
+                DtuSubjectCrawler crawler = new DtuSubjectCrawler(_sessionId, courseId);
                 List<string> prerequisiteSubjects = crawler.PrerequisiteSubjects;
                 List<string> parallelSubjects = crawler.ParallelSubjects;
 
@@ -245,7 +245,6 @@ namespace cs4rsa.Crawler
                     else
                         studyState = StudyState.UnLearned;
                 }
-
 
                 ProgramSubject subject = new ProgramSubject(id, childOfNode, subjectCode, name, studyUnit,
                     studyUnitType, prerequisiteSubjects, parallelSubjects, studyState);

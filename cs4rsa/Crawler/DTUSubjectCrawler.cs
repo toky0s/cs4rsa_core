@@ -13,8 +13,10 @@ namespace cs4rsa.Crawler
     /// Bộ cào này xác định môn tiên quyết và môn song hành
     /// của một môn nào đó.
     /// *Chỉ dùng trong tính năng tự động xếp lịch*.
+    /// Thông tin của các môn tiên quyết, và song hành được lấy qua getter
+    /// sau khi chạy phương thức Run().
     /// </summary>
-    public class DTUSubjectCrawler
+    public class DtuSubjectCrawler
     {
         private string _courseId;
         private string _sessionId;
@@ -23,7 +25,7 @@ namespace cs4rsa.Crawler
         public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
         public List<string> ParallelSubjects => _parallelSubjects;
 
-        public DTUSubjectCrawler(string sessionId, string courseId)
+        public DtuSubjectCrawler(string sessionId, string courseId)
         {
             _courseId = courseId;
             _sessionId = sessionId;
