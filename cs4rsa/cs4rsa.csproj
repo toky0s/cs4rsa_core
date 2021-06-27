@@ -177,13 +177,16 @@
     <Compile Include="BasicData\ProgramDiagram.cs" />
     <Compile Include="BasicData\ProgramFolder.cs" />
     <Compile Include="BasicData\Semester.cs" />
+    <Compile Include="BasicData\StudentInfo.cs" />
     <Compile Include="BasicData\StudyTimePoint.cs" />
     <Compile Include="BasicData\ProgramSubject.cs" />
     <Compile Include="Converters\ClassGroupModelConverter.cs" />
     <Compile Include="Converters\ConflictModelConverter.cs" />
+    <Compile Include="Converters\DialogConverters\Base64ImageConverter.cs" />
     <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
-    <Compile Include="Crawler\DTUSubjectCrawler.cs" />
+    <Compile Include="Crawler\DtuStudentInfoCrawler.cs" />
+    <Compile Include="Crawler\DtuSubjectCrawler.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Crawler\SpecialStringCrawler.cs" />
     <Compile Include="Crawler\StudentProgramCrawler.cs" />
@@ -193,11 +196,15 @@
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
     <Compile Include="Dialogs\DialogResults\ImportResult.cs" />
+    <Compile Include="Dialogs\DialogResults\LoginResult.cs" />
     <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
     <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
     <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
     <Compile Include="Dialogs\DialogService\DialogService.cs" />
     <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\DialogViews\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
       <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
@@ -205,6 +212,7 @@
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
+    <Compile Include="Dialogs\Implements\LoginViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
       <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
@@ -223,10 +231,12 @@
     <Compile Include="Helpers\ShortedTimeConverter.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\SubjectCodeParser.cs" />
+    <Compile Include="Implements\StudentSaver.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Dialogs\Implements\SubjectImporter.cs" />
     <Compile Include="Interfaces\IProgramNode.cs" />
     <Compile Include="Interfaces\IProgramSubjectSaver.cs" />
+    <Compile Include="Interfaces\IStudentSaver.cs" />
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
@@ -259,11 +269,15 @@
     <Compile Include="Settings\SettingReader.cs" />
     <Compile Include="Settings\SettingWriter.cs" />
     <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
+    <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\AutoSchedule.xaml.cs">
+      <DependentUpon>AutoSchedule.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChoicedSession.xaml.cs">
       <DependentUpon>ChoicedSession.xaml</DependentUpon>
     </Compile>
@@ -276,6 +290,10 @@
     <Compile Include="Views\SearchSession.xaml.cs">
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogViews\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\SaveDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogViews\UpdateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AutoSchedule.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
