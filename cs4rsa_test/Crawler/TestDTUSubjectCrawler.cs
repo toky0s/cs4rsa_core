@@ -15,7 +15,7 @@ namespace cs4rsa_test.Crawler
         [Test]
         public void Run()
         {
-            DTUSubjectCrawler crawler = new DTUSubjectCrawler(InfoForTest.sessionId, "95");
+            DtuSubjectCrawler crawler = new DtuSubjectCrawler(InfoForTest.sessionId, "95");
             string real = crawler.PrerequisiteSubjects[0];
             Assert.AreEqual("CS 211", real);
         }

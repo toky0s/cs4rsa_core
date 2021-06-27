@@ -15,8 +15,7 @@ namespace cs4rsa_test.Crawler
         [Test]
         public void GetMyName()
         {
-            SpecialStringCrawler specialStringCrawler = new SpecialStringCrawler(InfoForTest.sessionId);
-            string result = SpecialStringCrawler.GetSpecialString();
+            string result = SpecialStringCrawler.GetSpecialString(InfoForTest.sessionId);
             Assert.AreEqual("ppxdPtQCkOX2+rc5tqBFhg==", result);
         }
     }
