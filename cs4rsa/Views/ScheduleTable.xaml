@@ -11,25 +11,25 @@
         <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter"></converter:ShortedTimeViewConverter>
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
         <Style x:Key="CellT2" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Monday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Monday.Background}"></Setter>
         </Style>
         <Style x:Key="CellT3" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Tuseday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Tuseday.Background}"></Setter>
         </Style>
         <Style x:Key="CellT4" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Wednessday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Wednessday.Background}"></Setter>
         </Style>
         <Style x:Key="CellT5" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Thursday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Thursday.Background}"></Setter>
         </Style>
         <Style x:Key="CellT6" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Friday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Friday.Background}"></Setter>
         </Style>
         <Style x:Key="CellT7" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Saturday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Saturday.Background}"></Setter>
         </Style>
         <Style x:Key="CellCN" TargetType="DataGridCell">
-            <Setter Property="Background" Value="{Binding Sunday.Color}"></Setter>
+            <Setter Property="Background" Value="{Binding Sunday.Background}"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>

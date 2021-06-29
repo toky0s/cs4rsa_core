@@ -32,7 +32,7 @@ namespace cs4rsa.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is ClassGroupModel classGroupModel ? classGroupModel.Name : null;
+            return value is TimeBlock classGroupModel ? classGroupModel.Text : null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -278,6 +278,7 @@
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
+    <Compile Include="Models\TimeBlock.cs" />
     <Compile Include="Settings\SettingInit.cs" />
     <Compile Include="Settings\SettingReader.cs" />
     <Compile Include="Settings\SettingWriter.cs" />

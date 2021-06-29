@@ -11,28 +11,17 @@ using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
 {
-    /// <summary>
-    /// Đại diện cho một ô trong ScheduleRow bao gồm các thuộc tính về giao diện.
-    /// </summary>
-    public class TimeBlock
-    {
-        public string BackgroundColor { get; set; }
-        public string Foreground { get; set; }
-        public string Text { get; set; }
-    }
-
-
     public class ScheduleRow
     {
         public ShortedTime Time { get; set; }
-        public ClassGroupModel[] DayAndClassGroups = new ClassGroupModel[7];
-        public ClassGroupModel Sunday => DayAndClassGroups[0];
-        public ClassGroupModel Monday => DayAndClassGroups[1];
-        public ClassGroupModel Tuseday => DayAndClassGroups[2];
-        public ClassGroupModel Wednessday => DayAndClassGroups[3];
-        public ClassGroupModel Thursday => DayAndClassGroups[4];
-        public ClassGroupModel Friday => DayAndClassGroups[5];
-        public ClassGroupModel Saturday => DayAndClassGroups[6];
+        public TimeBlock[] DayAndClassGroups = new TimeBlock[7];
+        public TimeBlock Sunday => DayAndClassGroups[0];
+        public TimeBlock Monday => DayAndClassGroups[1];
+        public TimeBlock Tuseday => DayAndClassGroups[2];
+        public TimeBlock Wednessday => DayAndClassGroups[3];
+        public TimeBlock Thursday => DayAndClassGroups[4];
+        public TimeBlock Friday => DayAndClassGroups[5];
+        public TimeBlock Saturday => DayAndClassGroups[6];
 
         public ScheduleRow(ShortedTime time)
         {
@@ -42,7 +31,7 @@ namespace cs4rsa.ViewModels
         public void AddClassGroupModelToDayOfWeek(ClassGroupModel classGroupModel, DayOfWeek day)
         {
             int dayIndex = (int)day;
-            DayAndClassGroups[dayIndex] = classGroupModel;
+            DayAndClassGroups[dayIndex] = new TimeBlock(classGroupModel);
         }
     }
 

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using cs4rsa.BasicData;
 using cs4rsa.Enums;
 using cs4rsa.Helpers;
+using cs4rsa.Models;
 
 namespace cs4rsa.Helpers
 {
     /// <summary>
-    /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData
+    /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData hoặc Model
+    /// và ngược lại.
     /// </summary>
     public class BasicDataConverter
     {
