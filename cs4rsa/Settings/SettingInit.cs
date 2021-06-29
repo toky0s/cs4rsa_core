@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using cs4rsa.Database;
+using cs4rsa.Enums;
 
 namespace cs4rsa.Settings
 {
@@ -12,9 +13,8 @@ namespace cs4rsa.Settings
     {
         private static Dictionary<string, string> _settingDict = new Dictionary<string, string>()
         {
-            {"SpecialString", "" },
-            {"IsDynamicSchedule", "1"},
-            {"IsShowPlaceColor", "0" }
+            {Setting.IsDynamicSchedule, "1"},
+            {Setting.IsShowPlaceColor, "0" }
         };
         
         public SettingInit()
@@ -29,7 +29,7 @@ namespace cs4rsa.Settings
         /// Thêm mới một setting vào database. Nếu setting tồn tại trả về 
         /// false, nếu chưa tồn tại trả về true.
         /// </summary>
-        /// <param name="key">Tên Setting.</param>
+        /// <param name="key">Tên Setting từ lớp Setting.</param>
         /// <param name="value">Giá trị của setting.</param>
         /// <returns></returns>
         private static bool AddSetting(string key, string value)
@@ -37,7 +37,7 @@ namespace cs4rsa.Settings
             if (SettingReader.IsExistsSetting(key))
                 return false;
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            string sql = $@"insert into user_settings values ('{key}', '{value}')";
+            string sql = $@"insert into setting values ('{key}', '{value}')";
             cs4RsaDatabase.DoSomething(sql);
             return true;
         }

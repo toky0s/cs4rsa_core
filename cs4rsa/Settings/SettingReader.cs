@@ -1,4 +1,5 @@
 ﻿using cs4rsa.Database;
+using cs4rsa.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace cs4rsa.Settings
     /// </summary>
     public class SettingReader
     {
-        public static string GetSetting(string key)
+        public static string GetSetting(string setting)
         {
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            string sql = $@"select value from user_settings where key='{key}'";
+            string sql = $@"select value from user_settings where key='{setting}'";
             return cs4RsaDatabase.GetScalar<string>(sql);
         }
 
