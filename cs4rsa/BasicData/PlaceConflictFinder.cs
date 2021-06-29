@@ -55,7 +55,7 @@ namespace cs4rsa.BasicData
                             List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
                             List<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
                             List<PlaceAdjacent> placeAdjacents = PlaceMapManipulation.GetPlaceAdjacents(placeMapPairs, _timeDelta);
-                            if (placeMapPairs.Count > 0)
+                            if (placeAdjacents.Count > 0)
                                 conflictPlaces.Add(dayOfWeek, placeAdjacents);
                         }
                         if (conflictPlaces.Count != 0)
