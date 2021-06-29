@@ -232,6 +232,8 @@
     <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
+    <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
+    <Compile Include="Settings\Setting.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
     <Compile Include="Helpers\DtuPageCrawler.cs" />
@@ -254,6 +256,7 @@
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
     <Compile Include="Enums\ConflictType.cs" />
+    <Compile Include="Messages\SettingChangeMessage.cs" />
     <Compile Include="Messages\UpdateSuccessMessage.cs" />
     <Compile Include="Models\Interfaces\IConflictModel.cs" />
     <Compile Include="Models\PlaceConflictFinderModel.cs" />

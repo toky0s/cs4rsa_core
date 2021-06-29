@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cs4rsa.Models.Interfaces;
 
 namespace cs4rsa.Models
 {
@@ -22,6 +23,11 @@ namespace cs4rsa.Models
             Background = classGroupModel.Color;
             Foreground = _defaultForeground;
             Text = classGroupModel.Name;
+        }
+
+        public TimeBlock(IConflictModel conflictModel)
+        {
+
         }
     }
 }

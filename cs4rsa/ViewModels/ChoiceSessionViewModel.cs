@@ -167,6 +167,7 @@ namespace cs4rsa.ViewModels
                     }
                 }
             }
+            MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
         }
     }
 }

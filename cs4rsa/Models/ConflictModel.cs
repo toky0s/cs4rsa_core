@@ -64,5 +64,11 @@ namespace cs4rsa.Models
         {
             return ConflictType.Time;
         }
+
+        public Phase GetPhase()
+        {
+            Console.WriteLine("Do something");
+            return Phase.ALL;
+        }
     }
 }

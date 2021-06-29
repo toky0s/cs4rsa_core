@@ -12,5 +12,6 @@ namespace cs4rsa.Models.Interfaces
         ClassGroup SecondClassGroup { get; set; }
         string GetConflictInfo();
         ConflictType GetConflictType();
+        Phase GetPhase();
     }
 }

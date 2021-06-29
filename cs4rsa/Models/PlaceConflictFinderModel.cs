@@ -4,13 +4,10 @@ using cs4rsa.Models.Enums;
 using cs4rsa.Models.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cs4rsa.Models
 {
-    class PlaceConflictFinderModel: IConflictModel
+    class PlaceConflictFinderModel : IConflictModel
     {
         private ClassGroup _classGroup1;
         private ClassGroup _classGroup2;
@@ -48,6 +45,19 @@ namespace cs4rsa.Models
         public ConflictType GetConflictType()
         {
             return ConflictType.Place;
+        }
+
+        public Phase GetPhase()
+        {
+            Phase classGroupPhase1 = _classGroup1.GetPhase();
+            Phase classGroupPhase2 = _classGroup2.GetPhase();
+            if ((classGroupPhase1 == Phase.FIRST && classGroupPhase2 == Phase.FIRST) ||
+                    (classGroupPhase1 == Phase.FIRST && classGroupPhase2 == Phase.ALL))
+                return Phase.FIRST;
+            if ((classGroupPhase1 == Phase.SECOND && classGroupPhase2 == Phase.SECOND) ||
+                    (classGroupPhase1 == Phase.SECOND && classGroupPhase2 == Phase.ALL))
+                return Phase.SECOND;
+            return Phase.ALL;
         }
     }
 }

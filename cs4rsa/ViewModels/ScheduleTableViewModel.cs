@@ -3,6 +3,8 @@ using cs4rsa.BasicData;
 using cs4rsa.Helpers;
 using cs4rsa.Messages;
 using cs4rsa.Models;
+using cs4rsa.Models.Interfaces;
+using cs4rsa.Settings;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
@@ -36,9 +38,14 @@ namespace cs4rsa.ViewModels
     }
 
     class ScheduleTableViewModel : NotifyPropertyChangedBase,
-        IMessageHandler<ChoicesChangedMessage>
+        IMessageHandler<ChoicesChangedMessage>,
+        IMessageHandler<ConflictCollectionChangeMessage>,
+        IMessageHandler<SettingChangeMessage>
     {
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
+        private List<IConflictModel> _conflictModels = new List<IConflictModel>();
+        private bool _settingIsDynamicSchedule;
+        private bool _settingIsShowPlaceColor;
 
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
@@ -48,7 +55,13 @@ namespace cs4rsa.ViewModels
 
         public ScheduleTableViewModel()
         {
+            // Load setting
+            _settingIsDynamicSchedule = SettingReader.GetSetting(Setting.IsDynamicSchedule) == "1" ? true : false;
+            _settingIsShowPlaceColor = SettingReader.GetSetting(Setting.IsShowPlaceColor) == "1" ? true : false;
+
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<ConflictCollectionChangeMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<SettingChangeMessage>().Notify(this);
         }
 
         private void DeleteClassGroup(ClassGroupModel classGroupModel)
@@ -115,10 +128,18 @@ namespace cs4rsa.ViewModels
             Render(ref Schedule2, ref Phase2);
             DumpClassGroupModel(ref Schedule1, ref Phase1);
             DumpClassGroupModel(ref Schedule2, ref Phase2);
+            //DumpConflict();
         }
 
+
+        /// <summary>
+        /// Render ra các ScheduleRow có shorted Time trống.
+        /// </summary>
+        /// <param name="schedule"></param>
+        /// <param name="classGroupModels"></param>
         private void Render(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
         {
+            // Dựa vào các shortedTime của các classGroups (render lịch động)
             List<ShortedTime> shortedTimes = GetShortedTimes(classGroupModels);
             // render schedule rows
             foreach (ShortedTime shortedTime in shortedTimes)
@@ -169,6 +190,17 @@ namespace cs4rsa.ViewModels
         public void Handle(ChoicesChangedMessage message)
         {
             classGroupModels = message.Source;
+            ReloadSchedule();
+        }
+
+        public void Handle(SettingChangeMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Handle(ConflictCollectionChangeMessage message)
+        {
+            _conflictModels = message.Source;
             ReloadSchedule();
         }
     }
