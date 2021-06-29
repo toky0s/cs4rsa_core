@@ -9,25 +9,17 @@ using cs4rsa.Database;
 
 namespace cs4rsa.Implements
 {
-    class StudentSaver : IStudentSaver
+    class StudentSaver : ISaver<StudentInfo>
     {
-        /// <summary>
-        /// Lưu thông tin của một sinh viên vào database.
-        /// Đã bao gồm Update trong trường hợp trùng mã sinh viên.
-        /// </summary>
-        /// <param name="studentInfo"></param>
-        /// <returns>Trả về 1 nếu là thêm mới, 0 nếu là cập nhật.</returns>
-        public int Save(StudentInfo studentInfo)
+        void ISaver<StudentInfo>.Save(StudentInfo obj)
         {
-            if (!Cs4rsaDataView.IsStudentExists(studentInfo.SpecialString))
+            if (!Cs4rsaDataView.IsStudentExists(obj.SpecialString))
             {
-                Cs4rsaDataEdit.AddStudent(studentInfo);
-                return 1;
+                Cs4rsaDataEdit.AddStudent(obj);
             }
             else
             {
-                Cs4rsaDataEdit.UpdateStudent(studentInfo);
-                return 0;
+                Cs4rsaDataEdit.UpdateStudent(obj);
             }
         }
     }
