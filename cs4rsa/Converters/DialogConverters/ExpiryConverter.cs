@@ -12,6 +12,10 @@ using System.Windows.Data;
 /// </summary>
 namespace cs4rsa.Converters.DialogConverters
 {
+    /// <summary>
+    /// Converter này xác định một phiên còn hợp lệ hay không dựa theo
+    /// year value và semester value của chúng.
+    /// </summary>
     class ExpiryConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
