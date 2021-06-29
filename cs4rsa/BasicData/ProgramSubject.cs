@@ -31,6 +31,7 @@ namespace cs4rsa.BasicData
         private List<string> _prerequisiteSubjects;
         private List<string> _parallelSubjects;
         private StudyState _studyState;
+        private string _courseId;
 
         public string Id => _id;
         public string ChildOfNode => _childOfNode;
@@ -41,9 +42,10 @@ namespace cs4rsa.BasicData
         public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
         public List<string> ParallelSubjects => _parallelSubjects;
         public StudyState StudyState => _studyState;
+        public string CourseId => _courseId;
 
         public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, string studyUnit, StudyUnitType studyUnitType,
-            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState)
+            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId)
         {
             _id = id;
             _childOfNode = childOfNode;
@@ -54,19 +56,7 @@ namespace cs4rsa.BasicData
             _prerequisiteSubjects = prerequisiteSubjects;
             _parallelSubjects = parallelSubject;
             _studyState = studyState;
-        }
-
-        public ProgramSubject(ProgramSubject programSubject)
-        {
-            _id = programSubject.Id;
-            _childOfNode = programSubject.ChildOfNode;
-            _subjectCode = programSubject.SubjectCode;
-            _subjectName = programSubject.SubjectName;
-            _studyUnit = programSubject.StudyUnit;
-            _studyUnitType = programSubject.StudyUnitType;
-            _prerequisiteSubjects = programSubject.PrerequisiteSubjects;
-            _parallelSubjects = programSubject.ParallelSubjects;
-            _studyState = programSubject.StudyState;
+            _courseId = courseId;
         }
 
         public string GetChildOfNode()
