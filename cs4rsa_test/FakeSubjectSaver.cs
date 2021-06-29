@@ -8,11 +8,11 @@ using cs4rsa.Interfaces;
 
 namespace cs4rsa_test
 {
-    class FakeStudentSaver : ISaver<StudentInfo>
+    public class FakeSubjectSaver : ISaver<ProgramSubject>
     {
-        public void Save(StudentInfo studentInfo)
+        public void Save(ProgramSubject obj)
         {
-            Console.WriteLine("Save "+studentInfo.Name);
+            Console.WriteLine("Save "+obj.SubjectName);
         }
     }
 }
