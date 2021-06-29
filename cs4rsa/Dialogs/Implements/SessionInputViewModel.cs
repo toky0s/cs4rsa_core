@@ -69,8 +69,15 @@ namespace cs4rsa.Dialogs.Implements
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+            worker.ReportProgress(10);
             string sessionId = (string)e.Argument;
             string specialString = SpecialStringCrawler.GetSpecialString(sessionId);
+            if (specialString == null)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             string curid = CurIdCrawler.GetCurId(specialString);
             worker.ReportProgress(30);
             StudentSaver studentSaver = new StudentSaver();
@@ -100,11 +107,25 @@ namespace cs4rsa.Dialogs.Implements
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Student student = e.Result as Student;
-            string message = $"Xin chào {student.Info.Name}";
-            _messageBox.ShowMessage(message, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-            StudentResult result = new StudentResult { Student = student };
-            CloseDialogWithResult(result);
+            if (e.Cancelled == true)
+            {
+                string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy Session ID, " +
+                    "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
+                _messageBox.ShowMessage(message,
+                                        "Thông báo",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Exclamation);
+                SessionId = "";
+                ProgressValue = 0;
+            }
+            else
+            {
+                Student student = e.Result as Student;
+                string message = $"Xin chào {student.Info.Name}";
+                _messageBox.ShowMessage(message, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                StudentResult result = new StudentResult { Student = student };
+                CloseDialogWithResult(result);
+            }
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

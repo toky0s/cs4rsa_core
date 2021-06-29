@@ -56,6 +56,7 @@ namespace cs4rsa.Dialogs.Implements
             SessionInputWindow sessionInputWindow = new SessionInputWindow();
             SessionInputViewModel vm = new SessionInputViewModel(messageBox);
             DialogService<StudentResult>.OpenDialog(vm, sessionInputWindow, obj as Window);
+            LoadStudentInfos();
         }
 
         private void LoadStudentInfos()
