@@ -24,19 +24,6 @@ namespace cs4rsa.Dialogs.Implements
                 RaisePropertyChanged();
             }
         }
-        private bool? _result;
-        public bool? Result
-        {
-            get
-            {
-                return _result;
-            }
-            set
-            {
-                _result = value;
-                RaisePropertyChanged();
-            }
-        }
         private IMessageBox _messageBox;
 
         public UpdateViewModel(IMessageBox messageBox)
@@ -69,8 +56,7 @@ namespace cs4rsa.Dialogs.Implements
                                     "Thông báo",
                                     MessageBoxButton.OK,
                                     MessageBoxImage.Information);
-            UserDialogResult = UpdateResult.Success;
-            Result = true;
+            CloseDialogWithResult(UpdateResult.Success);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

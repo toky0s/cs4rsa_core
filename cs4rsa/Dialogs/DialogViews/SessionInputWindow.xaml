@@ -1,0 +1,48 @@
+﻿<Window x:Class="cs4rsa.Dialogs.DialogViews.SessionInputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
+        xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        mc:Ignorable="d"
+        Title="SessionInputWindow" 
+        Height="210" 
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        dialogExtension:DialogExtension.DialogResult="{Binding Result}">
+    <StackPanel>
+        <TextBlock Text="Lưu ý"
+                   Margin="5"
+                   Style="{StaticResource Header1}"></TextBlock>
+        <TextBlock
+                   TextWrapping="Wrap"
+                   Margin="5,0,5,5">
+            Hãy đảm bảo bạn đã đăng nhập vào MyDTU, sau đó copy Session ID vào ô nhập bên dưới.
+            Việc nhập Session ID để đảm bảo CS4RSA tìm thấy bạn trong lần đầu tiên. Các lần sau
+            bạn sẽ không phải nhập Session ID nữa.
+        </TextBlock>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                       Text="Session ID:"
+                       Margin="5,0,5,0"></TextBlock>
+            <TextBox Grid.Column="1"
+                     Margin="0,0,5,0"
+                     Text="{Binding SessionId}"></TextBox>
+            <Button Grid.Column="2" 
+                    Content="Tìm kiếm"
+                    Width="80"
+                    Margin="0,0,5,0"
+                    Command="{Binding FindCommand}"></Button>
+        </Grid>
+        <ProgressBar Height="30"
+                     Margin="5"
+                     Maximum="100"
+                     Value="{Binding ProgressValue}"></ProgressBar>
+    </StackPanel>
+</Window>

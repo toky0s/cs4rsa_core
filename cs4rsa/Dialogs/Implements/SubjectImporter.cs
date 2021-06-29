@@ -47,19 +47,6 @@ namespace cs4rsa.Dialogs.Implements
                 RaisePropertyChanged();
             }
         }
-        private bool? _result;
-        public bool? Result
-        {
-            get
-            {
-                return _result;
-            }
-            set
-            {
-                _result = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private IMessageBox _messageBox;
         private BackgroundWorker _backgroundWorker;
@@ -123,8 +110,7 @@ namespace cs4rsa.Dialogs.Implements
                 subject.Color = ColorGenerator.GetColor(subject.CourseId);
             }
             UserDialogResult = new ImportResult() { SubjectModels = subjectModels };
-            CloseDialogWithResult(null, UserDialogResult);
-            Result = true;
+            CloseDialogWithResult(UserDialogResult);
         }
     }
 }

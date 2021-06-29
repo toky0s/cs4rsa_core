@@ -7,7 +7,7 @@
         xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
         mc:Ignorable="d"
         Title="LoginWindow" 
-        Height="410"
+        Height="430"
         Width="300"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
@@ -17,6 +17,8 @@
     <StackPanel>
         <TextBlock Text="Hãy chọn một tài khoản"
                    Style="{StaticResource Header1}"
+                   HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Nếu chưa có tài khoản nào hãy nhấn nút Thêm mới"
                    HorizontalAlignment="Center"></TextBlock>
         <ListView Height="300"
                   Style="{StaticResource Cs4rsaListView}"
@@ -32,7 +34,9 @@
                         </Grid.ColumnDefinitions>
                         <Ellipse Height="50" 
                                  Width="50"
-                                 Margin="3">
+                                 Margin="3"
+                                 Stroke="#990000"
+                                 StrokeThickness="2">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding Image, Converter={StaticResource Base64ImageConverter}}"
                                             Stretch="UniformToFill"/>
@@ -53,6 +57,8 @@
         </ListView>
         <Button Content="Thêm mới..."
                 Margin="5,0,5,5"
-                Height="30"></Button>
+                Height="30"
+                Command="{Binding OpenSessionIdInput}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
     </StackPanel>
 </Window>
