@@ -13,8 +13,6 @@ namespace cs4rsa.Crawler
     /// Bộ cào này xác định môn tiên quyết và môn song hành
     /// của một môn nào đó.
     /// *Chỉ dùng trong tính năng tự động xếp lịch*.
-    /// Thông tin của các môn tiên quyết, và song hành được lấy qua getter
-    /// sau khi chạy phương thức Run().
     /// </summary>
     public class DtuSubjectCrawler
     {

@@ -14,7 +14,7 @@ namespace cs4rsa.Crawler
 {
     public class DtuStudentInfoCrawler
     {
-        public static StudentInfo ToStudentInfo(string specialString, IStudentSaver studentSaver)
+        public static StudentInfo ToStudentInfo(string specialString, ISaver<StudentInfo> studentSaver)
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/mentor/WarningDetail.aspx?t={Helpers.Helpers.GetTimeFromEpoch()}&stid={specialString}";
             HtmlWeb web = new HtmlWeb();
@@ -41,7 +41,6 @@ namespace cs4rsa.Crawler
             string imageSrcData = imageNode.Attributes["src"].Value;
             string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", "");
 
-            string format = "dd/mm/yyyy";
             StudentInfo info = new StudentInfo()
             {
                 Name = name,

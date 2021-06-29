@@ -1,5 +1,6 @@
 ﻿using cs4rsa.BasicData;
 using cs4rsa.Enums;
+using cs4rsa.Interfaces;
 using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ namespace cs4rsa.Crawler
     public class StudentProgramCrawler
     {
         private string _sessionId;
+        private ISaver<ProgramSubject> _subjectSaver;
+        private IGetter<PreParSubject> _preparGetter;
+
         public List<HtmlNode> _fileNodes;
         public List<HtmlNode> _folderNodes;
         public List<ProgramFolder> ProgramFolders;
@@ -27,9 +31,12 @@ namespace cs4rsa.Crawler
         /// Nhận vào một chuỗi đặc biệt được mã hoá từ mã sinh viên.
         /// </summary>
         /// <param name="specialString">Mã đặc biệt được mã hoá từ mã sinh viên.</param>
-        public StudentProgramCrawler(string sessionId, string url)
+        public StudentProgramCrawler(string sessionId, string url, 
+            ISaver<ProgramSubject> subjectSaver, IGetter<PreParSubject> preparGetter)
         {
             _sessionId = sessionId;
+            _subjectSaver = subjectSaver;
+            _preparGetter = preparGetter;
             List<HtmlNode> allNodes = GetAllTrTag(url);
             GetFileAnhFolderNodes(allNodes);
             ProgramFolders = GetProgramFolders(_folderNodes);
@@ -229,9 +236,9 @@ namespace cs4rsa.Crawler
                 StudyUnitType studyUnitType = Helpers.BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
 
                 //prerequisiteSubjects and parallelSubjects
-                DtuSubjectCrawler crawler = new DtuSubjectCrawler(_sessionId, courseId);
-                List<string> prerequisiteSubjects = crawler.PrerequisiteSubjects;
-                List<string> parallelSubjects = crawler.ParallelSubjects;
+                PreParSubject preParSubject = _preparGetter.Get(new string[] { _sessionId, courseId });
+                List<string> prerequisiteSubjects = preParSubject.PreSubjects;
+                List<string> parallelSubjects = preParSubject.ParSubjects;
 
                 // study state
                 StudyState studyState;
@@ -247,8 +254,9 @@ namespace cs4rsa.Crawler
                 }
 
                 ProgramSubject subject = new ProgramSubject(id, childOfNode, subjectCode, name, studyUnit,
-                    studyUnitType, prerequisiteSubjects, parallelSubjects, studyState);
+                    studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId);
                 programSubjects.Add(subject);
+                _subjectSaver.Save(subject);
             }
             return programSubjects;
         }

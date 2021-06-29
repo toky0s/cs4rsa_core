@@ -10,7 +10,8 @@ using cs4rsa.Helpers;
 namespace cs4rsa.Crawler
 {
     /// <summary>
-    /// <para>Class này bao gồm các method liên quan đến tìm kiếm thông tin Học Kỳ, Năm học và Thông tin môn học được Crawl từ web.</para>
+    /// <para>Class này bao gồm các method liên quan đến tìm kiếm thông tin Học Kỳ, 
+    /// Năm học và Thông tin môn học được Crawl từ web.</para>
     /// </summary>
     public class HomeCourseSearch
     {
