@@ -181,7 +181,7 @@ namespace cs4rsa.Database
 
         public static bool IsStudentExists(string specialString)
         {
-            string sql = $"SELECT * from student WHERE specialString = '{specialString}'";
+            string sql = $"SELECT count(*) from student WHERE specialString = '{specialString}'";
             long result = _cs4RsaDatabase.GetScalar<long>(sql);
             return result == 1 ? true : false;
         }
@@ -191,7 +191,6 @@ namespace cs4rsa.Database
             List<StudentInfo> result = new List<StudentInfo>();
             string sql = $@"SELECT * from student";
             DataTable table = _cs4RsaDatabase.GetDataTable(sql);
-            string format = "dd/mm/yyyy";
             foreach (DataRow item in table.Rows)
             {
                 StudentInfo info = new StudentInfo()
@@ -209,6 +208,40 @@ namespace cs4rsa.Database
                 result.Add(info);
             }
             return result;
+        }
+
+        public static bool IsExistsPreParSubject(string subjectCode)
+        {
+            string sql = $@"select count(*) from pre_par_subject where subject_code = '{subjectCode}'";
+            long result = _cs4RsaDatabase.GetScalar<long>(sql);
+            if (result == 1)
+                return true;
+            return false;
+        }
+
+        public static bool IsExistsProgramSubject(string subjectCode)
+        {
+            string sql = $@"select count(*) from program_subject where subject_code = '{subjectCode}'";
+            long result = _cs4RsaDatabase.GetScalar<long>(sql);
+            return result == 1;
+        }
+
+        public static bool IsExistsPreDetail(string proSubjectCode, string preSubjectCode)
+        {
+            string sql = $@"select count(*) 
+                            from detail_pre 
+                            where pro_subject_code = '{proSubjectCode}' and pre_subject_code = '{preSubjectCode}'";
+            long result = _cs4RsaDatabase.GetScalar<long>(sql);
+            return result == 1;
+        }
+
+        public static bool IsExistsParDetail(string proSubjectCode, string parSubjectCode)
+        {
+            string sql = $@"select count(*) 
+                            from detail_par 
+                            where pro_subject_code = '{proSubjectCode}' and par_subject_code = '{parSubjectCode}'";
+            long result = _cs4RsaDatabase.GetScalar<long>(sql);
+            return result == 1;
         }
     }
 }

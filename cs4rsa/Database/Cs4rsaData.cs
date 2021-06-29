@@ -8,7 +8,7 @@ using System.IO;
 namespace cs4rsa.Database
 {
     /// <summary>
-    /// Class này chịu trách nhiệm khởi tạo database
+    /// Class này chịu trách nhiệm khởi tạo database và các bảng.
     /// </summary>
     public class Cs4rsaData
     {
@@ -89,6 +89,45 @@ namespace cs4rsa.Database
                 image text
             )";
 
+        private readonly string SQL_pre_par_subject =
+            @"create table pre_par_subject (
+                subject_code text primary key
+                )";
+
+        private readonly string SQL_program_subject =
+            @"create table program_subject (
+                subject_code text primary key,
+                course_id text,
+                name text,
+                credit int
+                )";
+
+        private readonly string SQL_detail_pre =
+            @"create table detail_pre(
+                pro_subject_code TEXT,
+                pre_subject_code text,
+                PRIMARY KEY(pro_subject_code,pre_subject_code),
+                FOREIGN key (pro_subject_code) REFERENCES program_subject(subject_code),
+                FOREIGN key (pre_subject_code) REFERENCES pre_par_subject(subject_code)
+                )";
+
+        private readonly string SQL_detail_par =
+            @"create table detail_par(
+                pro_subject_code TEXT,
+                par_subject_code text,
+                PRIMARY KEY(pro_subject_code,par_subject_code),
+                FOREIGN key (pro_subject_code) REFERENCES program_subject(subject_code),
+                FOREIGN key (par_subject_code) REFERENCES pre_par_subject(subject_code)
+                )";
+
+        private readonly string SQL_detail_program_subject =
+            @"create table detail_program_subject (
+                student_id text,
+                program_subject_code text,
+                FOREIGN key (program_subject_code) REFERENCES program_subject(subject_code),
+                FOREIGN key (student_id) REFERENCES student(studentId)
+                )";
+
         public Cs4rsaData()
         {
             if (!File.Exists(databaseName))
@@ -102,6 +141,11 @@ namespace cs4rsa.Database
                 CreateTable(SQL_SESSION_DETAIL);
                 CreateTable(SQL_USER_SETTINGS);
                 CreateTable(SQL_STUDENT);
+                CreateTable(SQL_pre_par_subject);
+                CreateTable(SQL_detail_pre);
+                CreateTable(SQL_detail_par);
+                CreateTable(SQL_program_subject);
+                CreateTable(SQL_detail_program_subject);
                 DumpData();
             }
         }

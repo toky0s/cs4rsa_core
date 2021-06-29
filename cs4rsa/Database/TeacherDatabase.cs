@@ -9,6 +9,9 @@ using cs4rsa.Database;
 
 namespace cs4rsa.Database
 {
+    /// <summary>
+    /// Lấy một teacher từ database.
+    /// </summary>
     class TeacherDatabase
     {
         private string _teacherId;

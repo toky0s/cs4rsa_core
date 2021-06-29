@@ -13,7 +13,7 @@ namespace cs4rsa.Database
 {
     class Cs4rsaDataEdit
     {
-        private static Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+        private static Cs4rsaDatabase _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
         public static void AddDiscipline(string discipline)
         {
             string sqlCommand = $@"INSERT INTO discipline (name)
@@ -83,7 +83,7 @@ namespace cs4rsa.Database
                            VALUES('{studentInfo.StudentId}', '{studentInfo.SpecialString}', '{studentInfo.Name}',
                            '{studentInfo.Birthday}', '{studentInfo.CMND}', 
                            '{studentInfo.Email}', '{studentInfo.PhoneNumber}', '{studentInfo.Address}', '{studentInfo.Image}')";
-            return cs4RsaDatabase.DoSomething(sql);
+            return _cs4RsaDatabase.DoSomething(sql);
         }
 
         public static int UpdateStudent(StudentInfo studentInfo)
@@ -97,7 +97,46 @@ namespace cs4rsa.Database
                             address = '{studentInfo.Address}',
                             image = '{studentInfo.Image}'
                             WHERE specialString = '{studentInfo.SpecialString}'";
-            return cs4RsaDatabase.DoSomething(sql);
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int AddProgramSubject(ProgramSubject subject)
+        {
+            string sql = $@"insert into program_subject
+                            values('{subject.SubjectCode}', '{subject.CourseId}','{subject.SubjectName}', {subject.StudyUnit})";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int UpdateProgramSubject(ProgramSubject subject)
+        {
+            string sql = $@"update program_subject
+                            set subject_name = {subject.SubjectName}, credit = {subject.StudyUnit}
+                            where subject_code = '{subject.SubjectCode}'";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        /// <summary>
+        /// Thêm mã môn và bảng môn tiên quyết và song hành
+        /// </summary>
+        public static int AddPreParSubject(string subjectCode)
+        {
+            string sql = $@"insert into pre_par_subject
+                            values('{subjectCode}')";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int AddPreSubjectDetail(string proSubjectCode, string preSubjectCode)
+        {
+            string sql = $@"insert into detail_pre
+                            values ('{proSubjectCode}', '{preSubjectCode}')";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int AddParSubjectDetail(string proSubjectCode, string parSubjectCode)
+        {
+            string sql = $@"insert into detail_par
+                            values ('{proSubjectCode}', '{parSubjectCode}')";
+            return _cs4RsaDatabase.DoSomething(sql);
         }
     }
 }
