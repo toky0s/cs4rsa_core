@@ -18,53 +18,48 @@ namespace cs4rsa.Database
         {
             string sqlCommand = $@"INSERT INTO discipline (name)
                                   VALUES('{discipline}');";
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            cs4RsaDatabase.DoSomething(sqlCommand);
+            _cs4RsaDatabase.DoSomething(sqlCommand);
         }
 
         public static void AddKeyword(string keyword1, string courseId, int discipline_id, string subjectName, string color=null)
         {
             string sqlCommand = $@"insert into keyword (keyword1, course_id, discipline_id, subject_name, color)
                                     values ('{keyword1}',{courseId},{discipline_id},'{subjectName}', '{color}')";
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            cs4RsaDatabase.DoSomething(sqlCommand);
+            _cs4RsaDatabase.DoSomething(sqlCommand);
         }
 
         public static void AddSession(string name, string saveDate, List<ClassGroupModel> classGroupModels)
         {
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
             string yearValue = HomeCourseSearch.GetInstance().CurrentYearValue;
             string sql = $@"insert into sessionx(name, save_date, semester, year) values ('{name}', '{saveDate}','{semesterValue}',{yearValue})";
-            cs4RsaDatabase.DoSomething(sql);
+            _cs4RsaDatabase.DoSomething(sql);
 
             string sqlGetId = "select id from sessionx ORDER by id desc LIMIT 1";
-            long id = cs4RsaDatabase.GetScalar<long>(sqlGetId);
+            long id = _cs4RsaDatabase.GetScalar<long>(sqlGetId);
             foreach (ClassGroupModel item in classGroupModels)
             {
                 sql = $@"insert into session_detail(session_id, subject_code, class_group) 
                         VALUES ({id}, '{item.SubjectCode}', '{item.Name}')";
-                cs4RsaDatabase.DoSomething(sql);
+                _cs4RsaDatabase.DoSomething(sql);
             }
         }
 
         public static int DeleteSession(string id)
         {
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sqlSessionDetail = $@"delete from session_detail
                             where session_id = {id}";
             string sqlSessionx = $@"delete from sessionx
                             where id = {id}";
-            cs4RsaDatabase.DoSomething(sqlSessionDetail);
-            int result = cs4RsaDatabase.DoSomething(sqlSessionx);
+            _cs4RsaDatabase.DoSomething(sqlSessionDetail);
+            int result = _cs4RsaDatabase.DoSomething(sqlSessionx);
             return result;
         }
 
         private static int DeleteTable(string tableName)
         {
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sql = $"delete from {tableName}";
-            return cs4RsaDatabase.DoSomething(sql);
+            return _cs4RsaDatabase.DoSomething(sql);
         }
 
         public static int DeleteDataInTableDiscipline()
@@ -82,7 +77,7 @@ namespace cs4rsa.Database
             string sql = $@"insert into student
                            VALUES('{studentInfo.StudentId}', '{studentInfo.SpecialString}', '{studentInfo.Name}',
                            '{studentInfo.Birthday}', '{studentInfo.CMND}', 
-                           '{studentInfo.Email}', '{studentInfo.PhoneNumber}', '{studentInfo.Address}', '{studentInfo.Image}')";
+                           '{studentInfo.Email}', '{studentInfo.PhoneNumber}', '{studentInfo.Address}', '{studentInfo.Image}', '{studentInfo.Curriculum.CurId}')";
             return _cs4RsaDatabase.DoSomething(sql);
         }
 
@@ -95,7 +90,8 @@ namespace cs4rsa.Database
                             email = '{studentInfo.Email}',
                             phoneNumber = '{studentInfo.PhoneNumber}',
                             address = '{studentInfo.Address}',
-                            image = '{studentInfo.Image}'
+                            image = '{studentInfo.Image}',
+                            curid = '{studentInfo.Curriculum.CurId}'
                             WHERE specialString = '{studentInfo.SpecialString}'";
             return _cs4RsaDatabase.DoSomething(sql);
         }
@@ -110,7 +106,8 @@ namespace cs4rsa.Database
         public static int UpdateProgramSubject(ProgramSubject subject)
         {
             string sql = $@"update program_subject
-                            set subject_name = {subject.SubjectName}, credit = {subject.StudyUnit}
+                            set subject_name = {subject.SubjectName}, 
+                            credit = {subject.StudyUnit}
                             where subject_code = '{subject.SubjectCode}'";
             return _cs4RsaDatabase.DoSomething(sql);
         }
@@ -136,6 +133,18 @@ namespace cs4rsa.Database
         {
             string sql = $@"insert into detail_par
                             values ('{proSubjectCode}', '{parSubjectCode}')";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int AddProSubjectDetail(string studentId, string proSubjectCode)
+        {
+            string sql = $@"insert into detail_program_subject values ('{studentId}', '{proSubjectCode}')";
+            return _cs4RsaDatabase.DoSomething(sql);
+        }
+
+        public static int AddCurriculum(Curriculum curriculum)
+        {
+            string sql = $@"insert into curriculum values ('{curriculum.CurId}','{curriculum.Name}')";
             return _cs4RsaDatabase.DoSomething(sql);
         }
     }

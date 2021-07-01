@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace cs4rsa.Models
 {
+    /// <summary>
+    /// Model này đại diện cho một xung đột vị trí học.
+    /// </summary>
     class PlaceConflictFinderModel : IConflictModel
     {
         private ClassGroup _classGroup1;

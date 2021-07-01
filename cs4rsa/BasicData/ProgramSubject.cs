@@ -1,5 +1,6 @@
 ﻿using cs4rsa.Enums;
 using cs4rsa.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace cs4rsa.BasicData
@@ -19,7 +20,7 @@ namespace cs4rsa.BasicData
     /// Đại diện cho một Row của trong bảng chương trình học.
     /// Chứa thông tin cơ bản của Môn có trong chương trình.
     /// </summary>
-    public class ProgramSubject: IProgramNode
+    public class ProgramSubject: IProgramNode, IComparable
     {
         private string _id;
         private string _childOfNode;
@@ -81,6 +82,12 @@ namespace cs4rsa.BasicData
             if (_studyState == StudyState.UnLearned)
                 return true;
             return false;
+        }
+
+        public int CompareTo(object obj)
+        {
+            ProgramSubject other = obj as ProgramSubject;
+            return Id.CompareTo(other.Id);
         }
     }
 }

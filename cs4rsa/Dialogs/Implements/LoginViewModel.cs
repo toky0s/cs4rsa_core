@@ -10,14 +10,16 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Enums;
 using System.Windows;
+using cs4rsa.Models;
 
 namespace cs4rsa.Dialogs.Implements
 {
     class LoginViewModel: DialogViewModelBase<LoginResult>
     {
-        private ObservableCollection<StudentInfo> _studentInfos = new ObservableCollection<StudentInfo>();
-        public ObservableCollection<StudentInfo> StudentInfos
+        private ObservableCollection<StudentModel> _studentInfos = new ObservableCollection<StudentModel>();
+        public ObservableCollection<StudentModel> StudentInfos
         {
             get
             {
@@ -29,8 +31,8 @@ namespace cs4rsa.Dialogs.Implements
             }
         }
 
-        private StudentInfo _selectedStudentInfo;
-        public StudentInfo SelectedStudentInfo
+        private StudentModel _selectedStudentInfo;
+        public StudentModel SelectedStudentInfo
         {
             get
             {
@@ -43,11 +45,22 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         public RelayCommand OpenSessionIdInput { get; set; }
+        public RelayCommand LoginCommand { get; set; }
 
         public LoginViewModel()
         {
             OpenSessionIdInput = new RelayCommand(OnOpenSessionIdInput, () => true);
+            LoginCommand = new RelayCommand(OnReturnStudent, () => true);
             LoadStudentInfos();
+        }
+
+        private void OnReturnStudent(object obj)
+        {
+            if (_selectedStudentInfo != null)
+            {
+                LoginResult loginResult = new LoginResult() { StudentModel=_selectedStudentInfo };
+                CloseDialogWithResult(obj as Window, loginResult);
+            }
         }
 
         private void OnOpenSessionIdInput(object obj)
@@ -55,8 +68,15 @@ namespace cs4rsa.Dialogs.Implements
             Cs4rsaMessageBox messageBox = new Cs4rsaMessageBox();
             SessionInputWindow sessionInputWindow = new SessionInputWindow();
             SessionInputViewModel vm = new SessionInputViewModel(messageBox);
-            DialogService<StudentResult>.OpenDialog(vm, sessionInputWindow, obj as Window);
-            LoadStudentInfos();
+            StudentResult result = DialogService<StudentResult>.OpenDialog(vm, sessionInputWindow, obj as Window);
+            StudentModel studentModel = new StudentModel(result.Student);
+            if (!_studentInfos.Contains(studentModel))
+                _studentInfos.Add(studentModel);
+            else
+            {
+                int index = _studentInfos.IndexOf(studentModel);
+                _studentInfos[index] = studentModel;
+            }
         }
 
         private void LoadStudentInfos()
@@ -65,7 +85,9 @@ namespace cs4rsa.Dialogs.Implements
             List<StudentInfo> studentInfos = Cs4rsaDataView.GetStudentInfos();
             foreach (StudentInfo info in studentInfos)
             {
-                _studentInfos.Add(info);
+                Student student = new Student(info);
+                StudentModel studentModel = new StudentModel(student);
+                _studentInfos.Add(studentModel);
             }
         }
     }

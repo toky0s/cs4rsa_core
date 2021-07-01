@@ -37,7 +37,7 @@ namespace cs4rsa.Settings
             if (SettingReader.IsExistsSetting(key))
                 return false;
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            string sql = $@"insert into setting values ('{key}', '{value}')";
+            string sql = $@"insert into user_settings values ('{key}', '{value}')";
             cs4RsaDatabase.DoSomething(sql);
             return true;
         }

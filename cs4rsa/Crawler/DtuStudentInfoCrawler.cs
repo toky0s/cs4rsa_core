@@ -9,6 +9,7 @@ using cs4rsa.Helpers;
 using cs4rsa.BasicData;
 using System.Globalization;
 using cs4rsa.Interfaces;
+using cs4rsa.Implements;
 
 namespace cs4rsa.Crawler
 {
@@ -41,6 +42,7 @@ namespace cs4rsa.Crawler
             string imageSrcData = imageNode.Attributes["src"].Value;
             string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", "");
 
+            Curriculum curriculum = CurriculumCrawler.GetCurriculum(specialString);
             StudentInfo info = new StudentInfo()
             {
                 Name = name,
@@ -51,7 +53,8 @@ namespace cs4rsa.Crawler
                 Email = email,
                 PhoneNumber = phoneNumber,
                 Address = address,
-                Image = imageBase64Data
+                Image = imageBase64Data,
+                Curriculum = curriculum
             };
             studentSaver.Save(info);
             return info;

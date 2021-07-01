@@ -171,6 +171,7 @@
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
+    <Compile Include="BasicData\Curriculum.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
     <Compile Include="BasicData\ConflictPlace.cs" />
     <Compile Include="BasicData\PlaceConflictFinder.cs" />
@@ -187,10 +188,11 @@
     <Compile Include="Converters\DialogConverters\Base64ImageConverter.cs" />
     <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
-    <Compile Include="Crawler\CurIdCrawler.cs" />
+    <Compile Include="Crawler\CurriculumCrawler.cs" />
     <Compile Include="Crawler\DtuStudentInfoCrawler.cs" />
     <Compile Include="Crawler\DtuSubjectCrawler.cs" />
     <Compile Include="Crawler\MetaDataCrawler.cs" />
+    <Compile Include="Crawler\ProgramDiagramCrawler.cs" />
     <Compile Include="Crawler\SpecialStringCrawler.cs" />
     <Compile Include="Crawler\StudentProgramCrawler.cs" />
     <Compile Include="Database\ColorGenerator.cs" />
@@ -232,7 +234,12 @@
     <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
+    <Compile Include="Enums\GetFrom.cs" />
+    <Compile Include="Implements\CurriculumGetter.cs" />
+    <Compile Include="Implements\CurriculumSaver.cs" />
+    <Compile Include="Implements\ProgramDiagramSaver.cs" />
     <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
+    <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
@@ -307,6 +314,7 @@
     <Compile Include="Views\SearchSession.xaml.cs">
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\StudentModel.cs" />
     <Page Include="Dialogs\DialogViews\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

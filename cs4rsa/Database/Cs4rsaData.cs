@@ -76,6 +76,12 @@ namespace cs4rsa.Database
                 value text
             )";
 
+        private readonly string SQL_curriculum =
+            @"CREATE table curriculum (
+                curid text PRIMARY key,
+                name text
+                )";
+
         private readonly string SQL_STUDENT =
             @"create table if not exists student (
                 studentId text,
@@ -86,7 +92,9 @@ namespace cs4rsa.Database
                 email text,
                 phoneNumber text,
                 address text,
-                image text
+                image text,
+                curid text,
+                foreign key (curid) references curriculum(curid)
             )";
 
         private readonly string SQL_pre_par_subject =
@@ -106,7 +114,7 @@ namespace cs4rsa.Database
             @"create table detail_pre(
                 pro_subject_code TEXT,
                 pre_subject_code text,
-                PRIMARY KEY(pro_subject_code,pre_subject_code),
+                PRIMARY KEY(pro_subject_code, pre_subject_code),
                 FOREIGN key (pro_subject_code) REFERENCES program_subject(subject_code),
                 FOREIGN key (pre_subject_code) REFERENCES pre_par_subject(subject_code)
                 )";
@@ -118,14 +126,6 @@ namespace cs4rsa.Database
                 PRIMARY KEY(pro_subject_code,par_subject_code),
                 FOREIGN key (pro_subject_code) REFERENCES program_subject(subject_code),
                 FOREIGN key (par_subject_code) REFERENCES pre_par_subject(subject_code)
-                )";
-
-        private readonly string SQL_detail_program_subject =
-            @"create table detail_program_subject (
-                student_id text,
-                program_subject_code text,
-                FOREIGN key (program_subject_code) REFERENCES program_subject(subject_code),
-                FOREIGN key (student_id) REFERENCES student(studentId)
                 )";
 
         public Cs4rsaData()
@@ -140,12 +140,12 @@ namespace cs4rsa.Database
                 CreateTable(SQL_SESSION);
                 CreateTable(SQL_SESSION_DETAIL);
                 CreateTable(SQL_USER_SETTINGS);
+                CreateTable(SQL_curriculum);
                 CreateTable(SQL_STUDENT);
                 CreateTable(SQL_pre_par_subject);
                 CreateTable(SQL_detail_pre);
                 CreateTable(SQL_detail_par);
                 CreateTable(SQL_program_subject);
-                CreateTable(SQL_detail_program_subject);
                 DumpData();
             }
         }

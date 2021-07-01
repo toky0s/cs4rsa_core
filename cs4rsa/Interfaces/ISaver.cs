@@ -15,6 +15,6 @@ namespace cs4rsa.Interfaces
     /// <typeparam name="T">Một BasicData hoặc một Model.</typeparam>
     public interface ISaver<T>
     {
-        void Save(T obj);
+        void Save(T obj, object[] parameters=null);
     }
 }

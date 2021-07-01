@@ -1,5 +1,6 @@
 ﻿using cs4rsa.BasicData;
 using cs4rsa.Crawler;
+using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
@@ -78,31 +79,22 @@ namespace cs4rsa.Dialogs.Implements
                 return;
             }
 
-            string curid = CurIdCrawler.GetCurId(specialString);
-            worker.ReportProgress(30);
+            Curriculum curriculum = CurriculumCrawler.GetCurriculum(specialString);
             StudentSaver studentSaver = new StudentSaver();
             StudentInfo info = DtuStudentInfoCrawler.ToStudentInfo(specialString, studentSaver);
-            worker.ReportProgress(40);
-            string t = Helpers.Helpers.GetTimeFromEpoch();
-            string url2 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid=2002";
-            string url1 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid=2001";
-            string url3 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid=2003";
-            string url4 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid=2004";
 
-            PreParGetter preParGetter = new PreParGetter();
-            ProgramSubjectSaver programSubjectSaver = new ProgramSubjectSaver();
-            StudentProgramCrawler programCrawler1 = new StudentProgramCrawler(sessionId, url1, programSubjectSaver, preParGetter);
-            worker.ReportProgress(50);
-            StudentProgramCrawler programCrawler2 = new StudentProgramCrawler(sessionId, url2, programSubjectSaver, preParGetter);
-            worker.ReportProgress(60);
-            StudentProgramCrawler programCrawler3 = new StudentProgramCrawler(sessionId, url3, programSubjectSaver, preParGetter);
-            worker.ReportProgress(70);
-            StudentProgramCrawler programCrawler4 = new StudentProgramCrawler(sessionId, url4, programSubjectSaver, preParGetter);
-            worker.ReportProgress(100);
-            ProgramDiagram diagram = new ProgramDiagram(programCrawler1.Root, programCrawler2.Root, 
-                                                        programCrawler3.Root, programCrawler4.Root);
-            Student student = new Student(info, diagram);
+            if (!Cs4rsaDataView.IsExistsCurriculum(info.Curriculum.CurId))
+            {
+                ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(_sessionId, specialString, worker);
+                ProgramDiagram diagram = programDiagramCrawler.ToProgramDiagram();
+            }
+            
+            CurriculumSaver curriculumSaver = new CurriculumSaver();
+            curriculumSaver.Save(curriculum);
+
+            Student student = new Student(info);
             e.Result = student;
+            worker.ReportProgress(100);
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -11,7 +11,7 @@ namespace cs4rsa.Implements
 {
     class StudentSaver : ISaver<StudentInfo>
     {
-        void ISaver<StudentInfo>.Save(StudentInfo obj)
+        void ISaver<StudentInfo>.Save(StudentInfo obj, object[] parameters = null)
         {
             if (!Cs4rsaDataView.IsStudentExists(obj.SpecialString))
             {

@@ -1,4 +1,5 @@
 ﻿using cs4rsa.BasicData;
+using cs4rsa.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace cs4rsa.Dialogs.DialogResults
 {
     class LoginResult
     {
-        public StudentInfo StudentInfo;
+        public StudentModel StudentModel { get; set; }
     }
 }

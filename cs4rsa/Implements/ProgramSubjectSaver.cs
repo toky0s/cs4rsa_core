@@ -10,7 +10,7 @@ namespace cs4rsa.Implements
     /// </summary>
     class ProgramSubjectSaver : ISaver<ProgramSubject>
     {
-        public void Save(ProgramSubject obj)
+        public void Save(ProgramSubject obj, object[] parameters = null)
         {
             if (!Cs4rsaDataView.IsExistsProgramSubject(obj.SubjectCode))
                 Cs4rsaDataEdit.AddProgramSubject(obj);

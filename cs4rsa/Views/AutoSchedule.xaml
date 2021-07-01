@@ -3,54 +3,134 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
         xmlns:local="clr-namespace:cs4rsa.Views"
         mc:Ignorable="d"
         Title="AutoSchedule" 
         Height="450" 
-        Width="800">
+        Width="800"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
+        <Style x:Key="InfoLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    Orientation="Vertical">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0"></Image>
-                <StackPanel Grid.Column="1"
-                            Orientation="Vertical">
-                    <TextBlock>A Xin</TextBlock>
-                    <TextBlock>24211200265</TextBlock>
-                    <Button Content="Đăng xuất..."></Button>
-                </StackPanel>
-            </Grid>
-            <StackPanel Orientation="Vertical">
-                <TextBlock>Thông tin khác</TextBlock>
-                <TextBlock>Email</TextBlock>
-                <TextBlock>Địa chỉ</TextBlock>
-                <TextBlock>Số điện thoại</TextBlock>
-                <TextBlock>Số tín chỉ còn lại</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Margin="5"
+              Grid.Row="0"
+              Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Ellipse Height="100" 
+                        Width="100"
+                        Grid.Column="0">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding StudentModel.StudentInfo.Image, Converter={StaticResource Base64ImageConverter}}"
+                                            Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <StackPanel Grid.Column="1"
+                            Orientation="Vertical"
+                            Margin="5,0,5,0">
+                <TextBlock Text="{Binding StudentModel.StudentInfo.Name}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Margin="0,17,0,0"></TextBlock>
+                <TextBlock Text="{Binding StudentModel.StudentInfo.StudentId}"
+                               Margin="0,5,0,0"
+                           FontSize="16"></TextBlock>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Column="1"
-                    Orientation="Vertical">
-            <TextBox Background="Aqua"></TextBox>
-            <ListView>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock>Xin</TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackPanel>
-        
+        </Grid>
+        <Grid Grid.Row="1"
+              Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0"
+                  Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Danh sách các môn của bạn"
+                           Style="{StaticResource Header1}"
+                           Grid.Row="0"></TextBlock>
+                <TextBox Grid.Row="1"
+                         Margin="0,0,0,5"></TextBox>
+                <ListView Grid.Row="2"
+                          Style="{StaticResource Cs4rsaListView}"
+                          ItemsSource="{Binding ProgramSubjectModels}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding SubjectName}"></TextBlock>
+                                <TextBlock Text="{Binding SubjectCode}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+            <Grid Grid.Column="1"
+                  Margin="0,5,5,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Các môn bạn đã chọn"
+                           Style="{StaticResource Header1}"></TextBlock>
+                <ListView Grid.Row="1"
+                          Margin="0,0,0,5"
+                          Style="{StaticResource Cs4rsaListView}"></ListView>
+                <Button Grid.Row="2"
+                        Content="Sắp xếp"></Button>
+            </Grid>
+            <Grid Grid.Column="2"
+                  Margin="0,5,5,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Tất cả các cách sắp xếp"
+                           Style="{StaticResource Header1}"></TextBlock>
+                <ListView Grid.Row="1"
+                          Style="{StaticResource Cs4rsaListView}"></ListView>
+            </Grid>
+        </Grid>
+        <StatusBar Grid.Row="2"
+                   Grid.ColumnSpan="3">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock Text="Các môn trong chương trình"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <ProgressBar Width="100"
+                             Height="17"
+                             Maximum="100"
+                             Value="{Binding ProgressValue}"></ProgressBar>
+            </StatusBarItem>
+            <Separator Grid.Column="2" />
+        </StatusBar>
     </Grid>
 </Window>

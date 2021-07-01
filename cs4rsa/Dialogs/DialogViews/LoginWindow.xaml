@@ -38,27 +38,40 @@
                                  Stroke="#990000"
                                  StrokeThickness="2">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding Image, Converter={StaticResource Base64ImageConverter}}"
+                                <ImageBrush ImageSource="{Binding StudentInfo.Image, Converter={StaticResource Base64ImageConverter}}"
                                             Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
                         <StackPanel Orientation="Vertical"
                                     Grid.Column="1">
-                            <TextBlock Text="{Binding Name}"
+                            <TextBlock Text="{Binding StudentInfo.Name}"
                                        FontWeight="Bold"
                                        FontSize="16"
                                        Margin="3,5,0,0"></TextBlock>
-                            <TextBlock Text="{Binding StudentId}"
+                            <TextBlock Text="{Binding StudentInfo.StudentId}"
                                        Margin="3,0,0,0"></TextBlock>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Content="Thêm mới..."
-                Margin="5,0,5,5"
-                Height="30"
-                Command="{Binding OpenSessionIdInput}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Content="Thêm mới..."
+                    Grid.Column="0"
+                    Margin="5,0,5,5"
+                    Height="30"
+                    Command="{Binding OpenSessionIdInput}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+            <Button Content="Đăng nhập"
+                    Grid.Column="1"
+                    Margin="0,0,5,5"
+                    Command="{Binding LoginCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+            </Button>
+        </Grid>
     </StackPanel>
 </Window>

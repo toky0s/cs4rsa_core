@@ -5,10 +5,7 @@ using System.Collections.Generic;
 namespace cs4rsa.BasicData
 {
     /// <summary>
-    /// Đại diện cho một thư mục lớn của chương trình học
-    /// chứa các phương thức xác định một thư mục đã hoàn thành hay chưa.
-    /// ** Đây là class quan trọng giúp thao tác với các Node **
-    /// ** Muốn thao tác với một node phải thông qua class này **
+    /// Đại diện cho toàn bộ chương trình học.
     /// </summary>
     public class ProgramDiagram
     {
@@ -24,6 +21,16 @@ namespace cs4rsa.BasicData
             _physicalEducationRoot = physicalEducationRoot;
             _industryOutlineRoot = industryOutlineRoot;
             _specializedRoot = specializedRoot;
+        }
+
+        public List<ProgramSubject> GetAllProSubject()
+        {
+            List<ProgramSubject> programSubjects = new List<ProgramSubject>();
+            programSubjects.AddRange(_outlineRoot.GetProgramSubjects());
+            programSubjects.AddRange(_physicalEducationRoot.GetProgramSubjects());
+            programSubjects.AddRange(_industryOutlineRoot.GetProgramSubjects());
+            programSubjects.AddRange(_specializedRoot.GetProgramSubjects());
+            return programSubjects;
         }
     }
 }

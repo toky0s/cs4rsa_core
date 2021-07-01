@@ -10,6 +10,7 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.DialogResults;
+using cs4rsa.Views;
 
 namespace cs4rsa.ViewModels
 {
@@ -100,7 +101,13 @@ namespace cs4rsa.ViewModels
         {
             LoginWindow loginWindow = new LoginWindow();
             LoginViewModel loginViewModel = new LoginViewModel();
-            DialogService<LoginResult>.OpenDialog(loginViewModel, loginWindow, obj as Window);
+            LoginResult result = DialogService<LoginResult>.OpenDialog(loginViewModel, loginWindow, obj as Window);
+
+            AutoScheduleViewModel autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel);
+            AutoSchedule autoSchedule = new AutoSchedule();
+            autoSchedule.Owner = obj as Window;
+            autoSchedule.DataContext = autoScheduleViewModel;
+            autoSchedule.Show();
         }
 
         private void OnOpenUpdateWindow(object obj)

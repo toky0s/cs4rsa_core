@@ -10,9 +10,9 @@ namespace cs4rsa_test
 {
     public class FakeSubjectSaver : ISaver<ProgramSubject>
     {
-        public void Save(ProgramSubject obj)
+        public void Save(ProgramSubject obj, object[] parameters = null)
         {
-            Console.WriteLine("Save "+obj.SubjectName);
+            Console.WriteLine("Save " + obj.SubjectName);
         }
     }
 }

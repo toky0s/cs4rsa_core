@@ -20,5 +20,6 @@ namespace cs4rsa.BasicData
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string Image { get; set; }
+        public Curriculum Curriculum { get; set; }
     }
 }

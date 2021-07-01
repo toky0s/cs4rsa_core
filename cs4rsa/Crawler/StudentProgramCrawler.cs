@@ -31,7 +31,7 @@ namespace cs4rsa.Crawler
         /// Nhận vào một chuỗi đặc biệt được mã hoá từ mã sinh viên.
         /// </summary>
         /// <param name="specialString">Mã đặc biệt được mã hoá từ mã sinh viên.</param>
-        public StudentProgramCrawler(string sessionId, string url, 
+        public StudentProgramCrawler(string sessionId, string url,
             ISaver<ProgramSubject> subjectSaver, IGetter<PreParSubject> preparGetter)
         {
             _sessionId = sessionId;
@@ -236,9 +236,21 @@ namespace cs4rsa.Crawler
                 StudyUnitType studyUnitType = Helpers.BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
 
                 //prerequisiteSubjects and parallelSubjects
-                PreParSubject preParSubject = _preparGetter.Get(new string[] { _sessionId, courseId });
-                List<string> prerequisiteSubjects = preParSubject.PreSubjects;
-                List<string> parallelSubjects = preParSubject.ParSubjects;
+                List<string> prerequisiteSubjects;
+                List<string> parallelSubjects;
+                if (_sessionId != null)
+                {
+                    PreParSubject preParSubject = _preparGetter.Get(new string[] { _sessionId, courseId });
+                    prerequisiteSubjects = preParSubject.PreSubjects;
+                    parallelSubjects = preParSubject.ParSubjects;
+                }
+                else
+                {
+                    PreParSubject preParSubject = _preparGetter.Get(new string[] { courseId });
+                    prerequisiteSubjects = preParSubject.PreSubjects;
+                    parallelSubjects = preParSubject.ParSubjects;
+                }
+
 
                 // study state
                 StudyState studyState;

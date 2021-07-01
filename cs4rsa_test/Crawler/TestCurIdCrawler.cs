@@ -14,7 +14,7 @@ namespace cs4rsa_test.Crawler
         [Test]
         public void GetCurId()
         {
-            string result = CurIdCrawler.GetCurId("ppxdPtQCkOX2 rc5tqBFhg==");
+            string result = CurriculumCrawler.GetCurriculum("ppxdPtQCkOX2 rc5tqBFhg==").CurId;
             Assert.AreEqual("605", result);
         }
     }

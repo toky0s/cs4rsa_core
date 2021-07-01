@@ -1,115 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Crawler;
+using cs4rsa.Models;
 
 namespace cs4rsa.ViewModels
 {
     class AutoScheduleViewModel: NotifyPropertyChangedBase
     {
-        private string _name;
-        private string _studentId;
-        private DateTime _birthday;
-        private string _cmnd;
-        private string _email;
-        private string _phoneNumber;
-        private string _address;
+        private StudentModel _studentModel;
+        public StudentModel StudentModel
+        {
+            get
+            {
+                return _studentModel;
+            }
+            set
+            {
+                _studentModel = value;
+            }
+        }
 
-        public string Name
+        private int _progressValue;
+        public int ProgressValue
         {
             get
             {
-                return _name;
+                return _progressValue;
             }
             set
             {
-                _name = value;
-                RaisePropertyChanged();
-            }
-        }
-        public string StudentId
-        {
-            get
-            {
-                return _studentId;
-            }
-            set
-            {
-                _studentId = value;
-                RaisePropertyChanged();
-            }
-        }
-        public DateTime Birthday
-        {
-            get
-            {
-                return _birthday;
-            }
-            set
-            {
-                _birthday = value;
-                RaisePropertyChanged();
-            }
-        }
-        public string CMND
-        {
-            get
-            {
-                return _cmnd;
-            }
-            set
-            {
-                _cmnd = value;
-                RaisePropertyChanged();
-            }
-        }
-        public string Email
-        {
-            get
-            {
-                return _email;
-            }
-            set
-            {
-                _email = value;
-                RaisePropertyChanged();
-            }
-        }
-        public string PhoneNumber
-        {
-            get
-            {
-                return _phoneNumber;
-            }
-            set
-            {
-                _phoneNumber = value;
-                RaisePropertyChanged();
-            }
-        }
-        public string Address
-        {
-            get
-            {
-                return _address;
-            }
-            set
-            {
-                _address = value;
+                _progressValue = value;
                 RaisePropertyChanged();
             }
         }
 
-        private string _specialString;
-        private string _sessionId;
-
-        public AutoScheduleViewModel(string specialString, string sessionId=null)
+        private ObservableCollection<ProgramSubjectModel> _programSubjectModels = new ObservableCollection<ProgramSubjectModel>();
+        public ObservableCollection<ProgramSubjectModel> ProgramSubjectModels
         {
-            _specialString = specialString;
-            _sessionId = sessionId;
+            get
+            {
+                return _programSubjectModels;
+            }
+            set
+            {
+                _programSubjectModels = value;
+            }
+        }
+
+        private ProgramDiagram _programDiagram;
+        public AutoScheduleViewModel(StudentModel studentModel)
+        {
+            _studentModel = studentModel;
+            GetProgramDiagram(studentModel.StudentInfo.SpecialString);
+        }
+
+        private void GetProgramDiagram(string specialString)
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true,
+                WorkerReportsProgress = true
+            };
+            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerAsync(specialString);
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ProgressValue = 0;
+            _programDiagram = e.Result as ProgramDiagram;
+            List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
+            foreach(ProgramSubject subject in programSubjects)
+            {
+                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject);
+                _programSubjectModels.Add(proSubjectModel);
+            }
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker backgroundWorker = sender as BackgroundWorker;
+            string specialString = (string)e.Argument;
+            backgroundWorker.ReportProgress(10);
+            ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(null, specialString, backgroundWorker);
+            ProgramDiagram result = programDiagramCrawler.ToProgramDiagram();
+            backgroundWorker.ReportProgress(100);
+            e.Result = result;
+        }
+
+        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressValue = e.ProgressPercentage;
         }
     }
 }

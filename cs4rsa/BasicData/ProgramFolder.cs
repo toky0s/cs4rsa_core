@@ -35,7 +35,9 @@ namespace cs4rsa.BasicData
         public string RawHtml => _rawHtml;
 
         /// <summary>
-        /// 
+        /// Đại diện cho một folder là một mục trong chương trình học mà bạn phải hoàn thành.
+        /// Một folder sẽ chứa một tập các môn học, mà bạn cần phải học tất cả (bắt buộc) hoặc
+        /// chọn n trong k môn học phải hoàn thành.
         /// </summary>
         /// <param name="name">Tên node.</param>
         /// <param name="studyMode">Bắt buộc, chọn n trong k hoặc không có.</param>
@@ -88,6 +90,30 @@ namespace cs4rsa.BasicData
                 }
             }
             return flag;
+        }
+
+        /// <summary>
+        /// Trả về tất cả các ProSubject có trong folder này
+        /// bằng cách gọi đệ quy đi sâu vào trong từ folder.
+        /// </summary>
+        /// <returns></returns>
+        public List<ProgramSubject> GetProgramSubjects()
+        {
+            List<ProgramSubject> programSubjects = new List<ProgramSubject>();
+            foreach(ProgramFolder folder in _childProgramFolders)
+            {
+                if (folder._childProgramSubjects.Count > 0)
+                {
+                    programSubjects.AddRange(folder._childProgramSubjects);
+                }
+                else
+                {
+                    programSubjects.AddRange(folder.GetProgramSubjects());
+                }
+            }
+            programSubjects.AddRange(_childProgramSubjects);
+            programSubjects.Sort();
+            return programSubjects;
         }
 
         private static bool ThisProgramSubjectIsCompleted(List<IProgramNode> subjects, int mustLearn)
