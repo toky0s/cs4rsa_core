@@ -69,13 +69,16 @@ namespace cs4rsa.Dialogs.Implements
             SessionInputWindow sessionInputWindow = new SessionInputWindow();
             SessionInputViewModel vm = new SessionInputViewModel(messageBox);
             StudentResult result = DialogService<StudentResult>.OpenDialog(vm, sessionInputWindow, obj as Window);
-            StudentModel studentModel = new StudentModel(result.Student);
-            if (!_studentInfos.Contains(studentModel))
-                _studentInfos.Add(studentModel);
-            else
+            if (result != null)
             {
-                int index = _studentInfos.IndexOf(studentModel);
-                _studentInfos[index] = studentModel;
+                StudentModel studentModel = new StudentModel(result.Student);
+                if (!_studentInfos.Contains(studentModel))
+                    _studentInfos.Add(studentModel);
+                else
+                {
+                    int index = _studentInfos.IndexOf(studentModel);
+                    _studentInfos[index] = studentModel;
+                }
             }
         }
 

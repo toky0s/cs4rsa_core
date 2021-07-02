@@ -76,7 +76,8 @@ namespace cs4rsa.ViewModels
         private void OnDelete(object obj)
         {
             classGroupModels.Remove(_selectedClassGroupModel);
-            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
+            UpdateConflictModelCollection();
+            MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(classGroupModels.ToList()));
         }
 
         private bool CanSave()

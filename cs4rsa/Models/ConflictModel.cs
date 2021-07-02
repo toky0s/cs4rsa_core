@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace cs4rsa.Models
 {
-    class ConflictModel : IConflictModel
+    public class ConflictModel : IConflictModel
     {
         private ClassGroup _classGroup1;
         private ClassGroup _classGroup2;
@@ -42,6 +42,10 @@ namespace cs4rsa.Models
             _conflictTime = conflictTime;
         }
 
+        /// <summary>
+        /// Lấy ra thông tin dạng chuỗi để hiển thị lên giao diện của một xung đột về thời gian.
+        /// </summary>
+        /// <returns></returns>
         public string GetConflictInfo()
         {
             List<string> resultTimes = new List<string>();
@@ -51,7 +55,7 @@ namespace cs4rsa.Models
                 List<string> times = new List<string>();
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    string time = $"Từ {studyTimeIntersect.Start} đến {studyTimeIntersect.End}";
+                    string time = $"Từ {studyTimeIntersect.StartString} đến {studyTimeIntersect.EndString}";
                     times.Add(time);
                 }
                 string timeString = string.Join("\n", times);
@@ -67,7 +71,14 @@ namespace cs4rsa.Models
 
         public Phase GetPhase()
         {
-            Console.WriteLine("Do something");
+            if ((_classGroup1.GetPhase() == Phase.FIRST && _classGroup2.GetPhase() == Phase.FIRST) ||
+                    (_classGroup1.GetPhase() == Phase.FIRST && _classGroup2.GetPhase() == Phase.ALL) ||
+                    (_classGroup1.GetPhase() == Phase.ALL && _classGroup2.GetPhase() == Phase.FIRST))
+                return Phase.FIRST;
+            if ((_classGroup1.GetPhase() == Phase.SECOND && _classGroup2.GetPhase() == Phase.SECOND) ||
+                    (_classGroup1.GetPhase() == Phase.SECOND && _classGroup2.GetPhase() == Phase.ALL) ||
+                    (_classGroup1.GetPhase() == Phase.ALL && _classGroup2.GetPhase() == Phase.SECOND))
+                return Phase.SECOND;
             return Phase.ALL;
         }
     }

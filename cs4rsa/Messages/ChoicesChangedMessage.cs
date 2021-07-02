@@ -8,6 +8,9 @@ using cs4rsa.Models;
 
 namespace cs4rsa.Messages
 {
+    /// <summary>
+    /// Message này được gửi đi khi có sự thay đổi trong danh sách các class group đã chọn.
+    /// </summary>
     public class ChoicesChangedMessage : Cs4rsaMessage
     {
         public new List<ClassGroupModel> Source;

@@ -33,7 +33,7 @@
             <TextBlock Grid.Column="0"
                        Text="Tên Phiên:"></TextBlock>
             <TextBox x:Name="txtName" Grid.Column="1"
-                     Text="{Binding Name}"></TextBox>
+                     Text="{Binding Name, Mode=TwoWay}"></TextBox>
         </Grid>
 
         <StackPanel Grid.Row="2" 
@@ -42,7 +42,6 @@
                     Margin="0, 0, 7, 7">
             <Button MinWidth="60" 
                     Margin="0,0,10,0"
-                    IsDefault="True"
                 Content="Lưu" 
                 Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"

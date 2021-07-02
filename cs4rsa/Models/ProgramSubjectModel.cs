@@ -12,6 +12,7 @@ namespace cs4rsa.Models
         private ProgramSubject _programSubject;
         public string SubjectCode => _programSubject.SubjectCode;
         public string SubjectName => _programSubject.SubjectName;
+        public bool IsCompleted => _programSubject.IsCompleted();
         public ProgramSubjectModel(ProgramSubject programSubject)
         {
             _programSubject = programSubject;

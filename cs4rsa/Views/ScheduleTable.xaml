@@ -12,24 +12,31 @@
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
         <Style x:Key="CellT2" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Monday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Monday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellT3" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Tuseday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Tuseday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellT4" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Wednessday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Wednessday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellT5" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Thursday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Thursday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellT6" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Friday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Friday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellT7" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Saturday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Saturday.Foreground}"></Setter>
         </Style>
         <Style x:Key="CellCN" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Sunday.Background}"></Setter>
+            <Setter Property="Foreground" Value="{Binding Sunday.Foreground}"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -49,6 +56,7 @@
         <DataGrid Grid.Row="2"
                   x:Name="DataGridFirstPhase"
                   AutoGenerateColumns="False"
+                  GridLinesVisibility="None"
                   FontSize="10">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>
@@ -66,6 +74,7 @@
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"
                   AutoGenerateColumns="False"
+                  GridLinesVisibility="None"
                   FontSize="10">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>

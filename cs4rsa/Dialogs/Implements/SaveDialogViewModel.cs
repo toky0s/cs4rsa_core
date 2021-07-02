@@ -80,11 +80,6 @@ namespace cs4rsa.Dialogs.Implements
 
         private void Save(object obj)
         {
-            if (name == null || name.Trim() == "")
-            {
-                _messageBox.ShowMessage("Tên không được để trống");
-                return;
-            }
             Cs4rsaDataEdit.AddSession(name, DateTime.Now.ToString(), _classGroupModels);
             SaveResult result = new SaveResult() { Name = name};
             CloseDialogWithResult(obj as Window, result);

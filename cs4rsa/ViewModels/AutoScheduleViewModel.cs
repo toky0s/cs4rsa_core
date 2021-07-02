@@ -84,6 +84,15 @@ namespace cs4rsa.ViewModels
                 ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject);
                 _programSubjectModels.Add(proSubjectModel);
             }
+            Analyze();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void Analyze()
+        {
+            
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

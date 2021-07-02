@@ -214,6 +214,9 @@
     <Compile Include="Dialogs\DialogViews\SessionInputWindow.xaml.cs">
       <DependentUpon>SessionInputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\SettingWindow.xaml.cs">
+      <DependentUpon>SettingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
       <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
@@ -239,6 +242,7 @@
     <Compile Include="Implements\CurriculumSaver.cs" />
     <Compile Include="Implements\ProgramDiagramSaver.cs" />
     <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
+    <Compile Include="Messages\DeleteClassGroupChoiceMessage.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
@@ -328,6 +332,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogViews\SessionManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogViews\SettingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -425,7 +433,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\X.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ok.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

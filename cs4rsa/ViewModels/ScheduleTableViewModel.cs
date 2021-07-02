@@ -16,14 +16,14 @@ namespace cs4rsa.ViewModels
     public class ScheduleRow
     {
         public ShortedTime Time { get; set; }
-        public TimeBlock[] DayAndClassGroups = new TimeBlock[7];
-        public TimeBlock Sunday => DayAndClassGroups[0];
-        public TimeBlock Monday => DayAndClassGroups[1];
-        public TimeBlock Tuseday => DayAndClassGroups[2];
-        public TimeBlock Wednessday => DayAndClassGroups[3];
-        public TimeBlock Thursday => DayAndClassGroups[4];
-        public TimeBlock Friday => DayAndClassGroups[5];
-        public TimeBlock Saturday => DayAndClassGroups[6];
+        public TimeBlock[] DayAndTimeBlock = new TimeBlock[7];
+        public TimeBlock Sunday => DayAndTimeBlock[0];
+        public TimeBlock Monday => DayAndTimeBlock[1];
+        public TimeBlock Tuseday => DayAndTimeBlock[2];
+        public TimeBlock Wednessday => DayAndTimeBlock[3];
+        public TimeBlock Thursday => DayAndTimeBlock[4];
+        public TimeBlock Friday => DayAndTimeBlock[5];
+        public TimeBlock Saturday => DayAndTimeBlock[6];
 
         public ScheduleRow(ShortedTime time)
         {
@@ -33,14 +33,21 @@ namespace cs4rsa.ViewModels
         public void AddClassGroupModelToDayOfWeek(ClassGroupModel classGroupModel, DayOfWeek day)
         {
             int dayIndex = (int)day;
-            DayAndClassGroups[dayIndex] = new TimeBlock(classGroupModel);
+            DayAndTimeBlock[dayIndex] = new TimeBlock(classGroupModel);
+        }
+
+        public void AddStudyTimeIntersectToDayOfWeek(StudyTimeIntersect timeIntersect, DayOfWeek day)
+        {
+            int dayIndex = (int)day;
+            DayAndTimeBlock[dayIndex] = new TimeBlock(timeIntersect);
         }
     }
 
     class ScheduleTableViewModel : NotifyPropertyChangedBase,
         IMessageHandler<ChoicesChangedMessage>,
         IMessageHandler<ConflictCollectionChangeMessage>,
-        IMessageHandler<SettingChangeMessage>
+        IMessageHandler<SettingChangeMessage>,
+        IMessageHandler<DeleteClassGroupChoiceMessage>
     {
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
         private List<IConflictModel> _conflictModels = new List<IConflictModel>();
@@ -49,6 +56,9 @@ namespace cs4rsa.ViewModels
 
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
+
+        private List<ConflictModel> ConflictPhase1 = new List<ConflictModel>();
+        private List<ConflictModel> ConflictPhase2 = new List<ConflictModel>();
 
         public ObservableCollection<ScheduleRow> Schedule1 = new ObservableCollection<ScheduleRow>();
         public ObservableCollection<ScheduleRow> Schedule2 = new ObservableCollection<ScheduleRow>();
@@ -60,6 +70,7 @@ namespace cs4rsa.ViewModels
             _settingIsShowPlaceColor = SettingReader.GetSetting(Setting.IsShowPlaceColor) == "1" ? true : false;
 
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ConflictCollectionChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<SettingChangeMessage>().Notify(this);
         }
@@ -122,13 +133,31 @@ namespace cs4rsa.ViewModels
         private void ReloadSchedule()
         {
             CleanPhase();
+            CleanConflictPhase();
             CleanSchedules();
             DivideClassGroupsByPhases();
             Render(ref Schedule1, ref Phase1);
             Render(ref Schedule2, ref Phase2);
             DumpClassGroupModel(ref Schedule1, ref Phase1);
             DumpClassGroupModel(ref Schedule2, ref Phase2);
-            //DumpConflict();
+            DivideConflictByPhase();
+            DumConflictModel(ref Schedule1, ref ConflictPhase1);
+            DumConflictModel(ref Schedule2, ref ConflictPhase2);
+        }
+
+        private void DivideConflictByPhase()
+        {
+            foreach (ConflictModel conflict in _conflictModels)
+            {
+                if (conflict.GetPhase() == Phase.FIRST || conflict.GetPhase() == Phase.ALL)
+                {
+                    ConflictPhase1.Add(conflict);
+                }
+                else
+                {
+                    ConflictPhase2.Add(conflict);
+                }
+            }
         }
 
 
@@ -157,6 +186,35 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private void DumConflictModel(ref ObservableCollection<ScheduleRow> schedule, ref List<ConflictModel> conflictModels)
+        {
+            foreach (ConflictModel conflictModel in conflictModels)
+            {
+                AddConflict(ref schedule, conflictModel);
+            }
+        }
+
+        private void AddConflict(ref ObservableCollection<ScheduleRow> schedule, ConflictModel conflictModel)
+        {
+            ShortedTimeConverter converter = new ShortedTimeConverter();
+            foreach (DayOfWeek day in conflictModel.ConflictTime.GetSchoolDays())
+            {
+                List<StudyTimeIntersect> timeIntersects = conflictModel.ConflictTime.GetStudyTimeIntersects(day);
+                foreach (StudyTimeIntersect timeIntersect in timeIntersects)
+                {
+                    foreach (ScheduleRow scheduleRow in schedule)
+                    {
+                        if (scheduleRow.Time >= converter.Convert(timeIntersect.Start) &&
+                            scheduleRow.Time <= converter.Convert(timeIntersect.End))
+                        {
+                            scheduleRow.AddStudyTimeIntersectToDayOfWeek(timeIntersect, day);
+                        }
+                    }
+                }
+
+            }
+        }
+
         private void AddClassGroup(ref ObservableCollection<ScheduleRow> schedule, ClassGroupModel classGroupModel)
         {
             ShortedTimeConverter converter = new ShortedTimeConverter();
@@ -169,7 +227,9 @@ namespace cs4rsa.ViewModels
                     {
                         if (scheduleRow.Time >= converter.Convert(time.Start) &&
                             scheduleRow.Time <= converter.Convert(time.End))
+                        {
                             scheduleRow.AddClassGroupModelToDayOfWeek(classGroupModel, day);
+                        }
                     }
                 }
             }
@@ -187,6 +247,12 @@ namespace cs4rsa.ViewModels
             Phase2.Clear();
         }
 
+        private void CleanConflictPhase()
+        {
+            ConflictPhase1.Clear();
+            ConflictPhase2.Clear();
+        }
+
         public void Handle(ChoicesChangedMessage message)
         {
             classGroupModels = message.Source;
@@ -201,6 +267,12 @@ namespace cs4rsa.ViewModels
         public void Handle(ConflictCollectionChangeMessage message)
         {
             _conflictModels = message.Source;
+            ReloadSchedule();
+        }
+
+        public void Handle(DeleteClassGroupChoiceMessage message)
+        {
+            classGroupModels = message.Source;
             ReloadSchedule();
         }
     }

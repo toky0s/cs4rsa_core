@@ -23,9 +23,10 @@
                    Style="{StaticResource Header1}"></TextBlock>
         <ListBox Grid.Row="1"
                  Grid.Column="0"
+                 x:Name="ClassGroupListBox"
                  ScrollViewer.VerticalScrollBarVisibility="auto"
-                 ItemsSource="{Binding ClassGroupModels}"
-                 SelectedItem="{Binding SelectedClassGroup}"
+                 ItemsSource="{Binding ClassGroupModels, UpdateSourceTrigger=PropertyChanged}"
+                 SelectedItem="{Binding SelectedClassGroup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                  Background="#f5f5f5">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">

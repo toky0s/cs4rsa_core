@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:cs4rsa.Views"
         mc:Ignorable="d"
         Title="AutoSchedule" 
-        Height="450" 
-        Width="800"
+        Height="600" 
+        Width="1000"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
@@ -29,8 +29,8 @@
                 <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Ellipse Height="100" 
-                        Width="100"
+            <Ellipse Height="80" 
+                        Width="80"
                         Grid.Column="0">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="{Binding StudentModel.StudentInfo.Image, Converter={StaticResource Base64ImageConverter}}"
@@ -55,46 +55,92 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0"
                   Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Danh sách các môn của bạn"
-                           Style="{StaticResource Header1}"
+                           Style="{StaticResource Header2}"
                            Grid.Row="0"></TextBlock>
-                <TextBox Grid.Row="1"
-                         Margin="0,0,0,5"></TextBox>
-                <ListView Grid.Row="2"
+
+                <ListView Grid.Row="1"
                           Style="{StaticResource Cs4rsaListView}"
                           ItemsSource="{Binding ProgramSubjectModels}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding SubjectName}"></TextBlock>
-                                <TextBlock Text="{Binding SubjectCode}"></TextBlock>
+                                <TextBlock Text="{Binding SubjectName}"
+                                           Margin="5,0,0,5"
+                                           FontSize="16"></TextBlock>
+                                <TextBlock Text="{Binding SubjectCode}"
+                                           Margin="5,0,0,5"></TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="15"
+                                       Width="15"
+                                       HorizontalAlignment="Left"
+                                           Margin="5">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Source" Value="..\Images\X.png"></Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                        <Setter Property="Source" Value="..\Images\ok.png"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock Margin="0,5,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Chưa hoàn thành"></Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                        <Setter Property="Text" Value="Đã hoàn thành"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <TextBox Grid.Row="2"
+                         Margin="0,5,0,0"
+                         Height="20"></TextBox>
             </Grid>
             <Grid Grid.Column="1"
                   Margin="0,5,5,5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Các môn bạn đã chọn"
-                           Style="{StaticResource Header1}"></TextBlock>
-                <ListView Grid.Row="1"
-                          Margin="0,0,0,5"
-                          Style="{StaticResource Cs4rsaListView}"></ListView>
-                <Button Grid.Row="2"
-                        Content="Sắp xếp"></Button>
+                <TextBlock Text="Bộ lọc"
+                           Style="{StaticResource Header2}"
+                           Grid.Row="0"></TextBlock>
+                <StackPanel Grid.Row="1">
+                    <GroupBox Header="Hiển thị">
+                        <StackPanel>
+                            <RadioButton Content="Các môn có thể chọn"></RadioButton>
+                            <RadioButton Content="Các môn đã hoàn thành"></RadioButton>
+                            <RadioButton Content="Các môn thuộc thư mục đã hoàn thành"></RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Sắp xếp">
+                        <StackPanel>
+                            <RadioButton Content="Theo tên"></RadioButton>
+                            <RadioButton Content="Theo số tín chỉ"></RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
             </Grid>
             <Grid Grid.Column="2"
                   Margin="0,5,5,5">
@@ -103,7 +149,7 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Tất cả các cách sắp xếp"
-                           Style="{StaticResource Header1}"></TextBlock>
+                           Style="{StaticResource Header2}"></TextBlock>
                 <ListView Grid.Row="1"
                           Style="{StaticResource Cs4rsaListView}"></ListView>
             </Grid>

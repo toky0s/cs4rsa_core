@@ -15,8 +15,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using cs4rsa.BasicData;
 using cs4rsa.Helpers;
+using cs4rsa.Messages;
 using cs4rsa.Models;
 using cs4rsa.ViewModels;
+using LightMessageBus;
+using LightMessageBus.Interfaces;
 
 namespace cs4rsa.Views
 {
