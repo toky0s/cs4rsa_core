@@ -3,6 +3,7 @@ using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -54,6 +55,19 @@ namespace cs4rsa.Dialogs.Implements
             }
         }
 
+        private string _shareString;
+        public string ShareString
+        {
+            get
+            {
+                return _shareString;
+            }
+            set
+            {
+                _shareString = value;
+            }
+        }
+
         private void LoadScheduleSessionDetail(ScheduleSession value)
         {
             if (value != null)
@@ -67,6 +81,7 @@ namespace cs4rsa.Dialogs.Implements
 
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
+        public RelayCommand ShareStringCommand { get; set; }
 
         private IMessageBox _messageBox;
 
@@ -74,8 +89,20 @@ namespace cs4rsa.Dialogs.Implements
         {
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
+            ShareStringCommand = new RelayCommand(OnParseShareString, CanParse);
             _messageBox = messageBox;
             LoadScheduleSession();
+        }
+
+        private bool CanParse()
+        {
+            return true;
+        }
+
+        private void OnParseShareString(object obj)
+        {
+            SessionManagerResult result = Helpers.ShareString.GetSubjectFromShareString(ShareString);
+            CloseDialogWithResult(obj as Window, result);
         }
 
         private bool CanImport()

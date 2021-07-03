@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Globalization;
 
 namespace cs4rsa.Database
 {
@@ -173,10 +172,20 @@ namespace cs4rsa.Database
 
         public static string GetCourseId(string subjectCode)
         {
-            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sql = $@"select course_id from discipline d, keyword k
                             where d.id = k.discipline_id and d.name || ' ' || k.keyword1 = '{subjectCode}'";
-            return cs4RsaDatabase.GetScalar<string>(sql);
+            return _cs4RsaDatabase.GetScalar<string>(sql);
+        }
+
+        public static string GetSubjectName(string subjectCode)
+        {
+            string discipline = subjectCode.Split(new char[] { ' ' })[0];
+            string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
+            string sql = $@"select subject_name from discipline, keyword
+                            where discipline.name = '{discipline}' and 
+		                            keyword1 = '{keyword1}' AND
+		                            discipline.id = keyword.discipline_id";
+            return _cs4RsaDatabase.GetScalar<string>(sql);
         }
 
         public static bool IsStudentExists(string specialString)

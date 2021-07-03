@@ -8,6 +8,10 @@ using cs4rsa.ViewModels;
 
 namespace cs4rsa.Messages
 {
+    /// <summary>
+    /// Message này sẽ được xử lý bởi MainWindow nhằm xác định số lượng môn
+    /// và số tín chỉ hiện tại trong phần Search.
+    /// </summary>
     public class SubjectItemChangeMessage : Cs4rsaMessage
     {
         public new SearchViewModel Source;

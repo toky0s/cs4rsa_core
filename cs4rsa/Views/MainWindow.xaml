@@ -33,7 +33,9 @@
                         <MenuItem Header="Xuất dưới JSON..."
                                   InputGestureText="Ctrl+Z"></MenuItem>
                         <MenuItem Header="Xuất dưới CS4RSA String..."
-                                  InputGestureText="Ctrl+X"></MenuItem>
+                                  InputGestureText="Ctrl+X"
+                                  Command="{Binding OpenShareStringWindowCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
                         <Separator></Separator>
                         <MenuItem Header="Phân tích"></MenuItem>
                         <MenuItem Header="Tự động xếp lịch"
