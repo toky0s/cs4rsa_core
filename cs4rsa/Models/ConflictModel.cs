@@ -27,6 +27,7 @@ namespace cs4rsa.Models
 
         public ClassGroup FirstClassGroup { get => _classGroup1; set => _classGroup1 = value; }
         public ClassGroup SecondClassGroup { get => _classGroup2; set => _classGroup2 = value; }
+        public ConflictType ConflictType { get => GetConflictType(); }
 
         public ConflictModel(Conflict conflict)
         {

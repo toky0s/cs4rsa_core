@@ -11,10 +11,14 @@ using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Views;
+using System.Collections.Generic;
+using cs4rsa.Models;
 
 namespace cs4rsa.ViewModels
 {
-    public class MainWindowViewModel: NotifyPropertyChangedBase, IMessageHandler<SubjectItemChangeMessage>
+    public class MainWindowViewModel: NotifyPropertyChangedBase, 
+        IMessageHandler<SubjectItemChangeMessage>,
+        IMessageHandler<ChoicesChangedMessage>
     {
         private string _currentYearInfo;
         private string _currentSemesterInfo;
@@ -73,14 +77,17 @@ namespace cs4rsa.ViewModels
         }
 
         private IMessageBox _messageBox;
+        private string _shareString;
 
         public RelayCommand OpenSettingCommand { get; set; }
         public RelayCommand OpenUpdateWindowCommand { get; set; }
         public RelayCommand OpenAutoScheduling { get; set; }
+        public RelayCommand OpenShareStringWindowCommand { get; set; }
 
         public MainWindowViewModel(IMessageBox messageBox)
         {
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
             _messageBox = messageBox;
             HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
@@ -88,8 +95,16 @@ namespace cs4rsa.ViewModels
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
             OpenSettingCommand = new RelayCommand(OnOpenSetting, () => true);
             OpenAutoScheduling = new RelayCommand(OnOpenAutoScheduling, () => true);
+            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow, () => true);
             TotalCredit = 0;
             TotalSubject = 0;
+        }
+
+        private void OnOpenShareStringWindow(object obj)
+        {
+            ShareStringWindow shareStringWindow = new ShareStringWindow();
+            ShareStringViewModel shareStringViewModel = new ShareStringViewModel(_shareString);
+            DialogService<ShareStringResult>.OpenDialog(shareStringViewModel, shareStringWindow, obj as Window);
         }
 
 
@@ -128,6 +143,12 @@ namespace cs4rsa.ViewModels
         private void OnOpenSetting(object obj)
         {
             MessageBox.Show("Mở setting");
+        }
+
+        public void Handle(ChoicesChangedMessage message)
+        {
+            List<ClassGroupModel> classGroupModels = message.Source; 
+            _shareString = Helpers.ShareString.GetShareString(classGroupModels);
         }
     }
 }
