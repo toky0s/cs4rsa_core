@@ -32,5 +32,14 @@ namespace cs4rsa_test.Helpers
             List<string> test = SubjectCodeParser.GetSubjectCodes("JAP 202 - Nhật Ngữ Trung Cấp 2");
             Assert.AreEqual("JAP 202", test[0]);
         }
+
+        [Test]
+        public void ParseSubjectCode4()
+        {
+            List<string> test = SubjectCodeParser.GetSubjectCodes("CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng");
+            Assert.AreEqual("CS 366", test[0]);
+            Assert.AreEqual("CS 372", test[1]);
+            Assert.AreEqual("CS 376", test[2]);
+        }
     }
 }
