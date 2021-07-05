@@ -14,8 +14,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="1.7*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
@@ -75,20 +77,54 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="15"
-                               Width="15"
-                               Margin="0,0,5,0">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Setter Property="Source" Value="..\Images\clock.png"></Setter>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ConflictType, Converter={StaticResource ResourceKey=ConflictTypeConverter}}" Value="1">
-                                            <Setter Property="Source" Value="..\Images\location.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <Canvas Width="10"
+                                Height="10"
+                                Margin="0,0,5,0">
+                            <Rectangle
+                                Width="10"
+                                Height="10">
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Setter Property="Fill" Value="Red"></Setter>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConflictType, Converter={StaticResource ResourceKey=ConflictTypeConverter}}" Value="1">
+                                                <Setter Property="Fill" Value="Yellow"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+                        </Canvas>
+
+                        <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
+                        <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
+                        <Run Text=" - "></Run>
+                        <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock Text="Xung đột vị trí"
+                   Style="{StaticResource Header2}"
+                   Grid.Row="5"></TextBlock>
+        <ListBox Grid.Row="6"
+                 ItemsSource="{Binding PlaceConflictFinderModels}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Style="{StaticResource Cs4rsaListBox}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Canvas Width="10"
+                                Height="10"
+                                Margin="0,0,5,0">
+                            <Rectangle
+                                Width="10"
+                                Height="10"
+                                Fill="Yellow">
+                            </Rectangle>
+                        </Canvas>
+
                         <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
                         <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
                         <Run Text=" - "></Run>

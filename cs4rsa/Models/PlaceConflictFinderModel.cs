@@ -36,8 +36,8 @@ namespace cs4rsa.Models
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
                     string from = $"Từ {placeAdjacent.Start} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceStart)}";
-                    string place = $"đến {placeAdjacent.End} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceEnd)}";
-                    info.Add(place);
+                    string to = $"đến {placeAdjacent.End} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceEnd)}";
+                    info.Add(from+" "+to);
                 }
                 string placeString = string.Join("\n", info);
                 resultTimes.Add(day + "\n" + placeString);

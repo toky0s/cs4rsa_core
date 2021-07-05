@@ -1,22 +1,21 @@
-﻿using cs4rsa.Crawler;
-using cs4rsa.BaseClasses;
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-using cs4rsa.Messages;
-using System.Windows;
-using System;
-using cs4rsa.Dialogs.MessageBoxService;
+﻿using cs4rsa.BaseClasses;
+using cs4rsa.Crawler;
+using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
-using cs4rsa.Dialogs.DialogResults;
-using cs4rsa.Views;
-using System.Collections.Generic;
+using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Messages;
 using cs4rsa.Models;
+using cs4rsa.Views;
+using LightMessageBus;
+using LightMessageBus.Interfaces;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
-    public class MainWindowViewModel: NotifyPropertyChangedBase, 
+    public class MainWindowViewModel : NotifyPropertyChangedBase,
         IMessageHandler<SubjectItemChangeMessage>,
         IMessageHandler<ChoicesChangedMessage>
     {
@@ -118,11 +117,12 @@ namespace cs4rsa.ViewModels
             LoginViewModel loginViewModel = new LoginViewModel();
             LoginResult result = DialogService<LoginResult>.OpenDialog(loginViewModel, loginWindow, obj as Window);
 
-            AutoScheduleViewModel autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel);
-            AutoSchedule autoSchedule = new AutoSchedule();
-            autoSchedule.Owner = obj as Window;
-            autoSchedule.DataContext = autoScheduleViewModel;
-            autoSchedule.Show();
+            if (result != null)
+            {
+                AutoSchedule autoSchedule = new AutoSchedule(result);
+                autoSchedule.Owner = obj as Window;
+                autoSchedule.Show();
+            }
         }
 
         private void OnOpenUpdateWindow(object obj)
@@ -147,7 +147,7 @@ namespace cs4rsa.ViewModels
 
         public void Handle(ChoicesChangedMessage message)
         {
-            List<ClassGroupModel> classGroupModels = message.Source; 
+            List<ClassGroupModel> classGroupModels = message.Source;
             _shareString = Helpers.ShareString.GetShareString(classGroupModels);
         }
     }

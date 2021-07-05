@@ -50,7 +50,7 @@ namespace cs4rsa.ViewModels
         IMessageHandler<DeleteClassGroupChoiceMessage>
     {
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
-        private List<IConflictModel> _conflictModels = new List<IConflictModel>();
+        private List<ConflictModel> _conflictModels = new List<ConflictModel>();
         private bool _settingIsDynamicSchedule;
         private bool _settingIsShowPlaceColor;
 

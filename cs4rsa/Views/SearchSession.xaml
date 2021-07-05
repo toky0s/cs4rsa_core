@@ -69,6 +69,7 @@
             <ListBox.Resources>
                 <ContextMenu x:Key="ListBoxContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem Header="Xoá" Command="{Binding DeleteCommand}"/>
+                    <MenuItem Header="Mở trong courses.duytan.edu.vn" Command="{Binding GotoCourseCommand}"/>
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>

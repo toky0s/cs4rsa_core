@@ -12,9 +12,11 @@ using cs4rsa.Models;
 using cs4rsa.ViewModelFunctions;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -43,6 +45,7 @@ namespace cs4rsa.ViewModels
         }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportDialogCommand { get; set; }
+        public RelayCommand GotoCourseCommand { get; set; }
         #endregion
 
         //ComboBox discipline
@@ -172,6 +175,15 @@ namespace cs4rsa.ViewModels
             AddCommand = new RelayCommand(OnAddSubject);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
+            GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
+        }
+
+        private void OnGotoCourse(object obj)
+        {
+            string courseId = selectedSubjectModel.CourseId;
+            string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
+            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
+            Process.Start(url);
         }
 
 
@@ -203,6 +215,7 @@ namespace cs4rsa.ViewModels
                 ImportResult importResult = DialogService<ImportResult>.OpenDialog(subjectImporterVm, subjectImporterWindow, obj as Window);
                 ImportSubjects(importResult.SubjectModels);
                 ClassGroupChoicer.Start(importResult.SubjectModels, result.SubjectInfoDatas);
+                SelectedSubjectModel = SubjectModels[0];
             }
         }
 

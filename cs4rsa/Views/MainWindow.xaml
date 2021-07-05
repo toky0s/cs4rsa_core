@@ -10,8 +10,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#FFFAFAFA"
         Title="CS4RSA"
-        Height="600"
-        Width="1300">
+        Height="700"
+        Width="1400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>

@@ -49,8 +49,8 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<IConflictModel> conflictModels = new ObservableCollection<IConflictModel>();
-        public ObservableCollection<IConflictModel> ConflictModels
+        private ObservableCollection<ConflictModel> conflictModels = new ObservableCollection<ConflictModel>();
+        public ObservableCollection<ConflictModel> ConflictModels
         {
             get
             {
@@ -59,6 +59,19 @@ namespace cs4rsa.ViewModels
             set
             {
                 conflictModels = value;
+            }
+        }
+
+        private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+        public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels
+        {
+            get
+            {
+                return _placeConflictFinderModels;
+            }
+            set
+            {
+                _placeConflictFinderModels = value;
             }
         }
 
@@ -106,6 +119,7 @@ namespace cs4rsa.ViewModels
                     classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
             SaveCommand.RaiseCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
@@ -137,13 +151,14 @@ namespace cs4rsa.ViewModels
                 }
             }
             UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
             SaveCommand.RaiseCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
         }
 
         /// <summary>
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
-        /// trong Collection để phát hiện các Conflict.
+        /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
         private void UpdateConflictModelCollection()
         {
@@ -156,19 +171,31 @@ namespace cs4rsa.ViewModels
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
-                        IConflictModel conflictModel = new ConflictModel(conflict);
+                        ConflictModel conflictModel = new ConflictModel(conflict);
                         conflictModels.Add(conflictModel);
-                    }
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(classGroupModels[i], classGroupModels[k]);
-                    ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
-                    {
-                        IConflictModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
-                        conflictModels.Add(placeConflictModel);
                     }
                 }
             }
             MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
+        }
+
+        private void UpdatePlaceConflictCollection()
+        {
+            _placeConflictFinderModels.Clear();
+            for (int i = 0; i < classGroupModels.Count; ++i)
+            {
+                for (int k = i + 1; k < classGroupModels.Count; ++k)
+                {
+                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(classGroupModels[i], classGroupModels[k]);
+                    ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
+                    if (conflictPlace != null)
+                    {
+                        PlaceConflictFinderModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
+                        _placeConflictFinderModels.Add(placeConflictModel);
+                    }
+                }
+            }
+            //MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
         }
     }
 }
