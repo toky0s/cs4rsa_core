@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace cs4rsa.Helpers
 {
@@ -17,6 +18,9 @@ namespace cs4rsa.Helpers
                 text.Equals("(Không có môn tiên quyết)"))
                 return null;
             //  CS 211 - Lập Trình Cơ Sở, IS 301 - Cơ Sở Dữ Liệu
+            // CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng
+            Regex regex = new Regex("\\((.*?)\\)");
+            text = regex.Replace(text, "");
             if (text.Contains(","))
             {
                 List<string> results = new List<string>();

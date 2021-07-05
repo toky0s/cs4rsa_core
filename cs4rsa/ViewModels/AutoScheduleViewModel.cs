@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using cs4rsa.BaseClasses;
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
@@ -81,7 +82,7 @@ namespace cs4rsa.ViewModels
             List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
             foreach(ProgramSubject subject in programSubjects)
             {
-                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject);
+                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
                 _programSubjectModels.Add(proSubjectModel);
             }
             Analyze();

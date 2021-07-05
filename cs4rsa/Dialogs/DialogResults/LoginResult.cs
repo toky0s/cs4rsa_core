@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Dialogs.DialogResults
 {
-    class LoginResult
+    public class LoginResult
     {
         public StudentModel StudentModel { get; set; }
     }
