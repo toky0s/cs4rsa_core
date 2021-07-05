@@ -258,6 +258,12 @@ namespace cs4rsa.Database
             return false;
         }
 
+
+        /// <summary>
+        /// Kiểm tra trong bảng program_subject có tồn tại một Program Subject hay không.
+        /// </summary>
+        /// <param name="subjectCode"></param>
+        /// <returns></returns>
         public static bool IsExistsProgramSubject(string subjectCode)
         {
             string sql = $@"select count(*) from program_subject where subject_code = '{subjectCode}'";
@@ -297,6 +303,17 @@ namespace cs4rsa.Database
             string sql = $@"select count(*) from curriculum where curid = '{curId}'";
             long result = _cs4RsaDatabase.GetScalar<long>(sql);
             return result == 1;
+        }
+
+        public static bool IsExistsSubjectInThisSemester(ProgramSubject programSubject)
+        {
+            string[] subjectCodeSlices = programSubject.SubjectCode.Split(new char[] { ' ' });
+            string discipline = subjectCodeSlices[0];
+            string keyword1 = subjectCodeSlices[1];
+            string sql = $@"select count(*) from discipline, keyword
+                            where discipline.id = keyword.discipline_id and 
+                            discipline.name = '{discipline}' and keyword.keyword1 = '{keyword1}'";
+            return _cs4RsaDatabase.GetScalar<long>(sql) == 1;
         }
     }
 }

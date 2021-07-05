@@ -34,10 +34,40 @@ namespace cs4rsa.BasicData
         private StudyState _studyState;
         private string _courseId;
 
-        public string Id => _id;
+        public string Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
         public string ChildOfNode => _childOfNode;
-        public string SubjectCode => _subjectCode;
-        public string SubjectName => _subjectName;
+        public string SubjectCode
+        {
+            get
+            {
+                return _subjectCode;
+            }
+            set
+            {
+                _subjectCode = value;
+            }
+        }
+        public string SubjectName
+        {
+            get
+            {
+                return _subjectName;
+            }
+            set
+            {
+                _subjectName = value;
+            }
+        }
         public string StudyUnit => _studyUnit;
         public StudyUnitType StudyUnitType => _studyUnitType;
         public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
@@ -69,8 +99,12 @@ namespace cs4rsa.BasicData
         {
             return _id;
         }
-
-        public bool IsCompleted()
+        
+        /// <summary>
+        /// Kiểm tra xem môn học này đã học qua hay chưa.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDone()
         {
             if (_studyState == StudyState.Completed)
                 return true;

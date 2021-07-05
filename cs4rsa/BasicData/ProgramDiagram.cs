@@ -9,28 +9,75 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class ProgramDiagram
     {
-        private ProgramFolder _outlineRoot;
-        private ProgramFolder _physicalEducationRoot;
-        private ProgramFolder _industryOutlineRoot;
-        private ProgramFolder _specializedRoot;
+        private List<ProgramFolder> _programFolders = new List<ProgramFolder>();
 
         public ProgramDiagram(ProgramFolder outlineRoot, ProgramFolder physicalEducationRoot,
                               ProgramFolder industryOutlineRoot, ProgramFolder specializedRoot)
         {
-            _outlineRoot = outlineRoot;
-            _physicalEducationRoot = physicalEducationRoot;
-            _industryOutlineRoot = industryOutlineRoot;
-            _specializedRoot = specializedRoot;
+            _programFolders.Add(outlineRoot);
+            _programFolders.Add(physicalEducationRoot);
+            _programFolders.Add(industryOutlineRoot);
+            _programFolders.Add(specializedRoot);
         }
 
         public List<ProgramSubject> GetAllProSubject()
         {
             List<ProgramSubject> programSubjects = new List<ProgramSubject>();
-            programSubjects.AddRange(_outlineRoot.GetProgramSubjects());
-            programSubjects.AddRange(_physicalEducationRoot.GetProgramSubjects());
-            programSubjects.AddRange(_industryOutlineRoot.GetProgramSubjects());
-            programSubjects.AddRange(_specializedRoot.GetProgramSubjects());
+            foreach (ProgramFolder folder in _programFolders)
+            {
+                programSubjects.AddRange(folder.GetProgramSubjects());
+            }
             return programSubjects;
+        }
+
+        /// <summary>
+        /// Trả về tên Folder chứa của một ProgramSubject.
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        public string GetFolderName(ProgramSubject subject)
+        {
+            string name;
+            foreach (ProgramFolder folder in _programFolders)
+            {
+                name = folder.GetNameOfFolderContainsThisSubject(subject);
+                if (name != null)
+                    return name;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Lấy ra một folder trong cây folder này dựa theo tên.
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <returns></returns>
+        public ProgramFolder GetFolder(string folderName)
+        {
+            foreach (ProgramFolder folder in _programFolders)
+            {
+                ProgramFolder result = folder.FindProgramFolder(folderName);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Lấy ra một Program Subject có trong diagram này.
+        /// </summary>
+        /// <param name="subjectCode"></param>
+        /// <returns></returns>
+        public ProgramSubject GetProgramSubject(string subjectCode)
+        {
+            foreach (ProgramFolder folder in _programFolders)
+            {
+                ProgramSubject result = folder.GetProgramSubject(subjectCode);
+                if (result != null)
+                    return result;
+            }
+            return null;
         }
     }
 }

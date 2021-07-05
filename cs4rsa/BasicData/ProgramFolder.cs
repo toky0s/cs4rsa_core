@@ -1,6 +1,6 @@
 ﻿using cs4rsa.Interfaces;
-using System.Collections.Generic;
 using HtmlAgilityPack;
+using System.Collections.Generic;
 
 namespace cs4rsa.BasicData
 {
@@ -65,6 +65,10 @@ namespace cs4rsa.BasicData
             return false;
         }
 
+        /// <summary>
+        /// Kiểm tra xem folder này đã completed hay chưa.
+        /// </summary>
+        /// <returns></returns>
         public bool IsCompleted()
         {
             bool flag = true;
@@ -81,7 +85,7 @@ namespace cs4rsa.BasicData
                 if (item is ProgramSubject)
                 {
                     ProgramSubject subject = item as ProgramSubject;
-                    flag = flag && subject.IsCompleted();
+                    flag = flag && subject.IsDone();
                 }
                 else
                 {
@@ -92,6 +96,47 @@ namespace cs4rsa.BasicData
             return flag;
         }
 
+
+        /// <summary>
+        /// Kiểm tra xem một Program Subject có nằm trong folder này hay không.
+        /// (Phương thức này thực hiện đệ quy sâu vào tất cả các program folder con bên trong)
+        /// </summary>
+        /// <param name="proSubjectCode"></param>
+        /// <returns></returns>
+        public bool Contains(string proSubjectCode)
+        {
+            List<ProgramSubject> programSubjects = GetProgramSubjects();
+            foreach (ProgramSubject item in programSubjects)
+            {
+                if (item.SubjectCode == proSubjectCode)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Trả về tên của folder chứa Program Subject.
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        public string GetNameOfFolderContainsThisSubject(ProgramSubject subject)
+        {
+            string parrentId = subject.ChildOfNode;
+            if (Id == parrentId)
+                return _name;
+            else
+            {
+                string name;
+                foreach (ProgramFolder folder in ChildProgramFolders)
+                {
+                    name = folder.GetNameOfFolderContainsThisSubject(subject);
+                    if (name != null)
+                        return name;
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// Trả về tất cả các ProSubject có trong folder này
         /// bằng cách gọi đệ quy đi sâu vào trong từ folder.
@@ -100,7 +145,7 @@ namespace cs4rsa.BasicData
         public List<ProgramSubject> GetProgramSubjects()
         {
             List<ProgramSubject> programSubjects = new List<ProgramSubject>();
-            foreach(ProgramFolder folder in _childProgramFolders)
+            foreach (ProgramFolder folder in _childProgramFolders)
             {
                 if (folder._childProgramSubjects.Count > 0)
                 {
@@ -120,7 +165,7 @@ namespace cs4rsa.BasicData
         {
             foreach (ProgramSubject item in subjects)
             {
-                if (item.IsCompleted())
+                if (item.IsDone())
                     mustLearn--;
             }
             if (mustLearn == 0) return true;
@@ -149,6 +194,54 @@ namespace cs4rsa.BasicData
             nodes.AddRange(_childProgramFolders);
             nodes.AddRange(_childProgramSubjects);
             return nodes;
+        }
+
+
+        /// <summary>
+        /// Lấy ra một Program Subject dựa theo subject code.
+        /// </summary>
+        /// <param name="subjectCode"></param>
+        /// <returns></returns>
+        public ProgramSubject GetProgramSubject(string subjectCode)
+        {
+            foreach(ProgramSubject subject in _childProgramSubjects)
+            {
+                if (subject.SubjectCode.Equals(subjectCode))
+                {
+                    return subject;
+                }
+            }
+            foreach(ProgramFolder folder in _childProgramFolders)
+            {
+                ProgramSubject result = folder.GetProgramSubject(subjectCode);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Tìm kiếm một folder dựa theo name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public ProgramFolder FindProgramFolder(string name)
+        {
+            if (_name.Equals(name))
+                return this;
+            else
+            {
+                foreach (ProgramFolder folder in _childProgramFolders)
+                {
+                    if (folder.FindProgramFolder(name) != null)
+                    {
+                        return folder;
+                    }
+                }
+                return null;
+            }
         }
 
         /// <summary>

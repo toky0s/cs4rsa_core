@@ -236,6 +236,11 @@ namespace cs4rsa.BasicData
         {
             List<PlaceMap> placeMaps = new List<PlaceMap>() { placeMap1, placeMap2 };
             placeMaps.Sort();
+            // Loại trừ xung đột thời gian
+            if (placeMaps[0].StudyTime.End >= placeMaps[1].StudyTime.Start)
+            {
+                return null;
+            }
             if (placeMaps[1].StudyTime.Start - placeMaps[0].StudyTime.End <= timeDelta)
             {
                 DateTime Start = placeMaps[0].StudyTime.End;
