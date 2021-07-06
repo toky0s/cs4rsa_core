@@ -34,6 +34,8 @@ namespace cs4rsa.BasicData
         public StudyWeek StudyWeek => studyWeek;
         public Teacher Teacher => teacher;
         public List<Place> Places => places;
+        public string RegistrationStatus => registrationStatus;
+        public string ImplementationStatus => implementationStatus;
         public DayPlaceMetaData DayPlaceMetaData => dayPlaceMetaData;
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 

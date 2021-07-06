@@ -1,4 +1,6 @@
-﻿using System;
+﻿using cs4rsa.Enums;
+using cs4rsa.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -172,6 +174,16 @@ namespace cs4rsa.BasicData
         public MetaDataMap GetMetaDataMap()
         {
             return new MetaDataMap(GetSchedule(), GetDayPlaceMetaData());
+        }
+
+        public ImplementType GetImplementType()
+        {
+            return BasicDataConverter.ToImplementType(schoolClasses[0].ImplementationStatus);
+        }
+
+        public RegistrationType GetRegistrationType()
+        {
+            return BasicDataConverter.ToRegistrationType(schoolClasses[0].RegistrationStatus);
         }
     }
 }
