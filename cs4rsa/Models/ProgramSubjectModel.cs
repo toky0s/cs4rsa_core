@@ -59,9 +59,23 @@ namespace cs4rsa.Models
             }
         }
 
+        private string _color;
+        public string Color
+        {
+            get
+            {
+                return _color;
+            }
+            set
+            {
+                _color = value;
+            }
+        }
+
         public bool IsDone => _programSubject.IsDone();
         public bool IsFolderCompleted => FolderContainThisSubjectIsCompleted();
         public bool IsCanChoice => CanChoice();
+        public string CourseId => _programSubject.CourseId;
 
         public ProgramSubjectModel(ProgramSubject programSubject, ref ProgramDiagram diagram)
         {
@@ -71,6 +85,7 @@ namespace cs4rsa.Models
             _subjectCode = programSubject.SubjectCode;
             _subjectName = programSubject.SubjectName;
             _folderName = _diagram.GetFolderName(_programSubject);
+            _color = ColorGenerator.GetColor(programSubject.CourseId);
         }
 
         /// <summary>

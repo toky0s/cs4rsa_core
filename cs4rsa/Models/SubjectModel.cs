@@ -42,13 +42,27 @@ namespace cs4rsa.Models
 
         public string SubjectName => subject.Name;
         public string SubjectCode => subject.SubjectCode;
-        public int StudyUnit => subject.StudyUnit;
+
+        private int _studyUnit;
+        public int StudyUnit
+        {
+            get
+            {
+                return _studyUnit;
+            }
+            set
+            {
+                _studyUnit = value;
+            }
+        }
+
         public string CourseId => subject.CourseId;
         public string Color { get; set; }
 
         public SubjectModel(Subject subject)
         {
             this.subject = subject;
+            _studyUnit = subject.StudyUnit;
         }
 
         /// <summary>
