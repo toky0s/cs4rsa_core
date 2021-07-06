@@ -55,11 +55,55 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private ProgramSubjectModel _selectedProSubject;
+        public ProgramSubjectModel SelectedProSubject
+        {
+            get
+            {
+                return _selectedProSubject;
+            }
+            set
+            {
+                _selectedProSubject = value;
+            }
+        }
+
+        private ObservableCollection<ProgramSubjectModel> _choicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
+        public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels
+        {
+            get
+            {
+                return _choicedProSubjectModels;
+            }
+            set
+            {
+                _choicedProSubjectModels = value;
+            }
+        }
+
         private ProgramDiagram _programDiagram;
+        public RelayCommand AddCommand { get; set; }
+        public RelayCommand SortCommand { get; set; }
+
         public AutoScheduleViewModel(StudentModel studentModel)
         {
+            AddCommand = new RelayCommand(OnAddSubject, () => true);
+            SortCommand = new RelayCommand(OnSort, () => true);
             _studentModel = studentModel;
             GetProgramDiagram(studentModel.StudentInfo.SpecialString);
+        }
+
+        private void OnSort(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnAddSubject(object obj)
+        {
+            if (_selectedProSubject != null)
+            {
+                _choicedProSubjectModels.Add(_selectedProSubject);
+            }
         }
 
         private void GetProgramDiagram(string specialString)

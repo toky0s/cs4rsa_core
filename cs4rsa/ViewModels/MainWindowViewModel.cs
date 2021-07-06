@@ -142,7 +142,9 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenSetting(object obj)
         {
-            MessageBox.Show("Mở setting");
+            SettingWindow settingWindow = new SettingWindow();
+            SettingViewModel settingViewModel = new SettingViewModel();
+            DialogService<SettingResult>.OpenDialog(settingViewModel, settingWindow, obj as Window);
         }
 
         public void Handle(ChoicesChangedMessage message)
