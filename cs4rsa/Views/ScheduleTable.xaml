@@ -59,7 +59,7 @@
                   GridLinesVisibility="None"
                   FontSize="10">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}, UpdateSourceTrigger=PropertyChanged}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>
                 <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
                 <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
                 <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*" CanUserSort="False" CanUserReorder="False"/>

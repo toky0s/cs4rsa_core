@@ -70,6 +70,10 @@ namespace cs4rsa.Views
             {
                 return !subject.IsFolderCompleted;
             }
+            if (RadioButtonAvailableSubject.IsChecked.Value == true)
+            {
+                return subject.IsAvaiableInThisSemester();
+            }
             return true;
         }
 

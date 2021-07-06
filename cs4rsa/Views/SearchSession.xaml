@@ -53,6 +53,7 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Height="30"
                 Margin="0, 5, 0, 0"
                 x:Name="DisciplineKeywordButton"
                 Command="{Binding AddCommand}"
@@ -94,8 +95,16 @@
                         <StackPanel Grid.Row="0"
                                     Grid.Column="1"
                                     Orientation="Vertical">
-                            <TextBlock Grid.Row="0" Text="{Binding SubjectCode}" Margin="5,0,0,0"></TextBlock>
-                            <TextBlock Grid.Row="1" Text="{Binding SubjectName}" Margin="5,0,0,0"></TextBlock>
+                            <TextBlock Text="{Binding SubjectName}" 
+                                       Margin="5,0,0,0"
+                                       FontSize="16"></TextBlock>
+                            <TextBlock Text="{Binding SubjectCode}" Margin="5,0,0,0"></TextBlock>
+                            <TextBlock Margin="5,0,0,0"
+                                       FontSize="10">
+                                <Run Text="Số tín chỉ: "></Run>
+                                <Run Text="{Binding StudyUnit}"></Run>
+                                <Run Text=" tín chỉ"></Run>
+                            </TextBlock>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
@@ -116,11 +125,13 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                     Content="Xoá"
+                    Height="30"
                     Command="{Binding DeleteCommand}"
                     Margin="0, 0, 2.5, 0">
             </Button>
             <Button Grid.Column="1" 
                     Content="Nhập..."
+                    Height="30"
                     Margin="2.5, 0, 0, 0"
                     Command="{Binding ImportDialogCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>

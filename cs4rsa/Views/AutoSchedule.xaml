@@ -63,6 +63,7 @@
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Danh sách các môn của bạn"
                            Style="{StaticResource Header2}"
@@ -71,104 +72,132 @@
                 <ListView Grid.Row="1"
                           x:Name="ListViewSubjects"
                           Style="{StaticResource Cs4rsaListView}"
-                          ItemsSource="{Binding ProgramSubjectModels}">
+                          ItemsSource="{Binding ProgramSubjectModels}"
+                          SelectedItem="{Binding SelectedProSubject}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical"
-                                            Grid.Column="0">
-                                <TextBlock Text="{Binding SubjectName}"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Height="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem, Mode=FindAncestor, AncestorLevel=1}}"
+                                           Fill="{Binding Color}"
+                                           Width="20">
+                                </Rectangle>
+                                <StackPanel Orientation="Vertical"
+                                            Grid.Column="1">
+                                    <TextBlock Text="{Binding SubjectName}"
                                            Margin="5,0,0,0"
                                            FontSize="16"></TextBlock>
-                                <TextBlock 
+                                    <TextBlock 
                                            Margin="5,0,0,5">
                                     <Run Text="{Binding SubjectCode}"></Run>
                                     <Run Text=" - "></Run>
                                     <Run Text="{Binding FolderName}"></Run>
-                                </TextBlock>
-                                <TextBlock FontSize="10"
+                                    </TextBlock>
+                                    <TextBlock FontSize="10"
                                            Margin="5,0,0,0">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Text" Value="Folder chứa môn này chưa hoàn thành"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsFolderCompleted}" Value="True">
-                                                    <Setter Property="Text" Value="Folder chứa môn này đã hoàn thành"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                                <StackPanel Orientation="Horizontal">
-
-                                    <Ellipse Height="10" 
-                                             Width="10"
-                                             Margin="5,0,0,5"
-                                             HorizontalAlignment="Left">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#f12711"></Setter>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsDone}" Value="True">
-                                                        <Setter Property="Fill" Value="#45a247"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-
-                                    <TextBlock Margin="5,0,0,0"
-                                               FontSize="10">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="Chưa học qua"></Setter>
+                                                <Setter Property="Text" Value="Folder chứa môn này chưa hoàn thành"></Setter>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsDone}" Value="True">
-                                                        <Setter Property="Text" Value="Đã học qua"/>
+                                                    <DataTrigger Binding="{Binding IsFolderCompleted}" Value="True">
+                                                        <Setter Property="Text" Value="Folder chứa môn này đã hoàn thành"></Setter>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Height="10" 
+                                    <StackPanel Orientation="Horizontal">
+
+                                        <Ellipse Height="10" 
                                              Width="10"
                                              Margin="5,0,0,5"
                                              HorizontalAlignment="Left">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="#f5af19"></Setter>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
-                                                        <Setter Property="Fill" Value="#80D0C7"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                    <TextBlock Margin="5,0,0,0"
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="#f12711"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDone}" Value="True">
+                                                            <Setter Property="Fill" Value="#45a247"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+
+                                        <TextBlock Margin="5,0,0,0"
                                                FontSize="10">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="Không thể chọn"></Setter>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
-                                                        <Setter Property="Text" Value="Có thể chọn"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="Chưa học qua"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDone}" Value="True">
+                                                            <Setter Property="Text" Value="Đã học qua"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Height="10" 
+                                             Width="10"
+                                             Margin="5,0,0,5"
+                                             HorizontalAlignment="Left">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="#f5af19"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
+                                                            <Setter Property="Fill" Value="#80D0C7"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <TextBlock Margin="5,0,0,0"
+                                               FontSize="10">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="Không thể chọn"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
+                                                            <Setter Property="Text" Value="Có thể chọn"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                            </Grid>
+
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <TextBox Grid.Row="2"
-                         Margin="0,5,0,0"
+                         Margin="0,5,0,5"
                          Height="20"
                          TextChanged="TextBox_TextChanged"
                          x:Name="TextBoxSubjectName"></TextBox>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Height="30"
+                        Content="Thêm"
+                        Grid.Column="0"
+                        Command="{Binding AddCommand}"
+                        Margin="0,0,5,0"></Button>
+                    <Button Height="30"
+                        Content="Thêm nhanh"
+                         Grid.Column="1"
+                        Command="{Binding AddCommand}"></Button>
+                </Grid>
+
             </Grid>
             <Grid Grid.Column="1"
                   Margin="0,5,5,5">
@@ -180,15 +209,26 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Các môn bạn đã chọn"
                                    Style="{StaticResource Header2}"
                                    Grid.Row="0">
                     </TextBlock>
                     <ListView Grid.Row="1"
-                              Style="{StaticResource Cs4rsaListView}">
-
+                              Margin="0,0,0,5"
+                              Style="{StaticResource Cs4rsaListView}"
+                              ItemsSource="{Binding ChoicedProSubjectModels}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SubjectName}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                     </ListView>
+                    <Button Content="Sắp xếp"
+                            Grid.Row="2"
+                            Height="30"
+                            Command="{Binding SortCommand}"></Button>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -222,6 +262,9 @@
                                 <RadioButton Content="Các môn đã học qua"
                                              Click="ReloadSubjects"
                                              x:Name="RadioButtonDoneSubject"></RadioButton>
+                                <RadioButton Content="Các môn có sẵn trong kỳ này"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonAvailableSubject"></RadioButton>
                                 <RadioButton Content="Các môn thuộc thư mục chưa hoàn thành"
                                              Click="ReloadSubjects"
                                              x:Name="RadioButtonUnCompletedFolder"></RadioButton>
@@ -229,6 +272,8 @@
                         </GroupBox>
                         <GroupBox Header="Sắp xếp">
                             <StackPanel>
+                                <RadioButton Content="Để y đó"
+                                             IsChecked="True"></RadioButton>
                                 <RadioButton Content="Theo tên"></RadioButton>
                                 <RadioButton Content="Theo mã môn"></RadioButton>
                                 <RadioButton Content="Theo thư mục chứa"></RadioButton>
