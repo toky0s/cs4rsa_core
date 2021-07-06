@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
         Title="Xuất với ShareString"
-        Height="150" 
+        Height="155" 
         Width="400"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
@@ -21,6 +21,8 @@
                  Background="#f5f5f5"></TextBox>
         <Button Content="Sao chép"
                 Command="{Binding CopyCommand}"
-                Margin="5,0,5,5"></Button>
+                Height="30"
+                Margin="5,0,5,5">
+        </Button>
     </StackPanel>
 </Window>
