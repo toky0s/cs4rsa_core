@@ -65,6 +65,22 @@ namespace cs4rsa.Helpers
             }
         }
 
+        public static RegistrationType ToRegistrationType(string text)
+        {
+            if (text.Equals("Còn Hạn Đăng Ký"))
+                return RegistrationType.Valid;
+            return RegistrationType.Expired;
+        }
+
+        public static ImplementType ToImplementType(string text)
+        {
+            if (text.Equals("Lớp Học Đã Bị Hủy"))
+                return ImplementType.Canceled;
+            if (text.Equals("Lớp Học Đã Bắt Đầu"))
+                return ImplementType.Started;
+            return ImplementType.Unstart;
+        }
+
         public static string ToDayOfWeekText(DayOfWeek day)
         {
             if (day == DayOfWeek.Sunday)

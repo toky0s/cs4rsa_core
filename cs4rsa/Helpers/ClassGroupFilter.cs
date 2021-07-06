@@ -100,6 +100,5 @@ namespace cs4rsa.Helpers
         {
             return baseClassGroups;
         }
-
     }
 }

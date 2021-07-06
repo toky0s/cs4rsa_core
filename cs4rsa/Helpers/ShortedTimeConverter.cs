@@ -25,7 +25,7 @@ namespace cs4rsa.Helpers
             {
                 return false;
             }
-            return this.RawTime == shortedTime.RawTime;
+            return RawTime == shortedTime.RawTime;
         }
 
         public override int GetHashCode()
@@ -44,12 +44,17 @@ namespace cs4rsa.Helpers
         }
     }
 
+
+    /// <summary>
+    /// Impelement Singleton.
+    /// </summary>
     public class ShortedTimeConverter
     {
+        private static ShortedTimeConverter _instance = new ShortedTimeConverter();
         private readonly DateTime now = DateTime.Now;
         private readonly Dictionary<DateTime, DateTime> DuyTanStudyTimes = new Dictionary<DateTime, DateTime>();
 
-        public ShortedTimeConverter()
+        private ShortedTimeConverter()
         {
             AddDuyTanTime(7, 15, 7, 0);
             AddDuyTanTime(9, 15, 9, 0);
@@ -59,6 +64,11 @@ namespace cs4rsa.Helpers
             AddDuyTanTime(16, 15, 16, 0);
             AddDuyTanTime(17, 15, 17, 0);
             AddDuyTanTime(17, 45, 18, 0);
+        }
+
+        public static ShortedTimeConverter GetInstance()
+        {
+            return _instance;
         }
 
         public ShortedTime Convert(DateTime time)
