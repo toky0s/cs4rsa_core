@@ -201,15 +201,20 @@
     <Compile Include="Database\Cs4rsaDataView.cs" />
     <Compile Include="Database\Cs4rsaDatabase.cs" />
     <Compile Include="Database\TeacherDatabase.cs" />
+    <Compile Include="Dialogs\DialogResults\AutoSortResult.cs" />
     <Compile Include="Dialogs\DialogResults\ImportResult.cs" />
     <Compile Include="Dialogs\DialogResults\LoginResult.cs" />
     <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
     <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
+    <Compile Include="Dialogs\DialogResults\SettingResult.cs" />
     <Compile Include="Dialogs\DialogResults\ShareStringResult.cs" />
     <Compile Include="Dialogs\DialogResults\StudentResult.cs" />
     <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
     <Compile Include="Dialogs\DialogService\DialogService.cs" />
     <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
+    <Compile Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml.cs">
+      <DependentUpon>AutoSortDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -229,6 +234,7 @@
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
+    <Compile Include="Dialogs\Implements\AutoSortViewModel.cs" />
     <Compile Include="Dialogs\Implements\LoginViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
@@ -239,11 +245,15 @@
       <DependentUpon>SessionManagerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Implements\SessionInputViewModel.cs" />
+    <Compile Include="Dialogs\Implements\SettingViewModel.cs" />
     <Compile Include="Dialogs\Implements\ShareStringViewModel.cs" />
     <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Enums\GetFrom.cs" />
+    <Compile Include="Enums\ImplementType.cs" />
+    <Compile Include="Enums\RegistrationType.cs" />
+    <Compile Include="Helpers\TimeConverter.cs" />
     <Compile Include="Implements\CurriculumGetter.cs" />
     <Compile Include="Implements\CurriculumSaver.cs" />
     <Compile Include="Implements\ProgramDiagramSaver.cs" />
@@ -326,6 +336,10 @@
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\StudentModel.cs" />
+    <Page Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
