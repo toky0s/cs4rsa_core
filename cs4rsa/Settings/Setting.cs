@@ -9,9 +9,9 @@ namespace cs4rsa.Settings
     /// <summary>
     /// Đây là các setting cho Cs4rsa.
     /// </summary>
-    public static class Setting
+    public enum Setting
     {
-        public const string IsShowPlaceColor = "IsShowPlaceColor";
-        public const string IsDynamicSchedule = "IsDynamicSchedule";
+        IsShowPlaceColor,
+        IsDynamicSchedule
     }
 }

@@ -11,7 +11,7 @@ namespace cs4rsa.Settings
     /// </summary>
     public class SettingInit
     {
-        private static Dictionary<string, string> _settingDict = new Dictionary<string, string>()
+        private static Dictionary<Setting, string> _settingDict = new Dictionary<Setting, string>()
         {
             {Setting.IsDynamicSchedule, "1"},
             {Setting.IsShowPlaceColor, "0" }
@@ -19,7 +19,7 @@ namespace cs4rsa.Settings
         
         public SettingInit()
         {
-            foreach (KeyValuePair<string,string> item in _settingDict)
+            foreach (KeyValuePair<Setting, string> item in _settingDict)
             {
                 AddSetting(item.Key, item.Value);
             }
@@ -32,7 +32,7 @@ namespace cs4rsa.Settings
         /// <param name="key">Tên Setting từ lớp Setting.</param>
         /// <param name="value">Giá trị của setting.</param>
         /// <returns></returns>
-        private static bool AddSetting(string key, string value)
+        private static bool AddSetting(Setting key, string value)
         {
             if (SettingReader.IsExistsSetting(key))
                 return false;

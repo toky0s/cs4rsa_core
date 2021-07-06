@@ -15,17 +15,17 @@ namespace cs4rsa.Settings
     /// </summary>
     public class SettingReader
     {
-        public static string GetSetting(string setting)
+        public static string GetSetting(Setting setting)
         {
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
             string sql = $@"select value from user_settings where key='{setting}'";
             return cs4RsaDatabase.GetScalar<string>(sql);
         }
 
-        public static bool IsExistsSetting(string key)
+        public static bool IsExistsSetting(Setting setting)
         {
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            string sql = $"select count(*) from user_settings where key = '{key}'";
+            string sql = $"select count(*) from user_settings where key = '{setting}'";
             long result = cs4RsaDatabase.GetScalar<long>(sql);
             if (result > 0)
                 return true;
