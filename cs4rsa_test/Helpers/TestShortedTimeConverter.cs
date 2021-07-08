@@ -17,7 +17,7 @@ namespace cs4rsa_test.Helpers
             DateTime now = DateTime.Now;
             DateTime time1 = new DateTime(now.Year, now.Month, now.Day, 7, 15, 0);
             DateTime converted = new DateTime(now.Year, now.Month, now.Day, 7, 0, 0);
-            ShortedTimeConverter shortedTimeCv = new ShortedTimeConverter();
+            ShortedTimeConverter shortedTimeCv = ShortedTimeConverter.GetInstance();
             ShortedTime shortedTime = shortedTimeCv.Convert(time1);
             Assert.AreEqual(converted, shortedTime.NewTime);
         }
