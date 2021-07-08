@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
-        Title="AutoSortDialogWindow" Height="150" Width="450">
+        Title="AutoSortDialogWindow" 
+        Height="150" 
+        Width="450"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock TextWrapping="Wrap"
                    Margin="5"
@@ -18,6 +22,26 @@
         <ProgressBar Height="30"
                      Maximum="100"
                      Margin="5,0,5,5"
-                     Grid.Row="1"></ProgressBar>
+                     Grid.Row="1"
+                     x:Name="ProgressBar"
+                     Value="{Binding ProgressValue}"></ProgressBar>
+        <Button Grid.Row="2"
+                Content="Hoàn tất"
+                Width="100"
+                Height="30"
+                Command="{Binding CompletedCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}"
+                                     Value="100">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>

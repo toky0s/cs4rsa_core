@@ -9,23 +9,23 @@ namespace cs4rsa.Dialogs.DialogResults
 {
     public class AutoSortResult
     {
-        private List<ClassGroupModel> _classGroupModels;
-        public List<ClassGroupModel> ClassGroupModels
+        private List<List<ClassGroupModel>> _classGroupModelCombinations;
+        public List<List<ClassGroupModel>> ClassGroupModelCombinations
         {
             get
             {
-                return _classGroupModels;
+                return _classGroupModelCombinations;
             }
             set
             {
-                _classGroupModels = value;
+                _classGroupModelCombinations = value;
 
             }
         }
 
-        public AutoSortResult(List<ClassGroupModel> classGroupModels)
+        public AutoSortResult(List<List<ClassGroupModel>> classGroupModelCombination)
         {
-            _classGroupModels = classGroupModels;
+            _classGroupModelCombinations = classGroupModelCombination;
         }
     }
 }
