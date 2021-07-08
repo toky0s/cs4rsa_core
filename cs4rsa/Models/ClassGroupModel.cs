@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using cs4rsa.BasicData;
+﻿using cs4rsa.BasicData;
 using cs4rsa.Enums;
-using cs4rsa.Models;
+using System.Collections.Generic;
 
 namespace cs4rsa.Models
 {
@@ -21,6 +20,7 @@ namespace cs4rsa.Models
                 _emptySeat = value;
             }
         }
+
         public string Name => classGroup.Name;
         public string SubjectCode => classGroup.SubjectCode;
         public string RegisterCode => classGroup.GetRegisterCode();
@@ -43,6 +43,26 @@ namespace cs4rsa.Models
             foreach (Teacher teacher in classGroup.GetTeachers())
                 teacherModels.Add(new TeacherModel(teacher));
             return teacherModels;
+        }
+
+        public override bool Equals(object obj)
+        {
+            ClassGroupModel other = obj as ClassGroupModel;
+            if (other != null)
+            {
+                return Name.Equals(other.Name);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return classGroup.Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

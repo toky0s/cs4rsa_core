@@ -260,6 +260,7 @@
     <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
     <Compile Include="Messages\DeleteClassGroupChoiceMessage.cs" />
     <Compile Include="Messages\PlaceConflictCollectionChangeMessage.cs" />
+    <Compile Include="Models\CombinationModel.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />

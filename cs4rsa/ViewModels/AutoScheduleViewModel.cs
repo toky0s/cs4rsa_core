@@ -1,19 +1,20 @@
-﻿using System;
+﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
+using cs4rsa.Crawler;
+using cs4rsa.Dialogs.DialogResults;
+using cs4rsa.Dialogs.DialogService;
+using cs4rsa.Dialogs.DialogViews;
+using cs4rsa.Dialogs.Implements;
+using cs4rsa.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using cs4rsa.BaseClasses;
-using cs4rsa.BasicData;
-using cs4rsa.Crawler;
-using cs4rsa.Models;
+using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
-    class AutoScheduleViewModel: NotifyPropertyChangedBase
+    class AutoScheduleViewModel : NotifyPropertyChangedBase
     {
         private StudentModel _studentModel;
         public StudentModel StudentModel
@@ -81,6 +82,33 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private ObservableCollection<CombinationModel> _combinationModels = new ObservableCollection<CombinationModel>();
+        public ObservableCollection<CombinationModel> CombinationModels
+        {
+            get
+            {
+                return _combinationModels;
+            }
+            set
+            {
+                _combinationModels = value;
+            }
+        }
+
+        private int _combinationCount = 0;
+        public int CombinationCount
+        {
+            get
+            {
+                return _combinationCount;
+            }
+            set
+            {
+                _combinationCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ProgramDiagram _programDiagram;
         public RelayCommand AddCommand { get; set; }
         public RelayCommand SortCommand { get; set; }
@@ -95,7 +123,23 @@ namespace cs4rsa.ViewModels
 
         private void OnSort(object obj)
         {
-            throw new NotImplementedException();
+            AutoSortDialogWindow autoSortDialogWindow = new AutoSortDialogWindow();
+            AutoSortViewModel autoSortViewModel = new AutoSortViewModel(_choicedProSubjectModels.ToList());
+            AutoSortResult result = DialogService<AutoSortResult>.OpenDialog(autoSortViewModel, autoSortDialogWindow, obj as Window);
+            List<CombinationModel> combinationModels = result.ClassGroupModelCombinations
+                .Select(item => new CombinationModel(item))
+                .ToList();
+            foreach (CombinationModel combination in combinationModels)
+            {
+                if (combination.IsValid() && !combination.IsHaveTimeConflicts())
+                    _combinationModels.Add(combination);
+            }
+            UpdateCombinationCount();
+        }
+
+        private void UpdateCombinationCount()
+        {
+            CombinationCount = _combinationModels.Count;
         }
 
         private void OnAddSubject(object obj)
@@ -124,7 +168,7 @@ namespace cs4rsa.ViewModels
             ProgressValue = 0;
             _programDiagram = e.Result as ProgramDiagram;
             List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
-            foreach(ProgramSubject subject in programSubjects)
+            foreach (ProgramSubject subject in programSubjects)
             {
                 ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
                 _programSubjectModels.Add(proSubjectModel);
@@ -137,7 +181,7 @@ namespace cs4rsa.ViewModels
         /// </summary>
         private void Analyze()
         {
-            
+
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

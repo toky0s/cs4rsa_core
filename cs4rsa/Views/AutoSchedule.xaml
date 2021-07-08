@@ -52,8 +52,7 @@
         <Grid Grid.Row="1"
               Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                <ColumnDefinition Width="1.7*"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -228,7 +227,8 @@
                     <Button Content="Sắp xếp"
                             Grid.Row="2"
                             Height="30"
-                            Command="{Binding SortCommand}"></Button>
+                            Command="{Binding SortCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -290,10 +290,38 @@
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Tất cả các cách sắp xếp"
-                           Style="{StaticResource Header2}"></TextBlock>
+                <TextBlock Style="{StaticResource Header2}">
+                    <Run Text="Các cách sắp xếp ("></Run>
+                    <Run Text="{Binding CombinationCount}"></Run>
+                    <Run Text=")"></Run>
+                </TextBlock>
                 <ListView Grid.Row="1"
-                          Style="{StaticResource Cs4rsaListView}"></ListView>
+                          Style="{StaticResource Cs4rsaListView}"
+                          Margin="0,0,0,5"
+                          ItemsSource="{Binding CombinationModels}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <ItemsControl ItemsSource="{Binding ClassGroupModels}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1,AncestorType=ListViewItem}}">
+                                                
+                                            </WrapPanel>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"
+                                                       Padding="5"
+                                                       Background="#dfe6e9"></TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </Grid>
         </Grid>
         <StatusBar Grid.Row="2"
