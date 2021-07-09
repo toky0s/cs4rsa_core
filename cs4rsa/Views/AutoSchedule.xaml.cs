@@ -23,15 +23,21 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class AutoSchedule : Window
     {
+        private AutoScheduleViewModel _autoScheduleViewModel;
         public AutoSchedule(LoginResult result)
         {
             InitializeComponent();
             Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            AutoScheduleViewModel autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel, cs4RsaMessageBox);
-            DataContext = autoScheduleViewModel;
-            ListViewSubjects.ItemsSource = autoScheduleViewModel.ProgramSubjectModels;
+            _autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel, cs4RsaMessageBox, this);
+            DataContext = _autoScheduleViewModel;
+            ListViewSubjects.ItemsSource = _autoScheduleViewModel.ProgramSubjectModels;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource);
             view.Filter = Filter;
+        }
+
+        public void Load()
+        {
+            _autoScheduleViewModel.LoadProgramSubject();
         }
 
         private bool Filter(object item)
@@ -88,6 +94,12 @@ namespace cs4rsa.Views
         {
             ContextMenu menu = sender as ContextMenu;
             menu.DataContext = DataContext;
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var window  = sender as Window;
+            window.Topmost = true;
         }
     }
 }

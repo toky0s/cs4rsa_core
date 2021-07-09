@@ -83,15 +83,12 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Canvas Grid.Row="1"
+                        <Rectangle Grid.Row="1"
                                 Grid.Column="0"
                                 Grid.RowSpan="2"
-                                Width="20" Height="20" >
-                            <Rectangle
                                 Width="20"
-                                Height="20"
+                                Height="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=ListBoxItem,Mode=FindAncestor}}"
                                 Fill="{Binding Color}"/>
-                        </Canvas>
                         <StackPanel Grid.Row="0"
                                     Grid.Column="1"
                                     Orientation="Vertical">

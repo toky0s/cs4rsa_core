@@ -1,25 +1,14 @@
-﻿using System;
+﻿using cs4rsa.BasicData;
+using cs4rsa.Helpers;
+using cs4rsa.Models;
+using cs4rsa.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using cs4rsa.BasicData;
-using cs4rsa.Helpers;
-using cs4rsa.Messages;
-using cs4rsa.Models;
-using cs4rsa.ViewModels;
-using LightMessageBus;
-using LightMessageBus.Interfaces;
 
 namespace cs4rsa.Views
 {
@@ -33,18 +22,29 @@ namespace cs4rsa.Views
         {
             InitializeComponent();
             DataContext = classGroupViewModel;
-            CollectionView view = (CollectionView) CollectionViewSource.GetDefaultView(classGroupViewModel.ClassGroupModels);
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(classGroupViewModel.ClassGroupModels);
             view.Filter = ClassGroupFilter;
         }
 
         private bool ClassGroupFilter(object obj)
         {
             ClassGroupModel classGroupModel = obj as ClassGroupModel;
-            return CheckDayOfWeek(classGroupModel) && 
+            return CheckDayOfWeek(classGroupModel) &&
                 CheckSession(classGroupModel) &&
                 CheckTeacher(classGroupModel) &&
                 CheckPhase(classGroupModel) &&
-                CheckPlace(classGroupModel);
+                CheckPlace(classGroupModel) &&
+                CheckSeat(classGroupModel);
+        }
+
+        private bool CheckSeat(ClassGroupModel classGroupModel)
+        {
+            RadioButton checkedRadioButton = RadioButtonContainer_Seat.Children
+                                            .OfType<RadioButton>()
+                                            .FirstOrDefault(r => r.IsChecked.Value);
+            string value = checkedRadioButton.Name;
+            if (value == "RadioButton_SeatAll") return true;
+            return classGroupModel.EmptySeat > 0;
         }
 
         private bool CheckTeacher(ClassGroupModel classGroupModel)
