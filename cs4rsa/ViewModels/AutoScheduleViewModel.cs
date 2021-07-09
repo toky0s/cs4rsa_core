@@ -71,6 +71,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedProSubject = value;
+                AddCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -144,6 +145,7 @@ namespace cs4rsa.ViewModels
 
         private ProgramDiagram _programDiagram;
         private IMessageBox _messageBox;
+        private Window _window;
 
         public RelayCommand AddCommand { get; set; }
         public RelayCommand SortCommand { get; set; }
@@ -152,9 +154,9 @@ namespace cs4rsa.ViewModels
         public RelayCommand WatchDetailCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
 
-        public AutoScheduleViewModel(StudentModel studentModel, IMessageBox messageBox)
+        public AutoScheduleViewModel(StudentModel studentModel, IMessageBox messageBox, Window window)
         {
-            AddCommand = new RelayCommand(OnAddSubject, () => true);
+            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             SortCommand = new RelayCommand(OnSort, CanSort);
             DeleteCommand = new RelayCommand(OnDelete);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
@@ -162,7 +164,29 @@ namespace cs4rsa.ViewModels
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             _studentModel = studentModel;
             _messageBox = messageBox;
-            GetProgramDiagram(studentModel.StudentInfo.SpecialString);
+            _window = window;
+        }
+
+        public void LoadProgramSubject()
+        {
+            ProSubjectLoadWindow proSubjectLoadWindow = new ProSubjectLoadWindow();
+            ProSubjectLoadViewModel proSubjectLoadViewModel = new ProSubjectLoadViewModel(_studentModel.StudentInfo.SpecialString);
+            ProSubjectLoadResult result = DialogService<ProSubjectLoadResult>.OpenDialog(proSubjectLoadViewModel, proSubjectLoadWindow, _window); ;
+
+            _programDiagram = result.ProgramDiagram;
+            List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
+            foreach (ProgramSubject subject in programSubjects)
+            {
+                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
+                _programSubjectModels.Add(proSubjectModel);
+            }
+        }
+
+        private bool CanAdd()
+        {
+            if (_selectedProSubject == null || _choicedProSubjectModels.Contains(_selectedProSubject))
+                return false;
+            return _selectedProSubject.IsCanChoice;
         }
 
         private bool CanShowOnSimu()
@@ -230,57 +254,8 @@ namespace cs4rsa.ViewModels
             {
                 _choicedProSubjectModels.Add(_selectedProSubject);
                 SortCommand.RaiseCanExecuteChanged();
+                AddCommand.RaiseCanExecuteChanged();
             }
-        }
-
-        private void GetProgramDiagram(string specialString)
-        {
-            BackgroundWorker backgroundWorker = new BackgroundWorker
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.RunWorkerAsync(specialString);
-        }
-
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            ProgressValue = 0;
-            _programDiagram = e.Result as ProgramDiagram;
-            List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
-            foreach (ProgramSubject subject in programSubjects)
-            {
-                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
-                _programSubjectModels.Add(proSubjectModel);
-            }
-            Analyze();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void Analyze()
-        {
-
-        }
-
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker backgroundWorker = sender as BackgroundWorker;
-            string specialString = (string)e.Argument;
-            backgroundWorker.ReportProgress(10);
-            ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(null, specialString, backgroundWorker);
-            ProgramDiagram result = programDiagramCrawler.ToProgramDiagram();
-            backgroundWorker.ReportProgress(100);
-            e.Result = result;
-        }
-
-        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            ProgressValue = e.ProgressPercentage;
         }
     }
 }

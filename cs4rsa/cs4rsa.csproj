@@ -204,6 +204,7 @@
     <Compile Include="Dialogs\DialogResults\AutoSortResult.cs" />
     <Compile Include="Dialogs\DialogResults\ImportResult.cs" />
     <Compile Include="Dialogs\DialogResults\LoginResult.cs" />
+    <Compile Include="Dialogs\DialogResults\ProSubjectLoadResult.cs" />
     <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
     <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
     <Compile Include="Dialogs\DialogResults\SettingResult.cs" />
@@ -217,6 +218,9 @@
     </Compile>
     <Compile Include="Dialogs\DialogViews\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogViews\ProSubjectLoadWindow.xaml.cs">
+      <DependentUpon>ProSubjectLoadWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\SessionInputWindow.xaml.cs">
       <DependentUpon>SessionInputWindow.xaml</DependentUpon>
@@ -236,6 +240,7 @@
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
     <Compile Include="Dialogs\Implements\AutoSortViewModel.cs" />
     <Compile Include="Dialogs\Implements\LoginViewModel.cs" />
+    <Compile Include="Dialogs\Implements\ProSubjectLoadViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
       <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
@@ -343,6 +348,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogViews\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogViews\ProSubjectLoadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

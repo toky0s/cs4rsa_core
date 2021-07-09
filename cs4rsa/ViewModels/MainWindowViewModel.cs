@@ -120,8 +120,8 @@ namespace cs4rsa.ViewModels
             if (result != null)
             {
                 AutoSchedule autoSchedule = new AutoSchedule(result);
-                autoSchedule.Owner = obj as Window;
                 autoSchedule.Show();
+                autoSchedule.Load();
             }
         }
 
