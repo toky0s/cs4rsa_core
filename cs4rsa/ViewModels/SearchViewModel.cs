@@ -26,7 +26,8 @@ namespace cs4rsa.ViewModels
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
     public class SearchViewModel : NotifyPropertyChangedBase,
-        IMessageHandler<UpdateSuccessMessage>
+        IMessageHandler<UpdateSuccessMessage>,
+        IMessageHandler<ShowOnSimuMessage>
     {
         #region Commands
         public RelayCommand AddCommand { get; set; }
@@ -168,6 +169,7 @@ namespace cs4rsa.ViewModels
         public SearchViewModel()
         {
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
@@ -277,7 +279,6 @@ namespace cs4rsa.ViewModels
             if (e.Result != null)
             {
                 SubjectModel subjectModel = (SubjectModel)e.Result;
-                subjectModel.Color = ColorGenerator.GetColor(subjectModel.CourseId);
                 subjectModels.Add(subjectModel);
                 TotalSubject = subjectModels.Count;
                 CanAddSubjectChange();
@@ -357,6 +358,15 @@ namespace cs4rsa.ViewModels
             DisciplineKeywordModels.Clear();
             Disciplines.Clear();
             ReloadDisciplineAndKeyWord();
+        }
+
+        public void Handle(ShowOnSimuMessage message)
+        {
+            List<SubjectModel> subjectModels = message.Source.SubjecModels;
+            ImportSubjects(subjectModels);
+
+            List<ClassGroupModel> classGroupModels = message.Source.ClassGroupModels;
+            ClassGroupChoicer.Start(classGroupModels);
         }
     }
 }

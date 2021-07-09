@@ -5,12 +5,17 @@ using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
+using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using LightMessageBus;
+using cs4rsa.Messages;
 
 namespace cs4rsa.ViewModels
 {
@@ -82,6 +87,20 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private ProgramSubjectModel _selectedProSubjectInChoiced;
+        public ProgramSubjectModel SelectedProSubjectInChoiced
+        {
+            get
+            {
+                return _selectedProSubjectInChoiced;
+            }
+            set
+            {
+                _selectedProSubjectInChoiced = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ObservableCollection<CombinationModel> _combinationModels = new ObservableCollection<CombinationModel>();
         public ObservableCollection<CombinationModel> CombinationModels
         {
@@ -92,6 +111,20 @@ namespace cs4rsa.ViewModels
             set
             {
                 _combinationModels = value;
+            }
+        }
+
+        private CombinationModel _selectedCombinationModel;
+        public CombinationModel SelectedCombinationModel
+        {
+            get
+            {
+                return _selectedCombinationModel;
+            }
+            set
+            {
+                _selectedCombinationModel = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -110,15 +143,64 @@ namespace cs4rsa.ViewModels
         }
 
         private ProgramDiagram _programDiagram;
+        private IMessageBox _messageBox;
+
         public RelayCommand AddCommand { get; set; }
         public RelayCommand SortCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
+        public RelayCommand GotoCourseCommand { get; set; }
+        public RelayCommand WatchDetailCommand { get; set; }
+        public RelayCommand ShowOnSimuCommand { get; set; }
 
-        public AutoScheduleViewModel(StudentModel studentModel)
+        public AutoScheduleViewModel(StudentModel studentModel, IMessageBox messageBox)
         {
             AddCommand = new RelayCommand(OnAddSubject, () => true);
-            SortCommand = new RelayCommand(OnSort, () => true);
+            SortCommand = new RelayCommand(OnSort, CanSort);
+            DeleteCommand = new RelayCommand(OnDelete);
+            GotoCourseCommand = new RelayCommand(OnGoToCourse);
+            WatchDetailCommand = new RelayCommand(OnWatchDetail);
+            ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             _studentModel = studentModel;
+            _messageBox = messageBox;
             GetProgramDiagram(studentModel.StudentInfo.SpecialString);
+        }
+
+        private bool CanShowOnSimu()
+        {
+            return true;
+        }
+
+        private void OnShowOnSimu(object obj)
+        {
+            ShowOnSimuMessage showOnSimuMessage = new ShowOnSimuMessage(_selectedCombinationModel);
+            MessageBus.Default.Publish<ShowOnSimuMessage>(showOnSimuMessage);
+        }
+
+        private bool CanSort()
+        {
+            return _choicedProSubjectModels.Count > 0;
+        }
+
+        private void OnWatchDetail(object obj)
+        {
+            _messageBox.ShowMessage("Mở xem chi tiết");
+        }
+
+        private void OnGoToCourse(object obj)
+        {
+            if (_selectedProSubjectInChoiced != null)
+            {
+                string courseId = _selectedProSubjectInChoiced.CourseId;
+                string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
+                string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
+                Process.Start(url);
+            }
+        }
+
+        private void OnDelete(object obj)
+        {
+            _choicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
+            SortCommand.RaiseCanExecuteChanged();
         }
 
         private void OnSort(object obj)
@@ -127,7 +209,7 @@ namespace cs4rsa.ViewModels
             AutoSortViewModel autoSortViewModel = new AutoSortViewModel(_choicedProSubjectModels.ToList());
             AutoSortResult result = DialogService<AutoSortResult>.OpenDialog(autoSortViewModel, autoSortDialogWindow, obj as Window);
             List<CombinationModel> combinationModels = result.ClassGroupModelCombinations
-                .Select(item => new CombinationModel(item))
+                .Select(item => new CombinationModel(result.SubjectModels,item))
                 .ToList();
             foreach (CombinationModel combination in combinationModels)
             {
@@ -147,6 +229,7 @@ namespace cs4rsa.ViewModels
             if (_selectedProSubject != null)
             {
                 _choicedProSubjectModels.Add(_selectedProSubject);
+                SortCommand.RaiseCanExecuteChanged();
             }
         }
 
