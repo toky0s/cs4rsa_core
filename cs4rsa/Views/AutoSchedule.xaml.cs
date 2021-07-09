@@ -1,4 +1,5 @@
 ﻿using cs4rsa.Dialogs.DialogResults;
+using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
 using cs4rsa.ViewModels;
 using System;
@@ -25,7 +26,8 @@ namespace cs4rsa.Views
         public AutoSchedule(LoginResult result)
         {
             InitializeComponent();
-            AutoScheduleViewModel autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel);
+            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
+            AutoScheduleViewModel autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel, cs4RsaMessageBox);
             DataContext = autoScheduleViewModel;
             ListViewSubjects.ItemsSource = autoScheduleViewModel.ProgramSubjectModels;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource);
@@ -80,6 +82,12 @@ namespace cs4rsa.Views
         private void ReloadSubjects(object sender, RoutedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource).Refresh();
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
         }
     }
 }

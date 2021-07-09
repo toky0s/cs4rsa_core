@@ -54,7 +54,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.7*"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="1.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0"
                   Margin="5">
@@ -73,6 +73,12 @@
                           Style="{StaticResource Cs4rsaListView}"
                           ItemsSource="{Binding ProgramSubjectModels}"
                           SelectedItem="{Binding SelectedProSubject}">
+                    <ListView.Resources>
+                        <ContextMenu x:Key="YourSubjectContextMenu" Opened="ContextMenu_Opened">
+                            <MenuItem Header="Thêm" Command="{Binding AddCommand}"></MenuItem>
+                            <MenuItem Header="Xem điểm của môn này" Command="{Binding WatchDetailCommand}"></MenuItem>
+                        </ContextMenu>
+                    </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -172,9 +178,13 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
-
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="ContextMenu" Value="{StaticResource YourSubjectContextMenu}"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
                 <TextBox Grid.Row="2"
                          Margin="0,5,0,5"
@@ -217,12 +227,24 @@
                     <ListView Grid.Row="1"
                               Margin="0,0,0,5"
                               Style="{StaticResource Cs4rsaListView}"
-                              ItemsSource="{Binding ChoicedProSubjectModels}">
+                              ItemsSource="{Binding ChoicedProSubjectModels}"
+                              SelectedItem="{Binding SelectedProSubjectInChoiced}">
+                        <ListView.Resources>
+                            <ContextMenu x:Key="ChoicedSubjectContextMenu" Opened="ContextMenu_Opened">
+                                <MenuItem Header="Xoá" Command="{Binding DeleteCommand}"/>
+                                <MenuItem Header="Mở trong courses.duytan.edu.vn" Command="{Binding GotoCourseCommand}"/>
+                            </ContextMenu>
+                        </ListView.Resources>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding SubjectName}"></TextBlock>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="ContextMenu" Value="{StaticResource ChoicedSubjectContextMenu}"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
                     <Button Content="Sắp xếp"
                             Grid.Row="2"
@@ -233,12 +255,8 @@
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Bộ lọc"
-                           Style="{StaticResource Header2}"
-                           Grid.Row="0"></TextBlock>
-                    <StackPanel Grid.Row="1">
+                    <StackPanel Grid.Row="0">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="IsEnabled" Value="True"></Setter>
@@ -297,8 +315,14 @@
                 </TextBlock>
                 <ListView Grid.Row="1"
                           Style="{StaticResource Cs4rsaListView}"
-                          Margin="0,0,0,5"
-                          ItemsSource="{Binding CombinationModels}">
+                          Margin="3,0.4,-3.6,5"
+                          ItemsSource="{Binding CombinationModels}"
+                          SelectedItem="{Binding SelectedCombinationModel}">
+                    <ListView.Resources>
+                        <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">
+                            <MenuItem Header="Hiển thị trên mô phỏng" Command="{Binding ShowOnSimuCommand}"/>
+                        </ContextMenu>
+                    </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -321,6 +345,11 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}"></Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </Grid>
         </Grid>
