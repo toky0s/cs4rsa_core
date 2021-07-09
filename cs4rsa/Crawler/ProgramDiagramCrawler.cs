@@ -33,13 +33,13 @@ namespace cs4rsa.Crawler
             PreParGetter preParGetter = new PreParGetter();
             ProgramSubjectSaver programSubjectSaver = new ProgramSubjectSaver();
             StudentProgramCrawler programCrawler1 = new StudentProgramCrawler(_sessionId, url1, programSubjectSaver, preParGetter);
-            ReportProgress(20);
+            ReportProgress(30);
             StudentProgramCrawler programCrawler2 = new StudentProgramCrawler(_sessionId, url2, programSubjectSaver, preParGetter);
-            ReportProgress(40);
+            ReportProgress(50);
             StudentProgramCrawler programCrawler3 = new StudentProgramCrawler(_sessionId, url3, programSubjectSaver, preParGetter);
-            ReportProgress(60);
+            ReportProgress(70);
             StudentProgramCrawler programCrawler4 = new StudentProgramCrawler(_sessionId, url4, programSubjectSaver, preParGetter);
-            ReportProgress(80);
+            ReportProgress(90);
             ProgramDiagram diagram = new ProgramDiagram(programCrawler1.Root, programCrawler2.Root,
                                                         programCrawler3.Root, programCrawler4.Root);
             return diagram;
