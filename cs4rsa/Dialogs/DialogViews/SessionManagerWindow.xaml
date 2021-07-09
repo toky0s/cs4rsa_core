@@ -10,7 +10,8 @@
         Title="Nhập Môn học"
         Height="356"
         Width="800"
-        Background="#FFFAFAFA">
+        Background="#FFFAFAFA"
+        ResizeMode="NoResize">
     <Window.Resources>
         <Style x:Key="HeaderExpander" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="Regular"></Setter>
@@ -111,11 +112,13 @@
                         <Button Grid.Row="2"
                                 Grid.Column="0"
                                 Content="Nhập"
+                                Height="30"
                                 Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                         <Button Grid.Row="2"
                                 Grid.Column="1"
                                 Content="Xoá"
+                                Height="30"
                                 Margin="0,5,0,0"
                                 Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"></Button>
                     </StackPanel>
@@ -143,6 +146,7 @@
                              Margin="0,0,5,0"
                              Text="{Binding ShareString}"></TextBox>
                     <Button
+                        Height="30"
                         Grid.Column="2"
                         Content="Nhập"
                         Width="100"

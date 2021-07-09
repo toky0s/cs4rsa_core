@@ -29,7 +29,6 @@ namespace cs4rsa.Dialogs.Implements
 
         private List<ProgramSubjectModel> _programSubjectModels;
         private Tuple<List<SubjectModel>, List<List<ClassGroupModel>>> _resultOfSorting;
-        private List<SubjectModel> _subjectModel;
 
         public RelayCommand CompletedCommand { get; set; }
         public AutoSortViewModel(List<ProgramSubjectModel> programSubjectModels)

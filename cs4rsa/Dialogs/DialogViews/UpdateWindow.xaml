@@ -7,7 +7,7 @@
         xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="Cập nhật"
-        Height="203" 
+        Height="217" 
         Width="415"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
@@ -31,6 +31,7 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="1000">
                                 <Setter Property="Text" Value="Cập nhật thành công"></Setter>
+                                <Setter Property="Foreground" Value="Green"></Setter>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -45,8 +46,19 @@
                         HorizontalAlignment="Right">
                 <Button Content="Bắt đầu"
                         Width="77"
+                        Height="30"
                         Margin="0,5,5,5"
                         Command="{Binding StartUpdateCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="0">
+                                    <Setter Property="IsEnabled" Value="True"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
             </StackPanel>
 
