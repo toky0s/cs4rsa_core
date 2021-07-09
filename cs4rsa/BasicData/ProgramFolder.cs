@@ -165,7 +165,7 @@ namespace cs4rsa.BasicData
         {
             foreach (ProgramSubject item in subjects)
             {
-                if (item.IsDone())
+                if (item.IsDone() || item.StudyState == StudyState.NoHavePoint)
                     mustLearn--;
             }
             if (mustLearn == 0) return true;
