@@ -19,6 +19,15 @@ namespace cs4rsa.Database
             return cs4RsaDatabase.GetScalar<string>(sql);
         }
 
+        public static string GetColorWithSubjectCode(string subjectCode)
+        {
+            Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            string sql = $@"select color from discipline, keyword
+                            where discipline.name||' '||keyword1 = '{subjectCode}' 
+                            AND discipline.id = keyword.discipline_id";
+            return cs4RsaDatabase.GetScalar<string>(sql);
+        }
+
         public static string GenerateColor()
         {
             string color;
