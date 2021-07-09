@@ -76,7 +76,6 @@
     <Compile Include="Crawler\TestTeacherCrawler.cs" />
     <Compile Include="FakeStudentSaver.cs" />
     <Compile Include="FakeSubjectSaver.cs" />
-    <Compile Include="Functions\Choice.cs" />
     <Compile Include="Helpers\TestBasicDataConverter.cs" />
     <Compile Include="Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Helpers\TestHelpers.cs" />
@@ -96,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
+    <Folder Include="Functions\" />
     <Folder Include="Settings\" />
   </ItemGroup>
   <ItemGroup>
