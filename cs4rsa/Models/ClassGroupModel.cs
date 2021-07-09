@@ -1,4 +1,5 @@
 ﻿using cs4rsa.BasicData;
+using cs4rsa.Database;
 using cs4rsa.Enums;
 using System.Collections.Generic;
 
@@ -35,6 +36,7 @@ namespace cs4rsa.Models
         {
             this.classGroup = classGroup;
             _emptySeat = classGroup.GetEmptySeat();
+            Color = ColorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
         }
 
         public List<TeacherModel> GetTeacherModels()

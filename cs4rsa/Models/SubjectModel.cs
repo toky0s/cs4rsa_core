@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.BasicData;
-
+using cs4rsa.Database;
 
 namespace cs4rsa.Models
 {
@@ -30,10 +30,7 @@ namespace cs4rsa.Models
                 List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
                 foreach(ClassGroup classGroup in subject.ClassGroups)
                 {
-                    ClassGroupModel classGroupModel = new ClassGroupModel(classGroup)
-                    {
-                        Color = Color
-                    };
+                    ClassGroupModel classGroupModel = new ClassGroupModel(classGroup);
                     classGroupModels.Add(classGroupModel);
                 }
                 return classGroupModels;
@@ -63,6 +60,7 @@ namespace cs4rsa.Models
         {
             this.subject = subject;
             _studyUnit = subject.StudyUnit;
+            Color = ColorGenerator.GetColor(subject.CourseId);
         }
 
         /// <summary>

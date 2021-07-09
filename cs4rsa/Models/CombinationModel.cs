@@ -12,6 +12,18 @@ namespace cs4rsa.Models
     /// </summary>
     public class CombinationModel
     {
+        private List<SubjectModel> _subjectModels;
+        public List<SubjectModel> SubjecModels
+        {
+            get
+            {
+                return _subjectModels;
+            }
+            set
+            {
+                _subjectModels = value;
+            }
+        }
         private List<ClassGroupModel> _classGroupModels;
         public List<ClassGroupModel> ClassGroupModels
         {
@@ -24,8 +36,9 @@ namespace cs4rsa.Models
                 _classGroupModels = value;
             }
         }
-        public CombinationModel(List<ClassGroupModel> classGroupModels)
+        public CombinationModel(List<SubjectModel> subjectModels, List<ClassGroupModel> classGroupModels)
         {
+            _subjectModels = subjectModels;
             _classGroupModels = classGroupModels;
         }
 
