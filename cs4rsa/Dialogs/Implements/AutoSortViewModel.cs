@@ -26,8 +26,11 @@ namespace cs4rsa.Dialogs.Implements
                 RaisePropertyChanged();
             }
         }
+
         private List<ProgramSubjectModel> _programSubjectModels;
-        private List<List<ClassGroupModel>> _resultOfSorting;
+        private Tuple<List<SubjectModel>, List<List<ClassGroupModel>>> _resultOfSorting;
+        private List<SubjectModel> _subjectModel;
+
         public RelayCommand CompletedCommand { get; set; }
         public AutoSortViewModel(List<ProgramSubjectModel> programSubjectModels)
         {
@@ -38,7 +41,7 @@ namespace cs4rsa.Dialogs.Implements
 
         private void OnCompleted(object obj)
         {
-            AutoSortResult result = new AutoSortResult(_resultOfSorting);
+            AutoSortResult result = new AutoSortResult(_resultOfSorting.Item1, _resultOfSorting.Item2);
             CloseDialogWithResult(obj as Window, result);
         }
 
@@ -56,7 +59,7 @@ namespace cs4rsa.Dialogs.Implements
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _resultOfSorting = e.Result as List<List<ClassGroupModel>>;
+            _resultOfSorting = e.Result as Tuple<List<SubjectModel>, List<List<ClassGroupModel>>>;
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -83,8 +86,9 @@ namespace cs4rsa.Dialogs.Implements
                 List<ClassGroupModel> classGroupModelNames = subject.ClassGroups.Select(cl => new ClassGroupModel(cl)).ToList();
                 elements.AddRange(classGroupModelNames);
             }
+            List<SubjectModel> subjectModels = subjects.Select(item => new SubjectModel(item)).ToList();
             List<List<ClassGroupModel>> cases = Gen(subjects.Count, elements);
-            e.Result = cases;
+            e.Result = Tuple.Create<List<SubjectModel>, List<List<ClassGroupModel>>>(subjectModels, cases);
             worker.ReportProgress(100);
         }
 

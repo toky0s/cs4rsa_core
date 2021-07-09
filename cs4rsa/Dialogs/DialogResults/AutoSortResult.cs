@@ -23,8 +23,22 @@ namespace cs4rsa.Dialogs.DialogResults
             }
         }
 
-        public AutoSortResult(List<List<ClassGroupModel>> classGroupModelCombination)
+        private List<SubjectModel> _subjectModels;
+        public List<SubjectModel> SubjectModels
         {
+            get
+            {
+                return _subjectModels;
+            }
+            set
+            {
+                _subjectModels = value;
+            }
+        }
+
+        public AutoSortResult(List<SubjectModel> subjectModels, List<List<ClassGroupModel>> classGroupModelCombination)
+        {
+            _subjectModels = subjectModels;
             _classGroupModelCombinations = classGroupModelCombination;
         }
     }
