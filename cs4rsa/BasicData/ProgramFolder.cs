@@ -98,6 +98,15 @@ namespace cs4rsa.BasicData
 
 
         /// <summary>
+        /// Trả về số lượng môn cần học để hoàn thành folder này.
+        /// </summary>
+        /// <returns></returns>
+        public int NeedLearnToComplete()
+        {
+            return MustComplete() - GetCompletedProSubjects().Count;
+        }
+
+        /// <summary>
         /// Kiểm tra xem một Program Subject có nằm trong folder này hay không.
         /// (Phương thức này thực hiện đệ quy sâu vào tất cả các program folder con bên trong)
         /// </summary>
@@ -172,6 +181,17 @@ namespace cs4rsa.BasicData
             return false;
         }
 
+        private List<ProgramSubject> GetCompletedProSubjects()
+        {
+            List<ProgramSubject> proSubjects = new List<ProgramSubject>();
+            foreach(ProgramSubject item in _childProgramSubjects)
+            {
+                if (item.IsDone())
+                    proSubjects.Add(item);
+            }
+            return proSubjects;
+        }
+
         /// <summary>
         /// Kiểm tra xem danh sách các IProgramNode truyền vào có phải
         /// toàn là ProgramSubject hay không.
@@ -195,7 +215,6 @@ namespace cs4rsa.BasicData
             nodes.AddRange(_childProgramSubjects);
             return nodes;
         }
-
 
         /// <summary>
         /// Lấy ra một Program Subject dựa theo subject code.

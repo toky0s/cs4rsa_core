@@ -6,43 +6,22 @@
         xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
-        Title="SessionInputWindow" 
-        Height="210" 
+        Title="Tìm kiếm thông tin" 
+        Height="150" 
         Width="400"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <StackPanel>
-        <TextBlock Text="Lưu ý"
-                   Margin="5"
-                   Style="{StaticResource Header1}"></TextBlock>
-        <TextBlock
-                   TextWrapping="Wrap"
-                   Margin="5,0,5,5">
-            Hãy đảm bảo bạn đã đăng nhập vào MyDTU, sau đó copy Session ID vào ô nhập bên dưới.
-            Việc nhập Session ID để đảm bảo CS4RSA tìm thấy bạn trong lần đầu tiên. Các lần sau
-            bạn sẽ không phải nhập Session ID nữa.
+        <TextBlock TextWrapping="Wrap"
+                   Margin="10">
+            Chờ một lát trong lúc CS4RSA tìm kiếm thông tin của sinh viên. Hãy đảm bảo rằng
+            bạn đã đăng nhập vào MyDTU trước khi lấy SessionID. Quá trình này sẽ mất một chút
+            thời gian, hãy kiên nhẫn.
         </TextBlock>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" 
-                       Text="Session ID:"
-                       Margin="5,0,5,0"></TextBlock>
-            <TextBox Grid.Column="1"
-                     Margin="0,0,5,0"
-                     Text="{Binding SessionId}"></TextBox>
-            <Button Grid.Column="2" 
-                    Content="Tìm kiếm"
-                    Width="80"
-                    Margin="0,0,5,0"
-                    Command="{Binding FindCommand}"></Button>
-        </Grid>
         <ProgressBar Height="30"
-                     Margin="5"
                      Maximum="100"
+                     Margin="10 0 10 10"
                      Value="{Binding ProgressValue}"></ProgressBar>
     </StackPanel>
 </Window>

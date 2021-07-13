@@ -1,4 +1,4 @@
-﻿<Window x:Class="cs4rsa.Dialogs.DialogViews.LoginWindow"
+﻿<Window x:Class="cs4rsa.Dialogs.DialogViews.LoginDialogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
         mc:Ignorable="d"
-        Title="LoginWindow" 
+        Title="Chọn tài khoản" 
         Height="430"
         Width="300"
         ResizeMode="NoResize"
@@ -16,12 +16,12 @@
     </Window.Resources>
     <StackPanel>
         <TextBlock Text="Hãy chọn một tài khoản"
-                   Style="{StaticResource Header1}"
+                   
                    HorizontalAlignment="Center"></TextBlock>
         <TextBlock Text="Nếu chưa có tài khoản nào hãy nhấn nút Thêm mới"
                    HorizontalAlignment="Center"></TextBlock>
         <ListView Height="300"
-                  Style="{StaticResource Cs4rsaListView}"
+                  
                   ItemsSource="{Binding StudentInfos}"
                   SelectedItem="{Binding SelectedStudentInfo}"
                   Margin="5">
@@ -58,18 +58,11 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Content="Thêm mới..."
-                    Grid.Column="0"
-                    Margin="5,0,5,5"
-                    Height="30"
-                    Command="{Binding OpenSessionIdInput}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
             <Button Content="Đăng nhập"
                     Grid.Column="1"
-                    Margin="0,0,5,5"
                     Height="30"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding LoginCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
             </Button>

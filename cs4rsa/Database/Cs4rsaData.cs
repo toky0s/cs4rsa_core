@@ -53,7 +53,7 @@ namespace cs4rsa.Database
             )";
 
         private readonly string SQL_SESSION =
-            @"create table if not exists sessionx (
+            @"create table if not exists session (
                 id integer primary key AUTOINCREMENT,
                 name text,
                 save_date text,
@@ -67,13 +67,7 @@ namespace cs4rsa.Database
                 session_id integer,
                 subject_code text,
                 class_group text,
-                foreign key (session_id) references sessionx(id)
-            )";
-
-        private readonly string SQL_USER_SETTINGS =
-            @"create table if not exists user_settings (
-                key text primary key,
-                value text
+                foreign key (session_id) references session(id)
             )";
 
         private readonly string SQL_curriculum =
@@ -139,7 +133,6 @@ namespace cs4rsa.Database
                 CreateTable(SQL_TEACHER_DETAIL_TABLE);
                 CreateTable(SQL_SESSION);
                 CreateTable(SQL_SESSION_DETAIL);
-                CreateTable(SQL_USER_SETTINGS);
                 CreateTable(SQL_curriculum);
                 CreateTable(SQL_STUDENT);
                 CreateTable(SQL_pre_par_subject);

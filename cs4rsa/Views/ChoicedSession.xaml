@@ -6,10 +6,23 @@
              xmlns:local="clr-namespace:cs4rsa.Views"
              xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="200"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"        
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
     <UserControl.Resources>
-        <converter:ConflictModelConverter x:Key="ConflictInfoConverter"></converter:ConflictModelConverter>
-        <converter:ConflictTypeConverter x:Key="ConflictTypeConverter"></converter:ConflictTypeConverter>
+        <ResourceDictionary>
+            <converter:ConflictModelConverter x:Key="ConflictInfoConverter"></converter:ConflictModelConverter>
+            <converter:ConflictTypeConverter x:Key="ConflictTypeConverter"></converter:ConflictTypeConverter>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,57 +36,71 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Đã chọn"
                    Grid.Row="0"
-                   Style="{StaticResource Header1}"></TextBlock>
-        <ListBox Grid.Row="1"
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+        <ListView Grid.Row="1"
                  x:Name="Listbox_Choiced"
                  ItemsSource="{Binding ClassGroupModels}"
                  SelectedItem="{Binding SelectedClassGroupModel}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 Style="{StaticResource Cs4rsaListBox}">
-            <ListBox.Resources>
-                <ContextMenu x:Key="listViewContextMenu" Opened="ContextMenu_Opened">
-                    <MenuItem Header="Sao chép mã" Click="MenuItem_Click"/>
-                    <MenuItem Header="Bỏ chọn" Command="{Binding DeleteCommand}"/>
-                </ContextMenu>
-            </ListBox.Resources>
-            <ListBox.ItemTemplate>
+                 HorizontalContentAlignment="Stretch">
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Canvas Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.RowSpan="2"
-                                Width="10" Height="10" >
-                            <Rectangle
-                                Width="10"
-                                Height="10"
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.Column="0"
+                                       Width="10"
                                 Fill="{Binding Color}"/>
-                        </Canvas>
-                        <TextBlock Text="{Binding Name}"
-                                   Margin="7, 0, 0, 0">
-                        </TextBlock>
-                    </StackPanel>
+                            <TextBlock Text="{Binding Name}"
+                                   Margin="7 10 0 0"
+                                       Grid.Column="1"></TextBlock>
+                            <materialDesign:PopupBox Margin="5"
+                                                     Grid.Column="2"
+                                                     Style="{StaticResource MaterialDesignToolPopupBox}">
+                                <StackPanel>
+                                    <Button Content="Sao chép mã"
+                                                Command="{Binding CopyCodeCommand}"
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
+                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
+                                    <Button Content="Bỏ chọn"
+                                                Command="{Binding DeleteCommand}"
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
+                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                        </Grid>
+                    </materialDesign:Card>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="ContextMenu" Value="{StaticResource listViewContextMenu}"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-        <StackPanel Grid.Row="2">
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Grid.Row="2"
+                    Margin="0 0 0 10">
             <Button Content="Lưu mới"
-                    Margin="0,5,0,0"
+                    Grid.Column="0"
+                    Height="30"
+                    Foreground="White"
+                    Margin="0 0 0 5"
                     Command="{Binding SaveCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     ></Button>
+            <Button Content="Bỏ chọn hết"
+                    Grid.Column="1"
+                    Height="30"
+                    Command="{Binding DeleteAllCommand}"
+                    Foreground="White">
+            </Button>
         </StackPanel>
         <TextBlock Text="Xung đột"
-                   Style="{StaticResource Header2}"
-                   Grid.Row="3"></TextBlock>
+                   Grid.Row="3"
+                   Margin="0 0 0 5"
+                   FontWeight="Bold"></TextBlock>
         <ListBox Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 Style="{StaticResource Cs4rsaListBox}">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -96,7 +123,8 @@
                             </Rectangle>
                         </Canvas>
 
-                        <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
+                        <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"
+                                   FontSize="10">
                         <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
                         <Run Text=" - "></Run>
                         <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
@@ -106,12 +134,13 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <TextBlock Text="Xung đột vị trí"
-                   Style="{StaticResource Header2}"
-                   Grid.Row="5"></TextBlock>
+                   Margin="0 5 0 0"
+                   Grid.Row="5"
+                   FontWeight="Bold"></TextBlock>
         <ListBox Grid.Row="6"
                  ItemsSource="{Binding PlaceConflictFinderModels}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 Style="{StaticResource Cs4rsaListBox}">
+                 >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

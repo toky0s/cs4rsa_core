@@ -3,7 +3,6 @@ using cs4rsa.BasicData;
 using cs4rsa.Helpers;
 using cs4rsa.Messages;
 using cs4rsa.Models;
-using cs4rsa.Settings;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
@@ -207,9 +206,7 @@ namespace cs4rsa.ViewModels
         public ScheduleTableViewModel()
         {
             // Load setting
-            _settingIsDynamicSchedule = SettingReader.GetSetting(Setting.IsDynamicSchedule) == "1" ? true : false;
             _settingIsDynamicSchedule = false;
-            _settingIsShowPlaceColor = SettingReader.GetSetting(Setting.IsShowPlaceColor) == "1" ? true : false;
 
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
@@ -396,6 +393,7 @@ namespace cs4rsa.ViewModels
                 TimeConverter.GetDateTimeFromString("11:15"),
                 TimeConverter.GetDateTimeFromString("13:00"),
                 TimeConverter.GetDateTimeFromString("14:00"),
+                TimeConverter.GetDateTimeFromString("15:00"),
                 TimeConverter.GetDateTimeFromString("15:15"),
                 TimeConverter.GetDateTimeFromString("16:15"),
                 TimeConverter.GetDateTimeFromString("17:15"),

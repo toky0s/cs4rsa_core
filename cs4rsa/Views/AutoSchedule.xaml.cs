@@ -21,14 +21,14 @@ namespace cs4rsa.Views
     /// <summary>
     /// Interaction logic for AutoSchedule.xaml
     /// </summary>
-    public partial class AutoSchedule : Window
+    public partial class AutoSchedule : UserControl
     {
         private AutoScheduleViewModel _autoScheduleViewModel;
-        public AutoSchedule(LoginResult result)
+        public AutoSchedule()
         {
             InitializeComponent();
             Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            _autoScheduleViewModel = new AutoScheduleViewModel(result.StudentModel, cs4RsaMessageBox, this);
+            _autoScheduleViewModel = new AutoScheduleViewModel();
             DataContext = _autoScheduleViewModel;
             ListViewSubjects.ItemsSource = _autoScheduleViewModel.ProgramSubjectModels;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource);
@@ -55,7 +55,8 @@ namespace cs4rsa.Views
             {
                 ProgramSubjectModel subject = item as ProgramSubjectModel;
                 return (subject.SubjectName.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (subject.SubjectCode.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0);                    
+                    (subject.SubjectCode.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (subject.FolderName.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0);                    
             }
         }
 

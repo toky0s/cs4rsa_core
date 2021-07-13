@@ -83,5 +83,20 @@ namespace cs4rsa.Models
             }
             return false;
         }
+
+        public bool IsHavePlaceConflicts()
+        {
+            for (int i = 0; i < _classGroupModels.Count; ++i)
+            {
+                for (int k = i + 1; k < _classGroupModels.Count; ++k)
+                {
+                    PlaceConflictFinder conflict = new PlaceConflictFinder(_classGroupModels[i], _classGroupModels[k]);
+                    ConflictPlace conflictPlace = conflict.GetPlaceConflict();
+                    if (conflictPlace != null)
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }

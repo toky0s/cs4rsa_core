@@ -92,6 +92,12 @@
     <Reference Include="LightMessageBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LightMessageBus.1.0.1\lib\portable-net4+sl5+wp8+win8\LightMessageBus.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=2.0.1.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.2.0.1\lib\net452\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=4.1.0.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.4.1.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -216,8 +222,8 @@
     <Compile Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml.cs">
       <DependentUpon>AutoSortDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogViews\LoginWindow.xaml.cs">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogViews\LoginDialogWindow.xaml.cs">
+      <DependentUpon>LoginDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\ProSubjectLoadWindow.xaml.cs">
       <DependentUpon>ProSubjectLoadWindow.xaml</DependentUpon>
@@ -239,7 +245,7 @@
     </Compile>
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
     <Compile Include="Dialogs\Implements\AutoSortViewModel.cs" />
-    <Compile Include="Dialogs\Implements\LoginViewModel.cs" />
+    <Compile Include="Dialogs\Implements\LoginDialogViewModel.cs" />
     <Compile Include="Dialogs\Implements\ProSubjectLoadViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
     <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
@@ -268,7 +274,6 @@
     <Compile Include="Messages\ShowOnSimuMessage.cs" />
     <Compile Include="Models\CombinationModel.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
-    <Compile Include="Settings\Setting.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
     <Compile Include="Helpers\DtuPageCrawler.cs" />
@@ -317,16 +322,14 @@
     <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
     <Compile Include="Models\TimeBlock.cs" />
-    <Compile Include="Settings\SettingInit.cs" />
-    <Compile Include="Settings\SettingReader.cs" />
-    <Compile Include="Settings\SettingWriter.cs" />
     <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
     <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Views\AutoSchedule.xaml.cs">
       <DependentUpon>AutoSchedule.xaml</DependentUpon>
     </Compile>
@@ -335,6 +338,15 @@
     </Compile>
     <Compile Include="Views\ClassGroupSession.xaml.cs">
       <DependentUpon>ClassGroupSession.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainScheduling.xaml.cs">
+      <DependentUpon>MainScheduling.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ScheduleTable.xaml.cs">
       <DependentUpon>ScheduleTable.xaml</DependentUpon>
@@ -347,7 +359,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\DialogViews\LoginWindow.xaml">
+    <Page Include="Dialogs\DialogViews\LoginDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -383,7 +395,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AutoSchedule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainScheduling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,6 +521,9 @@
   <ItemGroup>
     <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\1558939.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -502,7 +533,9 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
 </Project>

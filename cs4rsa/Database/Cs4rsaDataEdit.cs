@@ -32,10 +32,10 @@ namespace cs4rsa.Database
         {
             string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
             string yearValue = HomeCourseSearch.GetInstance().CurrentYearValue;
-            string sql = $@"insert into sessionx(name, save_date, semester, year) values ('{name}', '{saveDate}','{semesterValue}',{yearValue})";
+            string sql = $@"insert into session(name, save_date, semester, year) values ('{name}', '{saveDate}','{semesterValue}',{yearValue})";
             _cs4RsaDatabase.DoSomething(sql);
 
-            string sqlGetId = "select id from sessionx ORDER by id desc LIMIT 1";
+            string sqlGetId = "select id from session ORDER by id desc LIMIT 1";
             long id = _cs4RsaDatabase.GetScalar<long>(sqlGetId);
             foreach (ClassGroupModel item in classGroupModels)
             {
@@ -49,10 +49,10 @@ namespace cs4rsa.Database
         {
             string sqlSessionDetail = $@"delete from session_detail
                             where session_id = {id}";
-            string sqlSessionx = $@"delete from sessionx
+            string sqlsession = $@"delete from session
                             where id = {id}";
             _cs4RsaDatabase.DoSomething(sqlSessionDetail);
-            int result = _cs4RsaDatabase.DoSomething(sqlSessionx);
+            int result = _cs4RsaDatabase.DoSomething(sqlsession);
             return result;
         }
 

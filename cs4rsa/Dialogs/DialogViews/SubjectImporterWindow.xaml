@@ -7,34 +7,37 @@
         xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="SubjectImporterWindow"
-        Height="272"
+        Height="300"
         Width="440"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="Danh sách môn" 
-                       Style="{StaticResource Header1}"
-                       Margin="7"></TextBlock>
-            <ItemsControl Name="icTodoList"
+        <ItemsControl Name="icTodoList"
                           ItemsSource="{Binding SubjectInfoDatas}"
                           Margin="7">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
                             <Run Text="{Binding SubjectCode}"></Run>
                             <Run Text=" - "></Run>
                             <Run Text="{Binding SubjectName}"></Run>
-                        </TextBlock>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <ProgressBar Height="20" 
+                    </TextBlock>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ProgressBar Height="20" 
                          Minimum="0" 
                          Maximum="100"
                          Margin="7"
                          Value="{Binding Progress}"></ProgressBar>
-        </StackPanel>
     </Grid>
 </Window>

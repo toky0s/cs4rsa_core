@@ -1,5 +1,7 @@
 ﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Crawler;
+using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
@@ -11,11 +13,12 @@ using cs4rsa.Views;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
-    public class MainWindowViewModel : NotifyPropertyChangedBase,
+    public class MainSchedulingViewModel : NotifyPropertyChangedBase,
         IMessageHandler<SubjectItemChangeMessage>,
         IMessageHandler<ChoicesChangedMessage>
     {
@@ -83,7 +86,7 @@ namespace cs4rsa.ViewModels
         public RelayCommand OpenAutoScheduling { get; set; }
         public RelayCommand OpenShareStringWindowCommand { get; set; }
 
-        public MainWindowViewModel(IMessageBox messageBox)
+        public MainSchedulingViewModel(IMessageBox messageBox)
         {
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
@@ -93,7 +96,6 @@ namespace cs4rsa.ViewModels
             CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
             OpenSettingCommand = new RelayCommand(OnOpenSetting, () => true);
-            OpenAutoScheduling = new RelayCommand(OnOpenAutoScheduling, () => true);
             OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow, () => true);
             TotalCredit = 0;
             TotalSubject = 0;
@@ -104,25 +106,6 @@ namespace cs4rsa.ViewModels
             ShareStringWindow shareStringWindow = new ShareStringWindow();
             ShareStringViewModel shareStringViewModel = new ShareStringViewModel(_shareString);
             DialogService<ShareStringResult>.OpenDialog(shareStringViewModel, shareStringWindow, obj as Window);
-        }
-
-
-        /// <summary>
-        /// Mở hộp thoại chọn tài khoản.
-        /// </summary>
-        /// <param name="obj"></param>
-        private void OnOpenAutoScheduling(object obj)
-        {
-            LoginWindow loginWindow = new LoginWindow();
-            LoginViewModel loginViewModel = new LoginViewModel();
-            LoginResult result = DialogService<LoginResult>.OpenDialog(loginViewModel, loginWindow, obj as Window);
-
-            if (result != null)
-            {
-                AutoSchedule autoSchedule = new AutoSchedule(result);
-                autoSchedule.Show();
-                autoSchedule.Load();
-            }
         }
 
         private void OnOpenUpdateWindow(object obj)

@@ -163,26 +163,28 @@ namespace cs4rsa.ViewModels
         }
 
         #region DI
-        public IMessageBox MessageBox;
+        private IMessageBox _messageBox;
         #endregion
 
-        public SearchViewModel()
+        public SearchViewModel(IMessageBox messageBox)
         {
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
+            _messageBox = messageBox;
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             SelectedDiscipline = this.disciplines[0];
             AddCommand = new RelayCommand(OnAddSubject);
-            DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
+            DeleteCommand = new RelayCommand(OnDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
         }
 
         private void OnGotoCourse(object obj)
         {
-            string courseId = selectedSubjectModel.CourseId;
+            SubjectModel subjectModel = obj as SubjectModel;
+            string courseId = subjectModel.CourseId;
             string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             Process.Start(url);
@@ -228,8 +230,9 @@ namespace cs4rsa.ViewModels
 
         private void OnDeleteSubject(object obj)
         {
-            MessageBus.Default.Publish(new DeleteSubjectMessage(selectedSubjectModel));
-            subjectModels.Remove(selectedSubjectModel);
+            SubjectModel subjectModel = obj as SubjectModel;
+            MessageBus.Default.Publish(new DeleteSubjectMessage(subjectModel));
+            subjectModels.Remove(subjectModel);
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -287,7 +290,7 @@ namespace cs4rsa.ViewModels
             }
             else
             {
-                MessageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này",
+                _messageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này",
                     "Thông báo",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);

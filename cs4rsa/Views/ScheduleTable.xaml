@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:cs4rsa.Views"
              xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"        
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
     <UserControl.Resources>
         <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter"></converter:ShortedTimeViewConverter>
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
@@ -49,7 +57,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Lịch mô phỏng"
-                        Style="{StaticResource Header1}"></TextBlock>
+                        ></TextBlock>
         </StackPanel>
         <TextBlock Text="Giai đoạn 1 (Từ tuần 1 - 9)"
                            Grid.Row="1"></TextBlock>
@@ -57,16 +65,66 @@
                   x:Name="DataGridFirstPhase"
                   AutoGenerateColumns="False"
                   GridLinesVisibility="None"
-                  FontSize="10">
+                  FontSize="10"
+                  materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}, UpdateSourceTrigger=PropertyChanged}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>
-                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
+                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Text="Giai đoạn 2 (Từ tuần 10 - 18)"
@@ -75,16 +133,74 @@
                   x:Name="DataGridSecondPhase"
                   AutoGenerateColumns="False"
                   GridLinesVisibility="None"
-                  FontSize="10">
+                  FontSize="10"
+                  materialDesign:DataGridAssist.CellPadding="4 2 2 2"
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto" CanUserSort="False" CanUserReorder="False"></DataGridTextColumn>
-                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
-                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*" CanUserSort="False" CanUserReorder="False"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Giờ" Binding="{Binding Path=Time, Converter={StaticResource ResourceKey=ShortedTimeViewConverter}}" Width="auto" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT2}" IsReadOnly="True" Header="T2" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Monday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT3}" IsReadOnly="True" Header="T3" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Tuseday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT4}" IsReadOnly="True" Header="T4" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Wednessday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT5}" IsReadOnly="True" Header="T5" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Thursday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT6}" IsReadOnly="True" Header="T6" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Friday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellT7}" IsReadOnly="True" Header="T7" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Saturday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn CellStyle="{StaticResource CellCN}" IsReadOnly="True" Header="CN" Binding="{Binding Converter={StaticResource ResourceKey=ClassGroupModelConverter}, Path=Sunday}" Width="*" CanUserSort="False" CanUserReorder="False">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

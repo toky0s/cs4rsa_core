@@ -72,10 +72,25 @@ namespace cs4rsa.Models
             }
         }
 
+        private int _studyUnit = 0;
+        public int StudyUnit
+        {
+            get
+            {
+                return _studyUnit == 0 ? _programSubject.StudyUnit : _studyUnit;
+
+            }
+            set
+            {
+                _studyUnit = value;
+            }
+        }
+
         public bool IsDone => _programSubject.IsDone();
         public bool IsFolderCompleted => FolderContainThisSubjectIsCompleted();
         public bool IsCanChoice => CanChoice();
         public string CourseId => _programSubject.CourseId;
+        public string ChildOfNode => _programSubject.ChildOfNode;
 
         public ProgramSubjectModel(ProgramSubject programSubject, ref ProgramDiagram diagram)
         {

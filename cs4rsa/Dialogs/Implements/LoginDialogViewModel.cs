@@ -16,7 +16,7 @@ using cs4rsa.Models;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    class LoginViewModel: DialogViewModelBase<LoginResult>
+    class LoginDialogViewModel : DialogViewModelBase<LoginResult>
     {
         private ObservableCollection<StudentModel> _studentInfos = new ObservableCollection<StudentModel>();
         public ObservableCollection<StudentModel> StudentInfos
@@ -44,12 +44,10 @@ namespace cs4rsa.Dialogs.Implements
             }
         }
 
-        public RelayCommand OpenSessionIdInput { get; set; }
         public RelayCommand LoginCommand { get; set; }
 
-        public LoginViewModel()
+        public LoginDialogViewModel()
         {
-            OpenSessionIdInput = new RelayCommand(OnOpenSessionIdInput, () => true);
             LoginCommand = new RelayCommand(OnReturnStudent, () => true);
             LoadStudentInfos();
         }
@@ -58,27 +56,8 @@ namespace cs4rsa.Dialogs.Implements
         {
             if (_selectedStudentInfo != null)
             {
-                LoginResult loginResult = new LoginResult() { StudentModel=_selectedStudentInfo };
+                LoginResult loginResult = new LoginResult() { StudentModel = _selectedStudentInfo };
                 CloseDialogWithResult(obj as Window, loginResult);
-            }
-        }
-
-        private void OnOpenSessionIdInput(object obj)
-        {
-            Cs4rsaMessageBox messageBox = new Cs4rsaMessageBox();
-            SessionInputWindow sessionInputWindow = new SessionInputWindow();
-            SessionInputViewModel vm = new SessionInputViewModel(messageBox);
-            StudentResult result = DialogService<StudentResult>.OpenDialog(vm, sessionInputWindow, obj as Window);
-            if (result != null)
-            {
-                StudentModel studentModel = new StudentModel(result.Student);
-                if (!_studentInfos.Contains(studentModel))
-                    _studentInfos.Add(studentModel);
-                else
-                {
-                    int index = _studentInfos.IndexOf(studentModel);
-                    _studentInfos[index] = studentModel;
-                }
             }
         }
 

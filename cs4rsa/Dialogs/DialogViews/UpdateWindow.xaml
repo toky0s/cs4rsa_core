@@ -16,7 +16,7 @@
         <StackPanel>
             <TextBlock Text="Cảnh báo cập nhật"
                        Margin="5,0,5,0"
-                       Style="{StaticResource Header1}"></TextBlock>
+                       ></TextBlock>
             <TextBlock TextWrapping="Wrap"
                        Margin="5">
                 <TextBlock.Text>

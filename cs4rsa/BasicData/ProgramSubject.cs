@@ -68,7 +68,7 @@ namespace cs4rsa.BasicData
                 _subjectName = value;
             }
         }
-        public string StudyUnit => _studyUnit;
+        public int StudyUnit => int.Parse(_studyUnit);
         public StudyUnitType StudyUnitType => _studyUnitType;
         public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
         public List<string> ParallelSubjects => _parallelSubjects;

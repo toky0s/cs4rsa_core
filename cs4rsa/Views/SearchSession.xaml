@@ -6,7 +6,22 @@
              xmlns:local="clr-namespace:cs4rsa.Views"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="400"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -22,30 +37,38 @@
         <TextBlock Text="Tìm kiếm"
                    Grid.Row="0"
                    Grid.ColumnSpan="2"
-                   Style="{StaticResource Header1}"></TextBlock>
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
         <ComboBox Grid.Row="1"
                   Grid.Column="0"
                   Margin="0, 0, 5, 0"
+                  materialDesign:ComboBoxAssist.ClassicMode="True"
                   x:Name="DisciplineComboBox"
                   SelectionChanged="DisciplineComboBox_SelectionChanged"
                   ItemsSource="{Binding Disciplines, Mode=OneWay}"
                   SelectedItem="{Binding SelectedDiscipline}"
                   DisplayMemberPath="Discipline"
-                  SelectedValuePath="Discipline"></ComboBox>
+                  SelectedValuePath="Discipline"
+                  FontSize="12"
+                  FontWeight="Normal"></ComboBox>
         <ComboBox Grid.Row="1"
                   Grid.Column="1"
                   x:Name="Keyword1ComboxBox"
+                  materialDesign:ComboBoxAssist.ClassicMode="True"
                   ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
                   SelectedItem="{Binding SelectedKeyword}"
                   SelectedValuePath="Keyword1"
+                  FontSize="12"
+                  FontWeight="Normal"
                   ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock>
+                    <StackPanel>
+                        <TextBlock>
                         <Run Text="{Binding Keyword1}"></Run>
                         <Run Text=" - "></Run>
                         <Run Text="{Binding SubjectName}"></Run>
-                    </TextBlock>
+                        </TextBlock>
+                    </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
@@ -53,69 +76,84 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
+                materialDesign:ShadowAssist.ShadowDepth="Depth3" 
+                Background="#55efc4"
+                BorderBrush="#55efc4"
+                Foreground="White"
                 Height="30"
-                Margin="0, 5, 0, 0"
+                Margin="0, 5, 0, 5"
                 x:Name="DisciplineKeywordButton"
                 Command="{Binding AddCommand}"
                 IsEnabled="{Binding CanRunAddCommand}"></Button>
-        <ListBox Grid.Row="3"
+        <ListBox Grid.Row="3" 
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
-                 Margin="0, 5, 0, 0"
+                 Margin="0, 0, 0, 5"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  x:Name="DownloadSubjects"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 HorizontalContentAlignment="Stretch"
                  ItemsSource="{Binding SubjectModels}"
-                 SelectedItem="{Binding SelectedSubjectModel}"
-                 Style="{StaticResource Cs4rsaListBox}">
-            <ListBox.Resources>
-                <ContextMenu x:Key="ListBoxContextMenu" Opened="ContextMenu_Opened">
-                    <MenuItem Header="Xoá" Command="{Binding DeleteCommand}"/>
-                    <MenuItem Header="Mở trong courses.duytan.edu.vn" Command="{Binding GotoCourseCommand}"/>
-                </ContextMenu>
-            </ListBox.Resources>
+                 SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.RowSpan="2"
-                                Width="20"
-                                Height="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=ListBoxItem,Mode=FindAncestor}}"
+                    <materialDesign:Card Height="66"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.Column="0"
+                                       Width="27"
+                                HorizontalAlignment="Left"
                                 Fill="{Binding Color}"/>
-                        <StackPanel Grid.Row="0"
+                            <StackPanel
                                     Grid.Column="1"
                                     Orientation="Vertical">
-                            <TextBlock Text="{Binding SubjectName}" 
+                                <TextBlock Text="{Binding SubjectName}" 
+                                       Margin="5,10,0,0"
+                                       FontSize="14">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding SubjectName}"></TextBlock>
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                                <TextBlock Text="{Binding SubjectCode}" 
                                        Margin="5,0,0,0"
-                                       FontSize="16"></TextBlock>
-                            <TextBlock Text="{Binding SubjectCode}" Margin="5,0,0,0"></TextBlock>
-                            <TextBlock Margin="5,0,0,0"
-                                       FontSize="10">
-                                <Run Text="Số tín chỉ: "></Run>
-                                <Run Text="{Binding StudyUnit}"></Run>
-                                <Run Text=" tín chỉ"></Run>
-                            </TextBlock>
-                        </StackPanel>
-                    </Grid>
+                                       Style="{StaticResource Caption}"></TextBlock>
+                                <TextBlock Margin="5,0,0,0"
+                                           Style="{StaticResource Caption}">
+                                    <Run Text="Số tín chỉ:"></Run>
+                                    <Run Text="{Binding StudyUnit}"></Run>
+                                    <Run Text="tín chỉ"></Run>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <materialDesign:PopupBox Margin="10"
+                                                     Style="{StaticResource MaterialDesignToolPopupBox}">
+                                    <StackPanel>
+                                        <Button Content="Xoá"
+                                                Command="{Binding DeleteCommand}"
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
+                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
+                                        <Button Content="Mở trong Courses"
+                                                Command="{Binding GotoCourseCommand}"
+                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
+                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
+                                    </StackPanel>
+                                </materialDesign:PopupBox>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="ContextMenu" Value="{StaticResource ListBoxContextMenu}"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
         </ListBox>
+
         <Grid Grid.ColumnSpan="2"
                     Grid.Row="4" 
-                    Grid.Column="0"
-              Margin="0, 5, 0, 0">
+                    Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -124,12 +162,18 @@
                     Content="Xoá"
                     Height="30"
                     Command="{Binding DeleteCommand}"
-                    Margin="0, 0, 2.5, 0">
+                    Background="#ff6b81"
+                    BorderBrush="#ff6b81"
+                    Foreground="White"
+                    Margin="0,0,3,0">
             </Button>
             <Button Grid.Column="1" 
                     Content="Nhập..."
                     Height="30"
-                    Margin="2.5, 0, 0, 0"
+                    Background="#70a1ff"
+                    BorderBrush="#70a1ff"
+                    Foreground="White"
+                    Margin="3,0,0,0"
                     Command="{Binding ImportDialogCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
         </Grid>

@@ -127,7 +127,7 @@ namespace cs4rsa.Database
         {
             List<ScheduleSession> scheduleSessions = new List<ScheduleSession>();
             Cs4rsaDatabase cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
-            string sql = $@"select id, name, save_date, semester, year from sessionx";
+            string sql = $@"select id, name, save_date, semester, year from session";
             DataTable table = cs4RsaDatabase.GetDataTable(sql);
             foreach (DataRow item in table.Rows)
             {
@@ -217,6 +217,26 @@ namespace cs4rsa.Database
                 result.Add(info);
             }
             return result;
+        }
+
+        public static StudentInfo GetStudentInfo(string studentId)
+        {
+            string sql = $@"SELECT * from student
+                            where studentId = '{studentId}'";
+            DataTable table = _cs4RsaDatabase.GetDataTable(sql);
+            StudentInfo info = new StudentInfo()
+            {
+                Name = table.Rows[0]["name"].ToString(),
+                StudentId = table.Rows[0]["studentID"].ToString(),
+                SpecialString = table.Rows[0]["specialString"].ToString(),
+                Birthday = table.Rows[0]["birthDay"].ToString(),
+                CMND = table.Rows[0]["cmnd"].ToString(),
+                Email = table.Rows[0]["email"].ToString(),
+                PhoneNumber = table.Rows[0]["phoneNumber"].ToString(),
+                Address = table.Rows[0]["address"].ToString(),
+                Image = table.Rows[0]["image"].ToString(),
+            };
+            return info;
         }
 
         public static List<string> GetPreSubjects(string courseId)

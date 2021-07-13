@@ -23,16 +23,16 @@ namespace cs4rsa.ViewModels
         IMessageHandler<ClassGroupAddedMessage>,
         IMessageHandler<DeleteSubjectMessage>
     {
-        private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
+        private ObservableCollection<ClassGroupModel> _classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
         {
             get
             {
-                return classGroupModels;
+                return _classGroupModels;
             }
             set
             {
-                classGroupModels = value;
+                _classGroupModels = value;
             }
         }
 
@@ -77,6 +77,8 @@ namespace cs4rsa.ViewModels
 
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteAllCommand { get; set; }
+        public RelayCommand CopyCodeCommand { get; set; }
 
         public ChoiceSessionViewModel()
         {
@@ -84,24 +86,49 @@ namespace cs4rsa.ViewModels
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
+            CopyCodeCommand = new RelayCommand(OnCopyCode);
+        }
+
+        private void OnCopyCode(object obj)
+        {
+            ClassGroupModel classGroupModel = obj as ClassGroupModel;
+            string registerCode = classGroupModel.RegisterCode;
+            Clipboard.SetData(DataFormats.Text, registerCode);
+        }
+
+        private bool CanDeleteAll()
+        {
+            return _classGroupModels.Count > 0;
+        }
+
+        private void OnDeleteAll(object obj)
+        {
+            _classGroupModels.Clear();
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(_classGroupModels.ToList()));
         }
 
         private void OnDelete(object obj)
         {
-            classGroupModels.Remove(_selectedClassGroupModel);
+            ClassGroupModel classGroupModel = obj as ClassGroupModel;
+            _classGroupModels.Remove(classGroupModel);
             UpdateConflictModelCollection();
-            MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(classGroupModels.ToList()));
+            MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(_classGroupModels.ToList()));
         }
 
         private bool CanSave()
         {
-            return classGroupModels.Count > 0;
+            return _classGroupModels.Count > 0;
         }
 
         private void OpenSaveDialog(object parameter)
         {
             Cs4rsaMessageBox errorMessageBox = new Cs4rsaMessageBox();
-            SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, classGroupModels.ToList());
+            SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, _classGroupModels.ToList());
             SaveDialogWindow dialogWindow = new SaveDialogWindow();
             SaveResult result = DialogService<SaveResult>.OpenDialog(saveDialogViewModel, dialogWindow, parameter as Window);
         }
@@ -114,14 +141,15 @@ namespace cs4rsa.ViewModels
             {
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (ClassGroupModelIndex != -1)
-                    classGroupModels[ClassGroupModelIndex] = classGroupModel;
+                    _classGroupModels[ClassGroupModelIndex] = classGroupModel;
                 else
-                    classGroupModels.Add(classGroupModel);
+                    _classGroupModels.Add(classGroupModel);
             }
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
             SaveCommand.RaiseCanExecuteChanged();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(_classGroupModels.ToList()));
         }
 
         /// <summary>
@@ -133,8 +161,8 @@ namespace cs4rsa.ViewModels
         /// bằng với ClassGroupModel được truyền vào nếu không trả về -1.</returns>
         private int IsReallyHaveAnotherVersionInChoicedList(ClassGroupModel classGroupModel)
         {
-            for (int i = 0; i < classGroupModels.Count; ++i)
-                if (classGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
+            for (int i = 0; i < _classGroupModels.Count; ++i)
+                if (_classGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
                     return i;
             return -1;
         }
@@ -142,18 +170,18 @@ namespace cs4rsa.ViewModels
         public void Handle(DeleteSubjectMessage message)
         {
             SubjectModel subjectModel = message.Source;
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
                 {
-                    classGroupModels.Remove(classGroupModel);
+                    _classGroupModels.Remove(classGroupModel);
                     break;
                 }
             }
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
             SaveCommand.RaiseCanExecuteChanged();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(classGroupModels.ToList()));
+            MessageBus.Default.Publish(new ChoicesChangedMessage(_classGroupModels.ToList()));
         }
 
         /// <summary>
@@ -163,11 +191,11 @@ namespace cs4rsa.ViewModels
         private void UpdateConflictModelCollection()
         {
             conflictModels.Clear();
-            for (int i = 0; i < classGroupModels.Count; ++i)
+            for (int i = 0; i < _classGroupModels.Count; ++i)
             {
-                for (int k = i+1; k < classGroupModels.Count; ++k)
+                for (int k = i+1; k < _classGroupModels.Count; ++k)
                 {
-                    Conflict conflict = new Conflict(classGroupModels[i], classGroupModels[k]);
+                    Conflict conflict = new Conflict(_classGroupModels[i], _classGroupModels[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -182,11 +210,11 @@ namespace cs4rsa.ViewModels
         private void UpdatePlaceConflictCollection()
         {
             _placeConflictFinderModels.Clear();
-            for (int i = 0; i < classGroupModels.Count; ++i)
+            for (int i = 0; i < _classGroupModels.Count; ++i)
             {
-                for (int k = i + 1; k < classGroupModels.Count; ++k)
+                for (int k = i + 1; k < _classGroupModels.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(classGroupModels[i], classGroupModels[k]);
+                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(_classGroupModels[i], _classGroupModels[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {

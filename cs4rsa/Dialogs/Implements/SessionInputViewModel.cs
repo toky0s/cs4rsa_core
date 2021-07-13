@@ -47,32 +47,39 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         private IMessageBox _messageBox;
-        public RelayCommand FindCommand { get; set; }
-        public SessionInputViewModel(IMessageBox messageBox)
+        private BackgroundWorker _backgroundWorker;
+
+        public SessionInputViewModel(string sessionId, IMessageBox messageBox)
         {
+            _sessionId = sessionId;
             _messageBox = messageBox;
-            FindCommand = new RelayCommand(OnFind, () => true);
+            Find();
         }
 
-        private void OnFind(object obj)
+        private void Find()
         {
-            BackgroundWorker backgroundWorker = new BackgroundWorker()
+            _backgroundWorker = new BackgroundWorker()
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true
             };
-            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerAsync(_sessionId);
+            _backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
+            _backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            _backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            _backgroundWorker.RunWorkerAsync(_sessionId);
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+            if (worker.CancellationPending)
+            {
+                e.Cancel = true;
+            }
             worker.ReportProgress(10);
             string sessionId = (string)e.Argument;
             string specialString = SpecialStringCrawler.GetSpecialString(sessionId);
+
             if (specialString == null)
             {
                 e.Cancel = true;
@@ -107,8 +114,7 @@ namespace cs4rsa.Dialogs.Implements
                                         "Thông báo",
                                         MessageBoxButton.OK,
                                         MessageBoxImage.Exclamation);
-                SessionId = "";
-                ProgressValue = 0;
+                CloseDialogWithResult(null);
             }
             else
             {

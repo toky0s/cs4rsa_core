@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:cs4rsa.Views"
              xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="400"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="13"
+            TextOptions.TextFormattingMode="Ideal" 
+            TextOptions.TextRenderingMode="Auto"        
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
     <UserControl.Resources>
         <converter:PhaseConverter x:Key="PhaseConverter"></converter:PhaseConverter>
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter"></converter:EmptySeatCheckerConverter>
@@ -15,75 +23,70 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Text="Nhóm lớp"
                    Grid.Row="0"
-                   Style="{StaticResource Header1}"></TextBlock>
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
         <ListBox Grid.Row="1"
                  Grid.Column="0"
                  x:Name="ClassGroupListBox"
-                 ScrollViewer.VerticalScrollBarVisibility="auto"
-                 ItemsSource="{Binding ClassGroupModels, UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding SelectedClassGroup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                 Background="#f5f5f5">
-            <ListBox.Resources>
-                <ToolTip x:Key="ItemToolTipStyle">
-                    <TextBlock Text="{Binding RegisterCode}"></TextBlock>
-                </ToolTip>
-            </ListBox.Resources>
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ItemsSource="{Binding ClassGroupModels}"
+                 SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Rectangle Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.RowSpan="2"
-                                Width="10"
-                                Height="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=ListBoxItem,Mode=FindAncestor}}"
-                                Fill="{Binding Color}"/>
-                            <TextBlock Text="{Binding Name}"
-                                   Margin="7, 0, 0, 0">
-                            </TextBlock>
-                        </StackPanel>
-                        <TextBlock Margin="17,0,0,0"
-                                   FontSize="10">
-                            <Run Text="Còn trống "></Run>
-                            <Run Text="{Binding EmptySeat}"></Run>
-                            <Run Text=" chỗ"></Run>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding EmptySeat, 
-                            Converter={StaticResource EmptySeatCheckerConverter}, 
-                            ConverterParameter=5}" Value="True">
-                                            <Setter Property="Foreground" Value="#f83600"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding EmptySeat, 
-                            Converter={StaticResource EmptySeatCheckerConverter}, 
-                            ConverterParameter=0}" Value="True">
-                                            <Setter Property="Foreground" Value="Red"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        
-                    </StackPanel>
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                         Height="40" 
+                                         Width="220">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.Column="0"
+                                        Width="15"
+                                        Fill="{Binding Color}"/>
+                            <StackPanel Orientation="Vertical"
+                                    Grid.Column="1"
+                                        Margin="0 5 0 0">
+                                <TextBlock Text="{Binding Name}"
+                                       Margin="5,0,0,0"
+                                       FontSize="14">
+                                </TextBlock>
+                                <TextBlock FontSize="10"
+                                       Margin="5,0,0,0">
+                                    <Run Text="Còn trống"></Run>
+                                    <Run Text="{Binding EmptySeat}"></Run>
+                                    <Run Text="chỗ"></Run>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="12"></Setter>
+                                            <Setter Property="FontWeight" Value="Normal"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                                                            ConverterParameter=5}" Value="True">
+                                                    <Setter Property="Foreground" Value="#f83600"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                                                            ConverterParameter=0}" Value="True">
+                                                    <Setter Property="Foreground" Value="Red"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
+
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="ToolTip" Value="{StaticResource ItemToolTipStyle}"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
         </ListBox>
-        <TextBlock Grid.Row="2" 
-                   Grid.Column="0" 
-                   Text="Bộ lọc"
-                   Style="{StaticResource Header2}"></TextBlock>
-        <Grid Grid.Row="3" >
+        <Grid Grid.Row="2" >
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Grid.Row="1"
                     Grid.Column="0"
@@ -100,52 +103,68 @@
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
-                            <GroupBox Header="Thứ">
+                            <GroupBox Header="Thứ"
+                                      Margin="5,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
                                     <CheckBox 
-                                      Content="Thứ Hai"
+                                      Content="Hai"
                                       x:Name="CheckBox_Monday"
                                       IsChecked="False"
-                                      Click="ReloadClassGroupCollection"></CheckBox>
+                                      Click="ReloadClassGroupCollection"
+                                      Background="#636e72"></CheckBox>
                                     <CheckBox 
-                                      Content="Thứ Ba"
+                                      Content="Ba"
                                       x:Name="CheckBox_Tuseday"
                                       IsChecked="False"
-                                      Click="ReloadClassGroupCollection"></CheckBox>
+                                      Click="ReloadClassGroupCollection"
+                                       Background="#636e72"></CheckBox>
                                     <CheckBox
-                                      Content="Thứ Tư" 
+                                      Content="Tư" 
                                       Click="ReloadClassGroupCollection"
                                       IsChecked="False"
-                                      x:Name="CheckBox_Wednessday"></CheckBox>
+                                      x:Name="CheckBox_Wednessday"
+                                         Background="#636e72"></CheckBox>
                                     <CheckBox 
-                                      Content="Thứ Năm" 
+                                      Content="Năm" 
                                       Click="ReloadClassGroupCollection" 
                                       IsChecked="False"
-                                      x:Name="CheckBox_Thursday"></CheckBox>
+                                      x:Name="CheckBox_Thursday"
+                                         Background="#636e72"></CheckBox>
                                     <CheckBox 
-                                      Content="Thứ Sáu" 
+                                      Content="Sáu" 
                                       Click="ReloadClassGroupCollection" 
                                       IsChecked="False"
-                                      x:Name="CheckBox_Friday"></CheckBox>
+                                      x:Name="CheckBox_Friday"
+                                         Background="#636e72"></CheckBox>
                                     <CheckBox
-                                      Content="Thứ Bảy" 
+                                      Content="Bảy" 
                                       Click="ReloadClassGroupCollection"
                                       IsChecked="False"
-                                      x:Name="CheckBox_Saturday"></CheckBox>
+                                      x:Name="CheckBox_Saturday"
+                                         Background="#636e72"></CheckBox>
                                     <CheckBox
                                       Content="Chủ Nhật" 
                                       Click="ReloadClassGroupCollection"
                                       IsChecked="False"
-                                      x:Name="CheckBox_Sunday"></CheckBox>
+                                      x:Name="CheckBox_Sunday"
+                                         Background="#636e72"></CheckBox>
                                 </StackPanel>
                             </GroupBox>
 
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1">
-                            <GroupBox Header="Buổi">
+                            <GroupBox Header="Buổi"
+                                      Margin="0,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <StackPanel Orientation="Vertical">
                                     <CheckBox
                           Content="Sáng"
+                                         Background="#636e72"
                           x:Name="CheckBox_Morning"
                           Click="ReloadClassGroupCollection">
                                         <CheckBox.ToolTip>
@@ -156,6 +175,7 @@
                                     </CheckBox>
                                     <CheckBox
                           Content="Chiều"
+                                         Background="#636e72"
                           x:Name="CheckBox_Afternoon"
                           Click="ReloadClassGroupCollection">
                                         <CheckBox.ToolTip>
@@ -166,6 +186,7 @@
                                     </CheckBox>
                                     <CheckBox
                           Content="Tối"
+                                         Background="#636e72"
                           x:Name="CheckBox_Night"
                           Click="ReloadClassGroupCollection">
                                         <CheckBox.ToolTip>
@@ -176,59 +197,82 @@
                                     </CheckBox>
                                 </StackPanel>
                             </GroupBox>
-                            <GroupBox Header="Chỗ ngồi">
+                            <GroupBox Header="Chỗ ngồi"
+                                      Margin="0,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <StackPanel x:Name="RadioButtonContainer_Seat">
-                                    <RadioButton Content="Tất cả" 
+                                    <RadioButton Content="Tất cả"
+                                                  Background="#636e72"
                                                  IsChecked="True"
                                                  x:Name="RadioButton_SeatAll"
                                                  Click="ReloadClassGroupCollection"></RadioButton>
                                     <RadioButton Content="Còn chỗ"
+                                                  Background="#636e72"
                                                  x:Name="RadioButton_SeatHave"
                                                  Click="ReloadClassGroupCollection"></RadioButton>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                            <GroupBox Header="Giảng viên">
+                            <GroupBox Header="Giảng viên"
+                                      Margin="5,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <ComboBox 
-                ItemsSource="{Binding Teachers}"
-                SelectedItem="{Binding SelectedTeacher}"
-                DisplayMemberPath="Name"
-                SelectionChanged="ReloadClassGroupCollection"
-                x:Name="ComboxBox_Teachers">
+                                    ItemsSource="{Binding Teachers}"
+                                    SelectedItem="{Binding SelectedTeacher}"
+                                    materialDesign:ComboBoxAssist.ClassicMode="True"
+                                    DisplayMemberPath="Name"
+                                    SelectionChanged="ReloadClassGroupCollection"
+                                    x:Name="ComboxBox_Teachers">
                                 </ComboBox>
                             </GroupBox>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="0">
-                            <GroupBox Header="Giai đoạn">
+                            <GroupBox Header="Giai đoạn"
+                                      Margin="5,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <StackPanel x:Name="RadioButtonContainer_Phase">
-                                    <RadioButton  Name="all" Checked="ReloadClassGroupCollection" Content="Tất cả" IsChecked="True"></RadioButton>
-                                    <RadioButton  Name="first" Checked="ReloadClassGroupCollection" Content="Giai đoạn 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
-                                    <RadioButton  Name="second" Checked="ReloadClassGroupCollection" Content="Giai đoạn 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
-                                    <RadioButton  Name="both" Checked="ReloadClassGroupCollection" Content="Hai giai đoạn" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
+                                    <RadioButton  Name="all" 
+                                                  Checked="ReloadClassGroupCollection" 
+                                                  Content="Tất cả" 
+                                                  IsChecked="True"
+                                                   Background="#636e72"></RadioButton>
+                                    <RadioButton   Background="#636e72" Name="first" Checked="ReloadClassGroupCollection" Content="Giai đoạn 1" ToolTip="Những lớp chỉ ở giai đoạn 1"></RadioButton>
+                                    <RadioButton   Background="#636e72" Name="second" Checked="ReloadClassGroupCollection" Content="Giai đoạn 2" ToolTip="Những lớp chỉ ở giai đoạn 2"></RadioButton>
+                                    <RadioButton   Background="#636e72" Name="both" Checked="ReloadClassGroupCollection" Content="Hai giai đoạn" ToolTip="Những lớp kéo dài cả hai giai đoạn"></RadioButton>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="1">
-                            <GroupBox Header="Nơi học">
+                            <GroupBox Header="Nơi học"
+                                      Margin="0,0,5,5"
+                                      materialDesign:ColorZoneAssist.Mode="Custom"
+                                      materialDesign:ColorZoneAssist.Background="#b2bec3"
+                                      materialDesign:ColorZoneAssist.Foreground="White">
                                 <StackPanel x:Name="CheckBoxContainer_Place">
-                                    <CheckBox
+                                    <CheckBox  Background="#636e72"
                           Content="Quang Trung"
                           x:Name="CheckBox_quantrung"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                                    <CheckBox
+                                    <CheckBox  Background="#636e72"
                           Content="Phan Thanh"
                           x:Name="CheckBox_phanthanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                                    <CheckBox
+                                    <CheckBox  Background="#636e72"
                           Content="Việt Tin"
                           x:Name="CheckBox_viettin"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                                    <CheckBox
+                                    <CheckBox  Background="#636e72"
                           Content="Hoà Khánh"
                           x:Name="CheckBox_hoakhanh"
                           Click="ReloadClassGroupCollection"></CheckBox>
-                                    <CheckBox
+                                    <CheckBox  Background="#636e72"
                           Content="137 NVL"
                           x:Name="CheckBox_137_nvl"
                           Click="ReloadClassGroupCollection"></CheckBox>

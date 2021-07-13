@@ -6,35 +6,33 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         Title="Nhập Môn học"
-        Height="356"
+        Height="400"
         Width="800"
-        Background="#FFFAFAFA"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
-        <Style x:Key="HeaderExpander" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Regular"></Setter>
-            <Setter Property="FontSize" Value="20"></Setter>
-            <Setter Property="Foreground" Value="Black"></Setter>
-        </Style>
-        <Style x:Key="Expander" TargetType="Expander">
-
-        </Style>
         <converter:ExpiryConverter x:Key="ExpiryConverter"></converter:ExpiryConverter>
     </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical">
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Text="Từ cơ sở dữ liệu"
-                               Style="{StaticResource HeaderExpander}"></TextBlock>
+                    <TextBlock Text="Từ cơ sở dữ liệu"></TextBlock>
                 </Expander.Header>
                 <Grid x:Uid="GridSessions" Height="215">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2.5*"></ColumnDefinition>
                         <ColumnDefinition Width="3*"></ColumnDefinition>
-                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical"
                                 Grid.Column="0">
@@ -45,7 +43,7 @@
                             SelectedItem="{Binding SelectedScheduleSession}"
                             Margin="5,5,5,0" 
                             Grid.RowSpan="2"
-                            Style="{StaticResource Cs4rsaListView}">
+                            >
                             <ListView.Resources>
                                 <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
                                     <Style.Triggers>
@@ -57,7 +55,7 @@
                                                 </MultiBinding>
                                             </DataTrigger.Binding>
                                             <Setter Property="Text" Value="Có thể sử dụng"></Setter>
-                                            <Setter Property="Foreground" Value="LightGreen"></Setter>
+                                            <Setter Property="Foreground" Value="Green"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Value="0">
                                             <DataTrigger.Binding>
@@ -75,7 +73,6 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
-                                    <GridViewColumn Header="Ngày lưu" Width="auto" DisplayMemberBinding="{Binding SaveDate}" />
                                     <GridViewColumn Header="Hiệu lực" Width="auto">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
@@ -90,7 +87,7 @@
                     <StackPanel Grid.Column="1"
                                 Orientation="Vertical">
                         <ListView Grid.Row="4"
-                                  Style="{StaticResource Cs4rsaListView}"
+                                  
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"
                                   Height="200"
@@ -113,6 +110,8 @@
                                 Grid.Column="0"
                                 Content="Nhập"
                                 Height="30"
+                                Width="100"
+                                Foreground="White"
                                 Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                         <Button Grid.Row="2"
@@ -120,6 +119,7 @@
                                 Content="Xoá"
                                 Height="30"
                                 Margin="0,5,0,0"
+                                Foreground="White"
                                 Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"></Button>
                     </StackPanel>
 
@@ -128,28 +128,27 @@
             </Expander>
             <Expander IsExpanded="True">
                 <Expander.Header>
-                    <TextBlock Text="Từ ShareString"
-                               Style="{StaticResource HeaderExpander}">
-                    </TextBlock>
+                    <TextBlock Text="Từ ShareString"></TextBlock>
                 </Expander.Header>
                 <Grid Margin="7,7,7,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                               Text="Share String:"
-                               FontStyle="Italic"
-                               Margin="0,0,5,0"></TextBlock>
-                    <TextBox Grid.Column="1"
+                    <TextBox Grid.Column="0"
                              Margin="0,0,5,0"
+                             Height="40"
+                             x:Name="ShareString"
+                             materialDesign:HintAssist.Hint="Share String của bạn"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding ShareString}"></TextBox>
                     <Button
                         Height="30"
-                        Grid.Column="2"
+                        Grid.Column="1"
                         Content="Nhập"
                         Width="100"
+                        Foreground="White"
+                        IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}"
                         Command="{Binding ShareStringCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                 </Grid>

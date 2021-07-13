@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Globalization;
 using cs4rsa.Helpers;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Views;
 
 namespace cs4rsa
 {
@@ -24,12 +25,47 @@ namespace cs4rsa
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Khởi tạo trước các View trong Runtime
+        private HomeView _homeView = new HomeView();
+        private LoginView _loginView = new LoginView();
+        private MainScheduling _mainScheduling = new MainScheduling();
+        private AutoSchedule _autoScheduling = new AutoSchedule();
+
         public MainWindow()
         {
             InitializeComponent();
-            Cs4rsaMessageBox messageBox = new Cs4rsaMessageBox();
-            MainWindowViewModel semesterInfoViewModel = new MainWindowViewModel(messageBox);
-            DataContext = semesterInfoViewModel;
+        }
+
+        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int index = ListViewMenu.SelectedIndex;
+            MoveCursorMenu(index);
+
+            switch (index)
+            {
+                case 0:
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_homeView);
+                    break;
+                case 1:
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_loginView);
+                    break;
+                case 2:
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_mainScheduling);
+                    break;
+                case 3:
+                    GridPrincipal.Children.Clear();
+                    GridPrincipal.Children.Add(_autoScheduling);
+                    break;
+            }
+        }
+
+        private void MoveCursorMenu(int index)
+        {
+            TrainsitionigContentSlide.OnApplyTemplate();
+            GridCursor.Margin = new Thickness(0, (100 + (60 * index)), 0, 0);
         }
     }
 }

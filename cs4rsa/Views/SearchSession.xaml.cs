@@ -23,13 +23,13 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class SearchSession : UserControl
     {
-        private SearchViewModel searchViewModel = new SearchViewModel();
+        private SearchViewModel searchViewModel;
         
         public SearchSession()
         {
             InitializeComponent();
             Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            searchViewModel.MessageBox = cs4RsaMessageBox;
+            searchViewModel = new SearchViewModel(cs4RsaMessageBox);
             DataContext = searchViewModel;
         }
 
@@ -37,12 +37,6 @@ namespace cs4rsa.Views
         {
             if (searchViewModel.SelectedDiscipline!=null)
                 searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
-        }
-
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            ContextMenu menu = sender as ContextMenu;
-            menu.DataContext = DataContext;
         }
     }
 }

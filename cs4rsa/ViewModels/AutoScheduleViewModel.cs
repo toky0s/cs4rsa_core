@@ -6,16 +6,15 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Messages;
 using cs4rsa.Models;
+using LightMessageBus;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using LightMessageBus;
-using cs4rsa.Messages;
 
 namespace cs4rsa.ViewModels
 {
@@ -31,6 +30,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _studentModel = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -143,22 +143,55 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private int _choicedCount = 0;
+        public int ChoicedCount
+        {
+            get
+            {
+                return _choicedCount;
+            }
+            set
+            {
+                _choicedCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int _creditCount = 0;
+        public int CreditCount
+        {
+            get
+            {
+                return _creditCount;
+            }
+            set
+            {
+                _creditCount = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private ProgramDiagram _programDiagram;
         private IMessageBox _messageBox;
         private Window _window;
 
+        public RelayCommand ChoiceAccountCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
+        public RelayCommand CannotAddReasonCommand { get; set; }
         public RelayCommand SortCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand WatchDetailCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
 
         public AutoScheduleViewModel(StudentModel studentModel, IMessageBox messageBox, Window window)
         {
+            ChoiceAccountCommand = new RelayCommand(OnChoiceAccountCommand);
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             SortCommand = new RelayCommand(OnSort, CanSort);
             DeleteCommand = new RelayCommand(OnDelete);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
             WatchDetailCommand = new RelayCommand(OnWatchDetail);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
@@ -167,24 +200,66 @@ namespace cs4rsa.ViewModels
             _window = window;
         }
 
+        public AutoScheduleViewModel()
+        {
+            ChoiceAccountCommand = new RelayCommand(OnChoiceAccountCommand);
+            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
+            SortCommand = new RelayCommand(OnSort, CanSort);
+            DeleteCommand = new RelayCommand(OnDelete);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
+            GotoCourseCommand = new RelayCommand(OnGoToCourse);
+            WatchDetailCommand = new RelayCommand(OnWatchDetail);
+            ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
+        }
+
+        private void OnChoiceAccountCommand(object obj)
+        {
+            LoginDialogWindow loginWindow = new LoginDialogWindow();
+            LoginDialogViewModel loginDialogViewModel = new LoginDialogViewModel();
+            LoginResult result = DialogService<LoginResult>.OpenDialog(loginDialogViewModel, loginWindow, obj as Window);
+            if (result != null)
+            {
+                _studentModel = result.StudentModel;
+                LoadProgramSubject();
+            }
+        }
+
+        private bool CanDeleteAll()
+        {
+            return _choicedProSubjectModels.Count > 0;
+        }
+
+        private void OnDeleteAll(object obj)
+        {
+            _choicedProSubjectModels.Clear();
+            SortCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+        }
+
         public void LoadProgramSubject()
         {
             ProSubjectLoadWindow proSubjectLoadWindow = new ProSubjectLoadWindow();
             ProSubjectLoadViewModel proSubjectLoadViewModel = new ProSubjectLoadViewModel(_studentModel.StudentInfo.SpecialString);
             ProSubjectLoadResult result = DialogService<ProSubjectLoadResult>.OpenDialog(proSubjectLoadViewModel, proSubjectLoadWindow, _window); ;
 
-            _programDiagram = result.ProgramDiagram;
-            List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
-            foreach (ProgramSubject subject in programSubjects)
+            if (result != null)
             {
-                ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
-                _programSubjectModels.Add(proSubjectModel);
+                _programDiagram = result.ProgramDiagram;
+                List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
+                _programSubjectModels.Clear();
+                foreach (ProgramSubject subject in programSubjects)
+                {
+                    ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, ref _programDiagram);
+                    _programSubjectModels.Add(proSubjectModel);
+                }
             }
         }
 
         private bool CanAdd()
         {
-            if (_selectedProSubject == null || _choicedProSubjectModels.Contains(_selectedProSubject))
+            if (_selectedProSubject == null
+                || _choicedProSubjectModels.Contains(_selectedProSubject)
+                || IsFolderWillCompleteInFuture(_programDiagram.GetFolder(_selectedProSubject.FolderName)))
                 return false;
             return _selectedProSubject.IsCanChoice;
         }
@@ -225,6 +300,10 @@ namespace cs4rsa.ViewModels
         {
             _choicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
             SortCommand.RaiseCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            UpdateChoicedCount();
+            UpdateCreditCount();
         }
 
         private void OnSort(object obj)
@@ -232,12 +311,14 @@ namespace cs4rsa.ViewModels
             AutoSortDialogWindow autoSortDialogWindow = new AutoSortDialogWindow();
             AutoSortViewModel autoSortViewModel = new AutoSortViewModel(_choicedProSubjectModels.ToList());
             AutoSortResult result = DialogService<AutoSortResult>.OpenDialog(autoSortViewModel, autoSortDialogWindow, obj as Window);
+            _combinationModels.Clear();
             List<CombinationModel> combinationModels = result.ClassGroupModelCombinations
-                .Select(item => new CombinationModel(result.SubjectModels,item))
+                .Select(item => new CombinationModel(result.SubjectModels, item))
                 .ToList();
+            // filter
             foreach (CombinationModel combination in combinationModels)
             {
-                if (combination.IsValid() && !combination.IsHaveTimeConflicts())
+                if (combination.IsValid() && !combination.IsHaveTimeConflicts() && !combination.IsHavePlaceConflicts())
                     _combinationModels.Add(combination);
             }
             UpdateCombinationCount();
@@ -250,12 +331,56 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject(object obj)
         {
-            if (_selectedProSubject != null)
+            if (obj != null)
             {
-                _choicedProSubjectModels.Add(_selectedProSubject);
-                SortCommand.RaiseCanExecuteChanged();
-                AddCommand.RaiseCanExecuteChanged();
+                ProgramSubjectModel programSubjectModel = obj as ProgramSubjectModel;
+                _choicedProSubjectModels.Add(programSubjectModel);
             }
+            else 
+            {
+                if (_selectedProSubject != null)
+                    _choicedProSubjectModels.Add(_selectedProSubject);
+            }
+            SortCommand.RaiseCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            UpdateCreditCount();
+            UpdateChoicedCount();
+        }
+
+        private void UpdateChoicedCount()
+        {
+            ChoicedCount = _choicedProSubjectModels.Count;
+        }
+
+        private void UpdateCreditCount()
+        {
+            CreditCount = 0;
+            foreach (ProgramSubjectModel subjectModel in _choicedProSubjectModels)
+                CreditCount += subjectModel.StudyUnit;
+        }
+
+
+        /// <summary>
+        /// Kiểm tra xem Folder được truyền vào sẽ hoàn thành trong tương lai hay không
+        /// nếu người dùng chọn học những môn thuộc folder đó.
+        /// </summary>
+        /// <param name="programFolder"></param>
+        /// <returns></returns>
+        private bool IsFolderWillCompleteInFuture(ProgramFolder programFolder)
+        {
+            if (programFolder.StudyMode == StudyMode.AllowSelection)
+            {
+                int needLearn = programFolder.NeedLearnToComplete();
+                int hasChoiced = 0;
+                foreach (ProgramSubjectModel subjectModel in _choicedProSubjectModels)
+                {
+                    if (subjectModel.ChildOfNode == programFolder.Id)
+                        hasChoiced++;
+                }
+                return (needLearn - hasChoiced) == 0;
+            }
+            return false;
         }
     }
 }

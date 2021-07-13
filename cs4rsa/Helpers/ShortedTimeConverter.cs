@@ -47,6 +47,8 @@ namespace cs4rsa.Helpers
 
     /// <summary>
     /// Impelement Singleton.
+    /// Bộ chuyển đổi này sẽ chuyển một số mốc thời gian lẻ cố định như 07:15 thành
+    /// 07:00 để tiện cho các sinh viên theo dõi.
     /// </summary>
     public class ShortedTimeConverter
     {
@@ -57,10 +59,8 @@ namespace cs4rsa.Helpers
         private ShortedTimeConverter()
         {
             AddDuyTanTime(7, 15, 7, 0);
-            AddDuyTanTime(9, 15, 9, 0);
             AddDuyTanTime(10, 15, 10, 0);
             AddDuyTanTime(11, 15, 11, 0);
-            AddDuyTanTime(15, 15, 15, 0);
             AddDuyTanTime(16, 15, 16, 0);
             AddDuyTanTime(17, 15, 17, 0);
             AddDuyTanTime(17, 45, 18, 0);
@@ -88,22 +88,6 @@ namespace cs4rsa.Helpers
                 new DateTime(now.Year, now.Month, now.Day, rawHour, rawMinute, 0),
                 new DateTime(now.Year, now.Month, now.Day, newHour, newMinute, 0)
             );
-        }
-
-        public List<ShortedTime> ToShortedTime(List<StudyTime> studyTimes)
-        {
-            List<ShortedTime> shortedTimes = new List<ShortedTime>();
-            foreach (StudyTime studyTime in studyTimes)
-            {
-                ShortedTime shortedTimeStart = Convert(studyTime.Start);
-                if (!shortedTimes.Contains(shortedTimeStart))
-                    shortedTimes.Add(shortedTimeStart);
-
-                ShortedTime shortedTimeEnd = Convert(studyTime.End);
-                if (!shortedTimes.Contains(shortedTimeEnd))
-                    shortedTimes.Add(shortedTimeEnd);
-            }
-            return shortedTimes;
         }
     }
 }

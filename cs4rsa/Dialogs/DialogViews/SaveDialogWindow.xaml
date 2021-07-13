@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterOwner"
-        Title="Lưu phiên" Height="300" Width="485">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="Lưu phiên" Height="300" Width="485"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -15,8 +24,7 @@
         </Grid.RowDefinitions>
         <ListView Grid.Row="0"
                   Margin="7, 0, 7, 0"
-                  ItemsSource="{Binding ScheduleSessions}"
-                  Style="{StaticResource Cs4rsaListView}">
+                  ItemsSource="{Binding ScheduleSessions}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
@@ -30,9 +38,9 @@
                 <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Tên Phiên:"></TextBlock>
             <TextBox x:Name="txtName" Grid.Column="1"
+                     materialDesign:HintAssist.Hint="Tên phiên của bạn"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Text="{Binding Name, Mode=TwoWay}"></TextBox>
         </Grid>
 
@@ -40,14 +48,16 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Margin="0, 0, 7, 7">
-            <Button MinWidth="60" 
+            <Button Width="100"
                     Margin="0,0,10,0"
+                    Foreground="White"
                 Content="Lưu" 
                 Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                 IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}"></Button>
             <Button MinWidth="60"
                     IsCancel="True"
+                    Foreground="White"
                 Content="Thoát" 
                 Command="{Binding CancelCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>

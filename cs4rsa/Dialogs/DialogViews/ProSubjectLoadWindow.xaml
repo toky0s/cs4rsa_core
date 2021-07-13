@@ -8,16 +8,18 @@
         mc:Ignorable="d"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}"
         Title="ProSubjectLoadWindow"
-        Height="120" 
+        Height="150" 
         Width="400"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
     <StackPanel>
         <TextBlock TextWrapping="Wrap"
-                   Margin="5">Đang lấy thông tin về chương trình học từ MyDTU của bạn, 
+                   FontSize="14"
+                   Margin="10">Đang lấy thông tin về chương trình học từ MyDTU của bạn, 
             hãy chờ một lát sẽ rất nhanh.</TextBlock>
         <ProgressBar Height="30"
                      Maximum="100"
-                     Margin="5,0,5,5"
+                     Margin="10, 0, 10, 0"
                      Value="{Binding ProgressValue}"></ProgressBar>
     </StackPanel>
 </Window>
