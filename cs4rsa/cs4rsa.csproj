@@ -174,6 +174,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseClasses\BaseConflict.cs" />
+    <Compile Include="BaseClasses\ButtonLessWindow.cs" />
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
     <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Implements\CurriculumSaver.cs" />
     <Compile Include="Implements\ProgramDiagramSaver.cs" />
     <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
+    <Compile Include="Messages\Cs4rsaSnackbarMessage.cs" />
     <Compile Include="Messages\DeleteClassGroupChoiceMessage.cs" />
     <Compile Include="Messages\PlaceConflictCollectionChangeMessage.cs" />
     <Compile Include="Messages\ShowOnSimuMessage.cs" />
@@ -327,6 +329,7 @@
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
@@ -498,31 +501,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\X.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ok.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\location.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\clock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\hand.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\can_choice.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\cannot_choice.png" />
-  </ItemGroup>
-  <ItemGroup>
     <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\1558939.jpg" />
+    <Resource Include="Images\myimage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\github.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

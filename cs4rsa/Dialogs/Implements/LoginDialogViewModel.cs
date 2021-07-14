@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cs4rsa.BasicData;
+﻿using cs4rsa.BasicData;
+using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
-using cs4rsa.Database;
-using cs4rsa.Dialogs.DialogViews;
-using cs4rsa.Dialogs.MessageBoxService;
-using cs4rsa.Enums;
-using System.Windows;
 using cs4rsa.Models;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -48,17 +41,15 @@ namespace cs4rsa.Dialogs.Implements
 
         public LoginDialogViewModel()
         {
-            LoginCommand = new RelayCommand(OnReturnStudent, () => true);
             LoadStudentInfos();
+            LoginCommand = new RelayCommand(OnReturnStudent, () => true);
         }
 
         private void OnReturnStudent(object obj)
         {
-            if (_selectedStudentInfo != null)
-            {
-                LoginResult loginResult = new LoginResult() { StudentModel = _selectedStudentInfo };
-                CloseDialogWithResult(obj as Window, loginResult);
-            }
+            StudentModel studentModel = obj as StudentModel;
+            LoginResult loginResult = new LoginResult() { StudentModel = studentModel };
+            CloseDialogWithResult(loginResult);
         }
 
         private void LoadStudentInfos()

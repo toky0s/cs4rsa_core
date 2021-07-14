@@ -17,7 +17,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="300"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -31,12 +31,111 @@
                   Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                   Text="Chào mừng đến với CS4RSA" />
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
-                      ToolTip="MaterialDesignFlatButton"
                       Content="KHÁM PHÁ" />
             </StackPanel>
         </Grid>
-        <materialDesign:Card Grid.Row="1">
-
-        </materialDesign:Card>
+        <Grid Grid.Row="1"
+              Margin="30 0 0 40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <materialDesign:Card Grid.Column="0"
+                                 Width="400"
+                                 HorizontalAlignment="Right"
+                                 Margin="0 0 10 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="../Images/myimage.jpg"
+                           Stretch="UniformToFill"
+                           HorizontalAlignment="Center">
+                    </Image>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0"
+                                    Margin="15 15 30 0">
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                       Text="Tác giả"
+                                       Margin="0 0 0 20"/>
+                            <TextBlock Foreground="#636e72"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                       TextWrapping="WrapWithOverflow">
+                                "Xin" chào mọi người, tui chỉ muốn để cái mặt tui ở đây để mọi
+                                người biết cái ứng dụng củ chuối này đã được tạo ra bởi tui.
+                            </TextBlock>
+                        </StackPanel>
+                        <Button HorizontalAlignment="Left"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Grid.Row="2"
+                                Margin="15 0 0 15">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Facebook"
+                                                     Width="20"
+                                                     Height="20"
+                                                     Margin="0 0 2 0"/>
+                                <TextBlock Text="Facebook"
+                                           VerticalAlignment="Center"></TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+            <materialDesign:Card Grid.Column="1"
+                                 Width="400"
+                                 HorizontalAlignment="Left"
+                                 Margin="10 0 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="../Images/github.png"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Center"
+                           Margin="20 20 0 0">
+                    </Image>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0"
+                                    Margin="15 15 30 0">
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                       Text="Mã nguồn mở"
+                                       Margin="0 0 0 20"/>
+                            <TextBlock Foreground="#636e72"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                       TextWrapping="WrapWithOverflow">
+                                Dự án này được lên ý tưởng và thực hiện từ ngày 25/10/2020, kéo dài
+                                hơn 2 tháng trên Python và PyQt5. Sau đó được làm lại trên C# WPF trong
+                                hơn 7 tháng. Mã nguồn và tài liệu bạn có thể tham khảo từ các liên kết
+                                bên dưới.
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1">
+                            <Button HorizontalAlignment="Left"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Margin="15 0 0 5"
+                                Content="Về CS4RSA">
+                        </Button>
+                        <Button HorizontalAlignment="Left"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Margin="15 0 0 15"
+                                Content="CS4RSA of DTU-Universe">
+                        </Button>
+                        </StackPanel>
+                        
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </UserControl>

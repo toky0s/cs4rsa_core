@@ -43,39 +43,37 @@
                  SelectedItem="{Binding SelectedClassGroupModel}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  HorizontalContentAlignment="Stretch">
+            <ListBox.Resources>
+                <ContextMenu x:Key="ChoicedContextMenu" Opened="ContextMenu_Opened">
+                    <MenuItem Header="Sao chép mã" Command="{Binding CopyCodeCommand}"></MenuItem>
+                    <MenuItem Header="Bỏ chọn" Command="{Binding DeleteCommand}"></MenuItem>
+                </ContextMenu>
+            </ListBox.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                         Height="30">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition Width="auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Rectangle Grid.Column="0"
                                        Width="10"
                                 Fill="{Binding Color}"/>
                             <TextBlock Text="{Binding Name}"
-                                   Margin="7 10 0 0"
-                                       Grid.Column="1"></TextBlock>
-                            <materialDesign:PopupBox Margin="5"
-                                                     Grid.Column="2"
-                                                     Style="{StaticResource MaterialDesignToolPopupBox}">
-                                <StackPanel>
-                                    <Button Content="Sao chép mã"
-                                                Command="{Binding CopyCodeCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                    <Button Content="Bỏ chọn"
-                                                Command="{Binding DeleteCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                </StackPanel>
-                            </materialDesign:PopupBox>
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       Margin="5 0 0 0"></TextBlock>
                         </Grid>
                     </materialDesign:Card>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ChoicedContextMenu}"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Grid.Row="2"
                     Margin="0 0 0 10">
@@ -98,20 +96,25 @@
                    Grid.Row="3"
                    Margin="0 0 0 5"
                    FontWeight="Bold"></TextBlock>
-        <ListBox Grid.Row="4"
+        <ListView Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListBox.ItemTemplate>
+            <ListView.Resources>
+                <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
+                    <MenuItem Header="Giải quyết xung đột" Command="{Binding FixConflictCommand}"/>
+                </ContextMenu>
+            </ListView.Resources>
+            <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Canvas Width="10"
                                 Height="10"
                                 Margin="0,0,5,0">
-                            <Rectangle
+                            <Ellipse
                                 Width="10"
                                 Height="10">
-                                <Rectangle.Style>
-                                    <Style TargetType="Rectangle">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
                                         <Setter Property="Fill" Value="Red"></Setter>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ConflictType, Converter={StaticResource ResourceKey=ConflictTypeConverter}}" Value="1">
@@ -119,8 +122,8 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </Rectangle.Style>
-                            </Rectangle>
+                                </Ellipse.Style>
+                            </Ellipse>
                         </Canvas>
 
                         <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"
@@ -131,8 +134,13 @@
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ConflictContextMenu}"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
         <TextBlock Text="Xung đột vị trí"
                    Margin="0 5 0 0"
                    Grid.Row="5"

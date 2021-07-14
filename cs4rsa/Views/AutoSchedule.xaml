@@ -15,11 +15,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
     <UserControl.Resources>
-        <!--<converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
-        <Style x:Key="InfoLabel" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14"></Setter>
-        </Style>-->
         <ResourceDictionary>
+            <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -38,14 +35,14 @@
                 <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <!--<Ellipse Height="80" 
+            <Rectangle Height="80" 
                         Width="80"
                         Grid.Column="0">
-                <Ellipse.Fill>
+                <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding StudentModel.StudentInfo.Image, Converter={StaticResource Base64ImageConverter}}"
                                             Stretch="UniformToFill"/>
-                </Ellipse.Fill>
-            </Ellipse>-->
+                </Rectangle.Fill>
+            </Rectangle>
             <StackPanel Grid.Column="1"
                             Orientation="Vertical"
                             Margin="5,0,5,0">
@@ -56,10 +53,11 @@
                 <TextBlock Text="{Binding StudentModel.StudentInfo.StudentId}"
                                Margin="0,5,0,0"
                            FontSize="16"></TextBlock>
-                <Button Content="Chọn tài khoản khác..."
+                <Button Content="Chọn tài khoản..."
                         Height="30"
                         Width="160"
                         HorizontalAlignment="Right"
+                        Foreground="White"
                         Command="{Binding ChoiceAccountCommand}"></Button>
             </StackPanel>
         </Grid>
@@ -79,17 +77,23 @@
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Danh sách các môn của bạn"
-                           Grid.Row="0"></TextBlock>
-
+                           Grid.Row="0"
+                           FontWeight="Bold"></TextBlock>
                 <ListView Grid.Row="1"
                           x:Name="ListViewSubjects"
                           HorizontalContentAlignment="Stretch"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                           ItemsSource="{Binding ProgramSubjectModels}"
                           SelectedItem="{Binding SelectedProSubject}">
+                    <ListView.Resources>
+                        <ContextMenu x:Key="SubjectListContextMenu" Opened="ContextMenu_Opened">
+                            <MenuItem Header="Thêm" Command="{Binding AddCommand}"/>
+                            <MenuItem Header="Xem chi tiết" Command="{Binding WatchDetailCommand}"/>
+                        </ContextMenu>
+                    </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <materialDesign:Card Width="400"
-                                         UniformCornerRadius="5"
                                          materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                          Margin="0 0 0 5">
                                 <Grid>
@@ -191,29 +195,20 @@
                                             </TextBlock>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <materialDesign:PopupBox Margin="10"
-                                                     Style="{StaticResource MaterialDesignToolPopupBox}">
-                                            <StackPanel>
-                                                <Button Content="Thêm"
-                                                Command="{Binding AddCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListViewItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                                <Button Content="Xem chi tiết"
-                                                Command="{Binding WatchDetailCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListViewItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                            </StackPanel>
-                                        </materialDesign:PopupBox>
-                                    </StackPanel>
                                 </Grid>
                             </materialDesign:Card>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Setter Property="ContextMenu" Value="{StaticResource SubjectListContextMenu}"></Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
                 <TextBox Grid.Row="2"
                          Margin="0,5,0,5"
-                         Height="20"
+                         Height="30"
+                         materialDesign:HintAssist.Hint="Tìm kiếm"
                          TextChanged="TextBox_TextChanged"
                          x:Name="TextBoxSubjectName"></TextBox>
                 <Grid Grid.Row="3">
@@ -222,14 +217,16 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button Height="30"
-                        Content="Thêm"
-                        Grid.Column="0"
-                        Command="{Binding AddCommand}"
-                        Margin="0,0,5,0"></Button>
+                            Content="Thêm"
+                            Grid.Column="0"
+                            Foreground="White"
+                            Command="{Binding AddCommand}"
+                            Margin="0,0,5,0"></Button>
                     <Button Height="30"
-                        Content="Thêm nhanh"
-                         Grid.Column="1"
-                        Command="{Binding AddCommand}"></Button>
+                            Content="Thêm nhanh"
+                            Foreground="White"
+                            Grid.Column="1"
+                            Command="{Binding AddCommand}"></Button>
                 </Grid>
 
             </Grid>
@@ -239,14 +236,16 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0"
+                      Margin="0 0 0 10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Các môn bạn đã chọn"
-                                   Grid.Row="0">
+                               Grid.Row="0"
+                               FontWeight="Bold">
                     </TextBlock>
                     <ListView Grid.Row="1"
                               Margin="0,0,0,5"
@@ -264,7 +263,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                                 <Setter Property="ContextMenu" Value="{StaticResource ChoicedSubjectContextMenu}"/>
                             </Style>
                         </ListView.ItemContainerStyle>
@@ -275,11 +274,14 @@
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Button Content="Sắp xếp"
-                            Height="30"
+                                Foreground="White"
+                                Height="30"
                                 Grid.Column="0"
-                            Command="{Binding SortCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+                                Margin="5"
+                                Command="{Binding SortCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                         <Button Content="Xoá hết"
+                                Foreground="White"
                                 Height="30"
                                 Grid.Column="1"
                                 Command="{Binding DeleteAllCommand}"></Button>
@@ -341,13 +343,9 @@
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock >
-                    <Run Text="Các cách sắp xếp ("></Run>
-                    <Run Text="{Binding CombinationCount}"></Run>
-                    <Run Text=")"></Run>
-                </TextBlock>
+                <TextBlock Text="{Binding CombinationCount, StringFormat=Các cách sắp xếp ({0})}"
+                           FontWeight="Bold"/>
                 <ListView Grid.Row="1"
-                          
                           ItemsSource="{Binding CombinationModels}"
                           SelectedItem="{Binding SelectedCombinationModel}">
                     <ListView.Resources>
@@ -380,7 +378,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                             <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}"></Setter>
                         </Style>
                     </ListView.ItemContainerStyle>
@@ -399,7 +397,7 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <TextBlock>
+                <TextBlock FontSize="10">
                     <Run Text="Số môn đã chọn"></Run>
                     <Run Text="{Binding ChoicedCount}"></Run>
                     <Run Text="với tổng số tín chỉ"></Run>

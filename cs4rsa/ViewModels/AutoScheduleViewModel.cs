@@ -200,7 +200,7 @@ namespace cs4rsa.ViewModels
             _window = window;
         }
 
-        public AutoScheduleViewModel()
+        public AutoScheduleViewModel(IMessageBox messageBox)
         {
             ChoiceAccountCommand = new RelayCommand(OnChoiceAccountCommand);
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
@@ -210,6 +210,7 @@ namespace cs4rsa.ViewModels
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
             WatchDetailCommand = new RelayCommand(OnWatchDetail);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
+            _messageBox = messageBox;
         }
 
         private void OnChoiceAccountCommand(object obj)
@@ -219,7 +220,7 @@ namespace cs4rsa.ViewModels
             LoginResult result = DialogService<LoginResult>.OpenDialog(loginDialogViewModel, loginWindow, obj as Window);
             if (result != null)
             {
-                _studentModel = result.StudentModel;
+                StudentModel = result.StudentModel;
                 LoadProgramSubject();
             }
         }

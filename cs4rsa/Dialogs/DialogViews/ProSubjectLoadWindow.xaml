@@ -7,14 +7,21 @@
         xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}"
-        Title="ProSubjectLoadWindow"
+        Title="Tải thông tin chương trình học"
         Height="150" 
         Width="400"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterScreen"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <StackPanel>
         <TextBlock TextWrapping="Wrap"
-                   FontSize="14"
                    Margin="10">Đang lấy thông tin về chương trình học từ MyDTU của bạn, 
             hãy chờ một lát sẽ rất nhanh.</TextBlock>
         <ProgressBar Height="30"

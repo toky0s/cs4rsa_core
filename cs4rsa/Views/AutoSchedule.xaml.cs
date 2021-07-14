@@ -28,7 +28,7 @@ namespace cs4rsa.Views
         {
             InitializeComponent();
             Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            _autoScheduleViewModel = new AutoScheduleViewModel();
+            _autoScheduleViewModel = new AutoScheduleViewModel(cs4RsaMessageBox);
             DataContext = _autoScheduleViewModel;
             ListViewSubjects.ItemsSource = _autoScheduleViewModel.ProgramSubjectModels;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource);

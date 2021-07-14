@@ -1,6 +1,8 @@
 ﻿using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using System.Windows;
+using LightMessageBus;
+using cs4rsa.Messages;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -39,7 +41,11 @@ namespace cs4rsa.Dialogs.Implements
         private void OnCopy(object obj)
         {
             if (_shareString != null)
+            {
                 Clipboard.SetData(DataFormats.Text, _shareString);
+                string message = "Đã sao chép ShareString vào Clipboard";
+                MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(message));
+            }
         }
     }
 }

@@ -6,10 +6,18 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
         Title="Xuất với ShareString"
-        Height="155" 
+        Height="160" 
         Width="400"
-        WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <StackPanel>
         <TextBlock TextWrapping="Wrap"
                    Margin="5">Chia sẻ ShareString này cho bạn bè của
@@ -22,7 +30,8 @@
         <Button Content="Sao chép"
                 Command="{Binding CopyCommand}"
                 Height="30"
-                Margin="5,0,5,5">
+                Margin="5,0,5,5"
+                Foreground="White">
         </Button>
     </StackPanel>
 </Window>

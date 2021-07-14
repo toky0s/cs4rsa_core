@@ -38,5 +38,11 @@ namespace cs4rsa.Views
             if (searchViewModel.SelectedDiscipline!=null)
                 searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu context = sender as ContextMenu;
+            context.DataContext = searchViewModel;
+        }
     }
 }

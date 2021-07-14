@@ -5,11 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
-        Title="AutoSortDialogWindow" 
+        Title="Tải và sắp xếp" 
         Height="150" 
         Width="450"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterScreen"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -30,10 +38,11 @@
                 Content="Hoàn tất"
                 Width="100"
                 Height="30"
+                Foreground="White"
                 Command="{Binding CompletedCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
             <Button.Style>
-                <Style TargetType="Button">
+                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
                     <Setter Property="IsEnabled" Value="False"></Setter>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}"

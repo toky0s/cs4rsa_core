@@ -40,16 +40,24 @@ namespace cs4rsa.ViewModels
             {
                 _sessionId = value;
                 RaisePropertyChanged();
-                FindCommand.RaiseCanExecuteChanged();
             }
         }
 
         public RelayCommand FindCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
 
         public LoginViewModel()
         {
             LoadStudentInfos();
-            FindCommand = new RelayCommand(OnFind, CanFind);
+            FindCommand = new RelayCommand(OnFind);
+            DeleteCommand = new RelayCommand(OnDelete);
+        }
+
+        private void OnDelete(object obj)
+        {
+            StudentModel studentModel = obj as StudentModel;
+            Cs4rsaDataEdit.DeleteStudent(studentModel);
+            LoadStudentInfos();
         }
 
         private void OnFind(object obj)
@@ -59,11 +67,6 @@ namespace cs4rsa.ViewModels
             SessionInputWindow loginWindow = new SessionInputWindow();
             DialogService<StudentResult>.OpenDialog(vm, loginWindow, obj as Window);
             LoadStudentInfos();
-        }
-
-        private bool CanFind()
-        {
-            return _sessionId != null || _sessionId != "";
         }
 
         private void LoadStudentInfos()

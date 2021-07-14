@@ -46,6 +46,8 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedClassGroupModel = value;
+                RaisePropertyChanged();
+                DeleteCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -85,16 +87,22 @@ namespace cs4rsa.ViewModels
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
-            DeleteCommand = new RelayCommand(OnDelete);
+            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
         }
 
+        private bool CanDelete()
+        {
+            return _selectedClassGroupModel != null;
+        }
+
         private void OnCopyCode(object obj)
         {
-            ClassGroupModel classGroupModel = obj as ClassGroupModel;
-            string registerCode = classGroupModel.RegisterCode;
+            string registerCode = _selectedClassGroupModel.RegisterCode;
             Clipboard.SetData(DataFormats.Text, registerCode);
+            string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
         }
 
         private bool CanDeleteAll()
@@ -114,8 +122,10 @@ namespace cs4rsa.ViewModels
 
         private void OnDelete(object obj)
         {
-            ClassGroupModel classGroupModel = obj as ClassGroupModel;
-            _classGroupModels.Remove(classGroupModel);
+            _classGroupModels.Remove(_selectedClassGroupModel);
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            DeleteCommand.RaiseCanExecuteChanged();
             UpdateConflictModelCollection();
             MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(_classGroupModels.ToList()));
         }
@@ -131,6 +141,9 @@ namespace cs4rsa.ViewModels
             SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, _classGroupModels.ToList());
             SaveDialogWindow dialogWindow = new SaveDialogWindow();
             SaveResult result = DialogService<SaveResult>.OpenDialog(saveDialogViewModel, dialogWindow, parameter as Window);
+
+            string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
         }
 
         public void Handle(ClassGroupAddedMessage message)
@@ -223,7 +236,7 @@ namespace cs4rsa.ViewModels
                     }
                 }
             }
-            //MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
+            MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
         }
     }
 }

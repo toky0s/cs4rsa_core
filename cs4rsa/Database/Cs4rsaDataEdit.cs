@@ -45,6 +45,13 @@ namespace cs4rsa.Database
             }
         }
 
+        internal static void DeleteStudent(StudentModel studentModel)
+        {
+            string sql = $@"delete from student
+                            where studentId = '{studentModel.StudentInfo.StudentId}'";
+            _cs4RsaDatabase.DoSomething(sql);
+        }
+
         public static int DeleteSession(string id)
         {
             string sqlSessionDetail = $@"delete from session_detail

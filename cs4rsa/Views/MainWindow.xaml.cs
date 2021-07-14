@@ -17,6 +17,7 @@ using System.Globalization;
 using cs4rsa.Helpers;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Views;
+using MaterialDesignThemes.Wpf;
 
 namespace cs4rsa
 {
@@ -34,6 +35,7 @@ namespace cs4rsa
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)

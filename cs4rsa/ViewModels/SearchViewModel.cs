@@ -176,15 +176,14 @@ namespace cs4rsa.ViewModels
             this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
             SelectedDiscipline = this.disciplines[0];
             AddCommand = new RelayCommand(OnAddSubject);
-            DeleteCommand = new RelayCommand(OnDeleteSubject);
+            DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
         }
 
         private void OnGotoCourse(object obj)
         {
-            SubjectModel subjectModel = obj as SubjectModel;
-            string courseId = subjectModel.CourseId;
+            string courseId = selectedSubjectModel.CourseId;
             string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             Process.Start(url);
@@ -230,9 +229,8 @@ namespace cs4rsa.ViewModels
 
         private void OnDeleteSubject(object obj)
         {
-            SubjectModel subjectModel = obj as SubjectModel;
-            MessageBus.Default.Publish(new DeleteSubjectMessage(subjectModel));
-            subjectModels.Remove(subjectModel);
+            MessageBus.Default.Publish(new DeleteSubjectMessage(selectedSubjectModel));
+            subjectModels.Remove(selectedSubjectModel);
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();

@@ -72,10 +72,6 @@ namespace cs4rsa.Dialogs.Implements
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            if (worker.CancellationPending)
-            {
-                e.Cancel = true;
-            }
             worker.ReportProgress(10);
             string sessionId = (string)e.Argument;
             string specialString = SpecialStringCrawler.GetSpecialString(sessionId);
@@ -90,11 +86,11 @@ namespace cs4rsa.Dialogs.Implements
             StudentSaver studentSaver = new StudentSaver();
             StudentInfo info = DtuStudentInfoCrawler.ToStudentInfo(specialString, studentSaver);
 
-            if (!Cs4rsaDataView.IsExistsCurriculum(info.Curriculum.CurId))
-            {
-                ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(_sessionId, specialString, worker);
-                ProgramDiagram diagram = programDiagramCrawler.ToProgramDiagram();
-            }
+            //if (!Cs4rsaDataView.IsExistsCurriculum(info.Curriculum.CurId))
+            //{
+            //    ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(_sessionId, specialString, worker);
+            //    ProgramDiagram diagram = programDiagramCrawler.ToProgramDiagram();
+            //}
             
             CurriculumSaver curriculumSaver = new CurriculumSaver();
             curriculumSaver.Save(curriculum);

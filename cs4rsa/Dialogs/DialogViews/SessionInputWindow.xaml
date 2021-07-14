@@ -7,11 +7,20 @@
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
         mc:Ignorable="d"
         Title="Tìm kiếm thông tin" 
-        Height="150" 
+        Height="160" 
         Width="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        dialogExtension:DialogExtension.DialogResult="{Binding Result}">
+        dialogExtension:DialogExtension.DialogResult="{Binding Result}"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Padding="10">
     <StackPanel>
         <TextBlock TextWrapping="Wrap"
                    Margin="10">

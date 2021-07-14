@@ -89,20 +89,23 @@
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
                  Margin="0, 0, 0, 5"
-                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  x:Name="DownloadSubjects"
                  HorizontalContentAlignment="Stretch"
                  ItemsSource="{Binding SubjectModels}"
                  SelectedItem="{Binding SelectedSubjectModel}">
+            <ListBox.Resources>
+                <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
+                    <MenuItem Header="Xoá" Command="{Binding DeleteCommand}"></MenuItem>
+                    <MenuItem Header="Mở trong Course" Command="{Binding GotoCourseCommand}"></MenuItem>
+                </ContextMenu>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card Height="66"
-                                         materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="25"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Rectangle Grid.Column="0"
                                        Width="27"
@@ -112,8 +115,9 @@
                                     Grid.Column="1"
                                     Orientation="Vertical">
                                 <TextBlock Text="{Binding SubjectName}" 
-                                       Margin="5,10,0,0"
-                                       FontSize="14">
+                                            Margin="5,10,0,0"
+                                            FontSize="14"
+                                           TextWrapping="WrapWithOverflow">
                                     <TextBlock.ToolTip>
                                         <ToolTip>
                                             <TextBlock Text="{Binding SubjectName}"></TextBlock>
@@ -123,37 +127,26 @@
                                 <TextBlock Text="{Binding SubjectCode}" 
                                        Margin="5,0,0,0"
                                        Style="{StaticResource Caption}"></TextBlock>
-                                <TextBlock Margin="5,0,0,0"
-                                           Style="{StaticResource Caption}">
-                                    <Run Text="Số tín chỉ:"></Run>
-                                    <Run Text="{Binding StudyUnit}"></Run>
-                                    <Run Text="tín chỉ"></Run>
+                                <TextBlock Margin="5,0,0,10"
+                                           Style="{StaticResource Caption}"
+                                           Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}">
                                 </TextBlock>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2">
-                                <materialDesign:PopupBox Margin="10"
-                                                     Style="{StaticResource MaterialDesignToolPopupBox}">
-                                    <StackPanel>
-                                        <Button Content="Xoá"
-                                                Command="{Binding DeleteCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                        <Button Content="Mở trong Courses"
-                                                Command="{Binding GotoCourseCommand}"
-                                                CommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1,AncestorType=ListBoxItem,Mode=FindAncestor}}"
-                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1,Mode=FindAncestor}}"></Button>
-                                    </StackPanel>
-                                </materialDesign:PopupBox>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Card>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}"></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
 
         <Grid Grid.ColumnSpan="2"
                     Grid.Row="4" 
-                    Grid.Column="0">
+                    Grid.Column="0"
+              Margin="0 0 0 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>

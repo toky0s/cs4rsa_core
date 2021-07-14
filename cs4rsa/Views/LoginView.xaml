@@ -35,12 +35,13 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <materialDesign:Card Height="130"
-                                             Width="300"
+                                             Width="350"
                                              Margin="0 0 10 10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="auto"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <Rectangle
                                  Width="100"
@@ -52,7 +53,8 @@
                                 </Rectangle>
                                 <StackPanel Orientation="Vertical"
                                             Grid.Column="1"
-                                            Margin="5">
+                                            Margin="5"
+                                            x:Name="InfoPanel">
                                     <TextBlock
                                        FontWeight="Bold"
                                        FontSize="16">
@@ -71,6 +73,17 @@
                                         <Run Text="{Binding StudentInfo.Birthday}"></Run>
                                     </TextBlock>
                                 </StackPanel>
+                                <materialDesign:PopupBox Grid.Column="2"
+                                                         VerticalAlignment="Top"
+                                                         Margin="0 10 0 0">
+                                    <StackPanel>
+                                        <Button Content="Xoá"
+                                                Command="{Binding DeleteCommand}"
+                                                CommandParameter="{Binding DataContext, ElementName=InfoPanel}"
+                                                DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl,Mode=FindAncestor}}">
+                                        </Button>
+                                    </StackPanel>
+                                </materialDesign:PopupBox>
                             </Grid>
                         </materialDesign:Card>
                     </DataTemplate>
@@ -82,7 +95,6 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -92,11 +104,13 @@
             <TextBox  Text="{Binding SessionId}"
                       materialDesign:HintAssist.Hint="ASP.NET SessionID"
                       Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                      VerticalAlignment="Center" />
+                      VerticalAlignment="Center"
+                      x:Name="SessionIdTextBlock"/>
             <Button   Grid.Column="1"
                       Style="{StaticResource MaterialDesignRaisedDarkButton}"
                       Width="100"
                       Content="Tìm kiếm"
+                      IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}"
                       Command="{Binding FindCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Window, Mode=FindAncestor}}"/>
         </Grid>

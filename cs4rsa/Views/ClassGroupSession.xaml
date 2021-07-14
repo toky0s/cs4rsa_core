@@ -6,15 +6,15 @@
              xmlns:local="clr-namespace:cs4rsa.Views"
              xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400"
+             d:DesignHeight="450" d:DesignWidth="300"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            TextElement.FontWeight="Regular"
-            TextElement.FontSize="13"
-            TextOptions.TextFormattingMode="Ideal" 
-            TextOptions.TextRenderingMode="Auto"        
-            Background="{DynamicResource MaterialDesignPaper}"
-            FontFamily="{DynamicResource MaterialDesignFont}">
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
     <UserControl.Resources>
         <converter:PhaseConverter x:Key="PhaseConverter"></converter:PhaseConverter>
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter"></converter:EmptySeatCheckerConverter>
@@ -37,9 +37,8 @@
                  SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                         Height="40" 
-                                         Width="220">
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                         Height="40">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"></ColumnDefinition>
@@ -82,7 +81,6 @@
                             </StackPanel>
                         </Grid>
                     </materialDesign:Card>
-
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
