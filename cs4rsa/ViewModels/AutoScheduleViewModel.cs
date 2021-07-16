@@ -8,8 +8,8 @@ using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Messages;
 using cs4rsa.Models;
+using cs4rsa.Views;
 using LightMessageBus;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -125,8 +125,23 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedCombinationModel = value;
+                ShowOnSimuCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged();
             }
+        }
+
+        private bool _isRemoveClassGroupInvalid;
+        public bool IsRemoveClassGroupInvalid
+        {
+            get { return _isRemoveClassGroupInvalid; }
+            set { _isRemoveClassGroupInvalid = value; RaisePropertyChanged(); }
+        }
+
+        private bool _isAllowConflict;
+        public bool IsAllowConflict
+        {
+            get { return _isAllowConflict; }
+            set { _isAllowConflict = value; RaisePropertyChanged(); }
         }
 
         private int _combinationCount = 0;
@@ -173,7 +188,6 @@ namespace cs4rsa.ViewModels
 
         private ProgramDiagram _programDiagram;
         private IMessageBox _messageBox;
-        private Window _window;
 
         public RelayCommand ChoiceAccountCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
@@ -184,21 +198,8 @@ namespace cs4rsa.ViewModels
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand WatchDetailCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
+        public RelayCommand OpenInNewWindowCommand { get; set; }
 
-        public AutoScheduleViewModel(StudentModel studentModel, IMessageBox messageBox, Window window)
-        {
-            ChoiceAccountCommand = new RelayCommand(OnChoiceAccountCommand);
-            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
-            SortCommand = new RelayCommand(OnSort, CanSort);
-            DeleteCommand = new RelayCommand(OnDelete);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
-            GotoCourseCommand = new RelayCommand(OnGoToCourse);
-            WatchDetailCommand = new RelayCommand(OnWatchDetail);
-            ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
-            _studentModel = studentModel;
-            _messageBox = messageBox;
-            _window = window;
-        }
 
         public AutoScheduleViewModel(IMessageBox messageBox)
         {
@@ -210,7 +211,17 @@ namespace cs4rsa.ViewModels
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
             WatchDetailCommand = new RelayCommand(OnWatchDetail);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
+            OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
             _messageBox = messageBox;
+            _isRemoveClassGroupInvalid = true;
+            _isAllowConflict = false;
+        }
+
+        private void OnOpenInNewWindow(object obj)
+        {
+            CombinationContainerWindow combinationContainerWindow = new CombinationContainerWindow(_combinationModels.ToList(), this);
+            combinationContainerWindow.Topmost = true;
+            combinationContainerWindow.Show();
         }
 
         private void OnChoiceAccountCommand(object obj)
@@ -220,6 +231,9 @@ namespace cs4rsa.ViewModels
             LoginResult result = DialogService<LoginResult>.OpenDialog(loginDialogViewModel, loginWindow, obj as Window);
             if (result != null)
             {
+                _programSubjectModels.Clear();
+                _choicedProSubjectModels.Clear();
+                _combinationModels.Clear();
                 StudentModel = result.StudentModel;
                 LoadProgramSubject();
             }
@@ -241,7 +255,7 @@ namespace cs4rsa.ViewModels
         {
             ProSubjectLoadWindow proSubjectLoadWindow = new ProSubjectLoadWindow();
             ProSubjectLoadViewModel proSubjectLoadViewModel = new ProSubjectLoadViewModel(_studentModel.StudentInfo.SpecialString);
-            ProSubjectLoadResult result = DialogService<ProSubjectLoadResult>.OpenDialog(proSubjectLoadViewModel, proSubjectLoadWindow, _window); ;
+            ProSubjectLoadResult result = DialogService<ProSubjectLoadResult>.OpenDialog(proSubjectLoadViewModel, proSubjectLoadWindow, null); ;
 
             if (result != null)
             {
@@ -267,7 +281,9 @@ namespace cs4rsa.ViewModels
 
         private bool CanShowOnSimu()
         {
-            return true;
+            if (_selectedCombinationModel == null) return false;
+            return !_selectedCombinationModel.HaveAClassGroupHaveNotSchedule &&
+                    !_selectedCombinationModel.HaveAClassGroupHaveZeroEmptySeat;
         }
 
         private void OnShowOnSimu(object obj)
@@ -307,10 +323,16 @@ namespace cs4rsa.ViewModels
             UpdateCreditCount();
         }
 
+        /// <summary>
+        /// Thực hiện tại các Subject, lấy ra các ClassGroupModel, chạy thuật toán sinh tổ hợp chính tắc.
+        /// Kết quả cuối cùng là một danh sách các CombinationModel đại diện cho một cách sắp xếp.
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnSort(object obj)
         {
             AutoSortDialogWindow autoSortDialogWindow = new AutoSortDialogWindow();
-            AutoSortViewModel autoSortViewModel = new AutoSortViewModel(_choicedProSubjectModels.ToList());
+            AutoSortViewModel autoSortViewModel = new AutoSortViewModel(_choicedProSubjectModels.ToList(),
+                                                                        _isRemoveClassGroupInvalid);
             AutoSortResult result = DialogService<AutoSortResult>.OpenDialog(autoSortViewModel, autoSortDialogWindow, obj as Window);
             _combinationModels.Clear();
             List<CombinationModel> combinationModels = result.ClassGroupModelCombinations
@@ -319,10 +341,21 @@ namespace cs4rsa.ViewModels
             // filter
             foreach (CombinationModel combination in combinationModels)
             {
-                if (combination.IsValid() && !combination.IsHaveTimeConflicts() && !combination.IsHavePlaceConflicts())
-                    _combinationModels.Add(combination);
+                if (_isAllowConflict)
+                {
+                    if (combination.IsValid())
+                        _combinationModels.Add(combination);
+                }
+                else
+                {
+                    if (combination.IsValid() && !combination.IsHaveTimeConflicts() && !combination.IsHavePlaceConflicts())
+                        _combinationModels.Add(combination);
+                }
             }
             UpdateCombinationCount();
+
+            string message = $"Hoàn tất tìm kiếm và sắp xếp";
+            MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(message));
         }
 
         private void UpdateCombinationCount()
@@ -337,7 +370,7 @@ namespace cs4rsa.ViewModels
                 ProgramSubjectModel programSubjectModel = obj as ProgramSubjectModel;
                 _choicedProSubjectModels.Add(programSubjectModel);
             }
-            else 
+            else
             {
                 if (_selectedProSubject != null)
                     _choicedProSubjectModels.Add(_selectedProSubject);

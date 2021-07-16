@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -28,23 +27,14 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         private List<ProgramSubjectModel> _programSubjectModels;
-        private Tuple<List<SubjectModel>, List<List<ClassGroupModel>>> _resultOfSorting;
 
-        public RelayCommand CompletedCommand { get; set; }
-        public AutoSortViewModel(List<ProgramSubjectModel> programSubjectModels)
+        public AutoSortViewModel(List<ProgramSubjectModel> programSubjectModels, bool isRemoveClassGroupInvalid)
         {
-            CompletedCommand = new RelayCommand(OnCompleted);
             _programSubjectModels = programSubjectModels;
-            Sort();
+            Sort(isRemoveClassGroupInvalid);
         }
 
-        private void OnCompleted(object obj)
-        {
-            AutoSortResult result = new AutoSortResult(_resultOfSorting.Item1, _resultOfSorting.Item2);
-            CloseDialogWithResult(obj as Window, result);
-        }
-
-        private void Sort()
+        private void Sort(bool IsRemoveClassGroupInvalid)
         {
             List<string> courseIds = _programSubjectModels.Select(item => item.CourseId).ToList();
             BackgroundWorker backgroundWorker = new BackgroundWorker();
@@ -53,12 +43,15 @@ namespace cs4rsa.Dialogs.Implements
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
             backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.RunWorkerAsync(courseIds);
+            Tuple<List<string>, bool> tuplePara = Tuple.Create(courseIds, IsRemoveClassGroupInvalid);
+            backgroundWorker.RunWorkerAsync(tuplePara);
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _resultOfSorting = e.Result as Tuple<List<SubjectModel>, List<List<ClassGroupModel>>>;
+            Tuple<List<SubjectModel>, List<List<ClassGroupModel>>> resultOfSorting = e.Result as Tuple<List<SubjectModel>, List<List<ClassGroupModel>>>;
+            AutoSortResult result = new AutoSortResult(resultOfSorting.Item1, resultOfSorting.Item2);
+            CloseDialogWithResult(result);
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -69,7 +62,11 @@ namespace cs4rsa.Dialogs.Implements
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            List<string> courseIds = e.Argument as List<string>;
+            Tuple<List<string>, bool> para = e.Argument as Tuple<List<string>, bool>;
+
+            List<string> courseIds = para.Item1 as List<string>;
+            bool isRemoveClassGroupInvalid = (bool)para.Item2;
+
             List<Subject> subjects = new List<Subject>();
             worker.ReportProgress(10);
             foreach (string courseId in courseIds)
@@ -83,6 +80,10 @@ namespace cs4rsa.Dialogs.Implements
             foreach (Subject subject in subjects)
             {
                 List<ClassGroupModel> classGroupModelNames = subject.ClassGroups.Select(cl => new ClassGroupModel(cl)).ToList();
+                if (isRemoveClassGroupInvalid)
+                {
+                    classGroupModelNames = classGroupModelNames.Where(item => item.HaveSchedule && item.EmptySeat > 0).ToList();
+                }
                 elements.AddRange(classGroupModelNames);
             }
             List<SubjectModel> subjectModels = subjects.Select(item => new SubjectModel(item)).ToList();

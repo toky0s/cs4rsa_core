@@ -27,12 +27,29 @@ namespace cs4rsa.Models
 
         public ClassGroup FirstClassGroup { get => _classGroup1; set => _classGroup1 = value; }
         public ClassGroup SecondClassGroup { get => _classGroup2; set => _classGroup2 = value; }
+
+        private ClassGroupModel _firstClassGroupModel;
+        public ClassGroupModel FirstClassGroupModel
+        {
+            get { return _firstClassGroupModel; }
+            set { _firstClassGroupModel = value; }
+        }
+
+        private ClassGroupModel _secondClassGroupModel;
+        public ClassGroupModel SecondClassGroupModel
+        {
+            get { return _secondClassGroupModel; }
+            set { _secondClassGroupModel = value; }
+        }
+
         public ConflictType ConflictType { get => GetConflictType(); }
 
         public ConflictModel(Conflict conflict)
         {
             _classGroup1 = conflict.FirstClassGroup;
             _classGroup2 = conflict.SecondClassGroup;
+            _firstClassGroupModel = new ClassGroupModel(conflict.FirstClassGroup);
+            _secondClassGroupModel = new ClassGroupModel(conflict.SecondClassGroup);
             _conflictTime = conflict.GetConflictTime();
         }
 
@@ -40,6 +57,8 @@ namespace cs4rsa.Models
         {
             _classGroup1 = conflict.FirstClassGroup;
             _classGroup2 = conflict.SecondClassGroup;
+            _firstClassGroupModel = new ClassGroupModel(conflict.FirstClassGroup);
+            _secondClassGroupModel = new ClassGroupModel(conflict.SecondClassGroup);
             _conflictTime = conflictTime;
         }
 

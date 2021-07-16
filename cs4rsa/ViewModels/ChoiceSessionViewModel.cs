@@ -21,7 +21,8 @@ namespace cs4rsa.ViewModels
 {
     class ChoiceSessionViewModel : NotifyPropertyChangedBase,
         IMessageHandler<ClassGroupAddedMessage>,
-        IMessageHandler<DeleteSubjectMessage>
+        IMessageHandler<DeleteSubjectMessage>,
+        IMessageHandler<RemoveAChoiceClassGroupMessage>
     {
         private ObservableCollection<ClassGroupModel> _classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
@@ -64,6 +65,13 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        private ConflictModel _selectedConflictModel;
+        public ConflictModel SelectedConflictModel
+        {
+            get { return _selectedConflictModel; }
+            set { _selectedConflictModel = value; RaisePropertyChanged(); }
+        }
+
         private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels
         {
@@ -81,15 +89,30 @@ namespace cs4rsa.ViewModels
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
+        public RelayCommand SolveConflictCommand { get; set; }
 
         public ChoiceSessionViewModel()
         {
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<RemoveAChoiceClassGroupMessage>().Notify(this);
             SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
+            SolveConflictCommand = new RelayCommand(OnSolve);
+        }
+
+
+        /// <summary>
+        /// Giải quyết xung đột
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnSolve(object obj)
+        {
+            SolveConflictDialogWindow solveConflictDialogWindow = new SolveConflictDialogWindow();
+            SolveConflictViewModel vm = new SolveConflictViewModel(_selectedConflictModel);
+            DialogService<SolveConflictResult>.OpenDialog(vm, solveConflictDialogWindow, null);
         }
 
         private bool CanDelete()
@@ -237,6 +260,17 @@ namespace cs4rsa.ViewModels
                 }
             }
             MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
+        }
+
+        public void Handle(RemoveAChoiceClassGroupMessage message)
+        {
+            ClassGroupModel classGroupModel = message.Source;
+            _classGroupModels.Remove(classGroupModel);
+            MessageBus.Default.Publish<DeleteClassGroupChoiceMessage>(new DeleteClassGroupChoiceMessage(_classGroupModels.ToList()));
+            string snackMessage = $"Đã bỏ chọn lớp {classGroupModel.Name}";
+            MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(snackMessage));
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
         }
     }
 }

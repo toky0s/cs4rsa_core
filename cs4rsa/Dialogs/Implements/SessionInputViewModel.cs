@@ -8,6 +8,8 @@ using cs4rsa.Implements;
 using System;
 using System.ComponentModel;
 using System.Windows;
+using LightMessageBus;
+using cs4rsa.Messages;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -75,7 +77,7 @@ namespace cs4rsa.Dialogs.Implements
             worker.ReportProgress(10);
             string sessionId = (string)e.Argument;
             string specialString = SpecialStringCrawler.GetSpecialString(sessionId);
-
+            worker.ReportProgress(20);
             if (specialString == null)
             {
                 e.Cancel = true;
@@ -84,17 +86,12 @@ namespace cs4rsa.Dialogs.Implements
 
             Curriculum curriculum = CurriculumCrawler.GetCurriculum(specialString);
             StudentSaver studentSaver = new StudentSaver();
+            worker.ReportProgress(50);
             StudentInfo info = DtuStudentInfoCrawler.ToStudentInfo(specialString, studentSaver);
-
-            //if (!Cs4rsaDataView.IsExistsCurriculum(info.Curriculum.CurId))
-            //{
-            //    ProgramDiagramCrawler programDiagramCrawler = new ProgramDiagramCrawler(_sessionId, specialString, worker);
-            //    ProgramDiagram diagram = programDiagramCrawler.ToProgramDiagram();
-            //}
             
             CurriculumSaver curriculumSaver = new CurriculumSaver();
             curriculumSaver.Save(curriculum);
-
+            worker.ReportProgress(80);
             Student student = new Student(info);
             e.Result = student;
             worker.ReportProgress(100);
@@ -116,7 +113,7 @@ namespace cs4rsa.Dialogs.Implements
             {
                 Student student = e.Result as Student;
                 string message = $"Xin chào {student.Info.Name}";
-                _messageBox.ShowMessage(message, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(message));
                 StudentResult result = new StudentResult { Student = student };
                 CloseDialogWithResult(result);
             }

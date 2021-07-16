@@ -35,10 +35,16 @@
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  ItemsSource="{Binding ClassGroupModels}"
                  SelectedItem="{Binding SelectedClassGroup}">
+            <ListBox.Resources>
+                <ToolTip x:Key="ItemToolTip">
+                    Vì một số lý do nào đó một số lớp sẽ không có lịch hoặc chỉ có lịch bổ xung, xem chi tiết trên Course.
+                </ToolTip>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                          Height="40">
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="15"></ColumnDefinition>
@@ -51,38 +57,62 @@
                                     Grid.Column="1"
                                         Margin="0 5 0 0">
                                 <TextBlock Text="{Binding Name}"
-                                       Margin="5,0,0,0"
-                                       FontSize="14">
+                                            Margin="5,0,0,0"
+                                            FontSize="14">
                                 </TextBlock>
-                                <TextBlock FontSize="10"
-                                       Margin="5,0,0,0">
-                                    <Run Text="Còn trống"></Run>
-                                    <Run Text="{Binding EmptySeat}"></Run>
-                                    <Run Text="chỗ"></Run>
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="12"></Setter>
-                                            <Setter Property="FontWeight" Value="Normal"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="10"
+                                            Margin="5,0,0,0"
+                                           Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="FontSize" Value="12"></Setter>
+                                                <Setter Property="FontWeight" Value="Normal"></Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding EmptySeat, 
                                                             Converter={StaticResource EmptySeatCheckerConverter}, 
                                                             ConverterParameter=5}" Value="True">
-                                                    <Setter Property="Foreground" Value="#f83600"></Setter>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                                        <Setter Property="Foreground" Value="#c0392b"></Setter>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding EmptySeat, 
                                                             Converter={StaticResource EmptySeatCheckerConverter}, 
                                                             ConverterParameter=0}" Value="True">
-                                                    <Setter Property="Foreground" Value="Red"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                                                        <Setter Property="Foreground" Value="Red"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="Không có lịch"
+                                               FontSize="10"
+                                               Foreground="Red"
+                                               Margin="5 0 0 0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Hidden"></Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                                                        <Setter Property="Visibility" Value="Visible"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Card>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                            <Setter Property="ToolTip" Value="{StaticResource ItemToolTip}"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
         <Grid Grid.Row="2" >
             <ScrollViewer VerticalScrollBarVisibility="Auto">

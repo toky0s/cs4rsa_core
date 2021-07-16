@@ -98,10 +98,11 @@
                    FontWeight="Bold"></TextBlock>
         <ListView Grid.Row="4"
                  ItemsSource="{Binding ConflictModels}"
+                  SelectedItem="{Binding SelectedConflictModel}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.Resources>
                 <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
-                    <MenuItem Header="Giải quyết xung đột" Command="{Binding FixConflictCommand}"/>
+                    <MenuItem Header="Giải quyết xung đột" Command="{Binding SolveConflictCommand}"/>
                 </ContextMenu>
             </ListView.Resources>
             <ListView.ItemTemplate>

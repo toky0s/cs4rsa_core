@@ -77,8 +77,6 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 materialDesign:ShadowAssist.ShadowDepth="Depth3" 
-                Background="#55efc4"
-                BorderBrush="#55efc4"
                 Foreground="White"
                 Height="30"
                 Margin="0, 5, 0, 5"
@@ -152,9 +150,9 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
-                    Content="Xoá"
+                    Content="Xoá hết"
                     Height="30"
-                    Command="{Binding DeleteCommand}"
+                    Command="{Binding DeleteAllCommand}"
                     Background="#ff6b81"
                     BorderBrush="#ff6b81"
                     Foreground="White"

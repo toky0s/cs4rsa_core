@@ -18,12 +18,12 @@
         FontFamily="{materialDesign:MaterialDesignFont}">
     <Grid>
         <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="1">
-                <Grid x:Name="GridPrincipal"/>
+        <Grid Grid.Column="1">
+            <ContentControl x:Name="MainArea"></ContentControl>
             <materialDesign:Snackbar MessageQueue="{Binding SnackbarMessageQueue}"
                                      HorizontalAlignment="Center"/>
         </Grid>

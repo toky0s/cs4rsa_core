@@ -11,7 +11,7 @@ namespace cs4rsa.BasicData
     /// <summary>
     /// Trình tìm kiếm xung đột hai giờ đầu và hai giờ cuối của hai ClassGroup
     /// </summary>
-    class PlaceConflictFinder : BaseConflict
+    public class PlaceConflictFinder : BaseConflict
     {
         private static readonly TimeSpan _timeDelta = new TimeSpan(0, 15, 0); // 15 minutes
 
@@ -20,7 +20,7 @@ namespace cs4rsa.BasicData
         }
 
         public PlaceConflictFinder(ClassGroupModel classGroup1, ClassGroupModel classGroup2)
-            : base(classGroup1.classGroup, classGroup2.classGroup)
+            : base(classGroup1.ClassGroup, classGroup2.ClassGroup)
         {
         }
 

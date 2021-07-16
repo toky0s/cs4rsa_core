@@ -8,9 +8,10 @@
         mc:Ignorable="d"
         Title="Tải môn học"
         SizeToContent="WidthAndHeight"
+        Height="200"
         Width="440"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -21,9 +22,14 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
         <ItemsControl Name="icTodoList"
                           ItemsSource="{Binding SubjectInfoDatas}"
-                          Margin="7">
+                          Margin="7"
+                      Grid.Row="0">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>
@@ -35,9 +41,10 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <ProgressBar Height="20" 
-                         Minimum="0" 
-                         Maximum="100"
-                         Margin="7"
-                         Value="{Binding Progress}"></ProgressBar>
+                    Minimum="0" 
+                    Maximum="100"
+                    Margin="7"
+                    Value="{Binding Progress}"
+                     Grid.Row="1"></ProgressBar>
     </Grid>
 </Window>

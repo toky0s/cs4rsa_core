@@ -6,7 +6,9 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Dialogs.MessageBoxService;
+using cs4rsa.Messages;
 using cs4rsa.Models;
+using LightMessageBus;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -58,6 +60,8 @@ namespace cs4rsa.ViewModels
             StudentModel studentModel = obj as StudentModel;
             Cs4rsaDataEdit.DeleteStudent(studentModel);
             LoadStudentInfos();
+            string message = $"Bạn vừa xoá {studentModel.StudentInfo.Name}";
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
         }
 
         private void OnFind(object obj)

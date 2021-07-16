@@ -46,20 +46,16 @@ namespace cs4rsa
             switch (index)
             {
                 case 0:
-                    GridPrincipal.Children.Clear();
-                    GridPrincipal.Children.Add(_homeView);
+                    MainArea.Content = _homeView;
                     break;
                 case 1:
-                    GridPrincipal.Children.Clear();
-                    GridPrincipal.Children.Add(_loginView);
+                    MainArea.Content = _loginView;
                     break;
                 case 2:
-                    GridPrincipal.Children.Clear();
-                    GridPrincipal.Children.Add(_mainScheduling);
+                    MainArea.Content = _mainScheduling;
                     break;
                 case 3:
-                    GridPrincipal.Children.Clear();
-                    GridPrincipal.Children.Add(_autoScheduling);
+                    MainArea.Content = _autoScheduling;
                     break;
             }
         }

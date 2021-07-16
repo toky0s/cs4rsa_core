@@ -10,7 +10,7 @@ namespace cs4rsa.Models
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
     /// </summary>
-    class PlaceConflictFinderModel : IConflictModel
+    public class PlaceConflictFinderModel : IConflictModel
     {
         private ClassGroup _classGroup1;
         private ClassGroup _classGroup2;

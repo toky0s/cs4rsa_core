@@ -31,7 +31,8 @@
                   Style="{StaticResource MaterialDesignHeadline3TextBlock}"
                   Text="Chào mừng đến với CS4RSA" />
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
-                      Content="KHÁM PHÁ" />
+                      Content="HƯỚNG DẪN SỬ DỤNG"
+                        Click="GotoWeb"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1"
@@ -74,7 +75,8 @@
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Grid.Row="2"
-                                Margin="15 0 0 15">
+                                Margin="15 0 0 15"
+                                Click="Button_Click_2">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="Facebook"
                                                      Width="20"
@@ -124,12 +126,14 @@
                             <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Margin="15 0 0 5"
-                                Content="Về CS4RSA">
+                                Content="CS4RSA"
+                                Click="GotoSource">
                         </Button>
                         <Button HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Margin="15 0 0 15"
-                                Content="CS4RSA of DTU-Universe">
+                                Content="CS4RSA of DTU-Universe"
+                                Click="Button_Click_1">
                         </Button>
                         </StackPanel>
                         

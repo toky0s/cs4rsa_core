@@ -11,7 +11,7 @@ namespace cs4rsa.Messages
     /// <summary>
     /// Message này được gửi đi khi một Subject bị xoá khỏi danh sách.
     /// </summary>
-    class DeleteSubjectMessage : Cs4rsaMessage
+    public class DeleteSubjectMessage : Cs4rsaMessage
     {
         public readonly new SubjectModel Source;
         public DeleteSubjectMessage(SubjectModel source) : base(source)

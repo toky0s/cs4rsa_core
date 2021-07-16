@@ -12,7 +12,6 @@ using cs4rsa.Models;
 using cs4rsa.ViewModelFunctions;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -45,6 +44,7 @@ namespace cs4rsa.ViewModels
             }
         }
         public RelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         #endregion
@@ -103,7 +103,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        //ListBox downloaded subjects
         private ObservableCollection<SubjectModel> subjectModels = new ObservableCollection<SubjectModel>();
         public ObservableCollection<SubjectModel> SubjectModels
         {
@@ -146,7 +145,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        //Total Credits
         private int totalCredits = 0;
         public int TotalCredits
         {
@@ -179,6 +177,20 @@ namespace cs4rsa.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll);
+        }
+
+        private void OnDeleteAll(object obj)
+        {
+            for (int i = subjectModels.Count-1; i >= 0; --i)
+            {
+                MessageBus.Default.Publish(new DeleteSubjectMessage(subjectModels[i]));
+                subjectModels.RemoveAt(i);
+            }
+            CanAddSubjectChange();
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
+            AddCommand.RaiseCanExecuteChanged();
         }
 
         private void OnGotoCourse(object obj)
@@ -230,7 +242,9 @@ namespace cs4rsa.ViewModels
         private void OnDeleteSubject(object obj)
         {
             MessageBus.Default.Publish(new DeleteSubjectMessage(selectedSubjectModel));
+            string message = $"Vừa xoá môn {selectedSubjectModel.SubjectName}";
             subjectModels.Remove(selectedSubjectModel);
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -341,7 +355,7 @@ namespace cs4rsa.ViewModels
 
         private void ImportSubjects(List<SubjectModel> importSubjects)
         {
-            foreach(SubjectModel subject in subjectModels)
+            foreach (SubjectModel subject in subjectModels)
                 MessageBus.Default.Publish(new DeleteSubjectMessage(subject));
             subjectModels.Clear();
             foreach (SubjectModel subject in importSubjects)

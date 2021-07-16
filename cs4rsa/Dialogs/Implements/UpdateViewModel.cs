@@ -5,6 +5,8 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
 using System.ComponentModel;
 using System.Windows;
+using LightMessageBus;
+using cs4rsa.Messages;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -52,10 +54,8 @@ namespace cs4rsa.Dialogs.Implements
         {
             ProgressValue = 1000;
             int result = (int)e.Result;
-            _messageBox.ShowMessage($"Hoàn tất cập nhật {result} môn",
-                                    "Thông báo",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Information);
+            string message = $"Hoàn tất cập nhật {result} môn";
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
             CloseDialogWithResult(UpdateResult.Success);
         }
 

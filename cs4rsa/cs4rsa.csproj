@@ -51,7 +51,8 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -216,6 +217,7 @@
     <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
     <Compile Include="Dialogs\DialogResults\SettingResult.cs" />
     <Compile Include="Dialogs\DialogResults\ShareStringResult.cs" />
+    <Compile Include="Dialogs\DialogResults\SolveConflictResult.cs" />
     <Compile Include="Dialogs\DialogResults\StudentResult.cs" />
     <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
     <Compile Include="Dialogs\DialogService\DialogService.cs" />
@@ -238,6 +240,9 @@
     <Compile Include="Dialogs\DialogViews\ShareStringWindow.xaml.cs">
       <DependentUpon>ShareStringWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\SolveConflictDialogWindow.xaml.cs">
+      <DependentUpon>SolveConflictDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
       <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
@@ -259,11 +264,13 @@
     <Compile Include="Dialogs\Implements\SessionInputViewModel.cs" />
     <Compile Include="Dialogs\Implements\SettingViewModel.cs" />
     <Compile Include="Dialogs\Implements\ShareStringViewModel.cs" />
+    <Compile Include="Dialogs\Implements\SolveConflictViewModel.cs" />
     <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
     <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
     <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
     <Compile Include="Enums\GetFrom.cs" />
     <Compile Include="Enums\ImplementType.cs" />
+    <Compile Include="Enums\LearnState.cs" />
     <Compile Include="Enums\RegistrationType.cs" />
     <Compile Include="Helpers\TimeConverter.cs" />
     <Compile Include="Implements\CurriculumGetter.cs" />
@@ -273,7 +280,9 @@
     <Compile Include="Messages\Cs4rsaSnackbarMessage.cs" />
     <Compile Include="Messages\DeleteClassGroupChoiceMessage.cs" />
     <Compile Include="Messages\PlaceConflictCollectionChangeMessage.cs" />
+    <Compile Include="Messages\RemoveAChoiceClassGroupMessage.cs" />
     <Compile Include="Messages\ShowOnSimuMessage.cs" />
+    <Compile Include="Messages\SubjectsChangeMessage.cs" />
     <Compile Include="Models\CombinationModel.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
@@ -342,6 +351,9 @@
     <Compile Include="Views\ClassGroupSession.xaml.cs">
       <DependentUpon>ClassGroupSession.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CombinationContainerWindow.xaml.cs">
+      <DependentUpon>CombinationContainerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -390,6 +402,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\DialogViews\SolveConflictDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\SubjectImporterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -403,6 +419,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AutoSchedule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CombinationContainerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -508,6 +528,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\github.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\choice.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

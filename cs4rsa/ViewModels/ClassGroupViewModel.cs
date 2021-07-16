@@ -11,7 +11,8 @@ namespace cs4rsa.ViewModels
 {
     public class ClassGroupViewModel : NotifyPropertyChangedBase, 
         IMessageHandler<SelectedSubjectChangeMessage>,
-        IMessageHandler<DeleteClassGroupChoiceMessage>
+        IMessageHandler<DeleteClassGroupChoiceMessage>,
+        IMessageHandler<DeleteSubjectMessage>
     {
         public static EventHandler SelectedSubjectChanged;
 
@@ -78,6 +79,7 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
         }
 
         public void Handle(SelectedSubjectChangeMessage message)
@@ -108,6 +110,11 @@ namespace cs4rsa.ViewModels
         public void Handle(DeleteClassGroupChoiceMessage message)
         {
             SelectedClassGroup = null;
+        }
+
+        public void Handle(DeleteSubjectMessage message)
+        {
+            classGroupModels.Clear();
         }
     }
 }

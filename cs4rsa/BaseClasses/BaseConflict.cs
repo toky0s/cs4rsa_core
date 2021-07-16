@@ -27,8 +27,8 @@ namespace cs4rsa.BaseClasses
 
         public BaseConflict(ClassGroupModel classGroup1, ClassGroupModel classGroup2)
         {
-            _classGroup1 = classGroup1.classGroup;
-            _classGroup2 = classGroup2.classGroup;
+            _classGroup1 = classGroup1.ClassGroup;
+            _classGroup2 = classGroup2.ClassGroup;
         }
 
         protected static bool CanConflictPhase(Phase phase1, Phase phase2)

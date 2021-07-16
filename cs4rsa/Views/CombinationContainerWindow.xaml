@@ -1,0 +1,417 @@
+﻿<Window x:Class="cs4rsa.Views.CombinationContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:cs4rsa.Views"
+        xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
+        xmlns:vmConverter="clr-namespace:cs4rsa.Converters"
+        mc:Ignorable="d"
+        Title="Danh sách các cách sắp xếp"
+        ResizeMode="CanResizeWithGrip"
+        Height="450" 
+        Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type Border}" x:Key="HorizontalDividerBorder">
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
+                <Setter Property="UseLayoutRounding" Value="True"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Height" Value="1"/>
+            </Style>
+
+            <Style TargetType="{x:Type Border}" x:Key="VerticalDividerBorder" BasedOn="{StaticResource HorizontalDividerBorder}">
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="Height" Value="Auto"/>
+                <Setter Property="Width" Value="1"/>
+            </Style>
+            <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
+            <vmConverter:ConflictModelConverter x:Key="ConflictInfoConverter"></vmConverter:ConflictModelConverter>
+            <vmConverter:ConflictTypeConverter x:Key="ConflictTypeConverter"></vmConverter:ConflictTypeConverter>
+            <vmConverter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter"></vmConverter:EmptySeatCheckerConverter>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="500"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Visible"
+                          Grid.Row="1">
+                <StackPanel Margin="15">
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                Text="Thời gian rảnh"
+                                Margin="0 0 0 10"/>
+                    <Button Foreground="White"
+                            Margin="0 0 0 10"
+                            Click="ResetFilter">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FilterOff" />
+                                <TextBlock Text="Đặt lại"
+                                           Margin="5 0 0 0"></TextBlock>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <materialDesign:Card>
+                        <StackPanel x:Name="FiltersContainer">
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Hai">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Mon_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Mon_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Mon_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Ba">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Tus_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Tus_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Tus_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Tư">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Wed_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Wed_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Wed_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Năm">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Thur_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Thur_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Thur_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Sáu">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Fri_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Fri_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Fri_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Bảy">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Sat_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Sat_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Sat_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Chủ Nhật">
+                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                    <CheckBox Click="Reload" x:Name="Sun_Mor" Content="Sáng"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Sun_Aft" Content="Chiều"></CheckBox>
+                                    <CheckBox Click="Reload" x:Name="Sun_Nig" Content="Tối"></CheckBox>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Column="1">
+            <ListView  ItemsSource="{Binding CombinationModels}"
+                          SelectedItem="{Binding SelectedCombinationModel}"
+                          Margin="0 0 0 10"
+                          HorizontalContentAlignment="Stretch">
+                <ListView.Resources>
+                    <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">
+                        <MenuItem Header="Hiển thị trên mô phỏng" Command="{Binding ShowOnSimuCommand}"/>
+                    </ContextMenu>
+                    <ToolTip x:Key="CannotShowOnSimuContentTooltip"
+                                 Width="300">
+                        <TextBlock TextWrapping="WrapWithOverflow">Bộ sắp xếp này không thể mô phỏng vì chứa một hoặc nhiều lớp không có lịch hoặc chỉ có
+                            lịch bổ sung và/hoặc có một hoặc nhiều lớp hết chỗ ngồi</TextBlock>
+                    </ToolTip>
+                </ListView.Resources>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Expander>
+                                <Expander.Header>
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding ClassGroupModels}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1,AncestorType=ListViewItem}}">
+
+                                                    </WrapPanel>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <materialDesign:Card Margin="5" IsEnabled="False">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="10"></ColumnDefinition>
+                                                                <ColumnDefinition></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Rectangle Width="10"
+                                                               Fill="{Binding Color}"
+                                                               Grid.Column="0"
+                                                               IsEnabled="False"></Rectangle>
+                                                            <TextBlock Text="{Binding Name}"
+                                                       Padding="5"
+                                                       FontSize="10"
+                                                       Grid.Column="1"></TextBlock>
+                                                        </Grid>
+                                                    </materialDesign:Card>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock Text="Không thể mô phỏng"
+                                           Foreground="#c0392b"
+                                           Margin="5 0 0 0">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Hidden"></Setter>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding CanShow}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                </Expander.Header>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Danh sách môn"
+                                                   Grid.Row="0"
+                                                   FontWeight="Bold"
+                                                   Margin="40 5 0 0"></TextBlock>
+                                    <ListBox Grid.Row="1"
+                                             x:Name="ClassGroupListBox"
+                                             HorizontalContentAlignment="Stretch"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             ItemsSource="{Binding ClassGroupModels}"
+                                                 Margin="40 0 0 0">
+                                        <ListBox.Resources>
+                                            <ToolTip x:Key="ItemToolTip">
+                                                Vì một số lý do nào đó một số lớp sẽ không có lịch hoặc chỉ có lịch bổ xung, xem chi tiết trên Course.
+                                            </ToolTip>
+                                        </ListBox.Resources>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                         Height="40">
+
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="15"></ColumnDefinition>
+                                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Rectangle Grid.Column="0"
+                                        Width="15"
+                                        Fill="{Binding Color}"/>
+                                                        <StackPanel Orientation="Vertical"
+                                    Grid.Column="1"
+                                        Margin="0 5 0 0">
+                                                            <TextBlock Text="{Binding Name}"
+                                            Margin="5,0,0,0"
+                                            FontSize="14">
+                                                            </TextBlock>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock FontSize="10"
+                                            Margin="5,0,0,0"
+                                           Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="FontSize" Value="12"></Setter>
+                                                                            <Setter Property="FontWeight" Value="Normal"></Setter>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                                                            ConverterParameter=5}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="#c0392b"></Setter>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding EmptySeat, 
+                                                            Converter={StaticResource EmptySeatCheckerConverter}, 
+                                                            ConverterParameter=0}" Value="True">
+                                                                                    <Setter Property="Foreground" Value="Red"></Setter>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                                <TextBlock Text="Không có lịch"
+                                               FontSize="10"
+                                               Foreground="Red"
+                                               Margin="5 0 0 0">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                                                                                    <Setter Property="Visibility" Value="Visible"></Setter>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </materialDesign:Card>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                                                        <Setter Property="ToolTip" Value="{StaticResource ItemToolTip}"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+                                    <TextBlock Text="Xung đột"
+                                                   Grid.Row="2"
+                                                   Margin="40 0 0 5"
+                                                   FontWeight="Bold"></TextBlock>
+                                    <ListView Grid.Row="3"
+                                                ItemsSource="{Binding ConflictModels}"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                  Margin="40 0 0 0">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Canvas Width="10"
+                                                                Height="10"
+                                                                Margin="0,0,5,0">
+                                                        <Ellipse
+                                                                Width="10"
+                                                                Height="10">
+                                                            <Ellipse.Style>
+                                                                <Style TargetType="Ellipse">
+                                                                    <Setter Property="Fill" Value="Red"></Setter>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ConflictType, Converter={StaticResource ResourceKey=ConflictTypeConverter}}" Value="1">
+                                                                            <Setter Property="Fill" Value="Yellow"></Setter>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                    </Canvas>
+                                                    <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"
+                                                                       FontSize="10">
+                                                            <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
+                                                            <Run Text=" - "></Run>
+                                                            <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                    <TextBlock Text="Xung đột vị trí"
+                                               Margin="40 5 0 0"
+                                               Grid.Row="4"
+                                               FontWeight="Bold"></TextBlock>
+                                    <ListBox Grid.Row="5"
+                                             ItemsSource="{Binding PlaceConflictFinderModels}"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                  Margin="40 0 0 10">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Canvas Width="10"
+                                                            Height="10"
+                                                            Margin="0,0,5,0">
+                                                        <Rectangle
+                                                                Width="10"
+                                                                Height="10"
+                                                                Fill="Yellow">
+                                                        </Rectangle>
+                                                    </Canvas>
+                                                    <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
+                                                            <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
+                                                            <Run Text=" - "></Run>
+                                                            <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Expander>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                        <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CanShow}" Value="False">
+                                <Setter Property="ToolTip" Value="{StaticResource CannotShowOnSimuContentTooltip}"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

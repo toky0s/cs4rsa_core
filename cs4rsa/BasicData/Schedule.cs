@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using cs4rsa.Enums;
 
 namespace cs4rsa.BasicData
 {
@@ -61,7 +62,6 @@ namespace cs4rsa.BasicData
             return sessions;
         }
 
-
         /// <summary>
         /// Lấy ra tất cả StudyTime bất kế DayOfWeek.
         /// </summary>
@@ -74,6 +74,20 @@ namespace cs4rsa.BasicData
                 studyTimes.AddRange(item);
             }
             return studyTimes.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Lấy về LearnState xác định bạn học hay rảnh buổi nào đó.
+        /// </summary>
+        /// <param name="dayOfWeek"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public LearnState GetLearnState(DayOfWeek dayOfWeek, Session session)
+        {
+            if (!scheduleTime.ContainsKey(dayOfWeek)) return LearnState.Free;
+            List<StudyTime> studyTimes = scheduleTime[dayOfWeek]
+                                         .Where(item => item.GetSession()==session).ToList();
+            return studyTimes.Count == 0 ? LearnState.Free : LearnState.Learn;
         }
     }
 
@@ -90,6 +104,28 @@ namespace cs4rsa.BasicData
         public static List<DayOfWeek> GetIntersectDate(Schedule schedule1, Schedule schedule2)
         {
             return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays()).ToList();
+        }
+
+
+        /// <summary>
+        /// Gộp danh sách các Schedule lại thành 1.
+        /// </summary>
+        /// <param name="schedules"></param>
+        /// <returns></returns>
+        public static Schedule MergeSchedule(List<Schedule> schedules)
+        {
+            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
+            foreach(Schedule item in schedules)
+            {
+                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = item.ScheduleTime.ToList();
+                foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
+                {
+                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                }
+            }
+            Schedule schedule = new Schedule(DayOfWeekStudyTimePairs);
+            return schedule;
         }
     }
 }

@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs4rsa.Dialogs.DialogViews"
+        xmlns:extension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="Tải và sắp xếp" 
-        Height="150" 
+        extension:DialogExtension.DialogResult="{Binding Result}"
+        Height="120" 
         Width="450"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
@@ -34,24 +36,5 @@
                      Grid.Row="1"
                      x:Name="ProgressBar"
                      Value="{Binding ProgressValue}"></ProgressBar>
-        <Button Grid.Row="2"
-                Content="Hoàn tất"
-                Width="100"
-                Height="30"
-                Foreground="White"
-                Command="{Binding CompletedCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-                    <Setter Property="IsEnabled" Value="False"></Setter>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}"
-                                     Value="100">
-                            <Setter Property="IsEnabled" Value="True"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
     </Grid>
 </Window>

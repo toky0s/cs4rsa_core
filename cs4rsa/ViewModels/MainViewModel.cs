@@ -27,6 +27,7 @@ namespace cs4rsa.ViewModels
         public MainViewModel()
         {
             MessageBus.Default.FromAny().Where<Cs4rsaSnackbarMessage>().Notify(this);
+            _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
         }
 
         public void Handle(Cs4rsaSnackbarMessage message)

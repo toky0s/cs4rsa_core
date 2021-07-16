@@ -7,16 +7,24 @@
         xmlns:dialogExtension="clr-namespace:cs4rsa.Dialogs.Extensions"
         mc:Ignorable="d"
         Title="Cập nhật"
-        Height="217" 
+        Height="220" 
         Width="415"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         dialogExtension:DialogExtension.DialogResult="{Binding Result}">
     <Grid>
         <StackPanel>
             <TextBlock Text="Cảnh báo cập nhật"
-                       Margin="5,0,5,0"
-                       ></TextBlock>
+                       Margin="5"
+                       Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
             <TextBlock TextWrapping="Wrap"
                        Margin="5">
                 <TextBlock.Text>
@@ -45,12 +53,13 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="Bắt đầu"
-                        Width="77"
+                        Width="90"
                         Height="30"
                         Margin="0,5,5,5"
+                        Foreground="White"
                         Command="{Binding StartUpdateCommand}">
                     <Button.Style>
-                        <Style TargetType="Button">
+                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
                             <Setter Property="IsEnabled" Value="False"></Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="0">

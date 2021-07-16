@@ -18,24 +18,11 @@
                 <DockPanel>
                     <Menu IsMainMenu="True" Height="26">
                         <MenuItem Header="Thao tác" Height="20" Margin="0, 3, 0, 0">
-                            <MenuItem Header="Cài đặt..."
-                                  Command="{Binding OpenSettingCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
-                            </MenuItem>
                             <MenuItem Header="Cập nhật cơ sở dữ liệu môn học"
                                   Command="{Binding OpenUpdateWindowCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
-                            <Separator></Separator>
-                            <MenuItem Header="Xuất dưới JSON..."
-                                  InputGestureText="Ctrl+Z"></MenuItem>
                             <MenuItem Header="Xuất dưới CS4RSA String..."
-                                  InputGestureText="Ctrl+X"
                                   Command="{Binding OpenShareStringWindowCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
-                            <Separator></Separator>
-                            <MenuItem Header="Phân tích"></MenuItem>
-                            <MenuItem Header="Tự động xếp lịch"
-                                  Command="{Binding OpenAutoScheduling}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
                         </MenuItem>
                     </Menu>
