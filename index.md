@@ -15,15 +15,15 @@ Với 3 click chuột bạn có thể tìm được môn học của mình.
 CS4RSA có một số menu chuột phải giúp bạn thuận tiện hơn trong việc thao tác và điều hướng tới các trang của DTU. Còn
 nhiều menu chuột phải khác bạn có thể khám phá bên trong CS4RSA.
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20144602.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20144602.png "Logo Title Text 1")
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20144827.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20144827.png "Logo Title Text 1")
 
 Cùng với đó là một bộ lọc đủ mạnh để bạn lọc ra những lớp phù hợp với bản thân.
 
 Sau khi sắp xếp xong hãy click nút lưu mới để lưu lại Phiên làm việc của bạn. Khi đến lúc đăng ký tín chỉ, mở ứng dụng này lên và lấy mã của từng môn.
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20145217.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20145217.png "Logo Title Text 1")
 
 #### Xếp lịch tự động
 CS4RSA có một tính năng sắp xếp lịch tự động. Để chạy được tính năng này bạn cần cung cấp một session id để CS4RSA thu thập thông tin
@@ -33,14 +33,14 @@ chương trình học của bạn.
 Mở trình duyệt lên và đảm bảo rằng bạn đã đăng nhập vào MyDTU trước khi lấy session Id.
 
 Sau đó nhấp vào biểu tượng cái bánh như trong hình.
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20143951.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20143951.png "Logo Title Text 1")
 
 Sau đó sao chép giá trị ASP.NET_SessionId dán vào mục nhập bên dưới và nhấp Tìm kiếm, sau đó chờ một lát để ứng dụng tìm thấy bạn.
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20143619.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20143619.png "Logo Title Text 1")
 
 Giờ bạn có thể qua Tab Xếp lịch tự động, tại đây bạn chọn tài khoản và Đăng nhập. Chờ một lát (sẽ khá lâu tuỳ theo tốc độ của MyDTU) CS4RSA sẽ lấy chương trình học của bạn về.
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20143728.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20143728.png "Logo Title Text 1")
 
 Tại bộ lọc Hiển thị, bạn chọn các môn có thể chọn. CS4RSA bao gồm một số tiêu chí cụ thể cho các môn có thể chọn như:
 1. Có sẵn trong kỳ này.
@@ -52,7 +52,7 @@ Tại bộ lọc Hiển thị, bạn chọn các môn có thể chọn. CS4RSA b
 Sau đó nhấn Sắp xếp và đợi một chút. Sau khi sắp xếp hoàn thành, bạn có thể nhấn nút Mở trong cửa sổ mới và quay lại tab Sắp xếp thủ công.
 Trong cửa sổ mới bạn có thể click phải và Hiển thị trên mô phỏng. Sẽ có một số môn không thể Hiển thị được vì một số lý do sẽ được CS4RSA nêu rõ.
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20151136.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20151136.png "Logo Title Text 1")
 
 ### Hỏi đáp, đề xuất và sửa lỗi
 Mọi thắc mắc liên hệ mình qua [Facebook](https://www.facebook.com/truongaxin/).
