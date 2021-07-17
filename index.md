@@ -1,3 +1,6 @@
+---
+youtubeId: Ruh7nAi3OKw
+---
 ## Chào mừng đến với CS4RSA
 
 Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực mình vì web trường điều hướng quá củ chuối, máy của bạn không có excel, bạn không biết phải đăng ký môn nào
@@ -5,7 +8,7 @@ Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực 
  
  Tải xuống cho Window: [CS4RSA](https://drive.google.com/file/d/1CFRQgq-Alf-_Ej6zNqo-tcXTcFESlxT2/view?usp=sharing)
 
-{% youtube Ruh7nAi3OKw %}
+{% include youtubePlayer.html id=page.youtubeId %}
 
 ### Hướng dẫn sử dụng
 #### Xếp lịch thủ công
