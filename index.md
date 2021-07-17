@@ -9,7 +9,7 @@ Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực 
  Tải xuống cho Window: [CS4RSA](https://drive.google.com/file/d/1CFRQgq-Alf-_Ej6zNqo-tcXTcFESlxT2/view?usp=sharing)
 
 {% include youtubePlayer.html id=page.youtubeId %}
-
+Xin lỗi vì chất lượng video và quả giọng như shit của mình 😢
 ### Hướng dẫn sử dụng
 #### Xếp lịch thủ công
 #### Chọn môn bạn muốn học
