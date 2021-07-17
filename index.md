@@ -10,7 +10,7 @@ CS4RSA có một hệ thống thu thập dữ liệu đủ thông minh để bi�
 ưa thích của mình thông qua bộ chọn mã ngành và mã môn, sau đó nhấn Thêm và chờ một chút (thường thì sẽ rất nhanh).
 Với 3 click chuột bạn có thể tìm được môn học của mình.
 
-![alt text](https://github.com/toky0s/cs4rsa/blob/gh-pages/Screenshot%202021-07-17%20143502.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/toky0s/cs4rsa/gh-pages/Screenshot%202021-07-17%20143502.png "Xếp lịch thủ công")
 
 CS4RSA có một số menu chuột phải giúp bạn thuận tiện hơn trong việc thao tác và điều hướng tới các trang của DTU. Còn
 nhiều menu chuột phải khác bạn có thể khám phá bên trong CS4RSA.
