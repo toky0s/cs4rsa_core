@@ -1,5 +1,5 @@
 ---
-youtubeId: Ruh7nAi3OKw
+youtubeId: G73Ll0m3Hvc
 ---
 ## Chào mừng đến với CS4RSA
 
