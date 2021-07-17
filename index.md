@@ -5,6 +5,8 @@ Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực 
  
  Tải xuống cho Window: [CS4RSA](https://drive.google.com/file/d/1CFRQgq-Alf-_Ej6zNqo-tcXTcFESlxT2/view?usp=sharing)
 
+{% youtube Ruh7nAi3OKw %}
+
 ### Hướng dẫn sử dụng
 #### Xếp lịch thủ công
 #### Chọn môn bạn muốn học
