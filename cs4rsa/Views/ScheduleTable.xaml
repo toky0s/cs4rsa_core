@@ -127,7 +127,7 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBlock Text="Giai đoạn 2 (Từ tuần 10 - 18)"
+        <TextBlock Text="Giai đoạn 2 (Từ tuần 10 - 18) bao gồm Hè"
                            Grid.Row="3"></TextBlock>
         <DataGrid Grid.Row="4"
                   x:Name="DataGridSecondPhase"

@@ -27,11 +27,10 @@ namespace cs4rsa.Helpers
             return false;
         }
 
-        public static void Check(IMessageBox messageBox)
+        public static void Check()
         {
             if (!IsConnectingToInternet())
             {
-                messageBox.ShowMessage("Vui lòng kiểm tra kết nối Internet", "Lỗi kết nỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(-1);
             }
         }

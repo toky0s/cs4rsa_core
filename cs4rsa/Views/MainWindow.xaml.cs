@@ -27,13 +27,19 @@ namespace cs4rsa
     public partial class MainWindow : Window
     {
         // Khởi tạo trước các View trong Runtime
-        private HomeView _homeView = new HomeView();
-        private LoginView _loginView = new LoginView();
-        private MainScheduling _mainScheduling = new MainScheduling();
-        private AutoSchedule _autoScheduling = new AutoSchedule();
+        private HomeView _homeView;
+        private LoginView _loginView;
+        private MainScheduling _mainScheduling;
+        private AutoSchedule _autoScheduling;
+        private InfoView _infoView;
 
         public MainWindow()
         {
+            _homeView = new HomeView();
+            _loginView = new LoginView();
+            _mainScheduling = new MainScheduling();
+            _autoScheduling = new AutoSchedule();
+            _infoView = new InfoView();
             InitializeComponent();
             DataContext = new MainViewModel();
         }
@@ -56,6 +62,9 @@ namespace cs4rsa
                     break;
                 case 3:
                     MainArea.Content = _autoScheduling;
+                    break;
+                case 4:
+                    MainArea.Content = _infoView;
                     break;
             }
         }
