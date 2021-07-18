@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace cs4rsa.BasicData
 {
     /// <summary>
-    /// Đại diện cho toàn bộ chương trình học.
+    /// Đại diện cho toàn bộ chương trình học của một sinh viên nào đó.
     /// </summary>
     public class ProgramDiagram
     {

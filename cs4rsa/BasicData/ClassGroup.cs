@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace cs4rsa.BasicData
 {
+    /// <summary>
+    /// Đại diện cho nơi học của một lớp học.
+    /// </summary>
     public enum Place
     {
         QUANGTRUNG,
@@ -18,44 +21,34 @@ namespace cs4rsa.BasicData
 
     /// <summary>
     /// Đại diện cho một nhóm lớp của một môn nào đó, thường sẽ bao gồm các lớp học LEC và LAB.
+    /// Class này không được khởi tạo trực tiếp, mà được khởi tạo trong Subject vì theo kỹ thuật
+    /// ClassGroup phải từ một Subject ra.
     /// </summary>
     public class ClassGroup
     {
-        private readonly string name;
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-        }
+        private readonly string _name;
+        public string Name => _name;
 
-        private readonly string subjectCode;
-        public string SubjectCode
-        {
-            get
-            {
-                return subjectCode;
-            }
-        }
+        private readonly string _subjectCode;
+        public string SubjectCode => _subjectCode;
 
-        private readonly List<SchoolClass> schoolClasses = new List<SchoolClass>();
-        public List<SchoolClass> SchoolClasses { get { return schoolClasses; } }
+        private readonly List<SchoolClass> _schoolClasses = new List<SchoolClass>();
+        public List<SchoolClass> SchoolClasses => _schoolClasses;
 
         public ClassGroup(string name, string subjectCode)
         {
-            this.name = name;
-            this.subjectCode = subjectCode;
+            _name = name;
+            _subjectCode = subjectCode;
         }
 
         public void AddSchoolClass(SchoolClass schoolClass)
         {
-            schoolClasses.Add(schoolClass);
+            _schoolClasses.Add(schoolClass);
         }
 
         public DayPlaceMetaData GetDayPlaceMetaData()
         {
-            return schoolClasses[0].DayPlaceMetaData;
+            return _schoolClasses[0].DayPlaceMetaData;
         }
 
         /// <summary>
@@ -65,7 +58,7 @@ namespace cs4rsa.BasicData
         public Schedule GetSchedule()
         {
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
-            foreach(SchoolClass schoolClass in schoolClasses)
+            foreach(SchoolClass schoolClass in _schoolClasses)
             {
                 List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
@@ -80,13 +73,13 @@ namespace cs4rsa.BasicData
 
         public Phase GetPhase()
         {
-            return schoolClasses[0].StudyWeek.GetPhase();
+            return _schoolClasses[0].StudyWeek.GetPhase();
         }
 
         public List<Teacher> GetTeachers()
         {
             List<Teacher> teachers = new List<Teacher>();
-            foreach(SchoolClass schoolClass in schoolClasses)
+            foreach(SchoolClass schoolClass in _schoolClasses)
             {
                 teachers.Add(schoolClass.Teacher);
             }
@@ -109,7 +102,7 @@ namespace cs4rsa.BasicData
         public List<Session> GetSession()
         {
             List<Session> sessions = new List<Session>();
-            foreach(SchoolClass schoolClass in schoolClasses)
+            foreach(SchoolClass schoolClass in _schoolClasses)
             {
                 sessions.AddRange(schoolClass.Schedule.GetSessions());
             }
@@ -120,7 +113,7 @@ namespace cs4rsa.BasicData
         public List<Place> GetPlaces()
         {
             List<Place> places = new List<Place>();
-            foreach(SchoolClass schoolClass in schoolClasses)
+            foreach(SchoolClass schoolClass in _schoolClasses)
             {
                 places.AddRange(schoolClass.Places);
             }
@@ -141,7 +134,7 @@ namespace cs4rsa.BasicData
 
         public string GetRegisterCode()
         {
-            return schoolClasses[0].RegisterCode;
+            return _schoolClasses[0].RegisterCode;
         }
 
         /// <summary>
@@ -166,9 +159,9 @@ namespace cs4rsa.BasicData
         /// <returns></returns>
         public int GetEmptySeat()
         {
-            if (schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
+            if (_schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
                 return 0;
-            return int.Parse(schoolClasses[0].EmptySeat);
+            return int.Parse(_schoolClasses[0].EmptySeat);
         }
 
         public MetaDataMap GetMetaDataMap()
@@ -178,12 +171,12 @@ namespace cs4rsa.BasicData
 
         public ImplementType GetImplementType()
         {
-            return BasicDataConverter.ToImplementType(schoolClasses[0].ImplementationStatus);
+            return BasicDataConverter.ToImplementType(_schoolClasses[0].ImplementationStatus);
         }
 
         public RegistrationType GetRegistrationType()
         {
-            return BasicDataConverter.ToRegistrationType(schoolClasses[0].RegistrationStatus);
+            return BasicDataConverter.ToRegistrationType(_schoolClasses[0].RegistrationStatus);
         }
     }
 }

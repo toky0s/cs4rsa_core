@@ -71,9 +71,9 @@ namespace cs4rsa.Views
 
             Dictionary<string, Session> nameAndSession = new Dictionary<string, Session>()
             {
-                { "Mor", Session.MORNING },
-                { "Aft", Session.AFTERNOON },
-                { "Nig", Session.NIGHT },
+                { "Mor", Session.Morning },
+                { "Aft", Session.Afternoon },
+                { "Nig", Session.Night },
             };
             string[] nameSlices = checkboxName.Split(new char[] { '_' });
             string nameDay = nameSlices[0];

@@ -23,16 +23,16 @@ namespace cs4rsa.BasicData
     public class ProgramSubject: IProgramNode, IComparable
     {
         private string _id;
-        private string _childOfNode;
+        private readonly string _childOfNode;
         private string _subjectCode;
         private string _subjectName;
-        private string _studyUnit;
-        private StudyUnitType _studyUnitType;
+        private readonly string _studyUnit;
+        private readonly StudyUnitType _studyUnitType;
         // Lần lượt là các môn tiên quyết và song hành
-        private List<string> _prerequisiteSubjects;
-        private List<string> _parallelSubjects;
-        private StudyState _studyState;
-        private string _courseId;
+        private readonly List<string> _prerequisiteSubjects;
+        private readonly List<string> _parallelSubjects;
+        private readonly StudyState _studyState;
+        private readonly string _courseId;
 
         public string Id
         {

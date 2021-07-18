@@ -164,8 +164,8 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.4.0.0\lib\net46\System.Reactive.dll</HintPath>
+    <Reference Include="System.Reactive, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -330,12 +330,10 @@
     <Compile Include="Implements\StudentSaver.cs" />
     <Compile Include="Implements\TeacherSaver.cs" />
     <Compile Include="Dialogs\Implements\SubjectImporter.cs" />
-    <Compile Include="Interfaces\IDtuSubjectSaver.cs" />
     <Compile Include="Interfaces\IGetter.cs" />
     <Compile Include="Interfaces\IProgramNode.cs" />
     <Compile Include="Interfaces\IProgramSubjectSaver.cs" />
     <Compile Include="Interfaces\ISaver.cs" />
-    <Compile Include="Interfaces\IStudentSaver.cs" />
     <Compile Include="Messages\ChoicesChangedMessage.cs" />
     <Compile Include="Messages\ClassGroupAddedMessage.cs" />
     <Compile Include="Messages\DeleteSubjectMessage.cs" />
@@ -352,9 +350,6 @@
     <Compile Include="Database\Cs4rsaData.cs" />
     <Compile Include="Helpers\BasicDataConverter.cs" />
     <Compile Include="Helpers\ClassGroupFilter.cs" />
-    <Compile Include="Interfaces\IDatabaseChecker.cs" />
-    <Compile Include="Interfaces\IDisciplineSaver.cs" />
-    <Compile Include="Interfaces\ITeacherSaver.cs" />
     <Compile Include="Messages\SubjectItemChangeMessage.cs" />
     <Compile Include="Models\ClassGroupModel.cs" />
     <Compile Include="Models\ConflictModel.cs" />
@@ -575,9 +570,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\donate.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="hnet.com-image.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />

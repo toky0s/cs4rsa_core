@@ -65,12 +65,16 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<DisciplineInfomationModel> disciplines;
+        private ObservableCollection<DisciplineInfomationModel> _disciplines;
         public ObservableCollection<DisciplineInfomationModel> Disciplines
         {
             get
             {
-                return disciplines;
+                return _disciplines;
+            }
+            set
+            {
+                _disciplines = value;
             }
         }
 
@@ -171,8 +175,8 @@ namespace cs4rsa.ViewModels
             _messageBox = messageBox;
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
-            this.disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
-            SelectedDiscipline = this.disciplines[0];
+            _disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
+            SelectedDiscipline = _disciplines[0];
             AddCommand = new RelayCommand(OnAddSubject);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
@@ -211,9 +215,9 @@ namespace cs4rsa.ViewModels
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             foreach (DisciplineInfomationModel item in disciplineInfomationModels)
             {
-                this.disciplines.Add(item);
+                _disciplines.Add(item);
             }
-            SelectedDiscipline = this.disciplines[0];
+            SelectedDiscipline = _disciplines[0];
             LoadDisciplineKeyword(selectedDiscipline.Discipline);
         }
 

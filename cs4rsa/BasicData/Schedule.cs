@@ -16,22 +16,23 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class Schedule
     {
-        private Dictionary<DayOfWeek, List<StudyTime>> scheduleTime;
-        public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime { get { return scheduleTime; } }
-        
+        private Dictionary<DayOfWeek, List<StudyTime>> _scheduleTime;
+        public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime => _scheduleTime;
+
+
         public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
         {
-            this.scheduleTime = scheduleTime;
+            _scheduleTime = scheduleTime;
         }
         
         public List<DayOfWeek> GetSchoolDays()
         {
-            return scheduleTime.Keys.ToList();
+            return _scheduleTime.Keys.ToList();
         }
 
         public List<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
         {
-            return scheduleTime[DayOfWeek];
+            return _scheduleTime[DayOfWeek];
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace cs4rsa.BasicData
         public double TotalHours()
         {
             double total = 0;
-            foreach(List<StudyTime> studyTimes in scheduleTime.Values)
+            foreach(List<StudyTime> studyTimes in _scheduleTime.Values)
             {
                 foreach(StudyTime studyTime in studyTimes)
                 {
@@ -54,7 +55,7 @@ namespace cs4rsa.BasicData
         public List<Session> GetSessions()
         {
             List<Session> sessions = new List<Session>();
-            foreach(List<StudyTime> studyTimes in scheduleTime.Values)
+            foreach(List<StudyTime> studyTimes in _scheduleTime.Values)
             {
                 sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
             }
@@ -69,7 +70,7 @@ namespace cs4rsa.BasicData
         public List<StudyTime> GetStudyTimes()
         {
             List<StudyTime> studyTimes = new List<StudyTime>();
-            foreach (List<StudyTime> item in scheduleTime.Values)
+            foreach (List<StudyTime> item in _scheduleTime.Values)
             {
                 studyTimes.AddRange(item);
             }
@@ -84,8 +85,8 @@ namespace cs4rsa.BasicData
         /// <returns></returns>
         public LearnState GetLearnState(DayOfWeek dayOfWeek, Session session)
         {
-            if (!scheduleTime.ContainsKey(dayOfWeek)) return LearnState.Free;
-            List<StudyTime> studyTimes = scheduleTime[dayOfWeek]
+            if (!_scheduleTime.ContainsKey(dayOfWeek)) return LearnState.Free;
+            List<StudyTime> studyTimes = _scheduleTime[dayOfWeek]
                                          .Where(item => item.GetSession()==session).ToList();
             return studyTimes.Count == 0 ? LearnState.Free : LearnState.Learn;
         }

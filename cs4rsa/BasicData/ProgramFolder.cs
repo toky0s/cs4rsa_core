@@ -19,12 +19,12 @@ namespace cs4rsa.BasicData
     public class ProgramFolder : IProgramNode
     {
         private string _id;
-        private string _childOfNode;
+        private readonly string _childOfNode;
         private string _name;
         private List<ProgramFolder> _childProgramFolders = new List<ProgramFolder>();
         private List<ProgramSubject> _childProgramSubjects = new List<ProgramSubject>();
-        private string _rawHtml;
-        private StudyMode _studyMode;
+        private readonly string _rawHtml;
+        private readonly StudyMode _studyMode;
 
         public string Id => _id;
         public string ChildOfNode => _childOfNode;

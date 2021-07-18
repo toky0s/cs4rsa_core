@@ -7,51 +7,51 @@ namespace cs4rsa.Models
     /// </summary>
     public class DisciplineKeywordModel
     {
-        private string courseId;
-        private string subjectName;
-        private string discipline;
-        private string keyword1;
+        private string _courseId;
+        private string _subjectName;
+        private string _discipline;
+        private string _keyword1;
 
         public string CourseID
         {
             get
             {
-                return courseId;
+                return _courseId;
             }
             set
             {
-                courseId = value;
+                _courseId = value;
             }
         }
         public string SubjectName
         {
             get
             {
-                return subjectName;
+                return _subjectName;
             }
             set
             {
-                subjectName = value;
+                _subjectName = value;
             }
         }
         public string Keyword1
         {
             get
             {
-                return keyword1;
+                return _keyword1;
             }
             set
             {
-                keyword1 = value;
+                _keyword1 = value;
             }
         }
 
         public DisciplineKeywordModel(string courseId, string subjectName, string discipline, string keyword1)
         {
-            this.courseId = courseId;
-            this.subjectName = subjectName;
-            this.discipline = discipline;
-            this.keyword1 = keyword1;
+            _courseId = courseId;
+            _subjectName = subjectName;
+            _discipline = discipline;
+            _keyword1 = keyword1;
         }
     }
 }

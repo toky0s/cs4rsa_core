@@ -78,7 +78,7 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private IMessageBox _messageBox;
+        private readonly IMessageBox _messageBox;
         private string _shareString;
 
         public RelayCommand OpenSettingCommand { get; set; }

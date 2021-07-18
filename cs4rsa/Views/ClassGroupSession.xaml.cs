@@ -102,9 +102,9 @@ namespace cs4rsa.Views
 
             Dictionary<CheckBox, Session> checkSessions = new Dictionary<CheckBox, Session>
             {
-                { CheckBox_Morning, Session.MORNING },
-                { CheckBox_Afternoon, Session.AFTERNOON },
-                { CheckBox_Night, Session.NIGHT }
+                { CheckBox_Morning, Session.Morning },
+                { CheckBox_Afternoon, Session.Afternoon },
+                { CheckBox_Night, Session.Night }
             };
 
             checkSessions = checkSessions.Where(pair => pair.Key.IsChecked.Value)

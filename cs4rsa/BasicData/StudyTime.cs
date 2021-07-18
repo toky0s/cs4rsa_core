@@ -8,32 +8,20 @@ namespace cs4rsa.BasicData
 {
     public enum Session
     {
-        MORNING, AFTERNOON, NIGHT
+        Morning, Afternoon, Night
     }
 
     public class StudyTime
     {
-        private readonly DateTime start;
-        private readonly DateTime end;
-        public DateTime Start {get { return start; }}
-        public DateTime End { get { return end; }}
+        private readonly DateTime _start;
+        private readonly DateTime _end;
+        public DateTime Start {get { return _start; }}
+        public DateTime End { get { return _end; }}
 
-        private readonly string startAsString;
-        private readonly string endAsString;
-        public string StartAsString
-        {
-            get
-            {
-                return startAsString;
-            }
-        }
-        public string EndAsString
-        {
-            get
-            {
-                return endAsString;
-            }
-        }
+        private readonly string _startAsString;
+        private readonly string _endAsString;
+        public string StartAsString => _startAsString;
+        public string EndAsString => _endAsString;
 
         public StudyTime()
         {
@@ -42,21 +30,21 @@ namespace cs4rsa.BasicData
 
         public StudyTime(DateTime start, DateTime end)
         {
-            this.start = start;
-            this.end = end;
+            _start = start;
+            _end = end;
         }
 
         public StudyTime(string start, string end)
         {
-            startAsString = start;
-            endAsString = end;
-            this.start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            this.end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            _startAsString = start;
+            _endAsString = end;
+            _start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            _end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public double TotalHours()
         {
-            return (end - start).TotalHours;
+            return (_end - _start).TotalHours;
         }
 
         public Session GetSession()
@@ -65,46 +53,59 @@ namespace cs4rsa.BasicData
             {
                 if (!IsInAfternoon())
                 {
-                    return Session.NIGHT;
+                    return Session.Night;
                 }
-                return Session.AFTERNOON;
+                return Session.Afternoon;
             }
-            return Session.MORNING;
+            return Session.Morning;
         }
 
+
+        /// <summary>
+        /// Kiểm tra đây có phải là buổi sáng hay không.
+        /// </summary>
+        /// <returns></returns>
         private bool IsInMorning()
         {
-            DateTime[] morningTime =  {
+            DateTime[] MorningTime =  {
                 DateTime.ParseExact("07:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
                 DateTime.ParseExact("11:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
-            if (start <= morningTime[1])
+            if (_start <= MorningTime[1])
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Kiểm tra đây có phải là buổi chiều hay không.
+        /// </summary>
+        /// <returns></returns>
         private bool IsInAfternoon()
         {
-            DateTime[] afternoonTime =  {
+            DateTime[] AfternoonTime =  {
                 DateTime.ParseExact("13:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
                 DateTime.ParseExact("17:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
-            if (start >= afternoonTime[0] && start <= afternoonTime[1])
+            if (_start >= AfternoonTime[0] && _start <= AfternoonTime[1])
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Kiểm tra đây có phải là buổi tối hay không.
+        /// </summary>
+        /// <returns></returns>
         private bool IsInNight()
         {
-            DateTime[] nightTime =  {
+            DateTime[] NightTime =  {
                 DateTime.ParseExact("17:45", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
                 DateTime.ParseExact("21:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
-            if (start >= nightTime[0] && end <= nightTime[1])
+            if (_start >= NightTime[0] && _end <= NightTime[1])
             {
                 return true;
             }

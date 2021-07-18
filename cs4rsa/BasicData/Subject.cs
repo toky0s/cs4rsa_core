@@ -11,52 +11,52 @@ namespace cs4rsa.BasicData
 {
     /// <summary>
     /// Class này chứa toàn bộ thông tin về một môn học.
-    /// Đồng thời cũng là bộ cào data để tìm được ClassGroup và SchoolClass.
+    /// Bao gồm danh sách tất cả các ClassGroup có trong môn học đó.
     /// </summary>
     public class Subject
     {
-        private readonly string name;
-        private readonly string subjectCode;
-        private readonly string studyUnit;
-        private readonly string studyUnitType;
-        private readonly string studyType;
-        private readonly string semester;
-        private readonly string[] mustStudySubject;
-        private readonly string[] parallelSubject;
-        private readonly string description;
-        private readonly string rawSoup;
-        private readonly string courseId;
+        private readonly string _name;
+        private readonly string _subjectCode;
+        private readonly string _studyUnit;
+        private readonly string _studyUnitType;
+        private readonly string _studyType;
+        private readonly string _semester;
+        private readonly string[] _mustStudySubject;
+        private readonly string[] _parallelSubject;
+        private readonly string _description;
+        private readonly string _rawSoup;
+        private readonly string _courseId;
 
-        // pre-load
-        private List<Teacher> teachers = new List<Teacher>();
-        public List<Teacher> Teachers => teachers;
+        private List<Teacher> _teachers = new List<Teacher>();
+        public List<Teacher> Teachers => _teachers;
         private List<ClassGroup> classGroups = new List<ClassGroup>();
         public List<ClassGroup> ClassGroups => classGroups;
 
-        public string Name => name;
-        public string SubjectCode => subjectCode;
-        public string CourseId => courseId;
-        public int StudyUnit => int.Parse(studyUnit);
-        public string[] MustStudySubject => mustStudySubject;
-        public string[] ParallelSubject => parallelSubject;
-        public string RawSoup => rawSoup;
+        public string Name => _name;
+        public string SubjectCode => _subjectCode;
+        public int StudyUnit => int.Parse(_studyUnit);
+        public string[] MustStudySubject => _mustStudySubject;
+        public string[] ParallelSubject => _parallelSubject;
+        public string Desciption => _description;
+        public string RawSoup => _rawSoup;
+        public string CourseId => _courseId;
 
         public Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester, 
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, string courseId)
         {
-            this.name = name;
-            this.subjectCode = subjectCode;
-            this.studyUnit = studyUnit;
-            this.studyUnitType = studyUnitType;
-            this.studyType = studyType;
-            this.semester = semester;
-            this.mustStudySubject = SubjectSpliter(mustStudySubject);
-            this.parallelSubject = SubjectSpliter(parallelSubject);
-            this.description = description;
-            this.rawSoup = rawSoup;
-            this.courseId = courseId;
+            _name = name;
+            _subjectCode = subjectCode;
+            _studyUnit = studyUnit;
+            _studyUnitType = studyUnitType;
+            _studyType = studyType;
+            _semester = semester;
+            _mustStudySubject = SubjectSpliter(mustStudySubject);
+            _parallelSubject = SubjectSpliter(parallelSubject);
+            _description = description;
+            _rawSoup = rawSoup;
+            _courseId = courseId;
             GetClassGroups();
         }
 
@@ -81,7 +81,7 @@ namespace cs4rsa.BasicData
                 List<SchoolClass> schoolClasses = GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
-                    ClassGroup classGroup = new ClassGroup(classGroupName, subjectCode);
+                    ClassGroup classGroup = new ClassGroup(classGroupName, _subjectCode);
 
                     string pattern = string.Format(@"^({0})[0-9]*$", classGroupName);
                     Regex regexName = new Regex(pattern);
@@ -166,7 +166,7 @@ namespace cs4rsa.BasicData
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
-            SchoolClass schoolClass = new SchoolClass(subjectCode, classGroupName, name, registerCode, studyType,
+            SchoolClass schoolClass = new SchoolClass(_subjectCode, classGroupName, _name, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teacher, registrationStatus, implementationStatus, metaData);
             return schoolClass;
@@ -183,7 +183,7 @@ namespace cs4rsa.BasicData
         private HtmlNode[] GetListTrTagInCalendar()
         {
             HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(rawSoup);
+            htmlDocument.LoadHtml(_rawSoup);
             HtmlNode tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             HtmlNode[] trTags = bodyCalendar.Descendants("tr").ToArray();
@@ -221,10 +221,8 @@ namespace cs4rsa.BasicData
             };
             Teacher teacher = teacherCrawler.ToTeacher();
 
-            // add vào list teacher
-            if (teacher != null && !teachers.Contains(teacher))
-                teachers.Add(teacher);
-            // add vào list teacher
+            if (teacher != null && !_teachers.Contains(teacher))
+                _teachers.Add(teacher);
 
             return teacher;
         }

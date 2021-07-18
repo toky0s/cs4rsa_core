@@ -11,8 +11,8 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class Curriculum
     {
-        private string _curid;
-        private string _name;
+        private readonly string _curid;
+        private readonly string _name;
         public string CurId => _curid;
         public string Name => _name;
         public Curriculum(string curId, string name)

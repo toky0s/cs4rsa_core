@@ -8,56 +8,57 @@ namespace cs4rsa.BasicData
 {
     public class SchoolClass
     {
-        private readonly string subjectCode;
-        private string classGroupName;
-        private string name;
-        private string registerCode;
-        private string type;
-        private string emptySeat;
-        private string registrationTermEnd;
-        private string registrationTermStart;
-        private StudyWeek studyWeek;
-        private Schedule schedule;
-        private string[] rooms;
-        private List<Place> places;
-        private Teacher teacher;
-        private string registrationStatus;
-        private string implementationStatus;
-        private DayPlaceMetaData dayPlaceMetaData;
+        private readonly string _subjectCode;
+        private readonly string _classGroupName;
+        private readonly string _name;
+        private readonly string _registerCode;
+        private readonly string _type;
+        private readonly string _emptySeat;
+        private readonly string _registrationTermEnd;
+        private readonly string _registrationTermStart;
+        private readonly StudyWeek _studyWeek;
+        private readonly Schedule _schedule;
+        private readonly string[] _rooms;
+        private readonly List<Place> _places;
+        private readonly Teacher _teacher;
+        private readonly string _registrationStatus;
+        private readonly string _implementationStatus;
+        private readonly DayPlaceMetaData _dayPlaceMetaData;
 
-        public string Name => name;
-        public string SubjectCode => subjectCode;
-        public string ClassGroupName => classGroupName;
-        public string RegisterCode => registerCode;
-        public string EmptySeat => emptySeat;
-        public Schedule Schedule => schedule;
-        public StudyWeek StudyWeek => studyWeek;
-        public Teacher Teacher => teacher;
-        public List<Place> Places => places;
-        public string RegistrationStatus => registrationStatus;
-        public string ImplementationStatus => implementationStatus;
-        public DayPlaceMetaData DayPlaceMetaData => dayPlaceMetaData;
+        public string Name => _name;
+        public string SubjectCode => _subjectCode;
+        public string ClassGroupName => _classGroupName;
+        public string RegisterCode => _registerCode;
+        public string EmptySeat => _emptySeat;
+        public Schedule Schedule => _schedule;
+        public string[] Rooms => _rooms;
+        public StudyWeek StudyWeek => _studyWeek;
+        public Teacher Teacher => _teacher;
+        public List<Place> Places => _places;
+        public string RegistrationStatus => _registrationStatus;
+        public string ImplementationStatus => _implementationStatus;
+        public DayPlaceMetaData DayPlaceMetaData => _dayPlaceMetaData;
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 
             string[] rooms, List<Place> places, Teacher teacher, string registrationStatus, string implementationStatus, DayPlaceMetaData dayPlaceMetaData)
         {
-            this.subjectCode = subjectCode;
-            this.classGroupName = classGroupName;
-            this.name = name;
-            this.registerCode = registerCode;
-            this.type = type;
-            this.emptySeat = emptySeat;
-            this.registrationTermStart = registrationTermStart;
-            this.registrationTermEnd = registrationTermEnd;
-            this.studyWeek = studyWeek;
-            this.schedule = schedule;
-            this.rooms = rooms;
-            this.places = places;
-            this.teacher = teacher;
-            this.registrationStatus = registrationStatus;
-            this.implementationStatus = implementationStatus;
-            this.dayPlaceMetaData = dayPlaceMetaData;
+            _subjectCode = subjectCode;
+            _classGroupName = classGroupName;
+            _name = name;
+            _registerCode = registerCode;
+            _type = type;
+            _emptySeat = emptySeat;
+            _registrationTermStart = registrationTermStart;
+            _registrationTermEnd = registrationTermEnd;
+            _studyWeek = studyWeek;
+            _schedule = schedule;
+            _rooms = rooms;
+            _places = places;
+            _teacher = teacher;
+            _registrationStatus = registrationStatus;
+            _implementationStatus = implementationStatus;
+            _dayPlaceMetaData = dayPlaceMetaData;
         }
     }
 }

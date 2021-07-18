@@ -13,7 +13,7 @@ namespace cs4rsa.Models
     /// </summary>
     public class TimeBlock
     {
-        private string _defaultForeground = "#000000";
+        private readonly string _defaultForeground = "#000000";
         public string Background { get; set; }
         public string Foreground { get; set; }
         public string Text { get; set; }

@@ -8,7 +8,7 @@ namespace cs4rsa.BasicData
 {
     public class Student
     {
-        private StudentInfo _info;
+        private readonly StudentInfo _info;
 
         public StudentInfo Info => _info;
 

@@ -14,8 +14,8 @@ namespace cs4rsa.Crawler
         private bool SaveDatabase = false;
         private bool IsGetTeacherFromDataBase = false;
         private string intructorId;
-        private ITeacherSaver teacherSaver;
-        public ITeacherSaver TeacherSaver
+        private ISaver<Teacher> teacherSaver;
+        public ISaver<Teacher> TeacherSaver
         {
             get
             {

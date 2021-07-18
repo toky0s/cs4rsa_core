@@ -37,9 +37,11 @@ namespace cs4rsa.Dialogs.Implements
         private void Sort(bool IsRemoveClassGroupInvalid)
         {
             List<string> courseIds = _programSubjectModels.Select(item => item.CourseId).ToList();
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.WorkerReportsProgress = true;
-            backgroundWorker.WorkerSupportsCancellation = true;
+            BackgroundWorker backgroundWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
             backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;

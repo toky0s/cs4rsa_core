@@ -19,14 +19,11 @@ namespace cs4rsa.Crawler
         public string SubjectCode
         {
             get { return _subjectCode; }
-            set
-            {
-                _subjectCode = value;
-            }
+            set { _subjectCode = value; }
         }
 
-        private string discipline;
-        private string keyword1;
+        private readonly string discipline;
+        private readonly string keyword1;
         private readonly string _courseId;
 
         /// <summary>

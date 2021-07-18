@@ -17,7 +17,7 @@ namespace cs4rsa.Crawler
     {
         private DayPlaceMetaData _metaData = null;
 
-        private string _detailClassGroupUrl;
+        private readonly string _detailClassGroupUrl;
         public MetaDataCrawler(string detailClassGroupUrl)
         {
             _detailClassGroupUrl = detailClassGroupUrl;

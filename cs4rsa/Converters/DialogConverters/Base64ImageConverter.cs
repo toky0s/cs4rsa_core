@@ -13,9 +13,7 @@ namespace cs4rsa.Converters.DialogConverters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string s = value as string;
-
-            if (s == null)
+            if (!(value is string s))
                 return null;
 
             BitmapImage bi = new BitmapImage();

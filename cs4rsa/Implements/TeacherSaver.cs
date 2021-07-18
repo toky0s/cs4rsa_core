@@ -4,12 +4,12 @@ using cs4rsa.Interfaces;
 
 namespace cs4rsa.Implements
 {
-    class TeacherSaver : ITeacherSaver
+    class TeacherSaver : ISaver<Teacher>
     {
-        private Cs4rsaDatabase cs4RsaDatabase;
+        private Cs4rsaDatabase _cs4RsaDatabase;
         public TeacherSaver()
         {
-            cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+            _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
         }
 
         private bool IsExist(Teacher teacher)
@@ -17,7 +17,7 @@ namespace cs4rsa.Implements
 
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacher.Id}";
-            long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
+            long result = _cs4RsaDatabase.GetScalar<long>(countQueryString);
             if (result > 0)
                 return true;
             return false;
@@ -27,36 +27,36 @@ namespace cs4rsa.Implements
         {
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacherId}";
-            long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
+            long result = _cs4RsaDatabase.GetScalar<long>(countQueryString);
             if (result > 0)
                 return true;
             return false;
-        }
-
-        public void Save(Teacher teacher)
-        {
-            string doSQLString = $@"insert into teacher values ({teacher.Id},
-                                    '{teacher.Name}',
-                                    '{teacher.Sex}',
-                                    '{teacher.Place}',
-                                    '{teacher.Degree}',
-                                    '{teacher.WorkUnit}',
-                                    '{teacher.Position}',
-                                    '{teacher.Subject}',
-                                    '{teacher.Form}')";
-            cs4RsaDatabase.DoSomething(doSQLString);
-            SaveDetail(teacher);
         }
 
         private void SaveDetail(Teacher teacher)
         {
             foreach (string subjectName in teacher.TeachedSubjects)
             {
-                long currentId = cs4RsaDatabase.GetScalar<long>("select count(id) from teacher_detail")+1;
+                long currentId = _cs4RsaDatabase.GetScalar<long>("select count(id) from teacher_detail")+1;
                 string updateDetailSQLString = $@"insert into teacher_detail values('{currentId}','{teacher.Id}', '{subjectName}')";
-                cs4RsaDatabase.DoSomething(updateDetailSQLString);
+                _cs4RsaDatabase.DoSomething(updateDetailSQLString);
             }
 
+        }
+
+        public void Save(Teacher obj, object[] parameters = null)
+        {
+            string doSQLString = $@"insert into teacher values ({obj.Id},
+                                    '{obj.Name}',
+                                    '{obj.Sex}',
+                                    '{obj.Place}',
+                                    '{obj.Degree}',
+                                    '{obj.WorkUnit}',
+                                    '{obj.Position}',
+                                    '{obj.Subject}',
+                                    '{obj.Form}')";
+            _cs4RsaDatabase.DoSomething(doSQLString);
+            SaveDetail(obj);
         }
     }
 }

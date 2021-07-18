@@ -16,8 +16,8 @@ namespace cs4rsa.Crawler
     /// </summary>
     public class DtuSubjectCrawler
     {
-        private string _courseId;
-        private string _sessionId;
+        private readonly string _courseId;
+        private readonly string _sessionId;
         private List<string> _prerequisiteSubjects = new List<string>();
         private List<string> _parallelSubjects = new List<string>();
         public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
