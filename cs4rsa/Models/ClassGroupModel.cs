@@ -2,6 +2,7 @@
 using cs4rsa.Database;
 using cs4rsa.Enums;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace cs4rsa.Models
 {
@@ -31,11 +32,17 @@ namespace cs4rsa.Models
             set { _haveSchedule = value; }
         }
 
+        private ObservableCollection<Place> _places;
+        public ObservableCollection<Place> Places
+        {
+            get { return new ObservableCollection<Place>(_classGroup.GetPlaces()); }
+            set { _places = value; }
+        }
+
         public string SubjectCode => _classGroup.SubjectCode;
         public string RegisterCode => _classGroup.GetRegisterCode();
         public Phase Phase => _classGroup.GetPhase();
         public Schedule Schedule => _classGroup.GetSchedule();
-        public List<Place> Places => _classGroup.GetPlaces();
         public ImplementType ImplementType => _classGroup.GetImplementType();
         public RegistrationType RegistrationType => _classGroup.GetRegistrationType();
         public string Color { get; set; }

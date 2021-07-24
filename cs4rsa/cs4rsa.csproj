@@ -229,6 +229,7 @@
     <Compile Include="Converters\DialogConverters\Base64ImageConverter.cs" />
     <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
+    <Compile Include="Converters\PlaceToStringConverter.cs" />
     <Compile Include="Crawler\CurriculumCrawler.cs" />
     <Compile Include="Crawler\DtuStudentInfoCrawler.cs" />
     <Compile Include="Crawler\DtuSubjectCrawler.cs" />

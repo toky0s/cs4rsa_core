@@ -18,6 +18,7 @@
     <UserControl.Resources>
         <converter:PhaseConverter x:Key="PhaseConverter"></converter:PhaseConverter>
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter"></converter:EmptySeatCheckerConverter>
+        <converter:PlaceToStringConverter x:Key="PlaceToStringConverter"></converter:PlaceToStringConverter>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -38,6 +39,15 @@
             <ListBox.Resources>
                 <ToolTip x:Key="ItemToolTip">
                     Vì một số lý do nào đó một số lớp sẽ không có lịch hoặc chỉ có lịch bổ xung, xem chi tiết trên Course.
+                </ToolTip>
+                <ToolTip x:Key="PlaceToolTip">
+                    <ItemsControl ItemsSource="{Binding Places}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource PlaceToStringConverter}}"></TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ToolTip>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
@@ -99,6 +109,7 @@
                                         </TextBlock.Style>
                                     </TextBlock>
                                 </StackPanel>
+                                <TextBlock Text="{Binding Place}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Card>
@@ -106,6 +117,7 @@
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ToolTip" Value='{StaticResource PlaceToolTip}'></Setter>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
                             <Setter Property="ToolTip" Value="{StaticResource ItemToolTip}"></Setter>

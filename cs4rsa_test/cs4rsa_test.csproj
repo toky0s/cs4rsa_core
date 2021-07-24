@@ -90,10 +90,7 @@
     <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag3.html" />
     <Content Include="Crawler\HtmlTdTags\HTMLPagetdTag4.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="Functions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\cs4rsa\cs4rsa.csproj">
       <Project>{6bee43db-846c-45b4-8d49-f0e71aa1dbf8}</Project>

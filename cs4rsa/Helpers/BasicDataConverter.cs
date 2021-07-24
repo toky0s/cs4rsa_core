@@ -29,10 +29,12 @@ namespace cs4rsa.Helpers
                 return Place.QUANGTRUNG;
             if (slideds.Contains("Nam"))
                 return Place.HOAKHANH;
-            if (slideds.Contains("209") || slideds.Contains("254"))
+            if (slideds.Contains("209"))
                 return Place.PHANTHANH;
             if (slideds.Contains("334/4"))
                 return Place.VIETTIN;
+            if (slideds.Contains("254"))
+                return Place.NVL_254;
             else
                 return Place.NVL_137;
         }
