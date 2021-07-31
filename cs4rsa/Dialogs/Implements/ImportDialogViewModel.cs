@@ -108,7 +108,8 @@ namespace cs4rsa.Dialogs.Implements
         private bool CanImport()
         {
             if (_selectedScheduleSession != null)
-                return true;
+                if (_selectedScheduleSession.IsValid())
+                    return true;
             return false;
         }
 

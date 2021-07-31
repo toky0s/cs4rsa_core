@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cs4rsa.Crawler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,13 @@ namespace cs4rsa.Models
         public DateTime SaveDate { get; set; }
         public string Semester { get; set; }
         public string Year { get; set; }
+
+        public bool IsValid()
+        {
+            HomeCourseSearch hcs = HomeCourseSearch.GetInstance();
+            if (Semester.Equals(hcs.CurrentSemesterValue) && Year.Equals(hcs.CurrentYearValue))
+                return true;
+            return false;
+        }
     }
 }

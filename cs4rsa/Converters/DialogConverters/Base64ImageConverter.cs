@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
@@ -17,7 +18,8 @@ namespace cs4rsa.Converters.DialogConverters
                 return null;
 
             BitmapImage bi = new BitmapImage();
-
+            Regex regex = new Regex(@"^[\w/\:.-]+;base64,");
+            s = regex.Replace(s, string.Empty);
             bi.BeginInit();
             bi.StreamSource = new MemoryStream(System.Convert.FromBase64String(s));
             bi.EndInit();
