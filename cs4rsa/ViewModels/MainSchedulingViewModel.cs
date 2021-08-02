@@ -20,7 +20,8 @@ namespace cs4rsa.ViewModels
 {
     public class MainSchedulingViewModel : NotifyPropertyChangedBase,
         IMessageHandler<SubjectItemChangeMessage>,
-        IMessageHandler<ChoicesChangedMessage>
+        IMessageHandler<ChoicesChangedMessage>,
+        IMessageHandler<UpdateSubjectDatabase>
     {
         private string _currentYearInfo;
         private string _currentSemesterInfo;
@@ -90,6 +91,7 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<UpdateSubjectDatabase>().Notify(this);
             _messageBox = messageBox;
             HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
@@ -134,6 +136,11 @@ namespace cs4rsa.ViewModels
         {
             List<ClassGroupModel> classGroupModels = message.Source;
             _shareString = Helpers.ShareString.GetShareString(classGroupModels);
+        }
+
+        public void Handle(UpdateSubjectDatabase message)
+        {
+            OnOpenUpdateWindow(null);
         }
     }
 }

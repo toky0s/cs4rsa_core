@@ -26,7 +26,7 @@ namespace cs4rsa.ViewModels
     /// </summary>
     public class MainViewModel: NotifyPropertyChangedBase, IMessageHandler<Cs4rsaSnackbarMessage>
     {
-        private SnackbarMessageQueue _snackBarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(3000));
+        private SnackbarMessageQueue _snackBarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
         public SnackbarMessageQueue SnackbarMessageQueue
         {
             get { return _snackBarMessageQueue; }
