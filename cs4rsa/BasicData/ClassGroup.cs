@@ -73,7 +73,15 @@ namespace cs4rsa.BasicData
 
         public Phase GetPhase()
         {
-            return _schoolClasses[0].StudyWeek.GetPhase();
+            List<Phase> phases = new List<Phase>();
+            foreach(SchoolClass schoolClass in _schoolClasses)
+            {
+                Phase phase = schoolClass.StudyWeek.GetPhase();
+                phases.Add(phase);
+            }
+            phases = phases.Distinct().ToList();
+            return phases.Count == 2 ? Phase.ALL : phases[0];
+            //return _schoolClasses[0].StudyWeek.GetPhase();
         }
 
         public List<Teacher> GetTeachers()
