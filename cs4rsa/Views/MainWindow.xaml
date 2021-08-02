@@ -16,79 +16,91 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <Window.Resources>
+        <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <materialDesign:DialogHost>
+        <materialDesign:DialogHost.DialogContent>
+            <TextBlock Text="Hello World"></TextBlock>
+        </materialDesign:DialogHost.DialogContent>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1">
-            <ContentControl x:Name="MainArea"></ContentControl>
-            <materialDesign:Snackbar MessageQueue="{Binding SnackbarMessageQueue}"
-                                     HorizontalAlignment="Center"/>
-        </Grid>
-        <Grid Width="250" HorizontalAlignment="Left" Background="#00cec9">
-            <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" 
+            <Grid Grid.Column="1">
+                <ContentControl x:Name="MainArea"></ContentControl>
+                <materialDesign:Snackbar MessageQueue="{Binding SnackbarMessageQueue}"
+                                     HorizontalAlignment="Center">
+                    <materialDesign:SnackbarMessage HorizontalContentAlignment="Center"></materialDesign:SnackbarMessage>
+                </materialDesign:Snackbar>
+            </Grid>
+            <Grid Width="250" HorizontalAlignment="Left" Background="#00cec9">
+                <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" 
                                                  OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
-                <Grid x:Name="GridCursor" 
+                    <Grid x:Name="GridCursor" 
                       Margin="0 100 0 0" 
                       Background="#81ecec" 
                       Width="10" 
                       HorizontalAlignment="Left" 
                       Height="60" 
                       VerticalAlignment="Top"/>
-            </materialDesign:TransitioningContent>
-            <ListView x:Name="ListViewMenu" 
+                </materialDesign:TransitioningContent>
+                <ListView x:Name="ListViewMenu" 
                       Margin="0 100" 
                       Foreground="White"  
                       FontSize="18" 
                       SelectionChanged="ListViewMenu_SelectionChanged" 
                       SelectedIndex="0">
-                <ListViewItem Height="60">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Home" 
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Home" 
                                                  Width="30" 
                                                  Height="30" 
                                                  VerticalAlignment="Center" 
                                                  Margin="5"/>
-                        <TextBlock Text="Trang chủ" 
+                            <TextBlock Text="Trang chủ" 
                                    FontSize="17" 
                                    VerticalAlignment="Center" 
                                    Margin="20 0"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Height="60">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Account" 
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Account" 
                                                  Width="30" 
                                                  Height="30" 
                                                  VerticalAlignment="Center" 
                                                  Margin="5"/>
-                        <TextBlock Text="Tài khoản DTU" 
+                            <TextBlock Text="Tài khoản DTU" 
                                    FontSize="17" 
                                    VerticalAlignment="Center" 
                                    Margin="20 0"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Height="60">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Hand" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Xếp lịch thủ công" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Height="60">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="AutoFix" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Xếp lịch tự động" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Height="60">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Information" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Thông tin" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
-                    </StackPanel>
-                </ListViewItem>
-            </ListView>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Hand" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                            <TextBlock Text="Xếp lịch thủ công" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AutoFix" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                            <TextBlock Text="Xếp lịch tự động" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Information" Width="30" Height="30" VerticalAlignment="Center" Margin="5"/>
+                            <TextBlock Text="Thông tin" FontSize="17" VerticalAlignment="Center" Margin="20 0"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </Grid>
         </Grid>
-    </Grid>
+    </materialDesign:DialogHost>
 </Window>

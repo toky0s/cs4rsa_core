@@ -33,6 +33,18 @@
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                       Content="HƯỚNG DẪN SỬ DỤNG"
                         Click="GotoWeb"/>
+                <TextBlock Text="{Binding CurrentSemesterInfo}" 
+                           HorizontalAlignment="Center"
+                           Margin="0 10 0 0"
+                           Style="{StaticResource MaterialDesignHeadline6TextBlock}"></TextBlock>
+                <TextBlock Text="{Binding CurrentYearInfo}" 
+                           HorizontalAlignment="Center"
+                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
+                <Button Content="Cập nhật cơ sở dữ liệu môn học"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Command="{Binding UpdateSubjectDatabaseCommand}"></Button>
+                <TextBlock>*Học kỳ mới đã xuất hiện, hãy thực hiện cập nhật cơ sở dữ liệu
+                môn học để đảm bảo ứng dụng hoạt động đúng.</TextBlock>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1"

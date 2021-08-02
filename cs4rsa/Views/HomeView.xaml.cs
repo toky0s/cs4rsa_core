@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Configuration;
 using LightMessageBus;
 using cs4rsa.Messages;
+using cs4rsa.ViewModels;
 
 namespace cs4rsa.Views
 {
@@ -28,6 +29,7 @@ namespace cs4rsa.Views
         public HomeView()
         {
             InitializeComponent();
+            DataContext = new HomeViewModel();
             MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage("Chào mừng đến với CS4RSA"));
         }
 
