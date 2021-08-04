@@ -4,9 +4,7 @@ using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
-using cs4rsa.Messages;
 using cs4rsa.Models;
-using LightMessageBus;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,27 +42,42 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _progress = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
-        private IMessageBox _messageBox;
         private BackgroundWorker _backgroundWorker;
 
-        public SubjectImporter(SessionManagerResult sessionManagerResult, IMessageBox messageBox)
-        {
-            _messageBox = messageBox;
-            foreach (SubjectInfoData item in sessionManagerResult.SubjectInfoDatas)
-            {
-                SubjectInfoDatas.Add(item);
-            }
+        private List<SubjectCrawler> _subjectCrawlers;
 
-            List<string> _courseIds = sessionManagerResult.SubjectInfoDatas
-                                            .Select(item => Cs4rsaDataView.GetCourseId(item.SubjectCode))
-                                            .ToList();
-            List<SubjectCrawler> subjectCrawlers = _courseIds.Select(item => new SubjectCrawler(item)).ToList();
-            Run(subjectCrawlers);
+        public List<SubjectCrawler> SubjectCrawlers
+        {
+            get { return _subjectCrawlers; }
+            set { _subjectCrawlers = value; }
         }
+
+        private SessionManagerResult _sessionManagerResult;
+
+        public SessionManagerResult SessionManagerResult
+        {
+            get { return _sessionManagerResult; }
+            set
+            {
+                _sessionManagerResult = value;
+                foreach (SubjectInfoData item in _sessionManagerResult.SubjectInfoDatas)
+                {
+                    SubjectInfoDatas.Add(item);
+                }
+
+                List<string> _courseIds = _sessionManagerResult.SubjectInfoDatas
+                                                .Select(item => Cs4rsaDataView.GetCourseId(item.SubjectCode))
+                                                .ToList();
+                _subjectCrawlers = _courseIds.Select(item => new SubjectCrawler(item)).ToList();
+                Run(_subjectCrawlers);
+            }
+        }
+
+        public Action<ImportResult, SessionManagerResult> CloseDialogCallback { get; set; }
 
         private void Run(List<SubjectCrawler> subjectCrawlers)
         {
@@ -109,8 +122,8 @@ namespace cs4rsa.Dialogs.Implements
             {
                 subject.Color = ColorGenerator.GetColor(subject.CourseId);
             }
-            UserDialogResult = new ImportResult() { SubjectModels = subjectModels };
-            CloseDialogWithResult(UserDialogResult);
+            ImportResult importResult = new ImportResult() { SubjectModels = subjectModels };
+            CloseDialogCallback.Invoke(importResult, _sessionManagerResult);
         }
     }
 }

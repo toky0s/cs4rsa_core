@@ -22,7 +22,7 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _progressValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

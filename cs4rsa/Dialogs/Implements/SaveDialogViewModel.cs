@@ -16,10 +16,14 @@ using cs4rsa;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    class SaveDialogViewModel : DialogViewModelBase<SaveResult>
+    class SaveDialogViewModel : ViewModelBase
     {
-        private IMessageBox _messageBox;
         private List<ClassGroupModel> _classGroupModels;
+        public List<ClassGroupModel> ClassGroupModels
+        {
+            get { return _classGroupModels; }
+            set { _classGroupModels = value; }
+        }
 
         private ObservableCollection<ScheduleSession> scheduleSessions = new ObservableCollection<ScheduleSession>();
         public ObservableCollection<ScheduleSession> ScheduleSessions
@@ -44,7 +48,7 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 name = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 SaveCommand.RaiseCanExecuteChanged();
             }
         }
@@ -52,13 +56,13 @@ namespace cs4rsa.Dialogs.Implements
         public RelayCommand SaveCommand { get; set; }
 
         public RelayCommand CancelCommand { get; set; }
-        
-        public SaveDialogViewModel(IMessageBox messageBox, List<ClassGroupModel> classGroupModels)
+
+        public Action<SaveResult> CloseDialogCallback { get; set; }
+
+        public SaveDialogViewModel()
         {
             SaveCommand = new RelayCommand(Save, ()=> true); 
             CancelCommand = new RelayCommand(Cancle, ()=> true);
-            _messageBox = messageBox;
-            _classGroupModels = classGroupModels;
             LoadScheduleSessions();
         }
 
@@ -71,18 +75,14 @@ namespace cs4rsa.Dialogs.Implements
 
         private void Cancle(object obj)
         {
-            SaveResult a = new SaveResult
-            {
-                Name = null
-            };
-            CloseDialogWithResult(obj as Window, a);
+            CloseDialogCallback.Invoke(null);
         }
 
         private void Save(object obj)
         {
             Cs4rsaDataEdit.AddSession(name, DateTime.Now.ToString(), _classGroupModels);
             SaveResult result = new SaveResult() { Name = name};
-            CloseDialogWithResult(obj as Window, result);
+            CloseDialogCallback.Invoke(result);
         }
     }
 }

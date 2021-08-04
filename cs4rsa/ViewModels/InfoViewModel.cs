@@ -8,7 +8,7 @@ using cs4rsa.BaseClasses;
 
 namespace cs4rsa.ViewModels
 {
-    public class InfoViewModel: NotifyPropertyChangedBase
+    public class InfoViewModel: ViewModelBase
     {
         public string Version { get; set; }
         public InfoViewModel()

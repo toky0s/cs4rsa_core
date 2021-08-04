@@ -210,7 +210,7 @@
     <Compile Include="BaseClasses\ButtonLessWindow.cs" />
     <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
     <Compile Include="BaseClasses\MyICommand.cs" />
-    <Compile Include="BaseClasses\NotifyPropertyChangedBase.cs" />
+    <Compile Include="BaseClasses\ViewModelBase.cs" />
     <Compile Include="BasicData\Curriculum.cs" />
     <Compile Include="BasicData\DayPlaceMetaData.cs" />
     <Compile Include="BasicData\ConflictPlace.cs" />
@@ -258,6 +258,12 @@
     <Compile Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml.cs">
       <DependentUpon>AutoSortDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\ImportSessionUC.xaml.cs">
+      <DependentUpon>ImportSessionUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogViews\SaveSessionUC.xaml.cs">
+      <DependentUpon>SaveSessionUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\LoginDialogWindow.xaml.cs">
       <DependentUpon>LoginDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -270,17 +276,26 @@
     <Compile Include="Dialogs\DialogViews\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\ShareStringUC.xaml.cs">
+      <DependentUpon>ShareStringUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\ShareStringWindow.xaml.cs">
       <DependentUpon>ShareStringWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\SolveConflictDialogWindow.xaml.cs">
       <DependentUpon>SolveConflictDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\SolveConflictUC.xaml.cs">
+      <DependentUpon>SolveConflictUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogViews\SubjectImporterUC.xaml.cs">
+      <DependentUpon>SubjectImporterUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
       <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogViews\UpdateWindow.xaml.cs">
-      <DependentUpon>UpdateWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogViews\UpdateUC.xaml.cs">
+      <DependentUpon>UpdateUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
     <Compile Include="Dialogs\Implements\AutoSortViewModel.cs" />
@@ -317,6 +332,7 @@
     <Compile Include="Messages\RemoveAChoiceClassGroupMessage.cs" />
     <Compile Include="Messages\ShowOnSimuMessage.cs" />
     <Compile Include="Messages\SubjectsChangeMessage.cs" />
+    <Compile Include="Messages\UpdateSubjectDatabase.cs" />
     <Compile Include="Models\CombinationModel.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
@@ -362,10 +378,13 @@
     <Compile Include="Models\TeacherModel.cs" />
     <Compile Include="BaseClasses\RelayCommand.cs" />
     <Compile Include="Models\TimeBlock.cs" />
+    <Compile Include="Settings\Cs4rsaSetting.cs" />
+    <Compile Include="Settings\SettingsWriter.cs" />
     <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
     <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\InfoViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -407,6 +426,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\DialogViews\ImportSessionUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogViews\SaveSessionUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\LoginDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -431,6 +458,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\DialogViews\ShareStringUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\ShareStringWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -439,11 +470,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\DialogViews\SolveConflictUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogViews\SubjectImporterUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\SubjectImporterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\DialogViews\UpdateWindow.xaml">
+    <Page Include="Dialogs\DialogViews\UpdateUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

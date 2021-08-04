@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace cs4rsa.Dialogs.DialogViews
 {
     /// <summary>
-    /// Interaction logic for UpdateWindow.xaml
+    /// Interaction logic for UpdateUC.xaml
     /// </summary>
-    public partial class UpdateWindow : Window
+    public partial class UpdateUC : UserControl
     {
-        public UpdateWindow()
+        public UpdateUC()
         {
             InitializeComponent();
         }

@@ -18,7 +18,7 @@ using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
-    class AutoScheduleViewModel : NotifyPropertyChangedBase
+    class AutoScheduleViewModel : ViewModelBase
     {
         private StudentModel _studentModel;
         public StudentModel StudentModel
@@ -30,7 +30,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _studentModel = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -44,7 +44,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _progressValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -98,7 +98,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedProSubjectInChoiced = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -126,7 +126,7 @@ namespace cs4rsa.ViewModels
             {
                 _selectedCombinationModel = value;
                 ShowOnSimuCommand.RaiseCanExecuteChanged();
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -134,14 +134,14 @@ namespace cs4rsa.ViewModels
         public bool IsRemoveClassGroupInvalid
         {
             get { return _isRemoveClassGroupInvalid; }
-            set { _isRemoveClassGroupInvalid = value; RaisePropertyChanged(); }
+            set { _isRemoveClassGroupInvalid = value; OnPropertyChanged(); }
         }
 
         private bool _isAllowConflict;
         public bool IsAllowConflict
         {
             get { return _isAllowConflict; }
-            set { _isAllowConflict = value; RaisePropertyChanged(); }
+            set { _isAllowConflict = value; OnPropertyChanged(); }
         }
 
         private int _combinationCount = 0;
@@ -154,7 +154,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _combinationCount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -168,7 +168,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _choicedCount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -182,7 +182,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _creditCount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

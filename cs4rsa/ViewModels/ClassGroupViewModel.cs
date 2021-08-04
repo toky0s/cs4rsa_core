@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
 {
-    public class ClassGroupViewModel : NotifyPropertyChangedBase, 
+    public class ClassGroupViewModel : ViewModelBase, 
         IMessageHandler<SelectedSubjectChangeMessage>,
         IMessageHandler<DeleteClassGroupChoiceMessage>,
         IMessageHandler<DeleteSubjectMessage>
@@ -26,7 +26,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 classGroupModels = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -40,7 +40,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedClassGroup = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 if (value != null)
                 {
                     MessageBus.Default.Publish(new ClassGroupAddedMessage(value));
@@ -71,7 +71,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedTeacher = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

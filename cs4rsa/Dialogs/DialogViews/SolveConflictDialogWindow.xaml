@@ -26,6 +26,7 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                    HorizontalAlignment="Center"
@@ -39,12 +40,23 @@
             <Run Text="{Binding ClassGroup2.Name}"></Run>
             <Run Text="?"></Run>
         </TextBlock>
+        <TextBlock Grid.Row="2"
+                   HorizontalAlignment="Center"
+                   Text="Khum làm gì hết"
+                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                   ToolTip="Yếu đuối"
+                   Margin="0 5 0 10">
+            <TextBlock.InputBindings>
+                <MouseBinding Command="{Binding CloseDialogCommand}" MouseAction="LeftClick" />
+            </TextBlock.InputBindings>
+        </TextBlock>
         <Image Source="/Images/choice.jpg" 
                Height="200"
-               Grid.Row="2"
+               Grid.Row="3"
                Margin="0 0 0 10"></Image>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -57,7 +69,7 @@
                     Command="{Binding RemoveClassGroup1Command}"></Button>
             <Button Content="{Binding ClassGroup2.Name, StringFormat=Bỏ chọn {0} (viên màu xanh)}"
                     ToolTip="Cũng như thế nhưng vị dưa hấu"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Background="#00b894"
                     BorderBrush="#00b894"
                     Foreground="White"

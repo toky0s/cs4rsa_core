@@ -12,13 +12,15 @@ using cs4rsa.Models;
 using cs4rsa.Views;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace cs4rsa.ViewModels
 {
-    public class MainSchedulingViewModel : NotifyPropertyChangedBase,
+    public class MainSchedulingViewModel : ViewModelBase,
         IMessageHandler<SubjectItemChangeMessage>,
         IMessageHandler<ChoicesChangedMessage>,
         IMessageHandler<UpdateSubjectDatabase>
@@ -35,7 +37,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _currentYearInfo = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public string CurrentSemesterInfo
@@ -47,7 +49,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _currentSemesterInfo = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -61,7 +63,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _totalCredit = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -75,7 +77,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _totalSubject = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -105,19 +107,31 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenShareStringWindow(object obj)
         {
-            ShareStringWindow shareStringWindow = new ShareStringWindow();
-            ShareStringViewModel shareStringViewModel = new ShareStringViewModel(_shareString);
-            DialogService<ShareStringResult>.OpenDialog(shareStringViewModel, shareStringWindow, obj as Window);
+            //ShareStringWindow shareStringWindow = new ShareStringWindow();
+            //ShareStringViewModel shareStringViewModel = new ShareStringViewModel();
+            //DialogService<ShareStringResult>.OpenDialog(shareStringViewModel, shareStringWindow, obj as Window);
+
+            ShareStringUC shareStringUC = new ShareStringUC();
+            ShareStringViewModel vm = (shareStringUC.DataContext as ShareStringViewModel);
+            vm.ShareString = _shareString;
+            vm.CloseDialogCallback = (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(shareStringUC);
         }
 
         private void OnOpenUpdateWindow(object obj)
         {
-            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            UpdateWindow updateWindow = new UpdateWindow();
-            UpdateViewModel updateViewModel = new UpdateViewModel(cs4RsaMessageBox);
-            UpdateResult result = DialogService<UpdateResult>.OpenDialog(updateViewModel, updateWindow, obj as Window);
-            MessageBus.Default.Publish(new UpdateSuccessMessage(null));
+            //Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
+            //UpdateWindow updateWindow = new UpdateWindow();
+            //UpdateViewModel updateViewModel = new UpdateViewModel(cs4RsaMessageBox, () => { (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog()});
+            //UpdateResult result = DialogService<UpdateResult>.OpenDialog(updateViewModel, updateWindow, obj as Window);
+            //MessageBus.Default.Publish(new UpdateSuccessMessage(null));
+
+            UpdateUC updateUC = new UpdateUC();
+            (updateUC.DataContext as UpdateViewModel).CloseDialogCallback = (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(updateUC);
         }
+
+
 
         public void Handle(SubjectItemChangeMessage message)
         {

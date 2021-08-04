@@ -11,35 +11,35 @@ using LightMessageBus;
 
 namespace cs4rsa.ViewModels
 {
-    public class HomeViewModel: NotifyPropertyChangedBase
+    public class HomeViewModel: ViewModelBase
     {
         private HomeCourseSearch _homeCourseSearch = HomeCourseSearch.GetInstance();
         private string _currentYearValue;
         public string CurrentYearValue
         {
             get { return _currentYearValue; }
-            set { _currentYearValue = value; RaisePropertyChanged(); }
+            set { _currentYearValue = value; OnPropertyChanged(); }
         }
 
         private string _currentSemesterValue;
         public string CurrentSemesterValue
         {
             get { return _currentSemesterValue; }
-            set { _currentSemesterValue = value; RaisePropertyChanged(); }
+            set { _currentSemesterValue = value; OnPropertyChanged(); }
         }
 
         private string _currentYearInfo;
         public string CurrentYearInfo
         {
             get { return _currentYearInfo; }
-            set { _currentYearInfo = value; RaisePropertyChanged(); }
+            set { _currentYearInfo = value; OnPropertyChanged(); }
         }
 
         private string _currentSemesterInfo;
         public string CurrentSemesterInfo
         {
             get { return _currentSemesterInfo; }
-            set { _currentSemesterInfo = value; RaisePropertyChanged(); }
+            set { _currentSemesterInfo = value; OnPropertyChanged(); }
         }
 
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }

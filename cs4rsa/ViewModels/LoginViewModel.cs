@@ -19,7 +19,7 @@ using System.Windows;
 
 namespace cs4rsa.ViewModels
 {
-    public class LoginViewModel:  NotifyPropertyChangedBase
+    public class LoginViewModel:  ViewModelBase
     {
         private ObservableCollection<StudentModel> _students = new ObservableCollection<StudentModel>();
         public ObservableCollection<StudentModel> Students
@@ -41,7 +41,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _sessionId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

@@ -1,18 +1,27 @@
-﻿using cs4rsa.Crawler;
+﻿using System.ComponentModel;
+using System.Windows;
+using System;
+using System.Windows.Input;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using cs4rsa.BaseClasses;
+using cs4rsa.Models;
+using cs4rsa.Messages;
+using cs4rsa.Crawler;
 using cs4rsa.Database;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
-using System.ComponentModel;
-using System.Windows;
+using cs4rsa.BasicData;
 using LightMessageBus;
-using cs4rsa.Messages;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    class UpdateViewModel : DialogViewModelBase<UpdateResult>
+    public class UpdateViewModel : ViewModelBase
     {
         public RelayCommand StartUpdateCommand { get; set; }
+        public RelayCommand CloseDialogCommand { get; set; }
+
         private int _progressValue;
         public int ProgressValue
         {
@@ -23,23 +32,34 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _progressValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
-        private IMessageBox _messageBox;
 
-        public UpdateViewModel(IMessageBox messageBox)
+        public Action CloseDialogCallback { get; set; }
+        public UpdateViewModel()
         {
-            _messageBox = messageBox;
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
+            CloseDialogCommand = new RelayCommand(OnCloseDialog, CanClose);
+        }
+
+        private bool CanClose()
+        {
+            return _progressValue == 0;
+        }
+
+        private void OnCloseDialog(object obj)
+        {
+            CloseDialogCallback.Invoke();
         }
 
         private void OnStartUpdate(object obj)
         {
+            CloseDialogCommand.RaiseCanExecuteChanged();
             // đảm bảo ràng buộc toàn vẹn khi xoá, không thay đổi vị trí hai lệnh này.
             Cs4rsaDataEdit.DeleteDataInTableKeyword();
             Cs4rsaDataEdit.DeleteDataInTableDiscipline();
-            // chia thread cập nhật dưới luồng
+
             BackgroundWorker backgroundWorker = new BackgroundWorker()
             {
                 WorkerReportsProgress = true
@@ -56,7 +76,7 @@ namespace cs4rsa.Dialogs.Implements
             int result = (int)e.Result;
             string message = $"Hoàn tất cập nhật {result} môn";
             MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
-            CloseDialogWithResult(UpdateResult.Success);
+            CloseDialogCallback.Invoke();
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

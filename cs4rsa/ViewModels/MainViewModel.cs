@@ -1,20 +1,10 @@
-﻿using MaterialDesignThemes.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cs4rsa.BaseClasses;
-using LightMessageBus.Interfaces;
+﻿using cs4rsa.BaseClasses;
+using cs4rsa.Helpers;
 using cs4rsa.Messages;
 using LightMessageBus;
-using cs4rsa.Dialogs.MessageBoxService;
-using cs4rsa.Database;
-using FireSharp.Config;
-using FireSharp.Response;
-using FireSharp.Interfaces;
-using Newtonsoft.Json;
-using cs4rsa.Helpers;
+using LightMessageBus.Interfaces;
+using MaterialDesignThemes.Wpf;
+using System;
 using System.Configuration;
 
 namespace cs4rsa.ViewModels
@@ -24,13 +14,27 @@ namespace cs4rsa.ViewModels
     /// MainViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
     /// trong các View.
     /// </summary>
-    public class MainViewModel: NotifyPropertyChangedBase, IMessageHandler<Cs4rsaSnackbarMessage>
+    public class MainViewModel : ViewModelBase, IMessageHandler<Cs4rsaSnackbarMessage>
     {
+        private bool _isOpen;
+        public bool IsOpenDialog
+        {
+            get { return _isOpen; }
+            set { _isOpen = value; OnPropertyChanged(); }
+        }
+
+        private object _dialogUC;
+        public object DialogUC
+        {
+            get { return _dialogUC; }
+            set { _dialogUC = value; OnPropertyChanged(); }
+        }
+
         private SnackbarMessageQueue _snackBarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
         public SnackbarMessageQueue SnackbarMessageQueue
         {
             get { return _snackBarMessageQueue; }
-            set { _snackBarMessageQueue = value; RaisePropertyChanged(); }
+            set { _snackBarMessageQueue = value; OnPropertyChanged(); }
         }
 
         public MainViewModel()
@@ -51,5 +55,16 @@ namespace cs4rsa.ViewModels
         {
             _snackBarMessageQueue.Enqueue(message.Source);
         }
+
+        public void OpenDialog(object uc)
+        {
+            if (uc != null)
+            {
+                DialogUC = uc;
+            }
+            IsOpenDialog = true;
+        }
+
+        public void CloseDialog() => IsOpenDialog = false;
     }
 }

@@ -14,7 +14,7 @@ namespace cs4rsa.Dialogs.DialogService
     /// </para>
     /// </summary>
     /// <typeparam name="T">Dialog Result được trả về khi người dùng đóng Dialog</typeparam>
-    public abstract class DialogViewModelBase<T>: NotifyPropertyChangedBase
+    public abstract class DialogViewModelBase<T>: ViewModelBase
     {
         private bool? _result;
         public bool? Result
@@ -26,7 +26,7 @@ namespace cs4rsa.Dialogs.DialogService
             set
             {
                 _result = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

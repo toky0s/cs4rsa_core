@@ -142,7 +142,12 @@ namespace cs4rsa.BasicData
 
         public string GetRegisterCode()
         {
-            return _schoolClasses[0].RegisterCode;
+            foreach(SchoolClass schoolClass in _schoolClasses)
+            {
+                if (schoolClass.RegisterCode.Trim() != "")
+                    return schoolClass.RegisterCode;
+            }
+            return "";
         }
 
         /// <summary>

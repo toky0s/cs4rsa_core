@@ -30,7 +30,7 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _sessionId = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -44,7 +44,7 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _progressValue = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

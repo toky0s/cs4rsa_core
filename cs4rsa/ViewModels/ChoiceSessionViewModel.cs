@@ -19,7 +19,7 @@ using cs4rsa.Models.Interfaces;
 
 namespace cs4rsa.ViewModels
 {
-    class ChoiceSessionViewModel : NotifyPropertyChangedBase,
+    class ChoiceSessionViewModel : ViewModelBase,
         IMessageHandler<ClassGroupAddedMessage>,
         IMessageHandler<DeleteSubjectMessage>,
         IMessageHandler<RemoveAChoiceClassGroupMessage>
@@ -47,7 +47,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedClassGroupModel = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 DeleteCommand.RaiseCanExecuteChanged();
             }
         }
@@ -69,7 +69,7 @@ namespace cs4rsa.ViewModels
         public ConflictModel SelectedConflictModel
         {
             get { return _selectedConflictModel; }
-            set { _selectedConflictModel = value; RaisePropertyChanged(); }
+            set { _selectedConflictModel = value; OnPropertyChanged(); }
         }
 
         private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
@@ -110,9 +110,16 @@ namespace cs4rsa.ViewModels
         /// <param name="obj"></param>
         private void OnSolve(object obj)
         {
-            SolveConflictDialogWindow solveConflictDialogWindow = new SolveConflictDialogWindow();
+            SolveConflictUC solveConflictUC = new SolveConflictUC();
             SolveConflictViewModel vm = new SolveConflictViewModel(_selectedConflictModel);
-            DialogService<SolveConflictResult>.OpenDialog(vm, solveConflictDialogWindow, null);
+            vm.CloseDialogCallback = CloseDialogAndHandleSolveConflictResult;
+            solveConflictUC.DataContext = vm;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(solveConflictUC);
+        }
+
+        private void CloseDialogAndHandleSolveConflictResult(SolveConflictResult result)
+        {
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
         }
 
         private bool CanDelete()
@@ -160,13 +167,21 @@ namespace cs4rsa.ViewModels
 
         private void OpenSaveDialog(object parameter)
         {
-            Cs4rsaMessageBox errorMessageBox = new Cs4rsaMessageBox();
-            SaveDialogViewModel saveDialogViewModel = new SaveDialogViewModel(errorMessageBox, _classGroupModels.ToList());
-            SaveDialogWindow dialogWindow = new SaveDialogWindow();
-            SaveResult result = DialogService<SaveResult>.OpenDialog(saveDialogViewModel, dialogWindow, parameter as Window);
+            SaveSessionUC saveSessionUC = new SaveSessionUC();
+            SaveDialogViewModel vm = saveSessionUC.DataContext as SaveDialogViewModel;
+            vm.ClassGroupModels = _classGroupModels.ToList();
+            vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(saveSessionUC);
+        }
 
-            string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+        private void CloseDialogAndHandleSaveResult(SaveResult result)
+        {
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
+            if (result != null)
+            {
+                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
+                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            }
         }
 
         public void Handle(ClassGroupAddedMessage message)

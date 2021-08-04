@@ -1,8 +1,9 @@
 ﻿using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
-using System.Windows;
-using LightMessageBus;
 using cs4rsa.Messages;
+using LightMessageBus;
+using System;
+using System.Windows;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -11,26 +12,28 @@ namespace cs4rsa.Dialogs.Implements
         private string _shareString;
         public string ShareString
         {
-            get
-            {
-                return _shareString;
-            }
+            get { return _shareString ?? "Không có Share String nào ở đây cả."; }
             set
             {
                 _shareString = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
         public RelayCommand CopyCommand { get; set; }
+        public RelayCommand CloseDialogCommand { get; set; }
 
-        public ShareStringViewModel(string shareString)
+        public Action CloseDialogCallback { get; set; }
+
+        public ShareStringViewModel()
         {
-            if (shareString == null)
-                _shareString = "Không có Share String nào ở đây cả.";
-            else
-                _shareString = shareString;
             CopyCommand = new RelayCommand(OnCopy, CanCopy);
+            CloseDialogCommand = new RelayCommand(OnCloseDialog);
+        }
+
+        private void OnCloseDialog(object obj)
+        {
+            CloseDialogCallback.Invoke();
         }
 
         private bool CanCopy()

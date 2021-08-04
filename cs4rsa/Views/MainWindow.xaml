@@ -21,11 +21,8 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </Window.Resources>
-    <materialDesign:DialogHost>
-        <materialDesign:DialogHost.DialogContent>
-            <TextBlock Text="Hello World"></TextBlock>
-        </materialDesign:DialogHost.DialogContent>
-        <Grid>
+    <materialDesign:DialogHost IsOpen="{Binding IsOpenDialog}" DialogContent="{Binding DialogUC}">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>

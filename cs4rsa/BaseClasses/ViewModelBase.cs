@@ -3,10 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace cs4rsa.BaseClasses
 {
-    public class NotifyPropertyChangedBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string property = null)
+        protected void OnPropertyChanged([CallerMemberName] string property = null)
         {
             if (PropertyChanged != null)
             {

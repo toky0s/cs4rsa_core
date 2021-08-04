@@ -24,7 +24,7 @@ namespace cs4rsa.ViewModels
     /// <summary>
     /// ViewModel này đại diện cho phần Search Môn học.
     /// </summary>
-    public class SearchViewModel : NotifyPropertyChangedBase,
+    public class SearchViewModel : ViewModelBase,
         IMessageHandler<UpdateSuccessMessage>,
         IMessageHandler<ShowOnSimuMessage>
     {
@@ -40,7 +40,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 canRunAddCommand = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public RelayCommand DeleteCommand { get; set; }
@@ -61,7 +61,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 selectedDiscipline = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -90,7 +90,7 @@ namespace cs4rsa.ViewModels
             {
                 selectedKeyword = value;
                 CanAddSubjectChange();
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -130,7 +130,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 totalSubject = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -159,7 +159,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 totalCredits = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -223,19 +223,32 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenImportDialog(object obj)
         {
+            ImportSessionUC importSessionUC = new ImportSessionUC();
+            ImportDialogViewModel vm = (importSessionUC.DataContext as ImportDialogViewModel);
+            vm.CloseDialogCallback = CloseDialogAndHandleSessionManagerResult;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(importSessionUC);
+        }
+
+        private void CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
+        {
             Cs4rsaMessageBox messageBoxService = new Cs4rsaMessageBox();
-            ImportDialogViewModel vm = new ImportDialogViewModel(messageBoxService);
-            SessionManagerWindow dialogWindow = new SessionManagerWindow();
-            SessionManagerResult result = DialogService<SessionManagerResult>.OpenDialog(vm, dialogWindow, obj as Window);
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
             if (result != null)
             {
-                SubjectImporter subjectImporterVm = new SubjectImporter(result, messageBoxService);
-                SubjectImporterWindow subjectImporterWindow = new SubjectImporterWindow();
-                ImportResult importResult = DialogService<ImportResult>.OpenDialog(subjectImporterVm, subjectImporterWindow, obj as Window);
-                ImportSubjects(importResult.SubjectModels);
-                ClassGroupChoicer.Start(importResult.SubjectModels, result.SubjectInfoDatas);
-                SelectedSubjectModel = SubjectModels[0];
+                SubjectImporterUC subjectImporterUC = new SubjectImporterUC();
+                SubjectImporter vm = subjectImporterUC.DataContext as SubjectImporter;
+                vm.SessionManagerResult = result;
+                vm.CloseDialogCallback = CloseDialogAndHandleImportResult;
+                (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(subjectImporterUC);
             }
+        }
+
+        private void CloseDialogAndHandleImportResult(ImportResult importResult, SessionManagerResult sessionManagerResult)
+        {
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
+            ImportSubjects(importResult.SubjectModels);
+            ClassGroupChoicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
+            SelectedSubjectModel = SubjectModels[0];
         }
 
         private bool CanDeleteSubject()

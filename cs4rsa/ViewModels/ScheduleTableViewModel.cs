@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace cs4rsa.ViewModels
 {
-    public class ScheduleRow: NotifyPropertyChangedBase 
+    public class ScheduleRow: ViewModelBase 
     {
         private ShortedTime _time;
         public ShortedTime Time
@@ -24,7 +24,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _time = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -45,7 +45,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _sunday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Monday
@@ -57,7 +57,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _monday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Tuseday
@@ -69,7 +69,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _tuseday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Wednessday
@@ -81,7 +81,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _wednessday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Thursday
@@ -93,7 +93,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _thursday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Friday
@@ -105,7 +105,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _friday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
         public TimeBlock Saturday
@@ -117,7 +117,7 @@ namespace cs4rsa.ViewModels
             set
             {
                 _saturday = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -183,7 +183,7 @@ namespace cs4rsa.ViewModels
         }
     }
 
-    class ScheduleTableViewModel : NotifyPropertyChangedBase,
+    class ScheduleTableViewModel : ViewModelBase,
         IMessageHandler<ChoicesChangedMessage>,
         IMessageHandler<ConflictCollectionChangeMessage>,
         IMessageHandler<SettingChangeMessage>,

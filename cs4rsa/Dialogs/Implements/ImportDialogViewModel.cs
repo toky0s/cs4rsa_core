@@ -3,6 +3,7 @@ using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Models;
+using cs4rsa.BaseClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ using System.Windows;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    class ImportDialogViewModel : DialogViewModelBase<SessionManagerResult>
+    class ImportDialogViewModel: ViewModelBase
     {
         private ObservableCollection<ScheduleSession> _scheduleSessions = new ObservableCollection<ScheduleSession>();
         public ObservableCollection<ScheduleSession> ScheduleSessions
@@ -48,7 +49,7 @@ namespace cs4rsa.Dialogs.Implements
             set
             {
                 _selectedScheduleSession = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
                 ImportCommand.RaiseCanExecuteChanged();
                 DeleteCommand.RaiseCanExecuteChanged();
                 LoadScheduleSessionDetail(value);
@@ -82,16 +83,29 @@ namespace cs4rsa.Dialogs.Implements
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
         public RelayCommand ShareStringCommand { get; set; }
+        public RelayCommand CloseDialogCommand { get; set; }
 
         private IMessageBox _messageBox;
+        public IMessageBox MessageBox
+        {
+            get { return _messageBox; }
+            set { _messageBox = value; }
+        }
 
-        public ImportDialogViewModel(IMessageBox messageBox)
+        public Action<SessionManagerResult> CloseDialogCallback { get; set; }
+
+        public ImportDialogViewModel()
         {
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new RelayCommand(OnParseShareString, CanParse);
-            _messageBox = messageBox;
+            CloseDialogCommand = new RelayCommand(OnCloseDialog);
             LoadScheduleSession();
+        }
+
+        private void OnCloseDialog(object obj)
+        {
+            CloseDialogCallback.Invoke(null);
         }
 
         private bool CanParse()
@@ -102,7 +116,7 @@ namespace cs4rsa.Dialogs.Implements
         private void OnParseShareString(object obj)
         {
             SessionManagerResult result = Helpers.ShareString.GetSubjectFromShareString(ShareString);
-            CloseDialogWithResult(obj as Window, result);
+            CloseDialogCallback.Invoke(result);
         }
 
         private bool CanImport()
@@ -142,7 +156,7 @@ namespace cs4rsa.Dialogs.Implements
                 subjectInfoDatas.Add(data);
             }
             SessionManagerResult result = new SessionManagerResult(subjectInfoDatas);
-            CloseDialogWithResult(obj as Window, result);
+            CloseDialogCallback.Invoke(result);
         }
 
         private void OnDelete(object obj)
