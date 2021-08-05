@@ -192,7 +192,6 @@ namespace cs4rsa.ViewModels
         private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
         private List<ConflictModel> _conflictModels = new List<ConflictModel>();
         private bool _settingIsDynamicSchedule;
-        private bool _settingIsShowPlaceColor;
 
         private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
         private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
@@ -391,6 +390,7 @@ namespace cs4rsa.ViewModels
                 TimeConverter.GetDateTimeFromString("09:15"),
                 TimeConverter.GetDateTimeFromString("10:15"),
                 TimeConverter.GetDateTimeFromString("11:15"),
+                TimeConverter.GetDateTimeFromString("12:00"),
                 TimeConverter.GetDateTimeFromString("13:00"),
                 TimeConverter.GetDateTimeFromString("14:00"),
                 TimeConverter.GetDateTimeFromString("15:00"),

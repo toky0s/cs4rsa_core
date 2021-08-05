@@ -14,6 +14,8 @@ using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.BasicData;
 using LightMessageBus;
+using cs4rsa.Settings;
+using cs4rsa.ViewModels;
 
 namespace cs4rsa.Dialogs.Implements
 {
@@ -74,7 +76,15 @@ namespace cs4rsa.Dialogs.Implements
         {
             ProgressValue = 1000;
             int result = (int)e.Result;
+
+            Cs4rsaSetting newSetting = new Cs4rsaSetting
+            {
+                CurrentSemesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue,
+                CurrentYearValue = HomeCourseSearch.GetInstance().CurrentYearValue
+            };
+            SettingsWriter.GetInstance().Save(newSetting);
             string message = $"Hoàn tất cập nhật {result} môn";
+            MessageBus.Default.Publish<UpdateSuccessMessage>(new UpdateSuccessMessage(null));
             MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
             CloseDialogCallback.Invoke();
         }

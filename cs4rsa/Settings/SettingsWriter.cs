@@ -11,7 +11,7 @@ namespace cs4rsa.Settings
 {
     public class SettingsWriter
     {
-        private static readonly string _settingsFileName = "cs4rsa_settings.json";
+        public static readonly string SettingsFileName = "cs4rsa_settings.json";
         private static SettingsWriter _instance = new SettingsWriter();
 
         private static HomeCourseSearch _homeCourseSearch = HomeCourseSearch.GetInstance();
@@ -35,15 +35,15 @@ namespace cs4rsa.Settings
         public void Save(Cs4rsaSetting cs4RsaSetting)
         {
             string jsonString = JsonConvert.SerializeObject(cs4RsaSetting);
-            File.WriteAllText(_settingsFileName, jsonString);
+            File.WriteAllText(SettingsFileName, jsonString);
         }
 
         public void InitSettings()
         {
-            if (!File.Exists(_settingsFileName))
+            if (!File.Exists(SettingsFileName))
             {
                 string jsonString = JsonConvert.SerializeObject(_defaultSettings);
-                File.WriteAllText(_settingsFileName, jsonString);
+                File.WriteAllText(SettingsFileName, jsonString);
             }
         }
     }

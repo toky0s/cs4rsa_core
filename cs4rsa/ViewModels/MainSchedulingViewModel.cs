@@ -99,7 +99,6 @@ namespace cs4rsa.ViewModels
             CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
             CurrentYearInfo = homeCourseSearch.CurrentYearInfo;
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
-            OpenSettingCommand = new RelayCommand(OnOpenSetting, () => true);
             OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow, () => true);
             TotalCredit = 0;
             TotalSubject = 0;
@@ -107,10 +106,6 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenShareStringWindow(object obj)
         {
-            //ShareStringWindow shareStringWindow = new ShareStringWindow();
-            //ShareStringViewModel shareStringViewModel = new ShareStringViewModel();
-            //DialogService<ShareStringResult>.OpenDialog(shareStringViewModel, shareStringWindow, obj as Window);
-
             ShareStringUC shareStringUC = new ShareStringUC();
             ShareStringViewModel vm = (shareStringUC.DataContext as ShareStringViewModel);
             vm.ShareString = _shareString;
@@ -120,12 +115,6 @@ namespace cs4rsa.ViewModels
 
         private void OnOpenUpdateWindow(object obj)
         {
-            //Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            //UpdateWindow updateWindow = new UpdateWindow();
-            //UpdateViewModel updateViewModel = new UpdateViewModel(cs4RsaMessageBox, () => { (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog()});
-            //UpdateResult result = DialogService<UpdateResult>.OpenDialog(updateViewModel, updateWindow, obj as Window);
-            //MessageBus.Default.Publish(new UpdateSuccessMessage(null));
-
             UpdateUC updateUC = new UpdateUC();
             (updateUC.DataContext as UpdateViewModel).CloseDialogCallback = (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog;
             (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(updateUC);
@@ -137,13 +126,6 @@ namespace cs4rsa.ViewModels
         {
             TotalCredit = message.Source.TotalCredits;
             TotalSubject = message.Source.TotalSubject;
-        }
-
-        private void OnOpenSetting(object obj)
-        {
-            SettingWindow settingWindow = new SettingWindow();
-            SettingViewModel settingViewModel = new SettingViewModel();
-            DialogService<SettingResult>.OpenDialog(settingViewModel, settingWindow, obj as Window);
         }
 
         public void Handle(ChoicesChangedMessage message)

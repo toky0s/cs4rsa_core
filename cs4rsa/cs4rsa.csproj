@@ -273,26 +273,14 @@
     <Compile Include="Dialogs\DialogViews\SessionInputWindow.xaml.cs">
       <DependentUpon>SessionInputWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogViews\SettingWindow.xaml.cs">
-      <DependentUpon>SettingWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\DialogViews\ShareStringUC.xaml.cs">
       <DependentUpon>ShareStringUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ShareStringWindow.xaml.cs">
-      <DependentUpon>ShareStringWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SolveConflictDialogWindow.xaml.cs">
-      <DependentUpon>SolveConflictDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\SolveConflictUC.xaml.cs">
       <DependentUpon>SolveConflictUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\SubjectImporterUC.xaml.cs">
       <DependentUpon>SubjectImporterUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SubjectImporterWindow.xaml.cs">
-      <DependentUpon>SubjectImporterWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\UpdateUC.xaml.cs">
       <DependentUpon>UpdateUC.xaml</DependentUpon>
@@ -306,9 +294,6 @@
       <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Implements\ImportDialogViewModel.cs" />
-    <Compile Include="Dialogs\DialogViews\SessionManagerWindow.xaml.cs">
-      <DependentUpon>SessionManagerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Implements\SessionInputViewModel.cs" />
     <Compile Include="Dialogs\Implements\SettingViewModel.cs" />
     <Compile Include="Dialogs\Implements\ShareStringViewModel.cs" />
@@ -379,6 +364,7 @@
     <Compile Include="BaseClasses\RelayCommand.cs" />
     <Compile Include="Models\TimeBlock.cs" />
     <Compile Include="Settings\Cs4rsaSetting.cs" />
+    <Compile Include="Settings\SettingsReader.cs" />
     <Compile Include="Settings\SettingsWriter.cs" />
     <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
     <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
@@ -450,23 +436,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\DialogViews\SessionManagerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SettingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\DialogViews\ShareStringUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ShareStringWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SolveConflictDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -475,10 +445,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogViews\SubjectImporterUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SubjectImporterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

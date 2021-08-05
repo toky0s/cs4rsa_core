@@ -21,30 +21,37 @@
         <Style x:Key="CellT2" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Monday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Monday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellT3" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Tuseday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Tuseday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellT4" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Wednessday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Wednessday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellT5" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Thursday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Thursday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellT6" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Friday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Friday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellT7" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Saturday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Saturday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
         <Style x:Key="CellCN" TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding Sunday.Background}"></Setter>
             <Setter Property="Foreground" Value="{Binding Sunday.Foreground}"></Setter>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
         </Style>
     </UserControl.Resources>
     <Grid>
