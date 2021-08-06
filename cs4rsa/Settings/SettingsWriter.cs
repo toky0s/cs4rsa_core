@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Settings
 {
+    /// <summary>
+    /// Đảm nhiệm việc ghi setting vào cs4rsa_settings.json, nhận vào một Cs4rsaSetting.
+    /// </summary>
     public class SettingsWriter
     {
         public static readonly string SettingsFileName = "cs4rsa_settings.json";
