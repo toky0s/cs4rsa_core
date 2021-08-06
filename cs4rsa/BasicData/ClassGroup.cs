@@ -71,6 +71,16 @@ namespace cs4rsa.BasicData
             return schedule;
         }
 
+        public List<string> GetTempTeachers()
+        {
+            List<string> tempTeachers = new List<string>();
+            foreach (SchoolClass schoolClass in _schoolClasses)
+            {
+                tempTeachers.Add(schoolClass.TempTeacher);
+            }
+            return tempTeachers;
+        }
+
         public Phase GetPhase()
         {
             List<Phase> phases = new List<Phase>();

@@ -21,6 +21,7 @@ namespace cs4rsa.BasicData
         private readonly string[] _rooms;
         private readonly List<Place> _places;
         private readonly Teacher _teacher;
+        private readonly string _tempTeacher;
         private readonly string _registrationStatus;
         private readonly string _implementationStatus;
         private readonly DayPlaceMetaData _dayPlaceMetaData;
@@ -34,6 +35,7 @@ namespace cs4rsa.BasicData
         public string[] Rooms => _rooms;
         public StudyWeek StudyWeek => _studyWeek;
         public Teacher Teacher => _teacher;
+        public string TempTeacher => _tempTeacher;
         public List<Place> Places => _places;
         public string RegistrationStatus => _registrationStatus;
         public string ImplementationStatus => _implementationStatus;
@@ -41,7 +43,7 @@ namespace cs4rsa.BasicData
 
         public SchoolClass(string subjectCode, string classGroupName, string name, string registerCode, string type, 
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule, 
-            string[] rooms, List<Place> places, Teacher teacher, string registrationStatus, string implementationStatus, DayPlaceMetaData dayPlaceMetaData)
+            string[] rooms, List<Place> places, Teacher teacher, string tempTeacher, string registrationStatus, string implementationStatus, DayPlaceMetaData dayPlaceMetaData)
         {
             _subjectCode = subjectCode;
             _classGroupName = classGroupName;
@@ -56,6 +58,7 @@ namespace cs4rsa.BasicData
             _rooms = rooms;
             _places = places;
             _teacher = teacher;
+            _tempTeacher = tempTeacher;
             _registrationStatus = registrationStatus;
             _implementationStatus = implementationStatus;
             _dayPlaceMetaData = dayPlaceMetaData;

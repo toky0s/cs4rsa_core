@@ -39,6 +39,15 @@ namespace cs4rsa.Models
             set { _places = value; }
         }
 
+        private List<string> _tempTeacher;
+
+        public List<string> TempTeacher
+        {
+            get { return _classGroup.GetTempTeachers(); }
+            set { _tempTeacher = value; }
+        }
+
+
         public string SubjectCode => _classGroup.SubjectCode;
         public string RegisterCode => _classGroup.GetRegisterCode();
         public Phase Phase => _classGroup.GetPhase();

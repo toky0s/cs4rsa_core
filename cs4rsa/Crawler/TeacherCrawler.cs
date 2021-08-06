@@ -98,9 +98,9 @@ namespace cs4rsa.Crawler
             return intructorIdParam.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)[1];
         }
 
-        private bool ThisTeacherIsNotInDatabase(string intructorId)
+        private bool ThisTeacherIsNotInDatabase(string instructorId)
         {
-            string countQueryString = $@"SELECT count(id) from teacher WHERE id like {intructorId}";
+            string countQueryString = $@"SELECT count(id) from teacher WHERE id like {instructorId}";
             long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
             if (result == 0)
                 return true;

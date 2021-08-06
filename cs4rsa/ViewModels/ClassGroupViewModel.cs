@@ -5,6 +5,7 @@ using cs4rsa.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace cs4rsa.ViewModels
@@ -98,11 +99,31 @@ namespace cs4rsa.ViewModels
                     Id = "0"
                 };
                 teachers.Add(new TeacherModel(teacherAll));
+
+                List<string> tempTeachers = subjectModel.TempTeachers;
                 foreach (TeacherModel teacher in subjectModel.Teachers)
                 {
                     if (!teachers.Contains(teacher) && teacher != null)
+                    {
                         teachers.Add(teacher);
+                        tempTeachers.Remove(teacher.Name);
+                    }
                 }
+
+                // Giảng viên còn sót lại trong danh sách temp
+                // mà không có detail page được xem là giảng viên thỉnh giảng
+                if (tempTeachers.Count > 0)
+                {
+                    for (int i = 0; i < tempTeachers.Count; i++)
+                    {
+                        Teacher guestLecturer = new Teacher(tempTeachers[i])
+                        {
+                            Id = (i + 1).ToString()
+                        };
+                        teachers.Add(new TeacherModel(guestLecturer));
+                    }
+                }
+
                 SelectedTeacher = teachers[0];
             }
         }

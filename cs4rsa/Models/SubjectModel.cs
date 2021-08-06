@@ -23,6 +23,8 @@ namespace cs4rsa.Models
             }
         }
 
+        public List<string> TempTeachers => subject.TempTeachers;
+
         public List<ClassGroupModel> ClassGroupModels
         {
             get

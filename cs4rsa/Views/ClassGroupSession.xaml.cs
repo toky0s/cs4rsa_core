@@ -52,7 +52,8 @@ namespace cs4rsa.Views
             TeacherModel currentTeacher = (TeacherModel)ComboxBox_Teachers.SelectedItem;
             if (currentTeacher == null || currentTeacher.Id == "0")
                 return true;
-            return classGroupModel.GetTeacherModels().Contains(currentTeacher);
+            return classGroupModel.GetTeacherModels().Contains(currentTeacher)
+                || classGroupModel.TempTeacher.Contains(currentTeacher.Name);
         }
 
         private bool CheckDayOfWeek(ClassGroupModel classGroupModel)

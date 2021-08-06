@@ -27,6 +27,9 @@ namespace cs4rsa.BasicData
         private readonly string _rawSoup;
         private readonly string _courseId;
 
+        private List<string> _tempTeachers = new List<string>();
+        public List<string> TempTeachers => _tempTeachers;
+
         private List<Teacher> _teachers = new List<Teacher>();
         public List<Teacher> Teachers => _teachers;
         private List<ClassGroup> classGroups = new List<ClassGroup>();
@@ -121,6 +124,7 @@ namespace cs4rsa.BasicData
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
 
             //teacher parser
+            string teacherName = GetTeacherName(trTagClassLop);
             Teacher teacher = GetTeacherFromURL(urlToSubjectDetailPage);
             //teacher parser
 
@@ -168,8 +172,30 @@ namespace cs4rsa.BasicData
 
             SchoolClass schoolClass = new SchoolClass(_subjectCode, classGroupName, _name, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, teacher, registrationStatus, implementationStatus, metaData);
+                                        rooms, places, teacher, teacherName, registrationStatus, implementationStatus, metaData);
             return schoolClass;
+        }
+
+        /// <summary>
+        /// Trả về teacher Name của một school class. Đồng thời thêm teacher Name này vào
+        /// temp teachers nhằm đảm bảo không thất thoát các teacher không có detail page.
+        /// Cải thiện độ chính xác của bộ lọc teacher.
+        /// </summary>
+        /// <param name="trTagClassLop"></param>
+        /// <returns></returns>
+        private string GetTeacherName(HtmlNode trTagClassLop)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(trTagClassLop.InnerHtml);
+            HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
+            string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
+            string teacherName = String.Join(" ", slices);
+            if (teacherName != "")
+            {
+            _tempTeachers.Add(teacherName);
+            _tempTeachers = _tempTeachers.Distinct().ToList();
+            }
+            return teacherName;
         }
 
         private HtmlNode[] GetTrTagsWithClassLop()
@@ -230,7 +256,7 @@ namespace cs4rsa.BasicData
         /// <summary>
         /// Tách mã môn từ một chuỗi, nếu không phát hiện nó trả về null.
         /// </summary>
-        /// <returns>Mã môn (CS 414)</returns>
+        /// <returns>Mã môn (ví dụ CS 414)</returns>
         private string[] SubjectSpliter(string text)
         {
             if (text.Equals("(Không có Môn học Tiên quyết)") ||
