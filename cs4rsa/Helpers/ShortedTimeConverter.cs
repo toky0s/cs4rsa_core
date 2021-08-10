@@ -62,8 +62,6 @@ namespace cs4rsa.Helpers
             AddDuyTanTime(10, 15, 10, 0);
             AddDuyTanTime(11, 15, 11, 0);
             AddDuyTanTime(16, 15, 16, 0);
-            AddDuyTanTime(17, 15, 17, 0);
-            AddDuyTanTime(17, 45, 18, 0);
         }
 
         public static ShortedTimeConverter GetInstance()

@@ -13,22 +13,22 @@ namespace cs4rsa.BaseClasses
     /// </summary>
     public abstract class BaseConflict
     {
-        protected ClassGroup _classGroup1;
-        protected ClassGroup _classGroup2;
+        protected SchoolClass _schoolClass1;
+        protected SchoolClass _schoolClass2;
 
-        public ClassGroup FirstClassGroup { get => _classGroup1; private set => _classGroup1 = value; }
-        public ClassGroup SecondClassGroup { get => _classGroup2; private set => _classGroup2 = value; }
+        public SchoolClass FirstSchoolClass => _schoolClass1;
+        public SchoolClass SecondSchoolClass => _schoolClass2;
 
-        public BaseConflict(ClassGroup classGroup1, ClassGroup classGroup2)
+        public BaseConflict(SchoolClass schoolClass1, SchoolClass schoolClass2)
         {
-            _classGroup1 = classGroup1;
-            _classGroup2 = classGroup2;
+            _schoolClass1 = schoolClass1;
+            _schoolClass2 = schoolClass2;
         }
 
-        public BaseConflict(ClassGroupModel classGroup1, ClassGroupModel classGroup2)
+        public BaseConflict(SchoolClassModel schoolClassModel1, SchoolClassModel schoolClassModel2)
         {
-            _classGroup1 = classGroup1.ClassGroup;
-            _classGroup2 = classGroup2.ClassGroup;
+            _schoolClass1 = schoolClassModel1.SchoolClass;
+            _schoolClass2 = schoolClassModel2.SchoolClass;
         }
 
         protected static bool CanConflictPhase(Phase phase1, Phase phase2)

@@ -47,6 +47,11 @@ namespace cs4rsa.BasicData
         }
     }
 
+
+    /// <summary>
+    /// Một ngày học sẽ có một thời gian học, một nơi học và một phòng học nhất định.
+    /// DayPlacePair đại diện cho điều này.
+    /// </summary>
     public class DayPlacePair
     {
         private DayOfWeek _day;
@@ -190,7 +195,7 @@ namespace cs4rsa.BasicData
     public class PlaceMapManipulation
     {
         /// <summary>
-        /// Bắt cặp các StudyTime trong cùng một List. 
+        /// Bắt cặp các PlaceMap trong cùng một List. 
         /// Giống với phương thức StudyTimeManipulation.PairStudyTimes()
         /// </summary>
         /// <param name="studyTimes">List các PlaceMap.</param>

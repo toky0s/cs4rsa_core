@@ -9,8 +9,8 @@ namespace cs4rsa.Models
 {
     public class ConflictModel : IConflictModel
     {
-        private ClassGroup _classGroup1;
-        private ClassGroup _classGroup2;
+        private SchoolClass _schoolClass1;
+        private SchoolClass _schoolClass2;
         private ConflictTime _conflictTime;
 
         public ConflictTime ConflictTime
@@ -25,40 +25,43 @@ namespace cs4rsa.Models
             }
         }
 
-        public ClassGroup FirstClassGroup { get => _classGroup1; set => _classGroup1 = value; }
-        public ClassGroup SecondClassGroup { get => _classGroup2; set => _classGroup2 = value; }
+        public SchoolClass FirstSchoolClass { get => _schoolClass1; set => _schoolClass1 = value; }
+        public SchoolClass SecondSchoolClass { get => _schoolClass2; set => _schoolClass2 = value; }
 
-        private ClassGroupModel _firstClassGroupModel;
-        public ClassGroupModel FirstClassGroupModel
+        #region Models
+        private SchoolClassModel _firstSchoolClassModel;
+        public SchoolClassModel FirstSchoolClassModel
         {
-            get { return _firstClassGroupModel; }
-            set { _firstClassGroupModel = value; }
+            get { return _firstSchoolClassModel; }
+            set { _firstSchoolClassModel = value; }
         }
 
-        private ClassGroupModel _secondClassGroupModel;
-        public ClassGroupModel SecondClassGroupModel
+        private SchoolClassModel _secondSchoolClassModel;
+        public SchoolClassModel SecondSchoolClassModel
         {
-            get { return _secondClassGroupModel; }
-            set { _secondClassGroupModel = value; }
+            get { return _secondSchoolClassModel; }
+            set { _secondSchoolClassModel = value; }
         }
+        #endregion
+
 
         public ConflictType ConflictType { get => GetConflictType(); }
 
         public ConflictModel(Conflict conflict)
         {
-            _classGroup1 = conflict.FirstClassGroup;
-            _classGroup2 = conflict.SecondClassGroup;
-            _firstClassGroupModel = new ClassGroupModel(conflict.FirstClassGroup);
-            _secondClassGroupModel = new ClassGroupModel(conflict.SecondClassGroup);
+            _schoolClass1 = conflict.FirstSchoolClass;
+            _schoolClass2 = conflict.SecondSchoolClass;
+            _firstSchoolClassModel = new SchoolClassModel(conflict.FirstSchoolClass);
+            _secondSchoolClassModel = new SchoolClassModel(conflict.SecondSchoolClass);
             _conflictTime = conflict.GetConflictTime();
         }
 
         public ConflictModel(Conflict conflict, ConflictTime conflictTime)
         {
-            _classGroup1 = conflict.FirstClassGroup;
-            _classGroup2 = conflict.SecondClassGroup;
-            _firstClassGroupModel = new ClassGroupModel(conflict.FirstClassGroup);
-            _secondClassGroupModel = new ClassGroupModel(conflict.SecondClassGroup);
+            _schoolClass1 = conflict.FirstSchoolClass;
+            _schoolClass2 = conflict.SecondSchoolClass;
+            _firstSchoolClassModel = new SchoolClassModel(conflict.FirstSchoolClass);
+            _secondSchoolClassModel = new SchoolClassModel(conflict.SecondSchoolClass);
             _conflictTime = conflictTime;
         }
 
@@ -91,13 +94,13 @@ namespace cs4rsa.Models
 
         public Phase GetPhase()
         {
-            if ((_classGroup1.GetPhase() == Phase.FIRST && _classGroup2.GetPhase() == Phase.FIRST) ||
-                    (_classGroup1.GetPhase() == Phase.FIRST && _classGroup2.GetPhase() == Phase.ALL) ||
-                    (_classGroup1.GetPhase() == Phase.ALL && _classGroup2.GetPhase() == Phase.FIRST))
+            if ((_schoolClass1.GetPhase() == Phase.FIRST && _schoolClass2.GetPhase() == Phase.FIRST) ||
+                    (_schoolClass1.GetPhase() == Phase.FIRST && _schoolClass2.GetPhase() == Phase.ALL) ||
+                    (_schoolClass1.GetPhase() == Phase.ALL && _schoolClass2.GetPhase() == Phase.FIRST))
                 return Phase.FIRST;
-            if ((_classGroup1.GetPhase() == Phase.SECOND && _classGroup2.GetPhase() == Phase.SECOND) ||
-                    (_classGroup1.GetPhase() == Phase.SECOND && _classGroup2.GetPhase() == Phase.ALL) ||
-                    (_classGroup1.GetPhase() == Phase.ALL && _classGroup2.GetPhase() == Phase.SECOND))
+            if ((_schoolClass1.GetPhase() == Phase.SECOND && _schoolClass2.GetPhase() == Phase.SECOND) ||
+                    (_schoolClass1.GetPhase() == Phase.SECOND && _schoolClass2.GetPhase() == Phase.ALL) ||
+                    (_schoolClass1.GetPhase() == Phase.ALL && _schoolClass2.GetPhase() == Phase.SECOND))
                 return Phase.SECOND;
             return Phase.ALL;
         }

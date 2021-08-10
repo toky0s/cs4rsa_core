@@ -88,11 +88,16 @@ namespace cs4rsa.Models
         private void UpdatePlaceConflictModels()
         {
             _placeConflictFinderModels.Clear();
-            for (int i = 0; i < _classGroupModels.Count; ++i)
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                for (int k = i + 1; k < _classGroupModels.Count; ++k)
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
+            for (int i = 0; i < schoolClasses.Count; ++i)
+            {
+                for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(_classGroupModels[i], _classGroupModels[k]);
+                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
@@ -106,11 +111,16 @@ namespace cs4rsa.Models
         private void UpdateConflictModels()
         {
             _conflictModels.Clear();
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
+            {
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
             for (int i = 0; i < _classGroupModels.Count; ++i)
             {
                 for (int k = i + 1; k < _classGroupModels.Count; ++k)
                 {
-                    Conflict conflict = new Conflict(_classGroupModels[i], _classGroupModels[k]);
+                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -174,11 +184,16 @@ namespace cs4rsa.Models
         /// <returns></returns>
         public bool IsHaveTimeConflicts()
         {
-            for (int i = 0; i < _classGroupModels.Count; ++i)
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                for (int k = i + 1; k < _classGroupModels.Count; ++k)
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
+            for (int i = 0; i < schoolClasses.Count; ++i)
+            {
+                for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    Conflict conflict = new Conflict(_classGroupModels[i], _classGroupModels[k]);
+                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                         return true;
@@ -189,11 +204,16 @@ namespace cs4rsa.Models
 
         public bool IsHavePlaceConflicts()
         {
-            for (int i = 0; i < _classGroupModels.Count; ++i)
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                for (int k = i + 1; k < _classGroupModels.Count; ++k)
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
+            for (int i = 0; i < schoolClasses.Count; ++i)
+            {
+                for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder conflict = new PlaceConflictFinder(_classGroupModels[i], _classGroupModels[k]);
+                    PlaceConflictFinder conflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = conflict.GetPlaceConflict();
                     if (conflictPlace != null)
                         return true;

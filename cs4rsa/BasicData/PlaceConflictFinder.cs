@@ -15,44 +15,41 @@ namespace cs4rsa.BasicData
     {
         private static readonly TimeSpan _timeDelta = new TimeSpan(0, 15, 0); // 15 minutes
 
-        public PlaceConflictFinder(ClassGroup classGroup1, ClassGroup classGroup2) : base(classGroup1, classGroup2)
+        public PlaceConflictFinder(SchoolClass schoolClass1, SchoolClass schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 
-        public PlaceConflictFinder(ClassGroupModel classGroup1, ClassGroupModel classGroup2)
-            : base(classGroup1.ClassGroup, classGroup2.ClassGroup)
+        public PlaceConflictFinder(SchoolClassModel schoolClass1, SchoolClassModel schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 
         public ConflictPlace GetPlaceConflict()
         {
-            DayPlaceMetaData dayPlaceMetaData1 = _classGroup1.GetDayPlaceMetaData();
-            DayPlaceMetaData dayPlaceMetaData2 = _classGroup2.GetDayPlaceMetaData();
-            List<DayOfWeek> studyDays = new List<DayOfWeek>();
-            studyDays.AddRange(_classGroup1.GetDayOfWeeks());
-            studyDays.AddRange(_classGroup2.GetDayOfWeeks());
-            studyDays = studyDays.Distinct().ToList();
-
-            if (CanConflictPhase(_classGroup1.GetPhase(), _classGroup2.GetPhase()))
+            // Hai school class không có giao nhau về giai đoạn chắc chắn không xung đột.
+            if (CanConflictPhase(_schoolClass1.GetPhase(), _schoolClass2.GetPhase()))
             {
-                Schedule scheduleClassGroup1 = _classGroup1.GetSchedule();
-                Schedule scheduleClassGroup2 = _classGroup2.GetSchedule();
-                List<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
-                // Check date
-                if (DayOfWeeks.Count > 0)
+                // Kiểm tra hai school class có ngày học chung hay không, nếu không
+                // chắc chắn không xảy ra xung đột.
+                Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
+                Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
+                List<DayOfWeek> intersectDayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
+                if (intersectDayOfWeeks.Count > 0)
                 {
-                    List<Place> classGroup1Places = _classGroup1.GetDayPlaceMetaData().GetPlaces();
-                    List<Place> classGroup2Places = _classGroup2.GetDayPlaceMetaData().GetPlaces();
-                    List<Place> intersectedPlaces = classGroup1Places.Intersect(classGroup2Places).ToList();
-                    if (intersectedPlaces.Count >= 2)
+                    // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
+                    // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
+                    List<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
+                    List<Place> schoolClass2Places = _schoolClass2.DayPlaceMetaData.GetPlaces();
+                    List<Place> intersectedPlaces = schoolClass1Places.Intersect(schoolClass2Places).ToList();
+                    if (intersectedPlaces.Count > 1)
                     {
                         Dictionary<DayOfWeek, List<PlaceAdjacent>> conflictPlaces = new Dictionary<DayOfWeek, List<PlaceAdjacent>>();
-                        //check time
-                        foreach (DayOfWeek dayOfWeek in DayOfWeeks)
+                        // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
+                        foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
                         {
-                            List<PlaceMap> placeMap1 = _classGroup1.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
-                            List<PlaceMap> placeMap2 = _classGroup2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                            List<PlaceMap> placeMap1 = _schoolClass1.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                            List<PlaceMap> placeMap2 = _schoolClass2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
                             List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
+
                             List<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
                             List<PlaceAdjacent> placeAdjacents = PlaceMapManipulation.GetPlaceAdjacents(placeMapPairs, _timeDelta);
                             if (placeAdjacents.Count > 0)

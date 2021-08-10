@@ -126,30 +126,30 @@ namespace cs4rsa.ViewModels
             Time = time;
         }
 
-        public void Add(ClassGroupModel classGroupModel, DayOfWeek day)
+        public void Add(SchoolClassModel schoolClassModel, DayOfWeek day)
         {
             switch (day)
             {
                 case DayOfWeek.Monday:
-                    Monday = new TimeBlock(classGroupModel);
+                    Monday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Tuesday:
-                    Tuseday = new TimeBlock(classGroupModel);
+                    Tuseday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Wednesday:
-                    Wednessday = new TimeBlock(classGroupModel);
+                    Wednessday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Thursday:
-                    Thursday = new TimeBlock(classGroupModel);
+                    Thursday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Friday:
-                    Friday = new TimeBlock(classGroupModel);
+                    Friday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Saturday:
-                    Saturday = new TimeBlock(classGroupModel);
+                    Saturday = new TimeBlock(schoolClassModel);
                     break;
                 case DayOfWeek.Sunday:
-                    Sunday = new TimeBlock(classGroupModel);
+                    Sunday = new TimeBlock(schoolClassModel);
                     break;
             }
         }
@@ -189,18 +189,29 @@ namespace cs4rsa.ViewModels
         IMessageHandler<SettingChangeMessage>,
         IMessageHandler<DeleteClassGroupChoiceMessage>
     {
-        private List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
+        private List<ClassGroupModel> _classGroupModels = new List<ClassGroupModel>();
         private List<ConflictModel> _conflictModels = new List<ConflictModel>();
         private bool _settingIsDynamicSchedule;
 
-        private List<ClassGroupModel> Phase1 = new List<ClassGroupModel>();
-        private List<ClassGroupModel> Phase2 = new List<ClassGroupModel>();
+        private List<SchoolClassModel> Phase1 = new List<SchoolClassModel>();
+        private List<SchoolClassModel> Phase2 = new List<SchoolClassModel>();
 
         private List<ConflictModel> ConflictPhase1 = new List<ConflictModel>();
         private List<ConflictModel> ConflictPhase2 = new List<ConflictModel>();
 
-        public ObservableCollection<ScheduleRow> Schedule1 = new ObservableCollection<ScheduleRow>();
-        public ObservableCollection<ScheduleRow> Schedule2 = new ObservableCollection<ScheduleRow>();
+        private ObservableCollection<ScheduleRow> _schedule1 = new ObservableCollection<ScheduleRow>();
+        public ObservableCollection<ScheduleRow> Schedule1
+        {
+            get { return _schedule1; }
+            set { _schedule1 = value; }
+        }
+
+        private ObservableCollection<ScheduleRow> _schedule2 = new ObservableCollection<ScheduleRow>();
+        public ObservableCollection<ScheduleRow> Schedule2
+        {
+            get { return _schedule2; }
+            set { _schedule2 = value; }
+        }
 
         public ScheduleTableViewModel()
         {
@@ -216,39 +227,53 @@ namespace cs4rsa.ViewModels
             if (_settingIsDynamicSchedule == false)
             {
                 CleanSchedules();
-                RenderStatic(ref Schedule1);
-                RenderStatic(ref Schedule2);
+                RenderStatic(ref _schedule1);
+                RenderStatic(ref _schedule2);
             }
         }
 
         private void DeleteClassGroup(ClassGroupModel classGroupModel)
         {
-            classGroupModels.Remove(classGroupModel);
+            _classGroupModels.Remove(classGroupModel);
             ReloadSchedule();
         }
 
-        private void DivideClassGroupsByPhases()
+        private void DivideSchoolClassesByPhases()
         {
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                switch (classGroupModel.Phase)
+                List<SchoolClassModel> schoolClassModels = classGroupModel.ClassGroup
+                                                                          .SchoolClasses
+                                                                          .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color))
+                                                                          .ToList();
+                foreach (SchoolClassModel schoolClassModel in schoolClassModels)
                 {
-                    case Phase.FIRST:
-                        Phase1.Add(classGroupModel);
-                        break;
-                    case Phase.SECOND:
-                        Phase2.Add(classGroupModel);
-                        break;
-                    case Phase.ALL:
-                        Phase1.Add(classGroupModel);
-                        Phase2.Add(classGroupModel);
-                        break;
-                    case Phase.NON:
-                        break;
-                    default:
-                        break;
+                    switch (schoolClassModel.StudyWeek.GetPhase())
+                    {
+                        case Phase.FIRST:
+                            Phase1.Add(schoolClassModel);
+                            break;
+                        case Phase.SECOND:
+                            Phase2.Add(schoolClassModel);
+                            break;
+                        case Phase.ALL:
+                            Phase1.Add(schoolClassModel);
+                            Phase2.Add(schoolClassModel);
+                            break;
+                        case Phase.NON:
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+        }
+
+        private SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
+        {
+            SchoolClassModel schoolClassModel = new SchoolClassModel(schoolClass);
+            schoolClassModel.Color = color;
+            return schoolClassModel;
         }
 
         private List<ShortedTime> GetShortedTimes(List<ClassGroupModel> classGroupModels)
@@ -280,33 +305,33 @@ namespace cs4rsa.ViewModels
         /// </summary>
         private void ReloadSchedule()
         {
-            if (_settingIsDynamicSchedule)
-            {
+            //if (_settingIsDynamicSchedule)
+            //{
+            //    CleanPhase();
+            //    CleanConflictPhase();
+            //    CleanSchedules();
+            //    DivideSchoolClassesByPhases();
+            //    RenderDynamic(ref Schedule1, ref Phase1);
+            //    RenderDynamic(ref Schedule2, ref Phase2);
+            //    DumpClassGroupModel(ref Schedule1, ref Phase1);
+            //    DumpClassGroupModel(ref Schedule2, ref Phase2);
+            //    DivideConflictByPhase();
+            //    DumConflictModel(ref Schedule1, ref ConflictPhase1);
+            //    DumConflictModel(ref Schedule2, ref ConflictPhase2);
+            //}
+            //else
+            //{
                 CleanPhase();
                 CleanConflictPhase();
-                CleanSchedules();
-                DivideClassGroupsByPhases();
-                RenderDynamic(ref Schedule1, ref Phase1);
-                RenderDynamic(ref Schedule2, ref Phase2);
-                DumpClassGroupModel(ref Schedule1, ref Phase1);
-                DumpClassGroupModel(ref Schedule2, ref Phase2);
+                DivideSchoolClassesByPhases();
+                CleanStaticSchedule(ref _schedule1);
+                CleanStaticSchedule(ref _schedule2);
+                DumpSchoolClassModel(ref _schedule1, ref Phase1);
+                DumpSchoolClassModel(ref _schedule2, ref Phase2);
                 DivideConflictByPhase();
-                DumConflictModel(ref Schedule1, ref ConflictPhase1);
-                DumConflictModel(ref Schedule2, ref ConflictPhase2);
-            }
-            else
-            {
-                CleanPhase();
-                CleanConflictPhase();
-                DivideClassGroupsByPhases();
-                CleanStaticSchedule(ref Schedule1);
-                CleanStaticSchedule(ref Schedule2);
-                DumpClassGroupModel(ref Schedule1, ref Phase1);
-                DumpClassGroupModel(ref Schedule2, ref Phase2);
-                DivideConflictByPhase();
-                DumConflictModel(ref Schedule1, ref ConflictPhase1);
-                DumConflictModel(ref Schedule2, ref ConflictPhase2);
-            }
+                DumConflictModel(ref _schedule1, ref ConflictPhase1);
+                DumConflictModel(ref _schedule2, ref ConflictPhase2);
+            //}
         }
 
 
@@ -405,11 +430,11 @@ namespace cs4rsa.ViewModels
             return dateTimes.Select(time => shortedTimeConverter.Convert(time)).ToList();
         }
 
-        private void DumpClassGroupModel(ref ObservableCollection<ScheduleRow> schedule, ref List<ClassGroupModel> classGroupModels)
+        private void DumpSchoolClassModel(ref ObservableCollection<ScheduleRow> schedule, ref List<SchoolClassModel> schoolClassModels)
         {
-            foreach (ClassGroupModel cgm in classGroupModels)
+            foreach (SchoolClassModel schoolClassModel in schoolClassModels)
             {
-                AddClassGroup(ref schedule, cgm);
+                AddSchoolClassModel(ref schedule, schoolClassModel);
             }
         }
 
@@ -438,16 +463,15 @@ namespace cs4rsa.ViewModels
                         }
                     }
                 }
-
             }
         }
 
-        private void AddClassGroup(ref ObservableCollection<ScheduleRow> schedule, ClassGroupModel classGroupModel)
+        private void AddSchoolClassModel(ref ObservableCollection<ScheduleRow> schedule, SchoolClassModel schoolClassModel)
         {
             ShortedTimeConverter converter = ShortedTimeConverter.GetInstance();
-            foreach (DayOfWeek day in classGroupModel.Schedule.GetSchoolDays())
+            foreach (DayOfWeek day in schoolClassModel.Schedule.GetSchoolDays())
             {
-                List<StudyTime> studyTimes = classGroupModel.Schedule.GetStudyTimesAtDay(day);
+                List<StudyTime> studyTimes = schoolClassModel.Schedule.GetStudyTimesAtDay(day);
                 foreach (StudyTime time in studyTimes)
                 {
                     foreach (ScheduleRow scheduleRow in schedule)
@@ -455,7 +479,7 @@ namespace cs4rsa.ViewModels
                         if (scheduleRow.Time >= converter.Convert(time.Start) &&
                             scheduleRow.Time <= converter.Convert(time.End))
                         {
-                            scheduleRow.Add(classGroupModel, day);
+                            scheduleRow.Add(schoolClassModel, day);
                         }
                     }
                 }
@@ -482,7 +506,7 @@ namespace cs4rsa.ViewModels
 
         public void Handle(ChoicesChangedMessage message)
         {
-            classGroupModels = message.Source;
+            _classGroupModels = message.Source;
             ReloadSchedule();
         }
 
@@ -499,7 +523,7 @@ namespace cs4rsa.ViewModels
 
         public void Handle(DeleteClassGroupChoiceMessage message)
         {
-            classGroupModels = message.Source;
+            _classGroupModels = message.Source;
             ReloadSchedule();
         }
     }

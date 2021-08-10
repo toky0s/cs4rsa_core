@@ -17,11 +17,11 @@ namespace cs4rsa.Models
         public string Background { get; set; }
         public string Foreground { get; set; }
         public string Text { get; set; }
-        public TimeBlock(ClassGroupModel classGroupModel)
+        public TimeBlock(SchoolClassModel schoolClassModel)
         {
-            Background = classGroupModel.Color;
+            Background = schoolClassModel.Color;
             Foreground = _defaultForeground;
-            Text = classGroupModel.Name;
+            Text = schoolClassModel.SchoolClassName;
         }
 
         public TimeBlock(StudyTimeIntersect studyTimeIntersect)

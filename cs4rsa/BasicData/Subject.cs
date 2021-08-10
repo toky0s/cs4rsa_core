@@ -15,7 +15,7 @@ namespace cs4rsa.BasicData
     /// </summary>
     public class Subject
     {
-        private readonly string _name;
+        private readonly string _subjectName;
         private readonly string _subjectCode;
         private readonly string _studyUnit;
         private readonly string _studyUnitType;
@@ -35,7 +35,7 @@ namespace cs4rsa.BasicData
         private List<ClassGroup> classGroups = new List<ClassGroup>();
         public List<ClassGroup> ClassGroups => classGroups;
 
-        public string Name => _name;
+        public string Name => _subjectName;
         public string SubjectCode => _subjectCode;
         public int StudyUnit => int.Parse(_studyUnit);
         public string[] MustStudySubject => _mustStudySubject;
@@ -49,7 +49,7 @@ namespace cs4rsa.BasicData
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, string courseId)
         {
-            _name = name;
+            _subjectName = name;
             _subjectCode = subjectCode;
             _studyUnit = studyUnit;
             _studyUnitType = studyUnitType;
@@ -90,8 +90,9 @@ namespace cs4rsa.BasicData
                     Regex regexName = new Regex(pattern);
                     for (int i = 0; i < schoolClasses.Count(); i++)
                     {
-                        if (regexName.IsMatch(schoolClasses[i].ClassGroupName))
+                        if (regexName.IsMatch(schoolClasses[i].SchoolClassName))
                         {
+                            schoolClasses[i].ClassGroupName = classGroupName;
                             classGroup.AddSchoolClass(schoolClasses[i]);
                         }
                     }
@@ -122,17 +123,21 @@ namespace cs4rsa.BasicData
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
-
             //teacher parser
             string teacherName = GetTeacherName(trTagClassLop);
             Teacher teacher = GetTeacherFromURL(urlToSubjectDetailPage);
+
+            List<string> tempTeachers = new List<string>();
+            tempTeachers.Add(teacherName);
+            List<Teacher> teachers = new List<Teacher>();
+            teachers.Add(teacher);
             //teacher parser
 
             //meta data
             DayPlaceMetaData metaData = new MetaDataCrawler(urlToSubjectDetailPage).ToDayPlaceMetaData();
             //meta data
 
-            string classGroupName = aTag.InnerText.Trim();
+            string schoolClassName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
             string studyType = tdTags[2].InnerText.Trim();
             string emptySeat = tdTags[3].InnerText.Trim();
@@ -170,9 +175,9 @@ namespace cs4rsa.BasicData
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
-            SchoolClass schoolClass = new SchoolClass(_subjectCode, classGroupName, _name, registerCode, studyType,
+            SchoolClass schoolClass = new SchoolClass(schoolClassName, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, teacher, teacherName, registrationStatus, implementationStatus, metaData);
+                                        rooms, places, teachers, tempTeachers, registrationStatus, implementationStatus, urlToSubjectDetailPage, metaData);
             return schoolClass;
         }
 

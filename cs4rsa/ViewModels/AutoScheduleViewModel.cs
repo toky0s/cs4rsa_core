@@ -226,15 +226,21 @@ namespace cs4rsa.ViewModels
 
         private void OnChoiceAccountCommand(object obj)
         {
-            LoginDialogWindow loginWindow = new LoginDialogWindow();
-            LoginDialogViewModel loginDialogViewModel = new LoginDialogViewModel();
-            LoginResult result = DialogService<LoginResult>.OpenDialog(loginDialogViewModel, loginWindow, obj as Window);
-            if (result != null)
+            LoginUC loginUC = new LoginUC();
+            LoginDialogViewModel vm = loginUC.DataContext as LoginDialogViewModel;
+            vm.CloseDialogCallback = CloseDialogAndHandleLoginResult;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(loginUC);
+        }
+
+        private void CloseDialogAndHandleLoginResult(LoginResult loginResult)
+        {
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
+            if (loginResult != null)
             {
                 _programSubjectModels.Clear();
                 _choicedProSubjectModels.Clear();
                 _combinationModels.Clear();
-                StudentModel = result.StudentModel;
+                StudentModel = loginResult.StudentModel;
                 LoadProgramSubject();
             }
         }

@@ -81,7 +81,6 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private readonly IMessageBox _messageBox;
         private string _shareString;
 
         public RelayCommand OpenSettingCommand { get; set; }
@@ -89,12 +88,11 @@ namespace cs4rsa.ViewModels
         public RelayCommand OpenAutoScheduling { get; set; }
         public RelayCommand OpenShareStringWindowCommand { get; set; }
 
-        public MainSchedulingViewModel(IMessageBox messageBox)
+        public MainSchedulingViewModel()
         {
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<UpdateSubjectDatabase>().Notify(this);
-            _messageBox = messageBox;
             HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             CurrentSemesterInfo = homeCourseSearch.CurrentSemesterInfo;
             CurrentYearInfo = homeCourseSearch.CurrentYearInfo;

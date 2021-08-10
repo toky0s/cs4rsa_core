@@ -42,21 +42,21 @@ namespace cs4rsa.BasicData
 
     public class Conflict: BaseConflict
     {
-        public Conflict(ClassGroup classGroup1, ClassGroup classGroup2) : base(classGroup1, classGroup2)
+        public Conflict(SchoolClass schoolClass1, SchoolClass schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 
-        public Conflict(ClassGroupModel classGroup1, ClassGroupModel classGroup2) : base(classGroup1, classGroup2)
+        public Conflict(SchoolClassModel schoolClass1, SchoolClassModel schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 
         public ConflictTime GetConflictTime()
         {
             // Check phase
-            if (CanConflictPhase(_classGroup1.GetPhase(), _classGroup2.GetPhase()))
+            if (CanConflictPhase(_schoolClass1.GetPhase(), _schoolClass2.GetPhase()))
             {
-                Schedule scheduleClassGroup1 = _classGroup1.GetSchedule();
-                Schedule scheduleClassGroup2 = _classGroup2.GetSchedule();
+                Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
+                Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
                 List<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
                 // Check date
                 if (DayOfWeeks.Count > 0)

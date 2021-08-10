@@ -16,6 +16,7 @@ using System.Windows;
 using cs4rsa.Dialogs.MessageBoxService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Models.Interfaces;
+using System.Collections.Generic;
 
 namespace cs4rsa.ViewModels
 {
@@ -190,14 +191,18 @@ namespace cs4rsa.ViewModels
             
             if (classGroupModel != null)
             {
+                // Nếu có sẵn một ClassGroupModel cùng SubjectModel với ClassGroupModel được truyền vào
+                // thay thế chúng.
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (ClassGroupModelIndex != -1)
                     _classGroupModels[ClassGroupModelIndex] = classGroupModel;
                 else
                     _classGroupModels.Add(classGroupModel);
             }
+
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
+
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(_classGroupModels.ToList()));
@@ -242,11 +247,16 @@ namespace cs4rsa.ViewModels
         private void UpdateConflictModelCollection()
         {
             conflictModels.Clear();
-            for (int i = 0; i < _classGroupModels.Count; ++i)
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                for (int k = i+1; k < _classGroupModels.Count; ++k)
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
+            for (int i = 0; i < schoolClasses.Count; ++i)
+            {
+                for (int k = i+1; k < schoolClasses.Count; ++k)
                 {
-                    Conflict conflict = new Conflict(_classGroupModels[i], _classGroupModels[k]);
+                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -261,11 +271,17 @@ namespace cs4rsa.ViewModels
         private void UpdatePlaceConflictCollection()
         {
             _placeConflictFinderModels.Clear();
-            for (int i = 0; i < _classGroupModels.Count; ++i)
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                for (int k = i + 1; k < _classGroupModels.Count; ++k)
+                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+            }
+
+            for (int i = 0; i < schoolClasses.Count; ++i)
+            {
+                for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(_classGroupModels[i], _classGroupModels[k]);
+                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
@@ -279,10 +295,17 @@ namespace cs4rsa.ViewModels
 
         public void Handle(RemoveAChoiceClassGroupMessage message)
         {
-            ClassGroupModel classGroupModel = message.Source;
-            _classGroupModels.Remove(classGroupModel);
+            string classGroupModelName = message.Source;
+            for (int i = 0; i < _classGroupModels.Count; i++)
+            {
+                if (_classGroupModels[i].Name == classGroupModelName)
+                {
+                    _classGroupModels.RemoveAt(i);
+                    break;
+                }
+            }
             MessageBus.Default.Publish<DeleteClassGroupChoiceMessage>(new DeleteClassGroupChoiceMessage(_classGroupModels.ToList()));
-            string snackMessage = $"Đã bỏ chọn lớp {classGroupModel.Name}";
+            string snackMessage = $"Đã bỏ chọn lớp {classGroupModelName}";
             MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(snackMessage));
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();

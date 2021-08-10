@@ -7,6 +7,7 @@ using LightMessageBus.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace cs4rsa.ViewModels
 {
@@ -31,16 +32,16 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ClassGroupModel selectedClassGroup;
+        private ClassGroupModel _selectedClassGroup;
         public ClassGroupModel SelectedClassGroup
         {
             get
             {
-                return selectedClassGroup;
+                return _selectedClassGroup;
             }
             set
             {
-                selectedClassGroup = value;
+                _selectedClassGroup = value;
                 OnPropertyChanged();
                 if (value != null)
                 {
@@ -76,11 +77,20 @@ namespace cs4rsa.ViewModels
             }
         }
 
+        public RelayCommand GotoCourseCommand { get; set; }
+
         public ClassGroupViewModel()
         {
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
+            GotoCourseCommand = new RelayCommand(OnGotoCourse);
+        }
+
+        private void OnGotoCourse(object obj)
+        {
+            string url = _selectedClassGroup.ClassGroup.GetUrl();
+            Process.Start(url);
         }
 
         public void Handle(SelectedSubjectChangeMessage message)

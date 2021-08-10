@@ -8,8 +8,8 @@ namespace cs4rsa.Models.Interfaces
     /// </summary>
     public interface IConflictModel
     {
-        ClassGroup FirstClassGroup { get; set; }
-        ClassGroup SecondClassGroup { get; set; }
+        SchoolClass FirstSchoolClass { get; set; }
+        SchoolClass SecondSchoolClass { get; set; }
         string GetConflictInfo();
         ConflictType GetConflictType();
         Phase GetPhase();

@@ -10,8 +10,12 @@ namespace cs4rsa.Messages
 {
     public class RemoveAChoiceClassGroupMessage : Cs4rsaMessage
     {
-        public new ClassGroupModel Source;
-        public RemoveAChoiceClassGroupMessage(ClassGroupModel source) : base(source)
+        public new string Source;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source">Tên của class group cần loại bỏ.</param>
+        public RemoveAChoiceClassGroupMessage(string source) : base(source)
         {
             Source = source;
         }

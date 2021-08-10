@@ -164,15 +164,10 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        #region DI
-        private IMessageBox _messageBox;
-        #endregion
-
-        public SearchViewModel(IMessageBox messageBox)
+        public SearchViewModel()
         {
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
-            _messageBox = messageBox;
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
             List<DisciplineInfomationModel> disciplineInfomationModels = disciplines.Select(item => new DisciplineInfomationModel(item)).ToList();
             _disciplines = new ObservableCollection<DisciplineInfomationModel>(disciplineInfomationModels);
@@ -225,6 +220,7 @@ namespace cs4rsa.ViewModels
         {
             ImportSessionUC importSessionUC = new ImportSessionUC();
             ImportDialogViewModel vm = (importSessionUC.DataContext as ImportDialogViewModel);
+            vm.MessageBox = new Cs4rsaMessageBox();
             vm.CloseDialogCallback = CloseDialogAndHandleSessionManagerResult;
             (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(importSessionUC);
         }
@@ -285,6 +281,15 @@ namespace cs4rsa.ViewModels
         private void OnAddSubject(object obj)
         {
             CanAddSubjectChange(false);
+
+            SubjectDownloadingUC subjectDownloadingUC = new SubjectDownloadingUC();
+            SubjectDownloadingViewModel vm = subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
+            string subjectName = selectedKeyword.SubjectName;
+            string subjectCode = selectedDiscipline.Discipline + " " + selectedKeyword.Keyword1;
+            vm.SubjectName = subjectName;
+            vm.SubjectCode = subjectCode;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(subjectDownloadingUC);
+
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
@@ -316,13 +321,11 @@ namespace cs4rsa.ViewModels
                 CanAddSubjectChange();
                 UpdateCreditTotal();
                 UpdateSubjectAmount();
+                (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
             }
             else
             {
-                _messageBox.ShowMessage("Môn học này không tồn tại trong học kỳ này",
-                    "Thông báo",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Môn học không tồn tại trong học kỳ này"));
                 CanAddSubjectChange();
             }
         }
