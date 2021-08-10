@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="550" 
              d:DesignWidth="800"
+             xmlns:vm="clr-namespace:cs4rsa.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -15,6 +16,9 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.DataContext>
+        <vm:HomeViewModel></vm:HomeViewModel>
+    </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>

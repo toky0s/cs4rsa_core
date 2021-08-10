@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="800"
+             xmlns:vm="clr-namespace:cs4rsa.ViewModels"
             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
@@ -15,22 +16,24 @@
             TextOptions.TextRenderingMode="Auto"        
             Background="{DynamicResource MaterialDesignPaper}"
             FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.DataContext>
+        <vm:InfoViewModel></vm:InfoViewModel>
+    </UserControl.DataContext>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock
-  Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-  Text="Thông tin" />
+        <TextBlock Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                   Text="Thông tin" />
         <TextBox Grid.Row="1"
                  IsReadOnly="True"
                  Text="{Binding Version, StringFormat=Phiên bản: {0}}">
         </TextBox>
         <ScrollViewer Grid.Row="2">
             <StackPanel >
-            <TextBlock 
+                <TextBlock 
                    TextWrapping="WrapWithOverflow"
                    Width="500"
                    HorizontalAlignment="Center"
@@ -41,32 +44,32 @@
             nhưng nó không thuộc thẩm quyền của chúng tôi 😁 vì đơn giản mọi số liệu là từ web trường mà ra. 
             Mọi logic trong xếp lịch của chúng tôi được qua test kỹ lưỡng trước khi hiển thị lên màn hình. 
             Nếu có sai sót hãy trách web trường.
-            </TextBlock>
-            <Separator></Separator>
-            <TextBlock 
+                </TextBlock>
+                <Separator></Separator>
+                <TextBlock 
                    TextWrapping="WrapWithOverflow"
                    Width="500"
                    HorizontalAlignment="Center"
                    Margin="10">
             Sự giúp đỡ của mọi người là nguồn động viên to lớn của mình trong tương lai để
                 phát triển và hoàn thiện ứng dụng này.
-            </TextBlock>
-            <Image Source="/Images/donate.png"
+                </TextBlock>
+                <Image Source="/Images/donate.png"
                HorizontalAlignment="Center"
                Height="200"
                Width="200"
                Margin="0 10 0 0"
                Stretch="UniformToFill">
-            </Image>
-            <TextBlock 
+                </Image>
+                <TextBlock 
                    TextWrapping="WrapWithOverflow"
                    Width="500"
                    HorizontalAlignment="Center"
                    Margin="10"
                     FontWeight="Bold">
             Dòng này để cảm ơn
-            </TextBlock>
-            <TextBlock 
+                </TextBlock>
+                <TextBlock 
                    TextWrapping="WrapWithOverflow"
                    Width="500"
                    HorizontalAlignment="Center"
@@ -75,17 +78,16 @@
                 Ngoài những thành viên sáng lập của Start-up Sống Vì Donate 
                 cùng với đó là các cột mốc quan trọng 14:30, 19:32, 21:59, 
                 căn phòng chừng 8 mét vuông và con mèo đen tên Tôm.
-            </TextBlock>
-            <TextBlock TextWrapping="WrapWithOverflow"
+                </TextBlock>
+                <TextBlock TextWrapping="WrapWithOverflow"
                    Width="500"
                    HorizontalAlignment="Center"
                    Margin="10">
                 Cảm ơn những người đã cho mình mượn tài khoản DTU, những người cung cấp
                 thông tin, những người donate đầu tiên cho dự án và không thể thiếu là 
                 những người truyền động lực to lớn để mình hoàn thành ứng dụng này.
-            </TextBlock>
-        </StackPanel>
+                </TextBlock>
+            </StackPanel>
         </ScrollViewer>
-        
     </Grid>
 </UserControl>

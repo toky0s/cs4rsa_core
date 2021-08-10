@@ -15,12 +15,11 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class ScheduleTable : UserControl
     {
-        private ScheduleTableViewModel scheduleTableViewModel = new ScheduleTableViewModel();
         public ScheduleTable()
         {
             InitializeComponent();
-            DataGridFirstPhase.ItemsSource = scheduleTableViewModel.Schedule1;
-            DataGridSecondPhase.ItemsSource = scheduleTableViewModel.Schedule2;
+            //DataGridFirstPhase.ItemsSource = scheduleTableViewModel.Schedule1;
+            //DataGridSecondPhase.ItemsSource = scheduleTableViewModel.Schedule2;
         }
     }
 }

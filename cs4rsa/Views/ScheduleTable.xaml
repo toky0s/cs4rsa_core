@@ -7,6 +7,7 @@
              xmlns:converter="clr-namespace:cs4rsa.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:vm="clr-namespace:cs4rsa.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
             TextElement.FontWeight="Regular"
@@ -15,6 +16,9 @@
             TextOptions.TextRenderingMode="Auto"        
             Background="{DynamicResource MaterialDesignPaper}"
             FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.DataContext>
+        <vm:ScheduleTableViewModel></vm:ScheduleTableViewModel>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <converter:ShortedTimeViewConverter x:Key="ShortedTimeViewConverter"></converter:ShortedTimeViewConverter>
         <converter:ClassGroupModelConverter x:Key="ClassGroupModelConverter"></converter:ClassGroupModelConverter>
@@ -64,7 +68,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock Text="Lịch mô phỏng"
-                        ></TextBlock>
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
         </StackPanel>
         <TextBlock Text="Giai đoạn 1 (Từ tuần 1 - 9)"
                            Grid.Row="1"></TextBlock>
@@ -73,6 +77,7 @@
                   AutoGenerateColumns="False"
                   GridLinesVisibility="None"
                   FontSize="10"
+                  ItemsSource="{Binding Schedule1}"
                   materialDesign:DataGridAssist.CellPadding="4 2 2 2"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2">
             <DataGrid.Columns>
@@ -141,6 +146,7 @@
                   AutoGenerateColumns="False"
                   GridLinesVisibility="None"
                   FontSize="10"
+                  ItemsSource="{Binding Schedule2}"
                   materialDesign:DataGridAssist.CellPadding="4 2 2 2"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2">
             <DataGrid.Columns>

@@ -6,7 +6,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:cs4rsa.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:vm="clr-namespace:cs4rsa.ViewModels">
+    <UserControl.DataContext>
+        <vm:MainSchedulingViewModel></vm:MainSchedulingViewModel>
+    </UserControl.DataContext>
     <Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>

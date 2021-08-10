@@ -129,9 +129,9 @@
 
                         <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"
                                    FontSize="10">
-                        <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
+                        <Run Text="{Binding FirstSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
                         <Run Text=" - "></Run>
-                        <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
+                        <Run Text="{Binding SecondSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>

@@ -22,27 +22,23 @@ namespace cs4rsa.Views
     /// Interaction logic for SearchSession.xaml
     /// </summary>
     public partial class SearchSession : UserControl
-    {
-        private SearchViewModel searchViewModel;
-        
+    {       
         public SearchSession()
         {
             InitializeComponent();
-            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            searchViewModel = new SearchViewModel(cs4RsaMessageBox);
-            DataContext = searchViewModel;
         }
 
         private void DisciplineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            SearchViewModel searchViewModel = DataContext as SearchViewModel;
             if (searchViewModel.SelectedDiscipline!=null)
                 searchViewModel.LoadDisciplineKeyword(DisciplineComboBox.SelectedValue.ToString());
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
-            ContextMenu context = sender as ContextMenu;
-            context.DataContext = searchViewModel;
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
         }
     }
 }

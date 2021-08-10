@@ -49,6 +49,9 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ToolTip>
+                <ContextMenu x:Key="ClassGroupContextMenu" Opened="ContextMenu_Opened">
+                    <MenuItem Header="Xem chi tiết trong Course" Command="{Binding GotoCourseCommand}"></MenuItem>
+                </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -117,6 +120,7 @@
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ClassGroupContextMenu}"></Setter>
                     <Setter Property="ToolTip" Value='{StaticResource PlaceToolTip}'></Setter>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding HaveSchedule}" Value="false">

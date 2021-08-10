@@ -158,6 +158,12 @@ namespace cs4rsa.Views
         {
             CollectionViewSource.GetDefaultView(classGroupViewModel.ClassGroupModels).Refresh();
         }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
+        }
     }
 }
 

@@ -7,6 +7,7 @@
              xmlns:converter="clr-namespace:cs4rsa.Converters.DialogConverters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:vm="clr-namespace:cs4rsa.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -16,6 +17,9 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              Padding="10">
+    <UserControl.DataContext>
+        <vm:LoginViewModel></vm:LoginViewModel>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
     </UserControl.Resources>

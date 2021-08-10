@@ -24,7 +24,6 @@ namespace cs4rsa.Views
         public LoginView()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel();
         }
     }
 }

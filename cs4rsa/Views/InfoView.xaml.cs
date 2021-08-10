@@ -24,7 +24,6 @@ namespace cs4rsa.Views
         public InfoView()
         {
             InitializeComponent();
-            DataContext = new InfoViewModel();
         }
     }
 }

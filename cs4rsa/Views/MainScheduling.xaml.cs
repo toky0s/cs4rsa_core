@@ -25,9 +25,6 @@ namespace cs4rsa.Views
         public MainScheduling()
         {
             InitializeComponent();
-            Cs4rsaMessageBox messageBox = new Cs4rsaMessageBox();
-            MainSchedulingViewModel semesterInfoViewModel = new MainSchedulingViewModel(messageBox);
-            DataContext = semesterInfoViewModel;
         }
     }
 }

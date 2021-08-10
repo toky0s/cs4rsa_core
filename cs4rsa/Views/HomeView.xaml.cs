@@ -29,7 +29,6 @@ namespace cs4rsa.Views
         public HomeView()
         {
             InitializeComponent();
-            DataContext = new HomeViewModel();
             MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage("Chào mừng đến với CS4RSA"));
         }
 
