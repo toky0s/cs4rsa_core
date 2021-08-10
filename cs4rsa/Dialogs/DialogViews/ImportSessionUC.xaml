@@ -22,21 +22,20 @@
     <UserControl.DataContext>
         <vm:ImportDialogViewModel></vm:ImportDialogViewModel>
     </UserControl.DataContext>
-    <materialDesign:Card>
+    <materialDesign:Card Width="900">
         <StackPanel Orientation="Vertical">
-            <Expander IsExpanded="True">
-                <Expander.Header>
-                    <TextBlock Text="Từ cơ sở dữ liệu"></TextBlock>
-                </Expander.Header>
-                <Grid x:Uid="GridSessions" Height="215">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2.5*"></ColumnDefinition>
-                        <ColumnDefinition Width="3*"></ColumnDefinition>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical"
+            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                       Text="Từ cơ sở dữ liệu"
+                       Margin="10 15 "/>
+            <Grid x:Uid="GridSessions" Height="215">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical"
                                 Grid.Column="0">
-                        <ListView
+                    <ListView
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             Height="200"
                             ItemsSource="{Binding ScheduleSessions}"
@@ -44,49 +43,49 @@
                             Margin="5,5,5,0" 
                             Grid.RowSpan="2"
                             >
-                            <ListView.Resources>
-                                <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Value="1">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource ExpiryConverter}">
-                                                    <Binding Path="Semester"></Binding>
-                                                    <Binding Path="Year"></Binding>
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="Text" Value="Có thể sử dụng"></Setter>
-                                            <Setter Property="Foreground" Value="Green"></Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Value="0">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource ExpiryConverter}">
-                                                    <Binding Path="Semester"></Binding>
-                                                    <Binding Path="Year"></Binding>
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="Text" Value="Đã lỗi thời"></Setter>
-                                            <Setter Property="Foreground" Value="Red"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.Resources>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
-                                    <GridViewColumn Header="Hiệu lực" Width="auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource ExpiryConverterStyle}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1"
+                        <ListView.Resources>
+                            <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Value="1">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource ExpiryConverter}">
+                                                <Binding Path="Semester"></Binding>
+                                                <Binding Path="Year"></Binding>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Text" Value="Có thể sử dụng"></Setter>
+                                        <Setter Property="Foreground" Value="Green"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Value="0">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource ExpiryConverter}">
+                                                <Binding Path="Semester"></Binding>
+                                                <Binding Path="Year"></Binding>
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Text" Value="Đã lỗi thời"></Setter>
+                                        <Setter Property="Foreground" Value="Red"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Tên phiên" Width="auto" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="Hiệu lực" Width="auto">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource ExpiryConverterStyle}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+                <StackPanel Grid.Column="1"
                                 Orientation="Vertical">
-                        <ListView Grid.Row="4"
+                    <ListView Grid.Row="4"
                                   
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"
@@ -94,19 +93,18 @@
                                   Margin="0,5,5,0"
                                   ItemsSource="{Binding ScheduleSessionDetails}"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Mã môn" Width="auto" DisplayMemberBinding="{Binding SubjectCode}" />
-                                    <GridViewColumn Header="Tên môn" Width="auto" DisplayMemberBinding="{Binding SubjectName}" />
-                                    <GridViewColumn Header="Nhóm lớp" Width="auto" DisplayMemberBinding="{Binding ClassGroup}"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2"
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Nhóm lớp" Width="auto" DisplayMemberBinding="{Binding ClassGroup}"/>
+                                <GridViewColumn Header="Tên môn" Width="auto" DisplayMemberBinding="{Binding SubjectName}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
+                <StackPanel Grid.Column="2"
                                 Orientation="Vertical"
                                 Margin="0,7,7,0">
-                        <Button Grid.Row="2"
+                    <Button Grid.Row="2"
                                 Grid.Column="0"
                                 Content="Nhập"
                                 Height="30"
@@ -114,39 +112,36 @@
                                 Foreground="White"
                                 Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
-                        <Button Grid.Row="2"
+                    <Button Grid.Row="2"
                                 Grid.Column="1"
                                 Content="Xoá"
                                 Height="30"
                                 Margin="0,5,0,0"
                                 Foreground="White"
                                 Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"></Button>
-                        <Button Content="Thoát"
+                    <Button Content="Thoát"
                                 Foreground="White"
                                 Margin="0 5 0 0"
                                 Command="{Binding CloseDialogCommand}"></Button>
-                    </StackPanel>
+                </StackPanel>
+            </Grid>
 
-
-                </Grid>
-            </Expander>
-            <Expander IsExpanded="True">
-                <Expander.Header>
-                    <TextBlock Text="Từ ShareString"></TextBlock>
-                </Expander.Header>
-                <Grid Margin="7,7,7,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0"
+            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                       Text="Từ ShareString"
+                       Margin="10 15"/>
+            <Grid Margin="7,7,7,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0"
                              Margin="0,0,5,0"
                              Height="40"
                              x:Name="ShareString"
                              materialDesign:HintAssist.Hint="Share String của bạn"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              Text="{Binding ShareString}"></TextBox>
-                    <Button
+                <Button
                         Height="30"
                         Grid.Column="1"
                         Content="Nhập"
@@ -155,8 +150,8 @@
                         IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}"
                         Command="{Binding ShareStringCommand}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
-                </Grid>
-            </Expander>
+            </Grid>
+
         </StackPanel>
 
     </materialDesign:Card>

@@ -105,19 +105,23 @@ namespace cs4rsa.Dialogs.Implements
         {
             List<List<ClassGroupModel>> result = new List<List<ClassGroupModel>>();
             List<ClassGroupModel> firstCombination = new List<ClassGroupModel>();
-            for (int i = 0; i < k; i++)
+            if (firstCombination.Count > 0)
             {
-                firstCombination.Add(elements[i]);
-            }
-            while (true)
-            {
-                result.Add(firstCombination.ToList());
-                if (IsLastCombination(firstCombination, k, elements))
+                for (int i = 0; i < k; i++)
                 {
-                    return result;
+                    firstCombination.Add(elements[i]);
                 }
-                firstCombination = GenNext(firstCombination, k, elements);
+                while (true)
+                {
+                    result.Add(firstCombination.ToList());
+                    if (IsLastCombination(firstCombination, k, elements))
+                    {
+                        return result;
+                    }
+                    firstCombination = GenNext(firstCombination, k, elements);
+                }
             }
+            return result;
         }
 
         /// <summary>

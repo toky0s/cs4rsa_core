@@ -9,16 +9,20 @@ namespace cs4rsa.Dialogs.DialogResults
 {
     public class SolveConflictResult
     {
-        private ClassGroupModel _classGroupModel;
-        public ClassGroupModel ClassGroupModel
+        private string _classGroupModelName;
+        public string ClassGroupModel
         {
-            get { return _classGroupModel; }
-            set { _classGroupModel = value; }
+            get { return _classGroupModelName; }
+            set { _classGroupModelName = value; }
         }
 
-        public SolveConflictResult(ClassGroupModel classGroupModel)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classGroupModelName">Tên của ClassGroupModel cần loại bỏ.</param>
+        public SolveConflictResult(string classGroupModelName)
         {
-            _classGroupModel = classGroupModel;
+            _classGroupModelName = classGroupModelName;
         }
     }
 }

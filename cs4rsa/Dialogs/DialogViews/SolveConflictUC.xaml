@@ -31,9 +31,9 @@
             <TextBlock Grid.Row="1"
                    HorizontalAlignment="Center"
                    Style="{StaticResource MaterialDesignBody2TextBlock}">
-            <Run Text="{Binding ClassGroup1.Name}"></Run>
+            <Run Text="{Binding ClassGroup1Name}"></Run>
             <Run Text="hoặc"></Run>
-            <Run Text="{Binding ClassGroup2.Name}"></Run>
+            <Run Text="{Binding ClassGroup2Name}"></Run>
             <Run Text="?"></Run>
             </TextBlock>
             <TextBlock Grid.Row="2"
@@ -55,7 +55,7 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="{Binding ClassGroup1.Name, StringFormat=Bỏ chọn {0} (viên màu đỏ)}"
+                <Button Grid.Column="0" Content="{Binding ClassGroup1Name, StringFormat=Bỏ chọn {0} (viên màu đỏ)}"
                     ToolTip="Giải quyết xung đột và xem như chưa có chuyện gì xảy ra"
                     Background="#d63031"
                     BorderBrush="#d63031"
@@ -63,7 +63,7 @@
                     Width="200"
                     Margin="5 10 0 15"
                     Command="{Binding RemoveClassGroup1Command}"></Button>
-                <Button Content="{Binding ClassGroup2.Name, StringFormat=Bỏ chọn {0} (viên màu xanh)}"
+                <Button Content="{Binding ClassGroup2Name, StringFormat=Bỏ chọn {0} (viên màu xanh)}"
                     ToolTip="Cũng như thế nhưng vị dưa hấu"
                     Grid.Column="1"
                     Background="#00b894"
