@@ -56,6 +56,11 @@ namespace cs4rsa.ViewModels
             _snackBarMessageQueue.Enqueue(message.Source);
         }
 
+
+        /// <summary>
+        /// Hiển thị một UserControl dưới dạng một Dialog.
+        /// </summary>
+        /// <param name="uc">UserControl</param>
         public void OpenDialog(object uc)
         {
             if (uc != null)
@@ -65,6 +70,9 @@ namespace cs4rsa.ViewModels
             IsOpenDialog = true;
         }
 
+        /// <summary>
+        /// Đóng Dialog.
+        /// </summary>
         public void CloseDialog() => IsOpenDialog = false;
     }
 }

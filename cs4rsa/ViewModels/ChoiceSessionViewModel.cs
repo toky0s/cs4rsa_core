@@ -252,10 +252,13 @@ namespace cs4rsa.ViewModels
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
             }
+
             for (int i = 0; i < schoolClasses.Count; ++i)
             {
                 for (int k = i+1; k < schoolClasses.Count; ++k)
                 {
+                    if (schoolClasses[i].ClassGroupName.Equals(schoolClasses[k].ClassGroupName))
+                        continue;
                     Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)

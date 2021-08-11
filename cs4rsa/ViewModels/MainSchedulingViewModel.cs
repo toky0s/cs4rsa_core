@@ -119,7 +119,6 @@ namespace cs4rsa.ViewModels
         }
 
 
-
         public void Handle(SubjectItemChangeMessage message)
         {
             TotalCredit = message.Source.TotalCredits;

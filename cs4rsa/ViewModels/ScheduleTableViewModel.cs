@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace cs4rsa.ViewModels
 {
-    public class ScheduleRow: ViewModelBase 
+    public class ScheduleRow : ViewModelBase
     {
         private ShortedTime _time;
         public ShortedTime Time
@@ -305,33 +305,16 @@ namespace cs4rsa.ViewModels
         /// </summary>
         private void ReloadSchedule()
         {
-            //if (_settingIsDynamicSchedule)
-            //{
-            //    CleanPhase();
-            //    CleanConflictPhase();
-            //    CleanSchedules();
-            //    DivideSchoolClassesByPhases();
-            //    RenderDynamic(ref Schedule1, ref Phase1);
-            //    RenderDynamic(ref Schedule2, ref Phase2);
-            //    DumpClassGroupModel(ref Schedule1, ref Phase1);
-            //    DumpClassGroupModel(ref Schedule2, ref Phase2);
-            //    DivideConflictByPhase();
-            //    DumConflictModel(ref Schedule1, ref ConflictPhase1);
-            //    DumConflictModel(ref Schedule2, ref ConflictPhase2);
-            //}
-            //else
-            //{
-                CleanPhase();
-                CleanConflictPhase();
-                DivideSchoolClassesByPhases();
-                CleanStaticSchedule(ref _schedule1);
-                CleanStaticSchedule(ref _schedule2);
-                DumpSchoolClassModel(ref _schedule1, ref Phase1);
-                DumpSchoolClassModel(ref _schedule2, ref Phase2);
-                DivideConflictByPhase();
-                DumConflictModel(ref _schedule1, ref ConflictPhase1);
-                DumConflictModel(ref _schedule2, ref ConflictPhase2);
-            //}
+            CleanPhase();
+            CleanConflictPhase();
+            DivideSchoolClassesByPhases();
+            CleanStaticSchedule(ref _schedule1);
+            CleanStaticSchedule(ref _schedule2);
+            DumpSchoolClassModel(ref _schedule1, ref Phase1);
+            DumpSchoolClassModel(ref _schedule2, ref Phase2);
+            DivideConflictByPhase();
+            DumConflictModel(ref _schedule1, ref ConflictPhase1);
+            DumConflictModel(ref _schedule2, ref ConflictPhase2);
         }
 
 
@@ -341,7 +324,7 @@ namespace cs4rsa.ViewModels
         /// </summary>
         private void CleanStaticSchedule(ref ObservableCollection<ScheduleRow> schedule)
         {
-            foreach(ScheduleRow row in schedule)
+            foreach (ScheduleRow row in schedule)
             {
                 row.Monday = null;
                 row.Tuseday = null;

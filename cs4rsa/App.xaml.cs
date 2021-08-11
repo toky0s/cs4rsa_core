@@ -13,6 +13,7 @@ using cs4rsa.Helpers;
 using System.IO;
 using Newtonsoft.Json;
 using cs4rsa.Settings;
+using System.Windows.Threading;
 
 namespace cs4rsa
 {
@@ -27,6 +28,6 @@ namespace cs4rsa
             ConnectInternetChecker.Check();
             Cs4rsaData cs4RsaData = new Cs4rsaData();
             SettingsWriter.GetInstance().InitSettings();
-        }
+         }
     }
 }

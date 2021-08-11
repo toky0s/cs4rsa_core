@@ -120,11 +120,6 @@
                                             Margin="5,10,0,0"
                                             FontSize="14"
                                            TextWrapping="WrapWithOverflow">
-                                    <TextBlock.ToolTip>
-                                        <ToolTip>
-                                            <TextBlock Text="{Binding SubjectName}"></TextBlock>
-                                        </ToolTip>
-                                    </TextBlock.ToolTip>
                                 </TextBlock>
                                 <TextBlock Text="{Binding SubjectCode}" 
                                        Margin="5,0,0,0"
@@ -169,8 +164,7 @@
                     BorderBrush="#70a1ff"
                     Foreground="White"
                     Margin="3,0,0,0"
-                    Command="{Binding ImportDialogCommand}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
+                    Command="{Binding ImportDialogCommand}"></Button>
         </Grid>
     </Grid>
 </UserControl>

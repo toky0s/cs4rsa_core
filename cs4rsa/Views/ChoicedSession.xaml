@@ -82,9 +82,7 @@
                     Height="30"
                     Foreground="White"
                     Margin="0 0 0 5"
-                    Command="{Binding SaveCommand}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                    ></Button>
+                    Command="{Binding SaveCommand}"></Button>
             <Button Content="Bỏ chọn hết"
                     Grid.Column="1"
                     Height="30"
@@ -101,6 +99,9 @@
                   SelectedItem="{Binding SelectedConflictModel}"
                  ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.Resources>
+                <ToolTip x:Key="TimeConflictToolTip">
+                    <TextBlock Text="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"></TextBlock>
+                </ToolTip>
                 <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem Header="Giải quyết xung đột" Command="{Binding SolveConflictCommand}"/>
                 </ContextMenu>
@@ -127,8 +128,7 @@
                             </Ellipse>
                         </Canvas>
 
-                        <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"
-                                   FontSize="10">
+                        <TextBlock FontSize="10">
                         <Run Text="{Binding FirstSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
                         <Run Text=" - "></Run>
                         <Run Text="{Binding SecondSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
@@ -138,6 +138,7 @@
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ToolTip" Value='{StaticResource TimeConflictToolTip}'></Setter>
                     <Setter Property="ContextMenu" Value="{StaticResource ConflictContextMenu}"></Setter>
                 </Style>
             </ListView.ItemContainerStyle>
@@ -148,8 +149,12 @@
                    FontWeight="Bold"></TextBlock>
         <ListBox Grid.Row="6"
                  ItemsSource="{Binding PlaceConflictFinderModels}"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 >
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.Resources>
+                <ToolTip x:Key="PlaceConflictToolTip">
+                    <TextBlock Text="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}"></TextBlock>
+                </ToolTip>
+            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -163,14 +168,19 @@
                             </Rectangle>
                         </Canvas>
 
-                        <TextBlock ToolTipService.ToolTip="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}">
-                        <Run Text="{Binding FirstClassGroup.Name, Mode=OneWay}"></Run>
+                        <TextBlock FontSize="10">
+                        <Run Text="{Binding FirstSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
                         <Run Text=" - "></Run>
-                        <Run Text="{Binding SecondClassGroup.Name, Mode=OneWay}"></Run>
+                        <Run Text="{Binding SecondSchoolClass.ClassGroupName, Mode=OneWay}"></Run>
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Setter Property="ToolTip" Value='{StaticResource PlaceConflictToolTip}'></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
     </Grid>
 </UserControl>

@@ -31,7 +31,7 @@ namespace cs4rsa.Helpers
         {
             if (!IsConnectingToInternet())
             {
-                Environment.Exit(-1);
+                throw new Exception("ket noi internet");
             }
         }
     }

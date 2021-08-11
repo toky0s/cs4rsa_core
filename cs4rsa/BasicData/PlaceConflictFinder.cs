@@ -39,8 +39,8 @@ namespace cs4rsa.BasicData
                     // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
                     List<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
                     List<Place> schoolClass2Places = _schoolClass2.DayPlaceMetaData.GetPlaces();
-                    List<Place> intersectedPlaces = schoolClass1Places.Intersect(schoolClass2Places).ToList();
-                    if (intersectedPlaces.Count > 1)
+                    List<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct().ToList();
+                    if (dinstictPlaces.Count > 1)
                     {
                         Dictionary<DayOfWeek, List<PlaceAdjacent>> conflictPlaces = new Dictionary<DayOfWeek, List<PlaceAdjacent>>();
                         // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học

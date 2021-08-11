@@ -16,8 +16,12 @@ namespace cs4rsa.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            IConflictModel conflict = value as IConflictModel;
-            return conflict.GetConflictInfo();
+            if (value != null)
+            {
+                IConflictModel conflict = value as IConflictModel;
+                return conflict.GetConflictInfo();
+            }
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

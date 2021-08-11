@@ -112,7 +112,6 @@
                                         </TextBlock.Style>
                                     </TextBlock>
                                 </StackPanel>
-                                <TextBlock Text="{Binding Place}"></TextBlock>
                             </StackPanel>
                         </Grid>
                     </materialDesign:Card>

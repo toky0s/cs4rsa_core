@@ -16,8 +16,6 @@ namespace cs4rsa.ViewModels
         IMessageHandler<DeleteClassGroupChoiceMessage>,
         IMessageHandler<DeleteSubjectMessage>
     {
-        public static EventHandler SelectedSubjectChanged;
-
         private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
         public ObservableCollection<ClassGroupModel> ClassGroupModels
         {
