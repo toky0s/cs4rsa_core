@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Messages
 {
+    /// <summary>
+    /// Thông báo có sự thay đổi về danh sách các xung đột thời gian của một
+    /// </summary>
     class ConflictCollectionChangeMessage : Cs4rsaMessage
     {
         public new List<ConflictModel> Source;
