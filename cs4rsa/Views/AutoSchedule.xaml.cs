@@ -23,21 +23,19 @@ namespace cs4rsa.Views
     /// </summary>
     public partial class AutoSchedule : UserControl
     {
-        private AutoScheduleViewModel _autoScheduleViewModel;
         public AutoSchedule()
         {
             InitializeComponent();
-            Cs4rsaMessageBox cs4RsaMessageBox = new Cs4rsaMessageBox();
-            _autoScheduleViewModel = new AutoScheduleViewModel(cs4RsaMessageBox);
-            DataContext = _autoScheduleViewModel;
-            ListViewSubjects.ItemsSource = _autoScheduleViewModel.ProgramSubjectModels;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource);
+            AutoScheduleViewModel vm = DataContext as AutoScheduleViewModel;
+            ListBoxSubjects.ItemsSource = vm.ProgramSubjectModels;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource);
             view.Filter = Filter;
         }
 
         public void Load()
         {
-            _autoScheduleViewModel.LoadProgramSubject();
+            AutoScheduleViewModel vm = DataContext as AutoScheduleViewModel;
+            vm.LoadProgramSubject();
         }
 
         private bool Filter(object item)
@@ -62,7 +60,7 @@ namespace cs4rsa.Views
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource).Refresh();
+            CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource).Refresh();
         }
 
         private bool FilterShowing(ProgramSubjectModel subject)
@@ -88,7 +86,7 @@ namespace cs4rsa.Views
 
         private void ReloadSubjects(object sender, RoutedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(ListViewSubjects.ItemsSource).Refresh();
+            CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource).Refresh();
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)

@@ -233,7 +233,6 @@
     <Compile Include="Crawler\CurriculumCrawler.cs" />
     <Compile Include="Crawler\DtuStudentInfoCrawler.cs" />
     <Compile Include="Crawler\DtuSubjectCrawler.cs" />
-    <Compile Include="Crawler\MetaDataCrawler.cs" />
     <Compile Include="Crawler\ProgramDiagramCrawler.cs" />
     <Compile Include="Crawler\SpecialStringCrawler.cs" />
     <Compile Include="Crawler\StudentProgramCrawler.cs" />
@@ -255,8 +254,8 @@
     <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
     <Compile Include="Dialogs\DialogService\DialogService.cs" />
     <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
-    <Compile Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml.cs">
-      <DependentUpon>AutoSortDialogWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogViews\AutoSortSubjectLoadUC.xaml.cs">
+      <DependentUpon>AutoSortSubjectLoadUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\ImportSessionUC.xaml.cs">
       <DependentUpon>ImportSessionUC.xaml</DependentUpon>
@@ -264,14 +263,11 @@
     <Compile Include="Dialogs\DialogViews\LoginUC.xaml.cs">
       <DependentUpon>LoginUC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogViews\ProgramSubjectLoadUC.xaml.cs">
+      <DependentUpon>ProgramSubjectLoadUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogViews\SaveSessionUC.xaml.cs">
       <DependentUpon>SaveSessionUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\LoginDialogWindow.xaml.cs">
-      <DependentUpon>LoginDialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ProSubjectLoadWindow.xaml.cs">
-      <DependentUpon>ProSubjectLoadWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\SessionInputWindow.xaml.cs">
       <DependentUpon>SessionInputWindow.xaml</DependentUpon>
@@ -292,7 +288,7 @@
       <DependentUpon>UpdateUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
-    <Compile Include="Dialogs\Implements\AutoSortViewModel.cs" />
+    <Compile Include="Dialogs\Implements\AutoSortSubjectLoadVM.cs" />
     <Compile Include="Dialogs\Implements\LoginDialogViewModel.cs" />
     <Compile Include="Dialogs\Implements\ProSubjectLoadViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
@@ -313,6 +309,7 @@
     <Compile Include="Enums\LearnState.cs" />
     <Compile Include="Enums\RegistrationType.cs" />
     <Compile Include="Helpers\Cs4rsaVersion.cs" />
+    <Compile Include="Helpers\Gen.cs" />
     <Compile Include="Helpers\TimeConverter.cs" />
     <Compile Include="Implements\CurriculumGetter.cs" />
     <Compile Include="Implements\CurriculumSaver.cs" />
@@ -374,6 +371,7 @@
     <Compile Include="Settings\SettingsReader.cs" />
     <Compile Include="Settings\SettingsWriter.cs" />
     <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
+    <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
     <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
     <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
     <Compile Include="ViewModels\ClassGroupViewModel.cs" />
@@ -415,7 +413,7 @@
       <DependentUpon>SearchSession.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\StudentModel.cs" />
-    <Page Include="Dialogs\DialogViews\AutoSortDialogWindow.xaml">
+    <Page Include="Dialogs\DialogViews\AutoSortSubjectLoadUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -427,15 +425,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\DialogViews\ProgramSubjectLoadUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\DialogViews\SaveSessionUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\LoginDialogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ProSubjectLoadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

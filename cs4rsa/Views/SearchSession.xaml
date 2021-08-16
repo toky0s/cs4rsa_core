@@ -111,13 +111,13 @@
                             </Grid.ColumnDefinitions>
                             <Rectangle Grid.Column="0"
                                        Width="27"
-                                HorizontalAlignment="Left"
-                                Fill="{Binding Color}"/>
+                                       HorizontalAlignment="Left"
+                                       Fill="{Binding Color}"/>
                             <StackPanel
                                     Grid.Column="1"
                                     Orientation="Vertical">
                                 <TextBlock Text="{Binding SubjectName}" 
-                                            Margin="5,10,0,0"
+                                            Margin="5 10 0 0"
                                             FontSize="14"
                                            TextWrapping="WrapWithOverflow">
                                 </TextBlock>

@@ -7,6 +7,8 @@
         xmlns:vmConverter="clr-namespace:cs4rsa.Converters"
         xmlns:local="clr-namespace:cs4rsa.Views"
         mc:Ignorable="d"
+        d:DesignHeight="500" d:DesignWidth="800"
+        xmlns:vm="clr-namespace:cs4rsa.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -14,9 +16,18 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" d:DesignWidth="690">
+        FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.DataContext>
+        <vm:AutoScheduleViewModel></vm:AutoScheduleViewModel>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
+            <Style TargetType="{x:Type Border}" x:Key="HorizontalDividerBorder">
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
+                <Setter Property="UseLayoutRounding" Value="True"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Height" Value="1"/>
+            </Style>
             <converter:Base64ImageConverter x:Key="Base64ImageConverter"/>
             <vmConverter:ConflictModelConverter x:Key="ConflictInfoConverter"></vmConverter:ConflictModelConverter>
             <vmConverter:ConflictTypeConverter x:Key="ConflictTypeConverter"></vmConverter:ConflictTypeConverter>
@@ -65,7 +76,8 @@
         <Grid Grid.Row="1"
               Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.7*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="1.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -80,132 +92,56 @@
                 <TextBlock Text="Danh sách các môn của bạn"
                            Grid.Row="0"
                            FontWeight="Bold"></TextBlock>
-                <ListView Grid.Row="1"
-                          x:Name="ListViewSubjects"
+                <ListBox Grid.Row="1"
+                          x:Name="ListBoxSubjects"
                           HorizontalContentAlignment="Stretch"
-                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                           ItemsSource="{Binding ProgramSubjectModels}"
                           SelectedItem="{Binding SelectedProSubject}">
-                    <ListView.Resources>
+                    <ListBox.Resources>
                         <ContextMenu x:Key="SubjectListContextMenu" Opened="ContextMenu_Opened">
                             <MenuItem Header="Thêm" Command="{Binding AddCommand}"/>
                             <MenuItem Header="Xem chi tiết" Command="{Binding WatchDetailCommand}"/>
                         </ContextMenu>
-                    </ListView.Resources>
-                    <ListView.ItemTemplate>
+                    </ListBox.Resources>
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <materialDesign:Card Width="400"
-                                         materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                         Margin="0 0 0 5">
+                            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="25"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="auto"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Rectangle Fill="{Binding Color}"
-                                           Width="27">
+                                               Width="27"
+                                               Grid.Column="0">
                                     </Rectangle>
                                     <StackPanel Orientation="Vertical"
-                                                Grid.Column="1"
-                                                Margin="0 5 0 5">
+                                                Grid.Column="1">
                                         <TextBlock Text="{Binding SubjectName}"
-                                                   Margin="5,0,0,0"
+                                                   Margin="5 5 5 0"
                                                    FontSize="14"
                                                    TextWrapping="WrapWithOverflow"></TextBlock>
-                                        <TextBlock Margin="5,0,0,0">
+                                        <TextBlock Margin="5 0 0 0"
+                                                   TextWrapping="WrapWithOverflow">
                                         <Run Text="{Binding SubjectCode}"></Run>
                                         <Run Text=" - "></Run>
                                         <Run Text="{Binding FolderName}"></Run>
                                         </TextBlock>
-                                        <TextBlock Margin="5 0 0 0">
+                                        <TextBlock Margin="5 0 0 5">
                                             <Run Text="{Binding StudyUnit}"></Run>
                                             <Run Text="Tín chỉ"></Run>
                                         </TextBlock>
-                                        <TextBlock FontSize="10"
-                                           Margin="5,0,0,0">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="Folder chứa môn này chưa hoàn thành"></Setter>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsFolderCompleted}" Value="True">
-                                                            <Setter Property="Text" Value="Folder chứa môn này đã hoàn thành"></Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Ellipse Height="10" 
-                                             Width="10"
-                                             Margin="5,0,0,5"
-                                             HorizontalAlignment="Left">
-                                                <Ellipse.Style>
-                                                    <Style TargetType="Ellipse">
-                                                        <Setter Property="Fill" Value="#f12711"></Setter>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsDone}" Value="True">
-                                                                <Setter Property="Fill" Value="#45a247"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Ellipse.Style>
-                                            </Ellipse>
-                                            <TextBlock Margin="5,0,0,0"
-                                               FontSize="10">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Text" Value="Chưa học qua"></Setter>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsDone}" Value="True">
-                                                                <Setter Property="Text" Value="Đã học qua"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Ellipse Height="10" 
-                                             Width="10"
-                                             Margin="5,0,0,5"
-                                             HorizontalAlignment="Left">
-                                                <Ellipse.Style>
-                                                    <Style TargetType="Ellipse">
-                                                        <Setter Property="Fill" Value="#f5af19"></Setter>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
-                                                                <Setter Property="Fill" Value="#80D0C7"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Ellipse.Style>
-                                            </Ellipse>
-                                            <TextBlock Margin="5,0,0,0"
-                                               FontSize="10">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Text" Value="Không thể chọn"></Setter>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsCanChoice}" Value="True">
-                                                                <Setter Property="Text" Value="Có thể chọn"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
                             </materialDesign:Card>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                             <Setter Property="ContextMenu" Value="{StaticResource SubjectListContextMenu}"></Setter>
                         </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
                 <TextBox Grid.Row="2"
                          Margin="0,5,0,5"
                          Height="40"
@@ -232,7 +168,179 @@
                 </Grid>
 
             </Grid>
-            <Grid Grid.Column="1"
+            <Grid Grid.Column="1">
+                <TextBlock Text="Bộ lọc"></TextBlock>
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel>
+                            <GroupBox>
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Chọn thời gian rảnh"
+                                                   Foreground="White"></TextBlock>
+                                        <materialDesign:PackIcon Kind="Information"
+                                                                 Foreground="White"
+                                                                 Margin="5 0 0 0">
+                                            <materialDesign:PackIcon.ToolTip>
+                                                <StackPanel>
+                                                    <TextBlock Width="300" TextWrapping="WrapWithOverflow">
+                                                        Chọn thời gian rảnh không chỉ giúp lọc mà còn 
+                                                    giúp hiệu suất sắp xếp tăng nhanh đáng kể. Hãy chọn
+                                                    đủ ít để bộ sắp xếp xuất ra được bộ lịch dễ hơn, nếu
+                                                    không có bộ lịch nào được xuất ra, hãy thử bỏ bớt.
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </materialDesign:PackIcon.ToolTip>
+                                        </materialDesign:PackIcon>
+                                    </StackPanel>
+                                </GroupBox.Header>
+                                <StackPanel Orientation="Vertical">
+                                    <materialDesign:Card>
+                                        <StackPanel x:Name="FiltersContainer">
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Hai">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox x:Name="Mon_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox x:Name="Mon_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox x:Name="Mon_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Ba">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox x:Name="Tus_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox x:Name="Tus_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox x:Name="Tus_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Tư">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox  x:Name="Wed_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox  x:Name="Wed_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox  x:Name="Wed_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Năm">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox  x:Name="Thur_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox  x:Name="Thur_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox  x:Name="Thur_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Sáu">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox  x:Name="Fri_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox  x:Name="Fri_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox  x:Name="Fri_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Thứ Bảy">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox  x:Name="Sat_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox  x:Name="Sat_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox  x:Name="Sat_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                            <Border Style="{StaticResource HorizontalDividerBorder}" />
+                                            <Expander
+                              HorizontalAlignment="Stretch"
+                              Header="Chủ Nhật">
+                                                <StackPanel
+                                Orientation="Vertical"
+                                TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="24,8,24,16">
+                                                    <CheckBox  x:Name="Sun_Mor" Content="Sáng"></CheckBox>
+                                                    <CheckBox  x:Name="Sun_Aft" Content="Chiều"></CheckBox>
+                                                    <CheckBox  x:Name="Sun_Nig" Content="Tối"></CheckBox>
+                                                </StackPanel>
+                                            </Expander>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox x:Name="GroupBoxDisplay">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Hiển thị"
+                                           Foreground="White"></TextBlock>
+                                </GroupBox.Header>
+                                <StackPanel>
+                                    <RadioButton Content="Tất cả"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonAll"
+                                             IsChecked="True"></RadioButton>
+                                    <RadioButton Content="Các môn có thể chọn"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonCanChoice"></RadioButton>
+                                    <RadioButton Content="Các môn đã học qua"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonDoneSubject"></RadioButton>
+                                    <RadioButton Content="Các môn có sẵn trong kỳ này"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonAvailableSubject"></RadioButton>
+                                    <RadioButton Content="Các môn thuộc thư mục chưa hoàn thành"
+                                             Click="ReloadSubjects"
+                                             x:Name="RadioButtonUnCompletedFolder"></RadioButton>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox>
+                                <GroupBox.Header>
+                                    <TextBlock Text="Hiệu suất Sắp xếp"
+                                           Foreground="White"></TextBlock>
+                                </GroupBox.Header>
+                                <StackPanel>
+                                    <CheckBox Grid.Row="2" 
+                                              Margin="0 0 0 5"
+                                              IsChecked="{Binding IsRemoveClassGroupInvalid}">
+                                        <CheckBox.Content>
+                                            <TextBlock TextWrapping="Wrap">Loại bỏ các môn không có lịch và hết chỗ ngay từ đầu</TextBlock>
+                                        </CheckBox.Content>
+                                        <CheckBox.ToolTip>
+                                            <TextBlock TextWrapping="WrapWithOverflow">Việc loại bỏ các môn không có lịch và không còn chỗ ngồi
+                            giúp việc sắp xếp sẽ diễn ra nhanh hơn rất nhiều.</TextBlock>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
+                                    <CheckBox Content="Chấp nhận các cách sắp xếp xung đột"
+                                          IsChecked="{Binding IsAllowConflict}"></CheckBox>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Column="2"
                   Margin="0,5,5,5">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -244,13 +352,16 @@
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Các môn bạn đã chọn"
                                Grid.Row="0"
-                               FontWeight="Bold">
+                               FontWeight="Bold"
+                               Margin="5 0 0 5">
                     </TextBlock>
                     <ListView Grid.Row="1"
-                              Margin="0,0,0,5"
+                              Margin="0 0 0 5"
                               ItemsSource="{Binding ChoicedProSubjectModels}"
                               SelectedItem="{Binding SelectedProSubjectInChoiced}">
                         <ListView.Resources>
@@ -275,12 +386,12 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Button Content="Sắp xếp"
+                        <Button Content="Tải"
                                 Foreground="White"
                                 Height="30"
                                 Grid.Column="0"
                                 Margin="5"
-                                Command="{Binding SortCommand}"
+                                Command="{Binding SubjectDownloadCommand}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></Button>
                         <Button Content="Xoá hết"
                                 Foreground="White"
@@ -288,6 +399,18 @@
                                 Grid.Column="1"
                                 Command="{Binding DeleteAllCommand}"></Button>
                     </Grid>
+                    <TextBlock Text="Đã tải"
+                               FontWeight="Bold"
+                               Grid.Row="3"
+                               Margin="5 0 0 5"></TextBlock>
+                    <ListView Grid.Row="4"
+                              ItemsSource="{Binding SubjectModels}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SubjectName}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -304,63 +427,19 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <GroupBox x:Name="GroupBoxDisplay">
-                            <GroupBox.Header>
-                                <TextBlock Text="Hiển thị"
-                                           Foreground="White"></TextBlock>
-                            </GroupBox.Header>
-                            <StackPanel>
-                                <RadioButton Content="Tất cả"
-                                             Click="ReloadSubjects"
-                                             x:Name="RadioButtonAll"
-                                             IsChecked="True"></RadioButton>
-                                <RadioButton Content="Các môn có thể chọn"
-                                             Click="ReloadSubjects"
-                                             x:Name="RadioButtonCanChoice"></RadioButton>
-                                <RadioButton Content="Các môn đã học qua"
-                                             Click="ReloadSubjects"
-                                             x:Name="RadioButtonDoneSubject"></RadioButton>
-                                <RadioButton Content="Các môn có sẵn trong kỳ này"
-                                             Click="ReloadSubjects"
-                                             x:Name="RadioButtonAvailableSubject"></RadioButton>
-                                <RadioButton Content="Các môn thuộc thư mục chưa hoàn thành"
-                                             Click="ReloadSubjects"
-                                             x:Name="RadioButtonUnCompletedFolder"></RadioButton>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox>
-                            <GroupBox.Header>
-                                <TextBlock Text="Hiệu suất Sắp xếp"
-                                           Foreground="White"></TextBlock>
-                            </GroupBox.Header>
-                            <StackPanel>
-                                <CheckBox Grid.Row="2"
-                          Margin="0 0 0 5"
-                              IsChecked="{Binding IsRemoveClassGroupInvalid}">
-                                    <CheckBox.Content>
-                                        <TextBlock TextWrapping="Wrap">Loại bỏ các môn không có lịch và hết chỗ ngay từ đầu</TextBlock>
-                                    </CheckBox.Content>
-                                    <CheckBox.ToolTip>
-                                        <TextBlock TextWrapping="WrapWithOverflow">Việc loại bỏ các môn không có lịch và không còn chỗ ngồi
-                            giúp việc sắp xếp sẽ diễn ra nhanh hơn rất nhiều.</TextBlock>
-                                    </CheckBox.ToolTip>
-                                </CheckBox>
-                                <CheckBox Content="Chấp nhận các cách sắp xếp xung đột"
-                                          IsChecked="{Binding IsAllowConflict}"></CheckBox>
-                            </StackPanel>
-                        </GroupBox>
+
                     </StackPanel>
                 </Grid>
 
             </Grid>
-            <Grid Grid.Column="2"
+            <Grid Grid.Column="3"
                   Margin="0,5,5,5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding CombinationCount, StringFormat=Các cách sắp xếp ({0})}"
+                <TextBlock Text="Các cách sắp xếp"
                            FontWeight="Bold"/>
                 <ListView Grid.Row="1"
                           ItemsSource="{Binding CombinationModels}"
@@ -611,11 +690,15 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-
-                <Button Content="Mở trong cửa sổ mới"
-                        Grid.Row="2"
+                <StackPanel Grid.Row="2">
+                    <Button Content="Sinh thêm"
+                            Foreground="White"
+                            Margin="0 0 0 5"
+                            Command="{Binding GenCommand}"></Button>
+                    <Button Content="Mở trong cửa sổ mới"
                         Foreground="White"
                         Command="{Binding OpenInNewWindowCommand}"></Button>
+                </StackPanel>
             </Grid>
         </Grid>
         <StatusBar Grid.Row="2"
