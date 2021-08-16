@@ -33,6 +33,7 @@ namespace cs4rsa.BasicData
         private readonly List<string> _parallelSubjects;
         private readonly StudyState _studyState;
         private readonly string _courseId;
+        private readonly string _parrentNodeName;
 
         public string Id
         {
@@ -74,9 +75,10 @@ namespace cs4rsa.BasicData
         public List<string> ParallelSubjects => _parallelSubjects;
         public StudyState StudyState => _studyState;
         public string CourseId => _courseId;
+        public string ParrentNodeName => _parrentNodeName;
 
         public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, string studyUnit, StudyUnitType studyUnitType,
-            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId)
+            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
         {
             _id = id;
             _childOfNode = childOfNode;
@@ -88,6 +90,7 @@ namespace cs4rsa.BasicData
             _parallelSubjects = parallelSubject;
             _studyState = studyState;
             _courseId = courseId;
+            _parrentNodeName = parrentNodeName;
         }
 
         public string GetChildOfNode()

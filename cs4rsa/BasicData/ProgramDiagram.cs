@@ -31,24 +31,6 @@ namespace cs4rsa.BasicData
         }
 
         /// <summary>
-        /// Trả về tên Folder chứa của một ProgramSubject.
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        public string GetFolderName(ProgramSubject subject)
-        {
-            string name;
-            foreach (ProgramFolder folder in _programFolders)
-            {
-                name = folder.GetNameOfFolderContainsThisSubject(subject);
-                if (name != null)
-                    return name;
-            }
-            return null;
-        }
-
-
-        /// <summary>
         /// Lấy ra một folder trong cây folder này dựa theo tên.
         /// </summary>
         /// <param name="folderName"></param>

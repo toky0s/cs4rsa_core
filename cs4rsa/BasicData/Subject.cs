@@ -133,10 +133,6 @@ namespace cs4rsa.BasicData
             teachers.Add(teacher);
             //teacher parser
 
-            //meta data
-            DayPlaceMetaData metaData = new MetaDataCrawler(urlToSubjectDetailPage).ToDayPlaceMetaData();
-            //meta data
-
             string schoolClassName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
             string studyType = tdTags[2].InnerText.Trim();
@@ -161,16 +157,34 @@ namespace cs4rsa.BasicData
             StudyWeek studyWeek = new StudyWeek(studyWeekString);
 
             Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
-
+            
             string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
 
             Regex regexSpace = new Regex(@"^ *$");
-            string[] locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText);
+            List<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText).ToList();
             // remove space in locations
-            locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToArray();
-            locations = locations.Select(item => item.Trim()).Distinct().ToArray();
+            locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToList();
+            
+            List<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct().ToList();
             List<Place> places = new List<Place>();
-            places = locations.Select(item => BasicDataConverter.ToPlace(item)).ToList();
+            places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item)).ToList();
+
+            #region MetaData
+            // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
+            List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays();
+            int metaCount = dayOfWeeks.Count();
+            List<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).ToList();
+            List<Room> roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();
+            List<string> locationsForMetaData = locations.Select(item => item.Trim()).ToList();
+            List<Place> placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
+
+            DayPlaceMetaData metaData = new DayPlaceMetaData();
+            for (int i = 0; i < metaCount; i++)
+            {
+                DayPlacePair dayPlacePair = new DayPlacePair(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
+                metaData.AddDayTimePair(dayOfWeeks[i], dayPlacePair);
+            }
+            #endregion
 
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();

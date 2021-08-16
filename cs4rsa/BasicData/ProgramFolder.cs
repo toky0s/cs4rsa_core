@@ -124,29 +124,6 @@ namespace cs4rsa.BasicData
         }
 
         /// <summary>
-        /// Trả về tên của folder chứa Program Subject.
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <returns></returns>
-        public string GetNameOfFolderContainsThisSubject(ProgramSubject subject)
-        {
-            string parrentId = subject.ChildOfNode;
-            if (Id == parrentId)
-                return _name;
-            else
-            {
-                string name;
-                foreach (ProgramFolder folder in ChildProgramFolders)
-                {
-                    name = folder.GetNameOfFolderContainsThisSubject(subject);
-                    if (name != null)
-                        return name;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Trả về tất cả các ProSubject có trong folder này
         /// bằng cách gọi đệ quy đi sâu vào trong từ folder.
         /// </summary>
