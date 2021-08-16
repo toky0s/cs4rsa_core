@@ -22,7 +22,7 @@
     <UserControl.DataContext>
         <vm:LoginDialogViewModel/>
     </UserControl.DataContext>
-    <materialDesign:Card Width="400">
+    <materialDesign:Card Width="400" Height="600">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
@@ -79,11 +79,12 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+            <Button Style="{StaticResource MaterialDesignRaisedButton}"
                     Content="Thoát"
                     Foreground="White"
                     Grid.Row="2"
-                    Command="{Binding CloseDialogCommand}"/>
+                    Command="{Binding CloseDialogCommand}"
+                    Margin ="10"/>
         </Grid>
     </materialDesign:Card>
 

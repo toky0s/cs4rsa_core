@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace cs4rsa.Dialogs.DialogViews
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for AutoSortSubjectLoadUC.xaml
     /// </summary>
-    public partial class LoginDialogWindow : Window
+    public partial class AutoSortSubjectLoadUC : UserControl
     {
-        public LoginDialogWindow()
+        public AutoSortSubjectLoadUC()
         {
             InitializeComponent();
         }
