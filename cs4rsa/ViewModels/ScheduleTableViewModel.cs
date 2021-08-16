@@ -193,8 +193,8 @@ namespace cs4rsa.ViewModels
         private List<ConflictModel> _conflictModels = new List<ConflictModel>();
         private bool _settingIsDynamicSchedule;
 
-        private List<SchoolClassModel> Phase1 = new List<SchoolClassModel>();
-        private List<SchoolClassModel> Phase2 = new List<SchoolClassModel>();
+        private List<SchoolClassModel> _phase1 = new List<SchoolClassModel>();
+        private List<SchoolClassModel> _phase2 = new List<SchoolClassModel>();
 
         private List<ConflictModel> ConflictPhase1 = new List<ConflictModel>();
         private List<ConflictModel> ConflictPhase2 = new List<ConflictModel>();
@@ -211,6 +211,38 @@ namespace cs4rsa.ViewModels
         {
             get { return _schedule2; }
             set { _schedule2 = value; }
+        }
+
+        private int _startWeekPhase1;
+
+        public int StartWeekPhase1
+        {
+            get { return _startWeekPhase1; }
+            set { _startWeekPhase1 = value; OnPropertyChanged(); }
+        }
+
+        private int _endWeekPhase1;
+
+        public int EndWeekPhase1
+        {
+            get { return _endWeekPhase1; }
+            set { _endWeekPhase1 = value; OnPropertyChanged(); }
+        }
+
+        private int _startWeekPhase2;
+
+        public int StartWeekPhase2
+        {
+            get { return _startWeekPhase2; }
+            set { _startWeekPhase2 = value; OnPropertyChanged(); }
+        }
+
+        private int _endWeekPhase2;
+
+        public int EndWeekPhase2
+        {
+            get { return _endWeekPhase2; }
+            set { _endWeekPhase2 = value; OnPropertyChanged(); }
         }
 
         public ScheduleTableViewModel()
@@ -251,14 +283,14 @@ namespace cs4rsa.ViewModels
                     switch (schoolClassModel.StudyWeek.GetPhase())
                     {
                         case Phase.FIRST:
-                            Phase1.Add(schoolClassModel);
+                            _phase1.Add(schoolClassModel);
                             break;
                         case Phase.SECOND:
-                            Phase2.Add(schoolClassModel);
+                            _phase2.Add(schoolClassModel);
                             break;
                         case Phase.ALL:
-                            Phase1.Add(schoolClassModel);
-                            Phase2.Add(schoolClassModel);
+                            _phase1.Add(schoolClassModel);
+                            _phase2.Add(schoolClassModel);
                             break;
                         case Phase.NON:
                             break;
@@ -310,13 +342,12 @@ namespace cs4rsa.ViewModels
             DivideSchoolClassesByPhases();
             CleanStaticSchedule(ref _schedule1);
             CleanStaticSchedule(ref _schedule2);
-            DumpSchoolClassModel(ref _schedule1, ref Phase1);
-            DumpSchoolClassModel(ref _schedule2, ref Phase2);
+            DumpSchoolClassModel(ref _schedule1, ref _phase1);
+            DumpSchoolClassModel(ref _schedule2, ref _phase2);
             DivideConflictByPhase();
             DumConflictModel(ref _schedule1, ref ConflictPhase1);
             DumConflictModel(ref _schedule2, ref ConflictPhase2);
         }
-
 
         /// <summary>
         /// Làm sạch tất cả các hiển thị trên mô phỏng,
@@ -477,8 +508,8 @@ namespace cs4rsa.ViewModels
 
         private void CleanPhase()
         {
-            Phase1.Clear();
-            Phase2.Clear();
+            _phase1.Clear();
+            _phase2.Clear();
         }
 
         private void CleanConflictPhase()

@@ -53,16 +53,16 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<ConflictModel> conflictModels = new ObservableCollection<ConflictModel>();
+        private ObservableCollection<ConflictModel> _conflictModels = new ObservableCollection<ConflictModel>();
         public ObservableCollection<ConflictModel> ConflictModels
         {
             get
             {
-                return conflictModels;
+                return _conflictModels;
             }
             set
             {
-                conflictModels = value;
+                _conflictModels = value;
             }
         }
 
@@ -246,7 +246,7 @@ namespace cs4rsa.ViewModels
         /// </summary>
         private void UpdateConflictModelCollection()
         {
-            conflictModels.Clear();
+            _conflictModels.Clear();
             List<SchoolClass> schoolClasses = new List<SchoolClass>();
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
@@ -264,11 +264,11 @@ namespace cs4rsa.ViewModels
                     if (conflictTime != null)
                     {
                         ConflictModel conflictModel = new ConflictModel(conflict);
-                        conflictModels.Add(conflictModel);
+                        _conflictModels.Add(conflictModel);
                     }
                 }
             }
-            MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
+            MessageBus.Default.Publish(new ConflictCollectionChangeMessage(_conflictModels.ToList()));
         }
 
         private void UpdatePlaceConflictCollection()
@@ -293,7 +293,7 @@ namespace cs4rsa.ViewModels
                     }
                 }
             }
-            MessageBus.Default.Publish(new ConflictCollectionChangeMessage(conflictModels.ToList()));
+            MessageBus.Default.Publish(new PlaceConflictCollectionChangeMessage(_placeConflictFinderModels.ToList()));
         }
 
         public void Handle(RemoveAChoiceClassGroupMessage message)
