@@ -1,4 +1,5 @@
-﻿using cs4rsa.BasicData;
+﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Dialogs.Implements
 {
-    public class ProSubjectLoadViewModel: DialogViewModelBase<ProSubjectLoadResult>
+    public class ProSubjectLoadViewModel: ViewModelBase
     {
         private int _progressValue;
         public int ProgressValue
@@ -28,15 +29,23 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         private string _specialString;
-
-        public ProSubjectLoadViewModel(string specialString)
+        public string SpecialString
         {
-            _specialString = specialString;
-            Load(specialString);
+            get { return _specialString; }
+            set { _specialString = value; }
+        }
+
+        public Action<ProSubjectLoadResult> CloseDialogCallback { get; set; }
+
+        public ProSubjectLoadViewModel()
+        {
         }
 
 
-        private void Load(string specialString)
+        /// <summary>
+        /// Tải danh sách các môn thuộc chương trình học của sinh viên.
+        /// </summary>
+        public void Load()
         {
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
@@ -46,14 +55,14 @@ namespace cs4rsa.Dialogs.Implements
             backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.RunWorkerAsync(specialString);
+            backgroundWorker.RunWorkerAsync(_specialString);
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ProgramDiagram programDiagram = e.Result as ProgramDiagram;
             ProSubjectLoadResult result = new ProSubjectLoadResult(programDiagram);
-            CloseDialogWithResult(result);
+            CloseDialogCallback.Invoke(result);
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

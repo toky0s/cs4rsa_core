@@ -24,6 +24,5 @@ namespace cs4rsa.Dialogs.Implements
             get { return _subjectCode; }
             set { _subjectCode = value; OnPropertyChanged(); }
         }
-
     }
 }
