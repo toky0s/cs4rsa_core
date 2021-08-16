@@ -92,14 +92,14 @@ namespace cs4rsa.Models
         public string CourseId => _programSubject.CourseId;
         public string ChildOfNode => _programSubject.ChildOfNode;
 
-        public ProgramSubjectModel(ProgramSubject programSubject, ref ProgramDiagram diagram)
+        public ProgramSubjectModel(ProgramSubject programSubject, ProgramDiagram diagram)
         {
             _programSubject = programSubject;
             _diagram = diagram;
 
             _subjectCode = programSubject.SubjectCode;
             _subjectName = programSubject.SubjectName;
-            _folderName = _diagram.GetFolderName(_programSubject);
+            _folderName = programSubject.ParrentNodeName;
             _color = ColorGenerator.GetColor(programSubject.CourseId);
         }
 

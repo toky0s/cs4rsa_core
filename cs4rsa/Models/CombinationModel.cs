@@ -1,10 +1,11 @@
-﻿using cs4rsa.BasicData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cs4rsa.BasicData;
+using cs4rsa.ViewModelFunctions;
 
 namespace cs4rsa.Models
 {
@@ -81,54 +82,8 @@ namespace cs4rsa.Models
             _haveAClassGroupHaveNotSchedule = IsHaveAClassGroupHaveNotSchedule();
             _haveAClassGroupHaveZeroEmptySeat = IsHaveAClassGroupHaveZeroEmptySeat();
             _canShow = !_haveAClassGroupHaveZeroEmptySeat && !_haveAClassGroupHaveNotSchedule;
-            UpdateConflictModels();
-            UpdatePlaceConflictModels();
-        }
-
-        private void UpdatePlaceConflictModels()
-        {
-            _placeConflictFinderModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
-            foreach (ClassGroupModel classGroupModel in _classGroupModels)
-            {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
-            }
-            for (int i = 0; i < schoolClasses.Count; ++i)
-            {
-                for (int k = i + 1; k < schoolClasses.Count; ++k)
-                {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
-                    ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
-                    {
-                        PlaceConflictFinderModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
-                        _placeConflictFinderModels.Add(placeConflictModel);
-                    }
-                }
-            }
-        }
-
-        private void UpdateConflictModels()
-        {
-            _conflictModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
-            foreach (ClassGroupModel classGroupModel in _classGroupModels)
-            {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
-            }
-            for (int i = 0; i < _classGroupModels.Count; ++i)
-            {
-                for (int k = i + 1; k < _classGroupModels.Count; ++k)
-                {
-                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
-                    ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (conflictTime != null)
-                    {
-                        ConflictModel conflictModel = new ConflictModel(conflict);
-                        _conflictModels.Add(conflictModel);
-                    }
-                }
-            }
+            UpdateConflict.UpdateConflictModelCollection(ref _conflictModels, ref _classGroupModels);
+            UpdateConflict.UpdatePlaceConflictCollection(ref _placeConflictFinderModels, ref _classGroupModels);
         }
 
         private bool IsHaveAClassGroupHaveZeroEmptySeat()
