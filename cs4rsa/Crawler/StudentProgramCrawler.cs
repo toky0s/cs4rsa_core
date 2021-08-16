@@ -2,6 +2,7 @@
 using cs4rsa.Enums;
 using cs4rsa.Interfaces;
 using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -104,7 +105,6 @@ namespace cs4rsa.Crawler
             }
             return programFolders;
         }
-
 
         /// <summary>
         /// Lấy ra tất cả các subject con thuộc folder.
@@ -216,6 +216,8 @@ namespace cs4rsa.Crawler
                 else
                     childOfNode = classValue.Split(new char[] { '-' })[3];
 
+                string parrentNodeName = GetParrentNodeWithId(childOfNode);
+
                 // other infomations
                 HtmlNode aTag = docNode.SelectSingleNode("//span/a");
                 string subjectCode = Helpers.StringHelper.SuperCleanString(aTag.InnerText);
@@ -266,11 +268,21 @@ namespace cs4rsa.Crawler
                 }
 
                 ProgramSubject subject = new ProgramSubject(id, childOfNode, subjectCode, name, studyUnit,
-                    studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId);
+                    studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
                 programSubjects.Add(subject);
                 _subjectSaver.Save(subject);
             }
             return programSubjects;
+        }
+
+        private string GetParrentNodeWithId(string id)
+        {
+            foreach (ProgramFolder programFolder in ProgramFolders)
+            {
+                if (programFolder.Id.Equals(id))
+                    return programFolder.Name;
+            }
+            return "";
         }
 
         /// <summary>
