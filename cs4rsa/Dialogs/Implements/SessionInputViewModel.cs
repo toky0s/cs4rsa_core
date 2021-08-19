@@ -49,16 +49,22 @@ namespace cs4rsa.Dialogs.Implements
         }
 
         private IMessageBox _messageBox;
-        private BackgroundWorker _backgroundWorker;
-
-        public SessionInputViewModel(string sessionId, IMessageBox messageBox)
+        public IMessageBox MessageBox
         {
-            _sessionId = sessionId;
-            _messageBox = messageBox;
-            Find();
+            get { return _messageBox; }
+            set { _messageBox = value; }
         }
 
-        private void Find()
+        public Action<StudentResult> CloseDialogCallback { get; set; }
+
+        private BackgroundWorker _backgroundWorker;
+
+        public SessionInputViewModel()
+        {
+
+        }
+
+        public void Find()
         {
             _backgroundWorker = new BackgroundWorker()
             {
@@ -107,7 +113,7 @@ namespace cs4rsa.Dialogs.Implements
                                         "Thông báo",
                                         MessageBoxButton.OK,
                                         MessageBoxImage.Exclamation);
-                CloseDialogWithResult(null);
+                CloseDialogCallback.Invoke(null);
             }
             else
             {
@@ -115,7 +121,7 @@ namespace cs4rsa.Dialogs.Implements
                 string message = $"Xin chào {student.Info.Name}";
                 MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(message));
                 StudentResult result = new StudentResult { Student = student };
-                CloseDialogWithResult(result);
+                CloseDialogCallback.Invoke(result);
             }
         }
 
