@@ -269,8 +269,8 @@
     <Compile Include="Dialogs\DialogViews\SaveSessionUC.xaml.cs">
       <DependentUpon>SaveSessionUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogViews\SessionInputWindow.xaml.cs">
-      <DependentUpon>SessionInputWindow.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogViews\SessionInputUC.xaml.cs">
+      <DependentUpon>SessionInputUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\DialogViews\ShareStringUC.xaml.cs">
       <DependentUpon>ShareStringUC.xaml</DependentUpon>
@@ -292,9 +292,6 @@
     <Compile Include="Dialogs\Implements\LoginDialogViewModel.cs" />
     <Compile Include="Dialogs\Implements\ProSubjectLoadViewModel.cs" />
     <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
-    <Compile Include="Dialogs\DialogViews\SaveDialogWindow.xaml.cs">
-      <DependentUpon>SaveDialogWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Implements\ImportDialogViewModel.cs" />
     <Compile Include="Dialogs\Implements\SessionInputViewModel.cs" />
     <Compile Include="Dialogs\Implements\SettingViewModel.cs" />
@@ -322,7 +319,9 @@
     <Compile Include="Messages\ShowOnSimuMessage.cs" />
     <Compile Include="Messages\SubjectsChangeMessage.cs" />
     <Compile Include="Messages\UpdateSubjectDatabase.cs" />
+    <Compile Include="Models\Base\TreeItem.cs" />
     <Compile Include="Models\CombinationModel.cs" />
+    <Compile Include="Models\ProgramFolderModel.cs" />
     <Compile Include="Models\ProgramSubjectModel.cs" />
     <Compile Include="Enums\StudyUnitType.cs" />
     <Compile Include="Helpers\ConnectInternetChecker.cs" />
@@ -433,11 +432,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\DialogViews\SaveDialogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SessionInputWindow.xaml">
+    <Page Include="Dialogs\DialogViews\SessionInputUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

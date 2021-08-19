@@ -2,7 +2,6 @@
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Dialogs.DialogResults;
-using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
 using cs4rsa.Dialogs.Implements;
 using cs4rsa.Helpers;
@@ -46,6 +45,8 @@ namespace cs4rsa.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<ProgramFolderModel> ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
 
         private ObservableCollection<ProgramSubjectModel> _programSubjectModels = new ObservableCollection<ProgramSubjectModel>();
         public ObservableCollection<ProgramSubjectModel> ProgramSubjectModels
@@ -241,7 +242,6 @@ namespace cs4rsa.ViewModels
 
         private void OnGen(object obj)
         {
-
             // Gen cấu hình đầu tiên là tiền đề là các cấu hình tiếp theo.
             int subjectModelsCount = _subjectModels.Count();
             int countGen = 0;
@@ -250,19 +250,17 @@ namespace cs4rsa.ViewModels
             CombinationModel combinationModel;
             List<ClassGroupModel> nextCombi;
 
-            if (Gen<ClassGroupModel>.IsLastCombination(currentCombi, subjectModelsCount, _classGroupModelContainer)
-                && subjectModelsCount > 0)
-            {
-                MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage("Đã đến cấu hình cuối"));
-                return;
-            }
-
             do
             {
                 if (IsHaveFirstCombiOrMore() || currentCombi.Count() > 0)
                 {
-                    if (countGen<=countValidGen)
+                    if (countGen <= countValidGen)
                         currentCombi = _combinationModels.Last().ClassGroupModels;
+                    if (Gen<ClassGroupModel>.IsLastCombination(currentCombi, subjectModelsCount, _classGroupModelContainer))
+                    {
+                        MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage("Đã đến cấu hình cuối"));
+                        return;
+                    }
                     nextCombi = Gen<ClassGroupModel>.GenNext(currentCombi, subjectModelsCount, _classGroupModelContainer);
                     combinationModel = new CombinationModel(_subjectModels.ToList(), nextCombi);
                 }
@@ -273,7 +271,8 @@ namespace cs4rsa.ViewModels
                 }
 
                 countGen++;
-                currentCombi = nextCombi;
+                currentCombi = new List<ClassGroupModel>(nextCombi);
+                System.Console.WriteLine("Gen");
             }
             while (!combinationModel.IsValid());
 
@@ -345,12 +344,11 @@ namespace cs4rsa.ViewModels
             if (result != null)
             {
                 _programDiagram = result.ProgramDiagram;
-                List<ProgramSubject> programSubjects = _programDiagram.GetAllProSubject();
-                _programSubjectModels.Clear();
-                foreach (ProgramSubject subject in programSubjects)
+                ProgramFolderModels.Clear();
+                foreach(ProgramFolder programFolder in _programDiagram.ProgramFolders)
                 {
-                    ProgramSubjectModel proSubjectModel = new ProgramSubjectModel(subject, _programDiagram);
-                    _programSubjectModels.Add(proSubjectModel);
+                    ProgramFolderModel programFolderModel = new ProgramFolderModel(programFolder);
+                    ProgramFolderModels.Add(programFolderModel);
                 }
             }
         }

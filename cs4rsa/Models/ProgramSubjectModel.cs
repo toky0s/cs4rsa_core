@@ -1,10 +1,12 @@
-﻿using cs4rsa.BasicData;
-using cs4rsa.Database;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cs4rsa.BasicData;
+using cs4rsa.Database;
+using cs4rsa.Models.Base;
 
 namespace cs4rsa.Models
 {
@@ -14,10 +16,9 @@ namespace cs4rsa.Models
     /// làm được vì nó chỉ chứa thông tin của chính nó mà không có tương tác nào với các Folder hay Subject
     /// khác trong cây.
     /// </summary>
-    public class ProgramSubjectModel
+    public class ProgramSubjectModel: TreeItem
     {
         private ProgramSubject _programSubject;
-        private ProgramDiagram _diagram;
 
         private string _subjectCode;
         public string SubjectCode
@@ -87,16 +88,14 @@ namespace cs4rsa.Models
         }
 
         public bool IsDone => _programSubject.IsDone();
-        public bool IsFolderCompleted => FolderContainThisSubjectIsCompleted();
-        public bool IsCanChoice => CanChoice();
+        public bool IsFolderCompleted => false; // FolderContainThisSubjectIsCompleted();
+        public bool IsCanChoice => true; // CanChoice();
         public string CourseId => _programSubject.CourseId;
         public string ChildOfNode => _programSubject.ChildOfNode;
 
-        public ProgramSubjectModel(ProgramSubject programSubject, ProgramDiagram diagram)
+        public ProgramSubjectModel(ProgramSubject programSubject):base(programSubject.SubjectName, programSubject.Id)
         {
             _programSubject = programSubject;
-            _diagram = diagram;
-
             _subjectCode = programSubject.SubjectCode;
             _subjectName = programSubject.SubjectName;
             _folderName = programSubject.ParrentNodeName;
@@ -116,43 +115,43 @@ namespace cs4rsa.Models
         /// Kiểm tra xem folder chứa Subject này đã hoàn thành hay chưa.
         /// </summary>
         /// <returns></returns>
-        public bool FolderContainThisSubjectIsCompleted()
-        {
-            ProgramFolder folder = _diagram.GetFolder(_folderName);
-            return folder.IsCompleted();
-        }
+        //public bool FolderContainThisSubjectIsCompleted()
+        //{
+        //    ProgramFolder folder = _diagram.GetFolder(_folderName);
+        //    return folder.IsCompleted();
+        //}
 
 
         /// <summary>
         /// Kiểm tra xem tất cả các môn tiên quyết của môn này đã hoàn thành hay chưa.
         /// </summary>
         /// <returns></returns>
-        public bool IsCompletedPreSubject()
-        {
-            bool flag = true;
-            foreach (string subjectCode in _programSubject.PrerequisiteSubjects)
-            {
-                ProgramSubject subject = _diagram.GetProgramSubject(subjectCode);
-                if (subject == null)
-                {
-                    return false;
-                }
-                if (!subject.IsDone())
-                    return false;
-            }
-            return flag;
-        }
+        //public bool IsCompletedPreSubject()
+        //{
+        //    bool flag = true;
+        //    foreach (string subjectCode in _programSubject.PrerequisiteSubjects)
+        //    {
+        //        ProgramSubject subject = _diagram.GetProgramSubject(subjectCode);
+        //        if (subject == null)
+        //        {
+        //            return false;
+        //        }
+        //        if (!subject.IsDone())
+        //            return false;
+        //    }
+        //    return flag;
+        //}
 
         /// <summary>
         /// Xác định xem Subject này có thể chọn hay không.
         /// </summary>
         /// <returns></returns>
-        public bool CanChoice()
-        {
-            return _programSubject.IsUnLearn() &&
-                !FolderContainThisSubjectIsCompleted() &&
-                IsCompletedPreSubject() &&
-                Cs4rsaDataView.IsExistsSubjectInThisSemester(_programSubject);
-        }
+        //public bool CanChoice()
+        //{
+        //    return _programSubject.IsUnLearn() &&
+        //        !FolderContainThisSubjectIsCompleted() &&
+        //        IsCompletedPreSubject() &&
+        //        Cs4rsaDataView.IsExistsSubjectInThisSemester(_programSubject);
+        //}
     }
 }

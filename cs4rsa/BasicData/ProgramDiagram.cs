@@ -10,6 +10,11 @@ namespace cs4rsa.BasicData
     public class ProgramDiagram
     {
         private List<ProgramFolder> _programFolders = new List<ProgramFolder>();
+        public List<ProgramFolder> ProgramFolders
+        {
+            get { return _programFolders; }
+            set { _programFolders = value; }
+        }
 
         public ProgramDiagram(ProgramFolder outlineRoot, ProgramFolder physicalEducationRoot,
                               ProgramFolder industryOutlineRoot, ProgramFolder specializedRoot)
