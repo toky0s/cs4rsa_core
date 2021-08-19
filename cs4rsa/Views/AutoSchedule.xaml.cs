@@ -26,10 +26,7 @@ namespace cs4rsa.Views
         public AutoSchedule()
         {
             InitializeComponent();
-            AutoScheduleViewModel vm = DataContext as AutoScheduleViewModel;
-            ListBoxSubjects.ItemsSource = vm.ProgramSubjectModels;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource);
-            view.Filter = Filter;
+            treeView.ItemsSource = (DataContext as AutoScheduleViewModel).ProgramFolderModels;
         }
 
         public void Load()
@@ -60,7 +57,7 @@ namespace cs4rsa.Views
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource).Refresh();
+            
         }
 
         private bool FilterShowing(ProgramSubjectModel subject)
@@ -86,7 +83,7 @@ namespace cs4rsa.Views
 
         private void ReloadSubjects(object sender, RoutedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(ListBoxSubjects.ItemsSource).Refresh();
+            
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)

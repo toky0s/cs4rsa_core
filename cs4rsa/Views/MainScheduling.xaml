@@ -1,62 +1,65 @@
-﻿<UserControl x:Class="cs4rsa.Views.MainScheduling"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:local="clr-namespace:cs4rsa.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:vm="clr-namespace:cs4rsa.ViewModels">
+﻿<UserControl
+    x:Class="cs4rsa.Views.MainScheduling"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:cs4rsa.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:cs4rsa.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <UserControl.DataContext>
-        <vm:MainSchedulingViewModel></vm:MainSchedulingViewModel>
+        <vm:MainSchedulingViewModel />
     </UserControl.DataContext>
     <Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <DockPanel>
-                    <Menu IsMainMenu="True" Height="26">
-                        <MenuItem Header="Thao tác" Height="20" Margin="0, 3, 0, 0">
-                            <MenuItem Header="Cập nhật cơ sở dữ liệu môn học"
-                                  Command="{Binding OpenUpdateWindowCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
-                            <MenuItem Header="Xuất dưới CS4RSA String..."
-                                  Command="{Binding OpenShareStringWindowCommand}"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"></MenuItem>
+                    <Menu Height="26" IsMainMenu="True">
+                        <MenuItem
+                            Height="20"
+                            Margin="0,3,0,0"
+                            Header="Thao tác">
+                            <MenuItem
+                                Command="{Binding OpenUpdateWindowCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                                Header="Cập nhật cơ sở dữ liệu môn học" />
+                            <MenuItem
+                                Command="{Binding OpenShareStringWindowCommand}"
+                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                                Header="Xuất dưới CS4RSA String..." />
                         </MenuItem>
                     </Menu>
                 </DockPanel>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                    <ColumnDefinition Width="1.2*"></ColumnDefinition>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                    <ColumnDefinition Width="2.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2.5*" />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0"
-                  Margin="10, 10, 0, 0">
-                    <local:SearchSession></local:SearchSession>
+                <Grid Grid.Column="0" Margin="10,10,0,0">
+                    <local:SearchSession />
                 </Grid>
-                <Grid Grid.Column="1"
-                  Margin="10, 10, 0, 0">
-                    <local:ClassGroupSession></local:ClassGroupSession>
+                <Grid Grid.Column="1" Margin="10,10,0,0">
+                    <local:ClassGroupSession />
                 </Grid>
-                <Grid Grid.Column="2"
-                  Margin="10, 10, 0, 0">
-                    <local:ChoicedSession></local:ChoicedSession>
+                <Grid Grid.Column="2" Margin="10,10,0,0">
+                    <local:ChoicedSession />
                 </Grid>
-                <Grid Grid.Column="3"
-                  Margin="10, 10, 0, 0">
-                    <local:ScheduleTable></local:ScheduleTable>
+                <Grid Grid.Column="3" Margin="10,10,0,0">
+                    <local:ScheduleTable />
                 </Grid>
             </Grid>
-            <StatusBar Grid.Row="2" >
+            <StatusBar Grid.Row="2">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Grid>
@@ -69,22 +72,23 @@
                     </ItemsPanelTemplate>
                 </StatusBar.ItemsPanel>
                 <StatusBarItem Grid.Column="0">
-                    <TextBlock x:Name="SemesterInfo"
-                       Margin="0, 2, 10, 2"
-                       HorizontalAlignment="Right"
-                       FontSize="10">
-                    <Run Text="{Binding CurrentSemesterInfo}"></Run>
-                    <Run Text="{Binding CurrentYearInfo}"></Run>
+                    <TextBlock
+                        x:Name="SemesterInfo"
+                        Margin="0,2,10,2"
+                        HorizontalAlignment="Right"
+                        FontSize="10">
+                        <Run Text="{Binding CurrentSemesterInfo}" />
+                        <Run Text="{Binding CurrentYearInfo}" />
                     </TextBlock>
                 </StatusBarItem>
                 <Separator Grid.Column="1" />
                 <StatusBarItem Grid.Column="2">
                     <TextBlock FontSize="10">
-                    <Run>Có </Run>
-                    <Run Text="{Binding TotalSubject}"></Run>
-                    <Run> môn với </Run>
-                    <Run Text="{Binding TotalCredit}"></Run>
-                    <Run> tín chỉ</Run>
+                        <Run>Có</Run>
+                        <Run Text="{Binding TotalSubject}" />
+                        <Run>môn với</Run>
+                        <Run Text="{Binding TotalCredit}" />
+                        <Run>tín chỉ</Run>
                     </TextBlock>
                 </StatusBarItem>
             </StatusBar>
