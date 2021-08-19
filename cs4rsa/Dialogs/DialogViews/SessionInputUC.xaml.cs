@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace cs4rsa.Dialogs.DialogViews
 {
     /// <summary>
-    /// Interaction logic for SaveDialogWindow.xaml
+    /// Interaction logic for SessionInputUC.xaml
     /// </summary>
-    public partial class SaveDialogWindow : Window
+    public partial class SessionInputUC : UserControl
     {
-        public SaveDialogWindow()
+        public SessionInputUC()
         {
             InitializeComponent();
         }
