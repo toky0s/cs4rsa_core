@@ -67,9 +67,18 @@ namespace cs4rsa.ViewModels
         private void OnFind(object obj)
         {
             Cs4rsaMessageBox messageBox = new Cs4rsaMessageBox();
-            SessionInputViewModel vm = new SessionInputViewModel(_sessionId, messageBox);
-            SessionInputWindow loginWindow = new SessionInputWindow();
-            DialogService<StudentResult>.OpenDialog(vm, loginWindow, obj as Window);
+            SessionInputUC sessionInputUC = new SessionInputUC();
+            SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
+            vm.MessageBox = messageBox;
+            vm.SessionId = _sessionId;
+            vm.CloseDialogCallback = CloseDialogAndHandleStudentResult;
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(sessionInputUC);
+            vm.Find();
+        }
+
+        private void CloseDialogAndHandleStudentResult(StudentResult obj)
+        {
+            (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
             LoadStudentInfos();
         }
 
