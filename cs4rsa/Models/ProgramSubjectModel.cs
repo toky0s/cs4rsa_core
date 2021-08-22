@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cs4rsa.BasicData;
 using cs4rsa.Database;
+using cs4rsa.Enums;
 using cs4rsa.Models.Base;
 
 namespace cs4rsa.Models
@@ -87,6 +88,15 @@ namespace cs4rsa.Models
             }
         }
 
+        private StudyState _studyState;
+
+        public StudyState StudyState
+        {
+            get { return _studyState; }
+            set { _studyState = value; }
+        }
+
+
         public bool IsDone => _programSubject.IsDone();
         public bool IsFolderCompleted => false; // FolderContainThisSubjectIsCompleted();
         public bool IsCanChoice => true; // CanChoice();
@@ -99,6 +109,8 @@ namespace cs4rsa.Models
             _subjectCode = programSubject.SubjectCode;
             _subjectName = programSubject.SubjectName;
             _folderName = programSubject.ParrentNodeName;
+            _studyState = programSubject.StudyState;
+            NodeType = programSubject.GetNodeType();
             _color = ColorGenerator.GetColor(programSubject.CourseId);
         }
 

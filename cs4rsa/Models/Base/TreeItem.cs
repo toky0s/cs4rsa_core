@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using cs4rsa.Enums;
 
 namespace cs4rsa.Models.Base
 {
@@ -13,6 +9,7 @@ namespace cs4rsa.Models.Base
     {
         public string Name { get; set; }
         public string Id { get; set; }
+        public NodeType NodeType { get; set; }
 
         public TreeItem(string name, string id)
         {

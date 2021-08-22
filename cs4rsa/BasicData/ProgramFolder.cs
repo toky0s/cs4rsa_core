@@ -1,4 +1,5 @@
-﻿using cs4rsa.Interfaces;
+﻿using cs4rsa.Enums;
+using cs4rsa.Interfaces;
 using HtmlAgilityPack;
 using System.Collections.Generic;
 
@@ -25,6 +26,7 @@ namespace cs4rsa.BasicData
         private List<ProgramSubject> _childProgramSubjects = new List<ProgramSubject>();
         private readonly string _rawHtml;
         private readonly StudyMode _studyMode;
+        private readonly string _description;
 
         public string Id => _id;
         public string ChildOfNode => _childOfNode;
@@ -32,6 +34,7 @@ namespace cs4rsa.BasicData
         public List<ProgramFolder> ChildProgramFolders => _childProgramFolders;
         public List<ProgramSubject> ChildProgramSubjects => _childProgramSubjects;
         public StudyMode StudyMode => _studyMode;
+        public string Description => _description;
         public string RawHtml => _rawHtml;
 
         /// <summary>
@@ -44,13 +47,15 @@ namespace cs4rsa.BasicData
         /// <param name="isRoot">Là node gốc.</param>
         /// <param name="nodeId">Id node.</param>
         /// <param name="childOfNode">Id của node cha.</param>
+        /// <param name="description">Mô tả thư mục.</param>
         /// <param name="rawHtml">Html gốc.</param>
-        public ProgramFolder(string name, StudyMode studyMode, string nodeId, string childOfNode, string rawHtml)
+        public ProgramFolder(string name, StudyMode studyMode, string nodeId, string childOfNode, string description, string rawHtml)
         {
             _id = nodeId;
             _childOfNode = childOfNode;
             _name = name;
             _studyMode = studyMode;
+            _description = description;
             _rawHtml = rawHtml;
         }
 
@@ -96,6 +101,17 @@ namespace cs4rsa.BasicData
             return flag;
         }
 
+
+        private static bool ThisProgramSubjectIsCompleted(List<IProgramNode> subjects, int mustLearn)
+        {
+            foreach (ProgramSubject item in subjects)
+            {
+                if (item.IsDone() || item.StudyState == StudyState.NoHavePoint)
+                    mustLearn--;
+            }
+            if (mustLearn == 0) return true;
+            return false;
+        }
 
         /// <summary>
         /// Trả về số lượng môn cần học để hoàn thành folder này.
@@ -147,16 +163,6 @@ namespace cs4rsa.BasicData
             return programSubjects;
         }
 
-        private static bool ThisProgramSubjectIsCompleted(List<IProgramNode> subjects, int mustLearn)
-        {
-            foreach (ProgramSubject item in subjects)
-            {
-                if (item.IsDone() || item.StudyState == StudyState.NoHavePoint)
-                    mustLearn--;
-            }
-            if (mustLearn == 0) return true;
-            return false;
-        }
 
         private List<ProgramSubject> GetCompletedProSubjects()
         {
@@ -295,6 +301,16 @@ namespace cs4rsa.BasicData
             _childProgramSubjects.AddRange(nodes);
         }
 
+
+        /// <summary>
+        /// Trả về mô tả của Folder là Chọn k trong n môn hoặc Bắt buộc.
+        /// </summary>
+        /// <returns></returns>
+        public string GetDescription()
+        {
+            return "";
+        }
+
         public override bool Equals(object obj)
         {
             ProgramFolder folder = obj as ProgramFolder;
@@ -304,6 +320,11 @@ namespace cs4rsa.BasicData
         public override int GetHashCode()
         {
             return _id.GetHashCode();
+        }
+
+        public NodeType GetNodeType()
+        {
+            return NodeType.Folder;
         }
     }
 }

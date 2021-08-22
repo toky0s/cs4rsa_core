@@ -35,50 +35,9 @@ namespace cs4rsa.Views
             vm.LoadProgramSubject();
         }
 
-        private bool Filter(object item)
-        {
-            ProgramSubjectModel subject = item as ProgramSubjectModel;
-            return SubjectFilter(item)
-                && FilterShowing(subject);
-        }
-
-        private bool SubjectFilter(object item)
-        {
-            if (string.IsNullOrEmpty(TextBoxSubjectName.Text))
-                return true;
-            else
-            {
-                ProgramSubjectModel subject = item as ProgramSubjectModel;
-                return (subject.SubjectName.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (subject.SubjectCode.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (subject.FolderName.IndexOf(TextBoxSubjectName.Text, StringComparison.OrdinalIgnoreCase) >= 0);                    
-            }
-        }
-
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             
-        }
-
-        private bool FilterShowing(ProgramSubjectModel subject)
-        {
-            if (RadioButtonCanChoice.IsChecked.Value == true)
-            {
-                return subject.IsCanChoice;
-            }
-            if (RadioButtonDoneSubject.IsChecked.Value == true)
-            {
-                return subject.IsDone;
-            }
-            if (RadioButtonUnCompletedFolder.IsChecked.Value == true)
-            {
-                return !subject.IsFolderCompleted;
-            }
-            if (RadioButtonAvailableSubject.IsChecked.Value == true)
-            {
-                return subject.IsAvaiableInThisSemester();
-            }
-            return true;
         }
 
         private void ReloadSubjects(object sender, RoutedEventArgs e)
@@ -96,6 +55,11 @@ namespace cs4rsa.Views
         {
             var window  = sender as Window;
             window.Topmost = true;
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue as ProgramSubjectModel;
         }
     }
 }

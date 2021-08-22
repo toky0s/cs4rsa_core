@@ -26,6 +26,21 @@ namespace cs4rsa.Models
             set { _folderName = value; }
         }
 
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+
+        private bool _isCompleted;
+        public bool IsCompleted
+        {
+            get { return _isCompleted; }
+            set { _isCompleted = value; }
+        }
+
+
         public ProgramFolderModel(ProgramFolder programFolder):base(programFolder.Name, programFolder.Id)
         {
             List<ProgramFolderModel> folders = programFolder.ChildProgramFolders
@@ -51,6 +66,9 @@ namespace cs4rsa.Models
             }
 
             _folderName = programFolder.Name;
+            _description = programFolder.Description;
+            _isCompleted = programFolder.IsCompleted();
+            NodeType = programFolder.GetNodeType();
         }
     }
 }

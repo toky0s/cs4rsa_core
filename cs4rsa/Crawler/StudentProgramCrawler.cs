@@ -177,20 +177,29 @@ namespace cs4rsa.Crawler
 
                 HtmlNode studyModeSpanNode = docNode.SelectSingleNode("//span/span");
                 StudyMode studyMode;
+                string description;
                 if (studyModeSpanNode != null)
                 {
                     string studyModeText = studyModeSpanNode.InnerText;
                     if (studyModeText.Equals("(Bắt buộc)"))
+                    {
                         studyMode = StudyMode.Compulsory;
+                        description = "Bắt buộc";
+                    }
                     else
+                    {
                         studyMode = StudyMode.AllowSelection;
+                        description = studyModeText;
+                    }
                 }
                 else
+                {
                     studyMode = StudyMode.Compulsory;
-
+                    description = "Bắt buộc";
+                }
                 string name = GetNameFolderNode(htmlNode);
 
-                ProgramFolder folder = new ProgramFolder(name, studyMode, id, childOfNode, htmlNode.InnerHtml);
+                ProgramFolder folder = new ProgramFolder(name, studyMode, id, childOfNode, description, htmlNode.InnerHtml);
                 programFolders.Add(folder);
             }
             return programFolders;

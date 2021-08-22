@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cs4rsa.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace cs4rsa.Interfaces
     {
         string GetIdNode();
         string GetChildOfNode();
+        NodeType GetNodeType();
     }
 }

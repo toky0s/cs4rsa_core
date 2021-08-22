@@ -345,7 +345,7 @@ namespace cs4rsa.ViewModels
             {
                 _programDiagram = result.ProgramDiagram;
                 ProgramFolderModels.Clear();
-                foreach(ProgramFolder programFolder in _programDiagram.ProgramFolders)
+                foreach (ProgramFolder programFolder in _programDiagram.ProgramFolders)
                 {
                     ProgramFolderModel programFolderModel = new ProgramFolderModel(programFolder);
                     ProgramFolderModels.Add(programFolderModel);
@@ -355,7 +355,7 @@ namespace cs4rsa.ViewModels
 
         private bool CanAdd()
         {
-            return true;
+            return _selectedProSubject != null;
         }
 
         private bool CanShowOnSimu()
@@ -429,21 +429,15 @@ namespace cs4rsa.ViewModels
 
         private void OnAddSubject(object obj)
         {
-            if (obj != null)
+            if (_selectedProSubject != null)
             {
-                ProgramSubjectModel programSubjectModel = obj as ProgramSubjectModel;
-                _choicedProSubjectModels.Add(programSubjectModel);
+                _choicedProSubjectModels.Add(_selectedProSubject);
+                SubjectDownloadCommand.RaiseCanExecuteChanged();
+                AddCommand.RaiseCanExecuteChanged();
+                DeleteAllCommand.RaiseCanExecuteChanged();
+                UpdateCreditCount();
+                UpdateChoicedCount();
             }
-            else
-            {
-                if (_selectedProSubject != null)
-                    _choicedProSubjectModels.Add(_selectedProSubject);
-            }
-            SubjectDownloadCommand.RaiseCanExecuteChanged();
-            AddCommand.RaiseCanExecuteChanged();
-            DeleteAllCommand.RaiseCanExecuteChanged();
-            UpdateCreditCount();
-            UpdateChoicedCount();
         }
 
         private void UpdateChoicedCount()

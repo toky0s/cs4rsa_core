@@ -25,6 +25,9 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <Style x:Key="HorizontalDividerBorder" TargetType="{x:Type Border}">
                 <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
                 <Setter Property="UseLayoutRounding" Value="True" />
@@ -35,6 +38,8 @@
             <vmConverter:ConflictModelConverter x:Key="ConflictInfoConverter" />
             <vmConverter:ConflictTypeConverter x:Key="ConflictTypeConverter" />
             <vmConverter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
+            <vmConverter:StudyStateConverter x:Key="StudyStateConverter" />
+            <vmConverter:NodeTypeConverter x:Key="NodeTypeConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -83,7 +88,7 @@
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="1.7*" />
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition Width="1*" />
@@ -102,22 +107,74 @@
                 <TreeView
                     x:Name="treeView"
                     Grid.Row="1"
-                    FontSize="10"
-                    ItemsSource="{Binding}">
-                    <TreeView.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="IsExpanded" Value="True" />
-                        </Style>
-                    </TreeView.ItemContainerStyle>
+                    HorizontalContentAlignment="Stretch"
+                    FontSize="12"
+                    ItemsSource="{Binding}"
+                    SelectedItemChanged="TreeView_SelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding FolderName}" />
+                            <HierarchicalDataTemplate.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="True" />
+                                </Style>
+                            </HierarchicalDataTemplate.ItemContainerStyle>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse
+                                        Width="8"
+                                        Height="8"
+                                        Margin="0,0,5,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="Red" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                        <Setter Property="Fill" Value="Green" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding FolderName}" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Description}" />
                             </StackPanel>
                         </HierarchicalDataTemplate>
 
                         <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
                             <StackPanel Orientation="Horizontal">
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu Loaded="ContextMenu_Opened">
+                                        <MenuItem
+                                            Command="{Binding AddCommand}"
+                                            CommandParameter="{Binding SubjectCode}"
+                                            Header="Thêm" />
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <Ellipse
+                                    Width="8"
+                                    Height="8"
+                                    Margin="0,0,5,0">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="Red" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
+                                                    <Setter Property="Fill" Value="Green" />
+                                                    <Setter Property="ToolTip" Value="Đã học" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
+                                                    <Setter Property="Fill" Value="Yellow" />
+                                                    <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=UnLearned}" Value="True">
+                                                    <Setter Property="Fill" Value="Red" />
+                                                    <Setter Property="ToolTip" Value="Chưa học" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
                                 <TextBlock Text="{Binding SubjectCode}" />
                                 <TextBlock Text=" - " />
                                 <TextBlock Text="{Binding SubjectName}" />
@@ -126,35 +183,31 @@
                             </StackPanel>
                         </DataTemplate>
                     </TreeView.Resources>
-                </TreeView>
-                <TextBox
-                    x:Name="TextBoxSubjectName"
-                    Grid.Row="2"
-                    Height="40"
-                    Margin="0,5,0,5"
-                    materialDesign:HintAssist.Hint="Tìm kiếm"
-                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                    TextChanged="TextBox_TextChanged" />
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Button
-                        Grid.Column="0"
-                        Height="30"
-                        Margin="0,0,5,0"
-                        Command="{Binding AddCommand}"
-                        Content="Thêm"
-                        Foreground="White" />
-                    <Button
-                        Grid.Column="1"
-                        Height="30"
-                        Command="{Binding AddCommand}"
-                        Content="Thêm nhanh"
-                        Foreground="White" />
-                </Grid>
 
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+                <materialDesign:PopupBox
+                    Grid.Row="1"
+                    Margin="32"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}">
+                    <StackPanel>
+                        <Button Content="{materialDesign:PackIcon Kind=OpenInApp, Size=20}" ToolTip="Mở trong trình duyệt" />
+
+                        <Button
+                            Background="{DynamicResource PrimaryHueMidBrush}"
+                            Command="{Binding AddCommand}"
+                            Content="{materialDesign:PackIcon Kind=Plus,
+                                                              Size=20}"
+                            Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"
+                            ToolTip="Thêm" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
             </Grid>
             <Grid Grid.Column="1">
                 <TextBlock Text="Bộ lọc" />
@@ -268,34 +321,6 @@
                                         Content="Đặt lại bộ lọc"
                                         Foreground="White"
                                         Style="{StaticResource MaterialDesignRaisedButton}" />
-                                </StackPanel>
-                            </GroupBox>
-                            <GroupBox x:Name="GroupBoxDisplay">
-                                <GroupBox.Header>
-                                    <TextBlock Foreground="White" Text="Hiển thị" />
-                                </GroupBox.Header>
-                                <StackPanel>
-                                    <RadioButton
-                                        x:Name="RadioButtonAll"
-                                        Click="ReloadSubjects"
-                                        Content="Tất cả"
-                                        IsChecked="True" />
-                                    <RadioButton
-                                        x:Name="RadioButtonCanChoice"
-                                        Click="ReloadSubjects"
-                                        Content="Có thể chọn" />
-                                    <RadioButton
-                                        x:Name="RadioButtonDoneSubject"
-                                        Click="ReloadSubjects"
-                                        Content="Đã học qua" />
-                                    <RadioButton
-                                        x:Name="RadioButtonAvailableSubject"
-                                        Click="ReloadSubjects"
-                                        Content="Có sẵn trong kỳ này" />
-                                    <RadioButton
-                                        x:Name="RadioButtonUnCompletedFolder"
-                                        Click="ReloadSubjects"
-                                        Content="Thuộc thư mục chưa hoàn thành" />
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox>

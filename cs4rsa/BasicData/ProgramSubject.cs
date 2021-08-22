@@ -126,5 +126,10 @@ namespace cs4rsa.BasicData
             ProgramSubject other = obj as ProgramSubject;
             return Id.CompareTo(other.Id);
         }
+
+        public NodeType GetNodeType()
+        {
+            return NodeType.Subject;
+        }
     }
 }
