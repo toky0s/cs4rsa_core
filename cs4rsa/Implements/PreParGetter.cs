@@ -27,9 +27,21 @@ namespace cs4rsa.Implements
             }
             else
             {
+                /// TO DO: Cào từ Courses
                 string courseId = (string)parameters[0];
-                List<string> preSubjects = Cs4rsaDataView.GetPreSubjects(courseId);
-                List<string> parSubjects = Cs4rsaDataView.GetParSubjects(courseId);
+                DtuSubjectCrawler dtuStudentInfoCrawler = new DtuSubjectCrawler(courseId);
+                List<string> parSubjects;
+                List<string> preSubjects;
+                if (dtuStudentInfoCrawler.IsAvailableSubject)
+                {
+                    parSubjects = dtuStudentInfoCrawler.ParallelSubjects;
+                    preSubjects = dtuStudentInfoCrawler.PrerequisiteSubjects;
+                }
+                else
+                {
+                    preSubjects = Cs4rsaDataView.GetPreSubjects(courseId);
+                    parSubjects = Cs4rsaDataView.GetParSubjects(courseId);
+                }
                 return new PreParSubject(preSubjects, parSubjects);
             }
         }

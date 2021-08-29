@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 namespace cs4rsa.Enums
 {
     /// <summary>
-    /// Xác định một StudentModel được get từ Database
-    /// hay từ MyDTU.
+    /// Liên quan đến một số xử lý của trình parse mã môn.
     /// </summary>
     public enum GetFrom
     {
-        Database,
+        Course,
         MyDTU
     }
 }

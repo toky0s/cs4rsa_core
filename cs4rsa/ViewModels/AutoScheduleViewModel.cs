@@ -32,34 +32,11 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private int _progressValue;
-        public int ProgressValue
-        {
-            get
-            {
-                return _progressValue;
-            }
-            set
-            {
-                _progressValue = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<ProgramFolderModel> ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
-
-        private ObservableCollection<ProgramSubjectModel> _programSubjectModels = new ObservableCollection<ProgramSubjectModel>();
-        public ObservableCollection<ProgramSubjectModel> ProgramSubjectModels
-        {
-            get
-            {
-                return _programSubjectModels;
-            }
-            set
-            {
-                _programSubjectModels = value;
-            }
-        }
+        public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
+        public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
+        public ObservableCollection<CombinationModel> CombinationModels { get; set; }
+        public ObservableCollection<SubjectModel> SubjectModels { get; set; }
+        public List<ClassGroupModel> ClassGroupModelContainer { get; set; }
 
         private ProgramSubjectModel _selectedProSubject;
         public ProgramSubjectModel SelectedProSubject
@@ -71,20 +48,8 @@ namespace cs4rsa.ViewModels
             set
             {
                 _selectedProSubject = value;
+                OnPropertyChanged();
                 AddCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        private ObservableCollection<ProgramSubjectModel> _choicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
-        public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels
-        {
-            get
-            {
-                return _choicedProSubjectModels;
-            }
-            set
-            {
-                _choicedProSubjectModels = value;
             }
         }
 
@@ -100,34 +65,6 @@ namespace cs4rsa.ViewModels
                 _selectedProSubjectInChoiced = value;
                 OnPropertyChanged();
             }
-        }
-
-        private ObservableCollection<CombinationModel> _combinationModels = new ObservableCollection<CombinationModel>();
-        public ObservableCollection<CombinationModel> CombinationModels
-        {
-            get
-            {
-                return _combinationModels;
-            }
-            set
-            {
-                _combinationModels = value;
-            }
-        }
-
-        private ObservableCollection<SubjectModel> _subjectModels = new ObservableCollection<SubjectModel>();
-        public ObservableCollection<SubjectModel> SubjectModels
-        {
-            get { return _subjectModels; }
-            set { _subjectModels = value; }
-        }
-
-        private List<ClassGroupModel> _classGroupModelContainer = new List<ClassGroupModel>();
-
-        public List<ClassGroupModel> ClassGroupModelContainer
-        {
-            get { return _classGroupModelContainer; }
-            set { _classGroupModelContainer = value; }
         }
 
         private CombinationModel _selectedCombinationModel;
@@ -215,9 +152,14 @@ namespace cs4rsa.ViewModels
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
 
-
         public AutoScheduleViewModel()
         {
+            ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
+            ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
+            CombinationModels = new ObservableCollection<CombinationModel>();
+            SubjectModels = new ObservableCollection<SubjectModel>();
+            ClassGroupModelContainer = new List<ClassGroupModel>();
+
             ChoiceAccountCommand = new RelayCommand(OnChoiceAccountCommand);
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             SubjectDownloadCommand = new RelayCommand(OnDownload, CanDownload);
@@ -234,16 +176,16 @@ namespace cs4rsa.ViewModels
 
         private void UpdateClassGroupModelContainer()
         {
-            foreach (SubjectModel subjectModel in _subjectModels)
+            foreach (SubjectModel subjectModel in SubjectModels)
             {
-                _classGroupModelContainer.AddRange(subjectModel.ClassGroupModels);
+                ClassGroupModelContainer.AddRange(subjectModel.ClassGroupModels);
             }
         }
 
         private void OnGen(object obj)
         {
             // Gen cấu hình đầu tiên là tiền đề là các cấu hình tiếp theo.
-            int subjectModelsCount = _subjectModels.Count();
+            int subjectModelsCount = SubjectModels.Count();
             int countGen = 0;
             int countValidGen = 0;
             List<ClassGroupModel> currentCombi = new List<ClassGroupModel>();
@@ -255,28 +197,27 @@ namespace cs4rsa.ViewModels
                 if (IsHaveFirstCombiOrMore() || currentCombi.Count() > 0)
                 {
                     if (countGen <= countValidGen)
-                        currentCombi = _combinationModels.Last().ClassGroupModels;
-                    if (Gen<ClassGroupModel>.IsLastCombination(currentCombi, subjectModelsCount, _classGroupModelContainer))
+                        currentCombi = CombinationModels.Last().ClassGroupModels;
+                    if (Gen<ClassGroupModel>.IsLastCombination(currentCombi, subjectModelsCount, ClassGroupModelContainer))
                     {
                         MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage("Đã đến cấu hình cuối"));
                         return;
                     }
-                    nextCombi = Gen<ClassGroupModel>.GenNext(currentCombi, subjectModelsCount, _classGroupModelContainer);
-                    combinationModel = new CombinationModel(_subjectModels.ToList(), nextCombi);
+                    nextCombi = Gen<ClassGroupModel>.GenNext(currentCombi, subjectModelsCount, ClassGroupModelContainer);
+                    combinationModel = new CombinationModel(SubjectModels.ToList(), nextCombi);
                 }
                 else
                 {
-                    nextCombi = Gen<ClassGroupModel>.GenFirst(subjectModelsCount, _classGroupModelContainer);
-                    combinationModel = new CombinationModel(_subjectModels.ToList(), nextCombi);
+                    nextCombi = Gen<ClassGroupModel>.GenFirst(subjectModelsCount, ClassGroupModelContainer);
+                    combinationModel = new CombinationModel(SubjectModels.ToList(), nextCombi);
                 }
 
                 countGen++;
                 currentCombi = new List<ClassGroupModel>(nextCombi);
-                System.Console.WriteLine("Gen");
             }
             while (!combinationModel.IsValid());
 
-            _combinationModels.Add(combinationModel);
+            CombinationModels.Add(combinationModel);
             countValidGen++;
         }
 
@@ -286,12 +227,12 @@ namespace cs4rsa.ViewModels
         /// <returns></returns>
         private bool IsHaveFirstCombiOrMore()
         {
-            return _combinationModels.Count > 0;
+            return CombinationModels.Count > 0;
         }
 
         private void OnOpenInNewWindow(object obj)
         {
-            CombinationContainerWindow combinationContainerWindow = new CombinationContainerWindow(_combinationModels.ToList(), this);
+            CombinationContainerWindow combinationContainerWindow = new CombinationContainerWindow(CombinationModels.ToList(), this);
             combinationContainerWindow.Topmost = true;
             combinationContainerWindow.Show();
         }
@@ -309,9 +250,8 @@ namespace cs4rsa.ViewModels
             (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
             if (loginResult != null)
             {
-                _programSubjectModels.Clear();
-                _choicedProSubjectModels.Clear();
-                _combinationModels.Clear();
+                ChoicedProSubjectModels.Clear();
+                CombinationModels.Clear();
                 StudentModel = loginResult.StudentModel;
                 LoadProgramSubject();
             }
@@ -319,12 +259,12 @@ namespace cs4rsa.ViewModels
 
         private bool CanDeleteAll()
         {
-            return _choicedProSubjectModels.Count > 0;
+            return ChoicedProSubjectModels.Count > 0;
         }
 
         private void OnDeleteAll(object obj)
         {
-            _choicedProSubjectModels.Clear();
+            ChoicedProSubjectModels.Clear();
             DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
@@ -355,7 +295,11 @@ namespace cs4rsa.ViewModels
 
         private bool CanAdd()
         {
-            return _selectedProSubject != null;
+            return true;
+            return _selectedProSubject != null
+                && _selectedProSubject.IsAvaiable
+                && _selectedProSubject.IsDone == false
+                && !ChoicedProSubjectModels.Contains(_selectedProSubject);
         }
 
         private bool CanShowOnSimu()
@@ -373,12 +317,20 @@ namespace cs4rsa.ViewModels
 
         private bool CanDownload()
         {
-            return _choicedProSubjectModels.Count > 0;
+            return ChoicedProSubjectModels.Count > 0;
         }
 
         private void OnWatchDetail(object obj)
         {
-
+            ProSubjectDetailUC proSubjectDetailUC = new ProSubjectDetailUC();
+            ProSubjectDetailVM vm = proSubjectDetailUC.DataContext as ProSubjectDetailVM;
+            vm.ProgramDiagram = _programDiagram;
+            vm.ProgramSubjectModel = _selectedProSubject;
+            vm.AddCallback = OnAddSubject;
+            vm.CloseDialogCallback = (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog;
+            vm.LoadPreProSubjectModels();
+            vm.LoadParProSubjectModels();
+            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(proSubjectDetailUC);
         }
 
         private void OnGoToCourse(object obj)
@@ -394,7 +346,7 @@ namespace cs4rsa.ViewModels
 
         private void OnDelete(object obj)
         {
-            _choicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
+            ChoicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
             SubjectDownloadCommand.RaiseCanExecuteChanged();
             AddCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
@@ -404,10 +356,17 @@ namespace cs4rsa.ViewModels
 
         private void OnDownload(object obj)
         {
+            // to do: Xác định subject nào cần tải dựa vào phép trừ tập hợp
+            List<string> choiceSubjectCodes = ChoicedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode).ToList();
+            List<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode).ToList();
+            List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
+
+            List<ProgramSubjectModel> needDownload = ChoicedProSubjectModels.Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode)).ToList();
+
             AutoSortSubjectLoadUC autoSortSubjectLoadUC = new AutoSortSubjectLoadUC();
             AutoSortSubjectLoadVM vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadVM;
             vm.CloseDialogCallback += CloseDialogAndHandleDownloadResult;
-            vm.ProgramSubjectModels = ChoicedProSubjectModels.ToList();
+            vm.ProgramSubjectModels = needDownload;
             vm.Download();
             (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(autoSortSubjectLoadUC);
         }
@@ -417,21 +376,21 @@ namespace cs4rsa.ViewModels
             (App.Current.MainWindow.DataContext as MainViewModel).CloseDialog();
             foreach (SubjectModel subjectModel in subjectModels)
             {
-                _subjectModels.Add(subjectModel);
+                SubjectModels.Add(subjectModel);
             }
             UpdateClassGroupModelContainer();
         }
 
         private void UpdateCombinationCount()
         {
-            CombinationCount = _combinationModels.Count;
+            CombinationCount = CombinationModels.Count;
         }
 
         private void OnAddSubject(object obj)
         {
             if (_selectedProSubject != null)
             {
-                _choicedProSubjectModels.Add(_selectedProSubject);
+                ChoicedProSubjectModels.Add(SelectedProSubject);
                 SubjectDownloadCommand.RaiseCanExecuteChanged();
                 AddCommand.RaiseCanExecuteChanged();
                 DeleteAllCommand.RaiseCanExecuteChanged();
@@ -442,13 +401,13 @@ namespace cs4rsa.ViewModels
 
         private void UpdateChoicedCount()
         {
-            ChoicedCount = _choicedProSubjectModels.Count;
+            ChoicedCount = ChoicedProSubjectModels.Count;
         }
 
         private void UpdateCreditCount()
         {
             CreditCount = 0;
-            foreach (ProgramSubjectModel subjectModel in _choicedProSubjectModels)
+            foreach (ProgramSubjectModel subjectModel in ChoicedProSubjectModels)
                 CreditCount += subjectModel.StudyUnit;
         }
 
@@ -464,7 +423,7 @@ namespace cs4rsa.ViewModels
             {
                 int needLearn = programFolder.NeedLearnToComplete();
                 int hasChoiced = 0;
-                foreach (ProgramSubjectModel subjectModel in _choicedProSubjectModels)
+                foreach (ProgramSubjectModel subjectModel in ChoicedProSubjectModels)
                 {
                     if (subjectModel.ChildOfNode == programFolder.Id)
                         hasChoiced++;

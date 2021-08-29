@@ -19,7 +19,7 @@ namespace cs4rsa.Models
     /// </summary>
     public class ProgramSubjectModel: TreeItem
     {
-        private ProgramSubject _programSubject;
+        public ProgramSubject ProgramSubject { get; set; }
 
         private string _subjectCode;
         public string SubjectCode
@@ -79,8 +79,7 @@ namespace cs4rsa.Models
         {
             get
             {
-                return _studyUnit == 0 ? _programSubject.StudyUnit : _studyUnit;
-
+                return _studyUnit == 0 ? ProgramSubject.StudyUnit : _studyUnit;
             }
             set
             {
@@ -89,23 +88,20 @@ namespace cs4rsa.Models
         }
 
         private StudyState _studyState;
-
         public StudyState StudyState
         {
             get { return _studyState; }
             set { _studyState = value; }
         }
 
-
-        public bool IsDone => _programSubject.IsDone();
-        public bool IsFolderCompleted => false; // FolderContainThisSubjectIsCompleted();
-        public bool IsCanChoice => true; // CanChoice();
-        public string CourseId => _programSubject.CourseId;
-        public string ChildOfNode => _programSubject.ChildOfNode;
+        public bool IsDone => ProgramSubject.IsDone();
+        public bool IsAvaiable => IsAvaiableInThisSemester();
+        public string CourseId => ProgramSubject.CourseId;
+        public string ChildOfNode => ProgramSubject.ChildOfNode;
 
         public ProgramSubjectModel(ProgramSubject programSubject):base(programSubject.SubjectName, programSubject.Id)
         {
-            _programSubject = programSubject;
+            ProgramSubject = programSubject;
             _subjectCode = programSubject.SubjectCode;
             _subjectName = programSubject.SubjectName;
             _folderName = programSubject.ParrentNodeName;
@@ -118,52 +114,9 @@ namespace cs4rsa.Models
         /// Kiểm tra xem ProgramSubjectModel này có sẵn trong học kỳ này hay không.
         /// </summary>
         /// <returns></returns>
-        public bool IsAvaiableInThisSemester()
+        private bool IsAvaiableInThisSemester()
         {
-            return Cs4rsaDataView.IsExistsSubjectInThisSemester(_programSubject);
+            return Cs4rsaDataView.IsExistsSubjectInThisSemester(ProgramSubject);
         }
-
-        /// <summary>
-        /// Kiểm tra xem folder chứa Subject này đã hoàn thành hay chưa.
-        /// </summary>
-        /// <returns></returns>
-        //public bool FolderContainThisSubjectIsCompleted()
-        //{
-        //    ProgramFolder folder = _diagram.GetFolder(_folderName);
-        //    return folder.IsCompleted();
-        //}
-
-
-        /// <summary>
-        /// Kiểm tra xem tất cả các môn tiên quyết của môn này đã hoàn thành hay chưa.
-        /// </summary>
-        /// <returns></returns>
-        //public bool IsCompletedPreSubject()
-        //{
-        //    bool flag = true;
-        //    foreach (string subjectCode in _programSubject.PrerequisiteSubjects)
-        //    {
-        //        ProgramSubject subject = _diagram.GetProgramSubject(subjectCode);
-        //        if (subject == null)
-        //        {
-        //            return false;
-        //        }
-        //        if (!subject.IsDone())
-        //            return false;
-        //    }
-        //    return flag;
-        //}
-
-        /// <summary>
-        /// Xác định xem Subject này có thể chọn hay không.
-        /// </summary>
-        /// <returns></returns>
-        //public bool CanChoice()
-        //{
-        //    return _programSubject.IsUnLearn() &&
-        //        !FolderContainThisSubjectIsCompleted() &&
-        //        IsCompletedPreSubject() &&
-        //        Cs4rsaDataView.IsExistsSubjectInThisSemester(_programSubject);
-        //}
     }
 }

@@ -35,16 +35,6 @@ namespace cs4rsa.Views
             vm.LoadProgramSubject();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            
-        }
-
-        private void ReloadSubjects(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
             ContextMenu menu = sender as ContextMenu;
