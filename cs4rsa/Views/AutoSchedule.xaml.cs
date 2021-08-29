@@ -49,7 +49,14 @@ namespace cs4rsa.Views
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue as ProgramSubjectModel;
+            if (e.NewValue is ProgramSubjectModel)
+            {
+                (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue as ProgramSubjectModel;
+            }
+            else
+            {
+                (DataContext as AutoScheduleViewModel).SelectedProSubject = null;
+            }
         }
     }
 }

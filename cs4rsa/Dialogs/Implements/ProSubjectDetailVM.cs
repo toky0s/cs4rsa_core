@@ -95,10 +95,13 @@ namespace cs4rsa.Dialogs.Implements
 
         public void LoadParProSubjectModels()
         {
-            List<ProgramSubject> parProgramSubject = ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
-            foreach (ProgramSubject programSubject in parProgramSubject)
+            if (_programSubjectModel != null)
             {
-                ParProgramSubjectModels.Add(new ProgramSubjectModel(programSubject));
+                List<ProgramSubject> parProgramSubject = ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
+                foreach (ProgramSubject programSubject in parProgramSubject)
+                {
+                    ParProgramSubjectModels.Add(new ProgramSubjectModel(programSubject));
+                }
             }
         }
 

@@ -58,10 +58,10 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <Rectangle
-                HorizontalAlignment="Left"
                 Grid.Column="0"
                 Width="80"
-                Height="80">
+                Height="80"
+                HorizontalAlignment="Left">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding StudentModel.StudentInfo.Image, Converter={StaticResource Base64ImageConverter}}" Stretch="UniformToFill" />
                 </Rectangle.Fill>
@@ -234,8 +234,19 @@
                 </TreeView>
                 <materialDesign:Card
                     Grid.Row="2"
-                    Padding="5"
-                    Background="{Binding SelectedProSubject.Color}">
+                    Margin="0,5,0,0"
+                    Padding="5">
+                    <materialDesign:Card.Style>
+                        <Style TargetType="materialDesign:Card">
+                            <Setter Property="Background" Value="{Binding SelectedProSubject.Color}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedProSubject.IsAvaiable}" Value="False">
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </materialDesign:Card.Style>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
@@ -244,8 +255,20 @@
                         <StackPanel VerticalAlignment="Center" Orientation="Vertical">
                             <TextBlock
                                 Grid.Column="0"
-                                Text="{Binding SelectedProSubject.ProgramSubject.SubjectName, UpdateSourceTrigger=PropertyChanged}"
-                                TextWrapping="WrapWithOverflow" />
+                                Margin="5,0,5,0"
+                                TextWrapping="WrapWithOverflow">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding SelectedProSubject.ProgramSubject.SubjectName, UpdateSourceTrigger=PropertyChanged}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedProSubject}" Value="{x:Null}">
+                                                <Setter Property="Text" Value="Hãy chọn một môn..." />
+                                                <Setter Property="FontStyle" Value="Italic" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </StackPanel>
                         <StackPanel
                             Grid.Column="1"
