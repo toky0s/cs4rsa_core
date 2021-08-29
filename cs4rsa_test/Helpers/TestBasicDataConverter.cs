@@ -28,7 +28,7 @@ namespace cs4rsa_test.Helpers
         public void TestConvertPlace3()
         {
             Place output = BasicDataConverter.ToPlace("254 Nguyễn Văn Linh");
-            Assert.AreEqual(Place.PHANTHANH, output);
+            Assert.AreEqual(Place.NVL_254, output);
         }
         [Test]
         public void TestConvertPlace4()

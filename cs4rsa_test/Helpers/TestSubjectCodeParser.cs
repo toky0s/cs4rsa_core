@@ -14,7 +14,7 @@ namespace cs4rsa_test.Helpers
         [Test]
         public void ParseSubjectCode1()
         {
-            List<string> subjectCodes = SubjectCodeParser.GetSubjectCodes("CS 211 - Lập Trình Cơ Sở, IS 301 - Cơ Sở Dữ Liệu");
+            List<string> subjectCodes = SubjectCodeParser.GetSubjectCodes("CS 211 - Lập Trình Cơ Sở, IS 301 - Cơ Sở Dữ Liệu", cs4rsa.Enums.GetFrom.MyDTU);
             Assert.AreEqual("CS 211", subjectCodes[0]);
             Assert.AreEqual("IS 301", subjectCodes[1]);
         }
@@ -22,21 +22,21 @@ namespace cs4rsa_test.Helpers
         [Test]
         public void ParseSubjectCode2()
         {
-            List<string> test = SubjectCodeParser.GetSubjectCodes("(Không có môn song hành)");
-            Assert.AreEqual(null, test);
+            List<string> test = SubjectCodeParser.GetSubjectCodes("(Không có môn song hành)", cs4rsa.Enums.GetFrom.MyDTU);
+            Assert.AreEqual(0, test.Count);
         }
 
         [Test]
         public void ParseSubjectCode3()
         {
-            List<string> test = SubjectCodeParser.GetSubjectCodes("JAP 202 - Nhật Ngữ Trung Cấp 2");
+            List<string> test = SubjectCodeParser.GetSubjectCodes("JAP 202 - Nhật Ngữ Trung Cấp 2", cs4rsa.Enums.GetFrom.MyDTU);
             Assert.AreEqual("JAP 202", test[0]);
         }
 
         [Test]
         public void ParseSubjectCode4()
         {
-            List<string> test = SubjectCodeParser.GetSubjectCodes("CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng");
+            List<string> test = SubjectCodeParser.GetSubjectCodes("CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng", cs4rsa.Enums.GetFrom.MyDTU);
             Assert.AreEqual("CS 366", test[0]);
             Assert.AreEqual("CS 372", test[1]);
             Assert.AreEqual("CS 376", test[2]);

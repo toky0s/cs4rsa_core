@@ -65,10 +65,7 @@
     <Compile Include="BasicData\TestSubject.cs" />
     <Compile Include="Crawler\InfoForTest.cs" />
     <Compile Include="Crawler\TestCurIdCrawler.cs" />
-    <Compile Include="Crawler\TestDisciplineData.cs" />
     <Compile Include="Crawler\TestDTUSubjectCrawler.cs" />
-    <Compile Include="Crawler\TestHomeCourseSearch.cs" />
-    <Compile Include="Crawler\TestMetaDataCrawler.cs" />
     <Compile Include="Crawler\TestScheduleParser.cs" />
     <Compile Include="Crawler\TestTeacherCrawler.cs" />
     <Compile Include="FakeStudentSaver.cs" />
@@ -76,7 +73,6 @@
     <Compile Include="Helpers\TestBasicDataConverter.cs" />
     <Compile Include="Helpers\TestClassGroupFilter.cs" />
     <Compile Include="Helpers\TestHelpers.cs" />
-    <Compile Include="Helpers\TestShortedTimeConverter.cs" />
     <Compile Include="Helpers\TestSubjectCodeParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
