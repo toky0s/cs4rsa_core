@@ -1,6 +1,5 @@
 ﻿using cs4rsa.BasicData;
 using cs4rsa.Implements;
-using cs4rsa.Interfaces;
 using System.ComponentModel;
 
 namespace cs4rsa.Crawler

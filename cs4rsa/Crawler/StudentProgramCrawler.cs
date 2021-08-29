@@ -9,14 +9,6 @@ using System.Linq;
 
 namespace cs4rsa.Crawler
 {
-    /// <summary>
-    /// Bộ cào chương trình học của sinh viên.
-    /// ** Không chạy sau 23h đó là lúc server DTU bảo trì.
-    /// ** Đảm bảo nó chạy trong một lần duy nhất.
-    /// Bộ cào này lưu thông tin của các môn có trong chương trình học của bạn
-    /// vào database để vào lần chạy tiếp theo người dùng gần như không phải nhập lại sessionid
-    /// trừ khi họ Đăng xuất và đăng nhập với một tài khoảng mới.
-    /// </summary>
     public class StudentProgramCrawler
     {
         private string _sessionId;
