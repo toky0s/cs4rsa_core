@@ -1,6 +1,9 @@
-﻿using cs4rsa.Interfaces;
+﻿using cs4rsa.Database;
+using cs4rsa.Implements;
+using cs4rsa.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace cs4rsa.BasicData
 {
@@ -65,6 +68,28 @@ namespace cs4rsa.BasicData
                     return result;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Lấy ra danh sách các môn tiên quyết của một ProgramSubject.
+        /// </summary>
+        /// <param name="programSubject">ProgramSubject</param>
+        /// <returns></returns>
+        public List<ProgramSubject> GetPreProgramSubject(ProgramSubject programSubject)
+        {
+            List<string> subjectCodes = programSubject.PrerequisiteSubjects;
+            return subjectCodes.Select(item => GetProgramSubject(item)).ToList();
+        }
+
+        /// <summary>
+        /// Lấy ra danh sách các môn song hành của một ProgramSubject.
+        /// </summary>
+        /// <param name="programSubject">ProgramSubject</param>
+        /// <returns></returns>
+        public List<ProgramSubject> GetParProgramSubject(ProgramSubject programSubject)
+        {
+            List<string> subjectCodes = Cs4rsaDataView.GetParSubjects(programSubject.CourseId);
+            return subjectCodes.Select(item => GetProgramSubject(item)).ToList();
         }
     }
 }
