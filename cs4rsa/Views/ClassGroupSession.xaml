@@ -54,7 +54,10 @@
                     </ItemsControl>
                 </ToolTip>
                 <ContextMenu x:Key="ClassGroupContextMenu" Opened="ContextMenu_Opened">
-                    <MenuItem Command="{Binding GotoCourseCommand}" Header="Xem chi tiết trong Course" />
+                    <MenuItem
+                        Command="{Binding GotoCourseCommand}"
+                        Header="Xem chi tiết trong Course"
+                        Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>

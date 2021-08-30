@@ -29,12 +29,12 @@
                             Header="Thao tác">
                             <MenuItem
                                 Command="{Binding OpenUpdateWindowCommand}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                                Header="Cập nhật cơ sở dữ liệu môn học" />
+                                Header="Cập nhật cơ sở dữ liệu môn học"
+                                Icon="{materialDesign:PackIcon Kind=DatabaseSyncOutline}" />
                             <MenuItem
                                 Command="{Binding OpenShareStringWindowCommand}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                                Header="Xuất dưới CS4RSA String..." />
+                                Header="Xuất dưới CS4RSA String..."
+                                Icon="{materialDesign:PackIcon Kind=ShareVariantOutline}" />
                         </MenuItem>
                     </Menu>
                 </DockPanel>

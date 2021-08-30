@@ -454,8 +454,14 @@
                         SelectedItem="{Binding SelectedProSubjectInChoiced}">
                         <ListView.Resources>
                             <ContextMenu x:Key="ChoicedSubjectContextMenu" Opened="ContextMenu_Opened">
-                                <MenuItem Command="{Binding DeleteCommand}" Header="Xoá" />
-                                <MenuItem Command="{Binding GotoCourseCommand}" Header="Mở trong courses.duytan.edu.vn" />
+                                <MenuItem
+                                    Command="{Binding DeleteCommand}"
+                                    Header="Xoá"
+                                    Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
+                                <MenuItem
+                                    Command="{Binding GotoCourseCommand}"
+                                    Header="Mở trong Courses"
+                                    Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                             </ContextMenu>
                         </ListView.Resources>
                         <ListView.ItemTemplate>
@@ -472,15 +478,21 @@
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <Button
                             Grid.Column="0"
                             Height="30"
                             Margin="5"
                             Command="{Binding SubjectDownloadCommand}"
-                            Content="Tải"
-                            Foreground="White" />
+                            Foreground="White">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Margin="0,0,5,0" Kind="DownloadBoxOutline" />
+                                    <TextBlock>Tải và đồng bộ</TextBlock>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                         <Button
                             Grid.Column="1"
                             Height="30"
@@ -534,8 +546,11 @@
                     SelectedItem="{Binding SelectedCombinationModel}">
                     <ListView.Resources>
                         <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">
-                            <MenuItem Command="{Binding ShowOnSimuCommand}" Header="Hiển thị trên mô phỏng" />
-                            <MenuItem Header="Chi tiết" />
+                            <MenuItem
+                                Command="{Binding ShowOnSimuCommand}"
+                                Header="Hiển thị trên mô phỏng"
+                                Icon="{materialDesign:PackIcon Kind=Calendar}" />
+                            <MenuItem Header="Chi tiết" Icon="{materialDesign:PackIcon Kind=Details}" />
                         </ContextMenu>
                         <ToolTip x:Key="CannotShowOnSimuContentTooltip" Width="300">
                             <TextBlock TextWrapping="WrapWithOverflow">
