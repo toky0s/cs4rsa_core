@@ -354,21 +354,46 @@ namespace cs4rsa.ViewModels
             UpdateCreditCount();
         }
 
+        /// <summary>
+        /// Phương thức này không chỉ thực hiện download mà nó còn thực hiện đồng bộ
+        /// giữa đã chọn và đã tải nhằm tối ưu tốc độ, thay vì việc thực hiện tải lại
+        /// rất mất thời gian.
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnDownload(object obj)
         {
-            // to do: Xác định subject nào cần tải dựa vào phép trừ tập hợp
             List<string> choiceSubjectCodes = ChoicedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode).ToList();
             List<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode).ToList();
-            List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
+            
+            // to do: Xác định subject cần xoá để đồng bộ tập hợp.
+            List<string> needDeleteNames = wereDownloadedSubjectCodes.Except(choiceSubjectCodes).ToList();
+            needDeleteNames.ForEach(item => RemoveSubjectModelWithNameInDownloaded(item));
 
+            // to do: Xác định subject nào cần tải dựa vào phép trừ tập hợp
+            List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
             List<ProgramSubjectModel> needDownload = ChoicedProSubjectModels.Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode)).ToList();
 
-            AutoSortSubjectLoadUC autoSortSubjectLoadUC = new AutoSortSubjectLoadUC();
-            AutoSortSubjectLoadVM vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadVM;
-            vm.CloseDialogCallback += CloseDialogAndHandleDownloadResult;
-            vm.ProgramSubjectModels = needDownload;
-            vm.Download();
-            (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(autoSortSubjectLoadUC);
+            if (needDownload.Count > 0)
+            {
+                AutoSortSubjectLoadUC autoSortSubjectLoadUC = new AutoSortSubjectLoadUC();
+                AutoSortSubjectLoadVM vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadVM;
+                vm.CloseDialogCallback += CloseDialogAndHandleDownloadResult;
+                vm.ProgramSubjectModels = needDownload;
+                vm.Download();
+                (App.Current.MainWindow.DataContext as MainViewModel).OpenDialog(autoSortSubjectLoadUC);
+            }
+        }
+
+        private void RemoveSubjectModelWithNameInDownloaded(string name)
+        {
+            foreach (SubjectModel item in SubjectModels)
+            {
+                if (item.SubjectCode == name)
+                {
+                    SubjectModels.Remove(item);
+                    break;
+                }
+            }
         }
 
         private void CloseDialogAndHandleDownloadResult(IEnumerable<SubjectModel> subjectModels)
