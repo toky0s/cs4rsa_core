@@ -9,7 +9,7 @@ namespace cs4rsa.Database
 {
     class Cs4rsaDataView
     {
-        private static Cs4rsaDatabase _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
+        private readonly static Cs4rsaDatabase _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
         /// <summary>
         /// Lấy ra danh sách mã ngành.
         /// </summary>
@@ -192,7 +192,7 @@ namespace cs4rsa.Database
         {
             string sql = $"SELECT count(*) from student WHERE specialString = '{specialString}'";
             long result = _cs4RsaDatabase.GetScalar<long>(sql);
-            return result == 1 ? true : false;
+            return result == 1;
         }
 
         public static List<StudentInfo> GetStudentInfos()
