@@ -28,7 +28,7 @@ namespace cs4rsa.Helpers
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
+                StreamReader readStream;
                 if (string.IsNullOrWhiteSpace(response.CharacterSet))
                     readStream = new StreamReader(receiveStream);
                 else

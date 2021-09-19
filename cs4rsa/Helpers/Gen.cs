@@ -75,6 +75,29 @@ namespace cs4rsa.Helpers
         }
 
         /// <summary>
+        /// Kiểm tra một cấu hình có phải là cấu hình đầu tiên hay không.
+        /// </summary>
+        /// <param name="combination"></param>
+        /// <param name="k"></param>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public static bool IsFirstCombination(List<T> combination, int k, List<T> elements)
+        {
+            List<T> firstCombination = elements.GetRange(0, k);
+            if (combination.Count != firstCombination.Count)
+                return false;
+            int count = 0;
+            for (int i = 0; i < k; i++)
+            {
+                if (combination[i].Equals(firstCombination[i]))
+                    count++;
+            }
+            if (count == firstCombination.Count)
+                return true;
+            return false;
+        }
+
+        /// <summary>
         /// Sinh tổ hợp kế tiếp.
         /// </summary>
         /// <param name="currentCombination">Tổ hợp k phẩn tử.</param>
