@@ -17,6 +17,6 @@ namespace cs4rsa.Interfaces
     /// <typeparam name="T">Là một Basic Data hoặc Model.</typeparam>
     public interface IGetter<T>
     {
-        T Get(object[] parameters=null);
+        T Get(object[] parameters = null);
     }
 }
