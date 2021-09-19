@@ -1,12 +1,13 @@
 ﻿using cs4rsa.BasicData;
 using cs4rsa.Database;
 using cs4rsa.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace cs4rsa.Models
 {
-    public class ClassGroupModel
+    public class ClassGroupModel: ICloneable
     {
         private ClassGroup _classGroup;
         public ClassGroup ClassGroup => _classGroup;
@@ -21,8 +22,8 @@ namespace cs4rsa.Models
         private string _name;
         public string Name
         {
-            get { return _classGroup.Name; }
-            set { _name = value; }
+            get => _classGroup.Name;
+            set => _name = value;
         }
 
         private bool _haveSchedule;
@@ -43,10 +44,9 @@ namespace cs4rsa.Models
 
         public List<string> TempTeacher
         {
-            get { return _classGroup.GetTempTeachers(); }
-            set { _tempTeacher = value; }
+            get => _classGroup.GetTempTeachers();
+            set => _tempTeacher = value;
         }
-
 
         public string SubjectCode => _classGroup.SubjectCode;
         public string RegisterCode => _classGroup.GetRegisterCode();
@@ -99,6 +99,11 @@ namespace cs4rsa.Models
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

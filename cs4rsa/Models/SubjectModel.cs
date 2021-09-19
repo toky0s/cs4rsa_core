@@ -25,18 +25,11 @@ namespace cs4rsa.Models
 
         public List<string> TempTeachers => subject.TempTeachers;
 
+        private List<ClassGroupModel> _classGroupModels;
         public List<ClassGroupModel> ClassGroupModels
         {
-            get
-            {
-                List<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
-                foreach(ClassGroup classGroup in subject.ClassGroups)
-                {
-                    ClassGroupModel classGroupModel = new ClassGroupModel(classGroup);
-                    classGroupModels.Add(classGroupModel);
-                }
-                return classGroupModels;
-            }
+            get => _classGroupModels;
+            set => _classGroupModels = value;
         }
 
         public string SubjectName => subject.Name;
@@ -62,6 +55,7 @@ namespace cs4rsa.Models
         {
             this.subject = subject;
             _studyUnit = subject.StudyUnit;
+            _classGroupModels = subject.ClassGroups.Select(item => new ClassGroupModel(item)).ToList();
             Color = ColorGenerator.GetColor(subject.CourseId);
         }
 
