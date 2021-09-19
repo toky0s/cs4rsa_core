@@ -53,10 +53,7 @@ namespace cs4rsa.ViewModels
         private DisciplineInfomationModel selectedDiscipline;
         public DisciplineInfomationModel SelectedDiscipline
         {
-            get
-            {
-                return selectedDiscipline;
-            }
+            get => selectedDiscipline;
 
             set
             {
@@ -82,10 +79,7 @@ namespace cs4rsa.ViewModels
         private DisciplineKeywordModel selectedKeyword;
         public DisciplineKeywordModel SelectedKeyword
         {
-            get
-            {
-                return selectedKeyword;
-            }
+            get => selectedKeyword;
             set
             {
                 selectedKeyword = value;

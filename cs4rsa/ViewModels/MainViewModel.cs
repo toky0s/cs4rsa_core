@@ -1,9 +1,13 @@
 ﻿using cs4rsa.BaseClasses;
+using cs4rsa.BasicData;
 using cs4rsa.Helpers;
+using cs4rsa.Implements;
+using cs4rsa.Interfaces;
 using cs4rsa.Messages;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
 
@@ -12,7 +16,8 @@ namespace cs4rsa.ViewModels
 
     /// <summary>
     /// MainViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
-    /// trong các View.
+    /// trong các View. Thực hiện khai báo các dịch vụ triển khai DI. Thực hiện
+    /// các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
     public class MainViewModel : ViewModelBase, IMessageHandler<Cs4rsaSnackbarMessage>
     {
