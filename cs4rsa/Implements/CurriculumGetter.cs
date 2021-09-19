@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa.Implements
 {
-    class CurriculumGetter : IGetter<Curriculum>
+    public class CurriculumGetter : IGetter<Curriculum>
     {
         public Curriculum Get(object[] parameters = null)
         {

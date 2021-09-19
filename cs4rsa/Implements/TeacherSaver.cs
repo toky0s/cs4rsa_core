@@ -6,7 +6,7 @@ namespace cs4rsa.Implements
 {
     class TeacherSaver : ISaver<Teacher>
     {
-        private Cs4rsaDatabase _cs4RsaDatabase;
+        private readonly Cs4rsaDatabase _cs4RsaDatabase;
         public TeacherSaver()
         {
             _cs4RsaDatabase = Cs4rsaDatabase.GetInstance();
@@ -18,9 +18,7 @@ namespace cs4rsa.Implements
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacher.Id}";
             long result = _cs4RsaDatabase.GetScalar<long>(countQueryString);
-            if (result > 0)
-                return true;
-            return false;
+            return result > 0;
         }
 
         private bool IsExist(string teacherId)
@@ -28,9 +26,7 @@ namespace cs4rsa.Implements
             string countQueryString = $@"SELECT count(id) from teacher
                                     WHERE id like {teacherId}";
             long result = _cs4RsaDatabase.GetScalar<long>(countQueryString);
-            if (result > 0)
-                return true;
-            return false;
+            return result > 0;
         }
 
         private void SaveDetail(Teacher teacher)

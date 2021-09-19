@@ -9,7 +9,7 @@ using cs4rsa.Database;
 
 namespace cs4rsa.Implements
 {
-    class StudentSaver : ISaver<StudentInfo>
+    public class StudentSaver : ISaver<StudentInfo>
     {
         public void Save(StudentInfo obj, object[] parameters = null)
         {
