@@ -429,107 +429,89 @@
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
-            <Grid Grid.Column="2" Margin="0,5,5,5">
+            <Grid Grid.Column="2" Margin="0,5,5,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
                     <RowDefinition />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition  Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="1*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock
+                <TextBlock
                         Grid.Row="0"
                         Margin="5,0,0,5"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Các môn bạn đã chọn" />
-                    <ListView
+                <ListView
                         Grid.Row="1"
                         Margin="0,0,0,5"
                         ItemsSource="{Binding ChoicedProSubjectModels}"
                         SelectedItem="{Binding SelectedProSubjectInChoiced}">
-                        <ListView.Resources>
-                            <ContextMenu x:Key="ChoicedSubjectContextMenu" Opened="ContextMenu_Opened">
-                                <MenuItem
+                    <ListView.Resources>
+                        <ContextMenu x:Key="ChoicedSubjectContextMenu" Opened="ContextMenu_Opened">
+                            <MenuItem
                                     Command="{Binding DeleteCommand}"
                                     Header="Xoá"
                                     Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
-                                <MenuItem
+                            <MenuItem
                                     Command="{Binding GotoCourseCommand}"
                                     Header="Mở trong Courses"
                                     Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
-                            </ContextMenu>
-                        </ListView.Resources>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding SubjectName}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.ItemContainerStyle>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Setter Property="ContextMenu" Value="{StaticResource ChoicedSubjectContextMenu}" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Button
+                        </ContextMenu>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SubjectName}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                            <Setter Property="ContextMenu" Value="{StaticResource ChoicedSubjectContextMenu}" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button
                             Grid.Column="0"
                             Height="30"
                             Margin="5"
                             Command="{Binding SubjectDownloadCommand}"
                             Foreground="White">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Margin="0,0,5,0" Kind="DownloadBoxOutline" />
-                                    <TextBlock>Tải và đồng bộ</TextBlock>
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
-                        <Button
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="0,0,5,0" Kind="DownloadBoxOutline" />
+                                <TextBlock>Tải và đồng bộ</TextBlock>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button 
                             Grid.Column="1"
                             Height="30"
                             Command="{Binding DeleteAllCommand}"
                             Content="Xoá hết"
                             Foreground="White" />
-                    </Grid>
-                    <TextBlock
+                </Grid>
+                <TextBlock
                         Grid.Row="3"
                         Margin="5,0,0,5"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="Đã tải" />
-                    <ListView Grid.Row="4" ItemsSource="{Binding SubjectModels}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding SubjectName}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Setter Property="IsEnabled" Value="True" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ProgramSubjectModels.Count}" Value="0">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                    </StackPanel>
-                </Grid>
+                <ListView Grid.Row="4" Margin="0 0 0 5"  ItemsSource="{Binding SubjectModels}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SubjectName}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Button Content="Chuyển sang xếp thủ công"
+                            Foreground="White"
+                            Grid.Row="5"
+                        Margin="5 0 0 5"></Button>
             </Grid>
             <Grid Grid.Column="3" Margin="0,5,5,5">
                 <Grid.RowDefinitions>

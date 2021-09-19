@@ -27,11 +27,11 @@ namespace cs4rsa
     public partial class MainWindow : Window
     {
         // Khởi tạo trước các View trong Runtime
-        private HomeView _homeView = new HomeView();
-        private LoginView _loginView = new LoginView();
-        private MainScheduling _mainScheduling = new MainScheduling();
-        private AutoSchedule _autoScheduling = new AutoSchedule();
-        private InfoView _infoView = new InfoView();
+        private readonly HomeView _homeView = new HomeView();
+        private readonly LoginView _loginView = new LoginView();
+        private readonly MainScheduling _mainScheduling = new MainScheduling();
+        private readonly AutoSchedule _autoScheduling = new AutoSchedule();
+        private readonly InfoView _infoView = new InfoView();
 
         public MainWindow()
         {
