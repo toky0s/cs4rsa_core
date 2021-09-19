@@ -17,10 +17,7 @@ namespace cs4rsa.Crawler
         private ISaver<Teacher> teacherSaver;
         public ISaver<Teacher> TeacherSaver
         {
-            get
-            {
-                return teacherSaver;
-            }
+            get => teacherSaver;
             set
             {
                 SaveDatabase = true;
@@ -29,7 +26,7 @@ namespace cs4rsa.Crawler
         }
 
         //http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=010132007&classid=139631&academicleveltypeid=&curriculumid=
-        private HtmlDocument document;
+        private readonly HtmlDocument document;
         public TeacherCrawler(string url)
         {
             if (url != null)
@@ -50,7 +47,6 @@ namespace cs4rsa.Crawler
 
         public TeacherCrawler(string semesterValue, string intructorId)
         {
-            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan={semesterValue}&intructorid={intructorId}";
             HtmlWeb web = new HtmlWeb();
             document = web.Load(url);
@@ -102,9 +98,7 @@ namespace cs4rsa.Crawler
         {
             string countQueryString = $@"SELECT count(id) from teacher WHERE id like {instructorId}";
             long result = cs4RsaDatabase.GetScalar<long>(countQueryString);
-            if (result == 0)
-                return true;
-            return false;
+            return result == 0;
         }
     }
 }

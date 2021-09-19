@@ -13,7 +13,7 @@ namespace cs4rsa.Crawler
         /// <summary>
         /// Cào data từ Course DTU và lưu vào database.
         /// </summary>
-        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker=null, double numberOfSubjects =0)
+        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker = null, double numberOfSubjects = 0)
         {
             double reportValue = 0;
             double jump = 0;
@@ -22,7 +22,7 @@ namespace cs4rsa.Crawler
                 jump = 1000 / numberOfSubjects;
                 reportValue = jump;
             }
-                
+
             Cs4rsaData cs4RsaData = new Cs4rsaData();
             string URL = string.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
