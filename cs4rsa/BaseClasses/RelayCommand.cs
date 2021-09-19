@@ -59,7 +59,7 @@ namespace cs4rsa
         /// <returns>True if this command can be executed; otherwise, false.</returns>
         public bool CanExecute(object parameter)
         {
-            return this.canExecute == null ? true : this.canExecute();
+            return canExecute == null || this.canExecute();
         }
 
         /// <summary>
