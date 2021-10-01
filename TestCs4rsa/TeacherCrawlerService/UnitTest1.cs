@@ -21,7 +21,7 @@ namespace TestCs4rsa.TeacherCrawlerService
                 string url = @"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=221111108&classid=132070&academicleveltypeid=&curriculumid=";
                 TeacherCrawler teacherCrawler = new TeacherCrawler(url, db);
                 Teacher teacher = teacherCrawler.Crawl();
-                Assert.AreEqual("HỒ LÊ VIẾT NIN", teacher.Name);
+                Assert.AreEqual("HỒ LÊ VIẾT NI", teacher.Name);
             }
         }
     }
