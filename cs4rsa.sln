@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherCrawlerService1", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseSearchService", "CourseSearchService\CourseSearchService.csproj", "{A3461552-1257-433C-B527-A4ADA1538AD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisciplineCrawlerService", "DisciplineCrawlerService\DisciplineCrawlerService.csproj", "{F2D5710D-4143-4CC6-9C48-23F1AB670091}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisciplineCrawlerService", "DisciplineCrawlerService\DisciplineCrawlerService.csproj", "{F2D5710D-4143-4CC6-9C48-23F1AB670091}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCs4rsa", "TestCs4rsa\TestCs4rsa.csproj", "{84563F93-D94B-425B-B251-446D768D6B80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84563F93-D94B-425B-B251-446D768D6B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84563F93-D94B-425B-B251-446D768D6B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
