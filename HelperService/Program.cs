@@ -1,4 +1,5 @@
 ﻿using System;
+using Cs4rsaDatabaseService.DataProviders;
 
 namespace HelperService
 {
@@ -6,7 +7,6 @@ namespace HelperService
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
         }
     }
 }
