@@ -35,7 +35,7 @@ namespace TeacherCrawlerService1.Crawlers
         /// <returns></returns>
         private bool IsTeacherHasInDatabase(int instructorId)
         {
-            return false;
+            return _cs4rsaDbContext.Teachers.Where(teacher => teacher.TeacherId == instructorId).Any();
         }
 
         public Teacher Crawl()
