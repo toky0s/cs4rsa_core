@@ -2,9 +2,11 @@ name: .NET
 
 on:
   push:
-    branches: [ cs4rsa/netcore ]
+    branches:
+      - "**"
   pull_request:
-    branches: [ cs4rsa/netcore ]
+    branches: 
+      - "**"
 
 jobs:
   build:
