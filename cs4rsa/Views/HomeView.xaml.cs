@@ -34,26 +34,22 @@ namespace cs4rsa.Views
 
         private void GotoSource(object sender, RoutedEventArgs e)
         {
-            string url = ConfigurationManager.AppSettings.Get("Cs4rsaGitHub");
-            Process.Start(url);
+
         }
 
         private void GotoWeb(object sender, RoutedEventArgs e)
         {
-            string url = ConfigurationManager.AppSettings.Get("Cs4rsa");
-            Process.Start(url);
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            string url = ConfigurationManager.AppSettings.Get("Cs4rsaOfDTU");
-            Process.Start(url);
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            string url = ConfigurationManager.AppSettings.Get("Author");
-            Process.Start(url);
+
         }
     }
 }

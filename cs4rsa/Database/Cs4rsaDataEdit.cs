@@ -149,7 +149,7 @@ namespace cs4rsa.Database
             return _cs4RsaDatabase.DoSomething(sql);
         }
 
-        public static int AddCurriculum(Curriculum curriculum)
+        public static int AddCurriculum(BasicData.Curriculum curriculum)
         {
             string sql = $@"insert into curriculum values ('{curriculum.CurId}','{curriculum.Name}')";
             return _cs4RsaDatabase.DoSomething(sql);

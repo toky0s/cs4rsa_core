@@ -1,23 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\packages\NUnit3TestAdapter.4.0.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.4.0.0\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}</ProjectGuid>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>cs4rsa</RootNamespace>
-    <AssemblyName>cs4rsa</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -33,541 +19,28 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup />
-  <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FireSharp, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FireSharp.2.0.4\lib\portable-net45+sl5+wp8+win8\FireSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.36.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.36\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="LightMessageBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LightMessageBus.1.0.1\lib\portable-net4+sl5+wp8+win8\LightMessageBus.dll</HintPath>
-    </Reference>
-    <Reference Include="LiteDB, Version=5.0.11.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiteDB.5.0.11\lib\net45\LiteDB.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignColors, Version=2.0.1.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.2.0.1\lib\net452\MaterialDesignColors.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=4.1.0.2556, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.4.1.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=5.0.0.2, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.5.0.2\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.ConfigurationManager, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Configuration.ConfigurationManager.5.0.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Data.SQLite, Version=1.0.115.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <HintPath>..\packages\System.Data.SQLite.x86.1.0.115.0\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.115.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.115.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.115.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.115.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.5.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Permissions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Permissions.5.0.0\lib\net461\System.Security.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="BaseClasses\BaseConflict.cs" />
-    <Compile Include="BaseClasses\ButtonLessWindow.cs" />
-    <Compile Include="BaseClasses\Cs4rsaMessage.cs" />
-    <Compile Include="BaseClasses\MyICommand.cs" />
-    <Compile Include="BaseClasses\ViewModelBase.cs" />
-    <Compile Include="BasicData\CourseSemester.cs" />
-    <Compile Include="BasicData\Curriculum.cs" />
-    <Compile Include="BasicData\DayPlaceMetaData.cs" />
-    <Compile Include="BasicData\ConflictPlace.cs" />
-    <Compile Include="BasicData\PlaceConflictFinder.cs" />
-    <Compile Include="BasicData\PreParSubject.cs" />
-    <Compile Include="BasicData\ProgramDiagram.cs" />
-    <Compile Include="BasicData\ProgramFolder.cs" />
-    <Compile Include="BasicData\Semester.cs" />
-    <Compile Include="BasicData\Student.cs" />
-    <Compile Include="BasicData\StudentInfo.cs" />
-    <Compile Include="BasicData\StudyTimePoint.cs" />
-    <Compile Include="BasicData\ProgramSubject.cs" />
-    <Compile Include="BasicData\CourseYear.cs" />
-    <Compile Include="Converters\ClassGroupModelConverter.cs" />
-    <Compile Include="Converters\ConflictModelConverter.cs" />
-    <Compile Include="Converters\ConflictTypeConverter.cs" />
-    <Compile Include="Converters\DialogConverters\Base64ImageConverter.cs" />
-    <Compile Include="Converters\DialogConverters\ExpiryConverter.cs" />
-    <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
-    <Compile Include="Converters\NodeTypeConverter.cs" />
-    <Compile Include="Converters\PlaceToStringConverter.cs" />
-    <Compile Include="Converters\StudyStateConverter.cs" />
-    <Compile Include="Crawler\CurriculumCrawler.cs" />
-    <Compile Include="Crawler\DtuStudentInfoCrawler.cs" />
-    <Compile Include="Crawler\DtuSubjectCrawler.cs" />
-    <Compile Include="Crawler\ProgramDiagramCrawler.cs" />
-    <Compile Include="Crawler\SpecialStringCrawler.cs" />
-    <Compile Include="Crawler\StudentProgramCrawler.cs" />
-    <Compile Include="Database\ColorGenerator.cs" />
-    <Compile Include="Database\Cs4rsaDataEdit.cs" />
-    <Compile Include="Database\Cs4rsaDataView.cs" />
-    <Compile Include="Database\Cs4rsaDatabase.cs" />
-    <Compile Include="Database\TeacherDatabase.cs" />
-    <Compile Include="Dialogs\DialogResults\AutoSortResult.cs" />
-    <Compile Include="Dialogs\DialogResults\ImportResult.cs" />
-    <Compile Include="Dialogs\DialogResults\LoginResult.cs" />
-    <Compile Include="Dialogs\DialogResults\ProSubjectLoadResult.cs" />
-    <Compile Include="Dialogs\DialogResults\SaveResult.cs" />
-    <Compile Include="Dialogs\DialogResults\SessionManagerResult.cs" />
-    <Compile Include="Dialogs\DialogResults\SettingResult.cs" />
-    <Compile Include="Dialogs\DialogResults\ShareStringResult.cs" />
-    <Compile Include="Dialogs\DialogResults\SolveConflictResult.cs" />
-    <Compile Include="Dialogs\DialogResults\StudentResult.cs" />
-    <Compile Include="Dialogs\DialogResults\UpdateResult.cs" />
-    <Compile Include="Dialogs\DialogService\DialogService.cs" />
-    <Compile Include="Dialogs\DialogService\DialogViewModelBase.cs" />
-    <Compile Include="Dialogs\DialogViews\AutoSortSubjectLoadUC.xaml.cs">
-      <DependentUpon>AutoSortSubjectLoadUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ImportSessionUC.xaml.cs">
-      <DependentUpon>ImportSessionUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\LoginUC.xaml.cs">
-      <DependentUpon>LoginUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ProgramSubjectLoadUC.xaml.cs">
-      <DependentUpon>ProgramSubjectLoadUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ProSubjectDetailUC.xaml.cs">
-      <DependentUpon>ProSubjectDetailUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SaveSessionUC.xaml.cs">
-      <DependentUpon>SaveSessionUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SessionInputUC.xaml.cs">
-      <DependentUpon>SessionInputUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\ShareStringUC.xaml.cs">
-      <DependentUpon>ShareStringUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SolveConflictUC.xaml.cs">
-      <DependentUpon>SolveConflictUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SubjectDownloadingUC.xaml.cs">
-      <DependentUpon>SubjectDownloadingUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\SubjectImporterUC.xaml.cs">
-      <DependentUpon>SubjectImporterUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\DialogViews\UpdateUC.xaml.cs">
-      <DependentUpon>UpdateUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Extensions\DialogExtension.cs" />
-    <Compile Include="Dialogs\Implements\AutoSortSubjectLoadVM.cs" />
-    <Compile Include="Dialogs\Implements\LoginDialogViewModel.cs" />
-    <Compile Include="Dialogs\Implements\ProSubjectDetailVM.cs" />
-    <Compile Include="Dialogs\Implements\ProSubjectLoadViewModel.cs" />
-    <Compile Include="Dialogs\Implements\SaveDialogViewModel.cs" />
-    <Compile Include="Dialogs\Implements\ImportDialogViewModel.cs" />
-    <Compile Include="Dialogs\Implements\SessionInputViewModel.cs" />
-    <Compile Include="Dialogs\Implements\SettingViewModel.cs" />
-    <Compile Include="Dialogs\Implements\ShareStringViewModel.cs" />
-    <Compile Include="Dialogs\Implements\SolveConflictViewModel.cs" />
-    <Compile Include="Dialogs\Implements\SubjectDownloadingViewModel.cs" />
-    <Compile Include="Dialogs\Implements\UpdateViewModel.cs" />
-    <Compile Include="Dialogs\MessageBoxService\Cs4rsaMessageBox.cs" />
-    <Compile Include="Dialogs\MessageBoxService\IMessageBox.cs" />
-    <Compile Include="Enums\GetFrom.cs" />
-    <Compile Include="Enums\ImplementType.cs" />
-    <Compile Include="Enums\LearnState.cs" />
-    <Compile Include="Enums\NodeType.cs" />
-    <Compile Include="Enums\RegistrationType.cs" />
-    <Compile Include="Helpers\Cs4rsaColor.cs" />
-    <Compile Include="Helpers\Cs4rsaVersion.cs" />
-    <Compile Include="Helpers\Gen.cs" />
-    <Compile Include="Helpers\TimeConverter.cs" />
-    <Compile Include="Implements\CurriculumGetter.cs" />
-    <Compile Include="Implements\CurriculumSaver.cs" />
-    <Compile Include="Implements\ProgramDiagramSaver.cs" />
-    <Compile Include="Messages\ConflictCollectionChangeMessage.cs" />
-    <Compile Include="Messages\Cs4rsaSnackbarMessage.cs" />
-    <Compile Include="Messages\DeleteClassGroupChoiceMessage.cs" />
-    <Compile Include="Messages\PlaceConflictCollectionChangeMessage.cs" />
-    <Compile Include="Messages\RemoveAChoiceClassGroupMessage.cs" />
-    <Compile Include="Messages\ShowOnSimuMessage.cs" />
-    <Compile Include="Messages\SubjectsChangeMessage.cs" />
-    <Compile Include="Messages\UpdateSubjectDatabase.cs" />
-    <Compile Include="Models\Base\TreeItem.cs" />
-    <Compile Include="Models\CombinationModel.cs" />
-    <Compile Include="Models\ProgramFolderModel.cs" />
-    <Compile Include="Models\ProgramSubjectModel.cs" />
-    <Compile Include="Enums\StudyUnitType.cs" />
-    <Compile Include="Helpers\ConnectInternetChecker.cs" />
-    <Compile Include="Helpers\DtuPageCrawler.cs" />
-    <Compile Include="Helpers\ShareString.cs" />
-    <Compile Include="Helpers\ShortedTimeConverter.cs" />
-    <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\SubjectCodeParser.cs" />
-    <Compile Include="Implements\PreParGetter.cs" />
-    <Compile Include="Implements\ProgramSubjectSaver.cs" />
-    <Compile Include="Implements\StudentSaver.cs" />
-    <Compile Include="Implements\TeacherSaver.cs" />
-    <Compile Include="Dialogs\Implements\SubjectImporter.cs" />
-    <Compile Include="Interfaces\IGetter.cs" />
-    <Compile Include="Interfaces\IProgramNode.cs" />
-    <Compile Include="Interfaces\IProgramSubjectSaver.cs" />
-    <Compile Include="Interfaces\ISaver.cs" />
-    <Compile Include="Messages\ChoicesChangedMessage.cs" />
-    <Compile Include="Messages\ClassGroupAddedMessage.cs" />
-    <Compile Include="Messages\DeleteSubjectMessage.cs" />
-    <Compile Include="Enums\ConflictType.cs" />
-    <Compile Include="Messages\SettingChangeMessage.cs" />
-    <Compile Include="Messages\UpdateSuccessMessage.cs" />
-    <Compile Include="Models\Interfaces\IConflictModel.cs" />
-    <Compile Include="Models\PlaceConflictFinderModel.cs" />
-    <Compile Include="Messages\SelectedSubjectChangeMessage.cs" />
-    <Compile Include="BasicData\StudyWeek.cs" />
-    <Compile Include="BasicData\Teacher.cs" />
-    <Compile Include="Crawler\DisciplineData.cs" />
-    <Compile Include="Crawler\TeacherCrawler.cs" />
-    <Compile Include="Database\Cs4rsaData.cs" />
-    <Compile Include="Helpers\BasicDataConverter.cs" />
-    <Compile Include="Messages\SubjectItemChangeMessage.cs" />
-    <Compile Include="Models\ClassGroupModel.cs" />
-    <Compile Include="Models\ConflictModel.cs" />
-    <Compile Include="Models\DisciplineInfomationModel.cs" />
-    <Compile Include="Models\DisciplineKeywordModel.cs" />
-    <Compile Include="Models\ScheduleSession.cs" />
-    <Compile Include="Models\ScheduleSessionDetail.cs" />
-    <Compile Include="Models\SchoolClassModel.cs" />
-    <Compile Include="Models\SubjectModel.cs" />
-    <Compile Include="Models\TeacherModel.cs" />
-    <Compile Include="BaseClasses\RelayCommand.cs" />
-    <Compile Include="Models\TimeBlock.cs" />
-    <Compile Include="Settings\Cs4rsaSetting.cs" />
-    <Compile Include="Settings\SettingsReader.cs" />
-    <Compile Include="Settings\SettingsWriter.cs" />
-    <Compile Include="ViewModelFunctions\ClassGroupChoicer.cs" />
-    <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
-    <Compile Include="ViewModels\AutoScheduleViewModel.cs" />
-    <Compile Include="ViewModels\ChoiceSessionViewModel.cs" />
-    <Compile Include="ViewModels\ClassGroupViewModel.cs" />
-    <Compile Include="ViewModels\HomeViewModel.cs" />
-    <Compile Include="ViewModels\InfoViewModel.cs" />
-    <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\SearchViewModel.cs" />
-    <Compile Include="ViewModels\ScheduleTableViewModel.cs" />
-    <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
-    <Compile Include="Views\AutoSchedule.xaml.cs">
-      <DependentUpon>AutoSchedule.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChoicedSession.xaml.cs">
-      <DependentUpon>ChoicedSession.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ClassGroupSession.xaml.cs">
-      <DependentUpon>ClassGroupSession.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CombinationContainerWindow.xaml.cs">
-      <DependentUpon>CombinationContainerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HomeView.xaml.cs">
-      <DependentUpon>HomeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InfoView.xaml.cs">
-      <DependentUpon>InfoView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainScheduling.xaml.cs">
-      <DependentUpon>MainScheduling.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ScheduleTable.xaml.cs">
-      <DependentUpon>ScheduleTable.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SearchSession.xaml.cs">
-      <DependentUpon>SearchSession.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Models\StudentModel.cs" />
-    <Page Include="Dialogs\DialogViews\AutoSortSubjectLoadUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ImportSessionUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\LoginUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ProgramSubjectLoadUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ProSubjectDetailUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SaveSessionUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SessionInputUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\ShareStringUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SolveConflictUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SubjectDownloadingUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\SubjectImporterUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\DialogViews\UpdateUC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AutoSchedule.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CombinationContainerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HomeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\InfoView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LoginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainScheduling.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BasicData\ClassGroup.cs" />
-    <Compile Include="BasicData\Conflict.cs" />
-    <Compile Include="BasicData\Schedule.cs" />
-    <Compile Include="BasicData\SchoolClass.cs" />
-    <Compile Include="BasicData\StudyTime.cs" />
-    <Compile Include="BasicData\Subject.cs" />
-    <Compile Include="Crawler\HomeCourseSearch.cs" />
-    <Compile Include="Crawler\ScheduleParser.cs" />
-    <Compile Include="Crawler\SubjectCrawler.cs" />
-    <Compile Include="Helpers\Helper.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\ChoicedSession.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ClassGroupSession.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ScheduleTable.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SearchSession.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
@@ -598,18 +71,30 @@
   <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.4.0.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.4.0.0\build\net35\NUnit3TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-  </Target>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.37" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NUnit.Runners.Net4" Version="2.6.4" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.246501">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="LightMessageBus" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
+    <ProjectReference Include="..\TeacherCrawler\TeacherCrawlerService.csproj" />
+  </ItemGroup>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

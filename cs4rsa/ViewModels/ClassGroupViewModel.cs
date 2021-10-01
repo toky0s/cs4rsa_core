@@ -48,8 +48,8 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private ObservableCollection<TeacherModel> teachers = new ObservableCollection<TeacherModel>();
-        public ObservableCollection<TeacherModel> Teachers
+        private ObservableCollection<Models.Teacher> teachers = new ObservableCollection<Models.Teacher>();
+        public ObservableCollection<Models.Teacher> Teachers
         {
             get
             {
@@ -61,8 +61,8 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        private TeacherModel selectedTeacher;
-        public TeacherModel SelectedTeacher
+        private Models.Teacher selectedTeacher;
+        public Models.Teacher SelectedTeacher
         {
             get
             {
@@ -102,14 +102,14 @@ namespace cs4rsa.ViewModels
                 {
                     classGroupModels.Add(classGroupModel);
                 }
-                Teacher teacherAll = new Teacher("TẤT CẢ")
+                BasicData.Teacher teacherAll = new BasicData.Teacher("TẤT CẢ")
                 {
                     Id = "0"
                 };
-                teachers.Add(new TeacherModel(teacherAll));
+                teachers.Add(new Models.Teacher((BasicData.Teacher)teacherAll));
 
                 List<string> tempTeachers = subjectModel.TempTeachers;
-                foreach (TeacherModel teacher in subjectModel.Teachers)
+                foreach (Models.Teacher teacher in subjectModel.Teachers)
                 {
                     if (!teachers.Contains(teacher) && teacher != null)
                     {
@@ -124,11 +124,11 @@ namespace cs4rsa.ViewModels
                 {
                     for (int i = 0; i < tempTeachers.Count; i++)
                     {
-                        Teacher guestLecturer = new Teacher(tempTeachers[i])
+                        BasicData.Teacher guestLecturer = new BasicData.Teacher(tempTeachers[i])
                         {
                             Id = (i + 1).ToString()
                         };
-                        teachers.Add(new TeacherModel(guestLecturer));
+                        teachers.Add(new Models.Teacher((BasicData.Teacher)guestLecturer));
                     }
                 }
 

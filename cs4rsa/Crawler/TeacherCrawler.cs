@@ -1,6 +1,7 @@
 ﻿using cs4rsa.BasicData;
 using cs4rsa.Database;
 using cs4rsa.Interfaces;
+using cs4rsa.Models;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,6 @@ namespace cs4rsa.Crawler
             }
         }
 
-        //http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=010132007&classid=139631&academicleveltypeid=&curriculumid=
         private readonly HtmlDocument document;
         public TeacherCrawler(string url)
         {
@@ -69,8 +69,19 @@ namespace cs4rsa.Crawler
                 string form = Helpers.StringHelper.SuperCleanString(infoNodes[8].InnerText);
                 string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
                 List<HtmlNode> liNodes = document.DocumentNode.SelectNodes(xpathLiNode).ToList();
-                string[] teachedSubjects = liNodes.Select(item => item.InnerText).ToArray();
-                teacher = new Teacher(id, name, sex, place, degree, workUnit, position, subject, form, teachedSubjects);
+                List<string> teachedSubjects = liNodes.Select(item => item.InnerText).ToList();
+                teacher = new Teacher {
+                    TeacherId = id,
+                    Name = name,
+                    Sex = sex,
+                    Place = place,
+                    Degree = degree,
+                    WorkUnit = workUnit,
+                    Position = position,
+                    Subject = subject,
+                    Form = form,
+                    Subjects = teachedSubjects
+                };
                 if (SaveDatabase)
                 {
                     teacherSaver.Save(teacher);
@@ -86,7 +97,7 @@ namespace cs4rsa.Crawler
             return null;
         }
 
-        private string GetIntructorId(string url)
+        private static string GetIntructorId(string url)
         {
             string[] slideChars = { "&" };
             string[] separatingStrings = { "=" };
