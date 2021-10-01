@@ -113,7 +113,6 @@
                 Grid.Column="1"
                 Width="100"
                 Command="{Binding FindCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Window, Mode=FindAncestor}}"
                 Content="Tìm kiếm"
                 IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}"
                 Style="{StaticResource MaterialDesignRaisedDarkButton}" />

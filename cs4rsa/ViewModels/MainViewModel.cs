@@ -7,7 +7,6 @@ using cs4rsa.Messages;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
 
@@ -46,14 +45,6 @@ namespace cs4rsa.ViewModels
         {
             MessageBus.Default.FromAny().Where<Cs4rsaSnackbarMessage>().Notify(this);
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
-
-            string localVersion = ConfigurationManager.AppSettings.Get("Version");
-            string globalVersion = Cs4rsaVersion.CheckVer();
-            if (localVersion != globalVersion)
-            {
-                string message = $"CS4RSA phiên bản {globalVersion} đã có sẵn, hãy cập nhật";
-                _snackBarMessageQueue.Enqueue(message);
-            }
         }
 
         public void Handle(Cs4rsaSnackbarMessage message)

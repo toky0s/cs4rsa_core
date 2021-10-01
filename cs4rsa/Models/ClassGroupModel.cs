@@ -64,11 +64,11 @@ namespace cs4rsa.Models
             Color = ColorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
         }
 
-        public List<TeacherModel> GetTeacherModels()
+        public List<Teacher> GetTeacherModels()
         {
-            List<TeacherModel> teacherModels = new List<TeacherModel>();
+            List<Teacher> teacherModels = new List<Teacher>();
             foreach (Teacher teacher in _classGroup.GetTeachers())
-                teacherModels.Add(new TeacherModel(teacher));
+                teacherModels.Add(new Teacher(teacher));
             return teacherModels;
         }
 

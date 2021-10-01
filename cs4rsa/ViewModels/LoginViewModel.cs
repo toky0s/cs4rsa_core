@@ -88,7 +88,7 @@ namespace cs4rsa.ViewModels
             List<StudentInfo> studentInfos = Cs4rsaDataView.GetStudentInfos();
             foreach (StudentInfo info in studentInfos)
             {
-                Student student = new Student(info);
+                Models.Student student = new Models.Student { StudentId=info.StudentId, Address=info.Address, BirthDay= new DateTime(info.Birthday), };
                 StudentModel studentModel = new StudentModel(student);
                 _students.Add(studentModel);
             }

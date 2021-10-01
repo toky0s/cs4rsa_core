@@ -12,12 +12,12 @@ namespace cs4rsa.Models
     {
         private Subject subject;
 
-        public List<TeacherModel> Teachers
+        public List<Teacher> Teachers
         {
             get
             {
-                List<TeacherModel> teacherModels = subject.Teachers
-                    .Select(teacher => new TeacherModel(teacher))
+                List<Teacher> teacherModels = subject.Teachers
+                    .Select(teacher => new Teacher(teacher))
                     .ToList();
                 return teacherModels;
             }

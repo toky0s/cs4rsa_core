@@ -2,6 +2,7 @@
 using cs4rsa.BasicData;
 using cs4rsa.Crawler;
 using cs4rsa.Database;
+using cs4rsa.DI.Interfaces;
 using cs4rsa.Dialogs.DialogResults;
 using cs4rsa.Dialogs.DialogService;
 using cs4rsa.Dialogs.DialogViews;
@@ -158,8 +159,11 @@ namespace cs4rsa.ViewModels
             }
         }
 
-        public SearchViewModel()
+        private readonly ICourseCrawler _courseCrawler;
+
+        public SearchViewModel(ICourseCrawler courseCrawler)
         {
+            _courseCrawler = courseCrawler;
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             List<string> disciplines = Cs4rsaDataView.GetDisciplines();
@@ -189,7 +193,7 @@ namespace cs4rsa.ViewModels
         private void OnGotoCourse(object obj)
         {
             string courseId = selectedSubjectModel.CourseId;
-            string semesterValue = HomeCourseSearch.GetInstance().CurrentSemesterValue;
+            string semesterValue = _courseCrawler.GetCurrentSemesterValue();
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             Process.Start(url);
         }

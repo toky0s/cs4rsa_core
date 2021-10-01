@@ -7,6 +7,7 @@ using System.Resources;
 using cs4rsa.Properties;
 using cs4rsa.Helpers;
 using cs4rsa.BasicData;
+using cs4rsa.DI.Interfaces;
 
 namespace cs4rsa.Crawler
 {
@@ -14,57 +15,43 @@ namespace cs4rsa.Crawler
     /// <para>Class này bao gồm các method liên quan đến tìm kiếm thông tin Học Kỳ, 
     /// Năm học và Thông tin môn học được Crawl từ web.</para>
     /// </summary>
-    public class HomeCourseSearch
+    public class HomeCourseSearch : ICourseCrawler
     {
-        private static readonly HomeCourseSearch instance = new HomeCourseSearch();
+        public string CurrentYearValue { get; }
+        public string CurrentYearInfo { get; }
+        public string CurrentSemesterValue { get; }
+        public string CurrentSemesterInfo { get; }
+        public List<CourseYear> CourseYears { get; }
 
-        private string _currentYearValue;
-        private string _currentYearInfo;
-        private string _currentSemesterValue;
-        private string _currentSemesterInfo;
-
-        public string CurrentYearValue => _currentYearValue;
-        public string CurrentYearInfo => _currentYearInfo;
-        public string CurrentSemesterValue => _currentSemesterValue;
-        public string CurrentSemesterInfo => _currentSemesterInfo;
-
-        private List<CourseYear> _courseYears;
-        public List<CourseYear> CourseYears => _courseYears;
-
-        private HomeCourseSearch()
+        public HomeCourseSearch()
         {
-            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlWeb htmlWeb = new();
             string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
             HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
-            _courseYears = GetCourseYears(document);
+            CourseYears = GetCourseYears(document);
 
-            _currentYearValue = GetCurrentValue(document);
-            _currentYearInfo = GetCurrentInfo(document);
+            CurrentYearValue = GetCurrentValue(document);
+            CurrentYearInfo = GetCurrentInfo(document);
 
-            string URL_SEMESTER_COMBOBOX = string.Format("http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}", _currentYearValue);
+            string URL_SEMESTER_COMBOBOX = $"http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={CurrentYearValue}";
             document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
-            _currentSemesterValue = GetCurrentValue(document);
-            _currentSemesterInfo = GetCurrentInfo(document);
+            CurrentSemesterValue = GetCurrentValue(document);
+            CurrentSemesterInfo = GetCurrentInfo(document);
         }
 
-        public static HomeCourseSearch GetInstance()
-        {
-            return instance;
-        }
-
-        private string GetCurrentValue(HtmlDocument document)
+        private static string GetCurrentValue(HtmlDocument document)
         {
             IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants().Where(node => node.Name == "option");
             return optionElements.Last().Attributes["value"].Value;
         }
 
-        private string GetCurrentInfo(HtmlDocument document)
+        private static string GetCurrentInfo(HtmlDocument document)
         {
             IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants().Where(node => node.Name == "option");
             return optionElements.Last().InnerText.Trim();
         }
 
-        private List<CourseYear> GetCourseYears(HtmlDocument document)
+        private static List<CourseYear> GetCourseYears(HtmlDocument document)
         {
             List<CourseYear> courseYears = new List<CourseYear>();
             List<HtmlNode> optionElements = document.DocumentNode.Descendants()
@@ -76,13 +63,13 @@ namespace cs4rsa.Crawler
                 string name = node.InnerText.Trim();
                 string value = node.Attributes["value"].Value;
                 List<CourseSemester> courseSemesters = GetCourseSemesters(value);
-                CourseYear courseYear = new CourseYear(name, value, courseSemesters);
+                CourseYear courseYear = new() { Name = name, Value = value, CourseSemesters = courseSemesters };
                 courseYears.Add(courseYear);
             }
             return courseYears;
         }
 
-        private List<CourseSemester> GetCourseSemesters(string yearValue)
+        private static List<CourseSemester> GetCourseSemesters(string yearValue)
         {
             HtmlWeb htmlWeb = new HtmlWeb();
             string urlTemplate = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}";
@@ -98,10 +85,30 @@ namespace cs4rsa.Crawler
             {
                 string name = node.InnerText.Trim();
                 string value = node.Attributes["value"].Value;
-                CourseSemester courseSemester = new CourseSemester(name, value);
+                CourseSemester courseSemester = new() { Name = name, Value = value };
                 courseSemesters.Add(courseSemester);
             }
             return courseSemesters;
+        }
+
+        public string GetCurrentSemesterValue()
+        {
+            return CurrentSemesterValue;
+        }
+
+        public string GetCurrentSemesterInfo()
+        {
+            return CurrentSemesterInfo;
+        }
+
+        public string GetCurrentYearValue()
+        {
+            return CurrentYearValue;
+        }
+
+        public string GetCurrentYearInfo()
+        {
+            return CurrentYearInfo;
         }
     }
 }

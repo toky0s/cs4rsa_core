@@ -13,7 +13,7 @@ namespace cs4rsa.ViewModels
         public string Version { get; set; }
         public InfoViewModel()
         {
-            Version = ConfigurationManager.AppSettings.Get("Version");
+            //Version = ConfigurationManager.AppSettings.Get("Version");
         }
     }
 }

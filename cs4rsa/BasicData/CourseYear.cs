@@ -17,12 +17,5 @@ namespace cs4rsa.BasicData
 
         public string Value { get; set; }
         public IEnumerable<CourseSemester> CourseSemesters { get; set; }
-
-        public CourseYear(string name, string value, IEnumerable<CourseSemester> courseSemesters)
-        {
-            Name = name;
-            Value = value;
-            CourseSemesters = courseSemesters;
-        }
     }
 }

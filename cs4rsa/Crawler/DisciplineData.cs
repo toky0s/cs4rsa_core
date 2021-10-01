@@ -1,4 +1,5 @@
 ﻿using cs4rsa.Database;
+using cs4rsa.DI.Interfaces;
 using HtmlAgilityPack;
 using System.ComponentModel;
 using System.Linq;
@@ -8,7 +9,12 @@ namespace cs4rsa.Crawler
 {
     public class DisciplineData
     {
-        public HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
+        private readonly ICourseCrawler _homeCourseSearch;
+
+        public DisciplineData(ICourseCrawler courseCrawler)
+        {
+            _homeCourseSearch = courseCrawler;
+        }
 
         /// <summary>
         /// Cào data từ Course DTU và lưu vào database.
@@ -26,7 +32,7 @@ namespace cs4rsa.Crawler
             Cs4rsaData cs4RsaData = new Cs4rsaData();
             string URL = string.Format(
                 "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
-                homeCourseSearch.CurrentSemesterValue,
+                _homeCourseSearch.GetCurrentSemesterValue(),
                 Helpers.Helpers.GetTimeFromEpoch());
 
             HtmlWeb htmlWeb = new HtmlWeb();
@@ -84,13 +90,13 @@ namespace cs4rsa.Crawler
         /// Lấy ra số lượng môn học hiện có trong học kỳ hiện tại.
         /// </summary>
         /// <returns>Số lượng môn học hiện có.</returns>
-        public static int GetNumberOfSubjects()
+        public int GetNumberOfSubjects()
         {
-            HomeCourseSearch homeCourseSearch = HomeCourseSearch.GetInstance();
             string URL = string.Format(
             "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
-            homeCourseSearch.CurrentSemesterValue,
-            Helpers.Helpers.GetTimeFromEpoch());
+            _homeCourseSearch.GetCurrentSemesterValue(),
+            Helpers.Helpers.GetTimeFromEpoch()
+            );
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load(URL);

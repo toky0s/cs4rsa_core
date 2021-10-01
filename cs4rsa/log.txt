@@ -1,0 +1,148 @@
+2021-09-22 22:04:59.210 +07:00 [INF] Loaded 5 extensions
+2021-09-22 22:05:00.337 +07:00 [INF] MSBuild registered from C:\Program Files\dotnet\sdk\5.0.401\
+2021-09-22 22:05:01.479 +07:00 [INF] Found Visual Studio v16.11.31702.278 [C:\Program Files (x86)\Microsoft Visual Studio\2019\Community]
+2021-09-22 22:05:03.470 +07:00 [INF] Initializing upgrade step Select an entrypoint
+2021-09-22 22:05:03.476 +07:00 [INF] Setting entrypoint to only project in solution: C:\Users\truon\Desktop\cs4rsa\cs4rsa\cs4rsa.csproj
+2021-09-22 22:05:03.483 +07:00 [INF] Initializing upgrade step Select project to upgrade
+2021-09-22 22:05:03.515 +07:00 [INF] Initializing upgrade step Back up project
+2021-09-22 22:05:51.442 +07:00 [INF] Applying upgrade step Back up project
+2021-09-22 22:06:00.804 +07:00 [INF] Backing up C:\Users\truon\Desktop\cs4rsa\cs4rsa to C:\Users\truon\Desktop\cs4rsa\cs4rsa.backup
+2021-09-22 22:06:00.843 +07:00 [WRN] Could not copy file C:\Users\truon\Desktop\cs4rsa\cs4rsa\log.txt due to 'The process cannot access the file 'C:\Users\truon\Desktop\cs4rsa\cs4rsa\log.txt' because it is being used by another process.'
+2021-09-22 22:06:07.587 +07:00 [INF] Project backed up to C:\Users\truon\Desktop\cs4rsa\cs4rsa.backup
+2021-09-22 22:06:07.590 +07:00 [INF] Upgrade step Back up project applied successfully
+2021-09-22 22:06:15.063 +07:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-09-22 22:06:33.295 +07:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-09-22 22:06:33.299 +07:00 [INF] Converting project file format with try-convert, version 0.9.232202
+2021-09-22 22:06:33.884 +07:00 [INF] [dotnet] C:\Users\truon\Desktop\cs4rsa\cs4rsa\cs4rsa.csproj contains an App.config file. App.config is replaced by appsettings.json in .NET Core. You will need to delete App.config and migrate to appsettings.json if it's applicable to your project.
+2021-09-22 22:06:35.452 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: NUnit3TestAdapter.props
+2021-09-22 22:06:35.455 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.props
+2021-09-22 22:06:35.456 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.targets
+2021-09-22 22:06:35.457 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: MaterialDesignThemes.targets
+2021-09-22 22:06:35.458 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: Microsoft.Bcl.Build.targets
+2021-09-22 22:06:35.459 +07:00 [INF] [dotnet] This project has an unrecognized custom import which may need reviewed after conversion: Stub.System.Data.SQLite.Core.NetFramework.targets
+2021-09-22 22:06:38.703 +07:00 [INF] [dotnet] Conversion complete!
+2021-09-22 22:06:39.402 +07:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-09-22 22:06:41.485 +07:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-09-22 22:06:48.628 +07:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-09-22 22:06:50.281 +07:00 [INF] Marking package EntityFramework for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.352 +07:00 [INF] Marking package MaterialDesignColors for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.364 +07:00 [INF] Marking package Microsoft.Bcl for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.368 +07:00 [INF] Marking package Microsoft.Bcl.Async for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.372 +07:00 [INF] Marking package Microsoft.Bcl.AsyncInterfaces for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.392 +07:00 [INF] Marking package Microsoft.Extensions.DependencyInjection.Abstractions for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.411 +07:00 [INF] Marking package Stub.System.Data.SQLite.Core.NetFramework for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.416 +07:00 [INF] Marking package System.Buffers for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.436 +07:00 [INF] Marking package System.Data.SQLite.EF6 for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.441 +07:00 [INF] Marking package System.Data.SQLite.Linq for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.456 +07:00 [INF] Marking package System.Numerics.Vectors for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.467 +07:00 [INF] Marking package System.Runtime.InteropServices.WindowsRuntime for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.471 +07:00 [INF] Marking package System.Security.AccessControl for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.476 +07:00 [INF] Marking package System.Security.Permissions for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.481 +07:00 [INF] Marking package System.Security.Principal.Windows for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.485 +07:00 [INF] Marking package System.Threading.Tasks.Extensions for removal because it appears to be a transitive dependency
+2021-09-22 22:06:50.489 +07:00 [INF] Marking package Microsoft.Net.Http for removal based on package mapping configuration HTTP packages
+2021-09-22 22:06:50.493 +07:00 [INF] Adding package System.Net.Http based on package mapping configuration HTTP packages
+2021-09-22 22:06:50.495 +07:00 [INF] Marking assembly reference System.Configuration for removal based on package mapping configuration System.Configuration
+2021-09-22 22:06:50.496 +07:00 [INF] Marking assembly reference System.Net.Http.WebRequest for removal based on package mapping configuration HTTP packages
+2021-09-22 22:06:57.885 +07:00 [INF] Reference to .NET Upgrade Assistant analyzer package (Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, version 0.3.246501) needs added
+2021-09-22 22:06:57.898 +07:00 [INF] References to be removed: Operation { Item = System.Configuration, OperationDetails = OperationDetails { Risk = Medium, Details = System.Collections.Generic.List`1[System.String] } }
+Operation { Item = System.Net.Http.WebRequest, OperationDetails = OperationDetails { Risk = Medium, Details = System.Collections.Generic.List`1[System.String] } }
+2021-09-22 22:06:57.901 +07:00 [INF] Packages to be removed: Operation { Item = EntityFramework, Version=6.4.4, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = MaterialDesignColors, Version=2.0.1, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.Bcl, Version=1.1.10, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.Bcl.Async, Version=1.0.168, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.Bcl.AsyncInterfaces, Version=5.0.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Stub.System.Data.SQLite.Core.NetFramework, Version=1.0.115.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Buffers, Version=4.5.1, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Data.SQLite.EF6, Version=1.0.115.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Data.SQLite.Linq, Version=1.0.115.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Numerics.Vectors, Version=4.5.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Runtime.InteropServices.WindowsRuntime, Version=4.3.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Security.AccessControl, Version=5.0.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Security.Permissions, Version=5.0.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Security.Principal.Windows, Version=5.0.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = System.Threading.Tasks.Extensions, Version=4.5.4, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.Net.Http, Version=2.2.29, OperationDetails = OperationDetails { Risk = Medium, Details = System.Collections.Generic.List`1[System.String] } }
+2021-09-22 22:06:57.903 +07:00 [INF] Packages to be added: Operation { Item = System.Net.Http, Version=4.3.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.246501, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+2021-09-22 22:07:05.895 +07:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-09-22 22:07:05.899 +07:00 [INF] Removing outdated assembly reference: System.Configuration
+2021-09-22 22:07:05.901 +07:00 [INF] Removing outdated assembly reference: System.Net.Http.WebRequest
+2021-09-22 22:07:05.903 +07:00 [INF] Removing outdated package reference: EntityFramework, Version=6.4.4
+2021-09-22 22:07:05.904 +07:00 [INF] Removing outdated package reference: MaterialDesignColors, Version=2.0.1
+2021-09-22 22:07:05.905 +07:00 [INF] Removing outdated package reference: Microsoft.Bcl, Version=1.1.10
+2021-09-22 22:07:05.906 +07:00 [INF] Removing outdated package reference: Microsoft.Bcl.Async, Version=1.0.168
+2021-09-22 22:07:05.907 +07:00 [INF] Removing outdated package reference: Microsoft.Bcl.AsyncInterfaces, Version=5.0.0
+2021-09-22 22:07:05.909 +07:00 [INF] Removing outdated package reference: Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0
+2021-09-22 22:07:05.909 +07:00 [INF] Removing outdated package reference: Microsoft.Net.Http, Version=2.2.29
+2021-09-22 22:07:05.910 +07:00 [INF] Removing outdated package reference: Stub.System.Data.SQLite.Core.NetFramework, Version=1.0.115.0
+2021-09-22 22:07:05.911 +07:00 [INF] Removing outdated package reference: System.Buffers, Version=4.5.1
+2021-09-22 22:07:05.912 +07:00 [INF] Removing outdated package reference: System.Data.SQLite.EF6, Version=1.0.115.0
+2021-09-22 22:07:05.913 +07:00 [INF] Removing outdated package reference: System.Data.SQLite.Linq, Version=1.0.115.0
+2021-09-22 22:07:05.913 +07:00 [INF] Removing outdated package reference: System.Numerics.Vectors, Version=4.5.0
+2021-09-22 22:07:05.914 +07:00 [INF] Removing outdated package reference: System.Runtime.InteropServices.WindowsRuntime, Version=4.3.0
+2021-09-22 22:07:05.915 +07:00 [INF] Removing outdated package reference: System.Security.AccessControl, Version=5.0.0
+2021-09-22 22:07:05.915 +07:00 [INF] Removing outdated package reference: System.Security.Permissions, Version=5.0.0
+2021-09-22 22:07:05.916 +07:00 [INF] Removing outdated package reference: System.Security.Principal.Windows, Version=5.0.0
+2021-09-22 22:07:05.917 +07:00 [INF] Removing outdated package reference: System.Threading.Tasks.Extensions, Version=4.5.4
+2021-09-22 22:07:05.918 +07:00 [INF] Adding package reference: System.Net.Http, Version=4.3.0
+2021-09-22 22:07:05.920 +07:00 [INF] Adding package reference: Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.3.246501
+2021-09-22 22:07:17.023 +07:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-09-22 22:07:19.232 +07:00 [INF] Initializing upgrade step Update TFM
+2021-09-22 22:07:19.246 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:07:19.247 +07:00 [INF] TFM needs updated to net5.0-windows
+2021-09-22 22:07:26.516 +07:00 [INF] Applying upgrade step Update TFM
+2021-09-22 22:07:26.524 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:07:33.887 +07:00 [INF] Updated TFM to net5.0-windows
+2021-09-22 22:07:33.889 +07:00 [INF] Upgrade step Update TFM applied successfully
+2021-09-22 22:07:35.860 +07:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-09-22 22:07:37.575 +07:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-09-22 22:07:38.067 +07:00 [WRN] No version of FireSharp found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:07:38.475 +07:00 [INF] Marking package LightMessageBus, Version=1.0.1 for removal because it doesn't support the target framework but a newer version (1.0.2) does
+2021-09-22 22:07:40.969 +07:00 [WRN] No version of System.Data.SQLite.x64 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:07:42.869 +07:00 [WRN] No version of System.Data.SQLite.x86 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:07:45.218 +07:00 [INF] Adding Microsoft.Windows.Compatibility 5.0.2
+2021-09-22 22:07:45.225 +07:00 [INF] Packages to be removed: Operation { Item = Microsoft.CSharp, Version=4.7.0, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+Operation { Item = LightMessageBus, Version=1.0.1, OperationDetails = OperationDetails { Risk = None, Details = System.Collections.Generic.List`1[System.String] } }
+2021-09-22 22:07:45.227 +07:00 [INF] Packages to be added: Operation { Item = LightMessageBus, Version=1.0.2, OperationDetails = OperationDetails { Risk = Low, Details = System.Collections.Generic.List`1[System.String] } }
+Operation { Item = Microsoft.Windows.Compatibility, Version=5.0.2, OperationDetails = OperationDetails { Risk = None, Details = System.Linq.EmptyPartition`1[System.String] } }
+2021-09-22 22:07:50.858 +07:00 [INF] Applying upgrade step Update NuGet Packages
+2021-09-22 22:07:50.859 +07:00 [INF] Removing outdated package reference: LightMessageBus, Version=1.0.1
+2021-09-22 22:07:50.860 +07:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-09-22 22:07:50.861 +07:00 [INF] Adding package reference: LightMessageBus, Version=1.0.2
+2021-09-22 22:07:50.862 +07:00 [INF] Adding package reference: Microsoft.Windows.Compatibility, Version=5.0.2
+2021-09-22 22:07:56.090 +07:00 [INF] Marking package System.Configuration.ConfigurationManager for removal because it appears to be a transitive dependency
+2021-09-22 22:07:56.099 +07:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-09-22 22:07:56.567 +07:00 [WRN] No version of FireSharp found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:07:58.793 +07:00 [WRN] No version of System.Data.SQLite.x64 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:08:00.722 +07:00 [WRN] No version of System.Data.SQLite.x86 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:08:01.565 +07:00 [INF] Removing outdated package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-09-22 22:08:01.567 +07:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-09-22 22:08:04.920 +07:00 [WRN] No version of FireSharp found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:08:07.300 +07:00 [WRN] No version of System.Data.SQLite.x64 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:08:09.245 +07:00 [WRN] No version of System.Data.SQLite.x86 found that supports ["net5.0-windows"]; leaving unchanged
+2021-09-22 22:08:10.393 +07:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-09-22 22:08:13.938 +07:00 [INF] Initializing upgrade step Add template files
+2021-09-22 22:08:13.947 +07:00 [INF] 0 expected template items needed
+2021-09-22 22:08:13.949 +07:00 [INF] Initializing upgrade step Upgrade app config files
+2021-09-22 22:08:13.994 +07:00 [INF] Found 5 app settings for upgrade: Cs4rsa, Cs4rsaOfDTU, Author, Cs4rsaGitHub, Version
+2021-09-22 22:08:13.999 +07:00 [INF] Found 0 connection strings for upgrade: 
+2021-09-22 22:08:27.511 +07:00 [INF] Applying upgrade step Convert Application Settings
+2021-09-22 22:08:27.806 +07:00 [INF] Upgrade step Convert Application Settings applied successfully
+2021-09-22 22:08:27.809 +07:00 [INF] Applying upgrade step Upgrade app config files
+2021-09-22 22:08:27.810 +07:00 [INF] Upgrade step Upgrade app config files applied successfully
+2021-09-22 22:08:29.367 +07:00 [INF] Initializing upgrade step Update source code
+2021-09-22 22:08:29.374 +07:00 [INF] Running analyzers on cs4rsa
+2021-09-22 22:08:33.080 +07:00 [INF] Identified 0 diagnostics in project cs4rsa
+2021-09-22 22:08:33.131 +07:00 [INF] Initializing upgrade step Move to next project
+2021-09-22 22:08:38.485 +07:00 [INF] Applying upgrade step Move to next project
+2021-09-22 22:08:38.486 +07:00 [INF] Upgrade step Move to next project applied successfully
+2021-09-22 22:08:54.599 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:08:54.606 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:08:54.617 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:08:54.618 +07:00 [INF] Initializing upgrade step Finalize upgrade
+2021-09-22 22:08:54.625 +07:00 [INF] Recommending Windows TFM net5.0-windows because the project either has Windows-specific dependencies or builds to a WinExe
+2021-09-22 22:09:06.555 +07:00 [INF] Applying upgrade step Finalize upgrade
+2021-09-22 22:09:06.557 +07:00 [INF] Upgrade step Finalize upgrade applied successfully
+2021-09-22 22:09:08.609 +07:00 [INF] Upgrade has completed. Please review any changes.

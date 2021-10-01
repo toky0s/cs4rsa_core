@@ -49,7 +49,7 @@ namespace cs4rsa.Views
 
         private bool CheckTeacher(ClassGroupModel classGroupModel)
         {
-            TeacherModel currentTeacher = (TeacherModel)ComboxBox_Teachers.SelectedItem;
+            Models.Teacher currentTeacher = (Models.Teacher)ComboxBox_Teachers.SelectedItem;
             if (currentTeacher == null || currentTeacher.Id == "0")
                 return true;
             return classGroupModel.GetTeacherModels().Contains(currentTeacher)
