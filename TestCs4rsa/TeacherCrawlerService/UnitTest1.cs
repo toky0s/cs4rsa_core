@@ -13,14 +13,14 @@ namespace TestCs4rsa.TeacherCrawlerService
         }
 
         [Test]
-        public void Test1()
+        public void GetTeacherInfo()
         {
             using(Cs4rsaDbContext db = new Cs4rsaDbContext())
             {
                 db.Database.EnsureCreated();
                 string url = @"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&timespan=71&intructorid=221111108&classid=132070&academicleveltypeid=&curriculumid=";
-                TeacherCrawler teacherCrawler = new TeacherCrawler(url, db);
-                Teacher teacher = teacherCrawler.Crawl();
+                TeacherCrawler teacherCrawler = new TeacherCrawler(db);
+                Teacher teacher = teacherCrawler.Crawl(url);
                 Assert.AreEqual("HỒ LÊ VIẾT NIN", teacher.Name);
             }
         }
