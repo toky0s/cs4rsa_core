@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CourseSearchService\CourseSearchService.csproj" />
+    <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
+    <ProjectReference Include="..\DisciplineCrawlerService\DisciplineCrawlerService.csproj" />
+    <ProjectReference Include="..\HelperService\HelperService.csproj" />
+    <ProjectReference Include="..\TeacherCrawlerService1\TeacherCrawlerService1.csproj" />
+  </ItemGroup>
+
+</Project>
