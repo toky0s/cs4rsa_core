@@ -91,10 +91,6 @@
   <ItemGroup>
     <Content Include="appsettings.json" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
-    <ProjectReference Include="..\TeacherCrawler\TeacherCrawlerService.csproj" />
-  </ItemGroup>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

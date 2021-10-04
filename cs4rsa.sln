@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa", "cs4rsa\cs4rsa.csproj", "{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubjectCrawlService", "SubjectCrawlService\SubjectCrawlService.csproj", "{72839348-4C71-4C37-8DD4-8C9ADD50E3E3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaDatabaseService", "Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj", "{D023AA31-EAB7-4B34-B861-8A90948342E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelperService", "HelperService\HelperService.csproj", "{DFC60310-E393-437F-8DF4-2330CFB304D5}"
@@ -17,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseSearchService", "Cour
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisciplineCrawlerService", "DisciplineCrawlerService\DisciplineCrawlerService.csproj", "{F2D5710D-4143-4CC6-9C48-23F1AB670091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCs4rsa", "TestCs4rsa\TestCs4rsa.csproj", "{84563F93-D94B-425B-B251-446D768D6B80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCs4rsa", "TestCs4rsa\TestCs4rsa.csproj", "{84563F93-D94B-425B-B251-446D768D6B80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa_core", "cs4rsa_core\cs4rsa_core.csproj", "{93ACCEED-955F-4AF0-A909-76FE718B0DD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubjectCrawlService1", "SubjectCrawlService1\SubjectCrawlService1.csproj", "{03A31965-826F-47E1-AB54-DA44F9711F2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +31,6 @@ Global
 		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72839348-4C71-4C37-8DD4-8C9ADD50E3E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72839348-4C71-4C37-8DD4-8C9ADD50E3E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72839348-4C71-4C37-8DD4-8C9ADD50E3E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72839348-4C71-4C37-8DD4-8C9ADD50E3E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +55,14 @@ Global
 		{84563F93-D94B-425B-B251-446D768D6B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
