@@ -1,13 +1,13 @@
-﻿using SubjectCrawlService.DataTypes.Enums;
+﻿using SubjectCrawlService1.DataTypes.Enums;
 using Cs4rsaDatabaseService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SubjectCrawlService.Utils;
+using SubjectCrawlService1.Utils;
 
-namespace SubjectCrawlService.DataTypes
+namespace SubjectCrawlService1.DataTypes
 {
     public class ClassGroup
     {

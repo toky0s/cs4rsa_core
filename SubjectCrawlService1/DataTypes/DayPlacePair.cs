@@ -1,11 +1,11 @@
-﻿using SubjectCrawlService.DataTypes.Enums;
+﻿using SubjectCrawlService1.DataTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SubjectCrawlService.DataTypes
+namespace SubjectCrawlService1.DataTypes
 {
     /// <summary>
     /// Một ngày học sẽ có một thời gian học, một nơi học và một phòng học nhất định.

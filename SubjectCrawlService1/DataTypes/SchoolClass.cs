@@ -1,8 +1,8 @@
 ﻿using Cs4rsaDatabaseService.Models;
-using SubjectCrawlService.DataTypes.Enums;
+using SubjectCrawlService1.DataTypes.Enums;
 using System.Collections.Generic;
 
-namespace SubjectCrawlService.DataTypes
+namespace SubjectCrawlService1.DataTypes
 {
     public class SchoolClass
     {

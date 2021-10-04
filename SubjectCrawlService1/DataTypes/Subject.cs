@@ -2,9 +2,9 @@
 using Cs4rsaDatabaseService.DataProviders;
 using HelperService;
 using HtmlAgilityPack;
-using SubjectCrawlService.DataTypes;
-using SubjectCrawlService.DataTypes.Enums;
-using SubjectCrawlService.Utils;
+using SubjectCrawlService1.DataTypes;
+using SubjectCrawlService1.DataTypes.Enums;
+using SubjectCrawlService1.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers;
 
-namespace SubjectCrawlService.BasicDatas
+namespace SubjectCrawlService1.BasicDatas
 {
     public class Subject
     {
@@ -37,12 +37,13 @@ namespace SubjectCrawlService.BasicDatas
         public string[] ParallelSubject { get; }
         public string Desciption { get; }
         public string RawSoup { get; }
-        public string CourseId { get; }
+        public int CourseId { get; }
 
         public Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester, 
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, string courseId, Cs4rsaDbContext cs4rsaDbContext)
+                        string description, string rawSoup, int courseId, 
+                        ITeacherCrawler teacherCrawler, Cs4rsaDbContext cs4rsaDbContext)
         {
             Name = name;
             SubjectCode = subjectCode;
@@ -56,6 +57,7 @@ namespace SubjectCrawlService.BasicDatas
             RawSoup = rawSoup;
             CourseId = courseId;
             _cs4rsaDbContext = cs4rsaDbContext;
+            _teacherCrawler = teacherCrawler;
             GetClassGroups();
         }
 
@@ -256,8 +258,8 @@ namespace SubjectCrawlService.BasicDatas
         private Teacher GetTeacherFromURL(string url)
         {
             string teacherDetailPageURL = GetTeacherInfoPageURL(url);
-            TeacherCrawler teacherCrawler = new TeacherCrawler(teacherDetailPageURL, _cs4rsaDbContext);
-            Teacher teacher = teacherCrawler.Crawl();
+            TeacherCrawler teacherCrawler = new(_cs4rsaDbContext);
+            Teacher teacher = teacherCrawler.Crawl(teacherDetailPageURL);
 
             if (teacher != null && !_teachers.Contains(teacher))
                 _teachers.Add(teacher);
@@ -272,13 +274,19 @@ namespace SubjectCrawlService.BasicDatas
         private static string[] SubjectSpliter(string text)
         {
             if (text.Equals("(Không có Môn học Tiên quyết)") ||
-                text.Equals("(Không có Môn học Song hành)"))
+                text.Equals("(Không có Môn học Song hành)", StringComparison.Ordinal))
+            {
                 return null;
+            }
+
             Regex regex = new Regex(@"(?<=\()(.*?)(?=\))");
             MatchCollection matchSubject = regex.Matches(text);
             string[] subjects = new string[matchSubject.Count];
-            for(int i=0; i<matchSubject.Count; ++i)
+            for (int i = 0; i < matchSubject.Count; ++i)
+            {
                 subjects[i] = matchSubject[i].Value;
+            }
+
             return subjects;
         }
     }

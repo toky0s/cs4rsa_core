@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataTypes\Interfaces\**" />
+    <EmbeddedResource Remove="DataTypes\Interfaces\**" />
+    <None Remove="DataTypes\Interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.37" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CourseSearchService\CourseSearchService.csproj" />
+    <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
+    <ProjectReference Include="..\DisciplineCrawlerService\DisciplineCrawlerService.csproj" />
+    <ProjectReference Include="..\HelperService\HelperService.csproj" />
+    <ProjectReference Include="..\TeacherCrawlerService1\TeacherCrawlerService1.csproj" />
+  </ItemGroup>
+
+</Project>

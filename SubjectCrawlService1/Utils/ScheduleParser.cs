@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using SubjectCrawlService.DataTypes;
+using SubjectCrawlService1.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SubjectCrawlService.Utils
+namespace SubjectCrawlService1.Utils
 {
     /// <summary>
     /// Bộ phân tích này dùng để chuyển một <td> tag thành Schedule [{'T2:': ['07:00-09:00', '07:00-10:15']}]

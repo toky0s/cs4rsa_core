@@ -1,11 +1,11 @@
-﻿using SubjectCrawlService.DataTypes.Enums;
+﻿using SubjectCrawlService1.DataTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SubjectCrawlService.Utils
+namespace SubjectCrawlService1.Utils
 {
     /// <summary>
     /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData hoặc Model

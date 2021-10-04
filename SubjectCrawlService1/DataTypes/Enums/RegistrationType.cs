@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SubjectCrawlService.DataTypes.Enums
+namespace SubjectCrawlService1.DataTypes.Enums
 {
     /// <summary>
     /// Mô tả cho tình trạng đăng ký của một class group

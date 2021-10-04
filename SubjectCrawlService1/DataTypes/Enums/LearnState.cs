@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SubjectCrawlService.DataTypes.Enums
+namespace SubjectCrawlService1.DataTypes.Enums
 {
-    public enum Session
+    public enum LearnState
     {
-        Morning, Afternoon, Night
+        Free,
+        Learn
     }
 }
