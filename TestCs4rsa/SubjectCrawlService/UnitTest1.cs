@@ -35,7 +35,7 @@ namespace TestCs4rsa.SubjectCrawlService
             using (_container.BeginLifetimeScope())
             {
                 Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
-                cs4RsaDbContext.Database.EnsureCreated();
+                _ = cs4RsaDbContext.Database.EnsureCreated();
 
                 ISubjectCrawler subjectCrawler = _container.Resolve<ISubjectCrawler>();
                 Subject subject = subjectCrawler.Crawl("CS", "414");
