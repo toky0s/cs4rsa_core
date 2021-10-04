@@ -10,6 +10,6 @@ namespace TeacherCrawlerService1.Crawlers.Interfaces
 {
     public interface ITeacherCrawler
     {
-        Teacher Crawl();
+        Teacher Crawl(string url);
     }
 }

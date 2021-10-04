@@ -11,12 +11,10 @@ namespace TeacherCrawlerService1.Crawlers
 {
     public class TeacherCrawler : ITeacherCrawler
     {
-        private string _url;
         private HtmlDocument _htmlDocument;
         private Cs4rsaDbContext _cs4rsaDbContext;
-        public TeacherCrawler(string url, Cs4rsaDbContext cs4rsaDbContext)
+        public TeacherCrawler(Cs4rsaDbContext cs4rsaDbContext)
         {
-            _url = url;
             _cs4rsaDbContext = cs4rsaDbContext;
         }
 
@@ -38,11 +36,11 @@ namespace TeacherCrawlerService1.Crawlers
             return _cs4rsaDbContext.Teachers.Where(teacher => teacher.TeacherId == instructorId).Any();
         }
 
-        public Teacher Crawl()
+        public Teacher Crawl(string url)
         {
-            if (_url != null)
+            if (url != null)
             {
-                int intructorId = int.Parse(GetIntructorId(_url));
+                int intructorId = int.Parse(GetIntructorId(url));
                 if (IsTeacherHasInDatabase(intructorId))
                 {
                     return _cs4rsaDbContext.Teachers.Where(teacher => teacher.TeacherId == intructorId).FirstOrDefault();
@@ -50,7 +48,7 @@ namespace TeacherCrawlerService1.Crawlers
                 else
                 {
                     HtmlWeb web = new HtmlWeb();
-                    _htmlDocument = web.Load(_url);
+                    _htmlDocument = web.Load(url);
                     if (_htmlDocument != null)
                     {
                         List<HtmlNode> infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]").ToList();

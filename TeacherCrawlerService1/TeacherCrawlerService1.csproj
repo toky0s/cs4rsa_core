@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DateTypes\" />
+    <Compile Remove="DateTypes\**" />
+    <EmbeddedResource Remove="DateTypes\**" />
+    <None Remove="DateTypes\**" />
   </ItemGroup>
 
   <ItemGroup>
