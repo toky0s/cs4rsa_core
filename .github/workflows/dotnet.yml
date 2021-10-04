@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build TeacherCrawlerService1/TeacherCrawlerService1.csproj
     - name: Test
-      run: dotnet test
+      run: dotnet test TestCs4rsa
