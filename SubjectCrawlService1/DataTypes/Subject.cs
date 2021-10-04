@@ -77,16 +77,16 @@ namespace SubjectCrawlService1.BasicDatas
         /// <returns>List các ClassGroup.</returns>
         private void GetClassGroups()
         {
-            if (classGroups.Count() == 0)
+            if (classGroups.Count == 0)
             {
                 List<SchoolClass> schoolClasses = GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
-                    ClassGroup classGroup = new ClassGroup(classGroupName, SubjectCode);
+                    ClassGroup classGroup = new(classGroupName, SubjectCode);
 
-                    string pattern = string.Format(@"^({0})[0-9]*$", classGroupName);
-                    Regex regexName = new Regex(pattern);
-                    for (int i = 0; i < schoolClasses.Count(); i++)
+                    string pattern = $@"^({classGroupName})[0-9]*$";
+                    Regex regexName = new(pattern);
+                    for (int i = 0; i < schoolClasses.Count; i++)
                     {
                         if (regexName.IsMatch(schoolClasses[i].SchoolClassName))
                         {
@@ -140,7 +140,7 @@ namespace SubjectCrawlService1.BasicDatas
             string registrationTermStart;
             string registrationTermEnd;
             string[] registrationTerm = StringHelper.SplitAndRemoveAllSpace(tdTags[4].InnerText);
-            if (registrationTerm.Count() == 0)
+            if (registrationTerm.Length == 0)
             {
                 registrationTermStart = null;
                 registrationTermEnd = null;
@@ -170,7 +170,7 @@ namespace SubjectCrawlService1.BasicDatas
             #region MetaData
             // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
             List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays();
-            int metaCount = dayOfWeeks.Count();
+            int metaCount = dayOfWeeks.Count;
             List<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).ToList();
             List<Room> roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();
             List<string> locationsForMetaData = locations.Select(item => item.Trim()).ToList();

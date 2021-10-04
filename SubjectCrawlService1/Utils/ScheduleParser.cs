@@ -121,9 +121,9 @@ namespace SubjectCrawlService1.Utils
         /// <returns>Một list các index của chuỗi date.</returns>
         private List<int> IndexDayOfWeek(string[] times)
         {
-            Regex regex = new Regex(@"^T[2-7]:$|^CN:$");
-            List<int> output = new List<int>();
-            for (int i = 0; i < times.Count(); i++)
+            Regex regex = new(@"^T[2-7]:$|^CN:$");
+            List<int> output = new();
+            for (int i = 0; i < times.Length; i++)
             {
                 if (regex.IsMatch(times[i]))
                 {
