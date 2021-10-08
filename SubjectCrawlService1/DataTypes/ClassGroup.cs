@@ -69,7 +69,10 @@ namespace SubjectCrawlService1.DataTypes
         private List<Teacher> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             if (DinstictSchoolClassName(schoolClasses).Length > 1)
-                throw new Exception("SchoolClass's Name is difference!");
+            {
+                Exception ex = new("SchoolClass's Name is difference!");
+                throw ex;
+            }
             else
             {
                 List<Teacher> teachers = new List<Teacher>();

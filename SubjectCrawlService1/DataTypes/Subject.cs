@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers;
 
-namespace SubjectCrawlService1.BasicDatas
+namespace SubjectCrawlService1.DataTypes
 {
     public class Subject
     {

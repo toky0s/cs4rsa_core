@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubjectCrawlService11
+namespace SubjectCrawlService1
 {
     class Program
     {
