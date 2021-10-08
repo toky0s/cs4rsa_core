@@ -1,11 +1,12 @@
 ﻿using HtmlAgilityPack;
-using SubjectCrawlService1.BasicDatas;
+using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using System.Linq;
 using Cs4rsaDatabaseService.DataProviders;
 using CourseSearchService.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Models;
+using System.Threading.Tasks;
 
 namespace SubjectCrawlService1.Crawlers
 {
@@ -37,7 +38,7 @@ namespace SubjectCrawlService1.Crawlers
             _courseId = courseId;
         }
 
-        public Subject Crawl(string discipline, string keyword1)
+        public async Task<Subject> Crawl(string discipline, string keyword1)
         {
             SubjectCode = $"{discipline} {keyword1}";
             IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from ds in _cs4rsaDbContext.Disciplines
@@ -50,8 +51,9 @@ namespace SubjectCrawlService1.Crawlers
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
             string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            HtmlWeb htmlWeb = new();
-            HtmlDocument htmlDocument = htmlWeb.Load(url);
+            //HtmlWeb htmlWeb = new();
+            //HtmlDocument htmlDocument = htmlWeb.Load(url);
+            HtmlDocument htmlDocument = await TaskFetchCourseClass(url);
 
             // kiểm tra sự tồn tại của môn học
             HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
@@ -82,6 +84,20 @@ namespace SubjectCrawlService1.Crawlers
                            studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _cs4rsaDbContext);
             }
             return null;
+        }
+
+        private static async Task<HtmlDocument> TaskFetchCourseClass(string url)
+        {
+            Task<HtmlDocument> fetch = new Task<HtmlDocument>(() =>
+            {
+                HtmlWeb htmlWeb = new();
+                HtmlDocument htmlDocument = htmlWeb.Load(url);
+                return htmlDocument;
+            });
+
+            fetch.Start();
+            HtmlDocument document = await fetch;
+            return document;
         }
     }
 }

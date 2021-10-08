@@ -1,4 +1,4 @@
-﻿using SubjectCrawlService1.BasicDatas;
+﻿using SubjectCrawlService1.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace SubjectCrawlService1.Crawlers.Interfaces
 {
     public interface ISubjectCrawler
     {
-        Subject Crawl(string discipline, string keyword1);
+        Task<Subject> Crawl(string discipline, string keyword1);
     }
 }
