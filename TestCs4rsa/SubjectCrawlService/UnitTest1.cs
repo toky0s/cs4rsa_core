@@ -4,14 +4,14 @@ using CourseSearchService.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
 using DisciplineCrawlerService.Crawlers;
 using HelperService;
-using NUnit.Framework;
 using SubjectCrawlService1.Crawlers;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
-using System;
-using System.Threading.Tasks;
 using TeacherCrawlerService1.Crawlers;
 using TeacherCrawlerService1.Crawlers.Interfaces;
+using NUnit.Framework;
+using System;
+using System.Threading.Tasks;
 
 namespace TestCs4rsa.SubjectCrawlService
 {
