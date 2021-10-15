@@ -22,25 +22,42 @@ namespace TestCs4rsa.StudentCrawlerService
         [Test]
         public void CrawlStudentInfo1()
         {
-            IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-            Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
-            Assert.AreEqual("Trương A Xin", student.Name);
+            using (_container.BeginLifetimeScope())
+            {
+                Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
+                if (cs4RsaDbContext.Database.EnsureCreated() == true)
+                {
+                    IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
+                    Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                    Assert.AreEqual("Trương A Xin", student.Name);
+                }
+            }
+
         }
         
         [Test]
         public void CrawlStudentInfo2()
         {
-            IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-            Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
-            Assert.AreEqual("truongaxin@dtu.edu.vn", student.Email);
+            Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
+            if (cs4RsaDbContext.Database.EnsureCreated() == true)
+            {
+                IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
+                Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                Assert.AreEqual("truongaxin@dtu.edu.vn", student.Email);
+            }
+
         }
         
         [Test]
         public void CrawlStudentInfo3()
         {
-            IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-            Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
-            Assert.AreEqual("", student.PhoneNumber);
+            Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
+            if (cs4RsaDbContext.Database.EnsureCreated() == true)
+            {
+                IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
+                Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                Assert.AreEqual("", student.PhoneNumber);
+            }
         }
     }
 }
