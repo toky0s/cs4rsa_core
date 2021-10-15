@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Build Helper Service
+      run: dotnet build HelperService/HelperService.csproj
     - name: Build Cs4rsaDatabaseService
       run: dotnet build Cs4rsaDatabaseService/Cs4rsaDatabaseService.csproj
     - name: Build TeacherCrawlerService1
@@ -30,4 +32,4 @@ jobs:
     - name: Build CurriculumCrawlerService
       run: dotnet build CurriculumCrawlerService/CurriculumCrawlerService.csproj
     - name: Test
-      run: dotnet test TestCs4rsa
+      run: dotnet test --filter TestCategory=TestInLocal
