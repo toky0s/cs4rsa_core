@@ -8,7 +8,7 @@ namespace Cs4rsaDatabaseService.Models
 {
     public class Student
     {
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public string SpecialString { get; set; }
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
