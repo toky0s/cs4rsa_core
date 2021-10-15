@@ -19,7 +19,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCs4rsa", "TestCs4rsa\Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa_core", "cs4rsa_core\cs4rsa_core.csproj", "{93ACCEED-955F-4AF0-A909-76FE718B0DD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubjectCrawlService1", "SubjectCrawlService1\SubjectCrawlService1.csproj", "{03A31965-826F-47E1-AB54-DA44F9711F2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubjectCrawlService1", "SubjectCrawlService1\SubjectCrawlService1.csproj", "{03A31965-826F-47E1-AB54-DA44F9711F2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2BB9055-57B8-4383-B9A7-C1F0A15696D2}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConflictService", "ConflictService\ConflictService.csproj", "{D51764B2-5321-41A5-99BE-B25CE27E3677}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgramSubjectCrawlerService", "ProgramSubjectCrawlerService\ProgramSubjectCrawlerService.csproj", "{04307AF0-985B-4958-9961-069D06A18DEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentCrawlerService", "StudentCrawlerService\StudentCrawlerService.csproj", "{E647E4A4-F1D1-4878-8447-6492588BADFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumCrawlerService", "CurriculumCrawlerService\CurriculumCrawlerService.csproj", "{ECB0E3AD-024B-46FD-AD21-EC07399436A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +76,22 @@ Global
 		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03A31965-826F-47E1-AB54-DA44F9711F2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51764B2-5321-41A5-99BE-B25CE27E3677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51764B2-5321-41A5-99BE-B25CE27E3677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51764B2-5321-41A5-99BE-B25CE27E3677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51764B2-5321-41A5-99BE-B25CE27E3677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04307AF0-985B-4958-9961-069D06A18DEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04307AF0-985B-4958-9961-069D06A18DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04307AF0-985B-4958-9961-069D06A18DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04307AF0-985B-4958-9961-069D06A18DEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E647E4A4-F1D1-4878-8447-6492588BADFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E647E4A4-F1D1-4878-8447-6492588BADFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E647E4A4-F1D1-4878-8447-6492588BADFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E647E4A4-F1D1-4878-8447-6492588BADFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

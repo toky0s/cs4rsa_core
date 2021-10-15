@@ -1,4 +1,6 @@
-# cs4rsa
-CS4RSA in C# instead Python for speed by speed.
-Đây là phiên bản tiếp nối và cải thiện của CS4RSA cũ được dựng trên Python PyQt5.
-Với tốc độ nhanh hơn, dữ liệu an toàn hơn và bộ lọc cũng như giao diện thân thiện và các thao tác cũng quen thuộc hơn.
+# cs4rsa core
+💳💳💳
+Xây dựng trên NET 5.0 với nhiều cải tiến như đa nền tảng. Kiến trúc ổn định, testing và khả năng migrate linh hoạt
+hơn phiên bản cũ.
+Database here: 
+<iframe width="560" height="315" src='https://dbdiagram.io/embed/6155a57d825b5b01461a9d75'> </iframe>
