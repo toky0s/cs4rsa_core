@@ -1,6 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using StudentCrawlerService.Crawlers;
 using StudentCrawlerService.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
@@ -35,6 +33,14 @@ namespace TestCs4rsa.StudentCrawlerService
             IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
             Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
             Assert.AreEqual("truongaxin@dtu.edu.vn", student.Email);
+        }
+        
+        [Test]
+        public void CrawlStudentInfo3()
+        {
+            IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
+            Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+            Assert.AreEqual("", student.PhoneNumber);
         }
     }
 }
