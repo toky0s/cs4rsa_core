@@ -65,7 +65,7 @@ namespace TestCs4rsa.SubjectCrawlService
             }
         }
 
-        [Test]
+        [Test, Category("TestInLocal")]
         public void ThisWillPassIfExceptionThrownAsync()
         {
             Assert.ThrowsAsync<NullReferenceException>(async () => await GetSubject2());

@@ -12,7 +12,7 @@ namespace TestCs4rsa.TeacherCrawlerService
         {
         }
 
-        [Test]
+        [Test, Category("TestInLocal")]
         public void GetTeacherInfo()
         {
             using(Cs4rsaDbContext db = new Cs4rsaDbContext())

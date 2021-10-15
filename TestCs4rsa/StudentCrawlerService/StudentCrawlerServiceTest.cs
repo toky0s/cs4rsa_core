@@ -19,7 +19,7 @@ namespace TestCs4rsa.StudentCrawlerService
             _container = builder.Build();
         }
 
-        [Test]
+        [Test, Category("TestInLocal")]
         public void CrawlStudentInfo1()
         {
             using (_container.BeginLifetimeScope())
@@ -35,7 +35,7 @@ namespace TestCs4rsa.StudentCrawlerService
 
         }
         
-        [Test]
+        [Test, Category("TestInLocal")]
         public void CrawlStudentInfo2()
         {
             Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
@@ -48,7 +48,7 @@ namespace TestCs4rsa.StudentCrawlerService
 
         }
         
-        [Test]
+        [Test, Category("TestInLocal")]
         public void CrawlStudentInfo3()
         {
             Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
