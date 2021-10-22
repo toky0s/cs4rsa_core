@@ -1,4 +1,5 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using System;
 using System.Collections.Generic;
@@ -14,26 +15,21 @@ namespace HelperService
             "#111111"
         };
 
-        private Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly IKeywordRepository _keywordRepository;
 
-        public ColorGenerator(Cs4rsaDbContext cs4rsaDbContext)
+        public ColorGenerator(IKeywordRepository keywordRepository)
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _keywordRepository = keywordRepository;
         }
 
         public string GetColor(int courseId)
         {
-            Keyword keyword = _cs4rsaDbContext.Keywords.Where(keyword => keyword.CourseId == courseId).FirstOrDefault();
-            return keyword.Color;
+            return _keywordRepository.GetColor(courseId);
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
         {
-            Keyword keyword = (from discipline in _cs4rsaDbContext.Disciplines
-                                             from kw in _cs4rsaDbContext.Keywords
-                                             where discipline.Name + " " + kw.Keyword1 == subjectCode
-                                             select kw).FirstOrDefault();
-            return keyword.Color;
+            return _keywordRepository.GetColorWithSubjectCode(subjectCode);
         }
 
         public string GenerateColor()
@@ -53,7 +49,7 @@ namespace HelperService
 
         private bool IsHasColor(string color)
         {
-            return _cs4rsaDbContext.Keywords.Where(kw => kw.Color == color).Any();
+            return _keywordRepository.IsHasColor(color);
         }
     }
 }
