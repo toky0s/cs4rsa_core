@@ -1,0 +1,143 @@
+﻿<Window
+    x:Class="cs4rsa_core.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:cs4rsa_core"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:cs4rsa_core.Views"
+    xmlns:vm="clr-namespace:cs4rsa_core.ViewModels"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    Title="CS4RSA"
+    Width="1500"
+    Height="700"
+    vml:ViewModelLocator.AutoHookedUpViewModel="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <materialDesign:DialogHost DialogContent="{Binding DialogUC}" IsOpen="{Binding IsOpenDialog}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1">
+                <ContentControl x:Name="MainArea" />
+                <materialDesign:Snackbar HorizontalAlignment="Center" MessageQueue="{Binding SnackbarMessageQueue}">
+                    <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
+                </materialDesign:Snackbar>
+            </Grid>
+            <Grid
+                Width="210"
+                HorizontalAlignment="Left"
+                Background="#00cec9">
+                <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
+                    <Grid
+                        x:Name="GridCursor"
+                        Width="10"
+                        Height="60"
+                        Margin="0,100,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Background="#81ecec" />
+                </materialDesign:TransitioningContent>
+                <ListView
+                    x:Name="ListViewMenu"
+                    Margin="0,100"
+                    FontSize="18"
+                    Foreground="White"
+                    SelectedIndex="0"
+                    SelectionChanged="ListViewMenu_SelectionChanged">
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="Home" />
+                            <TextBlock
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Trang chủ" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="Account" />
+                            <TextBlock
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Tài khoản DTU" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="Calendar" />
+                            <TextBlock
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Xếp lịch thủ công" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="AutoFix" />
+                            <TextBlock
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Xếp lịch tự động" />
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="Information" />
+                            <TextBlock
+                                Margin="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="15"
+                                Text="Thông tin" />
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>
