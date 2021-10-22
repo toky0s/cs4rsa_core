@@ -31,5 +31,5 @@ jobs:
       run: dotnet build StudentCrawlerService/StudentCrawlerService.csproj
     - name: Build CurriculumCrawlerService
       run: dotnet build CurriculumCrawlerService/CurriculumCrawlerService.csproj
-    - name: Test
+    - name: Test Category=TestInLocal
       run: dotnet test --filter TestCategory=TestInLocal
