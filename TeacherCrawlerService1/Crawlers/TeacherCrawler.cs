@@ -6,16 +6,18 @@ using TeacherCrawlerService1.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
+using Cs4rsaDatabaseService.Interfaces;
+using System.Threading.Tasks;
 
 namespace TeacherCrawlerService1.Crawlers
 {
     public class TeacherCrawler : ITeacherCrawler
     {
         private HtmlDocument _htmlDocument;
-        private Cs4rsaDbContext _cs4rsaDbContext;
-        public TeacherCrawler(Cs4rsaDbContext cs4rsaDbContext)
+        private IUnitOfWork _unitOfWork;
+        public TeacherCrawler(IUnitOfWork unitOfWork)
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
         }
 
         private static string GetIntructorId(string url)
@@ -33,22 +35,22 @@ namespace TeacherCrawlerService1.Crawlers
         /// <returns></returns>
         private bool IsTeacherHasInDatabase(int instructorId)
         {
-            return _cs4rsaDbContext.Teachers.Where(teacher => teacher.TeacherId == instructorId).Any();
+            return _unitOfWork.Teachers.GetById(instructorId) is Teacher;
         }
 
-        public Teacher Crawl(string url)
+        public async Task<Teacher> Crawl(string url)
         {
             if (url != null)
             {
-                int intructorId = int.Parse(GetIntructorId(url));
-                if (IsTeacherHasInDatabase(intructorId))
+                int teacherId = int.Parse(GetIntructorId(url));
+                if (IsTeacherHasInDatabase(teacherId))
                 {
-                    return _cs4rsaDbContext.Teachers.Where(teacher => teacher.TeacherId == intructorId).FirstOrDefault();
+                    return _unitOfWork.Teachers.GetById(teacherId);
                 }
                 else
                 {
                     HtmlWeb web = new HtmlWeb();
-                    _htmlDocument = web.Load(url);
+                    _htmlDocument = await web.LoadFromWebAsync(url);
                     if (_htmlDocument != null)
                     {
                         List<HtmlNode> infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]").ToList();
@@ -64,7 +66,7 @@ namespace TeacherCrawlerService1.Crawlers
                         string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
                         List<HtmlNode> liNodes = _htmlDocument.DocumentNode.SelectNodes(xpathLiNode).ToList();
                         List<string> teachedSubjects = liNodes.Select(item => item.InnerText).ToList();
-                        Teacher teacher = new Teacher
+                        Teacher teacher = new()
                         {
                             TeacherId = int.Parse(id),
                             Name = name,
@@ -76,8 +78,8 @@ namespace TeacherCrawlerService1.Crawlers
                             Subject = subject,
                             Form = form,
                         };
-                        _cs4rsaDbContext.Teachers.Add(teacher);
-                        _cs4rsaDbContext.SaveChanges();
+                        _unitOfWork.Teachers.Add(teacher);
+                        _unitOfWork.Complete();
                         return teacher;
                     }
                     return null;
