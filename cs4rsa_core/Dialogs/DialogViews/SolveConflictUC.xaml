@@ -1,0 +1,88 @@
+﻿<UserControl
+    x:Class="cs4rsa_core.Dialogs.DialogViews.SolveConflictUC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:cs4rsa_core.Dialogs.DialogViews"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <materialDesign:Card>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Margin="15,20,15,5"
+                HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
+                Xung đột này có thể được giải quyết
+                bằng cách bỏ chọn một trong hai lớp
+            </TextBlock>
+            <TextBlock
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignBody2TextBlock}">
+                <Run Text="{Binding ClassGroup1Name}" />
+                <Run Text="hoặc" />
+                <Run Text="{Binding ClassGroup2Name}" />
+                <Run Text="?" />
+            </TextBlock>
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,5,0,10"
+                HorizontalAlignment="Center"
+                Foreground="{DynamicResource PrimaryHueMidBrush}"
+                Text="Không làm gì hết"
+                ToolTip="Yếu đuối">
+                <TextBlock.InputBindings>
+                    <MouseBinding Command="{Binding CloseDialogCommand}" MouseAction="LeftClick" />
+                </TextBlock.InputBindings>
+            </TextBlock>
+            <Image
+                Grid.Row="3"
+                Height="200"
+                Margin="0,0,0,10"
+                Source="/Images/choice.jpg" />
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    Width="200"
+                    Margin="5,10,0,15"
+                    Background="#d63031"
+                    BorderBrush="#d63031"
+                    Command="{Binding RemoveClassGroup1Command}"
+                    Content="{Binding ClassGroup1Name, StringFormat=Bỏ chọn {0} (viên màu đỏ)}"
+                    Foreground="White"
+                    ToolTip="Giải quyết xung đột và xem như chưa có chuyện gì xảy ra" />
+                <Button
+                    Grid.Column="1"
+                    Width="200"
+                    Margin="0,10,5,15"
+                    Command="{Binding RemoveClassGroup2Command}"
+                    Content="{Binding ClassGroup2Name, StringFormat=Bỏ chọn {0} (viên màu xanh)}"
+                    Foreground="White"
+                    ToolTip="Cũng như thế nhưng vị dưa hấu" />
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
+
+</UserControl>
