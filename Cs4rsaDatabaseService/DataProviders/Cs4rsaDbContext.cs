@@ -27,5 +27,23 @@ namespace Cs4rsaDatabaseService.DataProviders
             optionsBuilder.UseSqlite(@"Data Source=cs4rsa.db");
             base.OnConfiguring(optionsBuilder);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SessionDetail>()
+                .HasOne(sessionDetail => sessionDetail.Session)
+                .WithMany(session => session.SessionDetails)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Keyword>()
+                .HasOne(keyword => keyword.Discipline)
+                .WithMany(discipline => discipline.Keywords)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ParProDetail>()
+                .HasKey(x => new { x.ProgramSubjectId, x.PreParSubjectId});
+            modelBuilder.Entity<PreProDetail>()
+                .HasKey(x => new { x.ProgramSubjectId, x.PreParSubjectId });
+        }
     }
 }

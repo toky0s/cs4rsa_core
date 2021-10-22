@@ -10,4 +10,8 @@
     <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.115" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

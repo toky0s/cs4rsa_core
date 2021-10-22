@@ -11,7 +11,6 @@ namespace Cs4rsaDatabaseService.Models
     /// </summary>
     public class PreProDetail
     {
-        public int PreProDetailId { get; set; }
         public int ProgramSubjectId { get; set; }
         public ProgramSubject ProgramSubject { get; set; }
         public int PreParSubjectId { get; set; }
