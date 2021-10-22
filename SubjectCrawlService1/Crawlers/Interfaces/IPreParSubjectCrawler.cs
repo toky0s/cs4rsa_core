@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace SubjectCrawlService1.Crawlers.Interfaces
 {
-    public interface ISubjectCrawler
+    public interface IPreParSubjectCrawler
     {
-        Task<Subject> Crawl(string discipline, string keyword1);
-        Task<Subject> Crawl(int courseId);
+        public bool IsAvailableSubject { get; set; }
+        Task<PreParContainer> Run(string courseId);
+        Task<PreParContainer> Run(string courseId, string sessionId);
     }
 }

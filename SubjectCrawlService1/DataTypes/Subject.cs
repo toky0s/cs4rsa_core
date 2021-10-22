@@ -11,20 +11,21 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers;
+using System.Threading.Tasks;
+using Cs4rsaDatabaseService.Interfaces;
 
 namespace SubjectCrawlService1.DataTypes
 {
     public class Subject
     {
         private ITeacherCrawler _teacherCrawler;
-        private Cs4rsaDbContext _cs4rsaDbContext;
+        private IUnitOfWork _unitOfWork;
         private readonly string _studyUnit;
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
         private List<string> _tempTeachers = new();
         public List<string> TempTeachers => _tempTeachers;
-
         private List<Teacher> _teachers = new();
         public List<Teacher> Teachers => _teachers;
         private List<ClassGroup> classGroups = new();
@@ -43,8 +44,9 @@ namespace SubjectCrawlService1.DataTypes
                         string studyUnitType, string studyType, string semester, 
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId, 
-                        ITeacherCrawler teacherCrawler, Cs4rsaDbContext cs4rsaDbContext)
+                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             Name = name;
             SubjectCode = subjectCode;
             _studyUnit = studyUnit;
@@ -56,9 +58,7 @@ namespace SubjectCrawlService1.DataTypes
             Desciption = description;
             RawSoup = rawSoup;
             CourseId = courseId;
-            _cs4rsaDbContext = cs4rsaDbContext;
             _teacherCrawler = teacherCrawler;
-            GetClassGroups();
         }
 
         private string[] GetClassGroupNames()
@@ -75,11 +75,11 @@ namespace SubjectCrawlService1.DataTypes
         /// Trả về danh sách các nhóm lớp.
         /// </summary>
         /// <returns>List các ClassGroup.</returns>
-        private void GetClassGroups()
+        public async Task GetClassGroups()
         {
             if (classGroups.Count == 0)
             {
-                List<SchoolClass> schoolClasses = GetSchoolClasses();
+                List<SchoolClass> schoolClasses = await GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
                     ClassGroup classGroup = new(classGroupName, SubjectCode);
@@ -99,12 +99,12 @@ namespace SubjectCrawlService1.DataTypes
             }
         }
 
-        private List<SchoolClass> GetSchoolClasses()
+        private async Task<List<SchoolClass>> GetSchoolClasses()
         {
             List<SchoolClass> schoolClasses = new List<SchoolClass>();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
             {
-                SchoolClass schoolClass = GetSchoolClass(trTag);
+                SchoolClass schoolClass = await GetSchoolClass(trTag);
                 schoolClasses.Add(schoolClass);
             }
             return schoolClasses;
@@ -115,7 +115,7 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
         /// <returns></returns>
-        private SchoolClass GetSchoolClass(HtmlNode trTagClassLop)
+        private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
             HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
@@ -123,7 +123,7 @@ namespace SubjectCrawlService1.DataTypes
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
             //teacher parser
             string teacherName = GetTeacherName(trTagClassLop);
-            Teacher teacher = GetTeacherFromURL(urlToSubjectDetailPage);
+            Teacher teacher = await GetTeacherFromURL(urlToSubjectDetailPage);
 
             List<string> tempTeachers = new List<string>();
             tempTeachers.Add(teacherName);
@@ -233,10 +233,10 @@ namespace SubjectCrawlService1.DataTypes
             return trTags;
         }
 
-        private string GetTeacherInfoPageURL(string urlSubjectDetailPage)
+        private async Task<string> GetTeacherInfoPageURL(string urlSubjectDetailPage)
         {
-            HtmlWeb htmlWeb = new HtmlWeb();
-            HtmlDocument htmlDocument = htmlWeb.Load(urlSubjectDetailPage);
+            HtmlWeb htmlWeb = new();
+            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(urlSubjectDetailPage);
             HtmlNode aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
             if (aTag == null)
             {
@@ -255,14 +255,16 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="url">Chuỗi url tới trang chi tiết nhóm lớp.</param>
         /// <returns></returns>
-        private Teacher GetTeacherFromURL(string url)
+        private async Task<Teacher> GetTeacherFromURL(string url)
         {
-            string teacherDetailPageURL = GetTeacherInfoPageURL(url);
-            TeacherCrawler teacherCrawler = new(_cs4rsaDbContext);
-            Teacher teacher = teacherCrawler.Crawl(teacherDetailPageURL);
+            string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
+            TeacherCrawler teacherCrawler = new(_unitOfWork);
+            Teacher teacher = await teacherCrawler.Crawl(teacherDetailPageURL);
 
             if (teacher != null && !_teachers.Contains(teacher))
+            {
                 _teachers.Add(teacher);
+            }
 
             return teacher;
         }

@@ -7,17 +7,16 @@ using CourseSearchService.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using System.Threading.Tasks;
+using Cs4rsaDatabaseService.Interfaces;
 
 namespace SubjectCrawlService1.Crawlers
 {
-    public class SubjectCrawler: ISubjectCrawler
+    public class SubjectCrawler : ISubjectCrawler
     {
-        public string SubjectCode { get; set; }
-
         //private readonly string _discipline;
         //private readonly string _keyword1;
         private readonly int _courseId;
-        private readonly Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
 
@@ -26,34 +25,23 @@ namespace SubjectCrawlService1.Crawlers
         /// </summary>
         /// <param name="discipline">Hai chữ cái đầu của mã môn (CS).</param>
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
-        public SubjectCrawler(ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler,Cs4rsaDbContext cs4rsaDbContext)
+        public SubjectCrawler(ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _teacherCrawler = teacherCrawler;
         }
 
-        public SubjectCrawler(int courseId)
-        {
-            _courseId = courseId;
-        }
-
         public async Task<Subject> Crawl(string discipline, string keyword1)
         {
-            SubjectCode = $"{discipline} {keyword1}";
-            IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from ds in _cs4rsaDbContext.Disciplines
-                                                                      from kw in _cs4rsaDbContext.Keywords
-                                                                      where ds.Name == discipline && kw.Keyword1 == keyword1
-                                                                      select kw;
-
-            int courseId = _courseId != 0 ? _courseId : keywordByDisciplineAndKeyword1Query.FirstOrDefault().CourseId;
+            Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+            int courseId = keyword.CourseId;
 
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
             string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            //HtmlWeb htmlWeb = new();
-            //HtmlDocument htmlDocument = htmlWeb.Load(url);
-            HtmlDocument htmlDocument = await TaskFetchCourseClass(url);
+            HtmlWeb htmlWeb = new();
+            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(url);
 
             // kiểm tra sự tồn tại của môn học
             HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
@@ -63,11 +51,7 @@ namespace SubjectCrawlService1.Crawlers
                 HtmlNode[] trTags = table.Descendants("tr").ToArray();
                 string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
 
-                string name;
-                if (_courseId != 0)
-                    name = _cs4rsaDbContext.Keywords.Where(keyword => keyword.CourseId == _courseId).FirstOrDefault().SubjectName;
-                else
-                    name = keywordByDisciplineAndKeyword1Query.FirstOrDefault().SubjectName;
+                string name = keyword.SubjectName;
 
                 string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
                 string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
@@ -81,23 +65,44 @@ namespace SubjectCrawlService1.Crawlers
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
                 return new Subject(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _cs4rsaDbContext);
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
             }
             return null;
         }
 
-        private static async Task<HtmlDocument> TaskFetchCourseClass(string url)
+        public async Task<Subject> Crawl(int courseId)
         {
-            Task<HtmlDocument> fetch = new Task<HtmlDocument>(() =>
-            {
-                HtmlWeb htmlWeb = new();
-                HtmlDocument htmlDocument = htmlWeb.Load(url);
-                return htmlDocument;
-            });
+            string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
-            fetch.Start();
-            HtmlDocument document = await fetch;
-            return document;
+            string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
+            HtmlWeb htmlWeb = new();
+            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(url);
+
+            // kiểm tra sự tồn tại của môn học
+            HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
+            if (span == null)
+            {
+                HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
+                HtmlNode[] trTags = table.Descendants("tr").ToArray();
+                string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
+
+                string name = _unitOfWork.Keywords.GetKeyword(courseId).SubjectName;
+
+                string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
+                string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
+                string studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
+                string semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
+
+                string mustStudySubject = trTags[5].Elements("td").ToArray()[1].InnerText.Trim();
+                string parallelSubject = trTags[6].Elements("td").ToArray()[1].InnerText.Trim();
+
+                string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
+
+                string rawSoup = htmlDocument.DocumentNode.OuterHtml;
+                return new Subject(name, subjectCode, studyUnit, studyUnitType,
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
+            }
+            return null;
         }
     }
 }
