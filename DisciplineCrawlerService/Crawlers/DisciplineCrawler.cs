@@ -6,14 +6,15 @@ using HtmlAgilityPack;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DisciplineCrawlerService.Crawlers
 {
     public class DisciplineCrawler
     {
         private readonly ICourseCrawler _homeCourseSearch;
-        private Cs4rsaDbContext _cs4rsaDbContext;
-        private ColorGenerator _colorGenerator;
+        private readonly Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly ColorGenerator _colorGenerator;
 
         public DisciplineCrawler(ICourseCrawler courseCrawler, Cs4rsaDbContext cs4rsaDbContext, ColorGenerator colorGenerator)
         {
@@ -25,7 +26,7 @@ namespace DisciplineCrawlerService.Crawlers
         /// <summary>
         /// Cào data từ Course DTU và lưu vào database.
         /// </summary>
-        public void GetDisciplineAndKeywordDatabase(BackgroundWorker backgroundWorker = null, double numberOfSubjects = 0)
+        public void GetDisciplineAndKeyword(BackgroundWorker backgroundWorker = null, double numberOfSubjects = 0)
         {
             double reportValue = 0;
             double jump = 0;
@@ -35,10 +36,7 @@ namespace DisciplineCrawlerService.Crawlers
                 reportValue = jump;
             }
 
-            string URL = string.Format(
-                "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
-                _homeCourseSearch.GetCurrentSemesterValue(),
-                Helpers.GetTimeFromEpoch());
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load(URL);
@@ -75,7 +73,7 @@ namespace DisciplineCrawlerService.Crawlers
                     string color = _colorGenerator.GenerateColor();
                     HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
                     string subjectName = subjectNameAnchorTag.InnerText.Trim();
-                    Keyword keyword = new Keyword()
+                    Keyword keyword = new()
                     {
                         Keyword1 = keyword1,
                         CourseId = int.Parse(courseId),
@@ -109,11 +107,7 @@ namespace DisciplineCrawlerService.Crawlers
         /// <returns>Số lượng môn học hiện có.</returns>
         public int GetNumberOfSubjects()
         {
-            string URL = string.Format(
-            "http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={0}&t={1}",
-            _homeCourseSearch.GetCurrentSemesterValue(),
-            Helpers.GetTimeFromEpoch()
-            );
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load(URL);
