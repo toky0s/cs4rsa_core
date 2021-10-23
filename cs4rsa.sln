@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2BB9055-57B8-4383-B9A7-C1F0A15696D2}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConflictService", "ConflictService\ConflictService.csproj", "{D51764B2-5321-41A5-99BE-B25CE27E3677}"
@@ -32,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgramSubjectCrawlerServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentCrawlerService", "StudentCrawlerService\StudentCrawlerService.csproj", "{E647E4A4-F1D1-4878-8447-6492588BADFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurriculumCrawlerService", "CurriculumCrawlerService\CurriculumCrawlerService.csproj", "{ECB0E3AD-024B-46FD-AD21-EC07399436A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumCrawlerService", "CurriculumCrawlerService\CurriculumCrawlerService.csproj", "{ECB0E3AD-024B-46FD-AD21-EC07399436A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
