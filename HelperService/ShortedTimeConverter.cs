@@ -67,11 +67,11 @@ namespace HelperService
         public ShortedTime Convert(DateTime time)
         {
             if (!DuyTanStudyTimes.ContainsKey(time))
+            {
                 return new ShortedTime(time, time);
+            }
             DateTime converted = DuyTanStudyTimes[time];
-            if (converted != null)
-                return new ShortedTime(time, converted);
-            return new ShortedTime(time, time);
+            return converted != null ? new ShortedTime(time, converted) : new ShortedTime(time, time);
         }
 
         private void AddDuyTanTime(int rawHour, int rawMinute, int newHour, int newMinute)
