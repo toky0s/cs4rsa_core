@@ -13,6 +13,7 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.DialogResults;
 using ConflictService.DataTypes;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -46,7 +47,7 @@ namespace cs4rsa_core.ViewModels
 
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; } = new ObservableCollection<PlaceConflictFinderModel>();
 
-        public RelayCommand SaveCommand { get; set; }
+        public AsyncRelayCommand SaveCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
@@ -57,13 +58,12 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<RemoveAChoiceClassGroupMessage>().Notify(this);
-            SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
+            SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
         }
-
 
         /// <summary>
         /// Giải quyết xung đột
@@ -126,13 +126,14 @@ namespace cs4rsa_core.ViewModels
             return ClassGroupModels.Count > 0;
         }
 
-        private void OpenSaveDialog()
+        private readonly SaveSessionUC _saveSessionUC = new();
+        private async Task OpenSaveDialog()
         {
-            SaveSessionUC saveSessionUC = new SaveSessionUC();
-            SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
+            SaveSessionViewModel vm = _saveSessionUC.DataContext as SaveSessionViewModel;
             vm.ClassGroupModels = ClassGroupModels.ToList();
             vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(saveSessionUC);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(_saveSessionUC);
+            await vm.LoadScheduleSessions();
         }
 
         private void CloseDialogAndHandleSaveResult(SaveResult result)

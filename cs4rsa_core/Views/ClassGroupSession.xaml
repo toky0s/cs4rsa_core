@@ -155,11 +155,16 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
-                            <GroupBox
-                                Margin="5,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Thứ">
+                            <GroupBox Margin="5,0,5,5" materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="CalendarMonth" />
+                                        <TextBlock Foreground="White" Text="Thứ" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
                                     <CheckBox
                                         x:Name="CheckBox_Monday"
@@ -208,11 +213,16 @@
 
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1">
-                            <GroupBox
-                                Margin="0,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Buổi">
+                            <GroupBox Margin="0,0,5,5" materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="WeatherNight" />
+                                        <TextBlock Foreground="White" Text="Buổi" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <StackPanel Orientation="Vertical">
                                     <CheckBox
                                         x:Name="CheckBox_Morning"
@@ -252,8 +262,16 @@
                             <GroupBox
                                 Margin="0,0,5,5"
                                 materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Chỗ ngồi">
+                                materialDesign:ColorZoneAssist.Foreground="White">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="SeatPassenger" />
+                                        <TextBlock Foreground="White" Text="Chỗ ngồi" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <StackPanel x:Name="RadioButtonContainer_Seat">
                                     <RadioButton
                                         x:Name="RadioButton_SeatAll"
@@ -276,8 +294,16 @@
                             <GroupBox
                                 Margin="5,0,5,5"
                                 materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Giảng viên">
+                                materialDesign:ColorZoneAssist.Foreground="White">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="HumanMaleBoard" />
+                                        <TextBlock Foreground="White" Text="Giảng viên" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <ComboBox
                                     x:Name="ComboxBox_Teachers"
                                     materialDesign:ComboBoxAssist.ClassicMode="True"
@@ -291,8 +317,16 @@
                             <GroupBox
                                 Margin="5,0,5,5"
                                 materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Giai đoạn">
+                                materialDesign:ColorZoneAssist.Foreground="White">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="BookOpen" />
+                                        <TextBlock Foreground="White" Text="Giai đoạn" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <StackPanel x:Name="RadioButtonContainer_Phase">
                                     <RadioButton
                                         Name="all"
@@ -325,8 +359,16 @@
                             <GroupBox
                                 Margin="0,0,5,5"
                                 materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White"
-                                Header="Nơi học">
+                                materialDesign:ColorZoneAssist.Foreground="White">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="MapMarkerOutline" />
+                                        <TextBlock Foreground="White" Text="Nơi học" />
+                                    </StackPanel>
+                                </GroupBox.Header>
                                 <StackPanel x:Name="CheckBoxContainer_Place">
                                     <CheckBox
                                         x:Name="CheckBox_quantrung"

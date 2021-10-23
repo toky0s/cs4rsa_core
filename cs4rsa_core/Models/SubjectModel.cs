@@ -38,8 +38,10 @@ namespace cs4rsa_core.Models
         {
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
-                if (classGroupModel.Name.Equals(name))
+                if (classGroupModel.Name.Equals(name, System.StringComparison.Ordinal))
+                {
                     return classGroupModel;
+                }
             }
             return null;
         }

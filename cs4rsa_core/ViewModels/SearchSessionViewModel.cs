@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.Input;
+using Cs4rsaDatabaseService.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -46,7 +47,7 @@ namespace cs4rsa_core.ViewModels
         }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
-        public RelayCommand ImportDialogCommand { get; set; }
+        public AsyncRelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         #endregion
 
@@ -115,26 +116,27 @@ namespace cs4rsa_core.ViewModels
 
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
-        private readonly Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
 
-        public SearchSessionViewModel(ICourseCrawler courseCrawler, Cs4rsaDbContext cs4rsaDbContext,
+        public SearchSessionViewModel(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
         {
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ExitImportSubjectMessage>().Notify(this);
-            List<Discipline> disciplines = _cs4rsaDbContext.Disciplines.ToList();
+
+            List<Discipline> disciplines = _unitOfWork.Disciplines.GetAllInclideKeyword();
             Disciplines = new ObservableCollection<Discipline>(disciplines);
 
             SelectedDiscipline = Disciplines[0];
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
-            ImportDialogCommand = new RelayCommand(OnOpenImportDialog, () => true);
+            ImportDialogCommand = new AsyncRelayCommand(OnOpenImportDialog, () => true);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
         }
@@ -157,7 +159,7 @@ namespace cs4rsa_core.ViewModels
             int courseId = _selectedSubjectModel.CourseId;
             string semesterValue = _courseCrawler.GetCurrentSemesterValue();
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
-            Process.Start(new ProcessStartInfo
+            _ = Process.Start(new ProcessStartInfo
             {
                 FileName = url,
                 UseShellExecute = true
@@ -170,26 +172,25 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void ReloadDisciplineAndKeyWord()
         {
-            List<Discipline> disciplines = _cs4rsaDbContext.Disciplines.ToList();
+            Disciplines.Clear();
+            List<Discipline> disciplines = _unitOfWork.Disciplines.GetAllInclideKeyword();
             disciplines.ForEach(discipline => Disciplines.Add(discipline));
-
             SelectedDiscipline = Disciplines[0];
             LoadDisciplineKeyword(SelectedDiscipline);
         }
 
-        private void OnOpenImportDialog()
+        private readonly ImportSessionUC _importSessionUC = new();
+        private async Task OnOpenImportDialog()
         {
-            ImportSessionUC importSessionUC = new ImportSessionUC();
-            ImportSessionViewModel vm = importSessionUC.DataContext as ImportSessionViewModel;
+            ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
             vm.MessageBox = new Cs4rsaMessageBox();
-            vm.LoadScheduleSession();
-            //vm.CloseDialogCallback = CloseDialogAndHandleSessionManagerResult;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(importSessionUC);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(_importSessionUC);
+            await vm.LoadScheduleSession();
         }
 
         private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
         {
-            Cs4rsaMessageBox messageBoxService = new Cs4rsaMessageBox();
+            Cs4rsaMessageBox messageBoxService = new();
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
             if (result != null)
             {
@@ -234,7 +235,8 @@ namespace cs4rsa_core.ViewModels
         public void LoadDisciplineKeyword(Discipline discipline)
         {
             DisciplineKeywordModels.Clear();
-            List<Keyword> keywords = _cs4rsaDbContext.Keywords.Where(keyword => keyword.Discipline == discipline).ToList();
+            Discipline currentDiscipline = Disciplines.Where(d => d.DisciplineId == discipline.DisciplineId).FirstOrDefault();
+            List<Keyword> keywords = currentDiscipline.Keywords;
             keywords.ForEach(keyword => DisciplineKeywordModels.Add(keyword));
             SelectedKeyword = DisciplineKeywordModels[0];
         }
@@ -252,9 +254,9 @@ namespace cs4rsa_core.ViewModels
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(subjectDownloadingUC);
             // Dialog here
             Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1);
-            await subject.GetClassGroups();
             if (subject != null)
             {
+                await subject.GetClassGroups();
                 SubjectModel subjectModel = new(subject, _colorGenerator);
                 SubjectModels.Add(subjectModel);
                 TotalSubject = SubjectModels.Count;
@@ -262,9 +264,11 @@ namespace cs4rsa_core.ViewModels
                 UpdateCreditTotal();
                 UpdateSubjectAmount();
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                SelectedSubjectModel = SubjectModels.Last();
             }
             else
             {
+                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
                 MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Môn học không tồn tại trong học kỳ này"));
                 CanAddSubjectChange();
             }

@@ -103,10 +103,12 @@
                 <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
                         Command="{Binding DeleteCommand}"
+                        FontSize="13"
                         Header="Xoá"
                         Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
+                        FontSize="13"
                         Header="Mở trong Course"
                         Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                 </ContextMenu>

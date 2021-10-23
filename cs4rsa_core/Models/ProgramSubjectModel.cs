@@ -57,8 +57,8 @@ namespace cs4rsa_core.Models
             string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { ' ' });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
-            var query = from ds in _cs4rsaDbContext.Set<Discipline>()
-                        join kw in _cs4rsaDbContext.Set<Keyword>()
+            var query = from ds in _cs4rsaDbContext.Disciplines
+                        join kw in _cs4rsaDbContext.Keywords
                         on ds.DisciplineId equals kw.DisciplineId
                         where ds.Name == kw.Keyword1
                         select kw;

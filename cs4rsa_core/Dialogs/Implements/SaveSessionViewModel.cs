@@ -10,6 +10,7 @@ using Cs4rsaDatabaseService.Models;
 using CourseSearchService.Crawlers.Interfaces;
 using System.Linq;
 using Cs4rsaDatabaseService.Interfaces;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -46,13 +47,13 @@ namespace cs4rsa_core.Dialogs.Implements
             ScheduleSessions = new();
             SaveCommand = new RelayCommand(Save, () => true);
             CancelCommand = new RelayCommand(Cancle, () => true);
-            LoadScheduleSessions();
         }
 
-        private void LoadScheduleSessions()
+        public async Task LoadScheduleSessions()
         {
-            List<Session> sessions = _unitOfWork.Sessions.GetAll().ToList();
-            sessions.ForEach(session => ScheduleSessions.Add(session));
+            ScheduleSessions.Clear();
+            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            sessions.ToList().ForEach(session => ScheduleSessions.Add(session));
         }
 
         private void Cancle()
@@ -85,7 +86,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             _unitOfWork.Sessions.Add(session);
             _unitOfWork.Complete();
-            SaveResult result = new SaveResult() { Name = name };
+            SaveResult result = new() { Name = name };
             CloseDialogCallback.Invoke(result);
         }
     }

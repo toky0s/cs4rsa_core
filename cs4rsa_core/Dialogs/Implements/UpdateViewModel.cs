@@ -30,16 +30,16 @@ namespace cs4rsa_core.Dialogs.Implements
         }
 
         public Action CloseDialogCallback { get; set; }
-        private readonly IDisciplineRepository _disciplineRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly Cs4rsaDbContext _cs4rsaDbContext;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly DisciplineCrawler _disciplineCrawler;
-        public UpdateViewModel(IDisciplineRepository disciplineRepository, Cs4rsaDbContext cs4rsaDbContext, 
+        public UpdateViewModel(IUnitOfWork unitOfWork, Cs4rsaDbContext cs4rsaDbContext, 
             ICourseCrawler courseCrawler, ISetting setting, DisciplineCrawler disciplineCrawler)
         {
-            _disciplineRepository = disciplineRepository;
             _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _setting = setting;
             _disciplineCrawler = disciplineCrawler;
@@ -60,11 +60,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private void OnStartUpdate()
         {
             CloseDialogCommand.NotifyCanExecuteChanged();
-            // đảm bảo ràng buộc toàn vẹn khi xoá, không thay đổi vị trí hai lệnh này.
-            //Cs4rsaDataEdit.DeleteDataInTableKeyword();
-            //Cs4rsaDataEdit.DeleteDataInTableDiscipline();
-            _disciplineRepository.RemoveRange(_cs4rsaDbContext.Disciplines);
-
+            _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
 
             BackgroundWorker backgroundWorker = new BackgroundWorker()
             {
