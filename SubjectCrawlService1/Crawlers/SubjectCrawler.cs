@@ -13,9 +13,6 @@ namespace SubjectCrawlService1.Crawlers
 {
     public class SubjectCrawler : ISubjectCrawler
     {
-        //private readonly string _discipline;
-        //private readonly string _keyword1;
-        private readonly int _courseId;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
