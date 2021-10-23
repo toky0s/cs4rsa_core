@@ -1,5 +1,6 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
 using HtmlAgilityPack;
@@ -13,13 +14,13 @@ namespace DisciplineCrawlerService.Crawlers
     public class DisciplineCrawler
     {
         private readonly ICourseCrawler _homeCourseSearch;
-        private readonly Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
 
-        public DisciplineCrawler(ICourseCrawler courseCrawler, Cs4rsaDbContext cs4rsaDbContext, ColorGenerator colorGenerator)
+        public DisciplineCrawler(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork, ColorGenerator colorGenerator)
         {
             _homeCourseSearch = courseCrawler;
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
         }
 
@@ -63,8 +64,8 @@ namespace DisciplineCrawlerService.Crawlers
                     currentDiscipline = discipline;
                     disciplineId++;
                     Discipline discipline1 = new Discipline() { DisciplineId = disciplineId, Name = discipline };
-                    _cs4rsaDbContext.Disciplines.Add(discipline1);
-                    _cs4rsaDbContext.SaveChanges();
+                    _unitOfWork.Disciplines.Add(discipline1);
+                    _unitOfWork.Complete();
                 }
 
                 if (discipline == currentDiscipline)
@@ -81,8 +82,8 @@ namespace DisciplineCrawlerService.Crawlers
                         SubjectName = subjectName,
                         Color = color
                     };
-                    _cs4rsaDbContext.Keywords.Add(keyword);
-                    _cs4rsaDbContext.SaveChanges();
+                    _unitOfWork.Keywords.Add(keyword);
+                    _unitOfWork.Complete();
                 }
 
                 // report work progress
