@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Interfaces
 {
-    public interface ISessionRepository: IGenericRepository<Session>
+    public interface ISessionRepository : IGenericRepository<Session>
     {
         List<SessionDetail> GetSessionDetails(int sessionId);
     }

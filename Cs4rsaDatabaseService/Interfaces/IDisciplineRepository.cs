@@ -9,6 +9,6 @@ namespace Cs4rsaDatabaseService.Interfaces
 {
     public interface IDisciplineRepository : IGenericRepository<Discipline>
     {
-
+        List<Discipline> GetAllInclideKeyword();
     }
 }

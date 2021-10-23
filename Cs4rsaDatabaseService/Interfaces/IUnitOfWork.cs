@@ -16,5 +16,6 @@ namespace Cs4rsaDatabaseService.Interfaces
         ITeacherRepository Teachers { get; }
 
         int Complete();
+        Task<int> CompleteAsync();
     }
 }

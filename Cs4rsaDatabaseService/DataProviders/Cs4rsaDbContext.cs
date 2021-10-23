@@ -30,6 +30,11 @@ namespace Cs4rsaDatabaseService.DataProviders
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Keyword>()
+            .HasOne(k => k.Discipline)
+            .WithMany(d => d.Keywords)
+            .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<SessionDetail>()
                 .HasOne(sessionDetail => sessionDetail.Session)
                 .WithMany(session => session.SessionDetails)
@@ -41,7 +46,7 @@ namespace Cs4rsaDatabaseService.DataProviders
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ParProDetail>()
-                .HasKey(x => new { x.ProgramSubjectId, x.PreParSubjectId});
+                .HasKey(x => new { x.ProgramSubjectId, x.PreParSubjectId });
             modelBuilder.Entity<PreProDetail>()
                 .HasKey(x => new { x.ProgramSubjectId, x.PreParSubjectId });
         }

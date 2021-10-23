@@ -19,7 +19,6 @@ namespace Cs4rsaDatabaseService.Models
         public string Color { get; set; }
 
         public int DisciplineId { get; set; }
-
         public Discipline Discipline { get; set; }
     }
 }

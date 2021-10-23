@@ -11,6 +11,7 @@ namespace Cs4rsaDatabaseService.Interfaces
     {
         T GetById(int id);
         IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         void Add(T entity);
         void AddRange(IEnumerable<T> entities);

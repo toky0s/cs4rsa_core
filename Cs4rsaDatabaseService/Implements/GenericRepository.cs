@@ -1,10 +1,10 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Implements
@@ -32,6 +32,12 @@ namespace Cs4rsaDatabaseService.Implements
         {
             return _context.Set<T>().ToList();
         }
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
         public T GetById(int id)
         {
             return _context.Set<T>().Find(id);
@@ -40,6 +46,7 @@ namespace Cs4rsaDatabaseService.Implements
         {
             _context.Set<T>().Remove(entity);
         }
+
         public void RemoveRange(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
