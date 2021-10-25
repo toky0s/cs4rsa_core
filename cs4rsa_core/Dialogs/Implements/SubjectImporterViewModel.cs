@@ -60,13 +60,13 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 Subject subject = await _subjectCrawler.Crawl(courseId);
                 await subject.GetClassGroups();
-                SubjectModel subjectModel = new(subject, colorGenerator);
+                SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, colorGenerator);
                 subjectModels.Add(subjectModel);
             }
 
             foreach (SubjectModel subject in subjectModels)
             {
-                subject.Color = colorGenerator.GetColor(subject.CourseId);
+                subject.Color = await colorGenerator.GetColorAsync(subject.CourseId);
             }
             ImportResult importResult = new() { SubjectModels = subjectModels };
             CloseDialogCallback.Invoke(importResult, _sessionManagerResult);

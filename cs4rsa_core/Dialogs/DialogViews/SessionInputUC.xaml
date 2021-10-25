@@ -7,8 +7,10 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DesignHeight="250"
     d:DesignWidth="400"
+    vml:DialogVMLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     TextElement.FontSize="13"
@@ -17,9 +19,6 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <UserControl.DataContext>
-        <vm:SessionInputViewModel />
-    </UserControl.DataContext>
     <materialDesign:Card Width="400">
         <StackPanel>
             <TextBlock Margin="10" TextWrapping="Wrap">

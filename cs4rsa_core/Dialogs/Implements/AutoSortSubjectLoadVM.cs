@@ -25,13 +25,18 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task Download()
         {
             List<string> courseIds = ProgramSubjectModels.Select(item => item.CourseId).ToList();
-            List<Subject> subjects = new List<Subject>();
+            List<Subject> subjects = new();
             foreach (string courseId in courseIds)
             {
                 Subject subject = await _subjectCrawler.Crawl(int.Parse(courseId));
                 subjects.Add(subject);
             }
-            List<SubjectModel> subjectModels = subjects.Select(item => new SubjectModel(item, _colorGenerator)).ToList();
+            List<SubjectModel> subjectModels = new();
+            foreach (Subject item in subjects)
+            {
+                SubjectModel subjectModel = await SubjectModel.CreateAsync(item, _colorGenerator);
+                subjectModels.Add(subjectModel);
+            }
             CloseDialogCallback.Invoke(subjectModels);
         }
     }

@@ -1,12 +1,14 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Models;
 using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
 using HelperService;
 using Microsoft.Toolkit.Mvvm.Input;
 using ProgramSubjectCrawlerService.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -62,16 +64,17 @@ namespace cs4rsa_core.Dialogs.Implements
         public ObservableCollection<ProgramSubjectModel> ParProgramSubjectModels { get; set; }
 
         public Action CloseDialogCallback { get; set; }
-        public Action<object> AddCallback { get; set; }
+        public Action AddCallback { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
         public ProgramDiagram ProgramDiagram { get; set; }
-        private ColorGenerator _colorGenerator;
-        private Cs4rsaDbContext _cs4rsaDbContext;
-        public ProSubjectDetailVM(ColorGenerator colorGenerator, Cs4rsaDbContext cs4rsaDbContext)
+        private readonly ColorGenerator _colorGenerator;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ProSubjectDetailVM(ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
-            _cs4rsaDbContext = cs4rsaDbContext;
             CloseDialogCommand = new RelayCommand(OnCloseDialog);
             AddCommand = new RelayCommand(OnAdd);
             PreProgramSubjectModels = new ObservableCollection<ProgramSubjectModel>();
@@ -84,27 +87,31 @@ namespace cs4rsa_core.Dialogs.Implements
             //AddCallback.Invoke(obj);
         }
 
-        public void LoadPreProSubjectModels()
+        public async Task LoadPreProSubjectModels()
         {
-            if (_programSubjectModel!=null)
+            if (_programSubjectModel != null)
             {
                 List<ProgramSubject> preProgramSubject = ProgramDiagram.GetPreProgramSubject(_programSubjectModel.ProgramSubject);
                 foreach (ProgramSubject programSubject in preProgramSubject)
                 {
                     if (programSubject != null)
-                        PreProgramSubjectModels.Add(new ProgramSubjectModel(programSubject, _colorGenerator, _cs4rsaDbContext));
+                    {
+                        ProgramSubjectModel programSubjectModel = await ProgramSubjectModel.CreateAsync(programSubject, _colorGenerator, _unitOfWork);
+                        PreProgramSubjectModels.Add(programSubjectModel);
+                    }
                 }
             }
         }
 
-        public void LoadParProSubjectModels()
+        public async Task LoadParProSubjectModels()
         {
             if (_programSubjectModel != null)
             {
-                List<ProgramSubject> parProgramSubject = ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
+                List<ProgramSubject> parProgramSubject = await ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
                 foreach (ProgramSubject programSubject in parProgramSubject)
                 {
-                    ParProgramSubjectModels.Add(new ProgramSubjectModel(programSubject, _colorGenerator, _cs4rsaDbContext));
+                    ProgramSubjectModel programSubjectModel = await ProgramSubjectModel.CreateAsync(programSubject, _colorGenerator, _unitOfWork);
+                    ParProgramSubjectModels.Add(programSubjectModel);
                 }
             }
         }
