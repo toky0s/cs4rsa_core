@@ -51,9 +51,8 @@ namespace HelperService
     /// </summary>
     public class ShortedTimeConverter
     {
-        private static ShortedTimeConverter _instance = new ShortedTimeConverter();
-        private readonly DateTime now = DateTime.Now;
-        private readonly Dictionary<DateTime, DateTime> DuyTanStudyTimes = new Dictionary<DateTime, DateTime>();
+        private static ShortedTimeConverter _instance = new();
+        private readonly Dictionary<DateTime, DateTime> DuyTanStudyTimes = new();
 
         private ShortedTimeConverter()
         {
@@ -71,16 +70,7 @@ namespace HelperService
                 return new ShortedTime(time, time);
             }
             DateTime converted = DuyTanStudyTimes[time];
-            return converted != null ? new ShortedTime(time, converted) : new ShortedTime(time, time);
-        }
-
-        private void AddDuyTanTime(int rawHour, int rawMinute, int newHour, int newMinute)
-        {
-            DateTime now = DateTime.Now;
-            DuyTanStudyTimes.Add(
-                new DateTime(now.Year, now.Month, now.Day, rawHour, rawMinute, 0),
-                new DateTime(now.Year, now.Month, now.Day, newHour, newMinute, 0)
-            );
+            return new ShortedTime(time, converted);
         }
     }
 }

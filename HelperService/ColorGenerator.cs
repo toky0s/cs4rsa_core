@@ -4,6 +4,7 @@ using Cs4rsaDatabaseService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HelperService
 {
@@ -22,9 +23,9 @@ namespace HelperService
             _keywordRepository = keywordRepository;
         }
 
-        public string GetColor(int courseId)
+        public async Task<string> GetColorAsync(int courseId)
         {
-            return _keywordRepository.GetColor(courseId);
+            return await _keywordRepository.GetColorAsync(courseId);
         }
 
         public string GetColorWithSubjectCode(string subjectCode)

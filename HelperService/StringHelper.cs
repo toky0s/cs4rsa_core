@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HelperService
@@ -29,8 +30,14 @@ namespace HelperService
         {
             string[] separatingStrings = { " ", "\n", "\r" };
             string[] sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
-            string ouput = String.Join(" ", sliceStrings);
+            string ouput = string.Join(" ", sliceStrings);
             return ouput;
+        }
+
+        public static string ParseDateTime(string text)
+        {
+            text = text.Replace("\r\n", string.Empty);
+            return CleanString(text);
         }
     }
 }
