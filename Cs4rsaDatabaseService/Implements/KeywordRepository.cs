@@ -2,6 +2,8 @@
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cs4rsaDatabaseService.Implements
 {
@@ -11,10 +13,10 @@ namespace Cs4rsaDatabaseService.Implements
         {
         }
 
-        public string GetColor(int courseId)
+        public async Task<string> GetColorAsync(int courseId)
         {
-            Keyword keyword = _context.Keywords.Where(keyword => keyword.CourseId == courseId).FirstOrDefault();
-            return keyword.Color;
+            Keyword keyword = await _context.Keywords.FirstOrDefaultAsync(keyword => keyword.CourseId == courseId);
+            return keyword != null ? keyword.Color : "";
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
@@ -64,6 +66,16 @@ namespace Cs4rsaDatabaseService.Implements
             char[] splitChars = { ' ' };
             string[] slices = subjectCode.Split(splitChars);
             return GetKeyword(slices[0], slices[1]);
+        }
+
+        public async Task<int> CountAsync(string discipline, string keyword)
+        {
+            var query = from d in _context.Disciplines
+                        join k in _context.Keywords
+                        on d.DisciplineId equals k.DisciplineId
+                        where d.Name == discipline && k.Keyword1 == keyword
+                        select k;
+            return await query.CountAsync();
         }
     }
 }

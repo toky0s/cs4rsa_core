@@ -20,6 +20,12 @@ namespace Cs4rsaDatabaseService.Implements
         {
             _context.Set<T>().Add(entity);
         }
+
+        public async Task AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+        }
+
         public void AddRange(IEnumerable<T> entities)
         {
             _context.Set<T>().AddRange(entities);
@@ -42,6 +48,12 @@ namespace Cs4rsaDatabaseService.Implements
         {
             return _context.Set<T>().Find(id);
         }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
         public void Remove(T entity)
         {
             _context.Set<T>().Remove(entity);
