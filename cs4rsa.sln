@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa", "cs4rsa\cs4rsa.csproj", "{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaDatabaseService", "Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj", "{D023AA31-EAB7-4B34-B861-8A90948342E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelperService", "HelperService\HelperService.csproj", "{DFC60310-E393-437F-8DF4-2330CFB304D5}"
@@ -41,10 +39,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BEE43DB-846C-45B4-8D49-F0E71AA1DBF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D023AA31-EAB7-4B34-B861-8A90948342E8}.Release|Any CPU.ActiveCfg = Release|Any CPU

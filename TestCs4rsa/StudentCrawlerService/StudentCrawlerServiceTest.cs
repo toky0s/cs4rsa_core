@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
 using StudentCrawlerService.Crawlers;
-using StudentCrawlerService.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
 using Autofac;
 using Cs4rsaDatabaseService.Models;
+using StudentCrawlerService.Crawlers.Interfaces;
+using System.Threading.Tasks;
 
 namespace TestCs4rsa.StudentCrawlerService
 {
@@ -20,7 +21,7 @@ namespace TestCs4rsa.StudentCrawlerService
         }
 
         [Test, Category("TestInLocal")]
-        public void CrawlStudentInfo1()
+        public async Task CrawlStudentInfo1()
         {
             using (_container.BeginLifetimeScope())
             {
@@ -28,7 +29,7 @@ namespace TestCs4rsa.StudentCrawlerService
                 if (cs4RsaDbContext.Database.EnsureCreated() == true)
                 {
                     IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-                    Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                    Student student = await dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
                     Assert.AreEqual("Trương A Xin", student.Name);
                 }
             }
@@ -36,26 +37,26 @@ namespace TestCs4rsa.StudentCrawlerService
         }
         
         [Test, Category("TestInLocal")]
-        public void CrawlStudentInfo2()
+        public async Task CrawlStudentInfo2()
         {
             Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
             if (cs4RsaDbContext.Database.EnsureCreated() == true)
             {
                 IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-                Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                Student student = await dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
                 Assert.AreEqual("truongaxin@dtu.edu.vn", student.Email);
             }
 
         }
         
         [Test, Category("TestInLocal")]
-        public void CrawlStudentInfo3()
+        public async Task CrawlStudentInfo3()
         {
             Cs4rsaDbContext cs4RsaDbContext = _container.Resolve<Cs4rsaDbContext>();
             if (cs4RsaDbContext.Database.EnsureCreated() == true)
             {
                 IDtuStudentInfoCrawler dtuStudentInfoCrawler = _container.Resolve<IDtuStudentInfoCrawler>();
-                Student student = dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
+                Student student = await dtuStudentInfoCrawler.Crawl("ppxdPtQCkOX2 rc5tqBFhg==");
                 Assert.AreEqual("", student.PhoneNumber);
             }
         }
