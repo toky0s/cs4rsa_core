@@ -1,22 +1,24 @@
 ﻿using Cs4rsaDatabaseService.Models;
+using CurriculumCrawlerService.Crawlers.Interfaces;
 using HelperService;
 using HtmlAgilityPack;
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CurriculumCrawlerService.Crawlers
 {
     /// <summary>
     /// Lấy mã ngành của một sinh viên.
     /// </summary>
-    public class CurriculumCrawler
+    public class CurriculumCrawler : ICurriculumCrawler
     {
-        public static Curriculum GetCurriculum(string specialString)
+        public async Task<Curriculum> GetCurriculum(string specialString)
         {
             string t = Helpers.GetTimeFromEpoch();
             string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHoc.aspx?t={t}&studentidnumber={specialString}";
             HtmlWeb web = new();
-            HtmlDocument doc = web.Load(url);
+            HtmlDocument doc = await web.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode scriptNode = docNode.SelectSingleNode("//td/script");
             HtmlNode nameNode = docNode.SelectSingleNode("//li/a");
@@ -28,7 +30,7 @@ namespace CurriculumCrawlerService.Crawlers
             string matchString = matching.Value.ToString();
             string sCurid = matchString.Split(new char[] { '=' })[1];
             int curid = int.Parse(sCurid);
-            Curriculum curriculum = new() { CurriculumId=curid, Name=name};
+            Curriculum curriculum = new() { CurriculumId = curid, Name = name };
             return curriculum;
         }
     }
