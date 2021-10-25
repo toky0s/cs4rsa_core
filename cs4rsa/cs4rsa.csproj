@@ -54,24 +54,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="SplashScreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\myimage.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\github.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\choice.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\donate.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.37" />
     <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
