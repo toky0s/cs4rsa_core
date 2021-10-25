@@ -4,7 +4,6 @@ using CurriculumCrawlerService.Crawlers;
 using DisciplineCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers;
-using StudentCrawlerService.Interfaces;
 using SubjectCrawlService1.Crawlers;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Implements;
@@ -22,6 +21,10 @@ using cs4rsa_core.Settings;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Dialogs.Implements;
+using cs4rsa_core.Dialogs.MessageBoxService;
+using CurriculumCrawlerService.Crawlers.Interfaces;
+using StudentCrawlerService.Crawlers.Interfaces;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core
 {
@@ -33,6 +36,8 @@ namespace cs4rsa_core
         public IServiceProvider Container { get; set; }
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+            SetupExceptionHandling();
             Container = CreateServiceProvider();
             ISetting setting = Container.GetRequiredService<ISetting>();
             string isDatabaseCreated = setting.Read("IsDatabaseCreated");
@@ -43,7 +48,6 @@ namespace cs4rsa_core
                 setting.CurrentSetting.IsDatabaseCreated = "true";
                 setting.Save();
             }
-            base.OnStartup(e);
         }
         private IServiceProvider CreateServiceProvider()
         {
@@ -53,10 +57,14 @@ namespace cs4rsa_core
             services.AddSingleton<IDisciplineRepository, DisciplineRepository>();
             services.AddSingleton<IKeywordRepository, KeywordRepository>();
             services.AddSingleton<IStudentRepository, StudentRepository>();
+            services.AddSingleton<IProgramSubjectRepository, ProgramSubjectRepository>();
+            services.AddSingleton<IPreParSubjectRepository, PreParSubjectRepository>();
+            services.AddSingleton<IPreProDetailsRepository, PreProDetailRepository>();
+            services.AddSingleton<IParProDetailsRepository, ParProDetailRepository>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<ICourseCrawler, CourseCrawler>();
-            services.AddSingleton<CurriculumCrawler>();
+            services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
@@ -66,6 +74,10 @@ namespace cs4rsa_core
             services.AddSingleton<DisciplineCrawler>();
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
+            services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
+            services.AddSingleton<ISetting, Setting>();
+            services.AddSingleton<ISetting, Setting>();
+            services.AddSingleton<SessionExtension>();
 
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<SearchSessionViewModel>();
@@ -73,14 +85,49 @@ namespace cs4rsa_core
             services.AddScoped<ChoiceSessionViewModel>();
             services.AddScoped<ScheduleTableViewModel>();
             services.AddScoped<MainSchedulingViewModel>();
+            services.AddScoped<LoginViewModel>();
+            services.AddScoped<StudentInputViewModel>();
 
             services.AddScoped<SaveSessionViewModel>();
-            services.AddSingleton<ImportSessionViewModel>();
+            services.AddScoped<ImportSessionViewModel>();
 
-            services.AddScoped<ISetting, Setting>();
-            // Model Extension
-            services.AddSingleton<SessionExtension>();
             return services.BuildServiceProvider();
+        }
+
+        private void SetupExceptionHandling()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                LogUnhandledException((Exception)e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
+
+            DispatcherUnhandledException += (s, e) =>
+            {
+                LogUnhandledException(e.Exception, "Application.Current.DispatcherUnhandledException");
+                e.Handled = true;
+            };
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+            {
+                LogUnhandledException(e.Exception, "TaskScheduler.UnobservedTaskException");
+                e.SetObserved();
+            };
+        }
+
+        private void LogUnhandledException(Exception exception, string source)
+        {
+            string message = $"Unhandled exception ({source})";
+            try
+            {
+                System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
+                message = string.Format("Unhandled exception in {0} v{1}", assemblyName.Name, assemblyName.Version);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception in LogUnhandledException");
+            }
+            finally
+            {
+                Console.WriteLine(message);
+            }
         }
     }
 }

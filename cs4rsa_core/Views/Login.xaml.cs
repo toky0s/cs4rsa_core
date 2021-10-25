@@ -19,11 +19,17 @@ namespace cs4rsa_core.Views
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class Login : UserControl
     {
-        public LoginView()
+        public Login()
         {
             InitializeComponent();
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
         }
     }
 }

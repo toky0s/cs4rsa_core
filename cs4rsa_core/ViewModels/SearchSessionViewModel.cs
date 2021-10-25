@@ -7,7 +7,6 @@ using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModelFunctions;
-using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
 using LightMessageBus;
@@ -130,15 +129,24 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ExitImportSubjectMessage>().Notify(this);
 
-            List<Discipline> disciplines = _unitOfWork.Disciplines.GetAllInclideKeyword();
-            Disciplines = new ObservableCollection<Discipline>(disciplines);
-
-            SelectedDiscipline = Disciplines[0];
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new AsyncRelayCommand(OnOpenImportDialog, () => true);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
+
+            Disciplines = new ObservableCollection<Discipline>();
+            Task.Run(async () => await LoadDiscipline());
+        }
+
+        public async Task LoadDiscipline()
+        {
+            List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
+            foreach (Discipline discipline in disciplines)
+            {
+                Disciplines.Add(discipline);
+            }
+            SelectedDiscipline = Disciplines[0];
         }
 
         private void OnDeleteAll()
@@ -170,10 +178,10 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Load lại data môn học từ cơ sở dữ liệu lên
         /// </summary>
-        private void ReloadDisciplineAndKeyWord()
+        private async Task ReloadDisciplineAndKeyWord()
         {
             Disciplines.Clear();
-            List<Discipline> disciplines = _unitOfWork.Disciplines.GetAllInclideKeyword();
+            List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
             disciplines.ForEach(discipline => Disciplines.Add(discipline));
             SelectedDiscipline = Disciplines[0];
             LoadDisciplineKeyword(SelectedDiscipline);
@@ -257,7 +265,7 @@ namespace cs4rsa_core.ViewModels
             if (subject != null)
             {
                 await subject.GetClassGroups();
-                SubjectModel subjectModel = new(subject, _colorGenerator);
+                SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
                 SubjectModels.Add(subjectModel);
                 TotalSubject = SubjectModels.Count;
                 CanAddSubjectChange();
@@ -332,11 +340,11 @@ namespace cs4rsa_core.ViewModels
             UpdateSubjectAmount();
         }
 
-        public void Handle(UpdateSuccessMessage message)
+        public async void Handle(UpdateSuccessMessage message)
         {
             DisciplineKeywordModels.Clear();
             Disciplines.Clear();
-            ReloadDisciplineAndKeyWord();
+            await ReloadDisciplineAndKeyWord();
         }
 
         public void Handle(ShowOnSimuMessage message)

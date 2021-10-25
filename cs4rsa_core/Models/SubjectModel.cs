@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
 using SubjectCrawlService1.DataTypes;
@@ -19,13 +20,25 @@ namespace cs4rsa_core.Models
         public int StudyUnit { get; set; }
         public int CourseId => subject.CourseId;
         public string Color { get; set; }
-
-        public SubjectModel(Subject subject, ColorGenerator colorGenerator)
+        private ColorGenerator _colorGenerator;
+        private SubjectModel(Subject subject, ColorGenerator colorGenerator)
         {
+            _colorGenerator = colorGenerator;
             this.subject = subject;
             StudyUnit = subject.StudyUnit;
             ClassGroupModels = subject.ClassGroups.Select(item => new ClassGroupModel(item, colorGenerator)).ToList();
-            Color = colorGenerator.GetColor(subject.CourseId);
+        }
+
+        private async Task<SubjectModel> InitializeAsync()
+        {
+            Color = await _colorGenerator.GetColorAsync(subject.CourseId);
+            return this;
+        }
+
+        public static Task<SubjectModel> CreateAsync(Subject subject, ColorGenerator colorGenerator)
+        {
+            SubjectModel ret = new(subject, colorGenerator);
+            return ret.InitializeAsync();
         }
 
         /// <summary>

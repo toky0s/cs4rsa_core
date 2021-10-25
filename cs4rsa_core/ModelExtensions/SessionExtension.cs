@@ -10,7 +10,7 @@ namespace cs4rsa_core.ModelExtensions
 {
     public class SessionExtension
     {
-        private ICourseCrawler _courseCrawler;
+        private readonly ICourseCrawler _courseCrawler;
         public SessionExtension(ICourseCrawler courseCrawler)
         {
             _courseCrawler = courseCrawler;

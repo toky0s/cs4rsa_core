@@ -5,7 +5,7 @@ namespace cs4rsa_core.Messages
 {
     public class ExitImportSubjectMessage : Cs4rsaMessage
     {
-        public new SessionManagerResult Source;
+        public new SessionManagerResult Source { get; set; }
         public ExitImportSubjectMessage(SessionManagerResult source) : base(source)
         {
             Source = source;

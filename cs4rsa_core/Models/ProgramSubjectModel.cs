@@ -1,10 +1,10 @@
 ﻿using cs4rsa_core.Models.Bases;
-using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
 using ProgramSubjectCrawlerService.DataTypes;
 using ProgramSubjectCrawlerService.DataTypes.Enums;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.Models
 {
@@ -14,7 +14,7 @@ namespace cs4rsa_core.Models
     /// làm được vì nó chỉ chứa thông tin của chính nó mà không có tương tác nào với các Folder hay Subject
     /// khác trong cây.
     /// </summary>
-    public class ProgramSubjectModel: TreeItem
+    public class ProgramSubjectModel : TreeItem
     {
         public ProgramSubjectCrawlerService.DataTypes.ProgramSubject ProgramSubject { get; set; }
         public string SubjectCode { get; set; }
@@ -31,40 +31,49 @@ namespace cs4rsa_core.Models
         public StudyState StudyState { get; set; }
 
         public bool IsDone => ProgramSubject.IsDone();
-        public bool IsAvaiable => IsAvaiableInThisSemester();
+        public async Task<bool> IsAvaiable() => await IsAvaiableInThisSemester();
         public string CourseId => ProgramSubject.CourseId;
         public string ChildOfNode => ProgramSubject.ChildOfNode;
 
-        private Cs4rsaDbContext _cs4rsaDbContext;
-        public ProgramSubjectModel(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject, ColorGenerator colorGenerator, Cs4rsaDbContext cs4rsaDbContext) : base(programSubject.SubjectName, programSubject.Id)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ColorGenerator _colorGenerator;
+        private ProgramSubjectModel(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject, 
+            ColorGenerator colorGenerator, IUnitOfWork unitOfWork) : base(programSubject.SubjectName, programSubject.Id)
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
+            _colorGenerator = colorGenerator;
             ProgramSubject = programSubject;
             SubjectCode = programSubject.SubjectCode;
             SubjectName = programSubject.SubjectName;
             FolderName = programSubject.ParrentNodeName;
             StudyState = programSubject.StudyState;
             NodeType = programSubject.GetNodeType();
-            Color = colorGenerator.GetColor(int.Parse(programSubject.CourseId));
         }
 
         /// <summary>
         /// Kiểm tra xem ProgramSubjectModel này có sẵn trong học kỳ này hay không.
         /// </summary>
         /// <returns></returns>
-        private bool IsAvaiableInThisSemester()
+        private async Task<bool> IsAvaiableInThisSemester()
         {
             string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { ' ' });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
-            var query = from ds in _cs4rsaDbContext.Disciplines
-                        join kw in _cs4rsaDbContext.Keywords
-                        on ds.DisciplineId equals kw.DisciplineId
-                        where ds.Name == kw.Keyword1
-                        select kw;
-            return query.Count() > 0;
+            int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);
+            return count > 0;
+        }
 
-            //return Cs4rsaDataView.IsExistsSubjectInThisSemester(ProgramSubject);
+        private async Task<ProgramSubjectModel> InitializeAsync()
+        {
+            Color = await _colorGenerator.GetColorAsync(int.Parse(ProgramSubject.CourseId));
+            return this;
+        }
+
+        public static Task<ProgramSubjectModel> CreateAsync(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject,
+            ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
+        {
+            ProgramSubjectModel ret = new(programSubject, colorGenerator, unitOfWork);
+            return ret.InitializeAsync();
         }
     }
 }

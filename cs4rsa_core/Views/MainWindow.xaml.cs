@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using HelperService;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace cs4rsa_core.Views
@@ -8,11 +9,10 @@ namespace cs4rsa_core.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        // Khởi tạo trước các View trong Runtime
         private readonly Home _homeView = new();
-        private readonly LoginView _loginView = new();
+        private readonly Login _loginView = new();
         private readonly MainScheduling _mainScheduling = new();
-        //private readonly AutoSchedule _autoScheduling = new AutoSchedule();
+        private readonly AutoSchedule _autoScheduling = new();
         private readonly Info _infoView = new();
 
         public MainWindow()
@@ -37,11 +37,12 @@ namespace cs4rsa_core.Views
                     MainArea.Content = _mainScheduling;
                     break;
                 case 3:
-                    // fixed
-                    MainArea.Content = _infoView;
+                    MainArea.Content = _autoScheduling;
                     break;
                 case 4:
                     MainArea.Content = _infoView;
+                    break;
+                default:
                     break;
             }
         }
@@ -49,7 +50,7 @@ namespace cs4rsa_core.Views
         private void MoveCursorMenu(int index)
         {
             TrainsitionigContentSlide.OnApplyTemplate();
-            GridCursor.Margin = new Thickness(0, (100 + (60 * index)), 0, 0);
+            GridCursor.Margin = new Thickness(0, 100 + (60 * index), 0, 0);
         }
     }
 }

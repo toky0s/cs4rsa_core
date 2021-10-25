@@ -45,10 +45,7 @@
     <Page Update="Dialogs\DialogViews\ImportSessionUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Dialogs\DialogViews\LoginUC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Dialogs\DialogViews\ProgramSubjectLoadUC.xaml">
+    <Page Update="Dialogs\DialogViews\StudentInputUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Dialogs\DialogViews\ProSubjectDetailUC.xaml">
@@ -78,10 +75,16 @@
     <Page Update="Resources\Styles.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+    <Page Update="Views\AutoSchedule.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Views\ChoicedSession.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\ClassGroupSession.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Views\CombinationContainerWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Home.xaml">
@@ -90,7 +93,7 @@
     <Page Update="Views\Info.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\LoginView.xaml">
+    <Page Update="Views\Login.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\MainScheduling.xaml">
