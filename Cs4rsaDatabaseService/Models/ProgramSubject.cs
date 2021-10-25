@@ -12,7 +12,7 @@ namespace Cs4rsaDatabaseService.Models
         public string SubjectCode { get; set; }
         public string CourseId { get; set; }
         public string Name { get; set; }
-        public string Credit { get; set; }
+        public int Credit { get; set; }
 
         public List<ParProDetail> ParProDetails { get; set; }
         public List<PreProDetail> PreProDetails { get; set; }
