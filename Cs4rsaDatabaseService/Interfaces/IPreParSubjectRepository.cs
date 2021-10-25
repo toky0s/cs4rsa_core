@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Interfaces
 {
-    public interface IDisciplineRepository : IGenericRepository<Discipline>
+    public interface IPreParSubjectRepository : IGenericRepository<PreParSubject>
     {
-        Task<List<Discipline>> GetAllIncludeKeywordAsync();
     }
 }

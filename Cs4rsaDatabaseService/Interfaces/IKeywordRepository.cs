@@ -14,7 +14,8 @@ namespace Cs4rsaDatabaseService.Interfaces
         Keyword GetKeyword(int courseId);
         Keyword GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
-        string GetColor(int courseId);
+        Task<string> GetColorAsync(int courseId);
         bool IsHasColor(string color);
+        Task<int> CountAsync(string discipline, string keyword);
     }
 }

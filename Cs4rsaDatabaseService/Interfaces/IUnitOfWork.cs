@@ -14,7 +14,10 @@ namespace Cs4rsaDatabaseService.Interfaces
         ISessionRepository Sessions { get; }
         IStudentRepository Students { get; }
         ITeacherRepository Teachers { get; }
-
+        IProgramSubjectRepository ProgramSubjects { get; }
+        IPreParSubjectRepository PreParSubjects { get; }
+        IPreProDetailsRepository PreProDetails { get; }
+        IParProDetailsRepository ParProDetails { get; }
         int Complete();
         Task<int> CompleteAsync();
     }
