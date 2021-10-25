@@ -1,6 +1,7 @@
-﻿using Cs4rsaDatabaseService.DataProviders;
+﻿using Cs4rsaDatabaseService.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProgramSubjectCrawlerService.DataTypes
 {
@@ -10,21 +11,21 @@ namespace ProgramSubjectCrawlerService.DataTypes
     public class ProgramDiagram
     {
         public List<ProgramFolder> ProgramFolders { get; set; } = new List<ProgramFolder>();
-        private readonly Cs4rsaDbContext _cs4rsaDbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProgramDiagram(ProgramFolder outlineRoot, ProgramFolder physicalEducationRoot,
-                              ProgramFolder industryOutlineRoot, ProgramFolder specializedRoot, Cs4rsaDbContext cs4rsaDbContext)
+                              ProgramFolder industryOutlineRoot, ProgramFolder specializedRoot, IUnitOfWork unitOfWork)
         {
             ProgramFolders.Add(outlineRoot);
             ProgramFolders.Add(physicalEducationRoot);
             ProgramFolders.Add(industryOutlineRoot);
             ProgramFolders.Add(specializedRoot);
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
         }
 
         public List<ProgramSubject> GetAllProSubject()
         {
-            List<ProgramSubject> programSubjects = new List<ProgramSubject>();
+            List<ProgramSubject> programSubjects = new();
             foreach (ProgramFolder folder in ProgramFolders)
             {
                 programSubjects.AddRange(folder.GetProgramSubjects());
@@ -43,7 +44,9 @@ namespace ProgramSubjectCrawlerService.DataTypes
             {
                 ProgramFolder result = folder.FindProgramFolder(folderName);
                 if (result != null)
+                {
                     return result;
+                }
             }
             return null;
         }
@@ -59,7 +62,9 @@ namespace ProgramSubjectCrawlerService.DataTypes
             {
                 ProgramSubject result = folder.GetProgramSubject(subjectCode);
                 if (result != null)
+                {
                     return result;
+                }
             }
             return null;
         }
@@ -80,11 +85,9 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// </summary>
         /// <param name="programSubject">ProgramSubject</param>
         /// <returns></returns>
-        public List<ProgramSubject> GetParProgramSubject(ProgramSubject programSubject)
+        public async Task<List<ProgramSubject>> GetParProgramSubject(ProgramSubject programSubject)
         {
-            Cs4rsaDatabaseService.Models.ProgramSubject programSubjectModel = _cs4rsaDbContext.ProgramSubjects
-                .Where(p => p.CourseId == programSubject.CourseId)
-                .FirstOrDefault();
+            Cs4rsaDatabaseService.Models.ProgramSubject programSubjectModel = await _unitOfWork.ProgramSubjects.GetByCourseIdAsync(programSubject.CourseId);
             List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = programSubjectModel.ParProDetails
                 .Select(parProDetail => parProDetail.PreParSubject)
                 .ToList();

@@ -135,7 +135,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// <returns></returns>
         public List<ProgramSubject> GetProgramSubjects()
         {
-            List<ProgramSubject> programSubjects = new List<ProgramSubject>();
+            List<ProgramSubject> programSubjects = new();
             foreach (ProgramFolder folder in _childProgramFolders)
             {
                 if (folder._childProgramSubjects.Count > 0)
@@ -151,7 +151,6 @@ namespace ProgramSubjectCrawlerService.DataTypes
             programSubjects.Sort();
             return programSubjects;
         }
-
 
         private List<ProgramSubject> GetCompletedProSubjects()
         {
@@ -170,7 +169,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        private bool AllChildIsProgramSubject(List<IProgramNode> nodes)
+        private static bool AllChildIsProgramSubject(List<IProgramNode> nodes)
         {
             foreach (IProgramNode item in nodes)
             {

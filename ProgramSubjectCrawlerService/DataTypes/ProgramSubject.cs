@@ -12,85 +12,42 @@ namespace ProgramSubjectCrawlerService.DataTypes
     /// </summary>
     public class ProgramSubject : IProgramNode, IComparable
     {
-        private string _id;
-        private readonly string _childOfNode;
-        private string _subjectCode;
-        private string _subjectName;
-        private readonly string _studyUnit;
-        private readonly StudyUnitType _studyUnitType;
-        // Lần lượt là các môn tiên quyết và song hành
-        private readonly List<string> _prerequisiteSubjects;
-        private readonly List<string> _parallelSubjects;
-        private readonly StudyState _studyState;
-        private readonly string _courseId;
-        private readonly string _parrentNodeName;
+        public string Id { get; set; }
+        public string ChildOfNode { get; }
+        public string SubjectCode { get; set; }
+        public string SubjectName { get; set; }
+        public int StudyUnit { get; }
+        public StudyUnitType StudyUnitType { get; }
+        public List<string> PrerequisiteSubjects { get; }
+        public List<string> ParallelSubjects { get; }
+        public StudyState StudyState { get; }
+        public string CourseId { get; }
+        public string ParrentNodeName { get; }
 
-        public string Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
-        public string ChildOfNode => _childOfNode;
-        public string SubjectCode
-        {
-            get
-            {
-                return _subjectCode;
-            }
-            set
-            {
-                _subjectCode = value;
-            }
-        }
-        public string SubjectName
-        {
-            get
-            {
-                return _subjectName;
-            }
-            set
-            {
-                _subjectName = value;
-            }
-        }
-        public int StudyUnit => int.Parse(_studyUnit);
-        public StudyUnitType StudyUnitType => _studyUnitType;
-        public List<string> PrerequisiteSubjects => _prerequisiteSubjects;
-        public List<string> ParallelSubjects => _parallelSubjects;
-        public StudyState StudyState => _studyState;
-        public string CourseId => _courseId;
-        public string ParrentNodeName => _parrentNodeName;
-
-        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, string studyUnit, StudyUnitType studyUnitType,
+        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
             List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
         {
-            _id = id;
-            _childOfNode = childOfNode;
-            _subjectCode = subjectCode;
-            _subjectName = subjectName;
-            _studyUnit = studyUnit;
-            _studyUnitType = studyUnitType;
-            _prerequisiteSubjects = prerequisiteSubjects;
-            _parallelSubjects = parallelSubject;
-            _studyState = studyState;
-            _courseId = courseId;
-            _parrentNodeName = parrentNodeName;
+            Id = id;
+            ChildOfNode = childOfNode;
+            SubjectCode = subjectCode;
+            SubjectName = subjectName;
+            StudyUnit = studyUnit;
+            StudyUnitType = studyUnitType;
+            PrerequisiteSubjects = prerequisiteSubjects;
+            ParallelSubjects = parallelSubject;
+            StudyState = studyState;
+            CourseId = courseId;
+            ParrentNodeName = parrentNodeName;
         }
 
         public string GetChildOfNode()
         {
-            return _childOfNode;
+            return ChildOfNode;
         }
 
         public string GetIdNode()
         {
-            return _id;
+            return Id;
         }
 
         /// <summary>
@@ -99,14 +56,14 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// <returns></returns>
         public bool IsDone()
         {
-            if (_studyState == StudyState.Completed)
+            if (StudyState == StudyState.Completed)
                 return true;
             return false;
         }
 
         public bool IsUnLearn()
         {
-            if (_studyState == StudyState.UnLearned)
+            if (StudyState == StudyState.UnLearned)
                 return true;
             return false;
         }

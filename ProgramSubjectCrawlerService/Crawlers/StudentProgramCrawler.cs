@@ -1,4 +1,5 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
 using HtmlAgilityPack;
@@ -17,22 +18,22 @@ namespace ProgramSubjectCrawlerService.Crawlers
     public class StudentProgramCrawler
     {
         private string _sessionId;
-        private Cs4rsaDbContext _cs4rsaDbContext;
+        private IUnitOfWork _unitOfWork;
         private IPreParSubjectCrawler _preParSubjectCrawler;
 
         public List<HtmlNode> _fileNodes;
         public List<HtmlNode> _folderNodes;
         public List<ProgramFolder> ProgramFolders;
-        public List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> ProgramSubjects;
+        public List<DataTypes.ProgramSubject> ProgramSubjects;
         public ProgramFolder Root;
-        public StudentProgramCrawler(string sessionId, Cs4rsaDbContext cs4rsaDbContext, IPreParSubjectCrawler preParSubjectCrawler)
+        public StudentProgramCrawler(string sessionId, IUnitOfWork unitOfWork, IPreParSubjectCrawler preParSubjectCrawler)
         {
             _sessionId = sessionId;
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
             _preParSubjectCrawler = preParSubjectCrawler;
         }
 
-        public async Task GetNode(string url)
+        public async Task<ProgramFolder> GetNode(string url)
         {
             List<HtmlNode> allNodes = await GetAllTrTag(url);
             GetFileAnhFolderNodes(allNodes);
@@ -40,6 +41,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
             ProgramSubjects = await GetProgramSubjects(_fileNodes);
             List<ProgramFolder> divedProgramFolders = DivChildNode(ProgramFolders, ProgramSubjects);
             Root = MergeNode(divedProgramFolders);
+            return Root;
         }
 
         /// <summary>
@@ -90,12 +92,12 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// Copy các ProgramSubject con vào các ProgramFolder.
         /// </summary>
         /// <param name="nodes">Danh sách tất cả các node bao gồm cả subject và folder.</param>
-        private List<ProgramFolder> DivChildNode(List<ProgramFolder> folderNodes, List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> subjectNodes)
+        private List<ProgramFolder> DivChildNode(List<ProgramFolder> folderNodes, List<DataTypes.ProgramSubject> subjectNodes)
         {
-            List<ProgramFolder> programFolders = new List<ProgramFolder>();
+            List<ProgramFolder> programFolders = new();
             foreach (ProgramFolder node in folderNodes)
             {
-                List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> subjects = GetChildProgramSubject(node, subjectNodes);
+                List<DataTypes.ProgramSubject> subjects = GetChildProgramSubject(node, subjectNodes);
                 node.AddNodes(subjects);
                 programFolders.Add(node);
             }
@@ -108,42 +110,26 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// <param name="parrent">Một folder node.</param>
         /// <param name="subjects">Danh sách các subject node.</param>
         /// <returns></returns>
-        private List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> GetChildProgramSubject(ProgramFolder parrent, List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> subjects)
+        private List<DataTypes.ProgramSubject> GetChildProgramSubject(ProgramFolder parrent, List<DataTypes.ProgramSubject> subjects)
         {
-            List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> childSubjects = new List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject>();
-            foreach (ProgramSubjectCrawlerService.DataTypes.ProgramSubject subject in subjects)
+            List<DataTypes.ProgramSubject> childSubjects = new();
+            foreach (DataTypes.ProgramSubject subject in subjects)
             {
                 if (subject.GetChildOfNode() == parrent.GetIdNode())
+                {
                     childSubjects.Add(subject);
+                }
             }
             return childSubjects;
         }
 
         public async Task<List<HtmlNode>> GetAllTrTag(string url)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = await web.LoadFromWebAsync(url);
             List<HtmlNode> trTags = doc.DocumentNode.SelectNodes("//tr").ToList();
             trTags.RemoveAt(0);
             return trTags;
-        }
-
-        /// <summary>
-        /// Trả về trang html chương trình học
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private async static Task<HtmlDocument> FetchHtml(string url)
-        {
-            Task<HtmlDocument> fetchHtmlTask = new Task<HtmlDocument>(() =>
-            {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument doc = web.Load(url);
-                return doc;
-            });
-            fetchHtmlTask.Start();
-            HtmlDocument htmlDocument = await fetchHtmlTask;
-            return htmlDocument;
         }
 
         /// <summary>
@@ -152,12 +138,12 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// <param name="trNodes">Danh sách tất cả các tr node trong chương trình học.</param>
         public void GetFileAnhFolderNodes(List<HtmlNode> trNodes)
         {
-            List<HtmlNode> folderNodes = new List<HtmlNode>();
-            List<HtmlNode> fileNodes = new List<HtmlNode>();
+            List<HtmlNode> folderNodes = new();
+            List<HtmlNode> fileNodes = new();
             foreach (HtmlNode node in trNodes)
             {
                 string innerHtml = node.InnerHtml;
-                HtmlDocument htmlDocument = new HtmlDocument();
+                HtmlDocument htmlDocument = new();
                 htmlDocument.LoadHtml(innerHtml);
                 HtmlNode rootNode = htmlDocument.DocumentNode;
                 HtmlNode spanFolderNode = rootNode.SelectSingleNode("//span[@class='folder']");
@@ -173,10 +159,10 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
         public List<ProgramFolder> GetProgramFolders(List<HtmlNode> folderNodes)
         {
-            List<ProgramFolder> programFolders = new List<ProgramFolder>();
+            List<ProgramFolder> programFolders = new();
             foreach (HtmlNode htmlNode in folderNodes)
             {
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlNode.InnerHtml);
                 HtmlNode docNode = doc.DocumentNode;
 
@@ -213,18 +199,18 @@ namespace ProgramSubjectCrawlerService.Crawlers
                 }
                 string name = GetNameFolderNode(htmlNode);
 
-                ProgramFolder folder = new ProgramFolder(name, studyMode, id, childOfNode, description, htmlNode.InnerHtml);
+                ProgramFolder folder = new(name, studyMode, id, childOfNode, description, htmlNode.InnerHtml);
                 programFolders.Add(folder);
             }
             return programFolders;
         }
 
-        public async Task<List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject>> GetProgramSubjects(List<HtmlNode> fileNodes)
+        public async Task<List<DataTypes.ProgramSubject>> GetProgramSubjects(List<HtmlNode> fileNodes)
         {
-            List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject> programSubjects = new List<ProgramSubjectCrawlerService.DataTypes.ProgramSubject>();
+            List<DataTypes.ProgramSubject> programSubjects = new();
             foreach (HtmlNode node in fileNodes)
             {
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(node.InnerHtml);
                 HtmlNode docNode = doc.DocumentNode;
 
@@ -234,10 +220,14 @@ namespace ProgramSubjectCrawlerService.Crawlers
                 string classValue = classSlices[0];
                 string childOfNode;
                 string id = idValue.Split(new char[] { '-' })[1];
-                if (classValue.Equals("toptitle"))
+                if (classValue.Equals("toptitle", System.StringComparison.Ordinal))
+                {
                     childOfNode = "0";
+                }
                 else
+                {
                     childOfNode = classValue.Split(new char[] { '-' })[3];
+                }
 
                 string parrentNodeName = GetParrentNodeWithId(childOfNode);
 
@@ -253,7 +243,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
                 //study unit
                 HtmlNode tdStudyUnitTag = docNode.SelectSingleNode("//td[3]");
-                string studyUnit = StringHelper.SuperCleanString(tdStudyUnitTag.InnerText);
+                int studyUnit = int.Parse(StringHelper.SuperCleanString(tdStudyUnitTag.InnerText));
 
                 //studyunit type
                 HtmlNode tdStudyUnitTypeTag = docNode.SelectSingleNode("//td[4]");
@@ -275,8 +265,9 @@ namespace ProgramSubjectCrawlerService.Crawlers
                 List<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects).ToList();
                 List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = new();
                 sPreParSubjects.ForEach(
-                    sPreParSubject => {
-                        Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new Cs4rsaDatabaseService.Models.PreParSubject()
+                    sPreParSubject =>
+                    {
+                        Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new()
                         {
                             SubjectCode = sPreParSubject
                         };
@@ -288,16 +279,22 @@ namespace ProgramSubjectCrawlerService.Crawlers
                 StudyState studyState;
                 string nodeContent = StringHelper.SuperCleanString(node.InnerText);
                 if (nodeContent.Contains("Đã hoàn tất"))
+                {
                     studyState = StudyState.Completed;
+                }
                 else
                 {
                     if (nodeContent.Contains("Chưa có Điểm"))
+                    {
                         studyState = StudyState.NoHavePoint;
+                    }
                     else
+                    {
                         studyState = StudyState.UnLearned;
+                    }
                 }
 
-                ProgramSubjectCrawlerService.DataTypes.ProgramSubject subject = new ProgramSubjectCrawlerService.DataTypes.ProgramSubject(id, childOfNode, subjectCode, name, studyUnit,
+                DataTypes.ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
                     studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
                 programSubjects.Add(subject);
                 Cs4rsaDatabaseService.Models.ProgramSubject programSubject = new()
@@ -308,26 +305,25 @@ namespace ProgramSubjectCrawlerService.Crawlers
                     Credit = studyUnit,
                 };
 
-                _cs4rsaDbContext.ProgramSubjects.Add(programSubject);
+                await _unitOfWork.ProgramSubjects.AddAsync(programSubject);
                 foreach (Cs4rsaDatabaseService.Models.PreParSubject preParSubject in preParSubjects)
                 {
-                    _cs4rsaDbContext.PreParSubjects.Add(preParSubject);
+                    await _unitOfWork.PreParSubjects.AddAsync(preParSubject);
                     PreProDetail preProDetail = new()
                     {
                         ProgramSubject = programSubject,
                         PreParSubject = preParSubject
                     };
-                    _cs4rsaDbContext.PreProDetails.Add(preProDetail);
+                    await _unitOfWork.PreProDetails.AddAsync(preProDetail);
 
                     ParProDetail parProDetail = new()
                     {
                         ProgramSubject = programSubject,
                         PreParSubject = preParSubject
                     };
-                    _cs4rsaDbContext.ParProDetails.Add(parProDetail);
+                    await _unitOfWork.ParProDetails.AddAsync(parProDetail);
                 }
-                _cs4rsaDbContext.SaveChanges();
-                //_subjectSaver.Save(subject);
+                await _unitOfWork.CompleteAsync();
             }
             return programSubjects;
         }
@@ -336,8 +332,10 @@ namespace ProgramSubjectCrawlerService.Crawlers
         {
             foreach (ProgramFolder programFolder in ProgramFolders)
             {
-                if (programFolder.Id.Equals(id))
+                if (programFolder.Id.Equals(id, System.StringComparison.Ordinal))
+                {
                     return programFolder.Name;
+                }
             }
             return "";
         }
@@ -347,15 +345,18 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// </summary>
         /// <param name="folderNode">Một html folder node.</param>
         /// <returns></returns>
-        private string GetNameFolderNode(HtmlNode folderNode)
+        private static string GetNameFolderNode(HtmlNode folderNode)
         {
             string html = folderNode.InnerHtml;
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new();
             doc.LoadHtml(html);
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode nodesToRemove = docNode.SelectSingleNode("//span/span");
             if (nodesToRemove != null)
+            {
                 nodesToRemove.Remove();
+            }
+
             HtmlNode span = docNode.SelectSingleNode("//span");
             return StringHelper.SuperCleanString(span.InnerText);
         }
@@ -369,7 +370,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
         private string GetStudyModeText(HtmlNode folderNode)
         {
             string html = folderNode.InnerHtml;
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new();
             doc.LoadHtml(html);
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode span = docNode.SelectSingleNode("//span/span");
@@ -378,11 +379,13 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
         private List<ProgramFolder> GetChildFolderNodes(ProgramFolder parrent, List<ProgramFolder> programNodes)
         {
-            List<ProgramFolder> childProgramNodes = new List<ProgramFolder>();
+            List<ProgramFolder> childProgramNodes = new();
             foreach (ProgramFolder node in programNodes)
             {
                 if (node.GetChildOfNode() == parrent.GetIdNode())
+                {
                     childProgramNodes.Add(node);
+                }
             }
             return childProgramNodes;
         }
