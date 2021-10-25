@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentCrawlerService.Interfaces
+namespace StudentCrawlerService.Crawlers.Interfaces
 {
     public interface IDtuStudentInfoCrawler
     {
-        Student Crawl(string specialString);
+        Task<Student> Crawl(string specialString);
     }
 }

@@ -1,29 +1,30 @@
 ﻿using System;
 using HtmlAgilityPack;
 using HelperService;
-using StudentCrawlerService.Interfaces;
-using CurriculumCrawlerService.Crawlers;
 using Cs4rsaDatabaseService.Models;
-using Cs4rsaDatabaseService.DataProviders;
-using System.Linq;
-using Cs4rsaDatabaseService;
+using Cs4rsaDatabaseService.Interfaces;
+using CurriculumCrawlerService.Crawlers.Interfaces;
+using System.Threading.Tasks;
+using StudentCrawlerService.Crawlers.Interfaces;
+using System.Globalization;
 
 namespace StudentCrawlerService.Crawlers
 {
-    public class DtuStudentInfoCrawler: IDtuStudentInfoCrawler
+    public class DtuStudentInfoCrawler : IDtuStudentInfoCrawler
     {
-        private Cs4rsaDbContext _cs4rsaDbContext;
-
-        public DtuStudentInfoCrawler(Cs4rsaDbContext cs4rsaDbContext)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurriculumCrawler _curriculumCrawler;
+        public DtuStudentInfoCrawler(IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler)
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
+            _unitOfWork = unitOfWork;
+            _curriculumCrawler = curriculumCrawler;
         }
 
-        public Student Crawl(string specialString)
+        public async Task<Student> Crawl(string specialString)
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/mentor/WarningDetail.aspx?t={Helpers.GetTimeFromEpoch()}&stid={specialString}";
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(url);
+            HtmlWeb web = new();
+            HtmlDocument doc = await web.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
 
             HtmlNode nameNode = docNode.SelectSingleNode("//div/table[1]/tr[1]/td[2]/strong");
@@ -37,10 +38,13 @@ namespace StudentCrawlerService.Crawlers
 
             string name = nameNode.InnerText;
             string studentId = studentIdNode.InnerText;
-            
-            string sBirthday = StringHelper.SuperCleanString(birthdayNode.InnerText);
-            DateTime birthday = DateTime.ParseExact(sBirthday, "dd/MM/yyyy", null);
 
+            string sBirthday = StringHelper.ParseDateTime(birthdayNode.InnerText);
+            DateTime birthday;
+            if (!DateTime.TryParseExact(sBirthday, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday))
+            {
+                DateTime.TryParseExact(sBirthday, "dd/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday);
+            }
             string cmnd = cmndNode.InnerText;
             string email = emailNode.InnerText;
             string phoneNumber = phoneNumberNode.InnerText;
@@ -49,35 +53,34 @@ namespace StudentCrawlerService.Crawlers
             string imageSrcData = imageNode.Attributes["src"].Value;
             string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", "");
 
-            Curriculum curriculum = CurriculumCrawler.GetCurriculum(specialString);
-            bool existCurriculum =_cs4rsaDbContext.Curriculums.Any(cr => cr.CurriculumId==curriculum.CurriculumId);
-            if (!existCurriculum)
+            Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
+            Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
+            if (existCurriculum == null)
             {
-                _cs4rsaDbContext.Curriculums.Add(curriculum);
-                _cs4rsaDbContext.SaveChanges();
+                await _unitOfWork.Curriculums.AddAsync(curriculum);
+                await _unitOfWork.CompleteAsync();
             }
-
-            Student info = new()
+            Student studentExist = await _unitOfWork.Students.GetByStudentIdAsync(studentId);
+            if (studentExist == null)
             {
-                Name = name,
-                StudentId = studentId,
-                SpecialString = specialString,
-                BirthDay = birthday,
-                Cmnd = cmnd,
-                Email = email,
-                PhoneNumber = phoneNumber,
-                Address = address,
-                AvatarImage = imageBase64Data,
-                CurriculumId = curriculum.CurriculumId
-            };
-
-            bool existStudent = _cs4rsaDbContext.Students.Any(student => student.StudentId == info.StudentId);
-            if (!existStudent)
-            {
-                _cs4rsaDbContext.Students.Add(info);
-                _cs4rsaDbContext.SaveChanges();
+                Student student = new()
+                {
+                    Name = name,
+                    StudentId = studentId,
+                    SpecialString = specialString,
+                    BirthDay = birthday,
+                    Cmnd = cmnd,
+                    Email = email,
+                    PhoneNumber = phoneNumber,
+                    Address = address,
+                    AvatarImage = imageBase64Data,
+                    CurriculumId = curriculum.CurriculumId
+                };
+                await _unitOfWork.Students.AddAsync(student);
+                await _unitOfWork.CompleteAsync();
+                return student;
             }
-            return info;
+            return studentExist;
         }
     }
 }
