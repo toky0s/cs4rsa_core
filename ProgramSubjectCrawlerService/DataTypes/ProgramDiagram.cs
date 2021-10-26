@@ -74,7 +74,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// </summary>
         /// <param name="programSubject">ProgramSubject</param>
         /// <returns></returns>
-        public List<ProgramSubject> GetPreProgramSubject(ProgramSubject programSubject)
+        public List<ProgramSubject> GetPreProgramSubjects(ProgramSubject programSubject)
         {
             List<string> subjectCodes = programSubject.PrerequisiteSubjects;
             return subjectCodes.Select(item => GetProgramSubject(item)).ToList();

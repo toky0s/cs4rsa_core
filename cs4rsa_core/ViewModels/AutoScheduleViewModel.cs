@@ -355,8 +355,8 @@ namespace cs4rsa_core.ViewModels
 
         private async Task OnWatchDetail()
         {
-            ProSubjectDetailUC proSubjectDetailUC = new ProSubjectDetailUC();
-            ProSubjectDetailVM vm = proSubjectDetailUC.DataContext as ProSubjectDetailVM;
+            ProSubjectDetailUC proSubjectDetailUC = new();
+            ProSubjectDetailViewModel vm = proSubjectDetailUC.DataContext as ProSubjectDetailViewModel;
             vm.ProgramDiagram = _programDiagram;
             vm.ProgramSubjectModel = _selectedProSubject;
             vm.AddCallback = OnAddSubject;

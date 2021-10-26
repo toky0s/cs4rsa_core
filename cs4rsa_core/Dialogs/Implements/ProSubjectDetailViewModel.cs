@@ -1,6 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Models;
-using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using HelperService;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    public class ProSubjectDetailVM : ViewModelBase
+    public class ProSubjectDetailViewModel : ViewModelBase
     {
         private string _subjectName;
         public string SubjectName
@@ -71,7 +70,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProSubjectDetailVM(ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
+        public ProSubjectDetailViewModel(ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
@@ -91,8 +90,8 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             if (_programSubjectModel != null)
             {
-                List<ProgramSubject> preProgramSubject = ProgramDiagram.GetPreProgramSubject(_programSubjectModel.ProgramSubject);
-                foreach (ProgramSubject programSubject in preProgramSubject)
+                List<ProgramSubject> preProgramSubjects = ProgramDiagram.GetPreProgramSubjects(_programSubjectModel.ProgramSubject);
+                foreach (ProgramSubject programSubject in preProgramSubjects)
                 {
                     if (programSubject != null)
                     {

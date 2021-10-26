@@ -4,11 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <Win32Resource />
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
     <None Remove="Images\donate.png" />
+    <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
     <None Remove="Images\myimage.jpg" />
     <None Remove="logo.ico" />
@@ -118,12 +122,14 @@
   <ItemGroup>
     <Resource Include="Images\choice.jpg" />
     <Resource Include="Images\donate.png" />
+    <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />
     <Resource Include="Images\myimage.jpg" />
     <Resource Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\background.png" />
     <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
 

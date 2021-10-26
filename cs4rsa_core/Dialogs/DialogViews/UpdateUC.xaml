@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    d:DataContext="{d:DesignInstance Type=vm:UpdateViewModel}"
     d:DesignHeight="250"
     d:DesignWidth="400"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
@@ -19,46 +20,30 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="400">
+    <materialDesign:Card Width="400" Padding="10">
         <Grid>
             <StackPanel>
                 <TextBlock
-                    Margin="5"
+                    Margin="0,0,0,10"
                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                     Text="Cảnh báo cập nhật" />
-                <TextBlock Margin="5" TextWrapping="Wrap">
+                <TextBlock TextWrapping="Wrap">
                     <TextBlock.Text>
-                        Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian (dưới 10 giây).
-                        Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật.&quot;
+                        Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian.
+                        Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật
                     </TextBlock.Text>
-                </TextBlock>
-                <TextBlock Margin="5,0,5,0">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="Sẽ rất nhanh" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="1000">
-                                    <Setter Property="Text" Value="Cập nhật thành công" />
-                                    <Setter Property="Foreground" Value="Green" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
                 </TextBlock>
                 <ProgressBar
                     x:Name="ProgressBar"
                     Height="30"
-                    Margin="5,5,5,0"
+                    Margin="0,5,0,0"
                     Maximum="1000"
                     Value="{Binding ProgressValue}" />
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button
-                        Width="90"
-                        Height="30"
-                        Margin="0,5,5,5"
+                        Margin="0,5,5,0"
                         Command="{Binding StartUpdateCommand}"
-                        Content="Bắt đầu"
-                        Foreground="White">
+                        Content="Bắt đầu">
                         <Button.Style>
                             <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
@@ -71,10 +56,9 @@
                         </Button.Style>
                     </Button>
                     <Button
-                        Margin="0,5,5,5"
+                        Margin="0,5,0,0"
                         Command="{Binding CloseDialogCommand}"
-                        Content="Thoát"
-                        Foreground="White">
+                        Content="Thoát">
                         <Button.Style>
                             <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />

@@ -29,62 +29,171 @@
             IsReadOnly="True"
             Text="{Binding Version, StringFormat=Phiên bản: {0}}" />
         <ScrollViewer Grid.Row="2">
-            <StackPanel>
-                <TextBlock
-                    Width="500"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    TextWrapping="WrapWithOverflow">
-                    Credit Simulation 4nd Register Support Application tạm gọi là CS4RSA.
-                    Bao gồm đầy đủ các tính năng tìm môn, xếp môn, giải quyết xung đột, xếp lịch tự động,...
-                    Các số liệu trong App có thể có sai sót đôi chút trong thực tế,
-                    nhưng nó không thuộc thẩm quyền của chúng tôi 😁 vì đơn giản mọi số liệu là từ web trường mà ra.
-                    Mọi logic trong xếp lịch của chúng tôi được qua test kỹ lưỡng trước khi hiển thị lên màn hình.
-                    Nếu có sai sót hãy trách web trường.
-                </TextBlock>
-                <Separator />
-                <TextBlock
-                    Width="500"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    TextWrapping="WrapWithOverflow">
-                    Sự giúp đỡ của mọi người là nguồn động viên to lớn của mình trong tương lai để
-                    phát triển và hoàn thiện ứng dụng này.
-                </TextBlock>
-                <Image
-                    Width="200"
-                    Height="200"
-                    Margin="0,10,0,0"
-                    HorizontalAlignment="Center"
-                    Source="/Images/donate.png"
-                    Stretch="UniformToFill" />
-                <TextBlock
-                    Width="500"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    FontWeight="Bold"
-                    TextWrapping="WrapWithOverflow">
-                    Dòng này để cảm ơn
-                </TextBlock>
-                <TextBlock
-                    Width="500"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    TextWrapping="WrapWithOverflow">
-                    Khởi đầu, cảm ơn những người có đóng góp vào repo này (phiên bản trên Python).
-                    Ngoài những thành viên sáng lập của Start-up Sống Vì Donate
-                    cùng với đó là các cột mốc quan trọng 14:30, 19:32, 21:59,
-                    căn phòng chừng 8 mét vuông và con mèo đen tên Tôm.
-                </TextBlock>
-                <TextBlock
-                    Width="500"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    TextWrapping="WrapWithOverflow">
-                    Cảm ơn những người đã cho mình mượn tài khoản DTU, những người cung cấp
-                    thông tin, những người donate đầu tiên cho dự án và không thể thiếu là
-                    những người truyền động lực to lớn để mình hoàn thành ứng dụng này.
-                </TextBlock>
+            <StackPanel Width="800" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <materialDesign:Card Grid.Row="0" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Image
+                                Grid.Row="0"
+                                Source="/Images/background.png"
+                                Stretch="UniformToFill" />
+                            <StackPanel Grid.Row="1">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="0,10,0,0"
+                                    HorizontalAlignment="Center"
+                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                    Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
+                                    TextWrapping="Wrap">
+                                    Một chút tiểu sử
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="10"
+                                    HorizontalAlignment="Center"
+                                    TextWrapping="WrapWithOverflow">
+                                    Credit Simulation 4nd Register Support Application tạm gọi là CS4RSA.
+                                    Bao gồm đầy đủ các tính năng tìm môn, xếp môn, giải quyết xung đột, xếp lịch tự động,...
+                                    Các số liệu trong App có thể có sai sót đôi chút trong thực tế,
+                                    nhưng nó không thuộc thẩm quyền của chúng tôi vì đơn giản mọi số liệu là từ web trường mà ra.
+                                    Mọi logic trong xếp lịch của chúng tôi được qua test kỹ lưỡng trước khi hiển thị lên màn hình.
+                                    Nếu có sai sót hãy trách web trường.
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:Card>
+                    <materialDesign:Card
+                        Grid.Row="1"
+                        Margin="0,10,0,0"
+                        Padding="10">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                HorizontalAlignment="Center"
+                                Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
+                                TextWrapping="Wrap">
+                                Dòng này để cảm ơn
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Center" TextWrapping="WrapWithOverflow">
+                                Khởi đầu, cảm ơn những người có đóng góp vào repo này (phiên bản trên Python).
+                                Ngoài những thành viên sáng lập của Start-up Sống Vì Donate
+                                cùng với đó là các cột mốc quan trọng 14:30, 19:32, 21:59,
+                                căn phòng chừng 8 mét vuông và con mèo đen tên Tôm.
+                                Cảm ơn những người đã cho mình mượn tài khoản DTU, những người cung cấp
+                                thông tin, những người donate đầu tiên cho dự án và không thể thiếu là
+                                những người truyền động lực to lớn để mình hoàn thành ứng dụng này.
+                            </TextBlock>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:Card
+                        Grid.Column="0"
+                        Margin="0,10,5,0"
+                        Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Image
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Source="/Images/donate.png" />
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0">
+                                    <TextBlock
+                                        Margin="0,0,0,20"
+                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                        Text="Mua hắn ly cà phê" />
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="NoWrap">
+                                        MoMo: TRUONG A XIN
+                                    </TextBlock>
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="NoWrap">
+                                        0354281518
+                                    </TextBlock>
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="Wrap">
+                                        Sự giúp đỡ của mọi người là nguồn động viên to lớn của mình trong tương lai để
+                                        phát triển và hoàn thiện ứng dụng này.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </materialDesign:Card>
+                    <materialDesign:Card
+                        Grid.Column="1"
+                        Margin="5,10,0,0"
+                        Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Image
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Source="/Images/donate_viettel.png"
+                                Stretch="UniformToFill" />
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0">
+                                    <TextBlock
+                                        Margin="0,0,0,20"
+                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                        Text="Mua hắn ly trà sữa" />
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="NoWrap">
+                                        Viettel Pay: TRUONG A XIN
+                                    </TextBlock>
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="NoWrap">
+                                        9704 2292 3483 4278
+                                    </TextBlock>
+                                    <TextBlock
+                                        Foreground="#636e72"
+                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                        TextWrapping="WrapWithOverflow">
+                                        Không mua cà phê thì mua trà sữa cũng được.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </materialDesign:Card>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>

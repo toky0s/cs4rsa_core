@@ -1,60 +1,66 @@
-﻿<UserControl x:Class="cs4rsa_core.Dialogs.DialogViews.ShareStringUC"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:cs4rsa_core.Dialogs.DialogViews"
-             mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="400"
-             xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+﻿<UserControl
+    x:Class="cs4rsa_core.Dialogs.DialogViews.ShareStringUC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:cs4rsa_core.Dialogs.DialogViews"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    d:DesignHeight="200"
+    d:DesignWidth="400"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
     <UserControl.DataContext>
-        <vm:ShareStringViewModel></vm:ShareStringViewModel>
+        <vm:ShareStringViewModel />
     </UserControl.DataContext>
-    <materialDesign:Card Width="400">
+    <materialDesign:Card Width="400" Padding="10">
         <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                   Margin="5">Chia sẻ</TextBlock>
-        <TextBlock TextWrapping="Wrap"
-                   Grid.Row="1"
-                   Margin="5">Chia sẻ ShareString này cho bạn bè của
-        mình hiện tại đang chạy CS4RSA trên một thiết bị khác, giúp họ
-        thấy được lịch mà bạn đã sắp xếp.</TextBlock>
-        <TextBox Text="{Binding ShareString}"
-                 IsEnabled="False"
-                 Margin="5,0,5,5"
-                 Background="#f5f5f5"
-                 Grid.Row="2"></TextBox>
-        <Button Content="Sao chép"
-                Command="{Binding CopyCommand}"
-                Height="30"
-                Margin="5,0,5,5"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+                Chia sẻ
+            </TextBlock>
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,0,0,5"
+                TextWrapping="Wrap">
+                Chia sẻ ShareString này cho bạn bè của
+                mình hiện tại đang chạy CS4RSA trên một thiết bị khác, giúp họ
+                thấy được lịch mà bạn đã sắp xếp.
+            </TextBlock>
+            <TextBox
+                Grid.Row="2"
+                Margin="0,0,0,5"
+                Background="#f5f5f5"
+                IsEnabled="False"
+                Text="{Binding ShareString}" />
+            <Button
                 Grid.Row="3"
-                Foreground="White">
-        </Button>
-            <Button Content="Thoát"
-                Command="{Binding CloseDialogCommand}"
                 Height="30"
-                Margin="5,0,5,5"
+                Margin="0,0,0,5"
+                Command="{Binding CopyCommand}"
+                Content="Sao chép" />
+            <Button
                 Grid.Row="4"
-                Foreground="White">
-            </Button>
+                Height="30"
+                Command="{Binding CloseDialogCommand}"
+                Content="Thoát" />
         </Grid>
     </materialDesign:Card>
-    
+
 </UserControl>

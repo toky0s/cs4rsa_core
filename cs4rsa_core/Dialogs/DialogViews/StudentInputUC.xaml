@@ -24,7 +24,7 @@
     <UserControl.Resources>
         <converter:Base64ImageConverter x:Key="Base64ImageConverter" />
     </UserControl.Resources>
-    <materialDesign:Card Width="400" Height="600">
+    <materialDesign:Card Width="370" Height="600">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -78,7 +78,7 @@
                                         Margin="5,0,0,10"
                                         FontStyle="Italic"
                                         Foreground="LightGray"
-                                        Text="Nhấp chuột phải và chọn đăng nhập" />
+                                        Text="Nhấp chuột phải để thao tác" />
                                 </StackPanel>
                             </Grid>
                         </materialDesign:Card>

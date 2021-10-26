@@ -3,9 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:implements="clr-namespace:cs4rsa_core.Dialogs.Implements"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    d:DataContext="{d:DesignInstance Type=implements:SaveSessionViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
@@ -63,14 +65,12 @@
                     Width="100"
                     Margin="0,0,10,0"
                     Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     Content="Lưu"
                     Foreground="White"
                     IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}" />
                 <Button
                     MinWidth="60"
                     Command="{Binding CancelCommand}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     Content="Thoát"
                     Foreground="White"
                     IsCancel="True" />

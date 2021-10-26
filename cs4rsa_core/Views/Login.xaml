@@ -103,7 +103,7 @@
                 x:Name="SessionIdTextBlock"
                 VerticalAlignment="Center"
                 materialDesign:HintAssist.Hint="ASP.NET SessionID"
-                FontSize="16"
+                FontSize="15"
                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                 Text="{Binding SessionId}" />
             <Button
@@ -111,8 +111,7 @@
                 Width="100"
                 Command="{Binding FindCommand}"
                 Content="Tìm kiếm"
-                IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}"
-                Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+                IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}" />
         </Grid>
     </Grid>
 </UserControl>
