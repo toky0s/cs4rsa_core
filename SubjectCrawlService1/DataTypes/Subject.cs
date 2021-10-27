@@ -40,13 +40,14 @@ namespace SubjectCrawlService1.DataTypes
         public string RawSoup { get; }
         public int CourseId { get; }
 
-        public Subject(string name, string subjectCode, string studyUnit,
+        private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester, 
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId, 
                         ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _teacherCrawler = teacherCrawler;
             Name = name;
             SubjectCode = subjectCode;
             _studyUnit = studyUnit;
@@ -58,7 +59,6 @@ namespace SubjectCrawlService1.DataTypes
             Desciption = description;
             RawSoup = rawSoup;
             CourseId = courseId;
-            _teacherCrawler = teacherCrawler;
         }
 
         private string[] GetClassGroupNames()
@@ -158,7 +158,7 @@ namespace SubjectCrawlService1.DataTypes
             
             string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
 
-            Regex regexSpace = new Regex(@"^ *$");
+            Regex regexSpace = new(@"^ *$");
             List<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText).ToList();
             // remove space in locations
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToList();
@@ -202,11 +202,11 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns></returns>
         private string GetTeacherName(HtmlNode trTagClassLop)
         {
-            HtmlDocument doc = new HtmlDocument();
+            HtmlDocument doc = new();
             doc.LoadHtml(trTagClassLop.InnerHtml);
             HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
-            string teacherName = String.Join(" ", slices);
+            string teacherName = string.Join(" ", slices);
             if (teacherName != "")
             {
             _tempTeachers.Add(teacherName);
@@ -233,16 +233,12 @@ namespace SubjectCrawlService1.DataTypes
             return trTags;
         }
 
-        private async Task<string> GetTeacherInfoPageURL(string urlSubjectDetailPage)
+        private static async Task<string> GetTeacherInfoPageURL(string urlSubjectDetailPage)
         {
             HtmlWeb htmlWeb = new();
             HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(urlSubjectDetailPage);
             HtmlNode aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
-            if (aTag == null)
-            {
-                return null;
-            }
-            return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+            return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
 
         private string GetSubjectDetailPageURL(HtmlNode aTag)
@@ -290,6 +286,24 @@ namespace SubjectCrawlService1.DataTypes
             }
 
             return subjects;
+        }
+
+        private async Task<Subject> InitializeAsync()
+        {
+            await GetClassGroups();
+            return this;
+        }
+
+        public static Task<Subject> CreateAsync(string name, string subjectCode, string studyUnit,
+                        string studyUnitType, string studyType, string semester,
+                        string mustStudySubject, string parallelSubject,
+                        string description, string rawSoup, int courseId,
+                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
+        {
+            Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType, 
+                semester, mustStudySubject, parallelSubject, description,
+                rawSoup, courseId, teacherCrawler, unitOfWork);
+            return ret.InitializeAsync();
         }
     }
 }

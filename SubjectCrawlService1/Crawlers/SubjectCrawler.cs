@@ -2,7 +2,6 @@
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using System.Linq;
-using Cs4rsaDatabaseService.DataProviders;
 using CourseSearchService.Crawlers.Interfaces;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Models;
@@ -61,7 +60,7 @@ namespace SubjectCrawlService1.Crawlers
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
-                return new Subject(name, subjectCode, studyUnit, studyUnitType,
+                return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
                            studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
             }
             return null;
@@ -96,7 +95,7 @@ namespace SubjectCrawlService1.Crawlers
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
-                return new Subject(name, subjectCode, studyUnit, studyUnitType,
+                return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
                            studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
             }
             return null;

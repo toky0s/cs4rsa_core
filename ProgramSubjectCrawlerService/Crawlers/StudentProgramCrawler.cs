@@ -21,11 +21,11 @@ namespace ProgramSubjectCrawlerService.Crawlers
         private IUnitOfWork _unitOfWork;
         private IPreParSubjectCrawler _preParSubjectCrawler;
 
-        public List<HtmlNode> _fileNodes;
-        public List<HtmlNode> _folderNodes;
-        public List<ProgramFolder> ProgramFolders;
-        public List<DataTypes.ProgramSubject> ProgramSubjects;
-        public ProgramFolder Root;
+        private List<HtmlNode> _fileNodes;
+        private List<HtmlNode> _folderNodes;
+        private List<ProgramFolder> ProgramFolders;
+        private List<DataTypes.ProgramSubject> ProgramSubjects;
+        private ProgramFolder Root;
         public StudentProgramCrawler(string sessionId, IUnitOfWork unitOfWork, IPreParSubjectCrawler preParSubjectCrawler)
         {
             _sessionId = sessionId;
@@ -92,7 +92,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// Copy các ProgramSubject con vào các ProgramFolder.
         /// </summary>
         /// <param name="nodes">Danh sách tất cả các node bao gồm cả subject và folder.</param>
-        private List<ProgramFolder> DivChildNode(List<ProgramFolder> folderNodes, List<DataTypes.ProgramSubject> subjectNodes)
+        private static List<ProgramFolder> DivChildNode(List<ProgramFolder> folderNodes, List<DataTypes.ProgramSubject> subjectNodes)
         {
             List<ProgramFolder> programFolders = new();
             foreach (ProgramFolder node in folderNodes)
@@ -110,7 +110,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// <param name="parrent">Một folder node.</param>
         /// <param name="subjects">Danh sách các subject node.</param>
         /// <returns></returns>
-        private List<DataTypes.ProgramSubject> GetChildProgramSubject(ProgramFolder parrent, List<DataTypes.ProgramSubject> subjects)
+        private static List<DataTypes.ProgramSubject> GetChildProgramSubject(ProgramFolder parrent, List<DataTypes.ProgramSubject> subjects)
         {
             List<DataTypes.ProgramSubject> childSubjects = new();
             foreach (DataTypes.ProgramSubject subject in subjects)
@@ -123,7 +123,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
             return childSubjects;
         }
 
-        public async Task<List<HtmlNode>> GetAllTrTag(string url)
+        public static async Task<List<HtmlNode>> GetAllTrTag(string url)
         {
             HtmlWeb web = new();
             HtmlDocument doc = await web.LoadFromWebAsync(url);
