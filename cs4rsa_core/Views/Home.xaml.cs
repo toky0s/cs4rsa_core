@@ -29,7 +29,6 @@ namespace cs4rsa_core.Views
         public Home()
         {
             InitializeComponent();
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Chào mừng đến với CS4RSA"));
         }
 
         private void GotoSource(object sender, RoutedEventArgs e)

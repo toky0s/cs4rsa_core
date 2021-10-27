@@ -31,5 +31,11 @@ namespace cs4rsa_core.Views
             ContextMenu menu = sender as ContextMenu;
             menu.DataContext = DataContext;
         }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoginViewModel loginViewModel = DataContext as LoginViewModel;
+            await loginViewModel.LoadStudentInfos();
+        }
     }
 }

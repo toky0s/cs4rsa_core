@@ -85,7 +85,7 @@
                     Command="{Binding ChoiceAccountCommand}"
                     Content="Chọn tài khoản..." />
             </StackPanel>
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Margin="5,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -432,7 +432,7 @@
                                         Margin="0,0,0,5"
                                         IsChecked="{Binding IsRemoveClassGroupInvalid}">
                                         <CheckBox.Content>
-                                            <TextBlock TextWrapping="Wrap">Loại bỏ các môn không có lịch và hết chỗ ngay từ đầu</TextBlock>
+                                            <TextBlock TextWrapping="Wrap">Loại bỏ các lớp không có lịch và hết chỗ ngay từ đầu</TextBlock>
                                         </CheckBox.Content>
                                         <CheckBox.ToolTip>
                                             <TextBlock TextWrapping="WrapWithOverflow">
@@ -481,7 +481,10 @@
                     </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding SubjectName}" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding SubjectName}" />
+                                <TextBlock Text="{Binding SubjectCode}" />
+                            </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>

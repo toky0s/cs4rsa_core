@@ -1,4 +1,5 @@
-﻿using HelperService;
+﻿using cs4rsa_core.ViewModels;
+using HelperService;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,12 +10,6 @@ namespace cs4rsa_core.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Home _homeView = new();
-        private readonly Login _loginView = new();
-        private readonly MainScheduling _mainScheduling = new();
-        private readonly AutoSchedule _autoScheduling = new();
-        private readonly Info _infoView = new();
-
         public MainWindow()
         {
             InitializeComponent();
@@ -24,27 +19,8 @@ namespace cs4rsa_core.Views
         {
             int index = ListViewMenu.SelectedIndex;
             MoveCursorMenu(index);
-
-            switch (index)
-            {
-                case 0:
-                    MainArea.Content = _homeView;
-                    break;
-                case 1:
-                    MainArea.Content = _loginView;
-                    break;
-                case 2:
-                    MainArea.Content = _mainScheduling;
-                    break;
-                case 3:
-                    MainArea.Content = _autoScheduling;
-                    break;
-                case 4:
-                    MainArea.Content = _infoView;
-                    break;
-                default:
-                    break;
-            }
+            MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
+            mainWindowViewModel.SelectedIndex = index;
         }
 
         private void MoveCursorMenu(int index)

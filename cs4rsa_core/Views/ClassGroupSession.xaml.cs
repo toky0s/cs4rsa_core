@@ -18,11 +18,10 @@ namespace cs4rsa_core.Views
     /// </summary>
     public partial class ClassGroupSession : UserControl
     {
-        private ClassGroupSessionViewModel classGroupViewModel = new ClassGroupSessionViewModel();
         public ClassGroupSession()
         {
             InitializeComponent();
-            DataContext = classGroupViewModel;
+            ClassGroupSessionViewModel classGroupViewModel = DataContext as ClassGroupSessionViewModel;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(classGroupViewModel.ClassGroupModels);
             view.Filter = ClassGroupFilter;
         }
@@ -157,6 +156,7 @@ namespace cs4rsa_core.Views
 
         private void ReloadClassGroupCollection(object sender, RoutedEventArgs e)
         {
+            ClassGroupSessionViewModel classGroupViewModel = DataContext as ClassGroupSessionViewModel;
             CollectionViewSource.GetDefaultView(classGroupViewModel.ClassGroupModels).Refresh();
         }
 
