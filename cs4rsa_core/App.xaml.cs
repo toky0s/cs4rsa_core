@@ -25,6 +25,8 @@ using cs4rsa_core.Dialogs.MessageBoxService;
 using CurriculumCrawlerService.Crawlers.Interfaces;
 using StudentCrawlerService.Crawlers.Interfaces;
 using System.Threading.Tasks;
+using cs4rsa_core.Interfaces;
+using cs4rsa_core.Implements;
 
 namespace cs4rsa_core
 {
@@ -37,7 +39,6 @@ namespace cs4rsa_core
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            SetupExceptionHandling();
             Container = CreateServiceProvider();
             ISetting setting = Container.GetRequiredService<ISetting>();
             string isDatabaseCreated = setting.Read("IsDatabaseCreated");
@@ -78,6 +79,7 @@ namespace cs4rsa_core
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
+            services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
 
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<SearchSessionViewModel>();
@@ -87,47 +89,12 @@ namespace cs4rsa_core
             services.AddScoped<MainSchedulingViewModel>();
             services.AddScoped<LoginViewModel>();
             services.AddScoped<StudentInputViewModel>();
+            services.AddScoped<AutoSortSubjectLoadViewModel>();
 
             services.AddScoped<SaveSessionViewModel>();
             services.AddScoped<ImportSessionViewModel>();
 
             return services.BuildServiceProvider();
-        }
-
-        private void SetupExceptionHandling()
-        {
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-                LogUnhandledException((Exception)e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
-
-            DispatcherUnhandledException += (s, e) =>
-            {
-                LogUnhandledException(e.Exception, "Application.Current.DispatcherUnhandledException");
-                e.Handled = true;
-            };
-
-            TaskScheduler.UnobservedTaskException += (s, e) =>
-            {
-                LogUnhandledException(e.Exception, "TaskScheduler.UnobservedTaskException");
-                e.SetObserved();
-            };
-        }
-
-        private void LogUnhandledException(Exception exception, string source)
-        {
-            string message = $"Unhandled exception ({source})";
-            try
-            {
-                System.Reflection.AssemblyName assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName();
-                message = string.Format("Unhandled exception in {0} v{1}", assemblyName.Name, assemblyName.Version);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception in LogUnhandledException");
-            }
-            finally
-            {
-                Console.WriteLine(message);
-            }
         }
     }
 }

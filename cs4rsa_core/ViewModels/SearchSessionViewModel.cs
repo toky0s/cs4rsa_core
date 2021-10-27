@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Toolkit.Mvvm.Input;
 using Cs4rsaDatabaseService.Interfaces;
+using cs4rsa_core.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -46,7 +47,7 @@ namespace cs4rsa_core.ViewModels
         }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
-        public AsyncRelayCommand ImportDialogCommand { get; set; }
+        public RelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         #endregion
 
@@ -117,21 +118,23 @@ namespace cs4rsa_core.ViewModels
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
+        private readonly IOpenInBrowser _openInBrowser;
 
         public SearchSessionViewModel(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork,
-            ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
+            ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator, IOpenInBrowser openInBrowser)
         {
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
+            _openInBrowser = openInBrowser;
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ExitImportSubjectMessage>().Notify(this);
 
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
-            ImportDialogCommand = new AsyncRelayCommand(OnOpenImportDialog, () => true);
+            ImportDialogCommand = new RelayCommand(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
 
@@ -167,11 +170,7 @@ namespace cs4rsa_core.ViewModels
             int courseId = _selectedSubjectModel.CourseId;
             string semesterValue = _courseCrawler.GetCurrentSemesterValue();
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
-            _ = Process.Start(new ProcessStartInfo
-            {
-                FileName = url,
-                UseShellExecute = true
-            });
+            _openInBrowser.Open(url);
         }
 
 
@@ -188,12 +187,11 @@ namespace cs4rsa_core.ViewModels
         }
 
         private readonly ImportSessionUC _importSessionUC = new();
-        private async Task OnOpenImportDialog()
+        private void OnOpenImportDialog()
         {
             ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
-            vm.MessageBox = new Cs4rsaMessageBox();
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(_importSessionUC);
-            await vm.LoadScheduleSession();
+            Task.Run(async () => await vm.LoadScheduleSession());
         }
 
         private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)

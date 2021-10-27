@@ -16,6 +16,16 @@ namespace cs4rsa_core.ViewModels
     /// </summary>
     public class MainWindowViewModel : ViewModelBase, IMessageHandler<Cs4rsaSnackbarMessage>
     {
+        private int _SelectedIndex;
+        public int SelectedIndex
+        {
+            get => _SelectedIndex;
+            set
+            {
+                _SelectedIndex = value;
+                OnPropertyChanged();
+            }
+        }
         private bool _isOpen;
         public bool IsOpenDialog
         {

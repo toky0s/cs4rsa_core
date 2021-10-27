@@ -31,7 +31,7 @@ namespace cs4rsa_core.Models
         public StudyState StudyState { get; set; }
 
         public bool IsDone => ProgramSubject.IsDone();
-        public async Task<bool> IsAvaiable() => await IsAvaiableInThisSemester();
+        public bool IsAvaiable { get; set; }
         public string CourseId => ProgramSubject.CourseId;
         public string ChildOfNode => ProgramSubject.ChildOfNode;
 
@@ -54,18 +54,19 @@ namespace cs4rsa_core.Models
         /// Kiểm tra xem ProgramSubjectModel này có sẵn trong học kỳ này hay không.
         /// </summary>
         /// <returns></returns>
-        private async Task<bool> IsAvaiableInThisSemester()
+        private async Task IsAvaiableInThisSemester()
         {
             string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { ' ' });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
             int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);
-            return count > 0;
+            IsAvaiable = count > 0;
         }
 
         private async Task<ProgramSubjectModel> InitializeAsync()
         {
             Color = await _colorGenerator.GetColorAsync(int.Parse(ProgramSubject.CourseId));
+            await IsAvaiableInThisSemester();
             return this;
         }
 

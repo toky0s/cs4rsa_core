@@ -10,7 +10,6 @@ using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -19,17 +18,7 @@ namespace cs4rsa_core.ViewModels
     public class LoginViewModel : ViewModelBase, IMessageHandler<ExitSessionInputMessage>
     {
         public ObservableCollection<Student> Students { get; set; } = new ObservableCollection<Student>();
-
-        private Student _selectedStudent;
-        public Student SelectedStudent
-        {
-            get => _selectedStudent;
-            set
-            {
-                _selectedStudent = value;
-            }
-        }
-
+        public Student SelectedStudent { get; set; }
         private string _sessionId;
         public string SessionId
         {
@@ -40,12 +29,11 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public AsyncRelayCommand FindCommand { get; set; }
         public AsyncRelayCommand DeleteCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
-        private IMessageBox _cs4RsaMessageBox;
+        private readonly IMessageBox _cs4RsaMessageBox;
         public LoginViewModel(IMessageBox cs4rsaMessageBox, IUnitOfWork unitOfWork)
         {
             _cs4RsaMessageBox = cs4rsaMessageBox;
@@ -54,7 +42,6 @@ namespace cs4rsa_core.ViewModels
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
-            Task.Run(() => LoadStudentInfos());
         }
 
         private async Task OnDelete()
@@ -69,20 +56,22 @@ namespace cs4rsa_core.ViewModels
 
         private async Task OnFind()
         {
-            Cs4rsaMessageBox messageBox = new();
             SessionInputUC sessionInputUC = new();
             SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
-            vm.MessageBox = messageBox;
+            vm.MessageBox = _cs4RsaMessageBox;
             vm.SessionId = _sessionId;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(sessionInputUC);
             await vm.Find();
         }
 
-        private async Task LoadStudentInfos()
+        public async Task LoadStudentInfos()
         {
             Students.Clear();
             IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            students.ToList().ForEach(student => Students.Add(student));
+            foreach (Student student in students)
+            {
+                Students.Add(student);
+            }
         }
 
         public async void Handle(ExitSessionInputMessage message)

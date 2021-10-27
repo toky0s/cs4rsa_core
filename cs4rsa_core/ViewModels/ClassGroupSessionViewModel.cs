@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using Cs4rsaDatabaseService.Models;
@@ -16,16 +17,7 @@ namespace cs4rsa_core.ViewModels
         IMessageHandler<DeleteClassGroupChoiceMessage>,
         IMessageHandler<DeleteSubjectMessage>
     {
-        private ObservableCollection<ClassGroupModel> classGroupModels = new ObservableCollection<ClassGroupModel>();
-        public ObservableCollection<ClassGroupModel> ClassGroupModels
-        {
-            get => classGroupModels;
-            set
-            {
-                classGroupModels = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; } = new();
 
         private ClassGroupModel _selectedClassGroup;
         public ClassGroupModel SelectedClassGroup
@@ -56,9 +48,10 @@ namespace cs4rsa_core.ViewModels
         }
 
         public RelayCommand GotoCourseCommand { get; set; }
-
-        public ClassGroupSessionViewModel()
+        private readonly IOpenInBrowser _openInBrowser;
+        public ClassGroupSessionViewModel(IOpenInBrowser openInBrowser)
         {
+            _openInBrowser = openInBrowser;
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
@@ -68,23 +61,19 @@ namespace cs4rsa_core.ViewModels
         private void OnGotoCourse()
         {
             string url = _selectedClassGroup.ClassGroup.GetUrl();
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = url,
-                UseShellExecute = true
-            });
+            _openInBrowser.Open(url);
         }
 
         public void Handle(SelectedSubjectChangeMessage message)
         {
             SubjectModel subjectModel = message.Source;
-            classGroupModels.Clear();
+            ClassGroupModels.Clear();
             Teachers.Clear();
             if (subjectModel != null)
             {
                 foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
                 {
-                    classGroupModels.Add(classGroupModel);
+                    ClassGroupModels.Add(classGroupModel);
                 }
                 Teacher ALL_TEACHER = new() { TeacherId = 0, Name = "TẤT CẢ" };
                 Teachers.Add(ALL_TEACHER);
@@ -121,7 +110,7 @@ namespace cs4rsa_core.ViewModels
 
         public void Handle(DeleteSubjectMessage message)
         {
-            classGroupModels.Clear();
+            ClassGroupModels.Clear();
         }
     }
 }

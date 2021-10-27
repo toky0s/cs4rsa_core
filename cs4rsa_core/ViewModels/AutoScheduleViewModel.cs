@@ -4,6 +4,7 @@ using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
+using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using cs4rsa_core.Utils;
@@ -25,6 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -146,7 +148,6 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
-
         private ProgramDiagram _programDiagram;
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
@@ -166,10 +167,13 @@ namespace cs4rsa_core.ViewModels
         private readonly ICourseCrawler _courseCrawler;
         private readonly ICurriculumCrawler _curriculumCrawler;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
+        private readonly IOpenInBrowser _openInBrowser;
+        
         public AutoScheduleViewModel(IMessageBox messageBox, ICourseCrawler courseCrawler,
-            ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler, 
-            IPreParSubjectCrawler preParSubjectCrawler)
+            ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
+            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser)
         {
+            _openInBrowser = openInBrowser;
             _curriculumCrawler = curriculumCrawler;
             _preParSubjectCrawler = preParSubjectCrawler;
             _colorGenerator = colorGenerator;
@@ -205,8 +209,17 @@ namespace cs4rsa_core.ViewModels
             while (true)
             {
                 List<ClassGroupModel> generatedCombination = new();
-                OnGen().ForEach(item => generatedCombination.Add(item));
-                if (generatedCombination != null)
+                List<ClassGroupModel> classGroupModels = OnGen();
+                if (classGroupModels == null)
+                {
+                    MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Không thể sinh tiếp"));
+                    break;
+                }
+                foreach (ClassGroupModel item in classGroupModels)
+                {
+                    generatedCombination.Add(item);
+                }
+                if (generatedCombination.Count != 0)
                 {
                     // Sao chép lại list gen
                     List<ClassGroupModel> CopyList = new();
@@ -217,7 +230,7 @@ namespace cs4rsa_core.ViewModels
                     }
 
                     _hideActualClassGroupModels.Add(CopyList);
-                    CombinationModel combinationModel = new CombinationModel(SubjectModels.ToList(), generatedCombination);
+                    CombinationModel combinationModel = new(SubjectModels.ToList(), generatedCombination);
                     if (combinationModel.IsValid())
                     {
                         CombinationModels.Add(combinationModel);
@@ -235,6 +248,7 @@ namespace cs4rsa_core.ViewModels
 
         private void UpdateClassGroupModelContainer()
         {
+            ClassGroupModelsContainer.Clear();
             foreach (SubjectModel subjectModel in SubjectModels)
             {
                 ClassGroupModelsContainer.AddRange(subjectModel.ClassGroupModels);
@@ -245,17 +259,12 @@ namespace cs4rsa_core.ViewModels
         {
             if (IsHaveCombination())
             {
-                if (Gen<ClassGroupModel>.IsLastCombination(
+                return Gen<ClassGroupModel>.IsLastCombination(
                     _hideActualClassGroupModels.Last(),
                     SubjectModels.Count,
-                    ClassGroupModelsContainer))
-                {
-                    return null;
-                }
-                else
-                {
-                    return Gen<ClassGroupModel>.GenNext(_hideActualClassGroupModels.Last(), SubjectModels.Count, ClassGroupModelsContainer);
-                }
+                    ClassGroupModelsContainer)
+                    ? null
+                    : Gen<ClassGroupModel>.GenNext(_hideActualClassGroupModels.Last(), SubjectModels.Count, ClassGroupModelsContainer);
             }
             else
             {
@@ -307,7 +316,12 @@ namespace cs4rsa_core.ViewModels
         private void OnDeleteAll()
         {
             ChoicedProSubjectModels.Clear();
+            SubjectModels.Clear();
+            UpdateClassGroupModelContainer();
+            _hideActualClassGroupModels.Clear();
+            CombinationModels.Clear();
             DeleteAllCommand.NotifyCanExecuteChanged();
+            AddCommand.NotifyCanExecuteChanged();
         }
 
         public async Task LoadProgramSubject()
@@ -328,11 +342,10 @@ namespace cs4rsa_core.ViewModels
 
         private bool CanAdd()
         {
-            return true;
-            //return _selectedProSubject != null
-            //    && _selectedProSubject.IsAvaiable
-            //    && _selectedProSubject.IsDone == false
-            //    && !ChoicedProSubjectModels.Contains(_selectedProSubject);
+            return _selectedProSubject != null
+                && _selectedProSubject.IsAvaiable
+                && _selectedProSubject.IsDone == false
+                && !ChoicedProSubjectModels.Contains(_selectedProSubject);
         }
 
         private bool CanShowOnSimu()
@@ -350,7 +363,7 @@ namespace cs4rsa_core.ViewModels
 
         private bool CanDownload()
         {
-            return ChoicedProSubjectModels.Count > 0;
+            return true;
         }
 
         private async Task OnWatchDetail()
@@ -373,13 +386,20 @@ namespace cs4rsa_core.ViewModels
                 string courseId = _selectedProSubjectInChoiced.CourseId;
                 string semesterValue = _courseCrawler.GetCurrentSemesterValue();
                 string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
-                Process.Start(url);
+                _openInBrowser.Open(url);
             }
         }
 
         private void OnDelete()
         {
+            if (SubjectModels.Any(subjectModel => subjectModel.SubjectName == _selectedProSubjectInChoiced.SubjectName))
+            {
+                SubjectModel needRemove = SubjectModels
+                    .FirstOrDefault(subjectModel => subjectModel.SubjectName == _selectedProSubjectInChoiced.SubjectName);
+                SubjectModels.Remove(needRemove);
+            }
             ChoicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
+
             SubjectDownloadCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -401,11 +421,9 @@ namespace cs4rsa_core.ViewModels
 
             // khi cần tải == 0
             if (choiceSubjectCodes.Count == 0)
+            {
                 wereDownloadedSubjectCodes.Clear();
-
-            // to do: Xác định subject cần xoá để đồng bộ tập hợp.
-            List<string> needDeleteNames = wereDownloadedSubjectCodes.Except(choiceSubjectCodes).ToList();
-            needDeleteNames.ForEach(item => RemoveSubjectModelWithNameInDownloaded(item));
+            }
 
             // to do: Xác định subject nào cần tải dựa vào phép trừ tập hợp
             List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
@@ -414,11 +432,18 @@ namespace cs4rsa_core.ViewModels
             if (needDownload.Count > 0)
             {
                 AutoSortSubjectLoadUC autoSortSubjectLoadUC = new();
-                AutoSortSubjectLoadVM vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadVM;
-                vm.CloseDialogCallback += CloseDialogAndHandleDownloadResult;
+                AutoSortSubjectLoadViewModel vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadViewModel;
                 vm.ProgramSubjectModels = needDownload;
-                await vm.Download();
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(autoSortSubjectLoadUC);
+                List<SubjectModel> subjectModels = await vm.Download();
+                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                foreach (SubjectModel subjectModel in subjectModels)
+                {
+                    SubjectModels.Add(subjectModel);
+                }
+                UpdateClassGroupModelContainer();
+                CleanClassGroup();
+                _hideActualClassGroupModels.Clear();
             }
         }
 
@@ -431,30 +456,6 @@ namespace cs4rsa_core.ViewModels
             {
                 subjectModel.ClassGroupModels = subjectModel.ClassGroupModels.Where(item => item.EmptySeat > 0).ToList();
             }
-        }
-
-        private void RemoveSubjectModelWithNameInDownloaded(string name)
-        {
-            foreach (SubjectModel item in SubjectModels)
-            {
-                if (item.SubjectCode == name)
-                {
-                    SubjectModels.Remove(item);
-                    break;
-                }
-            }
-        }
-
-        private void CloseDialogAndHandleDownloadResult(IEnumerable<SubjectModel> subjectModels)
-        {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-            foreach (SubjectModel subjectModel in subjectModels)
-            {
-                SubjectModels.Add(subjectModel);
-            }
-            UpdateClassGroupModelContainer();
-            // filter again
-            CleanClassGroup();
         }
 
         private void OnAddSubject()
