@@ -10,19 +10,17 @@ using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    public class AutoSortSubjectLoadVM : ViewModelBase
+    public class AutoSortSubjectLoadViewModel : ViewModelBase
     {
         public List<ProgramSubjectModel> ProgramSubjectModels { get; set; } = new List<ProgramSubjectModel>();
-        public Action<List<SubjectModel>> CloseDialogCallback { get; set; }
-        public bool IsRemoveClassGroupInvalid { get; set; }
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;
-        public AutoSortSubjectLoadVM(ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
+        public AutoSortSubjectLoadViewModel(ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
         {
             _subjectCrawler = subjectCrawler;
             _colorGenerator = colorGenerator;
         }
-        public async Task Download()
+        public async Task<List<SubjectModel>> Download()
         {
             List<string> courseIds = ProgramSubjectModels.Select(item => item.CourseId).ToList();
             List<Subject> subjects = new();
@@ -37,7 +35,7 @@ namespace cs4rsa_core.Dialogs.Implements
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(item, _colorGenerator);
                 subjectModels.Add(subjectModel);
             }
-            CloseDialogCallback.Invoke(subjectModels);
+            return subjectModels;
         }
     }
 }

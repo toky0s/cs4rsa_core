@@ -55,15 +55,16 @@ namespace cs4rsa_core.Dialogs.Implements
         public RelayCommand ImportCommand { get; set; }
         public RelayCommand ShareStringCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
-        public IMessageBox MessageBox { get; set; }
 
         public Action<SessionManagerResult> CloseDialogCallback { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly SessionExtension _sessionExtension;
-        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler, SessionExtension sessionExtension)
+        private readonly IMessageBox _messageBox;
+        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler, SessionExtension sessionExtension, IMessageBox messageBox)
         {
+            _messageBox = messageBox;
             _sessionExtension = sessionExtension;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
@@ -139,7 +140,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private async Task OnDelete()
         {
             string sessionName = _selectedScheduleSession.Name;
-            MessageBoxResult result = MessageBox.ShowMessage($"Bạn có chắc muốn xoá phiên {sessionName}?",
+            MessageBoxResult result = _messageBox.ShowMessage($"Bạn có chắc muốn xoá phiên {sessionName}?",
                                     "Thông báo",
                                     MessageBoxButton.YesNo,
                                     MessageBoxImage.Question);

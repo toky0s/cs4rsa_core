@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using cs4rsa_core.Dialogs.Implements;
+using System.Windows.Controls;
 
 
 namespace cs4rsa_core.Dialogs.DialogViews
