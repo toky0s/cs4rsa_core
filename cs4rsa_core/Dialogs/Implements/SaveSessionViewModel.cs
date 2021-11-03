@@ -14,39 +14,24 @@ using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    class SaveSessionViewModel : ViewModelBase
+    public class SaveSessionViewModel : ViewModelBase
     {
         public List<ClassGroupModel> ClassGroupModels { get; set; }
-
         public ObservableCollection<Session> ScheduleSessions { get; set; }
-
-        private string name;
-        public string Name
-        {
-            get => name;
-            set
-            {
-                name = value;
-                OnPropertyChanged();
-                SaveCommand.NotifyCanExecuteChanged();
-            }
-        }
-
+        public string Name { get; set; }
         public RelayCommand SaveCommand { get; set; }
-
         public RelayCommand CancelCommand { get; set; }
-
         public Action<SaveResult> CloseDialogCallback { get; set; }
 
-        private IUnitOfWork _unitOfWork;
-        private ICourseCrawler _courseCrawler;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICourseCrawler _courseCrawler;
         public SaveSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             ScheduleSessions = new();
-            SaveCommand = new RelayCommand(Save, () => true);
-            CancelCommand = new RelayCommand(Cancle, () => true);
+            SaveCommand = new RelayCommand(Save);
+            CancelCommand = new RelayCommand(Cancle);
         }
 
         public async Task LoadScheduleSessions()
@@ -77,7 +62,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             Session session = new()
             {
-                Name = name,
+                Name = Name,
                 SaveDate = DateTime.Now,
                 SemesterValue = _courseCrawler.GetCurrentSemesterValue(),
                 YearValue = _courseCrawler.GetCurrentYearValue(),
@@ -86,7 +71,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             _unitOfWork.Sessions.Add(session);
             _unitOfWork.Complete();
-            SaveResult result = new() { Name = name };
+            SaveResult result = new() { Name = Name };
             CloseDialogCallback.Invoke(result);
         }
     }

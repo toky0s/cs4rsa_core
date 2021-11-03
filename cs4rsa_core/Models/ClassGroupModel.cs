@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace cs4rsa_core.Models
 {
-    public class ClassGroupModel: ICloneable
+    public class ClassGroupModel
     {
         public ClassGroup ClassGroup { get; }
 
@@ -25,7 +25,7 @@ namespace cs4rsa_core.Models
         private ObservableCollection<Place> _places;
         public ObservableCollection<Place> Places
         {
-            get => new ObservableCollection<Place>(ClassGroup.GetPlaces());
+            get => new(ClassGroup.GetPlaces());
             set => _places = value;
         }
 
@@ -88,11 +88,6 @@ namespace cs4rsa_core.Models
         public override string ToString()
         {
             return Name;
-        }
-
-        public object Clone()
-        {
-            return MemberwiseClone();
         }
     }
 }

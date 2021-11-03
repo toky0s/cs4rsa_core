@@ -25,11 +25,11 @@ namespace cs4rsa_core.Models
 
         public bool HaveAClassGroupHaveZeroEmptySeat { get; set; }
 
-        private ObservableCollection<ConflictModel> _conflictModels = new ObservableCollection<ConflictModel>();
+        private ObservableCollection<ConflictModel> _conflictModels = new();
         public ObservableCollection<ConflictModel> ConflictModels
         {
-            get { return _conflictModels; }
-            set { _conflictModels = value; }
+            get => _conflictModels;
+            set => _conflictModels = value;
         }
 
         private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
@@ -39,7 +39,8 @@ namespace cs4rsa_core.Models
             set { _placeConflictFinderModels = value; }
         }
 
-        public bool CanShow { get; set; }
+        public bool IsCanShow { get; set; }
+        public bool IsConflict { get; set; }
 
         public CombinationModel(List<SubjectModel> subjectModels, List<ClassGroupModel> classGroupModels)
         {
@@ -47,9 +48,10 @@ namespace cs4rsa_core.Models
             _classGroupModels = classGroupModels;
             HaveAClassGroupHaveNotSchedule = IsHaveAClassGroupHaveNotSchedule();
             HaveAClassGroupHaveZeroEmptySeat = IsHaveAClassGroupHaveZeroEmptySeat();
-            CanShow = !HaveAClassGroupHaveZeroEmptySeat && !HaveAClassGroupHaveNotSchedule;
+            IsCanShow = !HaveAClassGroupHaveZeroEmptySeat && !HaveAClassGroupHaveNotSchedule;
             UpdateConflict.UpdateConflictModelCollection(ref _conflictModels, ref _classGroupModels);
             UpdateConflict.UpdatePlaceConflictCollection(ref _placeConflictFinderModels, ref _classGroupModels);
+            IsConflict = _conflictModels.Count > 0;
         }
 
         private bool IsHaveAClassGroupHaveZeroEmptySeat()
@@ -57,7 +59,9 @@ namespace cs4rsa_core.Models
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 if (classGroupModel.EmptySeat == 0)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -69,10 +73,12 @@ namespace cs4rsa_core.Models
         /// <returns></returns>
         private bool IsHaveAClassGroupHaveNotSchedule()
         {
-            foreach(ClassGroupModel classGroupModel in _classGroupModels)
+            foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 if (!classGroupModel.HaveSchedule)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -94,9 +100,7 @@ namespace cs4rsa_core.Models
                     count++;
                 }
             }
-            if (count == _classGroupModels.Count)
-                return true;
-            return false;
+            return count == _classGroupModels.Count;
         }
 
         /// <summary>
@@ -137,7 +141,9 @@ namespace cs4rsa_core.Models
                     PlaceConflictFinder conflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = conflict.GetPlaceConflict();
                     if (conflictPlace != null)
+                    {
                         return true;
+                    }
                 }
             }
             return false;

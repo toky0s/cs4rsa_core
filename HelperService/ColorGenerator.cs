@@ -1,9 +1,6 @@
-﻿using Cs4rsaDatabaseService.DataProviders;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
+﻿using Cs4rsaDatabaseService.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HelperService
@@ -38,7 +35,7 @@ namespace HelperService
             string color;
             do
             {
-                Random random = new Random();
+                Random random = new();
                 int red = (random.Next(256) + 255) / 2;
                 int green = (random.Next(256) + 255) / 2;
                 int blue = (random.Next(256) + 255) / 2;

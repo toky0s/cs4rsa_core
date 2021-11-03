@@ -40,7 +40,7 @@
                         Grid.RowSpan="2"
                         Height="200"
                         Margin="5,5,5,0"
-                        ItemsSource="{Binding ScheduleSessions}"
+                        ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding SelectedScheduleSession}">
                         <ListView.Resources>
@@ -93,7 +93,7 @@
                         Grid.ColumnSpan="2"
                         Height="200"
                         Margin="0,5,5,0"
-                        ItemsSource="{Binding ScheduleSessionDetails}"
+                        ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>

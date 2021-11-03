@@ -63,7 +63,7 @@ namespace DisciplineCrawlerService.Crawlers
                 {
                     currentDiscipline = discipline;
                     disciplineId++;
-                    Discipline discipline1 = new Discipline() { DisciplineId = disciplineId, Name = discipline };
+                    Discipline discipline1 = new() { DisciplineId = disciplineId, Name = discipline };
                     _unitOfWork.Disciplines.Add(discipline1);
                     _unitOfWork.Complete();
                 }

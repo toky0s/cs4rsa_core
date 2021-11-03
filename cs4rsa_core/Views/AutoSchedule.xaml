@@ -90,8 +90,24 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <WrapPanel Grid.Row="0" Orientation="Horizontal">
-                    <StackPanel Margin="5,5,0,0" Orientation="Horizontal">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        Orientation="Horizontal">
                         <Ellipse
                             Width="8"
                             Height="8"
@@ -99,7 +115,11 @@
                             Fill="Red" />
                         <TextBlock Text="Chưa học" />
                     </StackPanel>
-                    <StackPanel Margin="5,5,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        Orientation="Horizontal">
                         <Ellipse
                             Width="8"
                             Height="8"
@@ -107,7 +127,10 @@
                             Fill="Green" />
                         <TextBlock Text="Đã học qua" />
                     </StackPanel>
-                    <StackPanel Margin="5,5,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
                         <Ellipse
                             Width="8"
                             Height="8"
@@ -115,7 +138,10 @@
                             Fill="Yellow" />
                         <TextBlock Text="Đã/đang học, chưa có điểm" />
                     </StackPanel>
-                    <StackPanel Margin="5,5,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
                         <Rectangle
                             Width="8"
                             Height="8"
@@ -124,9 +150,10 @@
                             Stroke="Red" />
                         <TextBlock Text="Không có trong học kỳ này" />
                     </StackPanel>
-                </WrapPanel>
+                </Grid>
                 <StackPanel
                     Grid.Row="1"
+                    Grid.Column="0"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal"
                     Visibility="{Binding Visibility}">
@@ -314,6 +341,33 @@
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel>
+                            <GroupBox x:Name="PlaceFilterGroupBox">
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="Place" />
+                                        <TextBlock Foreground="White" Text="Chọn nơi muốn học" />
+                                    </StackPanel>
+                                </GroupBox.Header>
+                                <StackPanel>
+                                    <CheckBox
+                                        x:Name="All"
+                                        Checked="All_Checked"
+                                        Content="Tất cả"
+                                        IsChecked="True"
+                                        Unchecked="All_Unchecked" />
+                                    <CheckBox Name="QuangTrung" Content="03 Quang Trung" />
+                                    <CheckBox Name="NguyenVanLinh254" Content="254 Nguyễn Văn Linh" />
+                                    <CheckBox Name="NguyenVanLinh137" Content="137 Nguyễn Văn Linh" />
+                                    <CheckBox Name="PhanThanh" Content="209 Phan Thanh" />
+                                    <CheckBox Name="HoaKhanhNam" Content="Hoà Khánh Nam" />
+                                    <CheckBox Name="VietTin" Content="VietTin" />
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                        <StackPanel>
                             <GroupBox>
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -337,7 +391,6 @@
                                     </StackPanel>
                                 </GroupBox.Header>
                                 <WrapPanel Orientation="Horizontal">
-
                                     <GroupBox Margin="2,2,0,0">
                                         <GroupBox.Header>
                                             <TextBlock Foreground="White" Text="Thứ Hai" />
@@ -441,7 +494,11 @@
                                             </TextBlock>
                                         </CheckBox.ToolTip>
                                     </CheckBox>
-                                    <CheckBox Content="Chấp nhận các cách sắp xếp xung đột" IsChecked="{Binding IsAllowConflict}" />
+                                    <CheckBox
+                                        Checked="CheckBoxHideConflict_Checked"
+                                        x:Name="CheckBoxHideConflict"
+                                        Content="Ẩn cách sắp xếp xung đột"
+                                        IsChecked="{Binding IsHideConflictedCombination}" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -481,10 +538,20 @@
                     </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding SubjectName}" />
-                                <TextBlock Text="{Binding SubjectCode}" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle
+                                    Grid.Column="0"
+                                    Margin="0,0,5,0"
+                                    Fill="{Binding Color}" />
+                                <StackPanel Grid.Column="1" Orientation="Vertical">
+                                    <TextBlock Text="{Binding SubjectName}" />
+                                    <TextBlock Text="{Binding SubjectCode}" />
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
@@ -529,7 +596,14 @@
                     ItemsSource="{Binding SubjectModels}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding SubjectName}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Margin="0,0,5,0" Fill="{Binding Color}" />
+                                <TextBlock Grid.Column="1" Text="{Binding SubjectName}" />
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -545,10 +619,11 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Các cách sắp xếp" />
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
                 <ListView
+                    x:Name="ListViewCombinationModels"
                     Grid.Row="1"
-                    Margin="0,0,0,10"
+                    Margin="0,0,0,5"
                     HorizontalContentAlignment="Stretch"
                     ItemsSource="{Binding CombinationModels}"
                     SelectedItem="{Binding SelectedCombinationModel}">
@@ -607,7 +682,22 @@
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Hidden" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding CanShow}" Value="False">
+                                                <DataTrigger Binding="{Binding IsCanShow}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    Foreground="#c0392b"
+                                    Text="Phát hiện xung đột">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsConflict}" Value="True">
                                                     <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -621,24 +711,37 @@
                         <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                             <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding CanShow}" Value="False">
+                                <DataTrigger Binding="{Binding IsCanShow}" Value="False">
                                     <Setter Property="ToolTip" Value="{StaticResource CannotShowOnSimuContentTooltip}" />
                                 </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ElementName=CheckBoxHideConflict, Path=IsChecked}" Value="True" />
+                                        <Condition Binding="{Binding IsConflict}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
                             </Style.Triggers>
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <StackPanel Grid.Row="2">
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <Button
-                        Margin="0,0,0,5"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
                         Command="{Binding GenCommand}"
-                        Content="Sinh thêm"
-                        Foreground="White" />
+                        Content="Sinh" />
                     <Button
+                        Grid.Column="1"
                         Command="{Binding OpenInNewWindowCommand}"
-                        Content="Mở trong cửa sổ mới"
-                        Foreground="White" />
-                </StackPanel>
+                        Content="Mở trong cửa sổ mới" />
+                </Grid>
             </Grid>
         </Grid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">

@@ -18,10 +18,10 @@ using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    class ImportSessionViewModel: ViewModelBase
+    public class ImportSessionViewModel: ViewModelBase
     {
-        public ObservableCollection<Session> ScheduleSessions { get; set; } = new();
-        public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; } = new();
+        public ObservableCollection<Session> ScheduleSessions { get; set; }
+        public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; }
 
         private Session _selectedScheduleSession;
         public Session SelectedScheduleSession
@@ -37,19 +37,6 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
         public string ShareString { get; set; }
-
-        private void LoadScheduleSessionDetail(Session value)
-        {
-            if (value != null)
-            {
-                ScheduleSessionDetails.Clear();
-                List<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
-                foreach (SessionDetail item in details)
-                {
-                    ScheduleSessionDetails.Add(item);
-                }
-            }
-        }
 
         public AsyncRelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
@@ -68,10 +55,28 @@ namespace cs4rsa_core.Dialogs.Implements
             _sessionExtension = sessionExtension;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+
+            ScheduleSessions = new();
+            ScheduleSessionDetails = new();
+
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new RelayCommand(OnParseShareString, CanParse);
             CloseDialogCommand = new RelayCommand(OnCloseDialog);
+            LoadScheduleSession();
+        }
+
+        private void LoadScheduleSessionDetail(Session value)
+        {
+            if (value != null)
+            {
+                ScheduleSessionDetails.Clear();
+                List<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
+                foreach (SessionDetail item in details)
+                {
+                    ScheduleSessionDetails.Add(item);
+                }
+            }
         }
 
         private void OnCloseDialog()
@@ -109,10 +114,10 @@ namespace cs4rsa_core.Dialogs.Implements
             return _selectedScheduleSession != null;
         }
 
-        public async Task LoadScheduleSession()
+        public void LoadScheduleSession()
         {
             ScheduleSessions.Clear();
-            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            IEnumerable<Session> sessions = _unitOfWork.Sessions.GetAll();
             foreach (Session item in sessions)
             {
                 ScheduleSessions.Add(item);
@@ -148,15 +153,15 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 _unitOfWork.Sessions.Remove(_selectedScheduleSession);
                 await _unitOfWork.CompleteAsync();
-                await Reload();
+                Reload();
             }
         }
 
-        private async Task Reload()
+        private void Reload()
         {
             ScheduleSessions.Clear();
             ScheduleSessionDetails.Clear();
-            await LoadScheduleSession();
+            LoadScheduleSession();
         }
     }
 }

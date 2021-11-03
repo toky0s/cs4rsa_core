@@ -11,7 +11,7 @@ namespace cs4rsa_core.Messages
     /// <summary>
     /// Message này được publish khi người dùng thêm một ClassGroup vào danh sách chọn
     /// </summary>
-    class ClassGroupAddedMessage : Cs4rsaMessage
+    public class ClassGroupAddedMessage : Cs4rsaMessage
     {
         public new ClassGroupModel Source;
         public ClassGroupAddedMessage(ClassGroupModel source) : base(source)

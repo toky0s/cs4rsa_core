@@ -50,7 +50,7 @@ namespace cs4rsa_core
                 setting.Save();
             }
         }
-        private IServiceProvider CreateServiceProvider()
+        private static IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();
             services.AddDbContext<Cs4rsaDbContext>();
@@ -77,22 +77,20 @@ namespace cs4rsa_core
             services.AddSingleton<ColorGenerator>();
             services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
-            services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
+            services.AddSingleton<SaveSessionViewModel>();
+            services.AddSingleton<ImportSessionViewModel>();
 
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<SearchSessionViewModel>();
             services.AddScoped<ClassGroupSessionViewModel>();
-            services.AddScoped<ChoiceSessionViewModel>();
+            services.AddScoped<ChoicedSessionViewModel>();
             services.AddScoped<ScheduleTableViewModel>();
             services.AddScoped<MainSchedulingViewModel>();
             services.AddScoped<LoginViewModel>();
             services.AddScoped<StudentInputViewModel>();
             services.AddScoped<AutoSortSubjectLoadViewModel>();
-
-            services.AddScoped<SaveSessionViewModel>();
-            services.AddScoped<ImportSessionViewModel>();
 
             return services.BuildServiceProvider();
         }
