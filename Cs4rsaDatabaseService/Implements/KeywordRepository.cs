@@ -22,7 +22,7 @@ namespace Cs4rsaDatabaseService.Implements
         public string GetColorWithSubjectCode(string subjectCode)
         {
             Keyword keyword = (from discipline in _context.Disciplines
-                               from kw in _context.Keywords
+                               join kw in _context.Keywords on discipline.DisciplineId equals kw.DisciplineId
                                where discipline.Name + " " + kw.Keyword1 == subjectCode
                                select kw).FirstOrDefault();
             return keyword.Color;
