@@ -46,12 +46,10 @@ namespace cs4rsa_core.Models
         {
             SubjecModels = subjectModels;
             _classGroupModels = classGroupModels;
-            HaveAClassGroupHaveNotSchedule = IsHaveAClassGroupHaveNotSchedule();
-            HaveAClassGroupHaveZeroEmptySeat = IsHaveAClassGroupHaveZeroEmptySeat();
-            IsCanShow = !HaveAClassGroupHaveZeroEmptySeat && !HaveAClassGroupHaveNotSchedule;
+            IsCanShow = !IsHaveAClassGroupHaveNotSchedule() && !IsHaveAClassGroupHaveZeroEmptySeat();
             UpdateConflict.UpdateConflictModelCollection(ref _conflictModels, ref _classGroupModels);
             UpdateConflict.UpdatePlaceConflictCollection(ref _placeConflictFinderModels, ref _classGroupModels);
-            IsConflict = _conflictModels.Count > 0;
+            IsConflict = _conflictModels.Count > 0 || _placeConflictFinderModels.Count > 0;
         }
 
         private bool IsHaveAClassGroupHaveZeroEmptySeat()
@@ -94,7 +92,7 @@ namespace cs4rsa_core.Models
             string subjecCode = "";
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                if (!classGroupModel.SubjectCode.Equals(subjecCode))
+                if (!classGroupModel.SubjectCode.Equals(subjecCode, System.StringComparison.Ordinal))
                 {
                     subjecCode = classGroupModel.SubjectCode;
                     count++;
@@ -109,7 +107,7 @@ namespace cs4rsa_core.Models
         /// <returns></returns>
         public bool IsHaveTimeConflicts()
         {
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
@@ -118,10 +116,12 @@ namespace cs4rsa_core.Models
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
+                    Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
+                    {
                         return true;
+                    }
                 }
             }
             return false;
@@ -129,7 +129,7 @@ namespace cs4rsa_core.Models
 
         public bool IsHavePlaceConflicts()
         {
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
