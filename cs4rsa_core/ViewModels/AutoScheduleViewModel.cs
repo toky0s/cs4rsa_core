@@ -3,7 +3,6 @@ using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
@@ -22,16 +21,26 @@ using SubjectCrawlService1.Crawlers.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
+using System.Windows.Data;
 
 namespace cs4rsa_core.ViewModels
 {
     public class AutoScheduleViewModel : ViewModelBase, IMessageHandler<ExitLoginMessage>, IMessageHandler<AddCombinationMessage>
     {
+        #region Properties
+        private bool _isRemoveClassGroupInvalid;
+        public bool IsRemoveClassGroupInvalid { 
+            get => _isRemoveClassGroupInvalid;
+            set
+            {
+                _isRemoveClassGroupInvalid = value;
+                OnPropertyChanged();
+            }
+        }
         private string _visibility = "Hidden";
         public string Visibility
         {
@@ -51,10 +60,13 @@ namespace cs4rsa_core.ViewModels
         }
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
+        public List<List<ClassGroupModel>> _filteredClassGroupModels;
+        public List<List<ClassGroupModel>> _classGroupModelsOfClass;
 
         // Đây là nơi chứa các combination model, người dùng sẽ nhìn thấy cái này.
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
+
 
         private ProgramSubjectModel _selectedProSubject;
         public ProgramSubjectModel SelectedProSubject
@@ -94,19 +106,8 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        private bool _isRemoveClassGroupInvalid;
-        public bool IsRemoveClassGroupInvalid
-        {
-            get => _isRemoveClassGroupInvalid;
-            set { _isRemoveClassGroupInvalid = value; OnPropertyChanged(); }
-        }
 
-        private bool _isHideConflictedCombination;
-        public bool IsHideConflictedCombination
-        {
-            get => _isHideConflictedCombination;
-            set { _isHideConflictedCombination = value; OnPropertyChanged(); }
-        }
+        public RelayCommand HideConflictCommand { get; set; }
 
         private int _combinationCount;
         public int CombinationCount
@@ -130,7 +131,7 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        private int _creditCount = 0;
+        private int _creditCount;
         public int CreditCount
         {
             get => _creditCount;
@@ -140,6 +141,9 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        #region Command
         private ProgramDiagram _programDiagram;
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
@@ -152,13 +156,17 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand GenCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
+        public RelayCommand FilterChangedCommand { get; set; }
+        #endregion
 
+        #region Dependencies
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ICurriculumCrawler _curriculumCrawler;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
         private readonly IOpenInBrowser _openInBrowser;
+        #endregion
 
         private Cs4rsaGen _cs4rsaGen;
 
@@ -180,6 +188,7 @@ namespace cs4rsa_core.ViewModels
             ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
             CombinationModels = new ObservableCollection<CombinationModel>();
             SubjectModels = new ObservableCollection<SubjectModel>();
+            _filteredClassGroupModels = new List<List<ClassGroupModel>>();
 
             ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
@@ -191,8 +200,55 @@ namespace cs4rsa_core.ViewModels
             GenCommand = new RelayCommand(OnStartGen, CanGen);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
-            _isRemoveClassGroupInvalid = true;
-            _isHideConflictedCombination = true;
+            HideConflictCommand = new RelayCommand(OnHideConflictCommand);
+            FilterChangedCommand = new RelayCommand(OnFiltering);
+            CvsCombination = new();
+            CvsCombination.Source = CombinationModels;
+            CvsCombination.Filter += CombinationFilter;
+        }
+
+        private void OnFiltering()
+        {
+            _filteredClassGroupModels.Clear();
+            foreach (List<ClassGroupModel> classGroupModels in _classGroupModelsOfClass)
+            {
+                List<ClassGroupModel> r = classGroupModels.Where(item => Filter(item))
+                    .ToList();
+                _filteredClassGroupModels.Add(r);
+            }
+            _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
+            CombinationModels.Clear();
+            GenCommand.NotifyCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Nơi triển khai bộ lọc trước khi sắp xếp
+        /// </summary>
+        /// <param name="classGroupModel"></param>
+        /// <returns></returns>
+        private bool Filter(ClassGroupModel classGroupModel)
+        {
+            bool flag = true;
+            if (_isRemoveClassGroupInvalid)
+            {
+                flag = classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0;
+            }
+            return flag;
+        }
+
+        private void CombinationFilter(object sender, FilterEventArgs e)
+        {
+            //CombinationModel combinationModel = (CombinationModel)e.Item;
+            //e.Accepted = !combinationModel.IsConflict;
+            e.Accepted = true;
+        }
+
+        internal CollectionViewSource CvsCombination { get; set; }
+        public ICollectionView AllCombination => CvsCombination.View;
+
+        private void OnHideConflictCommand()
+        {
+            CvsCombination.View.Refresh();
         }
 
         private bool CanGen()
@@ -281,7 +337,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnShowOnSimu()
         {
-            ShowOnSimuMessage showOnSimuMessage = new ShowOnSimuMessage(_selectedCombinationModel);
+            ShowOnSimuMessage showOnSimuMessage = new(_selectedCombinationModel);
             MessageBus.Default.Publish(showOnSimuMessage);
         }
 
@@ -323,18 +379,12 @@ namespace cs4rsa_core.ViewModels
                 SubjectModels.Remove(needRemove);
             }
             ChoicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
-
             SubjectDownloadCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             GenCommand.NotifyCanExecuteChanged();
             UpdateChoicedCount();
             UpdateCreditCount();
-        }
-
-        private void UpdateCombinationModels()
-        {
-
         }
 
         /// <summary>
@@ -371,22 +421,10 @@ namespace cs4rsa_core.ViewModels
                 {
                     SubjectModels.Add(subjectModel);
                 }
-                CleanClassGroup();
-                List<List<ClassGroupModel>> classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
-                _cs4rsaGen = new Cs4rsaGen(classGroupModelsOfClass);
-                GenCommand.NotifyCanExecuteChanged();
             }
-        }
-
-        /// <summary>
-        /// Loại bỏ các class group còn 0 chỗ ngồi nhằm tối ưu hoá hiệu suất sắp xếp.
-        /// </summary>
-        private void CleanClassGroup()
-        {
-            foreach (SubjectModel subjectModel in SubjectModels)
-            {
-                subjectModel.ClassGroupModels = subjectModel.ClassGroupModels.Where(item => item.EmptySeat > 0).ToList();
-            }
+            _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
+            OnFiltering();
+            GenCommand.NotifyCanExecuteChanged();
         }
 
         private void OnAddSubject()
@@ -431,7 +469,9 @@ namespace cs4rsa_core.ViewModels
                 foreach (ProgramSubjectModel subjectModel in ChoicedProSubjectModels)
                 {
                     if (subjectModel.ChildOfNode == programFolder.Id)
+                    {
                         hasChoiced++;
+                    }
                 }
                 return (needLearn - hasChoiced) == 0;
             }
@@ -449,9 +489,9 @@ namespace cs4rsa_core.ViewModels
             List<ClassGroupModel> result = new();
             for (int i = 0; i < indexes.Count; i++)
             {
-                result.Add(SubjectModels[i].ClassGroupModels[indexes[i]]);
+                result.Add(_filteredClassGroupModels[i][indexes[i]]);
             }
-            CombinationModel combinationModel = new CombinationModel(SubjectModels.ToList(), result);
+            CombinationModel combinationModel = new(SubjectModels.ToList(), result);
             CombinationModels.Add(combinationModel);
         }
     }
