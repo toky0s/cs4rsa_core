@@ -8,9 +8,6 @@ using System.Windows.Input;
 
 namespace cs4rsa_core.Views
 {
-    /// <summary>
-    /// Interaction logic for AutoSchedule.xaml
-    /// </summary>
     public partial class AutoSchedule : UserControl
     {
         public AutoSchedule()
@@ -23,14 +20,19 @@ namespace cs4rsa_core.Views
             NguyenVanLinh254.IsChecked = true;
             PhanThanh.IsChecked = true;
             VietTin.IsChecked = true;
+
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource);
-            view.Filter = Filter;
+            view.Filter = CombinationFilter;
         }
 
-        private bool Filter(object obj)
+        private bool CombinationFilter(object obj)
         {
-            CombinationModel combinationModel = obj as CombinationModel;
-            return combinationModel.IsConflict == CheckBoxHideConflict.IsChecked;
+            if (CheckBoxHideConflict.IsChecked == true)
+            {
+                CombinationModel combinationModel = obj as CombinationModel;
+                return !combinationModel.IsConflict;
+            }
+            return true;
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
@@ -47,16 +49,8 @@ namespace cs4rsa_core.Views
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue is ProgramSubjectModel)
-            {
-                (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue as ProgramSubjectModel;
-            }
-            else
-            {
-                (DataContext as AutoScheduleViewModel).SelectedProSubject = null;
-            }
+            (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue is ProgramSubjectModel ? e.NewValue as ProgramSubjectModel : null;
         }
-
 
         // Chống scroll auto đưa item vào trung tâm khi focus
         private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
@@ -100,9 +94,9 @@ namespace cs4rsa_core.Views
             }
         }
 
-        private void CheckBoxHideConflict_Checked(object sender, RoutedEventArgs e)
+        private void CheckBoxHideConflict_Click(object sender, RoutedEventArgs e)
         {
-            //CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
+            CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
         }
     }
 }

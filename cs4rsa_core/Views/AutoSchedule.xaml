@@ -11,8 +11,8 @@
     xmlns:vmConverter="clr-namespace:cs4rsa_core.Converters"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DataContext="{d:DesignInstance Type=vm:AutoScheduleViewModel}"
-    d:DesignHeight="500"
-    d:DesignWidth="800"
+    d:DesignHeight="1000"
+    d:DesignWidth="1000"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -352,12 +352,6 @@
                                     </StackPanel>
                                 </GroupBox.Header>
                                 <StackPanel>
-                                    <CheckBox
-                                        x:Name="All"
-                                        Checked="All_Checked"
-                                        Content="Tất cả"
-                                        IsChecked="True"
-                                        Unchecked="All_Unchecked" />
                                     <CheckBox Name="QuangTrung" Content="03 Quang Trung" />
                                     <CheckBox Name="NguyenVanLinh254" Content="254 Nguyễn Văn Linh" />
                                     <CheckBox Name="NguyenVanLinh137" Content="137 Nguyễn Văn Linh" />
@@ -464,11 +458,7 @@
 
                                 </WrapPanel>
                             </GroupBox>
-                            <Button
-                                Margin="0,5,0,5"
-                                Content="Đặt lại bộ lọc"
-                                Foreground="White"
-                                Style="{StaticResource MaterialDesignRaisedButton}" />
+
                             <GroupBox>
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -483,6 +473,7 @@
                                     <CheckBox
                                         Grid.Row="2"
                                         Margin="0,0,0,5"
+                                        Command="{Binding FilterChangedCommand}"
                                         IsChecked="{Binding IsRemoveClassGroupInvalid}">
                                         <CheckBox.Content>
                                             <TextBlock TextWrapping="Wrap">Loại bỏ các lớp không có lịch và hết chỗ ngay từ đầu</TextBlock>
@@ -494,11 +485,30 @@
                                             </TextBlock>
                                         </CheckBox.ToolTip>
                                     </CheckBox>
+
+                                </StackPanel>
+                            </GroupBox>
+                            <Button
+                                Margin="0,5,0,5"
+                                Content="Đặt lại bộ lọc"
+                                Foreground="White"
+                                Style="{StaticResource MaterialDesignRaisedButton}" />
+                            <GroupBox>
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="Filter" />
+                                        <TextBlock Foreground="White" Text="Lọc sau sắp xếp" />
+                                    </StackPanel>
+                                </GroupBox.Header>
+                                <StackPanel>
                                     <CheckBox
-                                        Checked="CheckBoxHideConflict_Checked"
                                         x:Name="CheckBoxHideConflict"
-                                        Content="Ẩn cách sắp xếp xung đột"
-                                        IsChecked="{Binding IsHideConflictedCombination}" />
+                                        Click="CheckBoxHideConflict_Click"
+                                        Command="{Binding HideConflictCommand}"
+                                        Content="Ẩn cách sắp xếp xung đột" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -625,7 +635,7 @@
                     Grid.Row="1"
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Stretch"
-                    ItemsSource="{Binding CombinationModels}"
+                    ItemsSource="{Binding AllCombination}"
                     SelectedItem="{Binding SelectedCombinationModel}">
                     <ListView.Resources>
                         <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">
@@ -653,7 +663,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <materialDesign:Card Margin="5" IsEnabled="False">
+                                            <materialDesign:Card Margin="2" IsEnabled="False">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="10" />
@@ -710,20 +720,11 @@
                     <ListView.ItemContainerStyle>
                         <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                             <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}" />
-                            <Style.Triggers>
+                            <!--<Style.Triggers>
                                 <DataTrigger Binding="{Binding IsCanShow}" Value="False">
                                     <Setter Property="ToolTip" Value="{StaticResource CannotShowOnSimuContentTooltip}" />
                                 </DataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding ElementName=CheckBoxHideConflict, Path=IsChecked}" Value="True" />
-                                        <Condition Binding="{Binding IsConflict}" Value="True" />
-                                    </MultiDataTrigger.Conditions>
-                                    <MultiDataTrigger.Setters>
-                                        <Setter Property="Visibility" Value="Hidden" />
-                                    </MultiDataTrigger.Setters>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>

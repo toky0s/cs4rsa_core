@@ -35,7 +35,7 @@
         <TextBlock
             Grid.Row="0"
             Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-            Text="Nhóm lớp" />
+            Text="{Binding ClassGroupModels.Count, StringFormat=Nhóm lớp ({0})}" />
         <ListBox
             x:Name="ClassGroupListBox"
             Grid.Row="1"
