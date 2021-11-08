@@ -7,7 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
-    d:DataContext="{d:DesignInstance Type=implements:ProSubjectDetailVM}"
+    d:DataContext="{d:DesignInstance Type=implements:ProSubjectDetailViewModel}"
     d:DesignHeight="250"
     d:DesignWidth="500"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
