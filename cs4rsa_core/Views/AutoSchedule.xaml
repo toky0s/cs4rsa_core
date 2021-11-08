@@ -341,6 +341,190 @@
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel>
+                            <GroupBox>
+                                <GroupBox.Header>
+                                    <Expander
+                                        Padding="0,0,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        Background="{DynamicResource PrimaryHueMidBrush}"
+                                        Foreground="White">
+                                        <Expander.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Margin="0,0,5,0"
+                                                    Foreground="White"
+                                                    Kind="Calendar" />
+                                                <TextBlock Foreground="White" Text="Chọn thời gian rảnh" />
+                                            </StackPanel>
+                                        </Expander.Header>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock TextWrapping="WrapWithOverflow">
+                                                Chọn thời gian rảnh đủ ít để bộ lọc có thể để lại
+                                                cho bạn được vài lớp. Nếu bạn chọn quá nhiều chúng sẽ lọc hết
+                                                và chẳng còn sót lại lớp nào thoả mãn điều kiện lọc của bạn cả.
+                                                Chúng tôi sẽ nói cho bạn biết nếu bộ lọc của bạn có gì đó không ổn.
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Expander>
+                                </GroupBox.Header>
+                                <WrapPanel Orientation="Horizontal">
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Hai" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Mon_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Mon_Mor}" />
+                                            <CheckBox
+                                                x:Name="Mon_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Mon_Aft}" />
+                                            <CheckBox
+                                                x:Name="Mon_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Mon_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Ba" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Tus_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Tue_Mor}" />
+                                            <CheckBox
+                                                x:Name="Tus_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Tue_Aft}" />
+                                            <CheckBox
+                                                x:Name="Tus_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Tue_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Tư" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Wed_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Wed_Mor}" />
+                                            <CheckBox
+                                                x:Name="Wed_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Wed_Aft}" />
+                                            <CheckBox
+                                                x:Name="Wed_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Wed_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Năm" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Thur_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Thur_Mor}" />
+                                            <CheckBox
+                                                x:Name="Thur_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Thur_Aft}" />
+                                            <CheckBox
+                                                x:Name="Thur_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Thur_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Sáu" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Fri_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Fri_Mor}" />
+                                            <CheckBox
+                                                x:Name="Fri_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Fri_Aft}" />
+                                            <CheckBox
+                                                x:Name="Fri_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Fri_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Thứ Bảy" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Sat_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Sat_Mor}" />
+                                            <CheckBox
+                                                x:Name="Sat_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Sat_Aft}" />
+                                            <CheckBox
+                                                x:Name="Sat_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Sat_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                                        <GroupBox.Header>
+                                            <TextBlock Foreground="White" Text="Chủ Nhật" />
+                                        </GroupBox.Header>
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                            <CheckBox
+                                                x:Name="Sun_Mor"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Sáng"
+                                                IsChecked="{Binding Sun_Mor}" />
+                                            <CheckBox
+                                                x:Name="Sun_Aft"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Chiều"
+                                                IsChecked="{Binding Sun_Aft}" />
+                                            <CheckBox
+                                                x:Name="Sun_Nig"
+                                                Command="{Binding FilterChangedCommand}"
+                                                Content="Tối"
+                                                IsChecked="{Binding Sun_Nig}" />
+                                        </StackPanel>
+                                    </GroupBox>
+
+                                </WrapPanel>
+                            </GroupBox>
                             <GroupBox x:Name="PlaceFilterGroupBox">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -352,113 +536,38 @@
                                     </StackPanel>
                                 </GroupBox.Header>
                                 <StackPanel>
-                                    <CheckBox Name="QuangTrung" Content="03 Quang Trung" />
-                                    <CheckBox Name="NguyenVanLinh254" Content="254 Nguyễn Văn Linh" />
-                                    <CheckBox Name="NguyenVanLinh137" Content="137 Nguyễn Văn Linh" />
-                                    <CheckBox Name="PhanThanh" Content="209 Phan Thanh" />
-                                    <CheckBox Name="HoaKhanhNam" Content="Hoà Khánh Nam" />
-                                    <CheckBox Name="VietTin" Content="VietTin" />
+                                    <CheckBox
+                                        Name="QuangTrung"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="03 Quang Trung"
+                                        IsChecked="{Binding QuangTrung}" />
+                                    <CheckBox
+                                        Name="NguyenVanLinh254"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="254 Nguyễn Văn Linh"
+                                        IsChecked="{Binding NguyenVanLinh254}" />
+                                    <CheckBox
+                                        Name="NguyenVanLinh137"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="137 Nguyễn Văn Linh"
+                                        IsChecked="{Binding NguyenVanLinh137}" />
+                                    <CheckBox
+                                        Name="PhanThanh"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="209 Phan Thanh"
+                                        IsChecked="{Binding PhanThanh}" />
+                                    <CheckBox
+                                        Name="HoaKhanhNam"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="Hoà Khánh Nam"
+                                        IsChecked="{Binding HoaKhanhNam}" />
+                                    <CheckBox
+                                        Name="VietTin"
+                                        Command="{Binding FilterChangedCommand}"
+                                        Content="VietTin"
+                                        IsChecked="{Binding VietTin}" />
                                 </StackPanel>
                             </GroupBox>
-                        </StackPanel>
-                        <StackPanel>
-                            <GroupBox>
-                                <GroupBox.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,5,0"
-                                            Foreground="White"
-                                            Kind="Calendar" />
-                                        <TextBlock Foreground="White" Text="Chọn thời gian rảnh" />
-                                        <materialDesign:PackIcon
-                                            Margin="5,0,0,0"
-                                            Foreground="White"
-                                            Kind="Information">
-                                            <materialDesign:PackIcon.ToolTip>
-                                                <StackPanel>
-                                                    <TextBlock Width="300" TextWrapping="WrapWithOverflow">
-                                                        Giúp hiệu suất sắp xếp tăng nhanh đáng kể.
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </materialDesign:PackIcon.ToolTip>
-                                        </materialDesign:PackIcon>
-                                    </StackPanel>
-                                </GroupBox.Header>
-                                <WrapPanel Orientation="Horizontal">
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Hai" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Mon_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Mon_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Mon_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Ba" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Tus_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Tus_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Tus_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Tư" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Wed_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Wed_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Wed_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Năm" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Thur_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Thur_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Thur_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Sáu" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Fri_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Fri_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Fri_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Bảy" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Sat_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Sat_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Sat_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Margin="2,2,0,0">
-                                        <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Chủ Nhật" />
-                                        </GroupBox.Header>
-                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                                            <CheckBox x:Name="Sun_Mor" Content="Sáng" />
-                                            <CheckBox x:Name="Sun_Aft" Content="Chiều" />
-                                            <CheckBox x:Name="Sun_Nig" Content="Tối" />
-                                        </StackPanel>
-                                    </GroupBox>
-
-                                </WrapPanel>
-                            </GroupBox>
-
                             <GroupBox>
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -490,6 +599,7 @@
                             </GroupBox>
                             <Button
                                 Margin="0,5,0,5"
+                                Command="{Binding ResetFilterCommand}"
                                 Content="Đặt lại bộ lọc"
                                 Foreground="White"
                                 Style="{StaticResource MaterialDesignRaisedButton}" />
@@ -507,8 +617,11 @@
                                     <CheckBox
                                         x:Name="CheckBoxHideConflict"
                                         Click="CheckBoxHideConflict_Click"
-                                        Command="{Binding HideConflictCommand}"
-                                        Content="Ẩn cách sắp xếp xung đột" />
+                                        Content="Ẩn cách sắp xếp xung đột thời gian" />
+                                    <CheckBox
+                                        x:Name="CheckBoxHideConflictTime"
+                                        Click="CheckBoxHideConflictTime_Click"
+                                        Content="Ẩn cách sắp xếp xung đột vị trí" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -635,7 +748,7 @@
                     Grid.Row="1"
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Stretch"
-                    ItemsSource="{Binding AllCombination}"
+                    ItemsSource="{Binding CombinationModels}"
                     SelectedItem="{Binding SelectedCombinationModel}">
                     <ListView.Resources>
                         <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">

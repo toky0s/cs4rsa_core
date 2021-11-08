@@ -18,6 +18,8 @@ using ProgramSubjectCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.DataTypes;
 using ProgramSubjectCrawlerService.DataTypes.Enums;
 using SubjectCrawlService1.Crawlers.Interfaces;
+using SubjectCrawlService1.DataTypes;
+using SubjectCrawlService1.DataTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,15 +34,7 @@ namespace cs4rsa_core.ViewModels
     public class AutoScheduleViewModel : ViewModelBase, IMessageHandler<ExitLoginMessage>, IMessageHandler<AddCombinationMessage>
     {
         #region Properties
-        private bool _isRemoveClassGroupInvalid;
-        public bool IsRemoveClassGroupInvalid { 
-            get => _isRemoveClassGroupInvalid;
-            set
-            {
-                _isRemoveClassGroupInvalid = value;
-                OnPropertyChanged();
-            }
-        }
+
         private string _visibility = "Hidden";
         public string Visibility
         {
@@ -60,10 +54,7 @@ namespace cs4rsa_core.ViewModels
         }
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
-        public List<List<ClassGroupModel>> _filteredClassGroupModels;
-        public List<List<ClassGroupModel>> _classGroupModelsOfClass;
 
-        // Đây là nơi chứa các combination model, người dùng sẽ nhìn thấy cái này.
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
 
@@ -106,9 +97,6 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-
-        public RelayCommand HideConflictCommand { get; set; }
-
         private int _combinationCount;
         public int CombinationCount
         {
@@ -120,7 +108,7 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        private int _choicedCount = 0;
+        private int _choicedCount;
         public int ChoicedCount
         {
             get => _choicedCount;
@@ -141,10 +129,13 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private ProgramDiagram _programDiagram;
+        private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
+        private List<List<ClassGroupModel>> _classGroupModelsOfClass;
         #endregion
 
         #region Command
-        private ProgramDiagram _programDiagram;
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
@@ -157,6 +148,7 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
         public RelayCommand FilterChangedCommand { get; set; }
+        public RelayCommand ResetFilterCommand { get; set; }
         #endregion
 
         #region Dependencies
@@ -168,8 +160,69 @@ namespace cs4rsa_core.ViewModels
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
-        private Cs4rsaGen _cs4rsaGen;
+        #region Filter Properties
+        private bool isRemoveClassGroupInvalid;
+        public bool IsRemoveClassGroupInvalid { get => isRemoveClassGroupInvalid; set { isRemoveClassGroupInvalid = value; OnPropertyChanged(); } }
 
+        private bool phanThanh;
+        private bool quangTrung;
+        private bool nguyenVanLinh254;
+        private bool nguyenVanLinh137;
+        private bool hoaKhanhNam;
+        private bool vietTin;
+        public bool PhanThanh { get => phanThanh; set { phanThanh = value; OnPropertyChanged(); } }
+        public bool QuangTrung { get => quangTrung; set { quangTrung = value; OnPropertyChanged(); } }
+        public bool NguyenVanLinh254 { get => nguyenVanLinh254; set { nguyenVanLinh254 = value; OnPropertyChanged(); } }
+        public bool NguyenVanLinh137 { get => nguyenVanLinh137; set { nguyenVanLinh137 = value; OnPropertyChanged(); } }
+        public bool HoaKhanhNam { get => hoaKhanhNam; set { hoaKhanhNam = value; OnPropertyChanged(); } }
+        public bool VietTin { get => vietTin; set { vietTin = value; OnPropertyChanged(); } }
+
+        private bool mon_Aft;
+        private bool mon_Mor;
+        private bool mon_Nig;
+        private bool tue_Aft;
+        private bool tue_Mor;
+        private bool tue_Nig;
+        private bool wed_Aft;
+        private bool wed_Mor;
+        private bool wed_Nig;
+        private bool thur_Aft;
+        private bool thur_Mor;
+        private bool thur_Nig;
+        private bool fri_Aft;
+        private bool fri_Mor;
+        private bool fri_Nig;
+        private bool sat_Aft;
+        private bool sat_Mor;
+        private bool sat_Nig;
+        private bool sun_Aft;
+        private bool sun_Mor;
+        private bool sun_Nig;
+
+        public bool Mon_Aft { get => mon_Aft; set { mon_Aft = value; OnPropertyChanged(); } }
+        public bool Mon_Mor { get => mon_Mor; set { mon_Mor = value; OnPropertyChanged(); } }
+        public bool Mon_Nig { get => mon_Nig; set { mon_Nig = value; OnPropertyChanged(); } }
+        public bool Tue_Aft { get => tue_Aft; set { tue_Aft = value; OnPropertyChanged(); } }
+        public bool Tue_Mor { get => tue_Mor; set { tue_Mor = value; OnPropertyChanged(); } }
+        public bool Tue_Nig { get => tue_Nig; set { tue_Nig = value; OnPropertyChanged(); } }
+        public bool Wed_Aft { get => wed_Aft; set { wed_Aft = value; OnPropertyChanged(); } }
+        public bool Wed_Mor { get => wed_Mor; set { wed_Mor = value; OnPropertyChanged(); } }
+        public bool Wed_Nig { get => wed_Nig; set { wed_Nig = value; OnPropertyChanged(); } }
+        public bool Thur_Aft { get => thur_Aft; set { thur_Aft = value; OnPropertyChanged(); } }
+        public bool Thur_Mor { get => thur_Mor; set { thur_Mor = value; OnPropertyChanged(); } }
+        public bool Thur_Nig { get => thur_Nig; set { thur_Nig = value; OnPropertyChanged(); } }
+        public bool Fri_Aft { get => fri_Aft; set { fri_Aft = value; OnPropertyChanged(); } }
+        public bool Fri_Mor { get => fri_Mor; set { fri_Mor = value; OnPropertyChanged(); } }
+        public bool Fri_Nig { get => fri_Nig; set { fri_Nig = value; OnPropertyChanged(); } }
+        public bool Sat_Aft { get => sat_Aft; set { sat_Aft = value; OnPropertyChanged(); } }
+        public bool Sat_Mor { get => sat_Mor; set { sat_Mor = value; OnPropertyChanged(); } }
+        public bool Sat_Nig { get => sat_Nig; set { sat_Nig = value; OnPropertyChanged(); } }
+        public bool Sun_Aft { get => sun_Aft; set { sun_Aft = value; OnPropertyChanged(); } }
+        public bool Sun_Mor { get => sun_Mor; set { sun_Mor = value; OnPropertyChanged(); } }
+        public bool Sun_Nig { get => sun_Nig; set { sun_Nig = value; OnPropertyChanged(); } }
+        #endregion
+
+        private Cs4rsaGen _cs4rsaGen;
         public AutoScheduleViewModel(ICourseCrawler courseCrawler,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
             IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser)
@@ -189,6 +242,7 @@ namespace cs4rsa_core.ViewModels
             CombinationModels = new ObservableCollection<CombinationModel>();
             SubjectModels = new ObservableCollection<SubjectModel>();
             _filteredClassGroupModels = new List<List<ClassGroupModel>>();
+            _classGroupModelsOfClass = new List<List<ClassGroupModel>>();
 
             ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
@@ -200,11 +254,52 @@ namespace cs4rsa_core.ViewModels
             GenCommand = new RelayCommand(OnStartGen, CanGen);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
-            HideConflictCommand = new RelayCommand(OnHideConflictCommand);
             FilterChangedCommand = new RelayCommand(OnFiltering);
-            CvsCombination = new();
-            CvsCombination.Source = CombinationModels;
-            CvsCombination.Filter += CombinationFilter;
+            ResetFilterCommand = new RelayCommand(OnResetFilter);
+
+            PhanThanh = true;
+            QuangTrung = true;
+            NguyenVanLinh254 = true;
+            NguyenVanLinh137 = true;
+            VietTin = true;
+            HoaKhanhNam = true;
+
+            IsRemoveClassGroupInvalid = true;
+        }
+
+        private void OnResetFilter()
+        {
+            IsRemoveClassGroupInvalid = true;
+
+            PhanThanh = true;
+            QuangTrung = true;
+            NguyenVanLinh254 = true;
+            NguyenVanLinh137 = true;
+            VietTin = true;
+            HoaKhanhNam = true;
+
+            Mon_Aft = false;
+            Mon_Mor = false;
+            Mon_Nig = false;
+            Tue_Aft = false;
+            Tue_Mor = false;
+            Tue_Nig = false;
+            Wed_Aft = false;
+            Wed_Mor = false;
+            Wed_Nig = false;
+            Thur_Aft = false;
+            Thur_Mor = false;
+            Thur_Nig = false;
+            Fri_Aft = false;
+            Fri_Mor = false;
+            Fri_Nig = false;
+            Sat_Aft = false;
+            Sat_Mor = false;
+            Sat_Nig = false;
+            Sun_Aft = false;
+            Sun_Mor = false;
+            Sun_Nig = false;
+            OnFiltering();
         }
 
         private void OnFiltering()
@@ -218,6 +313,7 @@ namespace cs4rsa_core.ViewModels
             }
             _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
             CombinationModels.Clear();
+            OnStartGen();
             GenCommand.NotifyCanExecuteChanged();
         }
 
@@ -228,28 +324,121 @@ namespace cs4rsa_core.ViewModels
         /// <returns></returns>
         private bool Filter(ClassGroupModel classGroupModel)
         {
-            bool flag = true;
-            if (_isRemoveClassGroupInvalid)
+            bool flagIsRemoveClassGroupInValid = IsRemoveClassGroupInValid(classGroupModel);
+            bool flagIsPlaceFiltering = IsPlaceFilter(classGroupModel);
+            bool flagIsFreeDayFilter = IsFreeDayFilter(classGroupModel);
+
+            return flagIsRemoveClassGroupInValid && flagIsPlaceFiltering && flagIsFreeDayFilter;
+        }
+
+        #region FilteringMethod
+        private bool IsPlaceFilter(ClassGroupModel classGroupModel)
+        {
+
+            Dictionary<Place, bool> placeFilters = new()
             {
-                flag = classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0;
+                { Place.QUANGTRUNG, QuangTrung },
+                { Place.NVL_254, NguyenVanLinh254 },
+                { Place.NVL_137, NguyenVanLinh137 },
+                { Place.PHANTHANH, PhanThanh },
+                { Place.VIETTIN, VietTin },
+                { Place.HOAKHANH, HoaKhanhNam },
+            };
+
+            foreach (KeyValuePair<Place, bool> placeKeyValue in placeFilters)
+            {
+                if (placeKeyValue.Value)
+                {
+                    if (classGroupModel.Places.Contains(placeKeyValue.Key))
+                    {
+                        return true;
+                    }
+                }
             }
-            return flag;
+            return false;
         }
-
-        private void CombinationFilter(object sender, FilterEventArgs e)
+        private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)
         {
-            //CombinationModel combinationModel = (CombinationModel)e.Item;
-            //e.Accepted = !combinationModel.IsConflict;
-            e.Accepted = true;
+            return IsRemoveClassGroupInvalid ? classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0 : true;
         }
-
-        internal CollectionViewSource CvsCombination { get; set; }
-        public ICollectionView AllCombination => CvsCombination.View;
-
-        private void OnHideConflictCommand()
+        private bool IsFreeDayFilter(ClassGroupModel classGroupModel)
         {
-            CvsCombination.View.Refresh();
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Mon = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Mon_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Mon_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Mon_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Tue = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Tue_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Tue_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Tue_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Wed = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Wed_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Wed_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Wed_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Thur = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Thur_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Thur_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Thur_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Fri = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Fri_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Fri_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Fri_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Sat = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Sat_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Sat_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Sat_Nig },
+            };
+            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Sun = new()
+            {
+                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Sun_Mor },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Sun_Aft },
+                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Sun_Nig },
+            };
+
+            Dictionary<DayOfWeek, Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool>> DayOfWeekAndSessionFilter = new()
+            {
+                { DayOfWeek.Monday, Mon },
+                { DayOfWeek.Tuesday, Tue },
+                { DayOfWeek.Wednesday, Wed },
+                { DayOfWeek.Thursday, Thur },
+                { DayOfWeek.Friday, Fri },
+                { DayOfWeek.Saturday, Sat },
+                { DayOfWeek.Sunday, Sun },
+            };
+
+            foreach (KeyValuePair<DayOfWeek, Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool>> dayOfWeekFilter in DayOfWeekAndSessionFilter)
+            {
+                foreach (KeyValuePair<SubjectCrawlService1.DataTypes.Enums.Session, bool> sessionKeyValuePair in dayOfWeekFilter.Value)
+                {
+                    if (sessionKeyValuePair.Value)
+                    {
+                        bool isHasDayOfWeek = classGroupModel.Schedule.ScheduleTime.ContainsKey(dayOfWeekFilter.Key);
+                        if (isHasDayOfWeek)
+                        {
+                            List<StudyTime> studyTimes = classGroupModel.Schedule.ScheduleTime[dayOfWeekFilter.Key];
+                            List<SubjectCrawlService1.DataTypes.Enums.Session> sessions = studyTimes.Select(item => item.GetSession()).ToList();
+                            if (sessions.Contains(sessionKeyValuePair.Key))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
+        #endregion
 
         private bool CanGen()
         {
