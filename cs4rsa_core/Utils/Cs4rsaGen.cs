@@ -2,6 +2,7 @@
 using cs4rsa_core.Models;
 using LightMessageBus;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json;
 
 namespace cs4rsa_core.Utils
@@ -20,7 +21,7 @@ namespace cs4rsa_core.Utils
             _classGroupModelsOfClass.ForEach(item => _currentIndexes.Add(PLACEHOLDER));
         }
 
-        public void Backtracking(int k)
+        public void Backtracking(int k, BackgroundWorker backgroundWorker = null)
         {
             for (int i = 0; i < _classGroupModelsOfClass[k].Count; i++)
             {
@@ -29,11 +30,15 @@ namespace cs4rsa_core.Utils
                 if (IsSuccess(_currentIndexes, _classGroupModelsOfClass.Count))
                 {
                     List<int> clone = Clone(_currentIndexes);
-                    MessageBus.Default.Publish(new AddCombinationMessage(clone));
+                    if (backgroundWorker != null)
+                    {
+                        backgroundWorker.ReportProgress(0, clone);
+                    }
+                    //MessageBus.Default.Publish(new AddCombinationMessage(clone));
                 }
                 else
                 {
-                    Backtracking(k + 1);
+                    Backtracking(k + 1, backgroundWorker);
                     _currentIndexes[k + 1] = -1;
                     continue;
                 }
