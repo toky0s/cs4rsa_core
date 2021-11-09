@@ -370,7 +370,10 @@
                                 <WrapPanel Orientation="Horizontal">
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Hai" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Hai" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -392,7 +395,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Ba" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Ba" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -414,7 +420,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Tư" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Tư" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -436,7 +445,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Năm" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Năm" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -458,7 +470,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Sáu" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Sáu" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -480,7 +495,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Thứ Bảy" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Thứ Bảy" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox
@@ -502,7 +520,10 @@
                                     </GroupBox>
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
                                         <GroupBox.Header>
-                                            <TextBlock Foreground="White" Text="Chủ Nhật" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="White"
+                                                Text="Chủ Nhật" />
                                         </GroupBox.Header>
                                         <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                             <CheckBox

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator" xmlns:viewmodels="clr-namespace:cs4rsa_core.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
     d:DesignHeight="550"
     d:DesignWidth="900"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
@@ -125,7 +125,7 @@
                             Grid.Row="2"
                             Margin="15,0,0,15"
                             HorizontalAlignment="Left"
-                            Click="Button_Click_2"
+                            Command="{Binding GotoFacebookCommand}"
                             Style="{StaticResource MaterialDesignOutlinedButton}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
@@ -178,7 +178,7 @@
                             <Button
                                 Margin="15,0,0,5"
                                 HorizontalAlignment="Left"
-                                Click="GotoSource"
+                                Command="{Binding GotoGitHubCommand}"
                                 Style="{StaticResource MaterialDesignOutlinedButton}">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">

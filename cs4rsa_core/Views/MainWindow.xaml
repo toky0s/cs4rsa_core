@@ -86,7 +86,7 @@
                 </materialDesign:Snackbar>
             </Grid>
             <Grid
-                Width="210"
+                Width="200"
                 HorizontalAlignment="Left"
                 Background="#00cec9">
                 <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
