@@ -27,7 +27,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -312,6 +311,7 @@ namespace cs4rsa_core.ViewModels
                 _filteredClassGroupModels.Add(r);
             }
             _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
+            bool isReGen = CombinationModels.Count > 0;
             CombinationModels.Clear();
             OnStartGen();
             GenCommand.NotifyCanExecuteChanged();
@@ -447,8 +447,36 @@ namespace cs4rsa_core.ViewModels
 
         private void OnStartGen()
         {
-            _cs4rsaGen.Backtracking(0);
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker.WorkerSupportsCancellation = true;
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
+            backgroundWorker.RunWorkerAsync();
             GenCommand.NotifyCanExecuteChanged();
+        }
+
+        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            List<int> indexes = e.UserState as List<int>;
+            List<ClassGroupModel> result = new();
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                result.Add(_filteredClassGroupModels[i][indexes[i]]);
+            }
+            CombinationModel combinationModel = new(SubjectModels.ToList(), result);
+            CombinationModels.Add(combinationModel);
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Console.WriteLine("Completed!!!");
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _cs4rsaGen.Backtracking(0, sender as BackgroundWorker);
         }
 
         private void OnOpenInNewWindow()
@@ -588,13 +616,11 @@ namespace cs4rsa_core.ViewModels
             List<string> choiceSubjectCodes = ChoicedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode).ToList();
             List<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode).ToList();
 
-            // khi cần tải == 0
             if (choiceSubjectCodes.Count == 0)
             {
                 wereDownloadedSubjectCodes.Clear();
             }
 
-            // to do: Xác định subject nào cần tải dựa vào phép trừ tập hợp
             List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
             List<ProgramSubjectModel> needDownload = ChoicedProSubjectModels.Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode)).ToList();
 
