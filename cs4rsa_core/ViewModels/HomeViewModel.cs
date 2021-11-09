@@ -5,6 +5,8 @@ using cs4rsa_core.Messages;
 using Microsoft.Toolkit.Mvvm.Input;
 using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.Settings.Interfaces;
+using System;
+using cs4rsa_core.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -46,19 +48,39 @@ namespace cs4rsa_core.ViewModels
         }
 
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
-        private ICourseCrawler _courseCrawler;
-        private ISetting _setting;
-        public HomeViewModel(ICourseCrawler courseCrawler, ISetting setting)
+        public RelayCommand GotoFacebookCommand { get; set; }
+        public RelayCommand GotoGitHubCommand { get; set; }
+
+        private readonly ICourseCrawler _courseCrawler;
+        private readonly ISetting _setting;
+        private readonly IOpenInBrowser _openInBrowser;
+        public HomeViewModel(ICourseCrawler courseCrawler, ISetting setting, IOpenInBrowser openInBrowser)
         {
             _courseCrawler = courseCrawler;
             _setting = setting;
+            _openInBrowser = openInBrowser;
+
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             _currentYearValue = _courseCrawler.GetCurrentYearValue();
             _currentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _currentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
             _currentYearInfo = _courseCrawler.GetCurrentYearInfo();
+            
             UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
+            GotoFacebookCommand = new RelayCommand(OnGotoFaceBook);
+            GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
+
             LoadIsNewSemester();
+        }
+
+        private void OnGotoGithubCommand()
+        {
+            _openInBrowser.Open("https://github.com/toky0s/cs4rsa_core");
+        }
+
+        private void OnGotoFaceBook()
+        {
+            _openInBrowser.Open("https://www.facebook.com/truongaxin/");
         }
 
         private void OnUpdate()
