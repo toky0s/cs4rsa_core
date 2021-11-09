@@ -30,9 +30,6 @@ using cs4rsa_core.Implements;
 
 namespace cs4rsa_core
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public IServiceProvider Container { get; set; }
