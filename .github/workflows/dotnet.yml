@@ -18,18 +18,6 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
-    - name: Build Helper Service
-      run: dotnet build HelperService/HelperService.csproj
-    - name: Build Cs4rsaDatabaseService
-      run: dotnet build Cs4rsaDatabaseService/Cs4rsaDatabaseService.csproj
-    - name: Build TeacherCrawlerService1
-      run: dotnet build TeacherCrawlerService1/TeacherCrawlerService1.csproj
-    - name: Build SubjectCrawlService1
-      run: dotnet build SubjectCrawlService1/SubjectCrawlService1.csproj
-    - name: Build StudentCrawlerService
-      run: dotnet build StudentCrawlerService/StudentCrawlerService.csproj
-    - name: Build CurriculumCrawlerService
-      run: dotnet build CurriculumCrawlerService/CurriculumCrawlerService.csproj
+        dotnet-version: 5.0.x
     - name: Test Category=TestInLocal
       run: dotnet test --filter TestCategory=TestInLocal
