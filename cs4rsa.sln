@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaDatabaseService", "Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj", "{D023AA31-EAB7-4B34-B861-8A90948342E8}"
 EndProject
@@ -32,6 +32,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentCrawlerService", "StudentCrawlerService\StudentCrawlerService.csproj", "{E647E4A4-F1D1-4878-8447-6492588BADFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumCrawlerService", "CurriculumCrawlerService\CurriculumCrawlerService.csproj", "{ECB0E3AD-024B-46FD-AD21-EC07399436A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebaseService", "FirebaseService\FirebaseService.csproj", "{04988B79-DAB1-463A-A736-F7D9A3587A0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECB0E3AD-024B-46FD-AD21-EC07399436A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

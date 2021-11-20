@@ -34,11 +34,11 @@ namespace TestCs4rsa.SubjectCrawlService
             {
                 DisciplineCrawler disciplineCrawler = _serviceProvider.GetService<DisciplineCrawler>();
                 disciplineCrawler.GetDisciplineAndKeyword();
-            }
 
-            ISubjectCrawler subjectCrawler = _serviceProvider.GetService<ISubjectCrawler>();
-            Subject subject = await subjectCrawler.Crawl("CS", "414");
-            Assert.AreEqual(3, subject.StudyUnit);
+                ISubjectCrawler subjectCrawler = _serviceProvider.GetService<ISubjectCrawler>();
+                Subject subject = await subjectCrawler.Crawl("CS", "414");
+                Assert.AreEqual(3, subject.StudyUnit);
+            }
         }
 
         public async Task GetSubject2()
@@ -68,11 +68,11 @@ namespace TestCs4rsa.SubjectCrawlService
             {
                 DisciplineCrawler disciplineCrawler = _serviceProvider.GetService<DisciplineCrawler>();
                 disciplineCrawler.GetDisciplineAndKeyword();
-            }
 
-            ISubjectCrawler subjectCrawler = _serviceProvider.GetService<ISubjectCrawler>();
-            Subject subject = await subjectCrawler.Crawl(95);
-            Assert.AreEqual(3, subject.StudyUnit);
+                ISubjectCrawler subjectCrawler = _serviceProvider.GetService<ISubjectCrawler>();
+                Subject subject = await subjectCrawler.Crawl(95);
+                Assert.AreEqual(3, subject.StudyUnit);
+            }
         }
 
         [Test]
