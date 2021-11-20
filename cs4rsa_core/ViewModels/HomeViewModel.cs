@@ -50,6 +50,7 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
         public RelayCommand GotoFacebookCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
+        public RelayCommand ManualCommand { get; set; }
 
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
@@ -69,8 +70,14 @@ namespace cs4rsa_core.ViewModels
             UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
             GotoFacebookCommand = new RelayCommand(OnGotoFaceBook);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
+            ManualCommand = new RelayCommand(OnGotoManualCommand);
 
             LoadIsNewSemester();
+        }
+
+        private void OnGotoManualCommand()
+        {
+            _openInBrowser.Open("https://toky0s.github.io/cs4rsa/");
         }
 
         private void OnGotoGithubCommand()
