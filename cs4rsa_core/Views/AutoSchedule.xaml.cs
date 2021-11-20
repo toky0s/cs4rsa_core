@@ -20,22 +20,34 @@ namespace cs4rsa_core.Views
         private bool CombinationFilter(object obj)
         {
             CombinationModel combinationModel = obj as CombinationModel;
-            if (CheckBoxHideConflict.IsChecked == true && CheckBoxHideConflictTime.IsChecked == true)
+            return CheckCannotShowFilter(combinationModel) && CheckConflict(combinationModel) && CheckConflictPlace(combinationModel);
+        }
+
+        private bool CheckCannotShowFilter(CombinationModel combinationModel)
+        {
+            if(CheckBoxHideCannotSimulate.IsChecked == true)
             {
-                return !combinationModel.IsConflict && !combinationModel.IsHavePlaceConflicts();
+                return combinationModel.IsCanShow;
             }
-            if (CheckBoxHideConflict.IsChecked == false && CheckBoxHideConflictTime.IsChecked == true)
+            return true;
+        }
+
+        private bool CheckConflict(CombinationModel combinationModel)
+        {
+            if(CheckBoxHideConflict.IsChecked == true)
             {
                 return !combinationModel.IsHaveTimeConflicts();
             }
-            if (CheckBoxHideConflict.IsChecked == true && CheckBoxHideConflictTime.IsChecked == false)
+            return true;
+        }
+
+        private bool CheckConflictPlace(CombinationModel combinationModel)
+        {
+            if(CheckBoxHideConflictPlace.IsChecked == true)
             {
-                return !combinationModel.IsConflict;
+                return !combinationModel.IsHavePlaceConflicts();
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
@@ -67,6 +79,11 @@ namespace cs4rsa_core.Views
         }
 
         private void CheckBoxHideConflictTime_Click(object sender, RoutedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
+        }
+
+        private void CheckBoxHideCannotSimulate_Click(object sender, RoutedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
         }

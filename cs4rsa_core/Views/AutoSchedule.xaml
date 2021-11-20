@@ -11,8 +11,8 @@
     xmlns:vmConverter="clr-namespace:cs4rsa_core.Converters"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DataContext="{d:DesignInstance Type=vm:AutoScheduleViewModel}"
-    d:DesignHeight="1000"
-    d:DesignWidth="1000"
+    d:DesignHeight="700"
+    d:DesignWidth="1600"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -640,16 +640,43 @@
                                         Click="CheckBoxHideConflict_Click"
                                         Content="Ẩn cách sắp xếp xung đột thời gian" />
                                     <CheckBox
-                                        x:Name="CheckBoxHideConflictTime"
+                                        x:Name="CheckBoxHideConflictPlace"
                                         Click="CheckBoxHideConflictTime_Click"
                                         Content="Ẩn cách sắp xếp xung đột vị trí" />
+                                    <CheckBox
+                                        x:Name="CheckBoxHideCannotSimulate"
+                                        Click="CheckBoxHideCannotSimulate_Click"
+                                        Content="Ẩn cách sắp xếp không thể mô phỏng" />
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox>
+                                <GroupBox.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="Counter" />
+                                        <TextBlock Foreground="White" Text="Cài đặt sinh" />
+                                    </StackPanel>
+                                </GroupBox.Header>
+                                <StackPanel>
+                                    <TextBox
+                                        Margin="0 0 0 10"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        VerticalAlignment="Top"
+                                        AcceptsReturn="True"
+                                        TextWrapping="Wrap"
+                                        MaxWidth="400"
+                                        materialDesign:HintAssist.Hint="Số lượng sinh mỗi lần"
+                                        IsEnabled="{Binding Path=IsChecked, ElementName=MaterialDesignFilledTextBoxEnabledComboBox}" 
+                                        Text="{Binding AmountEachTime}"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
-            <Grid Grid.Column="2" Margin="0,5,5,0">
+            <Grid Grid.Column="2" Margin="0,5,5,5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition />
@@ -707,20 +734,15 @@
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Column="0"
                         Height="30"
                         Margin="5"
                         Command="{Binding SubjectDownloadCommand}"
-                        Foreground="White">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Margin="0,0,5,0" Kind="DownloadBoxOutline" />
-                                <TextBlock>Tải và đồng bộ</TextBlock>
-                            </StackPanel>
-                        </Button.Content>
+                        Foreground="White"
+                        Content="Tải">
                     </Button>
                     <Button
                         Grid.Column="1"
@@ -729,11 +751,27 @@
                         Content="Xoá hết"
                         Foreground="White" />
                 </Grid>
-                <TextBlock
-                    Grid.Row="3"
+                <StackPanel Orientation="Vertical" Grid.Row="3">
+                    <TextBlock
                     Margin="5,0,0,5"
+                        Grid.Column="0"
                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                     Text="Đã tải" />
+                    <TextBlock Margin="5,0,0,5">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Chưa tính toán"></Setter>
+                                <Setter Property="Foreground" Value="Red"></Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCalculated}" Value="true">
+                                        <Setter Property="Text" Value="Đã tính toán"></Setter>
+                                        <Setter Property="Foreground" Value="Green"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
                 <ListView
                     Grid.Row="4"
                     Margin="0,0,0,5"
@@ -751,11 +789,16 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button
-                    Grid.Row="5"
-                    Margin="5,0,0,5"
-                    Content="Chuyển sang xếp thủ công"
-                    Foreground="White" />
+                <Grid Grid.Row="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button
+                    Content="Xếp lịch thủ công" Grid.Column="0" Margin="0,0,5,0"/>
+                    <Button Content="Tính toán" Grid.Column="1" Command="{Binding CalculateCommand}"></Button>
+                </Grid>
+
             </Grid>
             <Grid Grid.Column="3" Margin="0,5,5,5">
                 <Grid.RowDefinitions>
@@ -854,11 +897,6 @@
                     <ListView.ItemContainerStyle>
                         <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                             <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}" />
-                            <!--<Style.Triggers>
-                                <DataTrigger Binding="{Binding IsCanShow}" Value="False">
-                                    <Setter Property="ToolTip" Value="{StaticResource CannotShowOnSimuContentTooltip}" />
-                                </DataTrigger>
-                            </Style.Triggers>-->
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
@@ -874,8 +912,8 @@
                         Content="Sinh" />
                     <Button
                         Grid.Column="1"
-                        Command="{Binding OpenInNewWindowCommand}"
-                        Content="Mở trong cửa sổ mới" />
+                        Command="{Binding ValidGenCommand}"
+                        Content="Sinh hợp lệ" />
                 </Grid>
             </Grid>
         </Grid>

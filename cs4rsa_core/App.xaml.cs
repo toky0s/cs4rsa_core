@@ -27,6 +27,8 @@ using StudentCrawlerService.Crawlers.Interfaces;
 using System.Threading.Tasks;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Implements;
+using FirebaseService.Interfaces;
+using FirebaseService;
 
 namespace cs4rsa_core
 {
@@ -76,6 +78,7 @@ namespace cs4rsa_core
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
+            services.AddSingleton<IFirebase, Firebase>();
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
 

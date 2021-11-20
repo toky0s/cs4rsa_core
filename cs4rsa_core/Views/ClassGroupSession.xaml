@@ -313,7 +313,9 @@
                                     DisplayMemberPath="Name"
                                     ItemsSource="{Binding Teachers}"
                                     SelectedItem="{Binding SelectedTeacher}"
-                                    SelectionChanged="ReloadClassGroupCollection" />
+                                    SelectionChanged="ReloadClassGroupCollection">
+                                </ComboBox>
+
                             </GroupBox>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="0">
