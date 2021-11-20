@@ -30,7 +30,7 @@ using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class AutoScheduleViewModel : ViewModelBase, IMessageHandler<ExitLoginMessage>, IMessageHandler<AddCombinationMessage>
+    public class AutoScheduleViewModel : ViewModelBase, IMessageHandler<ExitLoginMessage>
     {
         #region Properties
 
@@ -40,6 +40,23 @@ namespace cs4rsa_core.ViewModels
             get { return _visibility; }
             set { _visibility = value; OnPropertyChanged(); }
         }
+
+        private bool _isCalculated;
+
+        public bool IsCalculated
+        {
+            get { return _isCalculated; }
+            set { _isCalculated = value; OnPropertyChanged(); }
+        }
+
+        private int _amountEachTime;
+
+        public int AmountEachTime
+        {
+            get { return _amountEachTime; }
+            set { _amountEachTime = value; OnPropertyChanged(); }
+        }
+
 
         private Student _student;
         public Student Student
@@ -148,6 +165,8 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand OpenInNewWindowCommand { get; set; }
         public RelayCommand FilterChangedCommand { get; set; }
         public RelayCommand ResetFilterCommand { get; set; }
+        public RelayCommand CalculateCommand { get; set; }
+        public RelayCommand ValidGenCommand { get; set; }
         #endregion
 
         #region Dependencies
@@ -221,6 +240,15 @@ namespace cs4rsa_core.ViewModels
         public bool Sun_Nig { get => sun_Nig; set { sun_Nig = value; OnPropertyChanged(); } }
         #endregion
 
+        #region State
+        // Nơi chưa danh sách tất cả các index của kết quả Gen.
+        private List<List<int>> _tempResult;
+
+        // Đánh dấu index của các lần gen
+        private int _genIndex;
+
+        #endregion
+
         private Cs4rsaGen _cs4rsaGen;
         public AutoScheduleViewModel(ICourseCrawler courseCrawler,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
@@ -234,7 +262,6 @@ namespace cs4rsa_core.ViewModels
             _courseCrawler = courseCrawler;
 
             MessageBus.Default.FromAny().Where<ExitLoginMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<AddCombinationMessage>().Notify(this);
 
             ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
             ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
@@ -255,6 +282,8 @@ namespace cs4rsa_core.ViewModels
             OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
             FilterChangedCommand = new RelayCommand(OnFiltering);
             ResetFilterCommand = new RelayCommand(OnResetFilter);
+            CalculateCommand = new RelayCommand(OnCalculate);
+            ValidGenCommand = new RelayCommand(OnValidGen, CanGen);
 
             PhanThanh = true;
             QuangTrung = true;
@@ -264,6 +293,65 @@ namespace cs4rsa_core.ViewModels
             HoaKhanhNam = true;
 
             IsRemoveClassGroupInvalid = true;
+            IsCalculated = false;
+            AmountEachTime = 1;
+            _tempResult = new();
+            _genIndex = 0;
+        }
+
+        private void OnValidGen()
+        {
+            for (int i = _genIndex; i < _tempResult.Count; i++)
+            {
+                List<ClassGroupModel> classGroupModels = new();
+                for (int j = 0; j < _tempResult[i].Count; j++)
+                {
+                    int where = _tempResult[_genIndex][j];
+                    classGroupModels.Add(_classGroupModelsOfClass[j][where]);
+                }
+                CombinationModel combinationModel = new CombinationModel(SubjectModels.ToList(), classGroupModels);
+                CombinationModels.Add(combinationModel);
+                _genIndex++;
+                GenCommand.NotifyCanExecuteChanged();
+                if (!combinationModel.IsHaveTimeConflicts() && !combinationModel.IsHavePlaceConflicts() && combinationModel.IsCanShow)
+                {
+                    break;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Chạy đa luồng thực hiện list danh sách tất cả các index.
+        /// </summary>
+        private void OnCalculate()
+        {
+            OnFiltering();
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            if(_filteredClassGroupModels.Count > 0)
+            {
+                backgroundWorker.RunWorkerAsync();
+            }
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _tempResult = e.Result as List<List<int>>;
+            IsCalculated = true;
+            string message = $"Đã tính toán xong với {_tempResult.Count} kết quả";
+            GenCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
+            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
+            _cs4rsaGen.TempResult.Clear();
+            _cs4rsaGen.Backtracking(0);
+            e.Result = _cs4rsaGen.TempResult;
         }
 
         private void OnResetFilter()
@@ -300,7 +388,6 @@ namespace cs4rsa_core.ViewModels
             Sun_Nig = false;
             OnFiltering();
         }
-
         private void OnFiltering()
         {
             _filteredClassGroupModels.Clear();
@@ -310,11 +397,11 @@ namespace cs4rsa_core.ViewModels
                     .ToList();
                 _filteredClassGroupModels.Add(r);
             }
-            _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
+            
             bool isReGen = CombinationModels.Count > 0;
             CombinationModels.Clear();
-            OnStartGen();
             GenCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>
@@ -442,41 +529,20 @@ namespace cs4rsa_core.ViewModels
 
         private bool CanGen()
         {
-            return CombinationModels.Count == 0 && SubjectModels.Count > 0;
+            return IsCalculated && _genIndex <= _tempResult.Count;
         }
 
         private void OnStartGen()
         {
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.WorkerReportsProgress = true;
-            backgroundWorker.WorkerSupportsCancellation = true;
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            backgroundWorker.ProgressChanged += BackgroundWorker_ProgressChanged;
-            backgroundWorker.RunWorkerAsync();
-            GenCommand.NotifyCanExecuteChanged();
-        }
-
-        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            List<int> indexes = e.UserState as List<int>;
-            List<ClassGroupModel> result = new();
-            for (int i = 0; i < indexes.Count; i++)
+            List<ClassGroupModel> classGroupModels = new();
+            for(int i=0; i<_tempResult[_genIndex].Count; i++)
             {
-                result.Add(_filteredClassGroupModels[i][indexes[i]]);
+                classGroupModels.Add(_classGroupModelsOfClass[i][_tempResult[_genIndex][i]]);
             }
-            CombinationModel combinationModel = new(SubjectModels.ToList(), result);
+            CombinationModel combinationModel = new(SubjectModels.ToList(), classGroupModels);
             CombinationModels.Add(combinationModel);
-        }
-
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Console.WriteLine("Completed!!!");
-        }
-
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            _cs4rsaGen.Backtracking(0, sender as BackgroundWorker);
+            _genIndex++;
+            GenCommand.NotifyCanExecuteChanged();
         }
 
         private void OnOpenInNewWindow()
@@ -516,9 +582,13 @@ namespace cs4rsa_core.ViewModels
             ChoicedProSubjectModels.Clear();
             SubjectModels.Clear();
             CombinationModels.Clear();
+            _tempResult.Clear();
+            _genIndex = 0;
+            IsCalculated = false;
             DeleteAllCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             GenCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
         }
 
         public async Task LoadProgramSubject()
@@ -599,7 +669,7 @@ namespace cs4rsa_core.ViewModels
             SubjectDownloadCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            GenCommand.NotifyCanExecuteChanged();
+            ResetState();
             UpdateChoicedCount();
             UpdateCreditCount();
         }
@@ -638,7 +708,7 @@ namespace cs4rsa_core.ViewModels
                 }
             }
             _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
-            OnFiltering();
+            IsCalculated = false;
             GenCommand.NotifyCanExecuteChanged();
         }
 
@@ -669,6 +739,15 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
+        private void ResetState()
+        {
+            _tempResult.Clear();
+            _genIndex = 0;
+            IsCalculated = false;
+            GenCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
+        }
+
         /// <summary>
         /// Kiểm tra xem Folder được truyền vào sẽ hoàn thành trong tương lai hay không
         /// nếu người dùng chọn học những môn thuộc folder đó.
@@ -696,18 +775,6 @@ namespace cs4rsa_core.ViewModels
         public async void Handle(ExitLoginMessage message)
         {
             await LoadStudent(message.Source);
-        }
-
-        public void Handle(AddCombinationMessage message)
-        {
-            List<int> indexes = message.Source;
-            List<ClassGroupModel> result = new();
-            for (int i = 0; i < indexes.Count; i++)
-            {
-                result.Add(_filteredClassGroupModels[i][indexes[i]]);
-            }
-            CombinationModel combinationModel = new(SubjectModels.ToList(), result);
-            CombinationModels.Add(combinationModel);
         }
     }
 }
