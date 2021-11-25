@@ -649,29 +649,6 @@
                                         Content="Ẩn cách sắp xếp không thể mô phỏng" />
                                 </StackPanel>
                             </GroupBox>
-                            <GroupBox>
-                                <GroupBox.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,5,0"
-                                            Foreground="White"
-                                            Kind="Counter" />
-                                        <TextBlock Foreground="White" Text="Cài đặt sinh" />
-                                    </StackPanel>
-                                </GroupBox.Header>
-                                <StackPanel>
-                                    <TextBox
-                                        Margin="0 0 0 10"
-                                        Style="{StaticResource MaterialDesignFilledTextBox}"
-                                        VerticalAlignment="Top"
-                                        AcceptsReturn="True"
-                                        TextWrapping="Wrap"
-                                        MaxWidth="400"
-                                        materialDesign:HintAssist.Hint="Số lượng sinh mỗi lần"
-                                        IsEnabled="{Binding Path=IsChecked, ElementName=MaterialDesignFilledTextBoxEnabledComboBox}" 
-                                        Text="{Binding AmountEachTime}"/>
-                                </StackPanel>
-                            </GroupBox>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
@@ -900,21 +877,11 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Button
-                        Grid.Column="0"
-                        Margin="0,0,5,0"
-                        Command="{Binding GenCommand}"
-                        Content="Sinh" />
-                    <Button
-                        Grid.Column="1"
+                <Button
+                        Grid.Row="2"
                         Command="{Binding ValidGenCommand}"
-                        Content="Sinh hợp lệ" />
-                </Grid>
+                        IsEnabled="{Binding IsCalculated}"
+                        Content="Tạo bộ lịch" />
             </Grid>
         </Grid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">

@@ -30,25 +30,5 @@ namespace cs4rsa_core.Views
         {
             InitializeComponent();
         }
-
-        private void GotoSource(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void GotoWeb(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -49,15 +49,6 @@ namespace cs4rsa_core.ViewModels
             set { _isCalculated = value; OnPropertyChanged(); }
         }
 
-        private int _amountEachTime;
-
-        public int AmountEachTime
-        {
-            get { return _amountEachTime; }
-            set { _amountEachTime = value; OnPropertyChanged(); }
-        }
-
-
         private Student _student;
         public Student Student
         {
@@ -147,7 +138,9 @@ namespace cs4rsa_core.ViewModels
         }
 
         private ProgramDiagram _programDiagram;
+
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
+
         private List<List<ClassGroupModel>> _classGroupModelsOfClass;
         #endregion
 
@@ -160,7 +153,6 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
-        public RelayCommand GenCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
         public RelayCommand FilterChangedCommand { get; set; }
@@ -277,13 +269,12 @@ namespace cs4rsa_core.ViewModels
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
-            GenCommand = new RelayCommand(OnStartGen, CanGen);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
             FilterChangedCommand = new RelayCommand(OnFiltering);
             ResetFilterCommand = new RelayCommand(OnResetFilter);
             CalculateCommand = new RelayCommand(OnCalculate);
-            ValidGenCommand = new RelayCommand(OnValidGen, CanGen);
+            ValidGenCommand = new RelayCommand(OnValidGen);
 
             PhanThanh = true;
             QuangTrung = true;
@@ -294,7 +285,6 @@ namespace cs4rsa_core.ViewModels
 
             IsRemoveClassGroupInvalid = true;
             IsCalculated = false;
-            AmountEachTime = 1;
             _tempResult = new();
             _genIndex = 0;
         }
@@ -312,11 +302,15 @@ namespace cs4rsa_core.ViewModels
                 CombinationModel combinationModel = new CombinationModel(SubjectModels.ToList(), classGroupModels);
                 CombinationModels.Add(combinationModel);
                 _genIndex++;
-                GenCommand.NotifyCanExecuteChanged();
                 if (!combinationModel.IsHaveTimeConflicts() && !combinationModel.IsHavePlaceConflicts() && combinationModel.IsCanShow)
                 {
                     break;
                 }
+            }
+            if(_genIndex == _tempResult.Count)
+            {
+                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Đã đến bộ lịch cuối"));
+                IsCalculated = false;
             }
         }
 
@@ -341,8 +335,6 @@ namespace cs4rsa_core.ViewModels
             _tempResult = e.Result as List<List<int>>;
             IsCalculated = true;
             string message = $"Đã tính toán xong với {_tempResult.Count} kết quả";
-            GenCommand.NotifyCanExecuteChanged();
-            ValidGenCommand.NotifyCanExecuteChanged();
             MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
         }
 
@@ -397,11 +389,10 @@ namespace cs4rsa_core.ViewModels
                     .ToList();
                 _filteredClassGroupModels.Add(r);
             }
-            
-            bool isReGen = CombinationModels.Count > 0;
             CombinationModels.Clear();
-            GenCommand.NotifyCanExecuteChanged();
-            ValidGenCommand.NotifyCanExecuteChanged();
+            IsCalculated = false;
+            _genIndex = 0;
+            _tempResult.Clear();
         }
 
         /// <summary>
@@ -527,24 +518,6 @@ namespace cs4rsa_core.ViewModels
         }
         #endregion
 
-        private bool CanGen()
-        {
-            return IsCalculated && _genIndex <= _tempResult.Count;
-        }
-
-        private void OnStartGen()
-        {
-            List<ClassGroupModel> classGroupModels = new();
-            for(int i=0; i<_tempResult[_genIndex].Count; i++)
-            {
-                classGroupModels.Add(_classGroupModelsOfClass[i][_tempResult[_genIndex][i]]);
-            }
-            CombinationModel combinationModel = new(SubjectModels.ToList(), classGroupModels);
-            CombinationModels.Add(combinationModel);
-            _genIndex++;
-            GenCommand.NotifyCanExecuteChanged();
-        }
-
         private void OnOpenInNewWindow()
         {
             //CombinationContainerWindow combinationContainerWindow = new CombinationContainerWindow(CombinationModels.ToList(), this);
@@ -582,12 +555,13 @@ namespace cs4rsa_core.ViewModels
             ChoicedProSubjectModels.Clear();
             SubjectModels.Clear();
             CombinationModels.Clear();
+            _classGroupModelsOfClass.Clear();
+            _filteredClassGroupModels.Clear();
             _tempResult.Clear();
             _genIndex = 0;
             IsCalculated = false;
             DeleteAllCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
-            GenCommand.NotifyCanExecuteChanged();
             ValidGenCommand.NotifyCanExecuteChanged();
         }
 
@@ -666,12 +640,16 @@ namespace cs4rsa_core.ViewModels
                 SubjectModels.Remove(needRemove);
             }
             ChoicedProSubjectModels.Remove(_selectedProSubjectInChoiced);
+            _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
             SubjectDownloadCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            ResetState();
+            IsCalculated = false;
+            _genIndex = 0;
+            _tempResult.Clear();
             UpdateChoicedCount();
             UpdateCreditCount();
+            OnFiltering();
         }
 
         /// <summary>
@@ -709,7 +687,6 @@ namespace cs4rsa_core.ViewModels
             }
             _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
             IsCalculated = false;
-            GenCommand.NotifyCanExecuteChanged();
         }
 
         private void OnAddSubject()
@@ -737,15 +714,6 @@ namespace cs4rsa_core.ViewModels
             {
                 CreditCount += subjectModel.StudyUnit;
             }
-        }
-
-        private void ResetState()
-        {
-            _tempResult.Clear();
-            _genIndex = 0;
-            IsCalculated = false;
-            GenCommand.NotifyCanExecuteChanged();
-            ValidGenCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>

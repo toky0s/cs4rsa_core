@@ -7,6 +7,8 @@ using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.Settings.Interfaces;
 using System;
 using cs4rsa_core.Interfaces;
+using FirebaseService.Interfaces;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -55,11 +57,14 @@ namespace cs4rsa_core.ViewModels
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly IOpenInBrowser _openInBrowser;
-        public HomeViewModel(ICourseCrawler courseCrawler, ISetting setting, IOpenInBrowser openInBrowser)
+        private readonly IFirebase _firebase;
+
+        public HomeViewModel(ICourseCrawler courseCrawler, ISetting setting, IOpenInBrowser openInBrowser, IFirebase firebase)
         {
             _courseCrawler = courseCrawler;
             _setting = setting;
             _openInBrowser = openInBrowser;
+            _firebase = firebase;
 
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             _currentYearValue = _courseCrawler.GetCurrentYearValue();
@@ -73,6 +78,16 @@ namespace cs4rsa_core.ViewModels
             ManualCommand = new RelayCommand(OnGotoManualCommand);
 
             LoadIsNewSemester();
+            CheckVersion();
+        }
+
+        private void CheckVersion()
+        {
+            string remoteVersion =  _firebase.GetLatestVersion();
+            if (_setting.CurrentSetting.Version != remoteVersion)
+            {
+                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage($"Phiên bản {remoteVersion} đã có, hãy cập nhật"));
+            }
         }
 
         private void OnGotoManualCommand()

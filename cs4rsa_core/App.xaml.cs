@@ -24,7 +24,6 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using CurriculumCrawlerService.Crawlers.Interfaces;
 using StudentCrawlerService.Crawlers.Interfaces;
-using System.Threading.Tasks;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Implements;
 using FirebaseService.Interfaces;

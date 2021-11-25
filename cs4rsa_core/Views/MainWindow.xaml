@@ -30,7 +30,7 @@
     <materialDesign:DialogHost DialogContent="{Binding DialogUC}" IsOpen="{Binding IsOpenDialog}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="210" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1">

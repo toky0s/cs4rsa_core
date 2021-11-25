@@ -25,10 +25,10 @@ namespace FirebaseService
         {
         }
 
-        public async Task<string> GetLatestVersion()
+        public string GetLatestVersion()
         {
             client = new FireSharp.FirebaseClient(ifc);
-            FirebaseResponse res = await client.GetTaskAsync(@"/appInfomations/Version");
+            FirebaseResponse res = client.Get(@"/appInfomations/Version");
             string version = res.Body.ToString();
             char[] chars = { '\"' };
             string[] result = version.Split(chars, StringSplitOptions.RemoveEmptyEntries);
