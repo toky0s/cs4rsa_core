@@ -49,24 +49,6 @@ namespace ProgramSubjectCrawlerService.Crawlers
             StudentProgramCrawler programCrawler3 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
             StudentProgramCrawler programCrawler4 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
 
-            //Task a = Task.Factory.StartNew(async () => {
-            //    ProgramFolder task1 = await programCrawler1.GetNode(url1);
-            //    await AddProgramFolder.Invoke(task1);
-            //});
-            //Task b = Task.Factory.StartNew(async () => {
-            //    ProgramFolder task1 = await programCrawler1.GetNode(url2);
-            //    await AddProgramFolder.Invoke(task1);
-            //});
-            //Task c = Task.Factory.StartNew(async () => {
-            //    ProgramFolder task1 = await programCrawler1.GetNode(url3);
-            //    await AddProgramFolder.Invoke(task1);
-            //});
-            //Task d = Task.Factory.StartNew(async () => {
-            //    ProgramFolder task1 = await programCrawler1.GetNode(url4);
-            //    await AddProgramFolder.Invoke(task1);
-            //});
-
-            //await Task.WhenAll(new[] { a, b, c, d });
             ProgramFolder task1 = await programCrawler1.GetNode(url1);
             await AddProgramFolder.Invoke(task1);
 

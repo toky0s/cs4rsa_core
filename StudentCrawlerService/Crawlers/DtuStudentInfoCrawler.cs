@@ -40,10 +40,15 @@ namespace StudentCrawlerService.Crawlers
             string studentId = studentIdNode.InnerText;
 
             string sBirthday = StringHelper.ParseDateTime(birthdayNode.InnerText);
-            DateTime birthday;
-            if (!DateTime.TryParseExact(sBirthday, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday))
+            if (!DateTime.TryParseExact(sBirthday, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime birthday))
             {
-                DateTime.TryParseExact(sBirthday, "dd/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday);
+                if (!DateTime.TryParseExact(sBirthday, "dd/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday))
+                {
+                    if (!DateTime.TryParseExact(sBirthday, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday))
+                    {
+                        DateTime.TryParseExact(sBirthday, "d/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthday);
+                    }
+                }
             }
             string cmnd = cmndNode.InnerText;
             string email = emailNode.InnerText;
@@ -81,6 +86,11 @@ namespace StudentCrawlerService.Crawlers
                 return student;
             }
             return studentExist;
+        }
+
+        public Task<Student> CrawlWithSessionId(string sessionId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

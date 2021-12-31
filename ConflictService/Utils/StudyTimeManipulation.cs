@@ -71,10 +71,10 @@ namespace ConflictService.Utils
         {
             List<Tuple<StudyTime, StudyTime>> tupleStudyTimes = new List<Tuple<StudyTime, StudyTime>>();
             int index = 0;
-            while (index < studyTimes.Count() - 1)
+            while (index < studyTimes.Count - 1)
             {
                 StudyTime firstItem = studyTimes[index];
-                for (int j = index + 1; j <= studyTimes.Count() - 1; ++j)
+                for (int j = index + 1; j <= studyTimes.Count - 1; ++j)
                 {
                     Tuple<StudyTime, StudyTime> tupleStudyTime = new Tuple<StudyTime, StudyTime>(firstItem, studyTimes[j]);
                     tupleStudyTimes.Add(tupleStudyTime);

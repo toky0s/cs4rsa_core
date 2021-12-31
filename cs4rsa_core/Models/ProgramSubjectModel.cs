@@ -45,7 +45,7 @@ namespace cs4rsa_core.Models
             ProgramSubject = programSubject;
             SubjectCode = programSubject.SubjectCode;
             SubjectName = programSubject.SubjectName;
-            FolderName = programSubject.ParrentNodeName;
+            FolderName = programSubject.ParentNodeName;
             StudyState = programSubject.StudyState;
             NodeType = programSubject.GetNodeType();
         }

@@ -10,17 +10,23 @@ namespace cs4rsa_core.Converters.DialogConverters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (!(value is string s))
+            if (value is not string s)
+            {
                 return null;
-
-            BitmapImage bi = new BitmapImage();
-            Regex regex = new Regex(@"^[\w/\:.-]+;base64,");
-            s = regex.Replace(s, string.Empty);
-            bi.BeginInit();
-            bi.StreamSource = new MemoryStream(System.Convert.FromBase64String(s));
-            bi.EndInit();
-
-            return bi;
+            }
+            try
+            {
+                BitmapImage bi = new();
+                Regex regex = new(@"^[\w/\:.-]+;base64,");
+                s = regex.Replace(s, string.Empty);
+                bi.BeginInit();
+                bi.StreamSource = new MemoryStream(System.Convert.FromBase64String(s));
+                bi.EndInit();
+                return bi;
+            }
+            catch (NotSupportedException e) {
+                return null;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

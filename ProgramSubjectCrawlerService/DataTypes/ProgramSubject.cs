@@ -22,7 +22,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         public List<string> ParallelSubjects { get; }
         public StudyState StudyState { get; }
         public string CourseId { get; }
-        public string ParrentNodeName { get; }
+        public string ParentNodeName { get; }
 
         public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
             List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
@@ -37,7 +37,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
             ParallelSubjects = parallelSubject;
             StudyState = studyState;
             CourseId = courseId;
-            ParrentNodeName = parrentNodeName;
+            ParentNodeName = parrentNodeName;
         }
 
         public string GetChildOfNode()

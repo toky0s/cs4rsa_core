@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace SubjectCrawlService1.DataTypes
 {
     /// <summary>
-    /// Một ngày học sẽ có một thời gian học, một nơi học và một phòng học nhất định.
-    /// DayPlacePair đại diện cho điều này.
+    /// Đại diện cho thứ-phòng-nơi
     /// </summary>
     public class DayPlacePair
     {
