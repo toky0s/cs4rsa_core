@@ -1,6 +1,3 @@
----
-youtubeId: G73Ll0m3Hvc
----
 ## Chào mừng đến với CS4RSA
 
 Bạn đang đau đầu vì kỳ đăng ký tín chỉ sắp tới, bạn bực mình vì web trường điều hướng quá củ chuối, máy của bạn không có excel, bạn không biết phải đăng ký môn nào
