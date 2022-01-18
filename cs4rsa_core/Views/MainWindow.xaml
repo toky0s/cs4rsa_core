@@ -27,7 +27,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </Window.Resources>
-    <materialDesign:DialogHost DialogContent="{Binding DialogUC}" IsOpen="{Binding IsOpenDialog}">
+    <materialDesign:DialogHost DialogContent="{Binding DialogUC}" IsOpen="{Binding IsOpenDialog}" CloseOnClickAway="True">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
@@ -35,42 +35,10 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1">
                 <materialDesign:Transitioner SelectedIndex="{Binding SelectedIndex}">
-                    <materialDesign:TransitionerSlide>
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideWipe Direction="Down" />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:TransitionerSlide.ForwardWipe>
-                            <materialDesign:SlideWipe Direction="Up" />
-                        </materialDesign:TransitionerSlide.ForwardWipe>
-                        <local:Home />
-                    </materialDesign:TransitionerSlide>
-                    <materialDesign:TransitionerSlide>
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideWipe Direction="Down" />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:TransitionerSlide.ForwardWipe>
-                            <materialDesign:SlideWipe Direction="Up" />
-                        </materialDesign:TransitionerSlide.ForwardWipe>
-                        <local:Login />
-                    </materialDesign:TransitionerSlide>
-                    <materialDesign:TransitionerSlide>
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideWipe Direction="Down" />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:TransitionerSlide.ForwardWipe>
-                            <materialDesign:SlideWipe Direction="Up" />
-                        </materialDesign:TransitionerSlide.ForwardWipe>
-                        <local:MainScheduling />
-                    </materialDesign:TransitionerSlide>
-                    <materialDesign:TransitionerSlide>
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideWipe Direction="Down" />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:TransitionerSlide.ForwardWipe>
-                            <materialDesign:SlideWipe Direction="Up" />
-                        </materialDesign:TransitionerSlide.ForwardWipe>
-                        <local:AutoSchedule />
-                    </materialDesign:TransitionerSlide>
+                    <local:Home />
+                    <local:Login />
+                    <local:MainScheduling />
+                    <local:AutoSchedule />
                     <materialDesign:TransitionerSlide>
                         <materialDesign:TransitionerSlide.BackwardWipe>
                             <materialDesign:SlideWipe Direction="Down" />

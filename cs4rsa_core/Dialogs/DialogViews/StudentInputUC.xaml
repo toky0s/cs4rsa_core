@@ -90,13 +90,6 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
-            <Button
-                Grid.Row="2"
-                Margin="10"
-                Command="{Binding CloseDialogCommand}"
-                Content="Thoát"
-                Foreground="White"
-                Style="{StaticResource MaterialDesignRaisedButton}" />
         </Grid>
     </materialDesign:Card>
 

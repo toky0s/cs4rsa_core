@@ -55,11 +55,6 @@
                 Margin="0,0,0,5"
                 Command="{Binding CopyCommand}"
                 Content="Sao chép" />
-            <Button
-                Grid.Row="4"
-                Height="30"
-                Command="{Binding CloseDialogCommand}"
-                Content="Thoát" />
         </Grid>
     </materialDesign:Card>
 
