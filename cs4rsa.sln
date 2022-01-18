@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseSearchService", "Cour
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisciplineCrawlerService", "DisciplineCrawlerService\DisciplineCrawlerService.csproj", "{F2D5710D-4143-4CC6-9C48-23F1AB670091}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCs4rsa", "TestCs4rsa\TestCs4rsa.csproj", "{84563F93-D94B-425B-B251-446D768D6B80}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa_core", "cs4rsa_core\cs4rsa_core.csproj", "{93ACCEED-955F-4AF0-A909-76FE718B0DD7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubjectCrawlService1", "SubjectCrawlService1\SubjectCrawlService1.csproj", "{03A31965-826F-47E1-AB54-DA44F9711F2A}"
@@ -34,6 +32,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumCrawlerService", "CurriculumCrawlerService\CurriculumCrawlerService.csproj", "{ECB0E3AD-024B-46FD-AD21-EC07399436A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebaseService", "FirebaseService\FirebaseService.csproj", "{04988B79-DAB1-463A-A736-F7D9A3587A0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseSearchDLL", "CourseSearchDLL\CourseSearchDLL.csproj", "{D13D7A10-D9D5-417B-8616-B88123260AFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelperServiceDLL", "HelperServiceDLL\HelperServiceDLL.csproj", "{D66A203B-4F2D-477F-B792-61D514F6C310}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaBlazorModel", "Cs4rsaBlazorModel\Cs4rsaBlazorModel.csproj", "{C267B35C-3F57-4D7A-A9FB-9E0A635451FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisciplineCrawlerDLL", "DisciplineCrawlerDLL\DisciplineCrawlerDLL.csproj", "{7D1E5159-8826-4C35-B6CE-56E2DF836D52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaTestDLL", "Cs4rsaTestDLL\Cs4rsaTestDLL.csproj", "{6D7B83C6-1744-43E0-8A8B-5107FF46165D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCs4rsa", "TestCs4rsa\TestCs4rsa.csproj", "{BA51F3BA-64B9-4FB5-A886-6383C3E5EA0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +71,6 @@ Global
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2D5710D-4143-4CC6-9C48-23F1AB670091}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84563F93-D94B-425B-B251-446D768D6B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84563F93-D94B-425B-B251-446D768D6B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84563F93-D94B-425B-B251-446D768D6B80}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,9 +99,36 @@ Global
 		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04988B79-DAB1-463A-A736-F7D9A3587A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13D7A10-D9D5-417B-8616-B88123260AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13D7A10-D9D5-417B-8616-B88123260AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13D7A10-D9D5-417B-8616-B88123260AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13D7A10-D9D5-417B-8616-B88123260AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D66A203B-4F2D-477F-B792-61D514F6C310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D66A203B-4F2D-477F-B792-61D514F6C310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D66A203B-4F2D-477F-B792-61D514F6C310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D66A203B-4F2D-477F-B792-61D514F6C310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C267B35C-3F57-4D7A-A9FB-9E0A635451FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C267B35C-3F57-4D7A-A9FB-9E0A635451FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C267B35C-3F57-4D7A-A9FB-9E0A635451FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C267B35C-3F57-4D7A-A9FB-9E0A635451FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D1E5159-8826-4C35-B6CE-56E2DF836D52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D1E5159-8826-4C35-B6CE-56E2DF836D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D1E5159-8826-4C35-B6CE-56E2DF836D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D1E5159-8826-4C35-B6CE-56E2DF836D52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D7B83C6-1744-43E0-8A8B-5107FF46165D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D7B83C6-1744-43E0-8A8B-5107FF46165D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D7B83C6-1744-43E0-8A8B-5107FF46165D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D7B83C6-1744-43E0-8A8B-5107FF46165D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA51F3BA-64B9-4FB5-A886-6383C3E5EA0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA51F3BA-64B9-4FB5-A886-6383C3E5EA0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA51F3BA-64B9-4FB5-A886-6383C3E5EA0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA51F3BA-64B9-4FB5-A886-6383C3E5EA0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C267B35C-3F57-4D7A-A9FB-9E0A635451FC} = {F2BB9055-57B8-4383-B9A7-C1F0A15696D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76EC2335-3EAD-45E4-94A3-6FBEF227F529}
