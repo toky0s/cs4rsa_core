@@ -15,7 +15,6 @@
     <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
     <None Remove="Images\myimage.jpg" />
-    <None Remove="logo.ico" />
     <None Remove="SplashScreen.png" />
   </ItemGroup>
 
@@ -124,7 +123,6 @@
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />
     <Resource Include="Images\myimage.jpg" />
-    <Resource Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
