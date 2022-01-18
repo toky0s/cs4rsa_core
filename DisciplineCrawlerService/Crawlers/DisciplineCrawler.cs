@@ -17,7 +17,10 @@ namespace DisciplineCrawlerService.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
 
-        public DisciplineCrawler(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork, ColorGenerator colorGenerator)
+        public DisciplineCrawler(
+            ICourseCrawler courseCrawler, 
+            IUnitOfWork unitOfWork,
+            ColorGenerator colorGenerator)
         {
             _homeCourseSearch = courseCrawler;
             _unitOfWork = unitOfWork;
@@ -27,7 +30,9 @@ namespace DisciplineCrawlerService.Crawlers
         /// <summary>
         /// Cào data từ Course DTU và lưu vào database.
         /// </summary>
-        public void GetDisciplineAndKeyword(BackgroundWorker backgroundWorker = null, double numberOfSubjects = 0)
+        public void GetDisciplineAndKeyword(
+            BackgroundWorker backgroundWorker = null,
+            double numberOfSubjects = 0)
         {
             double reportValue = 0;
             double jump = 0;
@@ -39,7 +44,7 @@ namespace DisciplineCrawlerService.Crawlers
 
             string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
 
-            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlWeb htmlWeb = new();
             HtmlDocument document = htmlWeb.Load(URL);
             HtmlNode[] trTags = document.DocumentNode.Descendants("tr").ToArray();
 
@@ -110,7 +115,7 @@ namespace DisciplineCrawlerService.Crawlers
         {
             string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
 
-            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlWeb htmlWeb = new();
             HtmlDocument document = htmlWeb.Load(URL);
 
             HtmlNode node = document.DocumentNode;
