@@ -66,7 +66,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Lịch mô phỏng" />
+            <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="Lịch mô phỏng" />
         </StackPanel>
         <TextBlock Grid.Row="1" Text="Giai đoạn 1 (Từ tuần 1 - 9)" />
         <DataGrid

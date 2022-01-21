@@ -27,14 +27,10 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}" Text="Danh sách các tài khoản của bạn" />
-        </Grid>
-        <Grid Grid.Row="1">
             <ListBox ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                 <ListBox.Resources>
                     <ContextMenu x:Key="StudentContextMenu" Opened="ContextMenu_Opened">
@@ -99,7 +95,7 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="auto" />

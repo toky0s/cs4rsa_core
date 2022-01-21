@@ -42,7 +42,7 @@
         <TextBlock
             Grid.Row="0"
             Grid.ColumnSpan="2"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
             Text="Tìm kiếm" />
         <ComboBox
             x:Name="DisciplineComboBox"
@@ -114,34 +114,33 @@
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="25" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Rectangle
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle
                                 Grid.Column="0"
-                                Width="27"
+                                Width="25"
                                 HorizontalAlignment="Left"
                                 Fill="{Binding Color}" />
-                            <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <TextBlock
                                     Margin="5,10,0,0"
                                     FontSize="14"
+                                    FontWeight="DemiBold"
                                     Text="{Binding SubjectName}"
                                     TextWrapping="WrapWithOverflow" />
-                                <TextBlock
+                            <TextBlock
                                     Margin="5,0,0,0"
                                     Style="{StaticResource Caption}"
                                     Text="{Binding SubjectCode}" />
-                                <TextBlock
+                            <TextBlock
                                     Margin="5,0,0,10"
                                     Style="{StaticResource Caption}"
                                     Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:Card>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
@@ -150,7 +149,6 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-
         <Grid
             Grid.Row="4"
             Grid.Column="0"

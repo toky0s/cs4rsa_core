@@ -23,13 +23,13 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource MaterialDesignHeadline3TextBlock}" Text="Thông tin" />
+        <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="Thông tin" />
         <TextBox
             Grid.Row="1"
             IsReadOnly="True"
             Text="{Binding Version, StringFormat=Phiên bản: {0}}" />
         <ScrollViewer Grid.Row="2">
-            <StackPanel Width="800" Margin="0,0,0,10">
+            <StackPanel Width="900" Margin="0,0,0,10">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />

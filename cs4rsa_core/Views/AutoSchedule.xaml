@@ -112,7 +112,7 @@
                             Width="8"
                             Height="8"
                             Margin="0,0,5,0"
-                            Fill="Red" />
+                            Fill="#e74c3c" />
                         <TextBlock Text="Chưa học" />
                     </StackPanel>
                     <StackPanel
@@ -135,7 +135,7 @@
                             Width="8"
                             Height="8"
                             Margin="0,0,5,0"
-                            Fill="Yellow" />
+                            Fill="#f1c40f" />
                         <TextBlock Text="Đã/đang học, chưa có điểm" />
                     </StackPanel>
                     <StackPanel
@@ -147,7 +147,7 @@
                             Height="8"
                             Margin="0,0,5,0"
                             Fill="White"
-                            Stroke="Red" />
+                            Stroke="#e74c3c" />
                         <TextBlock Text="Không có trong học kỳ này" />
                     </StackPanel>
                 </Grid>
@@ -206,10 +206,10 @@
                                         Margin="0,0,5,0">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
-                                                <Setter Property="Fill" Value="Red" />
+                                                <Setter Property="Fill" Value="#e74c3c" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsCompleted}" Value="True">
-                                                        <Setter Property="Fill" Value="Green" />
+                                                        <Setter Property="Fill" Value="#27ae60" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -228,18 +228,18 @@
                                     Margin="0,0,5,0">
                                     <Ellipse.Style>
                                         <Style TargetType="Ellipse">
-                                            <Setter Property="Fill" Value="Red" />
+                                            <Setter Property="Fill" Value="#e74c3c" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
-                                                    <Setter Property="Fill" Value="Green" />
+                                                    <Setter Property="Fill" Value="#27ae60" />
                                                     <Setter Property="ToolTip" Value="Đã học" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
-                                                    <Setter Property="Fill" Value="Yellow" />
+                                                    <Setter Property="Fill" Value="#f1c40f" />
                                                     <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=UnLearned}" Value="True">
-                                                    <Setter Property="Fill" Value="Red" />
+                                                    <Setter Property="Fill" Value="#e74c3c" />
                                                     <Setter Property="ToolTip" Value="Chưa học" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -326,13 +326,13 @@
                                 Content="{materialDesign:PackIcon Kind=Plus,
                                                                   Size=20}"
                                 ToolTip="Thêm" />
-                            <Button
+                            <!--<Button
                                 Margin="0,0,5,0"
                                 Command="{Binding WatchDetailCommand}"
                                 Content="{materialDesign:PackIcon Kind=Details,
                                                                   Size=20}"
-                                ToolTip="Xem chi tiết" />
-                            <Button Content="{materialDesign:PackIcon Kind=OpenInApp, Size=20}" ToolTip="Mở trong trình duyệt" />
+                                ToolTip="Xem chi tiết" />-->
+                            <!--<Button Content="{materialDesign:PackIcon Kind=OpenInApp, Size=20}" ToolTip="Mở trong trình duyệt" />-->
                         </StackPanel>
                     </Grid>
                 </materialDesign:Card>
@@ -343,29 +343,13 @@
                         <StackPanel>
                             <GroupBox>
                                 <GroupBox.Header>
-                                    <Expander
-                                        Padding="0,0,0,0"
-                                        HorizontalAlignment="Stretch"
-                                        Background="{DynamicResource PrimaryHueMidBrush}"
-                                        Foreground="White">
-                                        <Expander.Header>
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon
-                                                    Margin="0,0,5,0"
-                                                    Foreground="White"
-                                                    Kind="Calendar" />
-                                                <TextBlock Foreground="White" Text="Chọn thời gian rảnh" />
-                                            </StackPanel>
-                                        </Expander.Header>
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock TextWrapping="WrapWithOverflow">
-                                                Chọn thời gian rảnh đủ ít để bộ lọc có thể để lại
-                                                cho bạn được vài lớp. Nếu bạn chọn quá nhiều chúng sẽ lọc hết
-                                                và chẳng còn sót lại lớp nào thoả mãn điều kiện lọc của bạn cả.
-                                                Chúng tôi sẽ nói cho bạn biết nếu bộ lọc của bạn có gì đó không ổn.
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </Expander>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Margin="0,0,5,0"
+                                            Foreground="White"
+                                            Kind="Clock" />
+                                        <TextBlock Foreground="White" Text="Chọn thời gian rảnh" />
+                                    </StackPanel>
                                 </GroupBox.Header>
                                 <WrapPanel Orientation="Horizontal">
                                     <GroupBox Margin="2,2,0,0" BorderThickness="0">
@@ -738,11 +722,11 @@
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="Chưa tính toán"></Setter>
-                                <Setter Property="Foreground" Value="Red"></Setter>
+                                <Setter Property="Foreground" Value="#e74c3c"></Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsCalculated}" Value="true">
                                         <Setter Property="Text" Value="Đã tính toán"></Setter>
-                                        <Setter Property="Foreground" Value="Green"></Setter>
+                                        <Setter Property="Foreground" Value="#27ae60"></Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

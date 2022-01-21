@@ -41,7 +41,7 @@
         </Grid.RowDefinitions>
         <TextBlock
             Grid.Row="0"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
             Text="Đã chọn" />
         <ListView
             x:Name="Listbox_Choiced"
@@ -66,23 +66,21 @@
             </ListBox.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card Height="30" materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Rectangle
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle
                                 Grid.Column="0"
                                 Width="10"
                                 Fill="{Binding Color}" />
-                            <TextBlock
+                        <TextBlock
                                 Grid.Column="1"
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
                                 Text="{Binding Name}" />
-                        </Grid>
-                    </materialDesign:Card>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>

@@ -34,7 +34,7 @@
         </Grid.RowDefinitions>
         <TextBlock
             Grid.Row="0"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
             Text="{Binding ClassGroupModels.Count, StringFormat=Nhóm lớp ({0})}" />
         <ListBox
             x:Name="ClassGroupListBox"
@@ -67,65 +67,62 @@
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card Height="40" materialDesign:ShadowAssist.ShadowDepth="Depth1">
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Rectangle
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle
                                 Grid.Column="0"
                                 Width="15"
                                 Fill="{Binding Color}" />
-                            <StackPanel
+                        <StackPanel
                                 Grid.Column="1"
                                 Margin="0,5,0,0"
                                 Orientation="Vertical">
-                                <TextBlock
+                            <TextBlock
                                     Margin="5,0,0,0"
                                     FontSize="14"
                                     Text="{Binding Name}" />
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
                                         Margin="5,0,0,0"
                                         FontSize="10"
                                         Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="12" />
-                                                <Setter Property="FontWeight" Value="Normal" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=5}" Value="True">
-                                                        <Setter Property="Foreground" Value="#c0392b" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=0}" Value="True">
-                                                        <Setter Property="Foreground" Value="Red" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="12" />
+                                            <Setter Property="FontWeight" Value="Normal" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=5}" Value="True">
+                                                    <Setter Property="Foreground" Value="#c0392b" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=0}" Value="True">
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock
                                         Margin="5,0,0,0"
                                         FontSize="10"
                                         Foreground="Red"
                                         Text="Không có lịch">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Hidden" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
-                                                        <Setter Property="Visibility" Value="Visible" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
-                        </Grid>
-                    </materialDesign:Card>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
@@ -158,7 +155,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0">
-                            <GroupBox Margin="5,0,5,5" materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}">
+                            <GroupBox Margin="5,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
@@ -213,10 +210,9 @@
                                         IsChecked="False" />
                                 </StackPanel>
                             </GroupBox>
-
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1">
-                            <GroupBox Margin="0,0,5,5" materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}">
+                            <GroupBox Margin="0,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
