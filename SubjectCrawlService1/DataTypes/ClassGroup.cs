@@ -3,37 +3,45 @@ using Cs4rsaDatabaseService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SubjectCrawlService1.Utils;
 
 namespace SubjectCrawlService1.DataTypes
 {
     public class ClassGroup
     {
-        private readonly string _name;
-        public string Name => _name;
+        private readonly List<SchoolClass> _schoolClasses;
+        private readonly List<SchoolClass> _reRenderSchoolClasses;
+        private string _currentRegisterCodeForBelongSpecialSubject;
+        public string Name { get; }
+        public string SubjectCode { get; }
+        public string SubjectName { get; }
+        public List<SchoolClass> SchoolClasses => MergeTeacherInfoInSchoolClasses();
 
-        private readonly string _subjectCode;
-        public string SubjectCode => _subjectCode;
-
-        private readonly List<SchoolClass> _schoolClasses = new List<SchoolClass>();
-        public List<SchoolClass> SchoolClasses => GetSchoolClasses();
-
-        public ClassGroup(string name, string subjectCode)
+        public ClassGroup(string name, string subjectCode, string subjectName)
         {
-            _name = name;
-            _subjectCode = subjectCode;
+            _schoolClasses = new();
+            _reRenderSchoolClasses = new();
+            Name = name;
+            SubjectCode = subjectCode;
+            SubjectName = subjectName;
+        }
+
+        public void ReRenderScheduleRequest(string registerCode)
+        {
+            _currentRegisterCodeForBelongSpecialSubject = registerCode;
+            SchoolClass lecSchoolClass = _schoolClasses
+                .Where(schoolClass => schoolClass.Type == "LEC")
+                .FirstOrDefault();
+            _reRenderSchoolClasses.Add(lecSchoolClass);
+            SchoolClass labSchoolClass = _schoolClasses
+                .Where(schoolClass => schoolClass.RegisterCode == registerCode)
+                .FirstOrDefault();
+            _reRenderSchoolClasses.Add(labSchoolClass);
         }
 
         public void AddSchoolClass(SchoolClass schoolClass)
         {
             _schoolClasses.Add(schoolClass);
-        }
-
-        public List<SchoolClass> GetSchoolClasses()
-        {
-            return MergeTeacherInfoInSchoolClasses();
         }
 
         /// <summary>
@@ -45,7 +53,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns></returns>
         private List<SchoolClass> MergeTeacherInfoInSchoolClasses()
         {
-            List<SchoolClass> newSchoolClasses = new List<SchoolClass>();
+            List<SchoolClass> newSchoolClasses = new();
             List<string> schoolClassNames = GetSchoolClassNames();
             foreach (string schoolClassName in schoolClassNames)
             {
@@ -58,7 +66,6 @@ namespace SubjectCrawlService1.DataTypes
             }
             return newSchoolClasses;
         }
-
 
         /// <summary>
         /// Lấy ra tất cả các Teacher có trong các SchoolClass, nhằm thực hiện 
@@ -83,7 +90,6 @@ namespace SubjectCrawlService1.DataTypes
                 return teachers;
             }
         }
-
 
         /// <summary>
         /// Lấy ra tất cả các TempTeacher có trong các SchoolClass, nhằm thực hiện 
@@ -112,14 +118,14 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="schoolClasses"></param>
         /// <returns></returns>
-        private string[] DinstictSchoolClassName(IEnumerable<SchoolClass> schoolClasses)
+        private static string[] DinstictSchoolClassName(IEnumerable<SchoolClass> schoolClasses)
         {
             return schoolClasses.Select(item => item.ClassGroupName).Distinct().ToArray();
         }
 
         private List<SchoolClass> GetSchoolClassesWithName(string schoolClassName)
         {
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 if (schoolClass.SchoolClassName.Equals(schoolClassName))
@@ -130,6 +136,10 @@ namespace SubjectCrawlService1.DataTypes
 
         private List<string> GetSchoolClassNames()
         {
+            if (_currentRegisterCodeForBelongSpecialSubject != null)
+            {
+                return _reRenderSchoolClasses.Select(item => item.SchoolClassName).Distinct().ToList();
+            }
             return _schoolClasses.Select(item => item.SchoolClassName).Distinct().ToList();
         }
 
@@ -144,8 +154,8 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns>Trả về một Schedule.</returns>
         public Schedule GetSchedule()
         {
-            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
-            foreach (SchoolClass schoolClass in _schoolClasses)
+            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
+            foreach (SchoolClass schoolClass in GetSchoolClasses())
             {
                 List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
@@ -154,8 +164,17 @@ namespace SubjectCrawlService1.DataTypes
                         DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
                 }
             }
-            Schedule schedule = new Schedule(DayOfWeekStudyTimePairs);
+            Schedule schedule = new(DayOfWeekStudyTimePairs);
             return schedule;
+        }
+
+        private List<SchoolClass> GetSchoolClasses()
+        {
+            if (_currentRegisterCodeForBelongSpecialSubject != null)
+            {
+                return _reRenderSchoolClasses;
+            }
+            return _schoolClasses;
         }
 
         public List<string> GetTempTeachers()
@@ -198,7 +217,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns></returns>
         public List<DayOfWeek> GetDayOfWeeks(Phase phase)
         {
-            List<DayOfWeek> dayOfWeeks = new List<DayOfWeek>();
+            List<DayOfWeek> dayOfWeeks = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 if (schoolClass.StudyWeek.GetPhase() == phase)
@@ -209,7 +228,7 @@ namespace SubjectCrawlService1.DataTypes
 
         public List<Enums.Session> GetSession()
         {
-            List<Enums.Session> sessions = new List<Enums.Session>();
+            List<Enums.Session> sessions = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 sessions.AddRange(schoolClass.Schedule.GetSessions());
@@ -220,7 +239,7 @@ namespace SubjectCrawlService1.DataTypes
 
         public List<Place> GetPlaces()
         {
-            List<Place> places = new List<Place>();
+            List<Place> places = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 places.AddRange(schoolClass.Places);
