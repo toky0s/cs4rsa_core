@@ -1,4 +1,7 @@
 ﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogResults;
+using cs4rsa_core.Dialogs.DialogViews;
+using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
@@ -8,7 +11,8 @@ using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -18,7 +22,6 @@ namespace cs4rsa_core.ViewModels
         IMessageHandler<DeleteSubjectMessage>
     {
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; } = new();
-
         private ClassGroupModel _selectedClassGroup;
         public ClassGroupModel SelectedClassGroup
         {
@@ -29,13 +32,18 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
                 if (value != null)
                 {
-                    MessageBus.Default.Publish(new ClassGroupAddedMessage(value));
+                    if (value.IsBelongSpecialSubject)
+                    {
+                        OnShowDetailsSchoolClasses();
+                    }
+                    else
+                    {
+                        MessageBus.Default.Publish(new ClassGroupAddedMessage(value));
+                    }
                 }
             }
         }
-
-        public ObservableCollection<Teacher> Teachers { get; set; } = new ObservableCollection<Teacher>();
-
+        public ObservableCollection<Teacher> Teachers { get; set; } = new();
         private Teacher selectedTeacher;
         public Teacher SelectedTeacher
         {
@@ -48,6 +56,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         public RelayCommand GotoCourseCommand { get; set; }
+        public RelayCommand ShowDetailsSchoolClassesCommand { get; set; }
         private readonly IOpenInBrowser _openInBrowser;
         public ClassGroupSessionViewModel(IOpenInBrowser openInBrowser)
         {
@@ -56,6 +65,43 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             GotoCourseCommand = new RelayCommand(OnGotoCourse);
+            ShowDetailsSchoolClassesCommand = new RelayCommand(OnShowDetailsSchoolClasses);
+        }
+
+        public void OnShowDetailsSchoolClasses()
+        {
+            ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
+            ShowDetailsSchoolClassesViewModel vm = new();
+            vm.ClassGroupModel = _selectedClassGroup;
+            vm.CloseDialogCallback = CloseDialogAndHandleClassGroupResult;
+            _selectedClassGroup.GetSchoolClassModels()
+                .ForEach(scm =>
+                {
+                    if (scm.Type == "LAB")
+                    {
+                        vm.SchoolClassModels.Add(scm);
+                    }
+                });
+            showDetailsSchoolClassesUC.DataContext = vm;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(showDetailsSchoolClassesUC);
+        }
+
+        private void CloseDialogAndHandleClassGroupResult(ClassGroupResult classGroupResult)
+        {
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            // Pick current register code here
+            ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
+            string registerCode = classGroupResult.SelectedRegisterCode;
+
+            foreach (ClassGroupModel classGroupMD in ClassGroupModels)
+            {
+                if (classGroupMD.Name.Equals(classGroupModel.Name))
+                {
+                    classGroupMD.PickASchoolClass(registerCode);
+                    MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
+                    break;
+                }
+            }            
         }
 
         private void OnGotoCourse()

@@ -28,8 +28,8 @@ namespace SubjectCrawlService1.DataTypes
         public List<string> TempTeachers => _tempTeachers;
         private List<Teacher> _teachers = new();
         public List<Teacher> Teachers => _teachers;
-        private List<ClassGroup> classGroups = new();
-        public List<ClassGroup> ClassGroups => classGroups;
+        private List<ClassGroup> _classGroups = new();
+        public List<ClassGroup> ClassGroups => _classGroups;
 
         public string Name { get; }
         public string SubjectCode { get; }
@@ -48,17 +48,30 @@ namespace SubjectCrawlService1.DataTypes
         {
             _unitOfWork = unitOfWork;
             _teacherCrawler = teacherCrawler;
-            Name = name;
-            SubjectCode = subjectCode;
             _studyUnit = studyUnit;
             _studyUnitType = studyUnitType;
             _studyType = studyType;
             _semester = semester;
+            Name = name;
+            SubjectCode = subjectCode;
             MustStudySubject = SubjectSpliter(mustStudySubject);
             ParallelSubject = SubjectSpliter(parallelSubject);
             Desciption = description;
             RawSoup = rawSoup;
             CourseId = courseId;
+        }
+
+        /// <summary>
+        /// Một môn được xem là Special Subject khi chúng có nhiều hơn 1 mã đăng ký
+        /// trong một Class Group. Các môn như CHE 101 (Hoá đại cương) được xem là 
+        /// một Special Subject.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsSpecialSubject()
+        {
+            List<SchoolClass> schoolClasses = await GetSchoolClasses();
+            List<string> registerCodes = schoolClasses.Select(schoolClass => schoolClass.RegisterCode).Distinct().ToList();
+            return registerCodes.Count > GetClassGroupNames().Length;
         }
 
         private string[] GetClassGroupNames()
@@ -77,12 +90,12 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns>List các ClassGroup.</returns>
         public async Task GetClassGroups()
         {
-            if (classGroups.Count == 0)
+            if (_classGroups.Count == 0)
             {
                 List<SchoolClass> schoolClasses = await GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
-                    ClassGroup classGroup = new(classGroupName, SubjectCode);
+                    ClassGroup classGroup = new(classGroupName, SubjectCode, Name);
 
                     string pattern = $@"^({classGroupName})[0-9]*$";
                     Regex regexName = new(pattern);
@@ -94,14 +107,14 @@ namespace SubjectCrawlService1.DataTypes
                             classGroup.AddSchoolClass(schoolClasses[i]);
                         }
                     }
-                    classGroups.Add(classGroup);
+                    _classGroups.Add(classGroup);
                 }
             }
         }
 
         private async Task<List<SchoolClass>> GetSchoolClasses()
         {
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
             {
                 SchoolClass schoolClass = await GetSchoolClass(trTag);
@@ -121,15 +134,16 @@ namespace SubjectCrawlService1.DataTypes
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
-            //teacher parser
+
+            #region Teacher Parser
             string teacherName = GetTeacherName(trTagClassLop);
             Teacher teacher = await GetTeacherFromURL(urlToSubjectDetailPage);
 
-            List<string> tempTeachers = new List<string>();
+            List<string> tempTeachers = new();
             tempTeachers.Add(teacherName);
-            List<Teacher> teachers = new List<Teacher>();
+            List<Teacher> teachers = new();
             teachers.Add(teacher);
-            //teacher parser
+            #endregion
 
             string schoolClassName = aTag.InnerText.Trim();
             string registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();

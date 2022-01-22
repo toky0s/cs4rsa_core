@@ -42,7 +42,6 @@
             Grid.Column="0"
             HorizontalContentAlignment="Stretch"
             ItemsSource="{Binding ClassGroupModels}"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.Resources>
                 <ToolTip x:Key="ItemToolTip">
@@ -63,6 +62,11 @@
                         FontSize="13"
                         Header="Xem chi tiết trong Course"
                         Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                    <MenuItem
+                        Command="{Binding ShowDetailsSchoolClassesCommand}"
+                        FontSize="13"
+                        Header="Xem danh sách lớp thành phần"
+                        Icon="{materialDesign:PackIcon Kind=ListStatus}" />
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
@@ -73,22 +77,22 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Rectangle
-                                Grid.Column="0"
-                                Width="15"
-                                Fill="{Binding Color}" />
+                            Grid.Column="0"
+                            Width="15"
+                            Fill="{Binding Color}" />
                         <StackPanel
-                                Grid.Column="1"
-                                Margin="0,5,0,0"
-                                Orientation="Vertical">
+                            Grid.Column="1"
+                            Margin="0,5,0,0"
+                            Orientation="Vertical">
                             <TextBlock
-                                    Margin="5,0,0,0"
-                                    FontSize="14"
-                                    Text="{Binding Name}" />
+                                Margin="5,0,0,0"
+                                FontSize="14"
+                                Text="{Binding Name}" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
-                                        Margin="5,0,0,0"
-                                        FontSize="10"
-                                        Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
+                                    Margin="5,0,0,0"
+                                    FontSize="10"
+                                    Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="FontSize" Value="12" />
@@ -98,17 +102,17 @@
                                                     <Setter Property="Foreground" Value="#c0392b" />
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=0}" Value="True">
-                                                    <Setter Property="Foreground" Value="Red" />
+                                                    <Setter Property="Foreground" Value="#c0392b" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
                                 <TextBlock
-                                        Margin="5,0,0,0"
-                                        FontSize="10"
-                                        Foreground="Red"
-                                        Text="Không có lịch">
+                                    Margin="5,0,0,0"
+                                    FontSize="10"
+                                    Foreground="#c0392b"
+                                    Text="Không có lịch">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Hidden" />
@@ -309,8 +313,7 @@
                                     DisplayMemberPath="Name"
                                     ItemsSource="{Binding Teachers}"
                                     SelectedItem="{Binding SelectedTeacher}"
-                                    SelectionChanged="ReloadClassGroupCollection">
-                                </ComboBox>
+                                    SelectionChanged="ReloadClassGroupCollection" />
 
                             </GroupBox>
                         </StackPanel>

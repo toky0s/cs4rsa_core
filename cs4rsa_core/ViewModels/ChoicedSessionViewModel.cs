@@ -156,8 +156,8 @@ namespace cs4rsa_core.ViewModels
 
             if (classGroupModel != null)
             {
-                // Nếu có sẵn một ClassGroupModel cùng SubjectModel với ClassGroupModel được truyền vào
-                // thay thế chúng.
+                // Nếu có sẵn một ClassGroupModel cùng SubjectModel với ClassGroupModel
+                // được truyền vào => thay thế chúng.
                 int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (ClassGroupModelIndex != -1)
                     ClassGroupModels[ClassGroupModelIndex] = classGroupModel;

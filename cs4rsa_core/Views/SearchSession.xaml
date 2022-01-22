@@ -120,25 +120,38 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Rectangle
-                                Grid.Column="0"
-                                Width="25"
-                                HorizontalAlignment="Left"
-                                Fill="{Binding Color}" />
+                            Grid.Column="0"
+                            Width="20"
+                            HorizontalAlignment="Left"
+                            Fill="{Binding Color}" />
                         <StackPanel Grid.Column="1" Orientation="Vertical">
                             <TextBlock
-                                    Margin="5,10,0,0"
-                                    FontSize="14"
-                                    FontWeight="DemiBold"
-                                    Text="{Binding SubjectName}"
-                                    TextWrapping="WrapWithOverflow" />
+                                Margin="5,10,0,0"
+                                FontSize="14"
+                                FontWeight="DemiBold"
+                                TextWrapping="WrapWithOverflow">
+                                <Run Text="{Binding SubjectName, Mode=OneWay}" />
+                                <Run>
+                                    <Run.Style>
+                                        <Style TargetType="Run">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
+                                                    <Setter Property="Text" Value="*" />
+                                                    <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Run.Style>
+                                </Run>
+                            </TextBlock>
                             <TextBlock
-                                    Margin="5,0,0,0"
-                                    Style="{StaticResource Caption}"
-                                    Text="{Binding SubjectCode}" />
+                                Margin="5,0,0,0"
+                                Style="{StaticResource Caption}"
+                                Text="{Binding SubjectCode}" />
                             <TextBlock
-                                    Margin="5,0,0,10"
-                                    Style="{StaticResource Caption}"
-                                    Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                                Margin="5,0,0,10"
+                                Style="{StaticResource Caption}"
+                                Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

@@ -49,11 +49,6 @@ namespace SubjectCrawlService1.DataTypes
             DayPlaceMetaData = dayPlaceMetaData;
         }
 
-        public SchoolClass()
-        {
-
-        }
-
         public Phase GetPhase()
         {
             return StudyWeek.GetPhase();

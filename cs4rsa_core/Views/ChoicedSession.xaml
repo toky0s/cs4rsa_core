@@ -72,14 +72,14 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Rectangle
-                                Grid.Column="0"
-                                Width="10"
-                                Fill="{Binding Color}" />
+                            Grid.Column="0"
+                            Width="10"
+                            Fill="{Binding Color}" />
                         <TextBlock
-                                Grid.Column="1"
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="{Binding Name}" />
+                            Grid.Column="1"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name}" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
