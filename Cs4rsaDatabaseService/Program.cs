@@ -1,5 +1,5 @@
-﻿using System;
-using Cs4rsaDatabaseService.DataProviders;
+﻿using Cs4rsaDatabaseService.DataProviders;
+using System;
 
 namespace Cs4rsaDatabaseService
 {
@@ -7,7 +7,7 @@ namespace Cs4rsaDatabaseService
     {
         static void Main(string[] args)
         {
-            using(Cs4rsaDbContext cs4RsaDbContext = new Cs4rsaDbContext())
+            using (Cs4rsaDbContext cs4RsaDbContext = new Cs4rsaDbContext())
             {
                 cs4RsaDbContext.Database.EnsureCreated();
                 Console.WriteLine("Hello World");

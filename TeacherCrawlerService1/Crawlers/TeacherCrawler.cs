@@ -1,13 +1,12 @@
-﻿using HtmlAgilityPack;
+﻿using Cs4rsaDatabaseService.Interfaces;
+using Cs4rsaDatabaseService.Models;
+using HelperService;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TeacherCrawlerService1.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
-using Cs4rsaDatabaseService.Models;
-using HelperService;
-using Cs4rsaDatabaseService.Interfaces;
 using System.Threading.Tasks;
+using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace TeacherCrawlerService1.Crawlers
 {

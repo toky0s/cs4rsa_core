@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +20,7 @@ namespace HelperService
             Cookie cookie = new Cookie("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
-            
+
             WebResponse response = await request.GetResponseAsync();
             HttpWebResponse httpWebResponse = (HttpWebResponse)response;
 

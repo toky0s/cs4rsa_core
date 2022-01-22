@@ -1,12 +1,8 @@
 ﻿using ConflictService.DataTypes;
-using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
-using LightMessageBus;
 using SubjectCrawlService1.DataTypes;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace cs4rsa_core.ViewModelFunctions
 {

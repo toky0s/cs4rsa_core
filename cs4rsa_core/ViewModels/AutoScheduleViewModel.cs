@@ -137,7 +137,9 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
+#pragma warning disable CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
         private ProgramDiagram _programDiagram;
+#pragma warning restore CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
 
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
 
@@ -307,7 +309,7 @@ namespace cs4rsa_core.ViewModels
                     break;
                 }
             }
-            if(_genIndex == _tempResult.Count)
+            if (_genIndex == _tempResult.Count)
             {
                 MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Đã đến bộ lịch cuối"));
                 IsCalculated = false;
@@ -324,7 +326,7 @@ namespace cs4rsa_core.ViewModels
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            if(_filteredClassGroupModels.Count > 0)
+            if (_filteredClassGroupModels.Count > 0)
             {
                 backgroundWorker.RunWorkerAsync();
             }

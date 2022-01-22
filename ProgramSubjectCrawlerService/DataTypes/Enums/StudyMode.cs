@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProgramSubjectCrawlerService.DataTypes.Enums
+﻿namespace ProgramSubjectCrawlerService.DataTypes.Enums
 {
     /// <summary>
     /// Đại diện cho hình thức học của một Folder, có thể là bắt buộc

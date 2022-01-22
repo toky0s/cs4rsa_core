@@ -155,7 +155,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         private List<ProgramSubject> GetCompletedProSubjects()
         {
             List<ProgramSubject> proSubjects = new List<ProgramSubject>();
-            foreach(ProgramSubject item in _childProgramSubjects)
+            foreach (ProgramSubject item in _childProgramSubjects)
             {
                 if (item.IsDone())
                     proSubjects.Add(item);
@@ -194,14 +194,14 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// <returns></returns>
         public ProgramSubject GetProgramSubject(string subjectCode)
         {
-            foreach(ProgramSubject subject in _childProgramSubjects)
+            foreach (ProgramSubject subject in _childProgramSubjects)
             {
                 if (subject.SubjectCode.Equals(subjectCode))
                 {
                     return subject;
                 }
             }
-            foreach(ProgramFolder folder in _childProgramFolders)
+            foreach (ProgramFolder folder in _childProgramFolders)
             {
                 ProgramSubject result = folder.GetProgramSubject(subjectCode);
                 if (result != null)

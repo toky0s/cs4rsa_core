@@ -37,7 +37,7 @@ namespace cs4rsa_core.Models
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
-        private ProgramSubjectModel(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject, 
+        private ProgramSubjectModel(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork) : base(programSubject.SubjectName, programSubject.Id)
         {
             _unitOfWork = unitOfWork;

@@ -25,7 +25,7 @@ namespace cs4rsa_core.Views
 
         private bool CheckCannotShowFilter(CombinationModel combinationModel)
         {
-            if(CheckBoxHideCannotSimulate.IsChecked == true)
+            if (CheckBoxHideCannotSimulate.IsChecked == true)
             {
                 return combinationModel.IsCanShow;
             }
@@ -34,7 +34,7 @@ namespace cs4rsa_core.Views
 
         private bool CheckConflict(CombinationModel combinationModel)
         {
-            if(CheckBoxHideConflict.IsChecked == true)
+            if (CheckBoxHideConflict.IsChecked == true)
             {
                 return !combinationModel.IsHaveTimeConflicts();
             }
@@ -43,7 +43,7 @@ namespace cs4rsa_core.Views
 
         private bool CheckConflictPlace(CombinationModel combinationModel)
         {
-            if(CheckBoxHideConflictPlace.IsChecked == true)
+            if (CheckBoxHideConflictPlace.IsChecked == true)
             {
                 return !combinationModel.IsHavePlaceConflicts();
             }

@@ -1,6 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Settings.Interfaces;
-using System.Configuration;
 
 namespace cs4rsa_core.ViewModels
 {

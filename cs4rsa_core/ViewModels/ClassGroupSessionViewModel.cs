@@ -11,7 +11,6 @@ using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 
 namespace cs4rsa_core.ViewModels
@@ -101,7 +100,7 @@ namespace cs4rsa_core.ViewModels
                     MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
                     break;
                 }
-            }            
+            }
         }
 
         private void OnGotoCourse()

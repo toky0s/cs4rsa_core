@@ -1,26 +1,26 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
-using HelperService;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using SubjectCrawlService1.DataTypes;
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
+using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModelFunctions;
-using cs4rsa_core.Interfaces;
+using Cs4rsaDatabaseService.Interfaces;
+using Cs4rsaDatabaseService.Models;
+using HelperService;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using Microsoft.Toolkit.Mvvm.Input;
+using SubjectCrawlService1.Crawlers.Interfaces;
+using SubjectCrawlService1.DataTypes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Toolkit.Mvvm.Input;
 
 
 

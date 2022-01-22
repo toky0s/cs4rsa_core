@@ -1,9 +1,9 @@
-﻿using SubjectCrawlService1.DataTypes.Enums;
-using Cs4rsaDatabaseService.Models;
+﻿using Cs4rsaDatabaseService.Models;
+using SubjectCrawlService1.DataTypes.Enums;
+using SubjectCrawlService1.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SubjectCrawlService1.Utils;
 
 namespace SubjectCrawlService1.DataTypes
 {

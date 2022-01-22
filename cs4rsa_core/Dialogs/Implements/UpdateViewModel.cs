@@ -1,15 +1,14 @@
-﻿using System.ComponentModel;
-using System;
+﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
+using cs4rsa_core.Settings.Interfaces;
+using Cs4rsaDatabaseService.DataProviders;
+using Cs4rsaDatabaseService.Interfaces;
+using DisciplineCrawlerService.Crawlers;
 using LightMessageBus;
 using Microsoft.Toolkit.Mvvm.Input;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
-using cs4rsa_core.Settings;
-using CourseSearchService.Crawlers.Interfaces;
-using DisciplineCrawlerService.Crawlers;
-using cs4rsa_core.Settings.Interfaces;
+using System;
+using System.ComponentModel;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -35,7 +34,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly DisciplineCrawler _disciplineCrawler;
-        public UpdateViewModel(IUnitOfWork unitOfWork, Cs4rsaDbContext cs4rsaDbContext, 
+        public UpdateViewModel(IUnitOfWork unitOfWork, Cs4rsaDbContext cs4rsaDbContext,
             ICourseCrawler courseCrawler, ISetting setting, DisciplineCrawler disciplineCrawler)
         {
             _cs4rsaDbContext = cs4rsaDbContext;

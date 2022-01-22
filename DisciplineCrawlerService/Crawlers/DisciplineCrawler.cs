@@ -1,5 +1,4 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
@@ -7,7 +6,6 @@ using HtmlAgilityPack;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DisciplineCrawlerService.Crawlers
 {
@@ -18,7 +16,7 @@ namespace DisciplineCrawlerService.Crawlers
         private readonly ColorGenerator _colorGenerator;
 
         public DisciplineCrawler(
-            ICourseCrawler courseCrawler, 
+            ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ColorGenerator colorGenerator)
         {
@@ -62,7 +60,7 @@ namespace DisciplineCrawlerService.Crawlers
                 string[] disciplineAndKeywordSplit = StringHelper.SplitAndRemoveAllSpace(disciplineAndKeyword);
 
                 string discipline = disciplineAndKeywordSplit[0];
-                
+
 
                 if (currentDiscipline == null || currentDiscipline != discipline)
                 {

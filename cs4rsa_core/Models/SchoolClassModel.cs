@@ -1,11 +1,7 @@
 ﻿using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cs4rsa_core.Models
 {

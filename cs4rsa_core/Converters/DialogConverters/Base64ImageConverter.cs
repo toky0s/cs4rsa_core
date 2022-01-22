@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace cs4rsa_core.Converters.DialogConverters
 {
-    class Base64ImageConverter: IValueConverter
+    class Base64ImageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -24,7 +24,10 @@ namespace cs4rsa_core.Converters.DialogConverters
                 bi.EndInit();
                 return bi;
             }
-            catch (NotSupportedException e) {
+#pragma warning disable CS0168 // The variable 'e' is declared but never used
+            catch (NotSupportedException e)
+            {
+#pragma warning restore CS0168 // The variable 'e' is declared but never used
                 return null;
             }
         }

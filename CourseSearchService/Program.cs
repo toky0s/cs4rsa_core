@@ -1,7 +1,4 @@
-﻿using System;
-using CourseSearchService.Crawlers;
-
-namespace CourseSearchService
+﻿namespace CourseSearchService
 {
     class Program
     {

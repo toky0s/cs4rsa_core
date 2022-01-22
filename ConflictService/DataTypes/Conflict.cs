@@ -25,7 +25,7 @@ namespace ConflictService.DataTypes
                 {
                     Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new Dictionary<DayOfWeek, List<StudyTimeIntersect>>();
                     //check time
-                    foreach(DayOfWeek DayOfWeek in DayOfWeeks)
+                    foreach (DayOfWeek DayOfWeek in DayOfWeeks)
                     {
                         List<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(DayOfWeek);
                         List<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(DayOfWeek);

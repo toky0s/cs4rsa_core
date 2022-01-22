@@ -9,7 +9,7 @@ namespace cs4rsa_core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Place place =(Place)value;
+            Place place = (Place)value;
             switch (place)
             {
                 case Place.QUANGTRUNG:

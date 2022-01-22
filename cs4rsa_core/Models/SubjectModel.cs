@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cs4rsaDatabaseService.Models;
+﻿using Cs4rsaDatabaseService.Models;
 using HelperService;
 using SubjectCrawlService1.DataTypes;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.Models
 {

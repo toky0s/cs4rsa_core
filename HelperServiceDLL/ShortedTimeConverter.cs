@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HelperService
 {
-    public class ShortedTime: IComparable<ShortedTime>
+    public class ShortedTime : IComparable<ShortedTime>
     {
         public readonly DateTime RawTime;
         public readonly DateTime NewTime;

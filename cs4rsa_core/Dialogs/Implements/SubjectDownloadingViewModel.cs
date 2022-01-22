@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    class SubjectDownloadingViewModel: ViewModelBase
+    class SubjectDownloadingViewModel : ViewModelBase
     {
         private string _subjectName;
 

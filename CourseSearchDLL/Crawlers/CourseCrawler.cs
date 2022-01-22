@@ -2,11 +2,8 @@
 using CourseSearchDLL.DataTypes;
 using HelperService;
 using HtmlAgilityPack;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CourseSearchDLL.Crawlers
@@ -47,7 +44,7 @@ namespace CourseSearchDLL.Crawlers
             document = await htmlWeb.LoadFromWebAsync(URL_SEMESTER_COMBOBOX);
             string currentSemesterValue = GetCurrentValue(document);
             string currentSemesterInfo = GetCurrentInfo(document);
-            return new CourseCrawler(courseYears, currentYearValue, currentYearInfo, 
+            return new CourseCrawler(courseYears, currentYearValue, currentYearInfo,
                 currentSemesterValue, currentSemesterInfo);
         }
 

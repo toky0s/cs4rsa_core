@@ -9,7 +9,7 @@ namespace cs4rsa_core.Dialogs.DialogServices
     /// </para>
     /// </summary>
     /// <typeparam name="T">Dialog Result được trả về khi người dùng đóng Dialog</typeparam>
-    public abstract class DialogViewModelBase<T>: ViewModelBase
+    public abstract class DialogViewModelBase<T> : ViewModelBase
     {
         private bool? _result;
         public bool? Result

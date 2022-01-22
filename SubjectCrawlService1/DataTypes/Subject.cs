@@ -1,18 +1,16 @@
-﻿using Cs4rsaDatabaseService.Models;
-using Cs4rsaDatabaseService.DataProviders;
+﻿using Cs4rsaDatabaseService.Interfaces;
+using Cs4rsaDatabaseService.Models;
 using HelperService;
 using HtmlAgilityPack;
-using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TeacherCrawlerService1.Crawlers.Interfaces;
-using TeacherCrawlerService1.Crawlers;
 using System.Threading.Tasks;
-using Cs4rsaDatabaseService.Interfaces;
+using TeacherCrawlerService1.Crawlers;
+using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace SubjectCrawlService1.DataTypes
 {
@@ -41,9 +39,9 @@ namespace SubjectCrawlService1.DataTypes
         public int CourseId { get; }
 
         private Subject(string name, string subjectCode, string studyUnit,
-                        string studyUnitType, string studyType, string semester, 
+                        string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, int courseId, 
+                        string description, string rawSoup, int courseId,
                         ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -169,14 +167,14 @@ namespace SubjectCrawlService1.DataTypes
             StudyWeek studyWeek = new StudyWeek(studyWeekString);
 
             Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
-            
+
             string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
 
             Regex regexSpace = new(@"^ *$");
             List<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText).ToList();
             // remove space in locations
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToList();
-            
+
             List<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct().ToList();
             List<Place> places = new List<Place>();
             places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item)).ToList();
@@ -223,8 +221,8 @@ namespace SubjectCrawlService1.DataTypes
             string teacherName = string.Join(" ", slices);
             if (teacherName != "")
             {
-            _tempTeachers.Add(teacherName);
-            _tempTeachers = _tempTeachers.Distinct().ToList();
+                _tempTeachers.Add(teacherName);
+                _tempTeachers = _tempTeachers.Distinct().ToList();
             }
             return teacherName;
         }
@@ -314,7 +312,7 @@ namespace SubjectCrawlService1.DataTypes
                         string description, string rawSoup, int courseId,
                         ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
         {
-            Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType, 
+            Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
                 rawSoup, courseId, teacherCrawler, unitOfWork);
             return ret.InitializeAsync();

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CourseSearchService.Crawlers.Interfaces;
+using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Models;
-using cs4rsa_core.BaseClasses;
-using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Cs4rsaDatabaseService.DataProviders;
-using Cs4rsaDatabaseService.Models;
-using CourseSearchService.Crawlers.Interfaces;
-using System.Linq;
 using Cs4rsaDatabaseService.Interfaces;
+using Cs4rsaDatabaseService.Models;
+using Microsoft.Toolkit.Mvvm.Input;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements

@@ -1,6 +1,5 @@
-﻿using System;
-using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
+﻿using CourseSearchService.Crawlers.Interfaces;
+using System;
 
 namespace cs4rsa_core.Models
 {

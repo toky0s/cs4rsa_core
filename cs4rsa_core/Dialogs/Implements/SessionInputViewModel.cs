@@ -1,15 +1,15 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.MessageBoxService;
-using System.Windows;
-using LightMessageBus;
-using cs4rsa_core.Messages;
 using cs4rsa_core.Dialogs.DialogServices;
-using StudentCrawlerService.Crawlers;
-using Cs4rsaDatabaseService.Models;
-using System.Threading.Tasks;
+using cs4rsa_core.Dialogs.MessageBoxService;
+using cs4rsa_core.Messages;
 using cs4rsa_core.ViewModels;
-using StudentCrawlerService.Crawlers.Interfaces;
+using Cs4rsaDatabaseService.Models;
 using FirebaseService.Interfaces;
+using LightMessageBus;
+using StudentCrawlerService.Crawlers;
+using StudentCrawlerService.Crawlers.Interfaces;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

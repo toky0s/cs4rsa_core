@@ -1,19 +1,19 @@
-﻿using LightMessageBus;
-using LightMessageBus.Interfaces;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Collections.Generic;
+﻿using ConflictService.DataTypes;
 using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages;
-using SubjectCrawlService1.DataTypes;
-using cs4rsa_core.Models;
-using Microsoft.Toolkit.Mvvm.Input;
+using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Dialogs.DialogResults;
-using ConflictService.DataTypes;
+using cs4rsa_core.Messages;
+using cs4rsa_core.Models;
+using LightMessageBus;
+using LightMessageBus.Interfaces;
+using Microsoft.Toolkit.Mvvm.Input;
+using SubjectCrawlService1.DataTypes;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {

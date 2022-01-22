@@ -2,7 +2,6 @@
 using CurriculumCrawlerService.Crawlers.Interfaces;
 using HelperService;
 using HtmlAgilityPack;
-using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 

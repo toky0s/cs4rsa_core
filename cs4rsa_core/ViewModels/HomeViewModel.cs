@@ -1,14 +1,12 @@
-﻿using LightMessageBus.Interfaces;
-using LightMessageBus;
+﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages;
-using Microsoft.Toolkit.Mvvm.Input;
-using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.Settings.Interfaces;
-using System;
 using cs4rsa_core.Interfaces;
+using cs4rsa_core.Messages;
+using cs4rsa_core.Settings.Interfaces;
 using FirebaseService.Interfaces;
-using System.Threading.Tasks;
+using LightMessageBus;
+using LightMessageBus.Interfaces;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -71,7 +69,7 @@ namespace cs4rsa_core.ViewModels
             _currentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _currentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
             _currentYearInfo = _courseCrawler.GetCurrentYearInfo();
-            
+
             UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
             GotoFacebookCommand = new RelayCommand(OnGotoFaceBook);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
@@ -83,7 +81,7 @@ namespace cs4rsa_core.ViewModels
 
         private void CheckVersion()
         {
-            string remoteVersion =  _firebase.GetLatestVersion();
+            string remoteVersion = _firebase.GetLatestVersion();
             if (_setting.CurrentSetting.Version != remoteVersion)
             {
                 MessageBus.Default.Publish(new Cs4rsaSnackbarMessage($"Phiên bản {remoteVersion} đã có, hãy cập nhật"));

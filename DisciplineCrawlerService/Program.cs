@@ -1,10 +1,4 @@
-﻿using Autofac;
-using CourseSearchService.Crawlers;
-using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
-using DisciplineCrawlerService.Crawlers;
-using HelperService;
-using System;
+﻿using System;
 
 namespace DisciplineCrawlerService
 {

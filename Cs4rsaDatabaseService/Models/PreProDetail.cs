@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cs4rsaDatabaseService.Models
+﻿namespace Cs4rsaDatabaseService.Models
 {
     /// <summary>
     /// Một môn có nhiều môn tiên quyết.

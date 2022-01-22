@@ -1,11 +1,9 @@
 ﻿using FirebaseService.Interfaces;
-using FirebaseService.Requests;
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace FirebaseService

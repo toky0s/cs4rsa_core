@@ -1,14 +1,11 @@
-﻿using CurriculumCrawlerService.Crawlers;
-using ProgramSubjectCrawlerService.DataTypes;
-using HelperService;
-using System.ComponentModel;
-using Cs4rsaDatabaseService.DataProviders;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using System.Threading.Tasks;
-using CurriculumCrawlerService.Crawlers.Interfaces;
+﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-using Cs4rsaDatabaseService.Interfaces;
+using CurriculumCrawlerService.Crawlers.Interfaces;
+using HelperService;
+using ProgramSubjectCrawlerService.DataTypes;
+using SubjectCrawlService1.Crawlers.Interfaces;
 using System;
+using System.Threading.Tasks;
 
 namespace ProgramSubjectCrawlerService.Crawlers
 {

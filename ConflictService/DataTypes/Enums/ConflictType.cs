@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConflictService.DataTypes.Enums
+﻿namespace ConflictService.DataTypes.Enums
 {
     /// <summary>
     /// Đại diện cho kiểu của một xung đột có thể là xung đột thời gian

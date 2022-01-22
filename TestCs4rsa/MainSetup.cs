@@ -1,20 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StudentCrawlerService.Crawlers;
+﻿using CourseSearchService.Crawlers;
+using CourseSearchService.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.DataProviders;
-using StudentCrawlerService.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Implements;
 using Cs4rsaDatabaseService.Interfaces;
-using CourseSearchService.Crawlers.Interfaces;
-using CurriculumCrawlerService.Crawlers.Interfaces;
-using TeacherCrawlerService1.Crawlers.Interfaces;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using ProgramSubjectCrawlerService.Crawlers;
-using DisciplineCrawlerService.Crawlers;
-using CourseSearchService.Crawlers;
 using CurriculumCrawlerService.Crawlers;
-using TeacherCrawlerService1.Crawlers;
-using SubjectCrawlService1.Crawlers;
+using CurriculumCrawlerService.Crawlers.Interfaces;
+using DisciplineCrawlerService.Crawlers;
 using HelperService;
+using Microsoft.Extensions.DependencyInjection;
+using ProgramSubjectCrawlerService.Crawlers;
+using StudentCrawlerService.Crawlers;
+using StudentCrawlerService.Crawlers.Interfaces;
+using SubjectCrawlService1.Crawlers;
+using SubjectCrawlService1.Crawlers.Interfaces;
+using TeacherCrawlerService1.Crawlers;
+using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace TestCs4rsa
 {

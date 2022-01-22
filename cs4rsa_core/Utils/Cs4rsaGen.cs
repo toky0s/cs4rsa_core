@@ -1,8 +1,5 @@
-﻿using cs4rsa_core.Messages;
-using cs4rsa_core.Models;
-using LightMessageBus;
+﻿using cs4rsa_core.Models;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text.Json;
 
 namespace cs4rsa_core.Utils
@@ -31,7 +28,7 @@ namespace cs4rsa_core.Utils
                 if (IsSuccess(_currentIndexes, _classGroupModelsOfClass.Count))
                 {
                     List<int> clone = Clone(_currentIndexes);
-                    TempResult.Add(clone);                    
+                    TempResult.Add(clone);
                 }
                 else
                 {

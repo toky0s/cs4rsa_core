@@ -39,7 +39,7 @@ namespace cs4rsa_core.Models
                 {
                     string from = $"Từ {placeAdjacent.Start} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceStart)}";
                     string to = $"đến {placeAdjacent.End} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceEnd)}";
-                    info.Add(from+" "+to);
+                    info.Add(from + " " + to);
                 }
                 string placeString = string.Join("\n", info);
                 resultTimes.Add(day + "\n" + placeString);

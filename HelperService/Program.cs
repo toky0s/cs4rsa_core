@@ -1,7 +1,4 @@
-﻿using System;
-using Cs4rsaDatabaseService.DataProviders;
-
-namespace HelperService
+﻿namespace HelperService
 {
     class Program
     {

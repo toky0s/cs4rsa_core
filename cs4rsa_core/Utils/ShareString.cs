@@ -1,11 +1,10 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
 using cs4rsa_core.Dialogs.DialogResults;
+using Cs4rsaDatabaseService.Interfaces;
+using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes;
 using System.Collections.Generic;
 using System.Linq;
-using Cs4rsaDatabaseService.Models;
-using Cs4rsaDatabaseService.Interfaces;
 
 namespace cs4rsa_core.Utils
 {
@@ -31,7 +30,7 @@ namespace cs4rsa_core.Utils
             string Count = classGroupModels.Count.ToString();
             string currentYear = _courseCrawler.GetCurrentYearValue();
             string currentSemester = _courseCrawler.GetCurrentSemesterValue();
-            return $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ','-');
+            return $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '-');
         }
 
         public SessionManagerResult GetSubjectFromShareString(string shareString)
@@ -43,10 +42,10 @@ namespace cs4rsa_core.Utils
             int count = int.Parse(shareStringSlices[3]);
 
             // ACC-201|ACC201202103003?ACC-411|ACC411202103001
-            string subjectHasses = shareStringSlices[4].Replace('-',' ');
+            string subjectHasses = shareStringSlices[4].Replace('-', ' ');
             string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
             List<SubjectInfoData> subjectInfoDatas = new List<SubjectInfoData>();
-            foreach(string item in subjectHassesSlices)
+            foreach (string item in subjectHassesSlices)
             {
                 string[] infoes = item.Split(new char[] { '|' });
                 string subjectCode = infoes[0];

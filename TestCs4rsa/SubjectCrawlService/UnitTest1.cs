@@ -1,19 +1,11 @@
-﻿using CourseSearchService.Crawlers;
-using CourseSearchService.Crawlers.Interfaces;
-using Cs4rsaDatabaseService.DataProviders;
+﻿using Cs4rsaDatabaseService.DataProviders;
 using DisciplineCrawlerService.Crawlers;
-using HelperService;
-using SubjectCrawlService1.Crawlers;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
-using TeacherCrawlerService1.Crawlers;
-using TeacherCrawlerService1.Crawlers.Interfaces;
-using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
-using Cs4rsaDatabaseService.Implements;
-using Cs4rsaDatabaseService.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace TestCs4rsa.SubjectCrawlService
 {

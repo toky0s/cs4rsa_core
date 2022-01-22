@@ -1,12 +1,12 @@
-﻿using System;
-using HtmlAgilityPack;
-using HelperService;
+﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-using Cs4rsaDatabaseService.Interfaces;
 using CurriculumCrawlerService.Crawlers.Interfaces;
-using System.Threading.Tasks;
+using HelperService;
+using HtmlAgilityPack;
 using StudentCrawlerService.Crawlers.Interfaces;
+using System;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace StudentCrawlerService.Crawlers
 {
