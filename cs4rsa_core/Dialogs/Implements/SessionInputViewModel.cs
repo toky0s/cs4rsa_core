@@ -4,7 +4,6 @@ using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.Models;
-using FirebaseService.Interfaces;
 using LightMessageBus;
 using StudentCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers.Interfaces;
@@ -33,11 +32,10 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public IMessageBox MessageBox { get; set; }
         private readonly IDtuStudentInfoCrawler _dtuStudentInfoCrawler;
-        private readonly IFirebase _firebase;
-        public SessionInputViewModel(IDtuStudentInfoCrawler dtuStudentInfoCrawler, IFirebase firebase)
+
+        public SessionInputViewModel(IDtuStudentInfoCrawler dtuStudentInfoCrawler)
         {
             _dtuStudentInfoCrawler = dtuStudentInfoCrawler;
-            _firebase = firebase;
         }
 
         public async Task Find()
@@ -59,7 +57,7 @@ namespace cs4rsa_core.Dialogs.Implements
             else
             {
                 Student student = await _dtuStudentInfoCrawler.Crawl(specialStringV1 ?? specialStringV2);
-                await _firebase.PostUser(student.StudentId, student.SpecialString);
+                //await _firebase.PostUser(student.StudentId, student.SpecialString);
                 string message = $"Xin chào {student.Name}";
                 MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
                 StudentResult result = new() { Student = student };
