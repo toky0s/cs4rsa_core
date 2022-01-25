@@ -67,7 +67,7 @@ namespace cs4rsa_core
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
-            services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawler>();
+            services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
             services.AddSingleton<ProgramDiagramCrawler>();
             services.AddSingleton<StudentProgramCrawler>();
             services.AddSingleton<DisciplineCrawler>();
@@ -77,7 +77,7 @@ namespace cs4rsa_core
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
-            services.AddSingleton<IFirebase, Firebase>();
+            services.AddSingleton<IFirebase, NewFirebase>();
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
 

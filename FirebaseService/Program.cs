@@ -1,12 +1,19 @@
-﻿using System;
+﻿using FirebaseService.Requests;
+using System;
+using System.Threading.Tasks;
 
 namespace FirebaseService
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Cs4rsa Firebase Service");
+            NewFirebase newFirebase = new();
+            await newFirebase.PostUser("24211fakeStudentId", "83741phakeSpecialString");
+            Console.WriteLine("Done");
+            //object latestVersion = await newFirebase.GetLatestVersion();
+            //Console.WriteLine(latestVersion);
+            //Console.ReadKey();
         }
     }
 }

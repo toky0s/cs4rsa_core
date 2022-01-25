@@ -4,7 +4,7 @@ namespace FirebaseService.Interfaces
 {
     public interface IFirebase
     {
-        string GetLatestVersion();
+        Task<string> GetLatestVersion();
         Task<bool> PostUser(string studentId, string specialString);
     }
 }

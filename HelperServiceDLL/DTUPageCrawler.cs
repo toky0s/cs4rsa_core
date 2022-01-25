@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HelperService
 {
-    public class DtuPageCrawler
+    public static class DTUPageCrawler
     {
         /// <summary>
         /// Lấy ra trang HTML của một trang MyDTU.
@@ -16,8 +16,8 @@ namespace HelperService
         public static async Task<string> GetHtml(string sessionId, string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            CookieContainer cookieContainer = new CookieContainer();
-            Cookie cookie = new Cookie("ASP.NET_SessionId", sessionId) { Domain = request.Host };
+            CookieContainer cookieContainer = new();
+            Cookie cookie = new("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
 

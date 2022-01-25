@@ -83,7 +83,6 @@ namespace cs4rsa_core.Dialogs.Implements
         private void OnAdd()
         {
             Console.WriteLine("Run Add in ProSubjectDetail VM");
-            //AddCallback.Invoke(obj);
         }
 
         public async Task LoadPreProSubjectModels()

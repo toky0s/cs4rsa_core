@@ -71,17 +71,15 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand OpenAutoScheduling { get; set; }
         public RelayCommand OpenShareStringWindowCommand { get; set; }
 
-        private readonly ICourseCrawler _courseCrawler;
         private readonly ShareString _shareStringGenerator;
         public MainSchedulingViewModel(ICourseCrawler courseCrawler, ShareString shareString)
         {
-            _courseCrawler = courseCrawler;
             _shareStringGenerator = shareString;
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<UpdateSubjectDatabase>().Notify(this);
-            CurrentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
-            CurrentYearInfo = _courseCrawler.GetCurrentYearInfo();
+            CurrentSemesterInfo = courseCrawler.GetCurrentSemesterInfo();
+            CurrentYearInfo = courseCrawler.GetCurrentYearInfo();
 
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
             OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow, () => true);

@@ -12,6 +12,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Linq;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -91,15 +92,10 @@ namespace cs4rsa_core.ViewModels
             // Pick current register code here
             ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
             string registerCode = classGroupResult.SelectedRegisterCode;
-
-            foreach (ClassGroupModel classGroupMD in ClassGroupModels)
+            foreach (var classGroupMD in ClassGroupModels.Where(classGroupMD => classGroupMD.Name.Equals(classGroupModel.Name)))
             {
-                if (classGroupMD.Name.Equals(classGroupModel.Name))
-                {
-                    classGroupMD.PickASchoolClass(registerCode);
-                    MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
-                    break;
-                }
+                classGroupMD.PickASchoolClass(registerCode);
+                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
             }
         }
 
@@ -120,8 +116,8 @@ namespace cs4rsa_core.ViewModels
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
-                Teacher ALL_TEACHER = new() { TeacherId = 0, Name = "TẤT CẢ" };
-                Teachers.Add(ALL_TEACHER);
+                Teacher allTeacher = new() { TeacherId = 0, Name = "TẤT CẢ" };
+                Teachers.Add(allTeacher);
 
                 List<string> tempTeachers = subjectModel.TempTeachers;
                 foreach (Teacher teacher in subjectModel.Teachers)

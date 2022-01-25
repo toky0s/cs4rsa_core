@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CourseSearchService\CourseSearchService.csproj" />
     <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
     <ProjectReference Include="..\HelperService\HelperService.csproj" />

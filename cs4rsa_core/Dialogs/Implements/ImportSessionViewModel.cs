@@ -99,12 +99,9 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private bool CanImport()
         {
-            if (_selectedScheduleSession != null)
+            if (_selectedScheduleSession != null && _sessionExtension.IsValid(_selectedScheduleSession))
             {
-                if (_sessionExtension.IsValid(_selectedScheduleSession))
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }

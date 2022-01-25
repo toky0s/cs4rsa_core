@@ -243,7 +243,6 @@ namespace cs4rsa_core.ViewModels
 
         #endregion
 
-        private Cs4rsaGen _cs4rsaGen;
         public AutoScheduleViewModel(ICourseCrawler courseCrawler,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
             IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser)
@@ -342,10 +341,10 @@ namespace cs4rsa_core.ViewModels
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            _cs4rsaGen = new Cs4rsaGen(_filteredClassGroupModels);
-            _cs4rsaGen.TempResult.Clear();
-            _cs4rsaGen.Backtracking(0);
-            e.Result = _cs4rsaGen.TempResult;
+            Cs4rsaGen cs4rsaGen = new(_filteredClassGroupModels);
+            cs4rsaGen.TempResult.Clear();
+            cs4rsaGen.Backtracking(0);
+            e.Result = cs4rsaGen.TempResult;
         }
 
         private void OnResetFilter()
@@ -587,7 +586,7 @@ namespace cs4rsa_core.ViewModels
         {
             return _selectedProSubject != null
                 && _selectedProSubject.IsAvaiable
-                && _selectedProSubject.IsDone == false
+                && !_selectedProSubject.IsDone 
                 && !ChoicedProSubjectModels.Contains(_selectedProSubject);
         }
 

@@ -42,8 +42,11 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public async Task Find()
         {
-            string specialString = await SpecialStringCrawler.GetSpecialString(_sessionId);
-            if (specialString == null)
+            SpecialStringCrawler specialStringCrawlerV1 = new();
+            SpecialStringCrawlerV2 specialStringCrawlerV2 = new();
+            string specialStringV1 = await specialStringCrawlerV1.GetSpecialString(_sessionId);
+            string specialStringV2 = await specialStringCrawlerV2.GetSpecialString(_sessionId);
+            if (specialStringV1 == null && specialStringCrawlerV2 == null)
             {
                 string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy Session ID, " +
                     "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
@@ -55,7 +58,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
             else
             {
-                Student student = await _dtuStudentInfoCrawler.Crawl(specialString);
+                Student student = await _dtuStudentInfoCrawler.Crawl(specialStringV1 ?? specialStringV2);
                 await _firebase.PostUser(student.StudentId, student.SpecialString);
                 string message = $"Xin chào {student.Name}";
                 MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));

@@ -88,8 +88,7 @@ namespace cs4rsa_core.Models
             if (IsBelongSpecialSubject)
             {
                 bool isValidRegisterCode = ClassGroup.SchoolClasses
-                    .Where(schoolClass => schoolClass.RegisterCode == registerCode)
-                    .Any();
+                    .Any(schoolClass => schoolClass.RegisterCode == registerCode);
                 if (isValidRegisterCode)
                 {
                     _currentRegisterCode = registerCode;
