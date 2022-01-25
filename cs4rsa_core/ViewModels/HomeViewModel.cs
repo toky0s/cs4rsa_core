@@ -3,11 +3,9 @@ using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
-using FirebaseService.Interfaces;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
-using System.Threading.Tasks;
 
 namespace cs4rsa_core.ViewModels
 {
