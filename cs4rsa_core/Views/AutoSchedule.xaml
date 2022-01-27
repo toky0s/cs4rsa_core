@@ -124,7 +124,7 @@
                             Width="8"
                             Height="8"
                             Margin="0,0,5,0"
-                            Fill="Green" />
+                            Fill="#27ae60" />
                         <TextBlock Text="Đã học qua" />
                     </StackPanel>
                     <StackPanel
@@ -702,9 +702,8 @@
                         Height="30"
                         Margin="5"
                         Command="{Binding SubjectDownloadCommand}"
-                        Foreground="White"
-                        Content="Tải">
-                    </Button>
+                        Content="Tải"
+                        Foreground="White" />
                     <Button
                         Grid.Column="1"
                         Height="30"
@@ -712,21 +711,21 @@
                         Content="Xoá hết"
                         Foreground="White" />
                 </Grid>
-                <StackPanel Orientation="Vertical" Grid.Row="3">
+                <StackPanel Grid.Row="3" Orientation="Vertical">
                     <TextBlock
-                    Margin="5,0,0,5"
                         Grid.Column="0"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="Đã tải" />
+                        Margin="5,0,0,5"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="Đã tải" />
                     <TextBlock Margin="5,0,0,5">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Chưa tính toán"></Setter>
-                                <Setter Property="Foreground" Value="#e74c3c"></Setter>
+                                <Setter Property="Text" Value="Chưa tính toán" />
+                                <Setter Property="Foreground" Value="#e74c3c" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsCalculated}" Value="true">
-                                        <Setter Property="Text" Value="Đã tính toán"></Setter>
-                                        <Setter Property="Foreground" Value="#27ae60"></Setter>
+                                        <Setter Property="Text" Value="Đã tính toán" />
+                                        <Setter Property="Foreground" Value="#27ae60" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -752,12 +751,17 @@
                 </ListView>
                 <Grid Grid.Row="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <Button
-                    Content="Xếp lịch thủ công" Grid.Column="0" Margin="0,0,5,0"/>
-                    <Button Content="Tính toán" Grid.Column="1" Command="{Binding CalculateCommand}"></Button>
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        Content="Xếp lịch thủ công" />
+                    <Button
+                        Grid.Column="1"
+                        Command="{Binding CalculateCommand}"
+                        Content="Tính toán" />
                 </Grid>
 
             </Grid>
@@ -862,10 +866,10 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
                 <Button
-                        Grid.Row="2"
-                        Command="{Binding ValidGenCommand}"
-                        IsEnabled="{Binding IsCalculated}"
-                        Content="Tạo bộ lịch" />
+                    Grid.Row="2"
+                    Command="{Binding ValidGenCommand}"
+                    Content="Tạo bộ lịch"
+                    IsEnabled="{Binding IsCalculated}" />
             </Grid>
         </Grid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">

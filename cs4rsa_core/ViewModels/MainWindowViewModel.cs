@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogServices;
 using cs4rsa_core.Messages;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
@@ -39,6 +40,14 @@ namespace cs4rsa_core.ViewModels
             set { _dialogUC = value; OnPropertyChanged(); }
         }
 
+        private bool _isCloseOnClickAway;
+
+        public bool IsCloseOnClickAway
+        {
+            get { return _isCloseOnClickAway; }
+            set { _isCloseOnClickAway = value; OnPropertyChanged(); }
+        }
+
         private SnackbarMessageQueue _snackBarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
         public SnackbarMessageQueue SnackbarMessageQueue
         {
@@ -57,22 +66,16 @@ namespace cs4rsa_core.ViewModels
             _snackBarMessageQueue.Enqueue(message.Source);
         }
 
-        /// <summary>
-        /// Hiển thị một UserControl dưới dạng một Dialog.
-        /// </summary>
-        /// <param name="uc">UserControl</param>
-        public void OpenDialog(object uc)
+        public void OpenDialog(IDialog uc)
         {
             if (uc != null)
             {
                 DialogUC = uc;
             }
             IsOpenDialog = true;
+            IsCloseOnClickAway = uc.IsCloseOnClickAway();
         }
 
-        /// <summary>
-        /// Đóng Dialog.
-        /// </summary>
         public void CloseDialog() => IsOpenDialog = false;
     }
 }

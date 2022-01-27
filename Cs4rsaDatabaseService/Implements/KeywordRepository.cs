@@ -1,6 +1,7 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,6 +77,34 @@ namespace Cs4rsaDatabaseService.Implements
                         where d.Name == discipline && k.Keyword1 == keyword
                         select k;
             return await query.CountAsync();
+        }
+
+        public async Task<List<Keyword>> GetBySubjectNameContains(string subjectName)
+        {
+            subjectName = subjectName.ToLower();
+            var query = from k in _context.Keywords
+                        where k.SubjectName.ToLower().StartsWith(subjectName)
+                        || k.SubjectName.ToLower().Contains(subjectName)
+                        || k.SubjectName.ToLower().EndsWith(subjectName)
+                        select k;
+            return await query
+                .Take(10)
+                .ToListAsync();
+        }
+
+        public Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword)
+        {
+            return _context.Keywords.Where(kw =>
+                kw.Discipline.Name.Contains(discipline.ToUpper()) 
+                && kw.Keyword1.Contains(keyword)
+            ).Take(10).ToListAsync();
+        }
+
+        public Task<List<Keyword>> GetByDisciplineStartWith(string text)
+        {
+            return _context.Keywords.Where(kw =>
+                kw.Discipline.Name.StartsWith(text.ToUpper())
+            ).Take(10).ToListAsync();
         }
     }
 }

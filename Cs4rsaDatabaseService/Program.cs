@@ -7,11 +7,6 @@ namespace Cs4rsaDatabaseService
     {
         static void Main(string[] args)
         {
-            using (Cs4rsaDbContext cs4RsaDbContext = new Cs4rsaDbContext())
-            {
-                cs4RsaDbContext.Database.EnsureCreated();
-                Console.WriteLine("Hello World");
-            }
         }
     }
 }

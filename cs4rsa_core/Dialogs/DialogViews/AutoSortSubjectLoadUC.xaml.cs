@@ -1,15 +1,16 @@
-﻿using System.Windows.Controls;
-
+﻿using cs4rsa_core.BaseClasses;
+using System.Windows.Controls;
 namespace cs4rsa_core.Dialogs.DialogViews
 {
-    /// <summary>
-    /// Interaction logic for AutoSortSubjectLoadUC.xaml
-    /// </summary>
-    public partial class AutoSortSubjectLoadUC : UserControl
+    public partial class AutoSortSubjectLoadUC : UserControl, IDialog
     {
         public AutoSortSubjectLoadUC()
         {
             InitializeComponent();
+        }
+        public bool IsCloseOnClickAway()
+        {
+            return false;
         }
     }
 }

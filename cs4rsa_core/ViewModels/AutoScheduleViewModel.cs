@@ -271,7 +271,6 @@ namespace cs4rsa_core.ViewModels
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
-            OpenInNewWindowCommand = new RelayCommand(OnOpenInNewWindow);
             FilterChangedCommand = new RelayCommand(OnFiltering);
             ResetFilterCommand = new RelayCommand(OnResetFilter);
             CalculateCommand = new RelayCommand(OnCalculate);
@@ -518,13 +517,6 @@ namespace cs4rsa_core.ViewModels
             return true;
         }
         #endregion
-
-        private void OnOpenInNewWindow()
-        {
-            //CombinationContainerWindow combinationContainerWindow = new CombinationContainerWindow(CombinationModels.ToList(), this);
-            //combinationContainerWindow.Topmost = true;
-            //combinationContainerWindow.Show();
-        }
 
         private async Task OnChoiceAccountCommand()
         {

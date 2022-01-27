@@ -15,8 +15,6 @@ using Cs4rsaDatabaseService.Interfaces;
 using CurriculumCrawlerService.Crawlers;
 using CurriculumCrawlerService.Crawlers.Interfaces;
 using DisciplineCrawlerService.Crawlers;
-using FirebaseService;
-using FirebaseService.Interfaces;
 using HelperService;
 using Microsoft.Extensions.DependencyInjection;
 using ProgramSubjectCrawlerService.Crawlers;
@@ -60,7 +58,7 @@ namespace cs4rsa_core
             services.AddSingleton<IPreParSubjectRepository, PreParSubjectRepository>();
             services.AddSingleton<IPreProDetailsRepository, PreProDetailRepository>();
             services.AddSingleton<IParProDetailsRepository, ParProDetailRepository>();
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<ICourseCrawler, CourseCrawler>();
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
@@ -77,7 +75,6 @@ namespace cs4rsa_core
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
-            services.AddSingleton<IFirebase, NewFirebase>();
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
 

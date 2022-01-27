@@ -1,4 +1,5 @@
 ﻿using Cs4rsaDatabaseService.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Interfaces
@@ -13,5 +14,8 @@ namespace Cs4rsaDatabaseService.Interfaces
         Task<string> GetColorAsync(int courseId);
         bool IsHasColor(string color);
         Task<int> CountAsync(string discipline, string keyword);
+        Task<List<Keyword>> GetBySubjectNameContains(string subjectName);
+        Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword);
+        Task<List<Keyword>> GetByDisciplineStartWith(string text);
     }
 }

@@ -68,12 +68,6 @@
                     Content="Lưu"
                     Foreground="White"
                     IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}" />
-                <Button
-                    MinWidth="60"
-                    Command="{Binding CancelCommand}"
-                    Content="Thoát"
-                    Foreground="White"
-                    IsCancel="True" />
             </StackPanel>
         </Grid>
     </materialDesign:Card>

@@ -16,6 +16,7 @@ using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -52,6 +53,7 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand GotoCourseCommand { get; set; }
         #endregion
 
+        #region Properties
         //ComboBox discipline
         private Discipline selectedDiscipline;
         public Discipline SelectedDiscipline
@@ -64,7 +66,6 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Discipline> Disciplines { get; set; }
 
         //ComboxBox keyword
         private Keyword selectedKeyword;
@@ -78,8 +79,25 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; } = new();
-        public ObservableCollection<SubjectModel> SubjectModels { get; set; } = new();
+
+        private string _searchText;
+        public string SearchText
+        {
+            get { return _searchText; }
+            set { _searchText = value; OnPropertyChanged(); }
+        }
+
+        private FullMatchSearchingKeyword _selectedFullMatchSearchingKeyword;
+        public FullMatchSearchingKeyword SelectedFullMatchSearchingKeyword
+        {
+            get { return _selectedFullMatchSearchingKeyword; }
+            set { _selectedFullMatchSearchingKeyword = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; }
+        public ObservableCollection<SubjectModel> SubjectModels { get; set; }
+        public ObservableCollection<Discipline> Disciplines { get; set; }
+        public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
 
         private int _totalSubject;
         public int TotalSubject
@@ -115,11 +133,15 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
+        #endregion
+
+        #region Dependencies
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
         private readonly IOpenInBrowser _openInBrowser;
+        #endregion
 
         public SearchSessionViewModel(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator, IOpenInBrowser openInBrowser)
@@ -129,18 +151,22 @@ namespace cs4rsa_core.ViewModels
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
             _openInBrowser = openInBrowser;
+
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ExitImportSubjectMessage>().Notify(this);
+
+            DisciplineKeywordModels = new();
+            SubjectModels = new();
+            Disciplines = new();
+            FullMatchSearchingKeywords = new();
+            SearchText = "";
 
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new RelayCommand(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
-
-            Disciplines = new ObservableCollection<Discipline>();
-            Task.Run(async () => await LoadDiscipline());
         }
 
         public async Task LoadDiscipline()
@@ -151,6 +177,78 @@ namespace cs4rsa_core.ViewModels
                 Disciplines.Add(discipline);
             }
             SelectedDiscipline = Disciplines[0];
+        }
+
+        internal void LoadSelectedDisciplineAndKeyword(Discipline discipline, Keyword keyword)
+        {
+            Discipline actualDiscipline = _unitOfWork.Disciplines.GetById(discipline.DisciplineId);
+            Keyword actualKeyword = _unitOfWork.Keywords.GetById(keyword.KeywordId);
+            SelectedDiscipline = actualDiscipline;
+            SelectedKeyword = actualKeyword;
+        }
+
+        public async Task LoadSearchItemSource(string text)
+        {
+            text = text.Trim();
+            if (text.Equals("")) return;
+
+            FullMatchSearchingKeywords.Clear();
+
+            Task<List<Keyword>> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
+            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
+            List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
+            foreach (List<Keyword> keywords in whenAllResult)
+            {
+                foreach (Keyword keyword in keywords)
+                {
+                    FullMatchSearchingKeyword fullMacth = new()
+                    {
+                        Keyword = keyword,
+                        Discipline = keyword.Discipline
+                    };
+                    FullMatchSearchingKeywords.Add(fullMacth);
+                }
+            }
+
+            if (text.Contains(' '))
+            {
+                string[] textSplit = text.Split(" ", System.StringSplitOptions.None);
+                string discipline = textSplit[0];
+                string keyword1 = textSplit[1];
+                List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
+                foreach (Keyword kw in keywordsBySubjectCode)
+                {
+                    FullMatchSearchingKeyword fullMatch = new()
+                    {
+                        Keyword = kw,
+                        Discipline = kw.Discipline
+                    };
+                    FullMatchSearchingKeywords.Add(fullMatch);
+                }
+            }
+
+            if (FullMatchSearchingKeywords.Count == 0)
+            {
+                Keyword keyword = new()
+                {
+                    CourseId = 000000,
+                    SubjectName = "Không tìm thấy tên môn này",
+                    Color = "#ffffff"
+                };
+                Discipline discipline = new()
+                {
+                    Name = "Không tìm thấy mã môn này"
+                };
+                FullMatchSearchingKeyword fullMatchSearchingKeyword = new();
+                fullMatchSearchingKeyword.Keyword = keyword;
+                fullMatchSearchingKeyword.Discipline = discipline;
+                FullMatchSearchingKeywords.Add(fullMatchSearchingKeyword);
+            }
+        }
+
+        public void OnSelectItemInRecommendBox()
+        {
+            SearchText = _selectedFullMatchSearchingKeyword.ToString();
         }
 
         private void OnDeleteAll()

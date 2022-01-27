@@ -19,7 +19,6 @@ namespace cs4rsa_core.Dialogs.Implements
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public string Name { get; set; }
         public RelayCommand SaveCommand { get; set; }
-        public RelayCommand CancelCommand { get; set; }
         public Action<SaveResult> CloseDialogCallback { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +29,6 @@ namespace cs4rsa_core.Dialogs.Implements
             _courseCrawler = courseCrawler;
             ScheduleSessions = new();
             SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(Cancle);
         }
 
         public async Task LoadScheduleSessions()
@@ -38,11 +36,6 @@ namespace cs4rsa_core.Dialogs.Implements
             ScheduleSessions.Clear();
             IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
             sessions.ToList().ForEach(session => ScheduleSessions.Add(session));
-        }
-
-        private void Cancle()
-        {
-            CloseDialogCallback.Invoke(null);
         }
 
         private void Save()

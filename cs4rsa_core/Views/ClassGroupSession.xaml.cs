@@ -13,9 +13,6 @@ using System.Windows.Data;
 
 namespace cs4rsa_core.Views
 {
-    /// <summary>
-    /// Interaction logic for ClassGroupSession.xaml
-    /// </summary>
     public partial class ClassGroupSession : UserControl
     {
         public ClassGroupSession()

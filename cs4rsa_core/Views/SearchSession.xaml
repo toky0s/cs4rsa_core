@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:cs4rsa_core.ViewModels"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    x:Name="SearchSessionUC"
     d:DataContext="{d:DesignInstance Type=vm:SearchSessionViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="400"
@@ -29,6 +30,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -79,9 +81,68 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <StackPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="0,10,0,0"
+            Orientation="Vertical">
+            <TextBox
+                x:Name="SearchingTextBox"
+                Margin="0,0,0,5"
+                materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
+                KeyUp="SearchingTextBox_KeyUp"
+                LostFocus="SearchingTextBox_LostFocus"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                Text="{Binding SearchText}" />
+            <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
+                <StackPanel>
+                    <Border
+                        Background="White"
+                        BorderBrush="{StaticResource PrimaryHueMidBrush}"
+                        BorderThickness="2.5"
+                        CornerRadius="5">
+                        <ListView
+                            MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
+                            MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
+                            Background="White"
+                            ItemsSource="{Binding FullMatchSearchingKeywords}"
+                            SelectedItem="{Binding SelectedFullMatchSearchingKeyword}"
+                            SelectionChanged="ListView_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="25" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle
+                                            Grid.Column="0"
+                                            Width="20"
+                                            HorizontalAlignment="Left"
+                                            Fill="{Binding Keyword.Color}" />
+                                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                                            <TextBlock
+                                                Margin="5,10,0,0"
+                                                FontSize="14"
+                                                FontWeight="DemiBold"
+                                                Text="{Binding Keyword.SubjectName, Mode=OneWay}"
+                                                TextWrapping="WrapWithOverflow" />
+                                            <TextBlock Margin="5,0,0,0" Style="{StaticResource Caption}">
+                                                <Run Text="{Binding Discipline.Name}" />
+                                                <Run Text="{Binding Keyword.Keyword1}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Border>
+                </StackPanel>
+            </Popup>
+        </StackPanel>
         <Button
             x:Name="DisciplineKeywordButton"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Height="30"
@@ -91,7 +152,7 @@
             IsEnabled="{Binding CanRunAddCommand}" />
         <ListBox
             x:Name="DownloadSubjects"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,0,0,5"
@@ -163,7 +224,7 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
         <Grid
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,0,0,10">

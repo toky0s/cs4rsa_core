@@ -24,6 +24,7 @@
         <Grid>
             <StackPanel>
                 <TextBlock
+                    Grid.Column="1"
                     Margin="0,0,0,10"
                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                     Text="Cảnh báo cập nhật" />

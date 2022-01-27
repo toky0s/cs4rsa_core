@@ -89,7 +89,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnOpenShareStringWindow()
         {
-            ShareStringUC shareStringUC = new ShareStringUC();
+            ShareStringUC shareStringUC = new();
             ShareStringViewModel vm = (shareStringUC.DataContext as ShareStringViewModel);
             vm.ShareString = _shareString;
             vm.CloseDialogCallback = (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog;

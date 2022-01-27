@@ -27,7 +27,10 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </Window.Resources>
-    <materialDesign:DialogHost DialogContent="{Binding DialogUC}" IsOpen="{Binding IsOpenDialog}" CloseOnClickAway="True">
+    <materialDesign:DialogHost
+        CloseOnClickAway="{Binding IsCloseOnClickAway}"
+        DialogContent="{Binding DialogUC}"
+        IsOpen="{Binding IsOpenDialog}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />

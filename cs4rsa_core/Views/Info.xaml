@@ -29,7 +29,7 @@
             IsReadOnly="True"
             Text="{Binding Version, StringFormat=Phiên bản: {0}}" />
         <ScrollViewer Grid.Row="2">
-            <StackPanel Width="900" Margin="0,0,0,10">
+            <StackPanel Width="700" Margin="0,0,0,10">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -121,7 +121,7 @@
                                     <TextBlock
                                         Margin="0,0,0,20"
                                         Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                         Text="Mua hắn ly cà phê" />
                                     <TextBlock
                                         Foreground="#636e72"
@@ -169,7 +169,7 @@
                                     <TextBlock
                                         Margin="0,0,0,20"
                                         Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                         Text="Mua hắn ly trà sữa" />
                                     <TextBlock
                                         Foreground="#636e72"
