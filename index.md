@@ -1,5 +1,3 @@
-## Chào mừng đến với CS4RSA
-
 <p align="center">
 <img src="https://raw.githubusercontent.com/toky0s/cs4rsa_core/gh-pages/splashScreen.png" width=500/>
 </p>
