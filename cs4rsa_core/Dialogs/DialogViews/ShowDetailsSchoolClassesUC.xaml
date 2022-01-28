@@ -37,7 +37,7 @@
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text="{Binding ClassGroupName}" />
+                <TextBlock Text="{Binding ClassGroupModel.ClassGroup.Name}" />
                 <TextBlock Text=" LEC + " />
                 <TextBlock Text="{Binding SelectedSchoolClassModel.SchoolClassName}" />
                 <TextBlock Text=" LAB" />

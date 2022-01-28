@@ -68,17 +68,16 @@ namespace SubjectCrawlService1.DataTypes
         public async Task<bool> IsSpecialSubject()
         {
             List<SchoolClass> schoolClasses = await GetSchoolClasses();
-            List<string> registerCodes = schoolClasses.Select(schoolClass => schoolClass.RegisterCode).Distinct().ToList();
-            return registerCodes.Count > GetClassGroupNames().Length;
+            IEnumerable<string> registerCodes = schoolClasses.Select(schoolClass => schoolClass.RegisterCode).Distinct();
+            return registerCodes.Count() > GetClassGroupNames().Count();
         }
 
-        private string[] GetClassGroupNames()
+        private IEnumerable<string> GetClassGroupNames()
         {
-            HtmlNode[] trTags = GetListTrTagInCalendar();
-            HtmlNode[] classGroupTrTags = trTags
-                                        .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop")
-                                        .ToArray();
-            string[] classGroupNames = classGroupTrTags.Select(node => node.InnerText.Trim()).ToArray();
+            IEnumerable<HtmlNode> trTags = GetListTrTagInCalendar();
+            IEnumerable<HtmlNode> classGroupTrTags = trTags
+                                        .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop");
+            IEnumerable<string> classGroupNames = classGroupTrTags.Select(node => node.InnerText.Trim());
             return classGroupNames;
         }
 
@@ -227,21 +226,21 @@ namespace SubjectCrawlService1.DataTypes
             return teacherName;
         }
 
-        private HtmlNode[] GetTrTagsWithClassLop()
+        private IEnumerable<HtmlNode> GetTrTagsWithClassLop()
         {
-            HtmlNode[] trTags = GetListTrTagInCalendar();
-            HtmlNode[] trTagsWithClassLop = trTags
-                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit").ToArray();
+            IEnumerable<HtmlNode> trTags = GetListTrTagInCalendar();
+            IEnumerable<HtmlNode> trTagsWithClassLop = trTags
+                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit");
             return trTagsWithClassLop;
         }
 
-        private HtmlNode[] GetListTrTagInCalendar()
+        private IEnumerable<HtmlNode> GetListTrTagInCalendar()
         {
-            HtmlDocument htmlDocument = new HtmlDocument();
+            HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(RawSoup);
             HtmlNode tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
-            HtmlNode[] trTags = bodyCalendar.Descendants("tr").ToArray();
+            IEnumerable<HtmlNode> trTags = bodyCalendar.Descendants("tr");
             return trTags;
         }
 

@@ -195,7 +195,7 @@ namespace cs4rsa_core.ViewModels
             FullMatchSearchingKeywords.Clear();
 
             Task<List<Keyword>> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
-            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
+            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text.FirstCharToUpper());
             List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
             foreach (List<Keyword> keywords in whenAllResult)
             {

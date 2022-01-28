@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace Cs4rsaDatabaseService.Implements
 {
@@ -79,16 +80,11 @@ namespace Cs4rsaDatabaseService.Implements
             return await query.CountAsync();
         }
 
-        public async Task<List<Keyword>> GetBySubjectNameContains(string subjectName)
+        public Task<List<Keyword>> GetBySubjectNameContains(string subjectName)
         {
-            subjectName = subjectName.ToLower();
-            var query = from k in _context.Keywords
-                        where k.SubjectName.ToLower().StartsWith(subjectName)
-                        || k.SubjectName.ToLower().Contains(subjectName)
-                        || k.SubjectName.ToLower().EndsWith(subjectName)
-                        select k;
-            return await query
-                .Take(10)
+            subjectName = subjectName.Trim();
+            return _context.Keywords.Where(kw => kw.SubjectName.Contains(subjectName))
+                .Take(20)
                 .ToListAsync();
         }
 
@@ -97,14 +93,14 @@ namespace Cs4rsaDatabaseService.Implements
             return _context.Keywords.Where(kw =>
                 kw.Discipline.Name.Contains(discipline.ToUpper()) 
                 && kw.Keyword1.Contains(keyword)
-            ).Take(10).ToListAsync();
+            ).Take(20).ToListAsync();
         }
 
         public Task<List<Keyword>> GetByDisciplineStartWith(string text)
         {
             return _context.Keywords.Where(kw =>
                 kw.Discipline.Name.StartsWith(text.ToUpper())
-            ).Take(10).ToListAsync();
+            ).Take(20).ToListAsync();
         }
     }
 }
