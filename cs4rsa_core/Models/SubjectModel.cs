@@ -38,7 +38,7 @@ namespace cs4rsa_core.Models
         private async Task<SubjectModel> InitializeAsync()
         {
             Color = await _colorGenerator.GetColorAsync(_subject.CourseId);
-            IsSpecialSubject = await _subject.IsSpecialSubject();
+            IsSpecialSubject = _subject.IsSpecialSubject();
             ClassGroupModels = _subject.ClassGroups
                 .Select(item => new ClassGroupModel(item, IsSpecialSubject, _colorGenerator))
                 .ToList();

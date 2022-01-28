@@ -55,6 +55,7 @@
             DisplayMemberPath="Name"
             FontSize="12"
             FontWeight="Normal"
+            IsEditable="True"
             ItemsSource="{Binding Disciplines, Mode=OneWay}"
             SelectedItem="{Binding SelectedDiscipline}"
             SelectionChanged="DisciplineComboBox_SelectionChanged" />
@@ -84,7 +85,7 @@
         <StackPanel
             Grid.Row="2"
             Grid.ColumnSpan="2"
-            Margin="0,10,0,0"
+            Margin="0,7,0,0"
             Orientation="Vertical">
             <TextBox
                 x:Name="SearchingTextBox"

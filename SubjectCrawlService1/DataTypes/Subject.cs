@@ -22,11 +22,11 @@ namespace SubjectCrawlService1.DataTypes
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
-        private List<string> _tempTeachers = new();
+        private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
-        private List<Teacher> _teachers = new();
+        private readonly List<Teacher> _teachers;
         public List<Teacher> Teachers => _teachers;
-        private List<ClassGroup> _classGroups = new();
+        private readonly List<ClassGroup> _classGroups;
         public List<ClassGroup> ClassGroups => _classGroups;
 
         public string Name { get; }
@@ -50,6 +50,11 @@ namespace SubjectCrawlService1.DataTypes
             _studyUnitType = studyUnitType;
             _studyType = studyType;
             _semester = semester;
+
+            _teachers = new();
+            _tempTeachers = new();
+            _classGroups = new();
+
             Name = name;
             SubjectCode = subjectCode;
             MustStudySubject = SubjectSpliter(mustStudySubject);
@@ -65,11 +70,27 @@ namespace SubjectCrawlService1.DataTypes
         /// một Special Subject.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> IsSpecialSubject()
+        public bool IsSpecialSubject()
         {
-            List<SchoolClass> schoolClasses = await GetSchoolClasses();
-            IEnumerable<string> registerCodes = schoolClasses.Select(schoolClass => schoolClass.RegisterCode).Distinct();
-            return registerCodes.Count() > GetClassGroupNames().Count();
+            bool isSpecialSubject = false;
+            foreach (ClassGroup classGroup in ClassGroups)
+            {
+                int registerCodeCount = 0;
+                foreach (SchoolClass schoolClass in classGroup.SchoolClasses)
+                {
+                    string registerCode = schoolClass.RegisterCode;
+                    if (registerCode != "")
+                    {
+                        registerCodeCount++;
+                    }
+                }
+                if (registerCodeCount > 1)
+                {
+                    isSpecialSubject = true;
+                    break;
+                }
+            }
+            return isSpecialSubject;
         }
 
         private IEnumerable<string> GetClassGroupNames()
@@ -127,7 +148,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns></returns>
         private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
-            HtmlNode[] tdTags = trTagClassLop.SelectNodes("td").ToArray();
+            HtmlNodeCollection tdTags = trTagClassLop.SelectNodes("td");
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
 
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
@@ -163,7 +184,7 @@ namespace SubjectCrawlService1.DataTypes
             }
 
             string studyWeekString = tdTags[5].InnerText.Trim();
-            StudyWeek studyWeek = new StudyWeek(studyWeekString);
+            StudyWeek studyWeek = new(studyWeekString);
 
             Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
 
@@ -198,7 +219,7 @@ namespace SubjectCrawlService1.DataTypes
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
-            SchoolClass schoolClass = new SchoolClass(schoolClassName, registerCode, studyType,
+            SchoolClass schoolClass = new(schoolClassName, registerCode, studyType,
                                         emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teachers, tempTeachers, registrationStatus, implementationStatus, urlToSubjectDetailPage, metaData);
             return schoolClass;
@@ -210,7 +231,7 @@ namespace SubjectCrawlService1.DataTypes
         /// Cải thiện độ chính xác của bộ lọc teacher.
         /// </summary>
         /// <param name="trTagClassLop"></param>
-        /// <returns></returns>
+        /// <returns>Tên giảng viên</returns>
         private string GetTeacherName(HtmlNode trTagClassLop)
         {
             HtmlDocument doc = new();
@@ -252,7 +273,7 @@ namespace SubjectCrawlService1.DataTypes
             return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
 
-        private string GetSubjectDetailPageURL(HtmlNode aTag)
+        private static string GetSubjectDetailPageURL(HtmlNode aTag)
         {
             return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
