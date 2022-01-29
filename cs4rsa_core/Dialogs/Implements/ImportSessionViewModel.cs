@@ -13,6 +13,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -31,14 +32,14 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 _selectedScheduleSession = value;
                 OnPropertyChanged();
+                LoadScheduleSessionDetail(value);
                 ImportCommand.NotifyCanExecuteChanged();
                 DeleteCommand.NotifyCanExecuteChanged();
-                LoadScheduleSessionDetail(value);
             }
         }
         public string ShareString { get; set; }
 
-        public AsyncRelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
         public RelayCommand ShareStringCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
@@ -49,7 +50,8 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ICourseCrawler _courseCrawler;
         private readonly SessionExtension _sessionExtension;
         private readonly IMessageBox _messageBox;
-        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler, SessionExtension sessionExtension, IMessageBox messageBox)
+        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler, 
+            SessionExtension sessionExtension, IMessageBox messageBox)
         {
             _messageBox = messageBox;
             _sessionExtension = sessionExtension;
@@ -59,19 +61,18 @@ namespace cs4rsa_core.Dialogs.Implements
             ScheduleSessions = new();
             ScheduleSessionDetails = new();
 
-            DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
+            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new RelayCommand(OnParseShareString, CanParse);
             CloseDialogCommand = new RelayCommand(OnCloseDialog);
-            LoadScheduleSession();
         }
 
-        private void LoadScheduleSessionDetail(Session value)
+        public void LoadScheduleSessionDetail(Session value)
         {
             if (value != null)
             {
                 ScheduleSessionDetails.Clear();
-                List<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
+                IEnumerable<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
                 foreach (SessionDetail item in details)
                 {
                     ScheduleSessionDetails.Add(item);
@@ -91,7 +92,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private void OnParseShareString()
         {
-            ShareString shareString = new ShareString(_unitOfWork, _courseCrawler);
+            ShareString shareString = new(_unitOfWork, _courseCrawler);
             SessionManagerResult result = shareString.GetSubjectFromShareString(ShareString);
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
             MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
@@ -111,14 +112,11 @@ namespace cs4rsa_core.Dialogs.Implements
             return _selectedScheduleSession != null;
         }
 
-        public void LoadScheduleSession()
+        public async Task LoadScheduleSession()
         {
             ScheduleSessions.Clear();
-            IEnumerable<Session> sessions = _unitOfWork.Sessions.GetAll();
-            foreach (Session item in sessions)
-            {
-                ScheduleSessions.Add(item);
-            }
+            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            sessions.ToList().ForEach(session => ScheduleSessions.Add(session));
         }
 
         private void OnImport()
@@ -139,7 +137,7 @@ namespace cs4rsa_core.Dialogs.Implements
             MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
         }
 
-        private async Task OnDelete()
+        private void OnDelete()
         {
             string sessionName = _selectedScheduleSession.Name;
             MessageBoxResult result = _messageBox.ShowMessage($"Bạn có chắc muốn xoá phiên {sessionName}?",
@@ -149,7 +147,7 @@ namespace cs4rsa_core.Dialogs.Implements
             if (result == MessageBoxResult.Yes)
             {
                 _unitOfWork.Sessions.Remove(_selectedScheduleSession);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Complete();
                 Reload();
             }
         }

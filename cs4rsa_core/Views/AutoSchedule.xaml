@@ -182,7 +182,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
                     Text="Danh sách các môn của bạn" />
                 <TreeView
                     x:Name="treeView"
@@ -649,7 +649,7 @@
                 <TextBlock
                     Grid.Row="0"
                     Margin="5,0,0,5"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
                     Text="Các môn bạn đã chọn" />
                 <ListView
                     Grid.Row="1"
@@ -661,11 +661,13 @@
                             <MenuItem
                                 Command="{Binding DeleteCommand}"
                                 Header="Xoá"
-                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
+                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}"
+                                Style="{StaticResource MenuItemFontSize}" />
                             <MenuItem
                                 Command="{Binding GotoCourseCommand}"
                                 Header="Mở trong Courses"
-                                Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                                Icon="{materialDesign:PackIcon Kind=OpenInApp}"
+                                Style="{StaticResource MenuItemFontSize}" />
                         </ContextMenu>
                     </ListView.Resources>
                     <ListView.ItemTemplate>
@@ -771,7 +773,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
+                <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
                 <ListView
                     x:Name="ListViewCombinationModels"
                     Grid.Row="1"
@@ -784,8 +786,8 @@
                             <MenuItem
                                 Command="{Binding ShowOnSimuCommand}"
                                 Header="Hiển thị trên mô phỏng"
-                                Icon="{materialDesign:PackIcon Kind=Calendar}" />
-                            <MenuItem Header="Chi tiết" Icon="{materialDesign:PackIcon Kind=Details}" />
+                                Icon="{materialDesign:PackIcon Kind=Calendar}"
+                                Style="{StaticResource MenuItemFontSize}" />
                         </ContextMenu>
                         <ToolTip x:Key="CannotShowOnSimuContentTooltip" Width="300">
                             <TextBlock TextWrapping="WrapWithOverflow">

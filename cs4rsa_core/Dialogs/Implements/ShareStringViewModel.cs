@@ -1,7 +1,6 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogServices;
-using cs4rsa_core.Messages;
-using LightMessageBus;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Windows;
@@ -26,8 +25,14 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public Action CloseDialogCallback { get; set; }
 
-        public ShareStringViewModel()
+        #region Service
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        #endregion
+
+        public ShareStringViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
+            _snackbarMessageQueue = snackbarMessageQueue;
+
             CopyCommand = new RelayCommand(OnCopy, CanCopy);
             CloseDialogCommand = new RelayCommand(OnCloseDialog);
         }
@@ -48,7 +53,7 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 Clipboard.SetData(DataFormats.Text, _shareString);
                 string message = "Đã sao chép ShareString vào Clipboard";
-                MessageBus.Default.Publish<Cs4rsaSnackbarMessage>(new Cs4rsaSnackbarMessage(message));
+                _snackbarMessageQueue.Enqueue(message);
             }
         }
     }

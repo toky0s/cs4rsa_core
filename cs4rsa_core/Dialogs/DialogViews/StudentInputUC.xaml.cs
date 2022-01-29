@@ -13,7 +13,7 @@ namespace cs4rsa_core.Dialogs.DialogViews
 
         public bool IsCloseOnClickAway()
         {
-            return false;
+            return true;
         }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)

@@ -13,6 +13,7 @@ using Cs4rsaDatabaseService.Models;
 using HelperService;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
@@ -49,7 +50,7 @@ namespace cs4rsa_core.ViewModels
         }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
-        public RelayCommand ImportDialogCommand { get; set; }
+        public AsyncRelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         #endregion
 
@@ -141,16 +142,19 @@ namespace cs4rsa_core.ViewModels
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
         private readonly IOpenInBrowser _openInBrowser;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public SearchSessionViewModel(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork,
-            ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator, IOpenInBrowser openInBrowser)
+            ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator, IOpenInBrowser openInBrowser,
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
             _openInBrowser = openInBrowser;
+            _snackbarMessageQueue = snackbarMessageQueue;
 
             MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
@@ -164,7 +168,7 @@ namespace cs4rsa_core.ViewModels
 
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
-            ImportDialogCommand = new RelayCommand(OnOpenImportDialog);
+            ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
         }
@@ -286,9 +290,11 @@ namespace cs4rsa_core.ViewModels
         }
 
         private readonly ImportSessionUC _importSessionUC = new();
-        private void OnOpenImportDialog()
+        private async Task OnOpenImportDialog()
         {
+            ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(_importSessionUC);
+            await vm.LoadScheduleSession();
         }
 
         private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
@@ -324,7 +330,7 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.Publish(new DeleteSubjectMessage(_selectedSubjectModel));
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            _snackbarMessageQueue.Enqueue(message);
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -372,7 +378,7 @@ namespace cs4rsa_core.ViewModels
             else
             {
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Môn học không tồn tại trong học kỳ này"));
+                _snackbarMessageQueue.Enqueue("Môn học không tồn tại trong học kỳ này");
                 CanAddSubjectChange();
             }
         }

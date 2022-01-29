@@ -35,7 +35,7 @@
                 Grid.Row="0"
                 Margin="10,15"
                 Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                Text="Đăng nhập" />
+                Text="Chọn tài khoản" />
             <ListView
                 Grid.Row="1"
                 Margin="0,0,0,10"

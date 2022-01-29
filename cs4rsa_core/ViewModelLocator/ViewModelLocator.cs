@@ -42,7 +42,6 @@ namespace cs4rsa_core.ViewModelLocator
             viewTypeName = str;
             viewModelTypeName = viewTypeName + "ViewModel";
             Type viewModelType = Type.GetType(viewModelTypeName);
-            // important!
             object viewModel = ActivatorUtilities.GetServiceOrCreateInstance(((App)Application.Current).Container, viewModelType);
             ((FrameworkElement)d).DataContext = viewModel;
         }

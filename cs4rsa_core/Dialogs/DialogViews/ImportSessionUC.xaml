@@ -2,7 +2,6 @@
     x:Class="cs4rsa_core.Dialogs.DialogViews.ImportSessionUC"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:cs4rsa_core.Converters.DialogConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:implements="clr-namespace:cs4rsa_core.Dialogs.Implements"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -20,95 +19,42 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <converter:ExpiryConverter x:Key="ExpiryConverter" />
-    </UserControl.Resources>
-    <materialDesign:Card Width="900">
+    <materialDesign:Card Width="800" Padding="10">
         <StackPanel Orientation="Vertical">
-            <TextBlock
-                Margin="10,15"
-                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                Text="Từ cơ sở dữ liệu" />
+            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />
             <Grid x:Uid="GridSessions" Height="215">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2.5*" />
-                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Vertical">
+                <Grid Grid.Column="0" Margin="0,0,5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
                     <ListView
-                        Grid.RowSpan="2"
-                        Height="200"
-                        Margin="5,5,5,0"
+                        Grid.Column="0"
                         ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding SelectedScheduleSession}">
-                        <ListView.Resources>
-                            <Style x:Key="ExpiryConverterStyle" TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Value="1">
-                                        <DataTrigger.Binding>
-                                            <MultiBinding Converter="{StaticResource ExpiryConverter}">
-                                                <Binding Path="SemesterValue" />
-                                                <Binding Path="YearValue" />
-                                            </MultiBinding>
-                                        </DataTrigger.Binding>
-                                        <Setter Property="Text" Value="Có thể sử dụng" />
-                                        <Setter Property="Foreground" Value="Green" />
-                                    </DataTrigger>
-                                    <DataTrigger Value="0">
-                                        <DataTrigger.Binding>
-                                            <MultiBinding Converter="{StaticResource ExpiryConverter}">
-                                                <Binding Path="SemesterValue" />
-                                                <Binding Path="YearValue" />
-                                            </MultiBinding>
-                                        </DataTrigger.Binding>
-                                        <Setter Property="Text" Value="Đã lỗi thời" />
-                                        <Setter Property="Foreground" Value="Red" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListView.Resources>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn
-                                    Width="auto"
-                                    DisplayMemberBinding="{Binding Name}"
-                                    Header="Tên phiên" />
-                                <GridViewColumn Width="auto" Header="Hiệu lực">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource ExpiryConverterStyle}" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
                             </GridView>
                         </ListView.View>
                     </ListView>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Vertical">
                     <ListView
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Height="200"
-                        Margin="0,5,5,0"
+                        Grid.Column="1"
                         ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn
-                                    Width="auto"
-                                    DisplayMemberBinding="{Binding ClassGroup}"
-                                    Header="Nhóm lớp" />
-                                <GridViewColumn
-                                    Width="auto"
-                                    DisplayMemberBinding="{Binding SubjectName}"
-                                    Header="Tên môn" />
+                                <GridViewColumn DisplayMemberBinding="{Binding ClassGroup}" Header="Nhóm lớp" />
+                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
                             </GridView>
                         </ListView.View>
                     </ListView>
-                </StackPanel>
+                </Grid>
                 <StackPanel
                     Grid.Column="2"
                     Margin="0,7,7,0"
@@ -126,11 +72,8 @@
                 </StackPanel>
             </Grid>
 
-            <TextBlock
-                Margin="10,15"
-                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                Text="Từ ShareString" />
-            <Grid Margin="7,7,7,0">
+            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ ShareString" />
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />

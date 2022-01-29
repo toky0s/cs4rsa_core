@@ -15,7 +15,10 @@ using Cs4rsaDatabaseService.Interfaces;
 using CurriculumCrawlerService.Crawlers;
 using CurriculumCrawlerService.Crawlers.Interfaces;
 using DisciplineCrawlerService.Crawlers;
+using FirebaseService;
+using FirebaseService.Interfaces;
 using HelperService;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using ProgramSubjectCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers;
@@ -69,14 +72,19 @@ namespace cs4rsa_core
             services.AddSingleton<ProgramDiagramCrawler>();
             services.AddSingleton<StudentProgramCrawler>();
             services.AddSingleton<DisciplineCrawler>();
+
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
             services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
+            services.AddSingleton<ISnackbarMessageQueue>(new SnackbarMessageQueue(TimeSpan.FromSeconds(2)));
+            services.AddSingleton<IFirebase, NewFirebase>();
+
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
+            services.AddSingleton<ShareStringViewModel>();
 
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<SearchSessionViewModel>();

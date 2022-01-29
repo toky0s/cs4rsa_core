@@ -17,6 +17,12 @@
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#00cec9" />
             <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="White" />
+            <Style
+                x:Key="MenuItemFontSize"
+                BasedOn="{StaticResource MaterialDesignMenuItem}"
+                TargetType="MenuItem">
+                <Setter Property="FontSize" Value="13" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -7,6 +7,7 @@ using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.DataTypes;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace cs4rsa_core.ViewModels
         IMessageHandler<DeleteSubjectMessage>,
         IMessageHandler<RemoveAChoiceClassGroupMessage>
     {
-        public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; } = new ObservableCollection<ClassGroupModel>();
+        public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
 
         private ClassGroupModel _selectedClassGroupModel;
         public ClassGroupModel SelectedClassGroupModel
@@ -36,7 +37,7 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        public ObservableCollection<ConflictModel> ConflictModels { get; set; } = new ObservableCollection<ConflictModel>();
+        public ObservableCollection<ConflictModel> ConflictModels { get; set; }
 
         private ConflictModel _selectedConflictModel;
         public ConflictModel SelectedConflictModel
@@ -45,26 +46,39 @@ namespace cs4rsa_core.ViewModels
             set { _selectedConflictModel = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; } = new();
+        public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
 
+        #region Commands
         public AsyncRelayCommand SaveCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
         public RelayCommand SolveConflictCommand { get; set; }
+        #endregion
 
+        #region Services
         private readonly ImportSessionViewModel _importSessionViewModel;
-        public ChoicedSessionViewModel(ImportSessionViewModel importSessionViewModel)
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        #endregion
+        public ChoicedSessionViewModel(ImportSessionViewModel importSessionViewModel, 
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _importSessionViewModel = importSessionViewModel;
+            _snackbarMessageQueue = snackbarMessageQueue;
+
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<RemoveAChoiceClassGroupMessage>().Notify(this);
+
             SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
+
+            PlaceConflictFinderModels = new();
+            ConflictModels = new();
+            ClassGroupModels = new();
         }
 
         /// <summary>
@@ -73,8 +87,8 @@ namespace cs4rsa_core.ViewModels
         /// <param name="obj"></param>
         private void OnSolve()
         {
-            SolveConflictUC solveConflictUC = new SolveConflictUC();
-            SolveConflictViewModel vm = new SolveConflictViewModel(_selectedConflictModel);
+            SolveConflictUC solveConflictUC = new();
+            SolveConflictViewModel vm = new(_selectedConflictModel);
             vm.CloseDialogCallback = CloseDialogAndHandleSolveConflictResult;
             solveConflictUC.DataContext = vm;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(solveConflictUC);
@@ -95,7 +109,7 @@ namespace cs4rsa_core.ViewModels
             string registerCode = _selectedClassGroupModel.RegisterCode;
             Clipboard.SetData(DataFormats.Text, registerCode);
             string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            _snackbarMessageQueue.Enqueue(message);
         }
 
         private bool CanDeleteAll()
@@ -145,8 +159,7 @@ namespace cs4rsa_core.ViewModels
             if (result != null)
             {
                 string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
-                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
-                _importSessionViewModel.LoadScheduleSession();
+                _snackbarMessageQueue.Enqueue(message);
             }
         }
 
@@ -274,7 +287,7 @@ namespace cs4rsa_core.ViewModels
             }
             MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(ClassGroupModels.ToList()));
             string snackMessage = $"Đã bỏ chọn lớp {classGroupModelName}";
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(snackMessage));
+            _snackbarMessageQueue.Enqueue(snackMessage);
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
         }

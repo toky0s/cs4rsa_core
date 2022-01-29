@@ -6,6 +6,7 @@ using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using DisciplineCrawlerService.Crawlers;
 using LightMessageBus;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
@@ -29,19 +30,26 @@ namespace cs4rsa_core.Dialogs.Implements
         }
 
         public Action CloseDialogCallback { get; set; }
+
+        #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly Cs4rsaDbContext _cs4rsaDbContext;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly DisciplineCrawler _disciplineCrawler;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        #endregion
         public UpdateViewModel(IUnitOfWork unitOfWork, Cs4rsaDbContext cs4rsaDbContext,
-            ICourseCrawler courseCrawler, ISetting setting, DisciplineCrawler disciplineCrawler)
+            ICourseCrawler courseCrawler, ISetting setting, DisciplineCrawler disciplineCrawler,
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _cs4rsaDbContext = cs4rsaDbContext;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _setting = setting;
             _disciplineCrawler = disciplineCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
+
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
             CloseDialogCommand = new RelayCommand(OnCloseDialog, CanClose);
         }
@@ -80,8 +88,8 @@ namespace cs4rsa_core.Dialogs.Implements
             _setting.CurrentSetting.CurrentYearValue = _courseCrawler.GetCurrentYearValue();
             _setting.Save();
             string message = $"Hoàn tất cập nhật {result} môn";
-            MessageBus.Default.Publish<UpdateSuccessMessage>(new UpdateSuccessMessage(null));
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            MessageBus.Default.Publish(new UpdateSuccessMessage(null));
+            _snackbarMessageQueue.Enqueue(message);
             CloseDialogCallback.Invoke();
         }
 

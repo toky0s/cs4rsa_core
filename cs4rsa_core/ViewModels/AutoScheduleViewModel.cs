@@ -13,6 +13,7 @@ using CurriculumCrawlerService.Crawlers.Interfaces;
 using HelperService;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using ProgramSubjectCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.DataTypes;
@@ -170,6 +171,7 @@ namespace cs4rsa_core.ViewModels
         private readonly ICurriculumCrawler _curriculumCrawler;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
         private readonly IOpenInBrowser _openInBrowser;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         #region Filter Properties
@@ -245,7 +247,8 @@ namespace cs4rsa_core.ViewModels
 
         public AutoScheduleViewModel(ICourseCrawler courseCrawler,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser)
+            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser, 
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _openInBrowser = openInBrowser;
             _curriculumCrawler = curriculumCrawler;
@@ -253,6 +256,7 @@ namespace cs4rsa_core.ViewModels
             _colorGenerator = colorGenerator;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
 
             MessageBus.Default.FromAny().Where<ExitLoginMessage>().Notify(this);
 
@@ -309,7 +313,7 @@ namespace cs4rsa_core.ViewModels
             }
             if (_genIndex == _tempResult.Count)
             {
-                MessageBus.Default.Publish(new Cs4rsaSnackbarMessage("Đã đến bộ lịch cuối"));
+                _snackbarMessageQueue.Enqueue("Đã đến bộ lịch cuối");
                 IsCalculated = false;
             }
         }
@@ -335,7 +339,7 @@ namespace cs4rsa_core.ViewModels
             _tempResult = e.Result as List<List<int>>;
             IsCalculated = true;
             string message = $"Đã tính toán xong với {_tempResult.Count} kết quả";
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            _snackbarMessageQueue.Enqueue(message);
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

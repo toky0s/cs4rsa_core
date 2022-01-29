@@ -7,6 +7,7 @@ using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +18,7 @@ namespace cs4rsa_core.ViewModels
 {
     public class LoginViewModel : ViewModelBase, IMessageHandler<ExitSessionInputMessage>
     {
-        public ObservableCollection<Student> Students { get; set; } = new ObservableCollection<Student>();
+        public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }
         private string _sessionId;
         public string SessionId
@@ -29,19 +30,30 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        #region Commands
         public AsyncRelayCommand FindCommand { get; set; }
         public AsyncRelayCommand DeleteCommand { get; set; }
+        #endregion
 
+        #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMessageBox _cs4RsaMessageBox;
-        public LoginViewModel(IMessageBox cs4rsaMessageBox, IUnitOfWork unitOfWork)
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        #endregion
+        public LoginViewModel(IMessageBox cs4rsaMessageBox, IUnitOfWork unitOfWork,
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _cs4RsaMessageBox = cs4rsaMessageBox;
             _unitOfWork = unitOfWork;
+            _snackbarMessageQueue = snackbarMessageQueue;
+
             MessageBus.Default.FromAny().Where<ExitSessionInputMessage>().Notify(this);
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
+
+            Students = new();
         }
 
         private async Task OnDelete()
@@ -51,7 +63,7 @@ namespace cs4rsa_core.ViewModels
             await _unitOfWork.CompleteAsync();
             await LoadStudentInfos();
             string message = $"Bạn vừa xoá {name}";
-            MessageBus.Default.Publish(new Cs4rsaSnackbarMessage(message));
+            _snackbarMessageQueue.Enqueue(message);
         }
 
         private async Task OnFind()

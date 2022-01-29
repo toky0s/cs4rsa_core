@@ -4,7 +4,9 @@ using cs4rsa_core.Messages;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -14,7 +16,7 @@ namespace cs4rsa_core.ViewModels
     /// trong các View. Thực hiện khai báo các dịch vụ triển khai DI. Thực hiện
     /// các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    public class MainWindowViewModel : ViewModelBase, IMessageHandler<Cs4rsaSnackbarMessage>
+    public class MainWindowViewModel : ViewModelBase
     {
         private int _SelectedIndex;
         public int SelectedIndex
@@ -41,29 +43,23 @@ namespace cs4rsa_core.ViewModels
         }
 
         private bool _isCloseOnClickAway;
-
         public bool IsCloseOnClickAway
         {
             get { return _isCloseOnClickAway; }
             set { _isCloseOnClickAway = value; OnPropertyChanged(); }
         }
 
-        private SnackbarMessageQueue _snackBarMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
+        private SnackbarMessageQueue _snackBarMessageQueue;
         public SnackbarMessageQueue SnackbarMessageQueue
         {
             get { return _snackBarMessageQueue; }
             set { _snackBarMessageQueue = value; OnPropertyChanged(); }
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
-            MessageBus.Default.FromAny().Where<Cs4rsaSnackbarMessage>().Notify(this);
+            SnackbarMessageQueue = (SnackbarMessageQueue)snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
-        }
-
-        public void Handle(Cs4rsaSnackbarMessage message)
-        {
-            _snackBarMessageQueue.Enqueue(message.Source);
         }
 
         public void OpenDialog(IDialog uc)

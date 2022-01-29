@@ -1,8 +1,10 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Implements
 {
@@ -12,9 +14,19 @@ namespace Cs4rsaDatabaseService.Implements
         {
         }
 
-        public List<SessionDetail> GetSessionDetails(int sessionId)
+        //public async Task<List<SessionDetail>> GetSessionDetails(int sessionId)
+        //{
+        //    return await _context.SessionDetails
+        //        .Where(sessionDetail => sessionDetail.SessionId == sessionId)
+        //        .AsNoTracking()
+        //        .ToListAsync();
+        //}
+
+        IEnumerable<SessionDetail> ISessionRepository.GetSessionDetails(int sessionId)
         {
-            return _context.SessionDetails.Where(sessionDetail => sessionDetail.SessionId == sessionId).ToList();
+            return _context.SessionDetails
+                .Where(sessionDetail => sessionDetail.SessionId == sessionId)
+                .AsNoTracking();
         }
     }
 }

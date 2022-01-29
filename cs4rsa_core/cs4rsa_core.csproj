@@ -33,6 +33,7 @@
     <ProjectReference Include="..\ConflictService\ConflictService.csproj" />
     <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
     <ProjectReference Include="..\DisciplineCrawlerService\DisciplineCrawlerService.csproj" />
+    <ProjectReference Include="..\FirebaseService\FirebaseService.csproj" />
     <ProjectReference Include="..\HelperService\HelperService.csproj" />
     <ProjectReference Include="..\ProgramSubjectCrawlerService\ProgramSubjectCrawlerService.csproj" />
     <ProjectReference Include="..\StudentCrawlerService\StudentCrawlerService.csproj" />

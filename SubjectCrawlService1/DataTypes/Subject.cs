@@ -66,8 +66,8 @@ namespace SubjectCrawlService1.DataTypes
 
         /// <summary>
         /// Một môn được xem là Special Subject khi chúng có nhiều hơn 1 mã đăng ký
-        /// trong một Class Group. Các môn như CHE 101 (Hoá đại cương) được xem là 
-        /// một Special Subject.
+        /// trong một Class Group. Các môn như CHE 101 (Hoá đại cương), BIO 101 (Sinh học đại cương)
+        /// được xem là một Special Subject.
         /// </summary>
         /// <returns></returns>
         public bool IsSpecialSubject()
