@@ -19,7 +19,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="800">
+    <materialDesign:Card Width="777">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

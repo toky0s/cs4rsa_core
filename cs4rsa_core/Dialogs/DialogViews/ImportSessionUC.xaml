@@ -19,82 +19,129 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="800" Padding="10">
+    <materialDesign:Card Width="888" Padding="10">
         <StackPanel Orientation="Vertical">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />
-            <Grid x:Uid="GridSessions" Height="215">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Margin="0,0,5,0">
+            <StackPanel Margin="0,0,0,10">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />
+                <Grid x:Uid="GridSessions" Height="200">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <ListView
-                        Grid.Column="0"
-                        ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        SelectedItem="{Binding SelectedScheduleSession}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <ListView
-                        Grid.Column="1"
-                        ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding ClassGroup}" Header="Nhóm lớp" />
-                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <Grid Grid.Column="0" Margin="0,0,5,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ListView
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedItem="{Binding SelectedScheduleSession}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <ListView
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedItem="{Binding SelectedSessionDetail}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <ListView
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            ItemsSource="{Binding SessionSchoolClasses, IsAsync=True}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Lớp thành phần" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Loại hình" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+                            <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="Hiệu lực của phiên đã chọn" />
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
+                                                <Setter Property="Text" Value="Chưa tính toán" />
+                                                <Setter Property="Foreground" Value="Gray" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
+                                                <Setter Property="Text" Value="Đã hết hạn" />
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
+                                                <Setter Property="Text" Value="Có thể sử dụng" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel
+                        Grid.Column="2"
+                        Margin="0,7,7,0"
+                        Orientation="Vertical">
+                        <Button
+                            Width="100"
+                            Height="30"
+                            Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
+                            Content="Nhập" />
+                        <Button
+                            Height="30"
+                            Margin="0,5,0,0"
+                            Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
+                            Content="Xoá" />
+                    </StackPanel>
                 </Grid>
-                <StackPanel
-                    Grid.Column="2"
-                    Margin="0,7,7,0"
-                    Orientation="Vertical">
+
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ ShareString" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        x:Name="ShareString"
+                        Grid.Column="0"
+                        Height="40"
+                        Margin="0,0,5,0"
+                        materialDesign:HintAssist.Hint="Share String của bạn"
+                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                        Text="{Binding ShareString}" />
                     <Button
+                        Grid.Column="1"
                         Width="100"
                         Height="30"
-                        Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
-                        Content="Nhập" />
-                    <Button
-                        Height="30"
-                        Margin="0,5,0,0"
-                        Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
-                        Content="Xoá" />
-                </StackPanel>
-            </Grid>
-
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ ShareString" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox
-                    x:Name="ShareString"
-                    Grid.Column="0"
-                    Height="40"
-                    Margin="0,0,5,0"
-                    materialDesign:HintAssist.Hint="Share String của bạn"
-                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                    Text="{Binding ShareString}" />
-                <Button
-                    Grid.Column="1"
-                    Width="100"
-                    Height="30"
-                    Command="{Binding ShareStringCommand}"
-                    Content="Nhập"
-                    Foreground="White"
-                    IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}" />
-            </Grid>
+                        Command="{Binding ShareStringCommand}"
+                        Content="Nhập"
+                        Foreground="White"
+                        IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}" />
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </materialDesign:Card>
 </UserControl>
