@@ -3,6 +3,7 @@ using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using LightMessageBus;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace cs4rsa_core.ViewModelFunctions
 {
@@ -33,14 +34,28 @@ namespace cs4rsa_core.ViewModelFunctions
             foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
             {
                 SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, subjectInfoData.SubjectCode);
-                Choice(subjectModel, subjectInfoData.ClassGroup);
+                Choose(subjectModel, subjectInfoData.ClassGroup, subjectInfoData.RegisterCode);
             }
         }
 
-        private static void Choice(SubjectModel subjectModel, string classGroupName)
+        private static void Choose(SubjectModel subjectModel, string classGroupName, string registerCode)
         {
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
-            if (classGroupModel != null)
+            bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()
+                .Any(scm => scm.RegisterCode == registerCode);
+            if (classGroupModel == null) {
+                throw new System.Exception("ClassGroupModel was null!");
+            }
+            if (!isValidRegisterCode)
+            {
+                throw new System.Exception("Register code for choose is invalid");
+            }
+            if (classGroupModel.IsBelongSpecialSubject)
+            {
+                classGroupModel.PickSchoolClass(registerCode);
+                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupModel));
+            }
+            else
             {
                 MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupModel));
             }

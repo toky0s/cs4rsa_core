@@ -43,11 +43,23 @@ namespace cs4rsa_core.Dialogs.Implements
             List<SessionDetail> sessionDetails = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
+                List<SessionSchoolClass> sessionSchoolClasses = new();
+                foreach (SchoolClassModel ssc in classGroupModel.GetSchoolClassModels())
+                {
+                    SessionSchoolClass sessionSchoolClass = new SessionSchoolClass()
+                    {
+                        Name = ssc.SchoolClassName,
+                        Type = ssc.Type
+                    };
+                    sessionSchoolClasses.Add(sessionSchoolClass);
+                }
                 SessionDetail sessionDetail = new()
                 {
                     SubjectCode = classGroupModel.SubjectCode,
                     ClassGroup = classGroupModel.ClassGroup.Name,
-                    SubjectName = _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode).SubjectName
+                    SubjectName = _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode).SubjectName,
+                    SessionSchoolClasses = sessionSchoolClasses,
+                    RegisterCode = classGroupModel.RegisterCode
                 };
                 sessionDetails.Add(sessionDetail);
             }
@@ -63,6 +75,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             _unitOfWork.Sessions.Add(session);
             _unitOfWork.Complete();
+            Name = "";
             SaveResult result = new() { Name = Name };
             CloseDialogCallback.Invoke(result);
         }

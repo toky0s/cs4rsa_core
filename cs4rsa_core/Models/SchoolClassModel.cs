@@ -2,6 +2,7 @@
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using System.Collections.Generic;
+using SchoolClass = SubjectCrawlService1.DataTypes.SchoolClass;
 
 namespace cs4rsa_core.Models
 {

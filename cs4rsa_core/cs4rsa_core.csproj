@@ -9,6 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataTypes\**" />
+    <Compile Remove="Enums\**" />
+    <EmbeddedResource Remove="DataTypes\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <None Remove="DataTypes\**" />
+    <None Remove="Enums\**" />
+    <Page Remove="DataTypes\**" />
+    <Page Remove="Enums\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
     <None Remove="Images\donate.png" />
@@ -110,11 +121,6 @@
     <Page Update="Views\SearchSession.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DataTypes\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -303,7 +303,7 @@ namespace cs4rsa_core.ViewModels
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
             if (result != null)
             {
-                SubjectImporterUC subjectImporterUC = new SubjectImporterUC();
+                SubjectImporterUC subjectImporterUC = new();
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
                 vm.SessionManagerResult = result;
                 vm.CloseDialogCallback = CloseDialogAndHandleImportResult;

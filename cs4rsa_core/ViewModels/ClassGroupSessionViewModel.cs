@@ -94,7 +94,7 @@ namespace cs4rsa_core.ViewModels
             string registerCode = classGroupResult.SelectedRegisterCode;
             foreach (var classGroupMD in ClassGroupModels.Where(classGroupMD => classGroupMD.Name.Equals(classGroupModel.Name)))
             {
-                classGroupMD.PickASchoolClass(registerCode);
+                classGroupMD.PickSchoolClass(registerCode);
                 MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
             }
         }

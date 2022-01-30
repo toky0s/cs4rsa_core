@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 namespace cs4rsa_core.Dialogs.Implements
 {
     /// <summary>
+    /// <strong>Trình Quản lý Phiên:</strong>
     /// Bộ ra lệnh cho SearchViewModel thực hiện import các Subject được truyền vào.
     /// </summary>
     public class SubjectImporterViewModel : DialogViewModelBase<ImportResult>

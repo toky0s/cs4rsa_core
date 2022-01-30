@@ -1,4 +1,5 @@
-﻿using Cs4rsaDatabaseService.Models;
+﻿using cs4rsa_core.Exceptions;
+using Cs4rsaDatabaseService.Models;
 using HelperService;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
@@ -83,7 +84,7 @@ namespace cs4rsa_core.Models
             return ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc)).ToList();
         }
 
-        public void PickASchoolClass(string registerCode)
+        public void PickSchoolClass(string registerCode)
         {
             if (IsBelongSpecialSubject)
             {
@@ -101,7 +102,8 @@ namespace cs4rsa_core.Models
             }
             else
             {
-                throw new Exception("This ClassGroup Is Not Belong Special Subject!");
+                string message = $"SchoolClass with code {registerCode} is not belong special subject!";
+                throw new SchoolClassIsNotBelongSpecialSubjectException(message);
             }
         }
 
