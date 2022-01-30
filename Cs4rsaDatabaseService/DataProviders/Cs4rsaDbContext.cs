@@ -21,6 +21,7 @@ namespace Cs4rsaDatabaseService.DataProviders
         public DbSet<PreParSubject> PreParSubjects { get; set; }
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
+        public DbSet<SessionSchoolClass> SessionSchoolClasses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,6 +39,11 @@ namespace Cs4rsaDatabaseService.DataProviders
             modelBuilder.Entity<SessionDetail>()
                 .HasOne(sessionDetail => sessionDetail.Session)
                 .WithMany(session => session.SessionDetails)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SessionSchoolClass>()
+                .HasOne(sessionSchoolClass => sessionSchoolClass.SessionDetail)
+                .WithMany(sessionDetail => sessionDetail.SessionSchoolClasses)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Keyword>()

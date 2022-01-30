@@ -20,6 +20,7 @@ namespace Cs4rsaDatabaseService.Implements
             PreParSubjects = new PreParSubjectRepository(_context);
             PreProDetails = new PreProDetailRepository(_context);
             ParProDetails = new ParProDetailRepository(_context);
+            SessionSchoolClassRepository = new SessionSchoolClassRepository(_context);
         }
 
         public ICurriculumRepository Curriculums { get; private set; }
@@ -40,10 +41,9 @@ namespace Cs4rsaDatabaseService.Implements
 
         public IPreProDetailsRepository PreProDetails { get; private set; }
 
-        public IParProDetailsRepository ParProDetails
-        {
-            get; private set;
-        }
+        public IParProDetailsRepository ParProDetails { get; private set; }
+
+        public ISessionSchoolClassRepository SessionSchoolClassRepository { get; private set; }
 
         public int Complete()
         {
