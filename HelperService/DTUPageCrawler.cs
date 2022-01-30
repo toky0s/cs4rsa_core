@@ -16,7 +16,7 @@ namespace HelperService
         public static async Task<string> GetHtml(string sessionId, string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            CookieContainer cookieContainer = new CookieContainer();
+            CookieContainer cookieContainer = new();
             Cookie cookie = new Cookie("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
