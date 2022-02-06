@@ -57,6 +57,7 @@
                         FontSize="13"
                         Header="Sao chép mã"
                         Icon="{materialDesign:PackIcon Kind=ContentCopy}" />
+                    <Separator />
                     <MenuItem
                         Command="{Binding DeleteCommand}"
                         FontSize="13"

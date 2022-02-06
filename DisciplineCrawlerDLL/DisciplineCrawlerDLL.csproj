@@ -33,8 +33,4 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.37" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\HelperServiceDLL\HelperServiceDLL.csproj" />
-  </ItemGroup>
-
 </Project>

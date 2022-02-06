@@ -1,6 +1,7 @@
 ﻿using Cs4rsaDatabaseService.Models;
 using HelperService;
 using SubjectCrawlService1.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace cs4rsa_core.Models
         #region Services
         private readonly ColorGenerator _colorGenerator;
         #endregion
+
+        public SubjectModel() { }
 
         private SubjectModel(Subject subject, ColorGenerator colorGenerator)
         {
@@ -52,7 +55,7 @@ namespace cs4rsa_core.Models
         {
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
-                if (classGroupModel.Name.Equals(name, System.StringComparison.Ordinal))
+                if (classGroupModel.Name.Equals(name, StringComparison.Ordinal))
                 {
                     return classGroupModel;
                 }

@@ -130,6 +130,18 @@
                         Width="65"
                         Height="60"
                         HorizontalAlignment="Left">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Mở rộng Menu" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                        <Setter Property="ToolTip" Value="Thu nhỏ Menu" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"
@@ -140,6 +152,15 @@
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Trang chủ" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"
@@ -155,6 +176,15 @@
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Tài khoản DTU" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"
@@ -170,6 +200,15 @@
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Xếp lịch thủ công" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"
@@ -185,6 +224,15 @@
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Xếp lịch tự động" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"
@@ -200,6 +248,15 @@
                         </StackPanel>
                     </ListViewItem>
                     <ListViewItem Height="60">
+                        <ListViewItem.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                        <Setter Property="ToolTip" Value="Thông tin" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListViewItem.Style>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                                 Width="30"

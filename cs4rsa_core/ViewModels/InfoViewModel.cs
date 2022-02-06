@@ -16,6 +16,13 @@ namespace cs4rsa_core.ViewModels
     {
         public string Version { get; set; }
 
+        private bool _isChecking;
+        public bool IsChecking
+        {
+            get { return _isChecking; }
+            set { _isChecking = value; OnPropertyChanged(); }
+        }
+
         public AsyncRelayCommand CheckUpdateCommand { get; set; }
 
         private readonly ISetting _setting;
@@ -33,10 +40,12 @@ namespace cs4rsa_core.ViewModels
             CheckUpdateCommand = new(OnCheckUpdate);
 
             Version = _setting.Read("Version");
+            IsChecking = false;
         }
 
         private async Task OnCheckUpdate()
         {
+            IsChecking = true;
             string strLatestVersion = await _firebase.GetLatestVersion();
             Version localVersion = new(Version);
             if (strLatestVersion != null)
@@ -51,9 +60,10 @@ namespace cs4rsa_core.ViewModels
                 else if (result == 0)
                 {
                     string message = $"Đang là phiên bản mới nhất";
-                    _snackbarMessageQueue.Enqueue(message, "TẢI XUỐNG", OnGotoInstanceSource);
+                    _snackbarMessageQueue.Enqueue(message);
                 }
             }
+            IsChecking = false;
         }
 
         private void OnGotoInstanceSource()

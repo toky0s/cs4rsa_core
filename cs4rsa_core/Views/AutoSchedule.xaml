@@ -78,16 +78,41 @@
                 <TextBlock FontSize="13" Text="{Binding Student.StudentId}" />
                 <Separator Height="5" Background="Transparent" />
                 <Button
-                    Width="160"
+                    Width="200"
                     Height="30"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    Command="{Binding ChoiceAccountCommand}"
-                    Content="Chọn tài khoản..." />
+                    Command="{Binding ChoiceAccountCommand}">
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
+                            <Setter Property="Content" Value="Đang tải chương trình học" />
+                            <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
+                            <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
+                            <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="True" />
+                            <Setter Property="IsEnabled" Value="False" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFinding}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="True" />
+                                    <Setter Property="Content" Value="Đang tải chương trình học" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsFinding}" Value="False">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
+                                    <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="False" />
+                                    <Setter Property="Content" Value="Chọn tài khoản..." />
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
             <Grid Grid.Column="2" Margin="5,0,0,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -113,7 +138,7 @@
                             Height="8"
                             Margin="0,0,5,0"
                             Fill="#e74c3c" />
-                        <TextBlock Text="Chưa học" />
+                        <TextBlock VerticalAlignment="Center" Text="Chưa học" />
                     </StackPanel>
                     <StackPanel
                         Grid.Row="1"
@@ -125,7 +150,7 @@
                             Height="8"
                             Margin="0,0,5,0"
                             Fill="#27ae60" />
-                        <TextBlock Text="Đã học qua" />
+                        <TextBlock VerticalAlignment="Center" Text="Đã học qua" />
                     </StackPanel>
                     <StackPanel
                         Grid.Row="0"
@@ -136,7 +161,7 @@
                             Height="8"
                             Margin="0,0,5,0"
                             Fill="#f1c40f" />
-                        <TextBlock Text="Đã/đang học, chưa có điểm" />
+                        <TextBlock VerticalAlignment="Center" Text="Đã/đang học, chưa có điểm" />
                     </StackPanel>
                     <StackPanel
                         Grid.Row="1"
@@ -148,23 +173,9 @@
                             Margin="0,0,5,0"
                             Fill="White"
                             Stroke="#e74c3c" />
-                        <TextBlock Text="Không có trong học kỳ này" />
+                        <TextBlock VerticalAlignment="Center" Text="Không có trong học kỳ này" />
                     </StackPanel>
                 </Grid>
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    Orientation="Horizontal"
-                    Visibility="{Binding Visibility}">
-                    <ProgressBar
-                        Margin="0,0,5,0"
-                        VerticalAlignment="Center"
-                        IsIndeterminate="True"
-                        Style="{StaticResource MaterialDesignCircularProgressBar}"
-                        Value="0" />
-                    <TextBlock VerticalAlignment="Center" Text="Đang tải chương trình học của bạn" />
-                </StackPanel>
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">

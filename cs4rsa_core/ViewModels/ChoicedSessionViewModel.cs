@@ -5,11 +5,13 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
+using cs4rsa_core.Services;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -129,13 +131,36 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDelete()
         {
+            string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
+            ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             ClassGroupModels.Remove(_selectedClassGroupModel);
+            _snackbarMessageQueue.Enqueue<ClassGroupModel>(message, "HOÀN TÁC", OnRestore, actionData);
+
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             DeleteCommand.NotifyCanExecuteChanged();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
             MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(ClassGroupModels.ToList()));
+        }
+
+        private void OnRestore(ClassGroupModel obj)
+        {
+            if (obj != null)
+            {
+                int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(obj);
+                if (ClassGroupModelIndex != -1)
+                    ClassGroupModels[ClassGroupModelIndex] = obj;
+                else
+                    ClassGroupModels.Add(obj);
+            }
+
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
+
+            SaveCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
         }
 
         private bool CanSave()

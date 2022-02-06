@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Converters\ShortedTimeViewConverter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
     <None Remove="Images\donate.png" />
@@ -95,9 +99,6 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\ClassGroupSession.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Views\CombinationContainerWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Home.xaml">

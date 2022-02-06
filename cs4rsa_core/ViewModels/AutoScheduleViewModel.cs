@@ -35,11 +35,11 @@ namespace cs4rsa_core.ViewModels
     {
         #region Properties
 
-        private string _visibility = "Hidden";
-        public string Visibility
+        private bool _isFinding;
+        public bool IsFinding
         {
-            get { return _visibility; }
-            set { _visibility = value; OnPropertyChanged(); }
+            get { return _isFinding; }
+            set { _isFinding = value; OnPropertyChanged(); }
         }
 
         private bool _isCalculated;
@@ -564,12 +564,12 @@ namespace cs4rsa_core.ViewModels
 
         public async Task LoadProgramSubject()
         {
-            Visibility = "Visible";
+            IsFinding = true;
             ProgramFolderModels.Clear();
             ProgramDiagramCrawler programDiagramCrawler = new("", _student.SpecialString, _curriculumCrawler, _unitOfWork, _preParSubjectCrawler);
             programDiagramCrawler.AddProgramFolder = AddProgramFolder;
             await programDiagramCrawler.ToProgramDiagram();
-            Visibility = "Hidden";
+            IsFinding = false;
         }
 
         private async Task AddProgramFolder(ProgramFolder programFolder)

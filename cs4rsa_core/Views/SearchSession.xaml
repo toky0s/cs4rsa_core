@@ -163,15 +163,21 @@
             <ListBox.Resources>
                 <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
-                        Command="{Binding DeleteCommand}"
+                        Command="{Binding GotoCourseCommand}"
                         FontSize="13"
-                        Header="Xoá"
-                        Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
+                        Header="Chi tiết"
+                        Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
                         FontSize="13"
                         Header="Mở trong Course"
                         Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding DeleteCommand}"
+                        FontSize="13"
+                        Header="Xoá"
+                        Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>

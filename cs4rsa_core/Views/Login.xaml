@@ -30,7 +30,19 @@
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <StackPanel Grid.Row="0">
+            <TextBlock>
+                <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="TextBlock">
+                        <Setter Property="Text" Value="Danh sách các tài khoản" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Students.Count}" Value="0">
+                                <Setter Property="Text" Value="Chưa có tài khoản nào hết" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
             <ListBox ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                 <ListBox.Resources>
                     <ContextMenu x:Key="StudentContextMenu" Opened="ContextMenu_Opened">
@@ -94,7 +106,7 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
-        </Grid>
+        </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />

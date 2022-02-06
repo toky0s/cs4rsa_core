@@ -1,5 +1,6 @@
 ﻿using cs4rsa_core.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace cs4rsa_core.Views
 {
@@ -22,15 +23,17 @@ namespace cs4rsa_core.Views
 
         private void ListViewMenu_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            ListView listView = sender as ListView;
             int index = ListViewMenu.SelectedIndex;
             MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
-            if (index > 0)
+            if (index > 0 && mainWindowViewModel.SelectedIndex != listView.SelectedIndex - 1)
             {
                 mainWindowViewModel.SelectedIndex = index - 1;
                 MoveCursorMenu(index);
             }
-            else
+            else if (index == 0)
             {
+                listView.SelectedIndex = 1;
                 mainWindowViewModel.IsExpanded = !mainWindowViewModel.IsExpanded;
             }
         }

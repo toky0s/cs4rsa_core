@@ -41,6 +41,8 @@ namespace cs4rsa_core.Models
         /// </summary>
         public bool IsBelongSpecialSubject { get; }
 
+        public ClassGroupModel() { }
+
         public ClassGroupModel(ClassGroup classGroup, bool isBelongSpecialSubject, ColorGenerator colorGenerator)
         {
             ClassGroup = classGroup;
