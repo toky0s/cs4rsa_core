@@ -139,7 +139,6 @@ namespace cs4rsa_core.ViewModels
                         Teachers.Add(guestLecturer);
                     }
                 }
-
                 SelectedTeacher = Teachers[0];
             }
         }

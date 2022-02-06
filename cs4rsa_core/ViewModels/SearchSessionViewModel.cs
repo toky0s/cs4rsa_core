@@ -353,7 +353,7 @@ namespace cs4rsa_core.ViewModels
         private async Task OnAddSubjectAsync()
         {
             CanAddSubjectChange(false);
-            // Dialog here
+
             SubjectDownloadingUC subjectDownloadingUC = new();
             SubjectDownloadingViewModel vm = subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
             string subjectName = selectedKeyword.SubjectName;
@@ -361,7 +361,7 @@ namespace cs4rsa_core.ViewModels
             vm.SubjectName = subjectName;
             vm.SubjectCode = subjectCode;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(subjectDownloadingUC);
-            // Dialog here
+
             Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1);
             if (subject != null)
             {

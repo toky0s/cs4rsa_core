@@ -62,6 +62,7 @@ namespace SubjectCrawlService1.DataTypes
                 List<string> tempTeachers = GetTempTeachersOfSchoolClasses(schoolClassesWithName);
                 schoolClassesWithName[0].Teachers = teachers;
                 schoolClassesWithName[0].TempTeachers = tempTeachers;
+                schoolClassesWithName[0].SubjectName = SubjectName;
                 newSchoolClasses.Add(schoolClassesWithName[0]);
             }
             return newSchoolClasses;

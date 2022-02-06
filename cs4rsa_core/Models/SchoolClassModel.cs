@@ -1,19 +1,18 @@
-﻿using Cs4rsaDatabaseService.Models;
+﻿using cs4rsa_core.Models.Interfaces;
+using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using System.Collections.Generic;
-using SchoolClass = SubjectCrawlService1.DataTypes.SchoolClass;
 
 namespace cs4rsa_core.Models
 {
-    public class SchoolClassModel
+    public class SchoolClassModel : ICanShowOnScheduleTable
     {
-        private SchoolClass _schoolClass;
+        private readonly SchoolClass _schoolClass;
 
         public SchoolClass SchoolClass
         {
             get { return _schoolClass; }
-            set { _schoolClass = value; }
         }
 
         private string _subjectCode;
@@ -155,6 +154,28 @@ namespace cs4rsa_core.Models
             _registrationStatus = schoolClass.RegistrationStatus;
             _implementationStatus = schoolClass.ImplementationStatus;
             _dayPlaceMetaData = schoolClass.DayPlaceMetaData;
+            _subjectName = schoolClass.SubjectName;
+        }
+
+        public List<TimeBlock> GetBlocks()
+        {
+            List<TimeBlock> timeBlocks = new();
+            foreach (var item in Schedule.ScheduleTime)
+            {
+                foreach (var studyTime in item.Value)
+                {
+                    TimeBlock timeBlock = new()
+                    {
+                        Start = studyTime.Start,
+                        End = studyTime.End,
+                        Background = Color,
+                        DayOfWeek = item.Key,
+                        Desciption = $"{SchoolClassName} | {SubjectName}"
+                    };
+                    timeBlocks.Add(timeBlock);
+                }
+            }
+            return timeBlocks;
         }
     }
 }

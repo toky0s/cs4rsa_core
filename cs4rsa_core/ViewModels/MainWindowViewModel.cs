@@ -18,16 +18,24 @@ namespace cs4rsa_core.ViewModels
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
-        private int _SelectedIndex;
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set { _isExpanded = value; OnPropertyChanged(); }
+        }
+
+        private int _selectedIndex;
         public int SelectedIndex
         {
-            get => _SelectedIndex;
+            get => _selectedIndex;
             set
             {
-                _SelectedIndex = value;
+                _selectedIndex = value;
                 OnPropertyChanged();
             }
         }
+
         private bool _isOpen;
         public bool IsOpenDialog
         {
@@ -60,6 +68,8 @@ namespace cs4rsa_core.ViewModels
         {
             SnackbarMessageQueue = (SnackbarMessageQueue)snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
+
+            SelectedIndex = 0;
         }
 
         public void OpenDialog(IDialog uc)

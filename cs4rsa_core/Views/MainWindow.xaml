@@ -11,6 +11,7 @@
     Title="CS4RSA"
     Width="1500"
     Height="700"
+    MinHeight="600"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -33,7 +34,7 @@
         IsOpen="{Binding IsOpenDialog}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1">
@@ -57,10 +58,57 @@
                 </materialDesign:Snackbar>
             </Grid>
             <Grid
-                Width="200"
+                x:Name="Grid_Menu"
+                Width="65"
                 HorizontalAlignment="Left"
                 Background="#00cec9">
-                <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect SlideInFromLeft, Duration=0:0:0.2}">
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="BeginExpandMenuAnimation">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Width"
+                                                From="65"
+                                                To="200"
+                                                Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <PowerEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="BeginExpandMenuAnimation" />
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="EndExpandMenuAnimation">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Width"
+                                                From="200"
+                                                To="65"
+                                                Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <PowerEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="EndExpandMenuAnimation" />
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.3}">
                     <Grid
                         x:Name="GridCursor"
                         Width="10"
@@ -75,8 +123,22 @@
                     Margin="0,100"
                     FontSize="18"
                     Foreground="White"
-                    SelectedIndex="0"
-                    SelectionChanged="ListViewMenu_SelectionChanged">
+                    PreviewMouseLeftButtonUp="ListViewMenu_PreviewMouseLeftButtonUp"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListViewItem
+                        x:Name="ListViewItem_Menu"
+                        Width="65"
+                        Height="60"
+                        HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="30"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="Menu" />
+                        </StackPanel>
+                    </ListViewItem>
                     <ListViewItem Height="60">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon

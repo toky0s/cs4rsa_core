@@ -1,19 +1,15 @@
-﻿using cs4rsa_core.Models;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 
-
-/// <summary>
-/// Namespace này chứa các converter cho phần giao diện.
-/// </summary>
-namespace cs4rsa_core.Converters
+namespace cs4rsa_core.Converters.Controls
 {
-    public class ClassGroupModelConverter : IValueConverter
+    internal class ScheduleBlockWidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is TimeBlock classGroupModel ? classGroupModel.Text : null;
+            double douCanvasWidth = (double)value;
+            return douCanvasWidth - 2;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

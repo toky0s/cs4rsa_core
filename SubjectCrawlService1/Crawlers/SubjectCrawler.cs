@@ -50,13 +50,15 @@ namespace SubjectCrawlService1.Crawlers
                 string name = keyword.SubjectName;
 
                 string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
+                if (studyUnit == "\r\n")
+                {
+                    studyUnit = "0";
+                }
                 string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
                 string studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
                 string semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
-
                 string mustStudySubject = trTags[5].Elements("td").ToArray()[1].InnerText.Trim();
                 string parallelSubject = trTags[6].Elements("td").ToArray()[1].InnerText.Trim();
-
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;

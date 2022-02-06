@@ -1,31 +1,38 @@
 ﻿using cs4rsa_core.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace cs4rsa_core.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int index = ListViewMenu.SelectedIndex;
-            MoveCursorMenu(index);
-            MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
-            mainWindowViewModel.SelectedIndex = index;
+            MoveCursorMenu(1);
         }
 
         private void MoveCursorMenu(int index)
         {
-            TrainsitionigContentSlide.OnApplyTemplate();
-            GridCursor.Margin = new Thickness(0, 100 + (60 * index), 0, 0);
+            if (index != 0)
+            {
+                TrainsitionigContentSlide.OnApplyTemplate();
+                GridCursor.Margin = new Thickness(0, 100 + (60 * index), 0, 0);
+            }
+        }
+
+        private void ListViewMenu_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            int index = ListViewMenu.SelectedIndex;
+            MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
+            if (index > 0)
+            {
+                mainWindowViewModel.SelectedIndex = index - 1;
+                MoveCursorMenu(index);
+            }
+            else
+            {
+                mainWindowViewModel.IsExpanded = !mainWindowViewModel.IsExpanded;
+            }
         }
     }
 }

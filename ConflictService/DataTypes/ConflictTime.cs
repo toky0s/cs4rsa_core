@@ -10,7 +10,7 @@ namespace ConflictService.DataTypes
     /// </summary>
     public class ConflictTime
     {
-        private readonly Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new Dictionary<DayOfWeek, List<StudyTimeIntersect>>();
+        private readonly Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes;
         public Dictionary<DayOfWeek, List<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
 
         public ConflictTime(Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes)
@@ -25,7 +25,7 @@ namespace ConflictService.DataTypes
 
         public List<DayOfWeek> GetSchoolDays()
         {
-            List<DayOfWeek> dayOfWeeks = new List<DayOfWeek>();
+            List<DayOfWeek> dayOfWeeks = new();
             foreach (DayOfWeek dayOfWeek in conflictTimes.Keys)
             {
                 dayOfWeeks.Add(dayOfWeek);

@@ -14,14 +14,17 @@ namespace cs4rsa_core.Models
         public List<Teacher> Teachers => _subject.Teachers;
         public List<string> TempTeachers => _subject.TempTeachers;
         public List<ClassGroupModel> ClassGroupModels { get; set; }
-
         public string SubjectName => _subject.Name;
         public string SubjectCode => _subject.SubjectCode;
         public int StudyUnit { get; set; }
         public int CourseId => _subject.CourseId;
         public bool IsSpecialSubject { get; set; }
         public string Color { get; set; }
+
+        #region Services
         private readonly ColorGenerator _colorGenerator;
+        #endregion
+
         private SubjectModel(Subject subject, ColorGenerator colorGenerator)
         {
             _colorGenerator = colorGenerator;
@@ -45,12 +48,6 @@ namespace cs4rsa_core.Models
             return this;
         }
 
-        /// <summary>
-        /// Trả về ClassGroupModel theo tên được truyền vào, nếu không tồn tại ClassGroupModel
-        /// theo tên đã truyền vào trả về null.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public ClassGroupModel GetClassGroupModelWithName(string name)
         {
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)

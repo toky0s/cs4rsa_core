@@ -154,13 +154,24 @@ namespace SubjectCrawlService1.DataTypes
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
 
             #region Teacher Parser
+            // ACC 448 - Thực Tập Tốt Nghiệp, cái môn củ chuối này nó không có
+            // tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
+            // tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
+            // Ngày Mùng 5 Tết 2022
             string teacherName = GetTeacherName(trTagClassLop);
             Teacher teacher = await GetTeacherFromURL(urlToSubjectDetailPage);
 
             List<string> tempTeachers = new();
-            tempTeachers.Add(teacherName);
+            if (teacherName != "")
+            {
+                tempTeachers.Add(teacherName);
+            }
+
             List<Teacher> teachers = new();
-            teachers.Add(teacher);
+            if (teacher != null)
+            {
+                teachers.Add(teacher);
+            }
             #endregion
 
             string schoolClassName = aTag.InnerText.Trim();

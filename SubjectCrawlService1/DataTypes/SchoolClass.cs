@@ -1,11 +1,13 @@
 ﻿using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace SubjectCrawlService1.DataTypes
 {
     public class SchoolClass
     {
+        public string SubjectName { get; set; }
         public string ClassGroupName { get; set; }
         public string SchoolClassName { get; set; }
         public string RegisterCode { get; set; }

@@ -33,6 +33,12 @@ namespace cs4rsa_core.Models
         public ImplementType ImplementType => ClassGroup.GetImplementType();
         public RegistrationType RegistrationType => ClassGroup.GetRegistrationType();
         public string Color { get; }
+
+        /// <summary>
+        /// Quyết định xem ClassGroupModel có thuộc một Multi Register Code Subject (SpecialSubject)
+        /// hay không. Các vấn đề của môn CHE 101 hay BIO 101 dù đã được giải quyết nhưng tôi vẫn
+        /// để comment này ở đây giúp bạn lưu ý về vấn đề này tương lai bạn refactor lại nó.
+        /// </summary>
         public bool IsBelongSpecialSubject { get; }
 
         public ClassGroupModel(ClassGroup classGroup, bool isBelongSpecialSubject, ColorGenerator colorGenerator)
