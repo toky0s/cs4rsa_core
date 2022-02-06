@@ -13,6 +13,7 @@
                     PrimaryColor="LightBlue"
                     SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
                 <ResourceDictionary Source="./Resources/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#00cec9" />

@@ -98,7 +98,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnOpenUpdateWindow()
         {
-            UpdateUC updateUC = new UpdateUC();
+            UpdateUC updateUC = new();
             (updateUC.DataContext as UpdateViewModel).CloseDialogCallback = (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(updateUC);
         }
