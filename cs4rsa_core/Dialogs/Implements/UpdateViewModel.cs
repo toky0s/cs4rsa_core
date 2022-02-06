@@ -2,6 +2,7 @@
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
+using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using DisciplineCrawlerService.Crawlers;
@@ -10,6 +11,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
+using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -67,6 +69,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private void OnStartUpdate()
         {
             CloseDialogCommand.NotifyCanExecuteChanged();
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = false;
             _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
 
             BackgroundWorker backgroundWorker = new BackgroundWorker()
@@ -82,6 +85,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ProgressValue = 1000;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = true;
             int result = (int)e.Result;
 
             _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
