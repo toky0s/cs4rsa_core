@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-
-namespace cs4rsa_core.BaseClasses
+﻿namespace cs4rsa_core.BaseClasses
 {
+    /// <summary>
+    /// Mọi Dialog trong Cs4rsa phải implement
+    /// interface này nhằm xác định xem Dialog
+    /// đó có thể Close khi Click ra bên ngoài
+    /// hay khum :D.
+    /// </summary>
     public interface IDialog
     {
         public bool IsCloseOnClickAway();
