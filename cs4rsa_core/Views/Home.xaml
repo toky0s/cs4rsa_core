@@ -193,6 +193,25 @@
                     </Grid>
                 </Grid>
             </materialDesign:Card>
+            <materialDesign:PopupBox
+                Grid.Column="1"
+                Margin="0,0,40,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                PlacementMode="TopAndAlignCentres"
+                Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                ToolTip="Donate nào mấy bạn"
+                ToolTipService.Placement="Left">
+                <StackPanel>
+                    <Button
+                        Content="1"
+                        Opacity="0.5"
+                        ToolTip="One with custom opacity" />
+                    <Button Content="2" ToolTip="Two" />
+                    <Button Content="3" ToolTip="Three" />
+                </StackPanel>
+            </materialDesign:PopupBox>
         </Grid>
     </Grid>
+
 </UserControl>
