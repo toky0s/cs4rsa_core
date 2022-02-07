@@ -86,7 +86,6 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Giải quyết xung đột
         /// </summary>
-        /// <param name="obj"></param>
         private void OnSolve()
         {
             SolveConflictUC solveConflictUC = new();
@@ -121,12 +120,27 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDeleteAll()
         {
+            List<ClassGroupModel> actionData = new();
+            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            {
+                actionData.Add(classGroupModel.DeepClone());
+            }
+
             ClassGroupModels.Clear();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            _snackbarMessageQueue.Enqueue<List<ClassGroupModel>>("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
+        }
+
+        private void OnRestore(List<ClassGroupModel> obj)
+        {
+            foreach (ClassGroupModel classGroupModel in obj)
+            {
+                AddClassGroupModelAndReload(classGroupModel);
+            }
         }
 
         private void OnDelete()
@@ -146,21 +160,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnRestore(ClassGroupModel obj)
         {
-            if (obj != null)
-            {
-                int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(obj);
-                if (ClassGroupModelIndex != -1)
-                    ClassGroupModels[ClassGroupModelIndex] = obj;
-                else
-                    ClassGroupModels.Add(obj);
-            }
-
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
-
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            AddClassGroupModelAndReload(obj);
         }
 
         private bool CanSave()
@@ -191,24 +191,7 @@ namespace cs4rsa_core.ViewModels
         public void Handle(ClassGroupAddedMessage message)
         {
             ClassGroupModel classGroupModel = message.Source;
-
-            if (classGroupModel != null)
-            {
-                // Nếu có sẵn một ClassGroupModel cùng SubjectModel với ClassGroupModel
-                // được truyền vào => thay thế chúng.
-                int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
-                if (ClassGroupModelIndex != -1)
-                    ClassGroupModels[ClassGroupModelIndex] = classGroupModel;
-                else
-                    ClassGroupModels.Add(classGroupModel);
-            }
-
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
-
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
-            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            AddClassGroupModelAndReload(classGroupModel);
         }
 
         /// <summary>
@@ -297,6 +280,25 @@ namespace cs4rsa_core.ViewModels
                 }
             }
             MessageBus.Default.Publish(new PlaceConflictCollectionChangeMessage(PlaceConflictFinderModels.ToList()));
+        }
+
+        private void AddClassGroupModelAndReload(ClassGroupModel classGroupModel)
+        {
+            if (classGroupModel != null)
+            {
+                int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
+                if (ClassGroupModelIndex != -1)
+                    ClassGroupModels[ClassGroupModelIndex] = classGroupModel;
+                else
+                    ClassGroupModels.Add(classGroupModel);
+            }
+
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
+
+            SaveCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
+            MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
         }
 
         public void Handle(RemoveAChoiceClassGroupMessage message)

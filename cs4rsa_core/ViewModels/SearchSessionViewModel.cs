@@ -137,7 +137,7 @@ namespace cs4rsa_core.ViewModels
 
         #endregion
 
-        #region Dependencies
+        #region Services
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
@@ -251,22 +251,29 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        public void OnSelectItemInRecommendBox()
-        {
-            SearchText = _selectedFullMatchSearchingKeyword.ToString();
-        }
-
         private void OnDeleteAll()
         {
+            List<SubjectModel> actionData = new();
             for (int i = SubjectModels.Count - 1; i >= 0; --i)
             {
                 MessageBus.Default.Publish(new DeleteSubjectMessage(SubjectModels[i]));
+                SubjectModel restoreSubject = SubjectModels[i].DeepClone();
+                actionData.Add(restoreSubject);
                 SubjectModels.RemoveAt(i);
             }
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
+            _snackbarMessageQueue.Enqueue<List<SubjectModel>>("Đã xoá hết", "HOÀN TÁC", OnRestore, actionData);
+        }
+
+        private void OnRestore(List<SubjectModel> obj)
+        {
+            foreach (SubjectModel subjectModel in obj)
+            {
+                AddSubjectAndReload(subjectModel);
+            }
         }
 
         private void OnGotoCourse()
@@ -276,7 +283,6 @@ namespace cs4rsa_core.ViewModels
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             _openInBrowser.Open(url);
         }
-
 
         /// <summary>
         /// Load lại data môn học từ cơ sở dữ liệu lên
@@ -343,11 +349,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnRestoreSubjectModel(SubjectModel obj)
         {
-            SubjectModels.Add(obj);
-            TotalSubject = SubjectModels.Count;
-            CanAddSubjectChange();
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
+            AddSubjectAndReload(obj);
         }
 
         /// <summary>
@@ -380,11 +382,7 @@ namespace cs4rsa_core.ViewModels
             {
                 await subject.GetClassGroups();
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
-                SubjectModels.Add(subjectModel);
-                TotalSubject = SubjectModels.Count;
-                CanAddSubjectChange();
-                UpdateCreditTotal();
-                UpdateSubjectAmount();
+                AddSubjectAndReload(subjectModel);
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
                 SelectedSubjectModel = SubjectModels.Last();
             }
@@ -448,6 +446,20 @@ namespace cs4rsa_core.ViewModels
             {
                 SubjectModels.Add(subject);
             }
+            TotalSubject = SubjectModels.Count;
+            CanAddSubjectChange();
+            UpdateCreditTotal();
+            UpdateSubjectAmount();
+        }
+
+        /// <summary>
+        /// Thêm một SubjectModel vào danh sách.
+        /// Load lại các thông tin cần thiết.
+        /// </summary>
+        /// <param name="subjectModel"></param>
+        private void AddSubjectAndReload(SubjectModel subjectModel)
+        {
+            SubjectModels.Add(subjectModel);
             TotalSubject = SubjectModels.Count;
             CanAddSubjectChange();
             UpdateCreditTotal();

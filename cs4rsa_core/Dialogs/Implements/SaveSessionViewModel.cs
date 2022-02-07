@@ -46,7 +46,7 @@ namespace cs4rsa_core.Dialogs.Implements
                 List<SessionSchoolClass> sessionSchoolClasses = new();
                 foreach (SchoolClassModel ssc in classGroupModel.GetSchoolClassModels())
                 {
-                    SessionSchoolClass sessionSchoolClass = new SessionSchoolClass()
+                    SessionSchoolClass sessionSchoolClass = new()
                     {
                         Name = ssc.SchoolClassName,
                         Type = ssc.Type
@@ -75,7 +75,6 @@ namespace cs4rsa_core.Dialogs.Implements
 
             _unitOfWork.Sessions.Add(session);
             _unitOfWork.Complete();
-            Name = "";
             SaveResult result = new() { Name = Name };
             CloseDialogCallback.Invoke(result);
         }

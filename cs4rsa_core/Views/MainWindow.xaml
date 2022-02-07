@@ -27,6 +27,12 @@
         <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
+        <Style
+            x:Key="Style_Cs4rsa_SnackbarActionButton"
+            BasedOn="{StaticResource MaterialDesignSnackbarActionButton}"
+            TargetType="Button">
+            <Setter Property="Foreground" Value="{DynamicResource Cs4rsa_MainThemeLightColor}" />
+        </Style>
     </Window.Resources>
     <materialDesign:DialogHost
         CloseOnClickAway="{Binding IsCloseOnClickAway}"
@@ -53,7 +59,10 @@
                         <local:Info />
                     </materialDesign:TransitionerSlide>
                 </materialDesign:Transitioner>
-                <materialDesign:Snackbar HorizontalAlignment="Center" MessageQueue="{Binding SnackbarMessageQueue}">
+                <materialDesign:Snackbar
+                    HorizontalAlignment="Center"
+                    ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
+                    MessageQueue="{Binding SnackbarMessageQueue}">
                     <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
                 </materialDesign:Snackbar>
             </Grid>
@@ -61,7 +70,7 @@
                 x:Name="Grid_Menu"
                 Width="65"
                 HorizontalAlignment="Left"
-                Background="#00cec9">
+                Background="{StaticResource Cs4rsa_MainThemeColor}">
                 <Grid.Style>
                     <Style>
                         <Style.Triggers>
@@ -116,7 +125,7 @@
                         Margin="0,100,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Background="#81ecec" />
+                        Background="{StaticResource Cs4rsa_MainThemeLightColor}" />
                 </materialDesign:TransitioningContent>
                 <ListView
                     x:Name="ListViewMenu"

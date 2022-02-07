@@ -13,7 +13,7 @@ namespace HelperService
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
-                Ping ping = new Ping();
+                Ping ping = new();
                 IPStatus status = ping.Send(new IPAddress(new byte[] { 8, 8, 8, 8 }), 2000).Status;
                 if (status == IPStatus.Success)
                 {

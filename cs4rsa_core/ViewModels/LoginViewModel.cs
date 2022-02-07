@@ -4,11 +4,13 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using Cs4rsaDatabaseService.Interfaces;
+using cs4rsa_core.Services;
 using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -20,6 +22,7 @@ namespace cs4rsa_core.ViewModels
     {
         public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }
+        
         private string _sessionId;
         public string SessionId
         {
@@ -59,11 +62,26 @@ namespace cs4rsa_core.ViewModels
         private async Task OnDelete()
         {
             string name = SelectedStudent.Name;
+            string message = $"Bạn vừa xoá {name}";
+            Student actionData = SelectedStudent.DeepClone();
+
             _unitOfWork.Students.Remove(SelectedStudent);
             await _unitOfWork.CompleteAsync();
             await LoadStudentInfos();
-            string message = $"Bạn vừa xoá {name}";
-            _snackbarMessageQueue.Enqueue(message);
+
+            _snackbarMessageQueue.Enqueue<Student>(message, "HOÀN TÁC", OnRestore, actionData);
+        }
+
+        private void OnRestore(Student obj)
+        {
+            _unitOfWork.Students.Add(obj);
+            _unitOfWork.Complete();
+            Students.Clear();
+            IEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            foreach (Student student in students)
+            {
+                Students.Add(student);
+            }
         }
 
         private async Task OnFind()

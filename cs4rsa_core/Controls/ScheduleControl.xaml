@@ -24,11 +24,7 @@
             <Setter Property="FontSize" Value="10" />
         </Style>
         <Style x:Key="Style_Line_Timeline" TargetType="Line">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Stroke" Value="Aqua" />
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="Stroke" Value="#dfe6e9" />
         </Style>
         <Style x:Key="Style_cnvDaySchedule" TargetType="Canvas">
             <Style.Triggers>
@@ -116,7 +112,6 @@
                 Y1="0"
                 Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight}" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -129,7 +124,6 @@
                 FontSize="10"
                 Text="07:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -142,7 +136,6 @@
                 FontSize="10"
                 Text="09:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -155,7 +148,6 @@
                 FontSize="10"
                 Text="09:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -168,7 +160,6 @@
                 FontSize="10"
                 Text="10:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -181,7 +172,6 @@
                 FontSize="10"
                 Text="11:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -194,7 +184,6 @@
                 FontSize="10"
                 Text="12:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -207,7 +196,6 @@
                 FontSize="10"
                 Text="13:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -220,7 +208,6 @@
                 FontSize="10"
                 Text="14:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -233,7 +220,6 @@
                 FontSize="10"
                 Text="15:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -246,7 +232,6 @@
                 FontSize="10"
                 Text="15:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -259,7 +244,6 @@
                 FontSize="10"
                 Text="16:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -272,7 +256,6 @@
                 FontSize="10"
                 Text="17:15" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -285,7 +268,6 @@
                 FontSize="10"
                 Text="17:45" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -298,7 +280,6 @@
                 FontSize="10"
                 Text="18:45" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"
@@ -311,7 +292,6 @@
                 FontSize="10"
                 Text="21:00" />
             <Line
-                Stroke="#dfe6e9"
                 StrokeThickness="1"
                 Style="{StaticResource Style_Line_Timeline}"
                 X1="0"

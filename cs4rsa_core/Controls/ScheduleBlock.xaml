@@ -17,6 +17,7 @@
         Padding="5"
         Background="{Binding BlockColor}"
         CornerRadius="5"
+        Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">
         <StackPanel>
             <TextBlock

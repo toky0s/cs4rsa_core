@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HelperService;
 
 namespace SubjectCrawlService1.DataTypes
 {
@@ -9,7 +10,6 @@ namespace SubjectCrawlService1.DataTypes
     {
         private Dictionary<DayOfWeek, List<StudyTime>> _scheduleTime;
         public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime => _scheduleTime;
-
 
         public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
         {
@@ -43,9 +43,9 @@ namespace SubjectCrawlService1.DataTypes
             return total;
         }
 
-        public List<Enums.Session> GetSessions()
+        public List<Session> GetSessions()
         {
-            List<Enums.Session> sessions = new List<Enums.Session>();
+            List<Session> sessions = new();
             foreach (List<StudyTime> studyTimes in _scheduleTime.Values)
             {
                 sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
@@ -80,6 +80,23 @@ namespace SubjectCrawlService1.DataTypes
             List<StudyTime> studyTimes = _scheduleTime[dayOfWeek]
                                          .Where(item => item.GetSession() == session).ToList();
             return studyTimes.Count == 0 ? LearnState.Free : LearnState.Learn;
+        }
+
+        public override string ToString()
+        {
+            List<string> results = new();
+            foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in _scheduleTime)
+            {
+                string thu = item.Key.ToCs4rsaThu();
+                string timesRange = "";
+                foreach (StudyTime studyTime in item.Value)
+                {
+                    timesRange += $"\nTừ {studyTime.StartAsString} đến {studyTime.EndAsString}";
+                }
+                string result = $"{thu}{timesRange}";
+                results.Add(result);
+            }
+            return string.Join('\n', results.ToArray());
         }
     }
 
@@ -116,7 +133,7 @@ namespace SubjectCrawlService1.DataTypes
                         DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
                 }
             }
-            Schedule schedule = new Schedule(DayOfWeekStudyTimePairs);
+            Schedule schedule = new(DayOfWeekStudyTimePairs);
             return schedule;
         }
     }

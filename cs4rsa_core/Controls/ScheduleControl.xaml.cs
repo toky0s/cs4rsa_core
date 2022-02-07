@@ -147,7 +147,7 @@ namespace cs4rsa_core.Controls
                     string description = conflictModel.GetConflictInfo();
                     int startIndex = GetTimeIndex(studyTimeIntersect.Start);
                     int endIndex = GetTimeIndex(studyTimeIntersect.End);
-                    ScheduleBlock scheduleBlock = GetScheduleBlock(CONFLICT_BLOCK_COLOR, startIndex, endIndex, description, item.Key);
+                    ScheduleBlock scheduleBlock = GetScheduleBlock(CONFLICT_BLOCK_COLOR, startIndex, endIndex, description);
                     scheduleBlock.DayOfWeek = item.Key;
                     scheduleBlocks.Add(scheduleBlock);
                 }
@@ -162,10 +162,10 @@ namespace cs4rsa_core.Controls
             {
                 foreach (StudyTime studyTime in item.Value)
                 {
-                    string description = schoolClassModel.SchoolClassName + " " + schoolClassModel.SubjectName;
+                    string description = schoolClassModel.SchoolClassName + " | " + schoolClassModel.SubjectName + "\n" + schoolClassModel.Schedule.ToString();
                     int startIndex = GetTimeIndex(studyTime.Start);
                     int endIndex = GetTimeIndex(studyTime.End);
-                    ScheduleBlock scheduleBlock = GetScheduleBlock(schoolClassModel.Color, startIndex, endIndex, description, item.Key);
+                    ScheduleBlock scheduleBlock = GetScheduleBlock(schoolClassModel.Color, startIndex, endIndex, description);
                     scheduleBlock.DayOfWeek = item.Key;
                     scheduleBlocks.Add(scheduleBlock);
                 }
@@ -200,7 +200,7 @@ namespace cs4rsa_core.Controls
 
         private ScheduleBlock GetScheduleBlock(
             string blockColor, int startIndex, int endIndex,
-            string description, DayOfWeek dayOfWeek)
+            string description)
         {
             ScheduleBlock scheduleBlock = new();
             scheduleBlock.BlockColor = blockColor;
@@ -258,7 +258,64 @@ namespace cs4rsa_core.Controls
             scheduleBlock.SetBinding(Canvas.HeightProperty, heightMultiBinding);
             scheduleBlock.SetBinding(Canvas.TopProperty, canvasTopMultiBinding);
 
+            #region Events
+            scheduleBlock.MouseEnter += ScheduleBlock_MouseEnter;
+            scheduleBlock.MouseLeave += ScheduleBlock_MouseLeave;
+            #endregion
+
             return scheduleBlock;
+        }
+
+        private void ScheduleBlock_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // Set mấy line vừa tô về màu cũ khi hover out
+
+            // Hai line dư lúc vẽ bảng
+            int UNEXPECTED_LINE_QTY = 2;
+
+            ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
+
+            List<Line> lines = Canvas_Timelines.Children.OfType<Line>().ToList();
+            Line startLine = lines[scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY];
+            Line endLine = lines[scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY];
+
+            var converter = new BrushConverter();
+            var brush = (Brush)converter.ConvertFromString("#dfe6e9");
+            startLine.Stroke = brush;
+            endLine.Stroke = brush;
+
+            List<TextBlock> textBlocks = Canvas_Timelines.Children.OfType<TextBlock>().ToList();
+
+            TextBlock startTextBlock = textBlocks[scheduleBlock.StartIndex];
+            TextBlock endTextBlock = textBlocks[scheduleBlock.EndIndex];
+
+            startTextBlock.FontWeight = FontWeights.Regular;
+            endTextBlock.FontWeight = FontWeights.Regular;
+        }
+
+        private void ScheduleBlock_MouseEnter(object sender, MouseEventArgs e)
+        {
+            // Hai line dư lúc vẽ bảng
+            int UNEXPECTED_LINE_QTY = 2;
+
+            ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
+
+            List<Line> lines = Canvas_Timelines.Children.OfType<Line>().ToList();
+            List<TextBlock> textBlocks = Canvas_Timelines.Children.OfType<TextBlock>().ToList();
+
+            Line startLine = lines[scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY];
+            Line endLine = lines[scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY];
+
+            TextBlock startTextBlock = textBlocks[scheduleBlock.StartIndex];
+            TextBlock endTextBlock = textBlocks[scheduleBlock.EndIndex];
+
+            var converter = new BrushConverter();
+            var brush = (Brush)converter.ConvertFromString("#a5abad");
+            startLine.Stroke = brush;
+            endLine.Stroke = brush;
+
+            startTextBlock.FontWeight = FontWeights.Bold;
+            endTextBlock.FontWeight= FontWeights.Bold;
         }
 
         private void CleanCanvas(Canvas canvas)
