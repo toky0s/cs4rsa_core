@@ -163,7 +163,7 @@
             <ListBox.Resources>
                 <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
-                        Command="{Binding GotoCourseCommand}"
+                        Command="{Binding DetailCommand}"
                         FontSize="13"
                         Header="Chi tiết"
                         Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />

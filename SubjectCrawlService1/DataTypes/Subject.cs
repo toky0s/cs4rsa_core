@@ -32,8 +32,11 @@ namespace SubjectCrawlService1.DataTypes
         public string Name { get; }
         public string SubjectCode { get; }
         public int StudyUnit => int.Parse(_studyUnit);
-        public string[] MustStudySubject { get; }
-        public string[] ParallelSubject { get; }
+        public string StudyUnitType => _studyUnitType;
+        public string StudyType => _studyType;
+        public string Semester => _semester;
+        public List<string> MustStudySubject { get; }
+        public List<string> ParallelSubject { get; }
         public string Desciption { get; }
         public string RawSoup { get; }
         public int CourseId { get; }
@@ -312,20 +315,20 @@ namespace SubjectCrawlService1.DataTypes
         /// Tách mã môn từ một chuỗi, nếu không phát hiện nó trả về null.
         /// </summary>
         /// <returns>Mã môn (ví dụ CS 414)</returns>
-        private static string[] SubjectSpliter(string text)
+        private static List<string> SubjectSpliter(string text)
         {
             if (text.Equals("(Không có Môn học Tiên quyết)") ||
                 text.Equals("(Không có Môn học Song hành)", StringComparison.Ordinal))
             {
-                return null;
+                return new List<string>();
             }
 
-            Regex regex = new Regex(@"(?<=\()(.*?)(?=\))");
+            Regex regex = new(@"(?<=\()(.*?)(?=\))");
             MatchCollection matchSubject = regex.Matches(text);
-            string[] subjects = new string[matchSubject.Count];
+            List<string> subjects = new();
             for (int i = 0; i < matchSubject.Count; ++i)
             {
-                subjects[i] = matchSubject[i].Value;
+                subjects.Add(matchSubject[i].Value);
             }
 
             return subjects;

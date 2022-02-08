@@ -52,6 +52,7 @@
                     x:Name="txtName"
                     Grid.Column="1"
                     materialDesign:HintAssist.Hint="Tên phiên của bạn"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                     Text="{Binding Name, Mode=TwoWay}" />
             </Grid>

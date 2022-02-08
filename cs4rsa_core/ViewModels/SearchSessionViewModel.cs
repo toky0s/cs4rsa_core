@@ -53,6 +53,7 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand DeleteAllCommand { get; set; }
         public AsyncRelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
+        public RelayCommand DetailCommand { get; set; }
         #endregion
 
         #region Properties
@@ -172,6 +173,14 @@ namespace cs4rsa_core.ViewModels
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
+            DetailCommand = new RelayCommand(OnDetail);
+        }
+
+        private readonly ShowDetailsSubjectUC showDetailsSubjectUC = new();
+        private void OnDetail()
+        {
+            (showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(showDetailsSubjectUC);
         }
 
         public async Task LoadDiscipline()

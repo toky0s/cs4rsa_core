@@ -19,6 +19,13 @@ namespace cs4rsa_core.Models
         public string SubjectCode => _subject.SubjectCode;
         public int StudyUnit { get; set; }
         public int CourseId => _subject.CourseId;
+        public string StudyUnitType => _subject.StudyUnitType;
+        public string StudyType => _subject.StudyType;
+        public string Semester => _subject.Semester;
+        public string Desciption => _subject.Desciption;
+        public string PrerequisiteSubjectAsString => GetMustStudySubjectsAsString();
+        public string ParallelSubjectAsString => GetParallelSubjectsAsString();
+
         public bool IsSpecialSubject { get; set; }
         public string Color { get; set; }
 
@@ -61,6 +68,24 @@ namespace cs4rsa_core.Models
                 }
             }
             return null;
+        }
+
+        public string GetMustStudySubjectsAsString()
+        {
+            if (_subject.MustStudySubject.Count == 0)
+            {
+                return "Không có môn tiên quyết";
+            }
+            return string.Join(", ", _subject.MustStudySubject);
+        }
+
+        public string GetParallelSubjectsAsString()
+        {
+            if (_subject.ParallelSubject.Count == 0)
+            {
+                return "Không có môn song hành";
+            }
+            return string.Join(", ", _subject.ParallelSubject);
         }
     }
 }
