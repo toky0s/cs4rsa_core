@@ -10,7 +10,7 @@ namespace cs4rsa_core.Dialogs.DialogViews
         }
         public bool IsCloseOnClickAway()
         {
-            return true;
+            return false;
         }
     }
 }

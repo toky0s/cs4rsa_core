@@ -120,6 +120,7 @@
                 <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
                         Command="{Binding SolveConflictCommand}"
+                        FontSize="13"
                         Header="Giải quyết xung đột"
                         Icon="{materialDesign:PackIcon Kind=ClockTimeEightOutline}" />
                 </ContextMenu>

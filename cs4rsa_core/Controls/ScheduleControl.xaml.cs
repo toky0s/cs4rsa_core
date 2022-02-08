@@ -291,6 +291,25 @@ namespace cs4rsa_core.Controls
 
             startTextBlock.FontWeight = FontWeights.Regular;
             endTextBlock.FontWeight = FontWeights.Regular;
+            startTextBlock.FontSize = 10;
+            endTextBlock.FontSize = 10;
+
+            // Khôi phục line về stroke ban đầu
+            for (int i = 2; i < lines.Count; i++)
+            {
+                if (i != scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY || i != scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY)
+                {
+                    lines[i].Stroke = (Brush)converter.ConvertFromString("#f1f2f6");
+                }
+            }
+            // tương tự với textblock
+            for (int i = 0; i < textBlocks.Count; i++)
+            {
+                if (i != scheduleBlock.StartIndex || i != scheduleBlock.EndIndex)
+                {
+                    textBlocks[i].Foreground = (Brush)converter.ConvertFromString("Black");
+                }
+            }
         }
 
         private void ScheduleBlock_MouseEnter(object sender, MouseEventArgs e)
@@ -301,21 +320,39 @@ namespace cs4rsa_core.Controls
             ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
 
             List<Line> lines = Canvas_Timelines.Children.OfType<Line>().ToList();
-            List<TextBlock> textBlocks = Canvas_Timelines.Children.OfType<TextBlock>().ToList();
-
             Line startLine = lines[scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY];
             Line endLine = lines[scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY];
 
-            TextBlock startTextBlock = textBlocks[scheduleBlock.StartIndex];
-            TextBlock endTextBlock = textBlocks[scheduleBlock.EndIndex];
 
             var converter = new BrushConverter();
+            // Hạ tone màu của các line còn lại để làm nổi bật
+            // line của block đang hover
+            for (int i = 2; i < lines.Count; i++)
+            {
+                if (i != scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY || i != scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY)
+                {
+                    lines[i].Stroke = (Brush)converter.ConvertFromString("#f7f8fc");
+                }
+            }
+
             var brush = (Brush)converter.ConvertFromString("#a5abad");
             startLine.Stroke = brush;
             endLine.Stroke = brush;
 
-            startTextBlock.FontWeight = FontWeights.Bold;
-            endTextBlock.FontWeight= FontWeights.Bold;
+            List<TextBlock> textBlocks = Canvas_Timelines.Children.OfType<TextBlock>().ToList();
+
+            // Tương tự line, các textblock cũng sẽ được hạ tone màu.
+            for (int i = 0; i < textBlocks.Count; i++)
+            {
+                if (i != scheduleBlock.StartIndex || i != scheduleBlock.EndIndex)
+                {
+                    textBlocks[i].Foreground = (Brush)converter.ConvertFromString("#b7bec7");
+                }
+            }
+            TextBlock startTextBlock = textBlocks[scheduleBlock.StartIndex];
+            TextBlock endTextBlock = textBlocks[scheduleBlock.EndIndex];
+            startTextBlock.Foreground = (Brush)converter.ConvertFromString("Black");
+            endTextBlock.Foreground = (Brush)converter.ConvertFromString("Black");
         }
 
         private void CleanCanvas(Canvas canvas)
