@@ -19,7 +19,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="888" Padding="10">
+    <materialDesign:Card Width="999" Padding="10">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="0,0,0,10">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />

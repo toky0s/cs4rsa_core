@@ -215,7 +215,7 @@ namespace SubjectCrawlService1.DataTypes
 
             #region MetaData
             // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
-            List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays();
+            List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays().ToList();
             int metaCount = dayOfWeeks.Count;
             List<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).ToList();
             List<Room> roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();

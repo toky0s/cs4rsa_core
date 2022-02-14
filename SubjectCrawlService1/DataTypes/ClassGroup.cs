@@ -238,14 +238,14 @@ namespace SubjectCrawlService1.DataTypes
             return sessions;
         }
 
-        public List<Place> GetPlaces()
+        public IEnumerable<Place> GetPlaces()
         {
             List<Place> places = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 places.AddRange(schoolClass.Places);
             }
-            return places.Distinct().ToList();
+            return places.Distinct();
         }
 
         public bool IsHaveThisTeacher(Teacher teacher)

@@ -46,12 +46,6 @@ namespace cs4rsa_core.Dialogs.Implements
             _classGroup2Name = conflictModel.SecondSchoolClass.ClassGroupName;
             RemoveClassGroup1Command = new RelayCommand(OnRemoveClassGroup1);
             RemoveClassGroup2Command = new RelayCommand(OnRemoveClassGroup2);
-            CloseDialogCommand = new RelayCommand(OnCloseDialog);
-        }
-
-        private void OnCloseDialog()
-        {
-            CloseDialogCallback.Invoke(null);
         }
 
         private void OnRemoveClassGroup2()

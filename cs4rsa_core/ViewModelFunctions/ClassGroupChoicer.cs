@@ -21,7 +21,6 @@ namespace cs4rsa_core.ViewModelFunctions
             }
         }
 
-
         /// <summary>
         /// Phương thức Start này sẽ import các class group có trong subject info data,
         /// bằng cách kiểm tra và tìm kiếm class group trong các subject model được truyền vào.

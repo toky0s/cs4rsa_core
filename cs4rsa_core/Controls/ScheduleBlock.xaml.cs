@@ -13,17 +13,32 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LightMessageBus.Interfaces;
+using LightMessageBus;
+using cs4rsa_core.Messages;
+using cs4rsa_core.Controls.Enums;
 
 namespace cs4rsa_core.Controls
 {
     public partial class ScheduleBlock : UserControl
     {
         public DayOfWeek DayOfWeek { get; set; }
-        public TimeBlock TimeBlock { get; set; }
+        public SchoolClassModel SchoolClassModel { get; set; }
         public ScheduleBlock()
         {
             InitializeComponent();
         }
+
+        public BlockType BlockType
+        {
+            get { return (BlockType)GetValue(BlockTypeProperty); }
+            set { SetValue(BlockTypeProperty, value); }
+        }
+
+        public static readonly DependencyProperty BlockTypeProperty =
+            DependencyProperty.Register("BlockType", typeof(BlockType), typeof(ScheduleBlock), new PropertyMetadata());
+
+
 
         #region propdp BlockColor
         public string BlockColor
@@ -100,5 +115,38 @@ namespace cs4rsa_core.Controls
                 new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
                 );
         #endregion
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            menu.DataContext = DataContext;
+        }
+
+        private void Command_Remove_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Remove executed");
+        }
+
+        private void Command_Details_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Details executed");
+        }
+
+        private void UC_ScheduleBlock_Loaded(object sender, RoutedEventArgs e)
+        {
+            UC_ScheduleBlock.DataContext = this;
+        }
+
+        private void MenuItem_Details_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Details");
+        }
+
+        private void MenuItem_Remove_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Removw");
+            //var message = new RemoveAChoiceClassGroupMessage(SchoolClassModel.);
+            //MessageBus.Default.Publish<RemoveAChoiceClassGroupMessage>()
+        }
     }
 }

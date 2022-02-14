@@ -56,28 +56,26 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Rectangle
-                Grid.Column="0"
-                Width="80"
-                Height="80"
-                Margin="0,0,5,0"
-                HorizontalAlignment="Left">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding Student.AvatarImage, Converter={StaticResource Base64ImageConverter}}" Stretch="UniformToFill" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <StackPanel
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                Orientation="Vertical">
+
+            <Grid Grid.Column="1" HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <TextBlock
+                    Grid.Row="0"
                     VerticalAlignment="Top"
                     FontSize="20"
                     FontWeight="Bold"
                     Text="{Binding Student.Name}" />
-                <TextBlock FontSize="13" Text="{Binding Student.StudentId}" />
-                <Separator Height="5" Background="Transparent" />
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="0,0,0,5"
+                    FontSize="13"
+                    Text="{Binding Student.StudentId}" />
                 <Button
+                    Grid.Row="2"
                     Width="200"
                     Height="30"
                     HorizontalAlignment="Left"
@@ -110,7 +108,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-            </StackPanel>
+            </Grid>
             <Grid Grid.Column="2" Margin="5,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -119,15 +117,10 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Row="0" Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Orientation="Vertical">
                     <StackPanel
                         Grid.Row="0"
                         Grid.Column="0"
@@ -175,13 +168,13 @@
                             Stroke="#e74c3c" />
                         <TextBlock VerticalAlignment="Center" Text="Không có trong học kỳ này" />
                     </StackPanel>
-                </Grid>
+                </StackPanel>
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.5*" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="0.8*" />
                 <ColumnDefinition />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
@@ -633,15 +626,15 @@
                                     <CheckBox
                                         x:Name="CheckBoxHideConflict"
                                         Click="CheckBoxHideConflict_Click"
-                                        Content="Ẩn cách sắp xếp xung đột thời gian" />
+                                        Content="Ẩn bộ lịch xung đột thời gian" />
                                     <CheckBox
                                         x:Name="CheckBoxHideConflictPlace"
                                         Click="CheckBoxHideConflictTime_Click"
-                                        Content="Ẩn cách sắp xếp xung đột vị trí" />
+                                        Content="Ẩn bộ lịch xung đột vị trí" />
                                     <CheckBox
                                         x:Name="CheckBoxHideCannotSimulate"
                                         Click="CheckBoxHideCannotSimulate_Click"
-                                        Content="Ẩn cách sắp xếp không thể mô phỏng" />
+                                        Content="Ẩn bộ lịch không thể mô phỏng" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>

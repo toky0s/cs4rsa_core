@@ -44,22 +44,24 @@ namespace cs4rsa_core.Utils
             // ACC-201|ACC201202103003?ACC-411|ACC411202103001
             string subjectHasses = shareStringSlices[4].Replace('-', ' ');
             string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
-            List<SubjectInfoData> subjectInfoDatas = new List<SubjectInfoData>();
+            List<SubjectInfoData> subjectInfoDatas = new();
             foreach (string item in subjectHassesSlices)
             {
                 string[] infoes = item.Split(new char[] { '|' });
                 string subjectCode = infoes[0];
                 string classGroupName = infoes[1];
+                string registerCode = infoes[2];
 
                 string discipline = subjectCode.Split(new char[] { ' ' })[0];
                 string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
                 Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
                 string subjectName = keyword.SubjectName;
-                SubjectInfoData subjectInfoData = new SubjectInfoData()
+                SubjectInfoData subjectInfoData = new()
                 {
                     SubjectCode = subjectCode,
                     ClassGroup = classGroupName,
-                    SubjectName = subjectName
+                    SubjectName = subjectName,
+                    RegisterCode = registerCode
                 };
                 subjectInfoDatas.Add(subjectInfoData);
             }
@@ -68,7 +70,7 @@ namespace cs4rsa_core.Utils
 
         private static string SubjectCodeVsRegisterCode(ClassGroup classGroup)
         {
-            return classGroup.SubjectCode + "|" + classGroup.Name;
+            return classGroup.SubjectCode + "|" + classGroup.Name + "|" + classGroup.GetRegisterCode();
         }
     }
 }

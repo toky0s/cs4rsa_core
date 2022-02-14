@@ -158,6 +158,8 @@
             Grid.ColumnSpan="2"
             Margin="0,0,0,5"
             HorizontalContentAlignment="Stretch"
+            AllowDrop="True"
+            Drop="DownloadSubjects_Drop"
             ItemsSource="{Binding SubjectModels}"
             SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.Resources>

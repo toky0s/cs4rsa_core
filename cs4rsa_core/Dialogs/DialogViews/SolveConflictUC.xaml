@@ -7,6 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    d:DataContext="{d:DesignInstance Type=vm:SolveConflictViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -20,7 +21,6 @@
     <materialDesign:Card>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -42,23 +42,12 @@
                 <Run Text="{Binding ClassGroup2Name}" />
                 <Run Text="?" />
             </TextBlock>
-            <TextBlock
-                Grid.Row="2"
-                Margin="0,5,0,10"
-                HorizontalAlignment="Center"
-                Foreground="{DynamicResource PrimaryHueMidBrush}"
-                Text="Không làm gì hết"
-                ToolTip="Yếu đuối">
-                <TextBlock.InputBindings>
-                    <MouseBinding Command="{Binding CloseDialogCommand}" MouseAction="LeftClick" />
-                </TextBlock.InputBindings>
-            </TextBlock>
             <Image
-                Grid.Row="3"
+                Grid.Row="2"
                 Height="200"
                 Margin="0,0,0,10"
                 Source="/Images/choice.jpg" />
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -84,5 +73,4 @@
             </Grid>
         </Grid>
     </materialDesign:Card>
-
 </UserControl>

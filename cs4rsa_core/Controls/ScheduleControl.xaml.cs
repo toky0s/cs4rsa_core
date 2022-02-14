@@ -144,7 +144,7 @@ namespace cs4rsa_core.Controls
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    string description = conflictModel.GetConflictInfo();
+                    string description = conflictModel.GetFullConflictInfo();
                     int startIndex = GetTimeIndex(studyTimeIntersect.Start);
                     int endIndex = GetTimeIndex(studyTimeIntersect.End);
                     ScheduleBlock scheduleBlock = GetScheduleBlock(CONFLICT_BLOCK_COLOR, startIndex, endIndex, description);
@@ -167,6 +167,7 @@ namespace cs4rsa_core.Controls
                     int endIndex = GetTimeIndex(studyTime.End);
                     ScheduleBlock scheduleBlock = GetScheduleBlock(schoolClassModel.Color, startIndex, endIndex, description);
                     scheduleBlock.DayOfWeek = item.Key;
+                    scheduleBlock.SchoolClassModel = schoolClassModel;
                     scheduleBlocks.Add(scheduleBlock);
                 }
             }

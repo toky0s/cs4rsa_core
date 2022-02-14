@@ -108,7 +108,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
-                            <RowDefinition />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Margin="15,15,30,0">
                             <TextBlock
@@ -116,6 +117,7 @@
                                 Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                                 Text="Tác giả" />
                             <TextBlock
+                                Margin="0,0,0,10"
                                 Foreground="#636e72"
                                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                 TextWrapping="WrapWithOverflow">
@@ -125,7 +127,7 @@
                         </StackPanel>
                         <Button
                             Grid.Row="2"
-                            Margin="15,0,0,15"
+                            Margin="15,0,0,5"
                             HorizontalAlignment="Left"
                             Command="{Binding GotoFacebookCommand}"
                             Style="{StaticResource MaterialDesignOutlinedButton}">
@@ -136,6 +138,21 @@
                                     Margin="0,0,2,0"
                                     Kind="Facebook" />
                                 <TextBlock VerticalAlignment="Center" Text="Facebook" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            Grid.Row="3"
+                            Margin="15,0,0,0"
+                            HorizontalAlignment="Left"
+                            Command="{Binding DonateCommand}"
+                            Style="{StaticResource MaterialDesignOutlinedButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Width="20"
+                                    Height="20"
+                                    Margin="0,0,2,0"
+                                    Kind="Donate" />
+                                <TextBlock VerticalAlignment="Center" Text="Donate nào mấy bạn" />
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -193,25 +210,6 @@
                     </Grid>
                 </Grid>
             </materialDesign:Card>
-            <materialDesign:PopupBox
-                Grid.Column="1"
-                Margin="0,0,40,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                PlacementMode="TopAndAlignCentres"
-                Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
-                ToolTip="Donate nào mấy bạn"
-                ToolTipService.Placement="Left">
-                <StackPanel>
-                    <Button
-                        Content="1"
-                        Opacity="0.5"
-                        ToolTip="One with custom opacity" />
-                    <Button Content="2" ToolTip="Two" />
-                    <Button Content="3" ToolTip="Three" />
-                </StackPanel>
-            </materialDesign:PopupBox>
         </Grid>
     </Grid>
-
 </UserControl>

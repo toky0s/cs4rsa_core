@@ -3,11 +3,30 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="UC_ScheduleBlock"
     d:DesignHeight="293.2"
     d:DesignWidth="99.2"
+    Loaded="UC_ScheduleBlock_Loaded"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ContextMenu x:Key="ChoicedContextMenu" Opened="ContextMenu_Opened">
+            <MenuItem
+                x:Name="MenuItem_Details"
+                Click="MenuItem_Details_Click"
+                FontSize="13"
+                Header="Chi tiết"
+                Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
+            <Separator />
+            <MenuItem
+                x:Name="MenuItem_Remove"
+                Click="MenuItem_Remove_Click"
+                FontSize="13"
+                Header="Bỏ chọn"
+                Icon="{materialDesign:PackIcon Kind=Remove}" />
+        </ContextMenu>
+    </UserControl.Resources>
     <Border
         x:Name="Border_ScheduleBlock"
         Grid.Row="0"
@@ -16,6 +35,7 @@
         Height="{Binding Path=Height, ElementName=UC_ScheduleBlock}"
         Padding="5"
         Background="{Binding BlockColor}"
+        ContextMenu="{StaticResource ChoicedContextMenu}"
         CornerRadius="5"
         Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">

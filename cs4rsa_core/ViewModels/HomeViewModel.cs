@@ -1,11 +1,14 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
+using System;
+using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -48,6 +51,7 @@ namespace cs4rsa_core.ViewModels
 
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
         public RelayCommand GotoFacebookCommand { get; set; }
+        public RelayCommand DonateCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
         public RelayCommand ManualCommand { get; set; }
 
@@ -71,8 +75,15 @@ namespace cs4rsa_core.ViewModels
             GotoFacebookCommand = new RelayCommand(OnGotoFaceBook);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
             ManualCommand = new RelayCommand(OnGotoManualCommand);
+            DonateCommand = new RelayCommand(OnDonate);
 
             LoadIsNewSemester();
+        }
+
+        private void OnDonate()
+        {
+            DonateUC donateUC = new();
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(donateUC);
         }
 
         private void OnGotoManualCommand()

@@ -4,13 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:cs4rsa_core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:cs4rsa_core.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:cs4rsa_core.ViewModels"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DataContext="{d:DesignInstance Type=viewmodels:ClassGroupSessionViewModel}"
-    d:DesignHeight="450"
+    d:DesignHeight="900"
     d:DesignWidth="300"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -87,7 +86,7 @@
                             Orientation="Vertical">
                             <TextBlock
                                 Margin="5,0,0,0"
-                                FontSize="14"
+                                FontSize="13"
                                 Text="{Binding Name}" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -154,12 +153,19 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0">
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.ColumnSpan="2"
+                            Margin="5"
+                            Content="Chỉ những lớp còn chỗ"
+                            IsChecked="{Binding HasSeat}" />
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <GroupBox Margin="5,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -171,134 +177,57 @@
                                     </StackPanel>
                                 </GroupBox.Header>
                                 <StackPanel x:Name="CheckBoxContainer_DayOfWeek">
-                                    <CheckBox
-                                        x:Name="CheckBox_Monday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Hai"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Tuseday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Ba"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Wednessday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Tư"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Thursday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Năm"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Friday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Sáu"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Saturday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Bảy"
-                                        IsChecked="False" />
-                                    <CheckBox
-                                        x:Name="CheckBox_Sunday"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Chủ Nhật"
-                                        IsChecked="False" />
+                                    <CheckBox Content="Hai" IsChecked="{Binding Monday}" />
+                                    <CheckBox Content="Ba" IsChecked="{Binding Tuesday}" />
+                                    <CheckBox Content="Tư" IsChecked="{Binding Wednesday}" />
+                                    <CheckBox Content="Năm" IsChecked="{Binding Thursday}" />
+                                    <CheckBox Content="Sáu" IsChecked="{Binding Friday}" />
+                                    <CheckBox Content="Bảy" IsChecked="{Binding Saturday}" />
+                                    <CheckBox Content="Chủ Nhật" IsChecked="{Binding Sunday}" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1">
+                        <StackPanel Grid.Row="1" Grid.Column="1">
                             <GroupBox Margin="0,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
                                             Margin="0,0,5,0"
                                             Foreground="White"
-                                            Kind="WeatherNight" />
-                                        <TextBlock Foreground="White" Text="Buổi" />
+                                            Kind="MapMarkerOutline" />
+                                        <TextBlock Foreground="White" Text="Nơi học" />
                                     </StackPanel>
                                 </GroupBox.Header>
-                                <StackPanel Orientation="Vertical">
+                                <StackPanel x:Name="CheckBoxContainer_Place">
+                                    <CheckBox Content="Quang Trung" IsChecked="{Binding PlaceQuangTrung}" />
                                     <CheckBox
-                                        x:Name="CheckBox_Morning"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Sáng">
-                                        <CheckBox.ToolTip>
-                                            <ToolTip>
-                                                7:00 - 9:00
-                                            </ToolTip>
-                                        </CheckBox.ToolTip>
-                                    </CheckBox>
+                                        x:Name="CheckBox_phanthanh"
+                                        Content="Phan Thanh"
+                                        IsChecked="{Binding PlacePhanThanh}" />
                                     <CheckBox
-                                        x:Name="CheckBox_Afternoon"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Chiều">
-                                        <CheckBox.ToolTip>
-                                            <ToolTip>
-                                                13:00 - 17:00
-                                            </ToolTip>
-                                        </CheckBox.ToolTip>
-                                    </CheckBox>
+                                        x:Name="CheckBox_viettin"
+                                        Content="Việt Tin"
+                                        IsChecked="{Binding PlaceVietTin}" />
                                     <CheckBox
-                                        x:Name="CheckBox_Night"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Tối">
-                                        <CheckBox.ToolTip>
-                                            <ToolTip>
-                                                18:00 - 21:00
-                                            </ToolTip>
-                                        </CheckBox.ToolTip>
-                                    </CheckBox>
-                                </StackPanel>
-                            </GroupBox>
-                            <GroupBox
-                                Margin="0,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White">
-                                <GroupBox.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,5,0"
-                                            Foreground="White"
-                                            Kind="SeatPassenger" />
-                                        <TextBlock Foreground="White" Text="Chỗ ngồi" />
-                                    </StackPanel>
-                                </GroupBox.Header>
-                                <StackPanel x:Name="RadioButtonContainer_Seat">
-                                    <RadioButton
-                                        x:Name="RadioButton_SeatAll"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Tất cả"
-                                        IsChecked="True" />
-                                    <RadioButton
-                                        x:Name="RadioButton_SeatHave"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Còn chỗ" />
+                                        x:Name="CheckBox_hoakhanh"
+                                        Content="Hoà Khánh"
+                                        IsChecked="{Binding PlaceHoaKhanh}" />
+                                    <CheckBox
+                                        x:Name="CheckBox_137_nvl"
+                                        Content="137 NVL"
+                                        IsChecked="{Binding Place137NVL}" />
+                                    <CheckBox
+                                        x:Name="CheckBox_254_nvl"
+                                        Content="254 NVL"
+                                        IsChecked="{Binding Place254NVL}" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
                         <StackPanel
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="0"
                             Grid.ColumnSpan="2">
-                            <GroupBox
-                                Margin="5,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White">
+                            <GroupBox Margin="5,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
@@ -313,16 +242,11 @@
                                     materialDesign:ComboBoxAssist.ClassicMode="True"
                                     DisplayMemberPath="Name"
                                     ItemsSource="{Binding Teachers}"
-                                    SelectedItem="{Binding SelectedTeacher}"
-                                    SelectionChanged="ReloadClassGroupCollection" />
-
+                                    SelectedItem="{Binding SelectedTeacher}" />
                             </GroupBox>
                         </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.Column="0">
-                            <GroupBox
-                                Margin="5,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White">
+                        <StackPanel Grid.Row="3" Grid.Column="0">
+                            <GroupBox Margin="5,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
@@ -333,73 +257,67 @@
                                     </StackPanel>
                                 </GroupBox.Header>
                                 <StackPanel x:Name="RadioButtonContainer_Phase">
-                                    <RadioButton
-                                        Name="all"
-                                        Background="#636e72"
-                                        Checked="ReloadClassGroupCollection"
-                                        Content="Tất cả"
-                                        IsChecked="True" />
-                                    <RadioButton
+                                    <CheckBox
                                         Name="first"
-                                        Background="#636e72"
-                                        Checked="ReloadClassGroupCollection"
                                         Content="Giai đoạn 1"
-                                        ToolTip="Những lớp chỉ ở giai đoạn 1" />
-                                    <RadioButton
+                                        IsChecked="{Binding PhaseFirst}"
+                                        ToolTip="Chỉ những lớp ở giai đoạn 1" />
+                                    <CheckBox
                                         Name="second"
-                                        Background="#636e72"
-                                        Checked="ReloadClassGroupCollection"
+                                        Command="{Binding FilterCommand}"
                                         Content="Giai đoạn 2"
-                                        ToolTip="Những lớp chỉ ở giai đoạn 2" />
-                                    <RadioButton
+                                        IsChecked="{Binding PhaseSecond}"
+                                        ToolTip="Chỉ những lớp ở giai đoạn 2" />
+                                    <CheckBox
                                         Name="both"
-                                        Background="#636e72"
-                                        Checked="ReloadClassGroupCollection"
                                         Content="Hai giai đoạn"
-                                        ToolTip="Những lớp kéo dài cả hai giai đoạn" />
+                                        IsChecked="{Binding PhaseBoth}"
+                                        ToolTip="Chỉ những lớp kéo dài cả hai giai đoạn" />
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.Column="1">
-                            <GroupBox
-                                Margin="0,0,5,5"
-                                materialDesign:ColorZoneAssist.Background="{DynamicResource PrimaryHueMidBrush}"
-                                materialDesign:ColorZoneAssist.Foreground="White">
+                        <StackPanel Grid.Row="3" Grid.Column="1">
+                            <GroupBox Margin="0,0,5,5">
                                 <GroupBox.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon
                                             Margin="0,0,5,0"
                                             Foreground="White"
-                                            Kind="MapMarkerOutline" />
-                                        <TextBlock Foreground="White" Text="Nơi học" />
+                                            Kind="WeatherNight" />
+                                        <TextBlock Foreground="White" Text="Buổi" />
                                     </StackPanel>
                                 </GroupBox.Header>
-                                <StackPanel x:Name="CheckBoxContainer_Place">
+                                <StackPanel Orientation="Vertical">
                                     <CheckBox
-                                        x:Name="CheckBox_quantrung"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Quang Trung" />
+                                        x:Name="CheckBox_Morning"
+                                        Content="Sáng"
+                                        IsChecked="{Binding Morning}">
+                                        <CheckBox.ToolTip>
+                                            <ToolTip>
+                                                7:00 - 11:00
+                                            </ToolTip>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
                                     <CheckBox
-                                        x:Name="CheckBox_phanthanh"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Phan Thanh" />
+                                        x:Name="CheckBox_Afternoon"
+                                        Content="Chiều"
+                                        IsChecked="{Binding Afternoon}">
+                                        <CheckBox.ToolTip>
+                                            <ToolTip>
+                                                13:00 - 17:00
+                                            </ToolTip>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
                                     <CheckBox
-                                        x:Name="CheckBox_viettin"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Việt Tin" />
-                                    <CheckBox
-                                        x:Name="CheckBox_hoakhanh"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="Hoà Khánh" />
-                                    <CheckBox
-                                        x:Name="CheckBox_137_nvl"
-                                        Background="#636e72"
-                                        Click="ReloadClassGroupCollection"
-                                        Content="137 NVL" />
+                                        x:Name="CheckBox_Night"
+                                        Content="Tối"
+                                        IsChecked="{Binding Night}">
+                                        <CheckBox.ToolTip>
+                                            <ToolTip>
+                                                18:00 - 21:00
+                                            </ToolTip>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>

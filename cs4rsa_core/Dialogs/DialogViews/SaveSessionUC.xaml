@@ -19,7 +19,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="666">
+    <materialDesign:Card Width="555">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -35,7 +35,7 @@
                         <GridViewColumn
                             Width="auto"
                             DisplayMemberBinding="{Binding Name}"
-                            Header="Tên phiên" />
+                            Header="Tên bộ lịch" />
                         <GridViewColumn
                             Width="auto"
                             DisplayMemberBinding="{Binding SaveDate}"
@@ -51,7 +51,7 @@
                 <TextBox
                     x:Name="txtName"
                     Grid.Column="1"
-                    materialDesign:HintAssist.Hint="Tên phiên của bạn"
+                    materialDesign:HintAssist.Hint="Tên bộ lịch của bạn"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                     Text="{Binding Name, Mode=TwoWay}" />

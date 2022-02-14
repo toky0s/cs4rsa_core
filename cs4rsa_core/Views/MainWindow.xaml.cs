@@ -1,4 +1,6 @@
 ﻿using cs4rsa_core.ViewModels;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 

@@ -70,7 +70,7 @@ namespace cs4rsa_core.ViewModels
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
 
             SelectedIndex = 0;
-            IsExpanded = true;
+            IsExpanded = false;
         }
 
         public void OpenDialog(IDialog uc)

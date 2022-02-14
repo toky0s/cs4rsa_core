@@ -49,7 +49,6 @@ namespace cs4rsa_core.Models
         /// <summary>
         /// Lấy ra thông tin dạng chuỗi để hiển thị lên giao diện của một xung đột về thời gian.
         /// </summary>
-        /// <returns></returns>
         public string GetConflictInfo()
         {
             List<string> resultTimes = new();
@@ -66,6 +65,29 @@ namespace cs4rsa_core.Models
                 resultTimes.Add(day + "\n" + timeString);
             }
             return string.Join("\n", resultTimes);
+        }
+        
+        /// <summary>
+        /// Lấy ra đầy đủ thông tin của xung đột.
+        /// </summary>
+        public string GetFullConflictInfo()
+        {
+            List<string> resultTimes = new();
+            foreach (KeyValuePair<DayOfWeek, List<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
+            {
+                string day = BasicDataConverter.ToDayOfWeekText(item.Key);
+                List<string> times = new();
+                foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
+                {
+                    string time = $"Từ {studyTimeIntersect.StartString} đến {studyTimeIntersect.EndString}";
+                    times.Add(time);
+                }
+                string timeString = string.Join("\n", times);
+                resultTimes.Add(day + "\n" + timeString);
+            }
+            string schoolClassesInfo = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName;
+            string timesInfo = string.Join("\n", resultTimes);
+            return "Xung đột: " + schoolClassesInfo + "\n" + timesInfo;
         }
 
         public ConflictType GetConflictType()

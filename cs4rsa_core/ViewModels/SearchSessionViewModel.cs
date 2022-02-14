@@ -23,15 +23,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 
 
 
 namespace cs4rsa_core.ViewModels
 {
-    /// <summary>
-    /// ViewModel này đại diện cho phần Search Môn học.
-    /// </summary>
     public class SearchSessionViewModel : ViewModelBase,
         IMessageHandler<UpdateSuccessMessage>,
         IMessageHandler<ShowOnSimuMessage>,
@@ -400,6 +398,27 @@ namespace cs4rsa_core.ViewModels
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
                 _snackbarMessageQueue.Enqueue("Môn học không tồn tại trong học kỳ này");
                 CanAddSubjectChange();
+            }
+        }
+
+        public void OnAddSubjectFromUriAsync(Uri uri)
+        {
+            var queries = HttpUtility.ParseQueryString(uri.Query);
+            string courseId = queries.Get("courseid");
+            string p = queries.Get("p");
+            string timespan = queries.Get("timespan");
+            string t = queries.Get("t");
+
+            bool isDtuCourseHost = uri.Host == "courses.duytan.edu.vn";
+            bool isRightAbsPath = uri.AbsolutePath == "/Sites/Home_ChuongTrinhDaoTao.aspx";
+
+            if (courseId != null && p != null && timespan != null && t != null && isDtuCourseHost && isRightAbsPath)
+            {
+                _snackbarMessageQueue.Enqueue("Đúng đường dẫn");
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue("Sai đường dẫn");
             }
         }
 

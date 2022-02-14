@@ -1,6 +1,7 @@
 ﻿using cs4rsa_core.Models;
 using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.Models;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -63,6 +64,16 @@ namespace cs4rsa_core.Views
         private void SearchingTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             Popup_Recommend.IsOpen = false;
+        }
+
+        private void DownloadSubjects_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+                string url = (string)e.Data.GetData(DataFormats.UnicodeText);
+                Uri uri = new UriBuilder(url).Uri;
+                (DataContext as SearchSessionViewModel).OnAddSubjectFromUriAsync(uri);
+            }
         }
     }
 }
