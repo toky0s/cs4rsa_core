@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Reflection;
 
-namespace cs4rsa_core.Services
+namespace cs4rsa_core.ModelExtensions
 {
     public static class DeepCloneExtension
     {
-        // consider instance fields, both public and non-public
         private static readonly BindingFlags bindingFlags =
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
@@ -15,10 +14,10 @@ namespace cs4rsa_core.Services
             var result = (T)Activator.CreateInstance(type);
 
             do
-                // copy all fields
+            {
                 foreach (var field in type.GetFields(bindingFlags))
                     field.SetValue(result, field.GetValue(obj));
-            // for every level of hierarchy
+            }
             while ((type = type.BaseType) != typeof(object));
 
             return result;

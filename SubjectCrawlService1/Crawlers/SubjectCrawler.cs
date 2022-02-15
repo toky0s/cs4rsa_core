@@ -1,6 +1,7 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+using HelperService.Interfaces;
 using HtmlAgilityPack;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
@@ -12,20 +13,26 @@ namespace SubjectCrawlService1.Crawlers
 {
     public class SubjectCrawler : ISubjectCrawler
     {
+        #region Services
+        private readonly IFolderManager _folderManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
+        #endregion
 
         /// <summary>
         /// Get a Subject of DTU.
         /// </summary>
         /// <param name="discipline">Hai chữ cái đầu của mã môn (CS).</param>
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
-        public SubjectCrawler(ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
+        public SubjectCrawler(
+            ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler, 
+            IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _teacherCrawler = teacherCrawler;
+            _folderManager = folderManager;
         }
 
         public async Task<Subject> Crawl(string discipline, string keyword1)
@@ -63,7 +70,7 @@ namespace SubjectCrawlService1.Crawlers
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
                 return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork, _folderManager);
             }
             return null;
         }
@@ -98,7 +105,7 @@ namespace SubjectCrawlService1.Crawlers
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
                 return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork);
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork, _folderManager);
             }
             return null;
         }

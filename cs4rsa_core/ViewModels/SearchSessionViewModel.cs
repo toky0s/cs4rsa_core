@@ -7,7 +7,7 @@ using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
-using cs4rsa_core.Services;
+using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.ViewModelFunctions;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
@@ -55,7 +55,6 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         #region Properties
-        //ComboBox discipline
         private Discipline selectedDiscipline;
         public Discipline SelectedDiscipline
         {
@@ -68,7 +67,6 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        //ComboxBox keyword
         private Keyword selectedKeyword;
         public Keyword SelectedKeyword
         {

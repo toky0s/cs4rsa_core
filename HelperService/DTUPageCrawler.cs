@@ -19,7 +19,7 @@ namespace HelperService
             //HttpResponseMessage request1 = await httpClient.GetAsync(url);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             CookieContainer cookieContainer = new();
-            Cookie cookie = new Cookie("ASP.NET_SessionId", sessionId) { Domain = request.Host };
+            Cookie cookie = new("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
 

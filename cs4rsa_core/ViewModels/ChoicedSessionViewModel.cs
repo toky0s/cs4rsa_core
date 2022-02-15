@@ -5,7 +5,7 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
-using cs4rsa_core.Services;
+using cs4rsa_core.ModelExtensions;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;

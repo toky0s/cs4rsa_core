@@ -18,6 +18,7 @@ using DisciplineCrawlerService.Crawlers;
 using FirebaseService;
 using FirebaseService.Interfaces;
 using HelperService;
+using HelperService.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using ProgramSubjectCrawlerService.Crawlers;
@@ -79,6 +80,7 @@ namespace cs4rsa_core
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
+            services.AddSingleton<IFolderManager, FolderManager>();
             services.AddSingleton<ISnackbarMessageQueue>(new SnackbarMessageQueue(TimeSpan.FromSeconds(2)));
             services.AddSingleton<IFirebase, NewFirebase>();
 

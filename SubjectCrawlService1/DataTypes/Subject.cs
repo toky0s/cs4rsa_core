@@ -1,6 +1,7 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
+using HelperService.Interfaces;
 using HtmlAgilityPack;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
@@ -16,12 +17,15 @@ namespace SubjectCrawlService1.DataTypes
 {
     public class Subject
     {
-        private ITeacherCrawler _teacherCrawler;
-        private IUnitOfWork _unitOfWork;
+        private readonly ITeacherCrawler _teacherCrawler;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IFolderManager _folderManager;
+
         private readonly string _studyUnit;
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
+
         private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
         private readonly List<Teacher> _teachers;
@@ -45,10 +49,12 @@ namespace SubjectCrawlService1.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
+                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
             _teacherCrawler = teacherCrawler;
+            _folderManager = folderManager;
+
             _studyUnit = studyUnit;
             _studyUnitType = studyUnitType;
             _studyType = studyType;
@@ -300,7 +306,7 @@ namespace SubjectCrawlService1.DataTypes
         private async Task<Teacher> GetTeacherFromURL(string url)
         {
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
-            TeacherCrawler teacherCrawler = new(_unitOfWork);
+            TeacherCrawler teacherCrawler = new(_unitOfWork, _folderManager);
             Teacher teacher = await teacherCrawler.Crawl(teacherDetailPageURL);
 
             if (teacher != null && !_teachers.Contains(teacher))
@@ -344,11 +350,11 @@ namespace SubjectCrawlService1.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork)
+                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, teacherCrawler, unitOfWork);
+                rawSoup, courseId, teacherCrawler, unitOfWork, folderManager);
             return ret.InitializeAsync();
         }
     }

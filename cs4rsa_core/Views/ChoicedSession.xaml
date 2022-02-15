@@ -135,7 +135,7 @@
                             <Ellipse Width="10" Height="10">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="Red" />
+                                        <Setter Property="Fill" Value="#e74c3c" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ConflictType, Converter={StaticResource ResourceKey=ConflictTypeConverter}}" Value="1">
                                                 <Setter Property="Fill" Value="Yellow" />
@@ -185,7 +185,7 @@
                             <Rectangle
                                 Width="10"
                                 Height="10"
-                                Fill="Yellow" />
+                                Fill="#f1c40f" />
                         </Canvas>
 
                         <TextBlock FontSize="10">

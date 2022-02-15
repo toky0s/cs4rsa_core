@@ -4,7 +4,7 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using Cs4rsaDatabaseService.Interfaces;
-using cs4rsa_core.Services;
+using cs4rsa_core.ModelExtensions;
 using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;

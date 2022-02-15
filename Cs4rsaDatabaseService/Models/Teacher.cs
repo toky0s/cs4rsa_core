@@ -11,5 +11,6 @@
         public string Position { get; set; }
         public string Subject { get; set; }
         public string Form { get; set; }
+        public string Path { get; set; }
     }
 }
