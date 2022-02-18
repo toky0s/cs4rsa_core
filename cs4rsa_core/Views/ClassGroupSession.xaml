@@ -30,10 +30,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-            Text="{Binding ClassGroupModels.Count, StringFormat=Nhóm lớp ({0})}" />
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock
+                Margin="0,0,5,0"
+                Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                Text="{Binding SubjectModel.SubjectName}" />
+            <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding ClassGroupModels.Count, StringFormat=({0})}" />
+        </StackPanel>
         <ListBox
             x:Name="ClassGroupListBox"
             Grid.Row="1"
@@ -42,18 +45,6 @@
             ItemsSource="{Binding ClassGroupModels}"
             SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.Resources>
-                <ToolTip x:Key="ItemToolTip">
-                    Vì một số lý do nào đó một số lớp sẽ không có lịch hoặc chỉ có lịch bổ xung, xem chi tiết trên Course.
-                </ToolTip>
-                <ToolTip x:Key="PlaceToolTip">
-                    <ItemsControl ItemsSource="{Binding Places}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Converter={StaticResource PlaceToStringConverter}}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ToolTip>
                 <ContextMenu x:Key="ClassGroupContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
@@ -131,12 +122,6 @@
             <ListBox.ItemContainerStyle>
                 <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
                     <Setter Property="ContextMenu" Value="{StaticResource ClassGroupContextMenu}" />
-                    <Setter Property="ToolTip" Value="{StaticResource PlaceToolTip}" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
-                            <Setter Property="ToolTip" Value="{StaticResource ItemToolTip}" />
-                        </DataTrigger>
-                    </Style.Triggers>
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
@@ -258,7 +243,7 @@
                                                                     <TextBlock Text="{Binding SelectedTeacher.Name, StringFormat=Tên: {0}}" />
                                                                     <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
                                                                     <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Nơi sinh: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Học hàm\học vị: {0}}" />
+                                                                    <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Học hàm\\học vị: {0}}" />
                                                                     <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị: {0}}" />
                                                                     <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Chức vụ: {0}}" />
                                                                     <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />

@@ -28,7 +28,7 @@ namespace CurriculumCrawlerService.Crawlers
             Match matching = regex.Match(content);
             string matchString = matching.Value.ToString();
             string sCurid = matchString.Split(new char[] { '=' })[1];
-            int curid = int.Parse(sCurid);
+            short curid = short.Parse(sCurid);
             Curriculum curriculum = new() { CurriculumId = curid, Name = name };
             return curriculum;
         }

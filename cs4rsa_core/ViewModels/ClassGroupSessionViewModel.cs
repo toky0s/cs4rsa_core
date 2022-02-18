@@ -9,14 +9,14 @@ using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
+using SubjectCrawlService1.DataTypes.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
-using System.Linq;
-using System;
-using System.Windows.Data;
-using SubjectCrawlService1.DataTypes.Enums;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Data;
 using Session = SubjectCrawlService1.DataTypes.Enums.Session;
 
 namespace cs4rsa_core.ViewModels
@@ -63,6 +63,13 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
                 OnFilter();
             }
+        }
+
+        private SubjectModel _subjectModel;
+        public SubjectModel SubjectModel
+        {
+            get { return _subjectModel; }
+            set { _subjectModel = value; OnPropertyChanged(); }
         }
         #endregion
 
@@ -158,7 +165,9 @@ namespace cs4rsa_core.ViewModels
         public bool HasSeat
         {
             get { return _hasSeat; }
-            set { _hasSeat = value; OnPropertyChanged();
+            set
+            {
+                _hasSeat = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -170,7 +179,9 @@ namespace cs4rsa_core.ViewModels
         public bool Morning
         {
             get { return _morning; }
-            set { _morning = value; OnPropertyChanged();
+            set
+            {
+                _morning = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -179,7 +190,9 @@ namespace cs4rsa_core.ViewModels
         public bool Afternoon
         {
             get { return _afternoon; }
-            set { _afternoon = value; OnPropertyChanged();
+            set
+            {
+                _afternoon = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -188,7 +201,9 @@ namespace cs4rsa_core.ViewModels
         public bool Night
         {
             get { return _night; }
-            set { _night = value; OnPropertyChanged();
+            set
+            {
+                _night = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -201,7 +216,9 @@ namespace cs4rsa_core.ViewModels
         public bool PhaseFirst
         {
             get { return _onlyPhaseFirst; }
-            set { _onlyPhaseFirst = value; OnPropertyChanged();
+            set
+            {
+                _onlyPhaseFirst = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -211,7 +228,9 @@ namespace cs4rsa_core.ViewModels
         public bool PhaseSecond
         {
             get { return _onlyPhaseSecond; }
-            set { _onlyPhaseSecond = value; OnPropertyChanged();
+            set
+            {
+                _onlyPhaseSecond = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -220,7 +239,9 @@ namespace cs4rsa_core.ViewModels
         public bool PhaseBoth
         {
             get { return _bothPhase; }
-            set { _bothPhase = value; OnPropertyChanged();
+            set
+            {
+                _bothPhase = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -233,7 +254,9 @@ namespace cs4rsa_core.ViewModels
         public bool PlaceQuangTrung
         {
             get { return _placeQuangTrung; }
-            set { _placeQuangTrung = value; OnPropertyChanged();
+            set
+            {
+                _placeQuangTrung = value; OnPropertyChanged();
                 OnFilter();
             }
         }
@@ -270,10 +293,11 @@ namespace cs4rsa_core.ViewModels
         public bool Place254NVL
         {
             get { return _place254NVL; }
-            set { 
-                _place254NVL = value; 
-                OnPropertyChanged(); 
-                OnFilter(); 
+            set
+            {
+                _place254NVL = value;
+                OnPropertyChanged();
+                OnFilter();
             }
         }
         #endregion
@@ -506,13 +530,13 @@ namespace cs4rsa_core.ViewModels
 
         public void Handle(SelectedSubjectChangeMessage message)
         {
-            SubjectModel subjectModel = message.Source;
+            SubjectModel = message.Source;
             ClassGroupModels.Clear();
             Teachers.Clear();
-            if (subjectModel != null)
+            if (SubjectModel != null)
             {
                 #region Add ClassGroupModel
-                foreach (ClassGroupModel classGroupModel in subjectModel.ClassGroupModels)
+                foreach (ClassGroupModel classGroupModel in SubjectModel.ClassGroupModels)
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
@@ -522,8 +546,8 @@ namespace cs4rsa_core.ViewModels
                 Teacher allTeacher = new() { TeacherId = 0, Name = "TẤT CẢ" };
                 Teachers.Add(allTeacher);
 
-                List<string> tempTeachers = subjectModel.TempTeachers;
-                foreach (Teacher teacher in subjectModel.Teachers)
+                List<string> tempTeachers = SubjectModel.TempTeachers;
+                foreach (Teacher teacher in SubjectModel.Teachers)
                 {
                     if (!Teachers.Contains(teacher) && teacher != null)
                     {

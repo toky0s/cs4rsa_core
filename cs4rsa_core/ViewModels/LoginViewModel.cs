@@ -3,14 +3,13 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
-using Cs4rsaDatabaseService.Interfaces;
 using cs4rsa_core.ModelExtensions;
+using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -22,7 +21,7 @@ namespace cs4rsa_core.ViewModels
     {
         public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }
-        
+
         private string _sessionId;
         public string SessionId
         {

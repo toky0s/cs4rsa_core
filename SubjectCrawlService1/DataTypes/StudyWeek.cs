@@ -4,18 +4,18 @@ namespace SubjectCrawlService1.DataTypes
 {
     public class StudyWeek
     {
-        private readonly int startWeek;
-        private int endWeek;
+        private readonly byte startWeek;
+        private readonly byte endWeek;
 
-        public int StartWeek { get { return startWeek; } }
-        public int EndWeek { get { return endWeek; } set { endWeek = value; } }
+        public byte StartWeek { get { return startWeek; } }
+        public byte EndWeek { get { return endWeek; } }
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
         /// </summary>
         /// <param name="startWeek">Tuần bắt đầu.</param>
         /// <param name="endWeek">Tuần kết thúc.</param>
-        public StudyWeek(int startWeek, int endWeek)
+        public StudyWeek(byte startWeek, byte endWeek)
         {
             this.startWeek = startWeek;
             this.endWeek = endWeek;
@@ -29,13 +29,8 @@ namespace SubjectCrawlService1.DataTypes
         {
             string[] separatingStrings = { "--" };
             string[] startAndEnd = studyWeek.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
-            startWeek = int.Parse(startAndEnd[0]);
-            endWeek = int.Parse(startAndEnd[1]);
-        }
-
-        public StudyWeek(int startWeek)
-        {
-            this.startWeek = startWeek;
+            startWeek = byte.Parse(startAndEnd[0]);
+            endWeek = byte.Parse(startAndEnd[1]);
         }
 
         /// <summary>

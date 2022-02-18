@@ -57,8 +57,8 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public string ShareString { get; set; }
 
-        private int _isAvailableSession;
-        public int IsAvailableSession
+        private sbyte _isAvailableSession;
+        public sbyte IsAvailableSession
         {
             get => _isAvailableSession;
             set
@@ -84,7 +84,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly IMessageBox _messageBox;
         #endregion
 
-        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler, 
+        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler,
             SessionExtension sessionExtension, IMessageBox messageBox)
         {
             _messageBox = messageBox;
@@ -119,7 +119,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private void LoadSessionSchoolClasses(SessionDetail value)
         {
-            if(value != null)
+            if (value != null)
             {
                 SessionSchoolClasses.Clear();
                 IEnumerable<SessionSchoolClass> sessionSchoolClasses = _unitOfWork
@@ -138,8 +138,10 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 string semester = session.SemesterValue;
                 string year = session.YearValue;
+                sbyte available = 1;
+                sbyte unavailable = 0;
                 IsAvailableSession = semester.Equals(_courseCrawler.GetCurrentSemesterValue(), StringComparison.Ordinal)
-                    && year.Equals(_courseCrawler.GetCurrentYearValue(), StringComparison.Ordinal) ? 1 : 0;
+                    && year.Equals(_courseCrawler.GetCurrentYearValue(), StringComparison.Ordinal) ? available : unavailable;
             }
             else
             {

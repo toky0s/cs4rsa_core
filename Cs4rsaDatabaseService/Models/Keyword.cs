@@ -9,7 +9,7 @@ namespace Cs4rsaDatabaseService.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int KeywordId { get; set; }
         public string Keyword1 { get; set; }
-        public int CourseId { get; set; }
+        public ushort CourseId { get; set; }
         public string SubjectName { get; set; }
         public string Color { get; set; }
 

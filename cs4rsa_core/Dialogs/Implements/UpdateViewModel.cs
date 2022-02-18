@@ -20,8 +20,8 @@ namespace cs4rsa_core.Dialogs.Implements
         public RelayCommand StartUpdateCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
 
-        private int _progressValue;
-        public int ProgressValue
+        private short _progressValue;
+        public short ProgressValue
         {
             get => _progressValue;
             set
@@ -86,7 +86,7 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             ProgressValue = 1000;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = true;
-            int result = (int)e.Result;
+            short result = (short)e.Result;
 
             _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _setting.CurrentSetting.CurrentYearValue = _courseCrawler.GetCurrentYearValue();
@@ -99,13 +99,13 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressValue = e.ProgressPercentage;
+            ProgressValue = (short)e.ProgressPercentage;
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker backgroundWorker = sender as BackgroundWorker;
-            int numberOfSubjects = _disciplineCrawler.GetNumberOfSubjects();
+            short numberOfSubjects = _disciplineCrawler.GetNumberOfSubjects();
             _disciplineCrawler.GetDisciplineAndKeyword(backgroundWorker, numberOfSubjects);
             e.Result = numberOfSubjects;
         }

@@ -2,7 +2,6 @@
 using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.Models;
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 

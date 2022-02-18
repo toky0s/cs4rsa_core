@@ -10,6 +10,11 @@ using System.Linq;
 
 namespace cs4rsa_core.Models
 {
+    /// <summary>
+    /// ClassGroupModel và ClassGroup:
+    /// - ClassGroup là nơi cung cấp dữ liệu.
+    /// - ClassGroupModel là nơi cung cấp các phương thức và dữ liệu tuỳ chỉnh dựa trên core đã có.
+    /// </summary>
     public class ClassGroupModel
     {
         private string _currentRegisterCode;
@@ -53,7 +58,7 @@ namespace cs4rsa_core.Models
             IsBelongSpecialSubject = isBelongSpecialSubject;
         }
 
-        public List<Teacher> GetTeacherModels()
+        public IEnumerable<Teacher> GetTeacherModels()
         {
             return ClassGroup.GetTeachers();
         }

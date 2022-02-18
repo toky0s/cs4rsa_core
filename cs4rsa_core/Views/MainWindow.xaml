@@ -143,10 +143,18 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Mở rộng Menu" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Mở rộng" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                        <Setter Property="ToolTip" Value="Thu nhỏ Menu" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Thu nhỏ" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -165,7 +173,11 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Trang chủ" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Trang chủ" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -189,7 +201,11 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Tài khoản DTU" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Tài khoản DTU" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -213,7 +229,11 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Xếp lịch thủ công" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Xếp lịch thủ công" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -237,7 +257,11 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Xếp lịch tự động" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Xếp lịch tự động" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -261,7 +285,11 @@
                             <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip" Value="Thông tin" />
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <ToolTip Content="Thông tin" Placement="Right" />
+                                            </Setter.Value>
+                                        </Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

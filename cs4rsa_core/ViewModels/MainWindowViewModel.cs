@@ -1,12 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Dialogs.DialogServices;
-using cs4rsa_core.Messages;
-using LightMessageBus;
-using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -25,8 +18,8 @@ namespace cs4rsa_core.ViewModels
             set { _isExpanded = value; OnPropertyChanged(); }
         }
 
-        private int _selectedIndex;
-        public int SelectedIndex
+        private byte _selectedIndex;
+        public byte SelectedIndex
         {
             get => _selectedIndex;
             set

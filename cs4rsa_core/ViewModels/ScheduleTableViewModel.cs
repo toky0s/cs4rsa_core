@@ -5,10 +5,8 @@ using cs4rsa_core.Models.Interfaces;
 using cs4rsa_core.ViewModels.Interfaces;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
-using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -83,7 +81,7 @@ namespace cs4rsa_core.ViewModels
                 }
             }
         }
-        
+
         private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
         {
             SchoolClassModel schoolClassModel = new(schoolClass);

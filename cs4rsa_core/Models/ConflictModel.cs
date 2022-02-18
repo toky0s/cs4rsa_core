@@ -66,7 +66,7 @@ namespace cs4rsa_core.Models
             }
             return string.Join("\n", resultTimes);
         }
-        
+
         /// <summary>
         /// Lấy ra đầy đủ thông tin của xung đột.
         /// </summary>

@@ -1,11 +1,10 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
 
 namespace Cs4rsaDatabaseService.Implements
 {
@@ -91,7 +90,7 @@ namespace Cs4rsaDatabaseService.Implements
         public Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword)
         {
             return _context.Keywords.Where(kw =>
-                kw.Discipline.Name.Contains(discipline.ToUpper()) 
+                kw.Discipline.Name.Contains(discipline.ToUpper())
                 && kw.Keyword1.Contains(keyword)
             ).Take(20).ToListAsync();
         }

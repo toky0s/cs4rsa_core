@@ -21,12 +21,12 @@ namespace SubjectCrawlService1.Crawlers
         #endregion
 
         /// <summary>
-        /// Get a Subject of DTU.
+        /// Bộ cào Subject từ Course DTU
         /// </summary>
         /// <param name="discipline">Hai chữ cái đầu của mã môn (CS).</param>
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
         public SubjectCrawler(
-            ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler, 
+            ICourseCrawler courseCrawler, ITeacherCrawler teacherCrawler,
             IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
@@ -38,7 +38,7 @@ namespace SubjectCrawlService1.Crawlers
         public async Task<Subject> Crawl(string discipline, string keyword1)
         {
             Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
-            int courseId = keyword.CourseId;
+            ushort courseId = keyword.CourseId;
 
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
@@ -75,7 +75,7 @@ namespace SubjectCrawlService1.Crawlers
             return null;
         }
 
-        public async Task<Subject> Crawl(int courseId)
+        public async Task<Subject> Crawl(ushort courseId)
         {
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 

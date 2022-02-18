@@ -37,9 +37,6 @@ namespace cs4rsa_core.Utils
         {
             // cs4rsa!69!73!2!%ACC 201|ACC201202103003%?%ACC 411|ACC411202103001%
             string[] shareStringSlices = shareString.Split(new char[] { '!' });
-            string currentYear = shareStringSlices[1];
-            string currentSemester = shareStringSlices[2];
-            int count = int.Parse(shareStringSlices[3]);
 
             // ACC-201|ACC201202103003?ACC-411|ACC411202103001
             string subjectHasses = shareStringSlices[4].Replace('-', ' ');

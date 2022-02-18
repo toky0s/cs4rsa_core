@@ -6,8 +6,8 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
-using cs4rsa_core.Models;
 using cs4rsa_core.ModelExtensions;
+using cs4rsa_core.Models;
 using cs4rsa_core.ViewModelFunctions;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
@@ -342,7 +342,7 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.Publish(new DeleteSubjectMessage(_selectedSubjectModel));
 
             SubjectModel actionData = _selectedSubjectModel.DeepClone();
-            
+
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
             _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", OnRestoreSubjectModel, actionData);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FirebaseService
 {
-    public class NewFirebase: IFirebase
+    public class NewFirebase : IFirebase
     {
         private readonly FirebaseClient _firebaseClient;
         public NewFirebase()
@@ -25,7 +25,7 @@ namespace FirebaseService
         public async Task<string> GetLatestVersion()
         {
             var appInfomations = await _firebaseClient.Child("appInfomations").OnceAsync<object>();
-            return (string) appInfomations.ElementAtOrDefault(0).Object;
+            return (string)appInfomations.ElementAtOrDefault(0).Object;
         }
 
         public async Task<bool> PostUser(string studentId, string specialString)

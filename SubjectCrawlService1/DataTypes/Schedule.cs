@@ -1,8 +1,8 @@
-﻿using SubjectCrawlService1.DataTypes.Enums;
+﻿using HelperService;
+using SubjectCrawlService1.DataTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HelperService;
 
 namespace SubjectCrawlService1.DataTypes
 {
@@ -122,7 +122,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns></returns>
         public static Schedule MergeSchedule(List<Schedule> schedules)
         {
-            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
+            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
             foreach (Schedule item in schedules)
             {
                 List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = item.ScheduleTime.ToList();

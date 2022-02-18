@@ -1,6 +1,5 @@
 ﻿using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes.Enums;
-using System;
 using System.Collections.Generic;
 
 namespace SubjectCrawlService1.DataTypes

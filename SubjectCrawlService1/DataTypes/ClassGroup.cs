@@ -54,7 +54,7 @@ namespace SubjectCrawlService1.DataTypes
         private List<SchoolClass> MergeTeacherInfoInSchoolClasses()
         {
             List<SchoolClass> newSchoolClasses = new();
-            List<string> schoolClassNames = GetSchoolClassNames();
+            IEnumerable<string> schoolClassNames = GetSchoolClassNames();
             foreach (string schoolClassName in schoolClassNames)
             {
                 List<SchoolClass> schoolClassesWithName = GetSchoolClassesWithName(schoolClassName);
@@ -74,7 +74,7 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="schoolClasses">Danh sách các SchoolClass cùng tên.</param>
         /// <returns>Danh sách các Teacher của các SchoolClass trên.</returns>
-        private List<Teacher> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
+        private static List<Teacher> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             if (DinstictSchoolClassName(schoolClasses).Length > 1)
             {
@@ -99,13 +99,13 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="schoolClasses">Danh sách các SchoolClass cùng tên.</param>
         /// <returns>Danh sách các TempTeacher của các SchoolClass trên.</returns>
-        private List<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
+        private static List<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             if (DinstictSchoolClassName(schoolClasses).Length > 1)
                 throw new Exception("SchoolClass's Name is difference!");
             else
             {
-                List<string> tempTeachers = new List<string>();
+                List<string> tempTeachers = new();
                 foreach (SchoolClass schoolClass in schoolClasses)
                 {
                     tempTeachers.AddRange(schoolClass.TempTeachers);
@@ -135,13 +135,13 @@ namespace SubjectCrawlService1.DataTypes
             return schoolClasses;
         }
 
-        private List<string> GetSchoolClassNames()
+        private IEnumerable<string> GetSchoolClassNames()
         {
             if (_currentRegisterCodeForBelongSpecialSubject != null)
             {
-                return _reRenderSchoolClasses.Select(item => item.SchoolClassName).Distinct().ToList();
+                return _reRenderSchoolClasses.Select(item => item.SchoolClassName).Distinct();
             }
-            return _schoolClasses.Select(item => item.SchoolClassName).Distinct().ToList();
+            return _schoolClasses.Select(item => item.SchoolClassName).Distinct();
         }
 
         public DayPlaceMetaData GetDayPlaceMetaData()
@@ -190,52 +190,27 @@ namespace SubjectCrawlService1.DataTypes
 
         public Phase GetPhase()
         {
-            List<Phase> phases = new List<Phase>();
+            List<Phase> phases = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 Phase phase = schoolClass.StudyWeek.GetPhase();
-                phases.Add(phase);
+                if (!phases.Contains(phase))
+                {
+                    phases.Add(phase);
+                }
             }
-            phases = phases.Distinct().ToList();
             return phases.Count == 2 ? Phase.All : phases[0];
         }
 
-        public List<Teacher> GetTeachers()
+        public IEnumerable<Teacher> GetTeachers()
         {
-            List<Teacher> teachers = new List<Teacher>();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                teachers.AddRange(schoolClass.Teachers);
+                foreach (Teacher teacher in schoolClass.Teachers)
+                {
+                    yield return teacher;
+                }
             }
-            return teachers;
-        }
-
-
-        /// <summary>
-        /// Lấy ra các thứ học tại một giai đoạn.
-        /// </summary>
-        /// <param name="phase"></param>
-        /// <returns></returns>
-        public List<DayOfWeek> GetDayOfWeeks(Phase phase)
-        {
-            List<DayOfWeek> dayOfWeeks = new();
-            foreach (SchoolClass schoolClass in _schoolClasses)
-            {
-                if (schoolClass.StudyWeek.GetPhase() == phase)
-                    dayOfWeeks.AddRange(schoolClass.Schedule.GetSchoolDays());
-            }
-            return dayOfWeeks;
-        }
-
-        public List<Enums.Session> GetSession()
-        {
-            List<Enums.Session> sessions = new();
-            foreach (SchoolClass schoolClass in _schoolClasses)
-            {
-                sessions.AddRange(schoolClass.Schedule.GetSessions());
-            }
-            sessions = sessions.Distinct().ToList();
-            return sessions;
         }
 
         public IEnumerable<Place> GetPlaces()
@@ -248,18 +223,6 @@ namespace SubjectCrawlService1.DataTypes
             return places.Distinct();
         }
 
-        public bool IsHaveThisTeacher(Teacher teacher)
-        {
-            return true;
-        }
-
-        public bool IsHaveThisPhase(Phase phase)
-        {
-            if (GetPhase() == phase)
-                return true;
-            return false;
-        }
-
         public string GetRegisterCode()
         {
             foreach (SchoolClass schoolClass in _schoolClasses)
@@ -268,22 +231,6 @@ namespace SubjectCrawlService1.DataTypes
                     return schoolClass.RegisterCode;
             }
             return "";
-        }
-
-        /// <summary>
-        /// Hợp nhất hai StudyWeek của các SchoolClass trong ClassGroup này.
-        /// </summary>
-        /// <returns>Trả về StudyWeek của ClassGroup này.</returns>
-        private StudyWeek GetStudyWeeks()
-        {
-            List<int> studyWeekValues = new List<int>();
-            foreach (SchoolClass schoolClass in SchoolClasses)
-            {
-                studyWeekValues.Add(schoolClass.StudyWeek.StartWeek);
-                studyWeekValues.Add(schoolClass.StudyWeek.EndWeek);
-            }
-            StudyWeek studyWeek = new StudyWeek(studyWeekValues.Min(), studyWeekValues.Max());
-            return studyWeek;
         }
 
         /// <summary>

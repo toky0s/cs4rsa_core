@@ -17,7 +17,6 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using ProgramSubjectCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.DataTypes;
-using ProgramSubjectCrawlerService.DataTypes.Enums;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
@@ -247,7 +246,7 @@ namespace cs4rsa_core.ViewModels
 
         public AutoScheduleViewModel(ICourseCrawler courseCrawler,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser, 
+            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue)
         {
             _openInBrowser = openInBrowser;
@@ -582,7 +581,7 @@ namespace cs4rsa_core.ViewModels
         {
             return _selectedProSubject != null
                 && _selectedProSubject.IsAvaiable
-                && !_selectedProSubject.IsDone 
+                && !_selectedProSubject.IsDone
                 && !ChoicedProSubjectModels.Contains(_selectedProSubject);
         }
 
@@ -711,30 +710,6 @@ namespace cs4rsa_core.ViewModels
             {
                 CreditCount += subjectModel.StudyUnit;
             }
-        }
-
-        /// <summary>
-        /// Kiểm tra xem Folder được truyền vào sẽ hoàn thành trong tương lai hay không
-        /// nếu người dùng chọn học những môn thuộc folder đó.
-        /// </summary>
-        /// <param name="programFolder"></param>
-        /// <returns></returns>
-        private bool IsFolderWillCompleteInFuture(ProgramFolder programFolder)
-        {
-            if (programFolder.StudyMode == StudyMode.AllowSelection)
-            {
-                int needLearn = programFolder.NeedLearnToComplete();
-                int hasChoiced = 0;
-                foreach (ProgramSubjectModel subjectModel in ChoicedProSubjectModels)
-                {
-                    if (subjectModel.ChildOfNode == programFolder.Id)
-                    {
-                        hasChoiced++;
-                    }
-                }
-                return (needLearn - hasChoiced) == 0;
-            }
-            return false;
         }
 
         public async void Handle(ExitLoginMessage message)

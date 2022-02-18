@@ -42,7 +42,8 @@ namespace cs4rsa_core.ViewModelFunctions
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
             bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()
                 .Any(scm => scm.RegisterCode == registerCode);
-            if (classGroupModel == null) {
+            if (classGroupModel == null)
+            {
                 throw new System.Exception("ClassGroupModel was null!");
             }
             if (!isValidRegisterCode)

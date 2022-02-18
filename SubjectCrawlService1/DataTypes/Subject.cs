@@ -35,7 +35,7 @@ namespace SubjectCrawlService1.DataTypes
 
         public string Name { get; }
         public string SubjectCode { get; }
-        public int StudyUnit => int.Parse(_studyUnit);
+        public byte StudyUnit => byte.Parse(_studyUnit);
         public string StudyUnitType => _studyUnitType;
         public string StudyType => _studyType;
         public string Semester => _semester;
@@ -43,12 +43,12 @@ namespace SubjectCrawlService1.DataTypes
         public List<string> ParallelSubject { get; }
         public string Desciption { get; }
         public string RawSoup { get; }
-        public int CourseId { get; }
+        public ushort CourseId { get; }
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, int courseId,
+                        string description, string rawSoup, ushort courseId,
                         ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
@@ -216,7 +216,7 @@ namespace SubjectCrawlService1.DataTypes
             locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToList();
 
             List<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct().ToList();
-            List<Place> places = new List<Place>();
+            List<Place> places = new();
             places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item)).ToList();
 
             #region MetaData
@@ -228,10 +228,10 @@ namespace SubjectCrawlService1.DataTypes
             List<string> locationsForMetaData = locations.Select(item => item.Trim()).ToList();
             List<Place> placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
 
-            DayPlaceMetaData metaData = new DayPlaceMetaData();
+            DayPlaceMetaData metaData = new();
             for (int i = 0; i < metaCount; i++)
             {
-                DayPlacePair dayPlacePair = new DayPlacePair(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
+                DayPlacePair dayPlacePair = new(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
                 metaData.AddDayTimePair(dayOfWeeks[i], dayPlacePair);
             }
             #endregion
@@ -349,7 +349,7 @@ namespace SubjectCrawlService1.DataTypes
         public static Task<Subject> CreateAsync(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, int courseId,
+                        string description, string rawSoup, ushort courseId,
                         ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,

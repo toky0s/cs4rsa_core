@@ -30,10 +30,10 @@ namespace DisciplineCrawlerService.Crawlers
         /// </summary>
         public void GetDisciplineAndKeyword(
             BackgroundWorker backgroundWorker = null,
-            double numberOfSubjects = 0)
+            short numberOfSubjects = 0)
         {
-            double reportValue = 0;
-            double jump = 0;
+            float reportValue = 0;
+            float jump = 0;
             if (numberOfSubjects != 0)
             {
                 jump = 1000 / numberOfSubjects;
@@ -80,7 +80,7 @@ namespace DisciplineCrawlerService.Crawlers
                     Keyword keyword = new()
                     {
                         Keyword1 = keyword1,
-                        CourseId = int.Parse(courseId),
+                        CourseId = ushort.Parse(courseId),
                         DisciplineId = disciplineId,
                         SubjectName = subjectName,
                         Color = color
@@ -109,7 +109,7 @@ namespace DisciplineCrawlerService.Crawlers
         /// Lấy ra số lượng môn học hiện có trong học kỳ hiện tại.
         /// </summary>
         /// <returns>Số lượng môn học hiện có.</returns>
-        public int GetNumberOfSubjects()
+        public short GetNumberOfSubjects()
         {
             string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
 
@@ -119,9 +119,9 @@ namespace DisciplineCrawlerService.Crawlers
             HtmlNode node = document.DocumentNode;
             HtmlNode result = node.SelectSingleNode("/div/table/thead/tr/th");
             string innerText = result.InnerText;
-            Regex numberMatchingRegex = new Regex("([0-9][0-9][0-9])");
+            Regex numberMatchingRegex = new("([0-9][0-9][0-9])");
             Match match = numberMatchingRegex.Match(innerText);
-            return int.Parse(match.Value);
+            return short.Parse(match.Value);
         }
     }
 }

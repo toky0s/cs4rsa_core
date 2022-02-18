@@ -7,7 +7,6 @@ using cs4rsa_core.Settings.Interfaces;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using Microsoft.Toolkit.Mvvm.Input;
-using System;
 using System.Windows;
 
 namespace cs4rsa_core.ViewModels

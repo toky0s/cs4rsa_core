@@ -25,7 +25,7 @@ namespace cs4rsa_core.Dialogs.Implements
             List<Subject> subjects = new();
             foreach (string courseId in courseIds)
             {
-                Subject subject = await _subjectCrawler.Crawl(int.Parse(courseId));
+                Subject subject = await _subjectCrawler.Crawl(ushort.Parse(courseId));
                 subjects.Add(subject);
             }
             List<SubjectModel> subjectModels = new();

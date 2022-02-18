@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,12 +15,12 @@ namespace HelperService
         /// <returns></returns>
         public static async Task<string> GetHtml(string sessionId, string url)
         {
-            //HttpResponseMessage request1 = await httpClient.GetAsync(url);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             CookieContainer cookieContainer = new();
             Cookie cookie = new("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
+            request.Timeout = 1000;
 
             WebResponse response = await request.GetResponseAsync();
             HttpWebResponse httpWebResponse = (HttpWebResponse)response;

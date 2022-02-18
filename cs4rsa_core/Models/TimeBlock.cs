@@ -1,8 +1,4 @@
-﻿
-
-using ConflictService.DataTypes;
-using SubjectCrawlService1.DataTypes;
-using System;
+﻿using System;
 
 namespace cs4rsa_core.Models
 {

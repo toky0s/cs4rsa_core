@@ -1,10 +1,7 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Interfaces;
-using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
 using FirebaseService.Interfaces;
-using LightMessageBus;
-using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
@@ -29,7 +26,7 @@ namespace cs4rsa_core.ViewModels
         private readonly IFirebase _firebase;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly IOpenInBrowser _openInBrowser;
-        public InfoViewModel(ISetting setting, IFirebase firebase, 
+        public InfoViewModel(ISetting setting, IFirebase firebase,
             ISnackbarMessageQueue snackbarMessageQueue, IOpenInBrowser openInBrowser)
         {
             _setting = setting;

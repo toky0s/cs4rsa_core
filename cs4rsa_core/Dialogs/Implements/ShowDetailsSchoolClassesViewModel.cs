@@ -22,12 +22,15 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public void OnPick()
         {
-            ClassGroupResult classGroupResult = new()
+            if (SelectedSchoolClassModel != null)
             {
-                ClassGroupModel = ClassGroupModel,
-                SelectedRegisterCode = SelectedSchoolClassModel.RegisterCode
-            };
-            CloseDialogCallback(classGroupResult);
+                ClassGroupResult classGroupResult = new()
+                {
+                    ClassGroupModel = ClassGroupModel,
+                    SelectedRegisterCode = SelectedSchoolClassModel.RegisterCode
+                };
+                CloseDialogCallback(classGroupResult);
+            }
         }
     }
 }

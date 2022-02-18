@@ -86,22 +86,5 @@ namespace SubjectCrawlService1.DataTypes
             }
             return false;
         }
-
-        /// <summary>
-        /// Kiểm tra đây có phải là buổi tối hay không.
-        /// </summary>
-        /// <returns></returns>
-        private bool IsInNight()
-        {
-            DateTime[] NightTime =  {
-                DateTime.ParseExact("17:45", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
-                DateTime.ParseExact("21:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
-            };
-            if (_start >= NightTime[0] && _end <= NightTime[1])
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

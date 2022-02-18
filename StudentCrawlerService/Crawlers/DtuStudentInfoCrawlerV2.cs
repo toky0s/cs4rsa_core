@@ -106,16 +106,12 @@ namespace StudentCrawlerService.Crawlers
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    using (var response = await client.GetAsync(uri))
-                    {
-                        response.EnsureSuccessStatusCode();
-                        Stream stream = await response.Content.ReadAsStreamAsync();
-                        return ConvertToBase64(stream);
-                    }
-                }
-                
+                using HttpClient client = new();
+                using var response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                return ConvertToBase64(stream);
+
             }
             catch (Exception ex)
             {
@@ -132,7 +128,7 @@ namespace StudentCrawlerService.Crawlers
                 return Convert.ToBase64String(memoryStream.ToArray());
             }
 
-            var bytes = new Byte[(int)stream.Length];
+            byte[] bytes = new byte[(int)stream.Length];
 
             stream.Seek(0, SeekOrigin.Begin);
             stream.Read(bytes, 0, (int)stream.Length);

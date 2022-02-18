@@ -39,19 +39,19 @@ namespace SubjectCrawlService1.Utils
             string[] dataFromTrTag = ExtractDataFromTrTag(tdTag);
             string[] times = CleanTimeItem(dataFromTrTag);
             // Convert to generic data;
-            Dictionary<DayOfWeek, List<StudyTime>> scheduleTime = new Dictionary<DayOfWeek, List<StudyTime>>();
-            Regex regexDate = new Regex(@"^T[2-7]:$|^CN:$");
-            Regex regexTime = new Regex(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            Dictionary<DayOfWeek, List<StudyTime>> scheduleTime = new();
+            Regex regexDate = new (@"^T[2-7]:$|^CN:$");
+            Regex regexTime = new (@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
             int i = 0;
             DayOfWeek dayOfWeek = DayOfWeek.Sunday;
-            Dictionary<DayOfWeek, List<string>> dateTimeStringPairs = new Dictionary<DayOfWeek, List<string>>();
+            Dictionary<DayOfWeek, List<string>> dateTimeStringPairs = new();
             while (i < times.Length)
             {
                 if (regexDate.IsMatch(times[i]))
                 {
                     dayOfWeek = DateToDateWeek(times[i]);
-                    List<string> timeStrings = new List<string>();
+                    List<string> timeStrings = new();
                     dateTimeStringPairs.Add(dayOfWeek, timeStrings);
                 }
                 if (regexTime.IsMatch(times[i]))
@@ -60,7 +60,6 @@ namespace SubjectCrawlService1.Utils
                 }
                 i++;
             }
-            // Dict[Date:List[time]]
             foreach (var item in dateTimeStringPairs)
             {
                 List<string> timeStrings = item.Value;
@@ -74,10 +73,10 @@ namespace SubjectCrawlService1.Utils
         /// Trả về array text được tách ra từ thẻ Td của thời gian học.
         /// </summary>
         /// <param name="trTag"></param>
-        private string[] ExtractDataFromTrTag(HtmlNode tdTag)
+        private static string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
             string[] separatingStrings = { " ", "\n", "\r", "-", "," };
-            string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return trTagSplitDatas;
         }
 
@@ -86,9 +85,9 @@ namespace SubjectCrawlService1.Utils
         /// </summary>
         /// <param name="tdTagSplitDatas"></param>
         /// <returns>Trả về array time item đã được clean.</returns>
-        private string[] CleanTimeItem(string[] tdTagSplitDatas)
+        private static string[] CleanTimeItem(string[] tdTagSplitDatas)
         {
-            Regex timeRegex = new Regex(@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            Regex timeRegex = new (@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
             string[] times = tdTagSplitDatas.Where(item => timeRegex.IsMatch(item)).ToArray();
             return times;
         }
@@ -98,37 +97,18 @@ namespace SubjectCrawlService1.Utils
         /// </summary>
         /// <param name="timeStrings">Time string phải match với pattern ^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$</param>
         /// <returns></returns>
-        private List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
+        private static List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
             timeStrings = timeStrings.Distinct().ToList();
-            List<StudyTime> studyTimes = new List<StudyTime>();
+            List<StudyTime> studyTimes = new();
             int i = 0;
-            while (i < timeStrings.Count())
+            while (i < timeStrings.Count)
             {
                 StudyTime studyTime = new StudyTime(timeStrings[i], timeStrings[i + 1]);
                 studyTimes.Add(studyTime);
-                i = i + 2;
+                i += 2;
             }
             return studyTimes;
-        }
-
-        /// <summary>
-        /// Trả về index của các chuỗi date như T2: T3: trong list times lấy được.
-        /// </summary>
-        /// <param name="times">{"T2:", "15:15", "17:15", "T5:", "15:15", "17:15"}</param>
-        /// <returns>Một list các index của chuỗi date.</returns>
-        private List<int> IndexDayOfWeek(string[] times)
-        {
-            Regex regex = new(@"^T[2-7]:$|^CN:$");
-            List<int> output = new();
-            for (int i = 0; i < times.Length; i++)
-            {
-                if (regex.IsMatch(times[i]))
-                {
-                    output.Add(i);
-                }
-            }
-            return output;
         }
 
         /// <summary>
@@ -136,7 +116,7 @@ namespace SubjectCrawlService1.Utils
         /// </summary>
         /// <param name="date">T2: T4: T5: T6: T7: CN:</param>
         /// <returns>Enum Week.</returns>
-        private DayOfWeek DateToDateWeek(string date)
+        private static DayOfWeek DateToDateWeek(string date)
         {
             switch (date)
             {

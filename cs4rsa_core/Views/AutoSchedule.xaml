@@ -33,7 +33,6 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Height" Value="1" />
             </Style>
-            <converter:Base64ImageConverter x:Key="Base64ImageConverter" />
             <vmConverter:ConflictModelConverter x:Key="ConflictInfoConverter" />
             <vmConverter:ConflictTypeConverter x:Key="ConflictTypeConverter" />
             <vmConverter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />

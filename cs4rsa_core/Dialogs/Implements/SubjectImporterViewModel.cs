@@ -56,7 +56,7 @@ namespace cs4rsa_core.Dialogs.Implements
                                             .ToList();
 
             List<SubjectModel> subjectModels = new();
-            foreach (int courseId in courseIds)
+            foreach (ushort courseId in courseIds)
             {
                 Subject subject = await _subjectCrawler.Crawl(courseId);
                 await subject.GetClassGroups();

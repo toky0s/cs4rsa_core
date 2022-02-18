@@ -54,11 +54,10 @@ namespace SubjectCrawlService1.Utils
 
         public static StudyUnitType ToStudyUnitType(string text)
         {
-            switch (text)
+            return text switch
             {
-                default:
-                    return StudyUnitType.Credit;
-            }
+                _ => StudyUnitType.Credit,
+            };
         }
 
         public static RegistrationType ToRegistrationType(string text)

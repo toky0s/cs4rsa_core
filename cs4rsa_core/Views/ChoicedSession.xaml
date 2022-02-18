@@ -114,7 +114,7 @@
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectedItem="{Binding SelectedConflictModel}">
             <ListView.Resources>
-                <ToolTip x:Key="TimeConflictToolTip">
+                <ToolTip x:Key="TimeConflictToolTip" Placement="Left">
                     <TextBlock Text="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}" />
                 </ToolTip>
                 <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">

@@ -1,6 +1,4 @@
 ﻿using cs4rsa_core.ViewModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,7 +12,7 @@ namespace cs4rsa_core.Views
             MoveCursorMenu(1);
         }
 
-        private void MoveCursorMenu(int index)
+        private void MoveCursorMenu(byte index)
         {
             if (index != 0)
             {
@@ -26,11 +24,11 @@ namespace cs4rsa_core.Views
         private void ListViewMenu_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ListView listView = sender as ListView;
-            int index = ListViewMenu.SelectedIndex;
+            byte index = (byte)ListViewMenu.SelectedIndex;
             MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
             if (index > 0 && mainWindowViewModel.SelectedIndex != listView.SelectedIndex - 1)
             {
-                mainWindowViewModel.SelectedIndex = index - 1;
+                mainWindowViewModel.SelectedIndex = (byte)(index - 1);
                 MoveCursorMenu(index);
             }
             else if (index == 0)
