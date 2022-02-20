@@ -8,8 +8,8 @@ namespace cs4rsa_core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int emptySeat = (int)value;
-            int compareToValue = int.Parse((string)parameter);
+            ushort emptySeat = (ushort)value;
+            ushort compareToValue = ushort.Parse((string)parameter);
             return emptySeat <= compareToValue;
         }
 

@@ -24,10 +24,8 @@ namespace cs4rsa_core.Converters.DialogConverters
                 bi.EndInit();
                 return bi;
             }
-#pragma warning disable CS0168 // The variable 'e' is declared but never used
-            catch (NotSupportedException e)
+            catch
             {
-#pragma warning restore CS0168 // The variable 'e' is declared but never used
                 return null;
             }
         }

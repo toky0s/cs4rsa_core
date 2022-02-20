@@ -53,35 +53,33 @@
                 </ListView.Resources>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <materialDesign:Card>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Rectangle
-                                    Width="80"
-                                    Height="80"
-                                    Margin="3">
-                                    <Rectangle.Fill>
-                                        <ImageBrush ImageSource="{Binding AvatarImage, Converter={StaticResource Base64ImageConverter}}" Stretch="UniformToFill" />
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <StackPanel Grid.Column="1" Orientation="Vertical">
-                                    <TextBlock
-                                        Margin="5,5,0,0"
-                                        FontSize="16"
-                                        FontWeight="Bold"
-                                        Text="{Binding Name}" />
-                                    <TextBlock Margin="5,0,0,0" Text="{Binding StudentId}" />
-                                    <TextBlock
-                                        Margin="5,0,0,10"
-                                        FontStyle="Italic"
-                                        Foreground="LightGray"
-                                        Text="Nhấp chuột phải để thao tác" />
-                                </StackPanel>
-                            </Grid>
-                        </materialDesign:Card>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle
+                                Width="80"
+                                Height="100"
+                                Margin="3">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="{Binding AvatarImage, Converter={StaticResource Base64ImageConverter}}" Stretch="UniformToFill" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock
+                                    Margin="5,5,0,0"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="{Binding Name}" />
+                                <TextBlock Margin="5,0,0,0" Text="{Binding StudentId}" />
+                                <TextBlock
+                                    Margin="5,0,0,10"
+                                    FontStyle="Italic"
+                                    Foreground="LightGray"
+                                    Text="Nhấp chuột phải để thao tác" />
+                            </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>

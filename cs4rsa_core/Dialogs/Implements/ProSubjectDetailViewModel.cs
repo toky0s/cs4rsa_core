@@ -67,8 +67,12 @@ namespace cs4rsa_core.Dialogs.Implements
         public RelayCommand CloseDialogCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
         public ProgramDiagram ProgramDiagram { get; set; }
+
+        #region Services
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
+
+        #endregion
 
         public ProSubjectDetailViewModel(ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
         {

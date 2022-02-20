@@ -1,5 +1,4 @@
-﻿using cs4rsa_core.Exceptions;
-using Cs4rsaDatabaseService.Models;
+﻿using Cs4rsaDatabaseService.Models;
 using HelperService;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
@@ -20,7 +19,7 @@ namespace cs4rsa_core.Models
         private string _currentRegisterCode;
 
         public ClassGroup ClassGroup { get; }
-        public int EmptySeat { get; }
+        public ushort EmptySeat { get; }
         public string Name => ClassGroup.Name;
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }
@@ -116,7 +115,7 @@ namespace cs4rsa_core.Models
             else
             {
                 string message = $"SchoolClass with code {registerCode} is not belong special subject!";
-                throw new SchoolClassIsNotBelongSpecialSubjectException(message);
+                throw new ArgumentException(message);
             }
         }
 

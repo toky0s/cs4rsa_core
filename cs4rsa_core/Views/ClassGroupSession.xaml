@@ -35,7 +35,18 @@
                 Margin="0,0,5,0"
                 Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
                 Text="{Binding SubjectModel.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding ClassGroupModels.Count, StringFormat=({0})}" />
+            <TextBlock>
+                <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" TargetType="TextBlock">
+                        <Setter Property="Text" Value="{Binding ClassGroupModels.Count, StringFormat=({0})}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ClassGroupModels.Count}" Value="0">
+                                <Setter Property="Text" Value="Chưa có môn nào được chọn" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </StackPanel>
         <ListBox
             x:Name="ClassGroupListBox"
@@ -263,7 +274,6 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </ToolTip.Style>
-
                                         </ToolTip>
                                     </ComboBox.ToolTip>
                                 </ComboBox>

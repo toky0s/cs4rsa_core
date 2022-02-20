@@ -48,9 +48,10 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             SpecialStringCrawler specialStringCrawlerV1 = new();
             SpecialStringCrawlerV2 specialStringCrawlerV2 = new();
-            string specialStringV1 = await specialStringCrawlerV1.GetSpecialString(_sessionId);
-            string specialStringV2 = await specialStringCrawlerV2.GetSpecialString(_sessionId);
-            if (specialStringV1 == null && specialStringCrawlerV2 == null)
+            Task<string> specialStringV1 =  specialStringCrawlerV1.GetSpecialString(_sessionId);
+            Task<string> specialStringV2 =  specialStringCrawlerV2.GetSpecialString(_sessionId);
+            string[] specialStrings = await Task.WhenAll(specialStringV1, specialStringV2);
+            if (specialStrings[0] is null && specialStrings[1] is null)
             {
                 string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy Session ID, " +
                     "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
@@ -62,7 +63,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
             else
             {
-                Student student = await _dtuStudentInfoCrawler.Crawl(specialStringV1 ?? specialStringV2);
+                Student student = await _dtuStudentInfoCrawler.Crawl(specialStrings[0] ?? specialStrings[1]);
                 //await _firebase.PostUser(student.StudentId, student.SpecialString);
                 string message = $"Xin chào {student.Name}";
                 _snackbarMessageQueue.Enqueue(message);

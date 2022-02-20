@@ -10,7 +10,7 @@
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     Title="CS4RSA"
     Width="1500"
-    Height="700"
+    Height="800"
     MinHeight="600"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
@@ -39,277 +39,250 @@
         DialogContent="{Binding DialogUC}"
         IsOpen="{Binding IsOpenDialog}">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="1">
-                <materialDesign:Transitioner SelectedIndex="{Binding SelectedIndex}">
-                    <local:Home />
-                    <local:Login />
-                    <local:MainScheduling />
-                    <local:AutoSchedule />
-                    <materialDesign:TransitionerSlide>
-                        <materialDesign:TransitionerSlide.BackwardWipe>
-                            <materialDesign:SlideWipe Direction="Down" />
-                        </materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:TransitionerSlide.ForwardWipe>
-                            <materialDesign:SlideWipe Direction="Up" />
-                        </materialDesign:TransitionerSlide.ForwardWipe>
-                        <local:Info />
-                    </materialDesign:TransitionerSlide>
-                </materialDesign:Transitioner>
-                <materialDesign:Snackbar
-                    HorizontalAlignment="Center"
-                    ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
-                    MessageQueue="{Binding SnackbarMessageQueue}">
-                    <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
-                </materialDesign:Snackbar>
-            </Grid>
-            <Grid
-                x:Name="Grid_Menu"
-                Width="65"
-                HorizontalAlignment="Left"
-                Background="{StaticResource Cs4rsa_MainThemeColor}">
-                <Grid.Style>
-                    <Style>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard x:Name="BeginExpandMenuAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                Storyboard.TargetProperty="Width"
-                                                From="65"
-                                                To="200"
-                                                Duration="0:0:0.3">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <PowerEase EasingMode="EaseOut" />
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <StopStoryboard BeginStoryboardName="BeginExpandMenuAnimation" />
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard x:Name="EndExpandMenuAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                Storyboard.TargetProperty="Width"
-                                                From="200"
-                                                To="65"
-                                                Duration="0:0:0.3">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <PowerEase EasingMode="EaseOut" />
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <StopStoryboard BeginStoryboardName="EndExpandMenuAnimation" />
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.3}">
-                    <Grid
-                        x:Name="GridCursor"
-                        Width="10"
-                        Height="60"
-                        Margin="0,100,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Background="{StaticResource Cs4rsa_MainThemeLightColor}" />
-                </materialDesign:TransitioningContent>
-                <ListView
-                    x:Name="ListViewMenu"
-                    Margin="0,100"
-                    FontSize="18"
-                    Foreground="White"
-                    PreviewMouseLeftButtonUp="ListViewMenu_PreviewMouseLeftButtonUp"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListViewItem
-                        x:Name="ListViewItem_Menu"
-                        Width="65"
-                        Height="60"
-                        HorizontalAlignment="Left">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+            <materialDesign:DrawerHost
+                x:Name="DrawerHost"
+                Grid.Row="0"
+                Grid.ColumnSpan="2">
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <!--<StackPanel Margin="16">
+                        <TextBlock
+                            Margin="4"
+                            HorizontalAlignment="Center"
+                            Text="LEFT FIELD" />
+                        <Button
+                            Margin="4"
+                            HorizontalAlignment="Center"
+                            Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                            CommandParameter="{x:Static Dock.Left}"
+                            Content="CLOSE THIS"
+                            Style="{DynamicResource MaterialDesignFlatButton}" />
+                        <Button
+                            Margin="4"
+                            HorizontalAlignment="Center"
+                            Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                            Content="CLOSE ALL"
+                            Style="{DynamicResource MaterialDesignFlatButton}" />
+                    </StackPanel>-->
+                    <Grid Background="{StaticResource Cs4rsa_MainThemeColor}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ToggleButton
+                            Grid.Row="0"
+                            Margin="0,16,10,16"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                            CommandParameter="{x:Static Dock.Left}"
+                            Foreground="White"
+                            IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
+                            Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+                        <Grid
+                            x:Name="Grid_Menu"
+                            Grid.Row="1"
+                            HorizontalAlignment="Left">
+                            <!--<Grid.Style>
+                            <Style>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Mở rộng" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Thu nhỏ" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="BeginExpandMenuAnimation">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Width"
+                                                        From="65"
+                                                        To="200"
+                                                        Duration="0:0:0.3">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <PowerEase EasingMode="EaseOut" />
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="BeginExpandMenuAnimation" />
+                                        </DataTrigger.ExitActions>
                                     </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="Menu" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Trang chủ" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="EndExpandMenuAnimation">
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Width"
+                                                        From="200"
+                                                        To="65"
+                                                        Duration="0:0:0.3">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <PowerEase EasingMode="EaseOut" />
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="EndExpandMenuAnimation" />
+                                        </DataTrigger.ExitActions>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Text="Trang chủ" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Tài khoản DTU" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="Account" />
-                            <TextBlock
-                                Margin="5,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Text="Tài khoản DTU" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Xếp lịch thủ công" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="Calendar" />
-                            <TextBlock
-                                Margin="5,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Text="Xếp lịch thủ công" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Xếp lịch tự động" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="AutoFix" />
-                            <TextBlock
-                                Margin="5,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Text="Xếp lịch tự động" />
-                        </StackPanel>
-                    </ListViewItem>
-                    <ListViewItem Height="60">
-                        <ListViewItem.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <Setter Property="ToolTip">
-                                            <Setter.Value>
-                                                <ToolTip Content="Thông tin" Placement="Right" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ListViewItem.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="30"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="Information" />
-                            <TextBlock
-                                Margin="5,0"
-                                VerticalAlignment="Center"
-                                FontSize="15"
-                                Text="Thông tin" />
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-            </Grid>
+                        </Grid.Style>-->
+                            <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.3}">
+                                <Grid
+                                    x:Name="GridCursor"
+                                    Width="10"
+                                    Height="60"
+                                    Margin="0,100,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="{StaticResource Cs4rsa_MainThemeLightColor}" />
+                            </materialDesign:TransitioningContent>
+                            <ListView
+                                x:Name="ListViewMenu"
+                                FontSize="18"
+                                Foreground="White"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                SelectionChanged="ListViewMenu_SelectionChanged">
+                                <ListViewItem Height="60">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Home" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Trang chủ" />
+                                    </StackPanel>
+                                </ListViewItem>
+                                <ListViewItem Height="60">
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Account" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Tài khoản DTU" />
+                                    </StackPanel>
+                                </ListViewItem>
+                                <ListViewItem Height="60">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Calendar" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Xếp lịch thủ công" />
+                                    </StackPanel>
+                                </ListViewItem>
+                                <ListViewItem Height="60">
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Kind="AutoFix" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Xếp lịch tự động" />
+                                    </StackPanel>
+                                </ListViewItem>
+                                <ListViewItem Height="60">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Information" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Thông tin" />
+                                    </StackPanel>
+                                </ListViewItem>
+                            </ListView>
+                        </Grid>
+                    </Grid>
+                </materialDesign:DrawerHost.LeftDrawerContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone
+                        Grid.Row="0"
+                        Padding="16"
+                        Mode="PrimaryMid">
+                        <DockPanel>
+                            <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
+                                <ListBox>
+                                    <ListBoxItem Content="Hello World" />
+                                    <ListBoxItem Content="Nice Popup" />
+                                    <ListBoxItem Content="Goodbye" />
+                                </ListBox>
+                            </materialDesign:PopupBox>
+                            <StackPanel Orientation="Horizontal">
+                                <ToggleButton
+                                    Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                                    CommandParameter="{x:Static Dock.Left}"
+                                    IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
+                                    Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+                                <TextBlock
+                                    Margin="16,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                    Text="Ứng dụng xếp lịch siêu cấp vũ trụ của trường đại học Top 500 thế giới" />
+                            </StackPanel>
+                        </DockPanel>
+                    </materialDesign:ColorZone>
+
+                    <Grid Grid.Row="1">
+                        <materialDesign:Transitioner SelectedIndex="{Binding SelectedIndex}">
+                            <local:Home />
+                            <local:Login />
+                            <local:MainScheduling />
+                            <local:AutoSchedule />
+                            <materialDesign:TransitionerSlide>
+                                <materialDesign:TransitionerSlide.BackwardWipe>
+                                    <materialDesign:SlideWipe Direction="Down" />
+                                </materialDesign:TransitionerSlide.BackwardWipe>
+                                <materialDesign:TransitionerSlide.ForwardWipe>
+                                    <materialDesign:SlideWipe Direction="Up" />
+                                </materialDesign:TransitionerSlide.ForwardWipe>
+                                <local:Info />
+                            </materialDesign:TransitionerSlide>
+                        </materialDesign:Transitioner>
+                        <materialDesign:Snackbar
+                            HorizontalAlignment="Center"
+                            ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
+                            MessageQueue="{Binding SnackbarMessageQueue}">
+                            <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
+                        </materialDesign:Snackbar>
+                    </Grid>
+                </Grid>
+            </materialDesign:DrawerHost>
         </Grid>
     </materialDesign:DialogHost>
 </Window>

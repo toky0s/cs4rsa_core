@@ -9,33 +9,22 @@ namespace cs4rsa_core.Views
         public MainWindow()
         {
             InitializeComponent();
-            MoveCursorMenu(1);
+            MoveCursorMenu(0);
         }
 
         private void MoveCursorMenu(byte index)
         {
-            if (index != 0)
-            {
-                TrainsitionigContentSlide.OnApplyTemplate();
-                GridCursor.Margin = new Thickness(0, 100 + (60 * index), 0, 0);
-            }
+            TrainsitionigContentSlide.OnApplyTemplate();
+            GridCursor.Margin = new Thickness(0, 0 + (60 * index), 0, 0);
         }
 
-        private void ListViewMenu_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listView = sender as ListView;
-            byte index = (byte)ListViewMenu.SelectedIndex;
             MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
-            if (index > 0 && mainWindowViewModel.SelectedIndex != listView.SelectedIndex - 1)
-            {
-                mainWindowViewModel.SelectedIndex = (byte)(index - 1);
-                MoveCursorMenu(index);
-            }
-            else if (index == 0)
-            {
-                listView.SelectedIndex = 1;
-                mainWindowViewModel.IsExpanded = !mainWindowViewModel.IsExpanded;
-            }
+            mainWindowViewModel.SelectedIndex = (byte)listView.SelectedIndex;
+            MoveCursorMenu((byte)listView.SelectedIndex);
+            MaterialDesignThemes.Wpf.DrawerHost.CloseDrawerCommand.Execute(null, null);
         }
     }
 }

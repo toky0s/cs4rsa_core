@@ -20,7 +20,6 @@ namespace HelperService
             Cookie cookie = new("ASP.NET_SessionId", sessionId) { Domain = request.Host };
             cookieContainer.Add(cookie);
             request.CookieContainer = cookieContainer;
-            request.Timeout = 1000;
 
             WebResponse response = await request.GetResponseAsync();
             HttpWebResponse httpWebResponse = (HttpWebResponse)response;

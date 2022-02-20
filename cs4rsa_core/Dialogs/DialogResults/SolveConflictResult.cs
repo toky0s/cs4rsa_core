@@ -10,7 +10,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Loại bỏ ClassGroupModel để solve conflict.
         /// </summary>
         /// <param name="classGroupModelName">Tên của ClassGroupModel cần loại bỏ.</param>
         public SolveConflictResult(string classGroupModelName)

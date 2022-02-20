@@ -10,6 +10,7 @@ using LightMessageBus;
 using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -19,6 +20,13 @@ namespace cs4rsa_core.ViewModels
 {
     public class LoginViewModel : ViewModelBase, IMessageHandler<ExitSessionInputMessage>
     {
+        #region Properties
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set { _isExpanded = value; OnPropertyChanged(); }
+        }
         public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }
 
@@ -32,10 +40,12 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         #region Commands
         public AsyncRelayCommand FindCommand { get; set; }
         public AsyncRelayCommand DeleteCommand { get; set; }
+        public RelayCommand ExpandedCommand { get; set; }
         #endregion
 
         #region Services
@@ -54,8 +64,14 @@ namespace cs4rsa_core.ViewModels
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
+            ExpandedCommand = new RelayCommand(OnExpanded);
 
             Students = new();
+        }
+
+        private void OnExpanded()
+        {
+            IsExpanded = !IsExpanded;
         }
 
         private async Task OnDelete()
@@ -68,7 +84,7 @@ namespace cs4rsa_core.ViewModels
             await _unitOfWork.CompleteAsync();
             await LoadStudentInfos();
 
-            _snackbarMessageQueue.Enqueue<Student>(message, "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", OnRestore, actionData);
         }
 
         private void OnRestore(Student obj)

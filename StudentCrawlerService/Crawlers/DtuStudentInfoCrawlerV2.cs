@@ -58,21 +58,23 @@ namespace StudentCrawlerService.Crawlers
                     }
                 }
             }
+
             string cmnd = cmndNode.InnerText;
             string email = emailNode.InnerText;
             string phoneNumber = phoneNumberNode.InnerText;
             string address = StringHelper.SuperCleanString(addressNode.InnerText);
 
             string imageSrcData = imageNode.Attributes["src"].Value;
-            Uri imageSrc = new Uri(imageSrcData);
+            Uri imageSrc = new(imageSrcData);
             string imageBase64Data = await LoadImage(imageSrc);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
             Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
+            
             if (existCurriculum == null)
             {
-                await _unitOfWork.Curriculums.AddAsync(curriculum);
-                await _unitOfWork.CompleteAsync();
+                 await _unitOfWork.Curriculums.AddAsync(curriculum);
+                 await _unitOfWork.CompleteAsync();
             }
             Student studentExist = await _unitOfWork.Students.GetByStudentIdAsync(studentId);
             if (studentExist == null)
@@ -90,8 +92,8 @@ namespace StudentCrawlerService.Crawlers
                     AvatarImage = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
-                await _unitOfWork.Students.AddAsync(student);
-                await _unitOfWork.CompleteAsync();
+                 _unitOfWork.Students.Add(student);
+                 _unitOfWork.Complete();
                 return student;
             }
             return studentExist;

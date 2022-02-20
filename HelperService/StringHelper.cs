@@ -11,19 +11,19 @@ namespace HelperService
 
         public static string[] SplitAndRemoveAllSpace(string text)
         {
-            string[] separatingStrings = { " ", "\n", "\r" };
+            char[] separatingStrings = { ' ', '\n', '\r' };
             return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static string[] SplitAndRemoveNewLine(string text)
         {
-            string[] separatingStrings = { "\n", "\r" };
+            char[] separatingStrings = { '\n', '\r' };
             return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static string SuperCleanString(string text)
         {
-            string[] separatingStrings = { " ", "\n", "\r" };
+            char[] separatingStrings = { ' ', '\n', '\r' };
             string[] sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             string ouput = string.Join(" ", sliceStrings);
             return ouput;

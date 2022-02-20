@@ -10,7 +10,7 @@
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     Padding="10"
     d:DataContext="{d:DesignInstance Type=viewmodels:LoginViewModel}"
-    d:DesignHeight="450"
+    d:DesignHeight="650"
     d:DesignWidth="800"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -30,19 +30,51 @@
             <RowDefinition />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <TextBlock>
-                <TextBlock.Style>
-                    <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="TextBlock">
-                        <Setter Property="Text" Value="Danh sách các tài khoản" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Students.Count}" Value="0">
-                                <Setter Property="Text" Value="Chưa có tài khoản nào hết" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="0,0,5,0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="TextBlock">
+                            <Setter Property="Text" Value="Danh sách các tài khoản" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Students.Count}" Value="0">
+                                    <Setter Property="Text" Value="Chưa có tài khoản nào hết" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <Button
+                    Width="15"
+                    Height="15"
+                    Command="{Binding ExpandedCommand}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <materialDesign:PackIcon
+                                    VerticalAlignment="Center"
+                                    Cursor="Hand"
+                                    Kind="HelpCircle">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Setter Property="Foreground" Value="Black" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource Cs4rsa_MainThemeLightColor}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
             <ListBox ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                 <ListBox.Resources>
                     <ContextMenu x:Key="StudentContextMenu" Opened="ContextMenu_Opened">
@@ -107,7 +139,7 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </StackPanel>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="auto" />
@@ -126,5 +158,148 @@
                 Content="Tìm kiếm"
                 IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}" />
         </Grid>
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+            <StackPanel.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard x:Name="BeginExpandMenuAnimation">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="Width"
+                                            From="0"
+                                            To="440"
+                                            Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <PowerEase EasingMode="EaseOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginExpandMenuAnimation" />
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard x:Name="EndExpandMenuAnimation">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="Width"
+                                            From="440"
+                                            To="0"
+                                            Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <PowerEase EasingMode="EaseOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="EndExpandMenuAnimation" />
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="Cách để tìm tài khoản của bạn" />
+            <ListView Height="600" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListViewItem>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Style="{StaticResource Header2}" Text="B1. Đầu tiên hãy tải cái extension này" />
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="100"
+                                Margin="0,0,5,0"
+                                Source="/Images/cookie_v1.png"
+                                Stretch="Uniform" />
+                            <TextBlock
+                                Width="200"
+                                Style="{StaticResource Caption}"
+                                TextWrapping="Wrap">
+                                <TextBlock Text="EditThisCookie là một extension cho phép các bạn xem được cookie của trang web hiện tại." TextWrapping="WrapWithOverflow" />
+                                <Hyperlink NavigateUri="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg" RequestNavigate="Hyperlink_RequestNavigate">Cài đặt</Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Style="{StaticResource Header2}" Text="B2. Kế đến là đăng nhập vào MyDTU" />
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="100"
+                                Margin="0,0,5,0"
+                                Source="../Images/logoDTU.png" />
+                            <TextBlock
+                                Width="200"
+                                Style="{StaticResource Caption}"
+                                TextWrapping="Wrap">
+                                <TextBlock Text="Truy cập trang web của trường top 500 thế giới, Miss chăm học,... và đăng nhập bằng tài khoản DTU của bạn." TextWrapping="WrapWithOverflow" />
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Style="{StaticResource Header2}" Text="B3. Tìm cái cục bánh này..." />
+                        <StackPanel Orientation="Vertical">
+                            <Border
+                                Margin="0,0,0,5"
+                                BorderBrush="{DynamicResource Cs4rsa_MainThemeLightColor}"
+                                BorderThickness="2.5"
+                                CornerRadius="3">
+                                <Image
+                                    Width="400"
+                                    HorizontalAlignment="Left"
+                                    Source="../Images/cockieeditor3.png"
+                                    Stretch="UniformToFill" />
+                            </Border>
+
+                            <TextBlock
+                                Width="400"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource Caption}"
+                                Text="Cục bánh này nằm đâu đó ở trên thanh công cụ của trình duyệt của bạn. Tìm ra rồi thì hãy click vào nó nhé."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Style="{StaticResource Header2}" Text="B4. Sao chép giá trị này" />
+                        <StackPanel Orientation="Vertical">
+                            <Border
+                                Margin="0,0,0,5"
+                                BorderBrush="{DynamicResource Cs4rsa_MainThemeLightColor}"
+                                BorderThickness="2.5"
+                                CornerRadius="3">
+                                <Image
+                                    Width="400"
+                                    Height="170"
+                                    Source="../Images/cockieeditor5.png"
+                                    Stretch="UniformToFill" />
+                            </Border>
+                            <TextBlock
+                                Width="400"
+                                Style="{StaticResource Caption}"
+                                Text="Sao chép đoạn mã rồi thả vào cái textbox bên cạnh rồi nhấn Tìm kiếm."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+
+        </StackPanel>
+
+
     </Grid>
 </UserControl>

@@ -58,8 +58,8 @@
 
             <Grid Grid.Column="1" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock

@@ -26,9 +26,13 @@
   <ItemGroup>
     <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
+    <None Remove="Images\cockieeditor3.png" />
+    <None Remove="Images\cockieeditor5.png" />
+    <None Remove="Images\cookie_v1.png" />
     <None Remove="Images\donate.png" />
     <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
+    <None Remove="Images\logoDTU.png" />
     <None Remove="Images\myimage.jpg" />
     <None Remove="SplashScreen.png" />
   </ItemGroup>
@@ -126,9 +130,13 @@
 
   <ItemGroup>
     <Resource Include="Images\choice.jpg" />
+    <Resource Include="Images\cockieeditor3.png" />
+    <Resource Include="Images\cockieeditor5.png" />
+    <Resource Include="Images\cookie_v1.png" />
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />
+    <Resource Include="Images\logoDTU.png" />
     <Resource Include="Images\myimage.jpg" />
   </ItemGroup>
 

@@ -237,11 +237,11 @@ namespace SubjectCrawlService1.DataTypes
         /// Chỗ còn trống.
         /// </summary>
         /// <returns></returns>
-        public int GetEmptySeat()
+        public ushort GetEmptySeat()
         {
             if (_schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
                 return 0;
-            return int.Parse(_schoolClasses[0].EmptySeat);
+            return ushort.Parse(_schoolClasses[0].EmptySeat);
         }
 
         public string GetUrl()

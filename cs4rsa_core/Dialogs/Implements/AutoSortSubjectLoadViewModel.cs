@@ -11,13 +11,14 @@ namespace cs4rsa_core.Dialogs.Implements
 {
     public class AutoSortSubjectLoadViewModel : ViewModelBase
     {
-        public List<ProgramSubjectModel> ProgramSubjectModels { get; set; } = new List<ProgramSubjectModel>();
+        public List<ProgramSubjectModel> ProgramSubjectModels { get; set; }
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;
         public AutoSortSubjectLoadViewModel(ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
         {
             _subjectCrawler = subjectCrawler;
             _colorGenerator = colorGenerator;
+            ProgramSubjectModels = new();
         }
         public async Task<List<SubjectModel>> Download()
         {

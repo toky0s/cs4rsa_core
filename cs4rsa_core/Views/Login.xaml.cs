@@ -1,12 +1,10 @@
 ﻿using cs4rsa_core.ViewModels;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace cs4rsa_core.Views
 {
-    /// <summary>
-    /// Interaction logic for LoginView.xaml
-    /// </summary>
     public partial class Login : UserControl
     {
         public Login()
@@ -24,6 +22,15 @@ namespace cs4rsa_core.Views
         {
             LoginViewModel loginViewModel = DataContext as LoginViewModel;
             await loginViewModel.LoadStudentInfos();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = e.Uri.ToString(),
+                UseShellExecute = true
+            });
         }
     }
 }

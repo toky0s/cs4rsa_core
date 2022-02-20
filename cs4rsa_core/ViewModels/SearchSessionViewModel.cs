@@ -222,7 +222,7 @@ namespace cs4rsa_core.ViewModels
 
             if (text.Contains(' '))
             {
-                string[] textSplit = text.Split(" ", System.StringSplitOptions.None);
+                string[] textSplit = text.Split(new char[] {' '}, StringSplitOptions.None);
                 string discipline = textSplit[0];
                 string keyword1 = textSplit[1];
                 List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
