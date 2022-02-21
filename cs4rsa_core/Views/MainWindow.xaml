@@ -44,25 +44,6 @@
                 Grid.Row="0"
                 Grid.ColumnSpan="2">
                 <materialDesign:DrawerHost.LeftDrawerContent>
-                    <!--<StackPanel Margin="16">
-                        <TextBlock
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Text="LEFT FIELD" />
-                        <Button
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
-                            CommandParameter="{x:Static Dock.Left}"
-                            Content="CLOSE THIS"
-                            Style="{DynamicResource MaterialDesignFlatButton}" />
-                        <Button
-                            Margin="4"
-                            HorizontalAlignment="Center"
-                            Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
-                            Content="CLOSE ALL"
-                            Style="{DynamicResource MaterialDesignFlatButton}" />
-                    </StackPanel>-->
                     <Grid Background="{StaticResource Cs4rsa_MainThemeColor}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -253,11 +234,10 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                    Text="Ứng dụng xếp lịch siêu cấp vũ trụ của trường đại học Top 500 thế giới" />
+                                    Text="Ứng dụng xếp lịch siêu cấp vũ trụ của Trường Đại học Top 500 Thế giới" />
                             </StackPanel>
                         </DockPanel>
                     </materialDesign:ColorZone>
-
                     <Grid Grid.Row="1">
                         <materialDesign:Transitioner SelectedIndex="{Binding SelectedIndex}">
                             <local:Home />

@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>logo.ico</ApplicationIcon>
+	<RuntimeIdentifiers>win10-x86</RuntimeIdentifiers>
     <Win32Resource />
   </PropertyGroup>
 
