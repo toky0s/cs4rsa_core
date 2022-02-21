@@ -130,6 +130,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\background.png" />
     <Resource Include="Images\choice.jpg" />
     <Resource Include="Images\cockieeditor3.png" />
     <Resource Include="Images\cockieeditor5.png" />
@@ -142,7 +143,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\background.png" />
     <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
 

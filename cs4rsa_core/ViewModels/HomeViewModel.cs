@@ -87,7 +87,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnGotoManualCommand()
         {
-            _openInBrowser.Open("https://toky0s.github.io/cs4rsa/");
+            _openInBrowser.Open("https://toky0s.github.io/cs4rsa_core/");
         }
 
         private void OnGotoGithubCommand()

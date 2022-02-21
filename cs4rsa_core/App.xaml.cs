@@ -9,6 +9,7 @@ using cs4rsa_core.Settings;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.Utils;
 using cs4rsa_core.ViewModels;
+using cs4rsa_core.Views;
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Implements;
 using Cs4rsaDatabaseService.Interfaces;
@@ -27,6 +28,7 @@ using StudentCrawlerService.Crawlers.Interfaces;
 using SubjectCrawlService1.Crawlers;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using TeacherCrawlerService1.Crawlers;
 using TeacherCrawlerService1.Crawlers.Interfaces;
@@ -39,6 +41,7 @@ namespace cs4rsa_core
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
             Container = CreateServiceProvider();
             ISetting setting = Container.GetRequiredService<ISetting>();
             string isDatabaseCreated = setting.Read("IsDatabaseCreated");
@@ -50,6 +53,7 @@ namespace cs4rsa_core
                 setting.Save();
             }
         }
+
         private static IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();
