@@ -23,10 +23,7 @@ Phiên bản 1.1.2
 2. Xem lại lưu ý 1.
 
 ## Các tài liệu liên quan
-✨ Nhớ xem qua hướng dẫn sử dụng [ở đây](https://toky0s.github.io/cs4rsa_core/)
-
-🍗 Cơ sở dữ liệu [ở đây](https://dbdiagram.io/d/6155a57d825b5b01461a9d75)
-
-📃 Tài liệu chi tiết [ở đây](https://drive.google.com/drive/folders/152TG-3yCybnFQmQvysOgMIlQdc7U5cnO?usp=sharing)
-
-🍠 Bạn có thể TẢI XUỐNG [ở đây](https://drive.google.com/drive/folders/1mtnhC8AmVsPO0KnyOueQRbvcyHVnMzxO?usp=sharing)
+- ✨ Nhớ xem qua hướng dẫn sử dụng [ở đây](https://toky0s.github.io/cs4rsa_core/)
+- 🍗 Cơ sở dữ liệu [ở đây](https://dbdiagram.io/d/6155a57d825b5b01461a9d75)
+- 📃 Tài liệu chi tiết [ở đây](https://drive.google.com/drive/folders/152TG-3yCybnFQmQvysOgMIlQdc7U5cnO?usp=sharing)
+- 🍠 Bạn có thể TẢI XUỐNG [ở đây](https://drive.google.com/drive/folders/1mtnhC8AmVsPO0KnyOueQRbvcyHVnMzxO?usp=sharing)
