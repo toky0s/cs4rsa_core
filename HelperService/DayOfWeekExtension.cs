@@ -6,23 +6,16 @@ namespace HelperService
     {
         public static string ToCs4rsaThu(this DayOfWeek dayOfWeek)
         {
-            switch (dayOfWeek)
+            return dayOfWeek switch
             {
-                case DayOfWeek.Sunday:
-                    return "Chủ Nhật";
-                case DayOfWeek.Monday:
-                    return "Thứ Hai";
-                case DayOfWeek.Tuesday:
-                    return "Thứ Ba";
-                case DayOfWeek.Wednesday:
-                    return "Thứ Tư";
-                case DayOfWeek.Thursday:
-                    return "Thứ Năm";
-                case DayOfWeek.Friday:
-                    return "Thứ Sáu";
-                default:
-                    return "Thứ Bảy";
-            }
+                DayOfWeek.Sunday => "Chủ Nhật",
+                DayOfWeek.Monday => "Thứ Hai",
+                DayOfWeek.Tuesday => "Thứ Ba",
+                DayOfWeek.Wednesday => "Thứ Tư",
+                DayOfWeek.Thursday => "Thứ Năm",
+                DayOfWeek.Friday => "Thứ Sáu",
+                _ => "Thứ Bảy",
+            };
         }
     }
 }

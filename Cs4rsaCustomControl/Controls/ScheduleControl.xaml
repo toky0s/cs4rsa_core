@@ -1,0 +1,338 @@
+﻿<UserControl
+    x:Class="cs4rsa_core.Controls.ScheduleControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:cs4rsa_core.Converters.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:LineHeightTimelineConverter x:Key="Converter_LineHeightTimelineConverter" />
+        <converter:TimeLineTextPositionConverter x:Key="Converter_TimeLineTextPositionConverter" />
+        <converter:ScheduleBlockHeightConverter x:Key="Converter_ScheduleBlockHeightConverter" />
+        <converter:TopRangeConverter x:Key="Converter_TopRangeConverter" />
+        <Style x:Key="Style_TextBlock_TimeLineHeading" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10" />
+        </Style>
+        <Style x:Key="Style_Line_Timeline" TargetType="Line">
+            <Setter Property="Stroke" Value="#dfe6e9" />
+        </Style>
+        <Style x:Key="Style_cnvDaySchedule" TargetType="Canvas">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#f1f2f6" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="Grid_Schedule">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,5,0"
+            VerticalAlignment="Center"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="Thời gian" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T2" />
+        <TextBlock
+            x:Name="TextBlock_Tuesday"
+            Grid.Row="0"
+            Grid.Column="2"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T3" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="3"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T4" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="4"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T5" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="5"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T6" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="6"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="T7" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="7"
+            Style="{StaticResource Style_TextBlock_TimeLineHeading}"
+            Text="CN" />
+
+        <Canvas
+            x:Name="Canvas_Timelines"
+            Grid.Row="1"
+            Grid.Column="0">
+            <Line
+                Stroke="#f1f2f6"
+                StrokeThickness="1"
+                X1="0"
+                X2="0"
+                Y1="0"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight}" />
+            <Line
+                Stroke="#f1f2f6"
+                StrokeThickness="1"
+                X1="{Binding ElementName=Canvas_Timelines, Path=ActualWidth}"
+                X2="{Binding ElementName=Canvas_Timelines, Path=ActualWidth}"
+                Y1="0"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight}" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="0"
+                Y2="0" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=1}"
+                FontSize="10"
+                Text="07:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=1}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=1}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=2}"
+                FontSize="10"
+                Text="09:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=2}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=2}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=3}"
+                FontSize="10"
+                Text="09:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=3}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=3}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=4}"
+                FontSize="10"
+                Text="10:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=4}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=4}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=5}"
+                FontSize="10"
+                Text="11:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=5}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=5}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=6}"
+                FontSize="10"
+                Text="12:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=6}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=6}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=7}"
+                FontSize="10"
+                Text="13:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=7}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=7}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=8}"
+                FontSize="10"
+                Text="14:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=8}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=8}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=9}"
+                FontSize="10"
+                Text="15:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=9}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=9}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=10}"
+                FontSize="10"
+                Text="15:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=10}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=10}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=11}"
+                FontSize="10"
+                Text="16:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=11}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=11}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=12}"
+                FontSize="10"
+                Text="17:15" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=12}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=12}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=13}"
+                FontSize="10"
+                Text="17:45" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=13}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=13}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=14}"
+                FontSize="10"
+                Text="18:45" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=14}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=14}" />
+            <TextBlock
+                Canvas.Left="2"
+                Canvas.Top="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_TimeLineTextPositionConverter}, ConverterParameter=15}"
+                FontSize="10"
+                Text="21:00" />
+            <Line
+                StrokeThickness="1"
+                Style="{StaticResource Style_Line_Timeline}"
+                X1="0"
+                X2="{Binding ElementName=Grid_Schedule, Path=ActualWidth}"
+                Y1="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=15}"
+                Y2="{Binding ElementName=Canvas_Timelines, Path=ActualHeight, Converter={StaticResource Converter_LineHeightTimelineConverter}, ConverterParameter=15}" />
+        </Canvas>
+        <Canvas
+            x:Name="cnvT2"
+            Grid.Row="1"
+            Grid.Column="1"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvT3"
+            Grid.Row="1"
+            Grid.Column="2"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvT4"
+            Grid.Row="1"
+            Grid.Column="3"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvT5"
+            Grid.Row="1"
+            Grid.Column="4"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvT6"
+            Grid.Row="1"
+            Grid.Column="5"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvT7"
+            Grid.Row="1"
+            Grid.Column="6"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+        <Canvas
+            x:Name="cnvCN"
+            Grid.Row="1"
+            Grid.Column="7"
+            Style="{StaticResource Style_cnvDaySchedule}" />
+    </Grid>
+</UserControl>

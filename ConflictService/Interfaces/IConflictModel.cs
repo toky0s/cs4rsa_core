@@ -3,7 +3,7 @@ using ConflictService.DataTypes.Enums;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 
-namespace cs4rsa_core.Models.Interfaces
+namespace ConflictService.Interfaces
 {
     /// <summary>
     /// Triển khai ConflictModel hiển thị các ConflictPlace hoặc ConflictTime

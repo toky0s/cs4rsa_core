@@ -44,6 +44,11 @@ namespace SubjectCrawlService1.DataTypes
             _schoolClasses.Add(schoolClass);
         }
 
+        public void AddRangeSchoolClass(IEnumerable<SchoolClass> schoolClasses)
+        {
+            _schoolClasses.AddRange(schoolClasses);
+        }
+
         /// <summary>
         /// Vì sẽ có một số lớp có nhiều school class trùng tên, nhưng chỉ khác ở tên giáo viên dạy
         /// điển hình là môn Machine Learning with Large Datasets (DS 423) lần phát hiện gần nhất 9/8/2021
@@ -237,11 +242,11 @@ namespace SubjectCrawlService1.DataTypes
         /// Chỗ còn trống.
         /// </summary>
         /// <returns></returns>
-        public ushort GetEmptySeat()
+        public short GetEmptySeat()
         {
             if (_schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
                 return 0;
-            return ushort.Parse(_schoolClasses[0].EmptySeat);
+            return short.Parse(_schoolClasses[0].EmptySeat);
         }
 
         public string GetUrl()
@@ -256,9 +261,9 @@ namespace SubjectCrawlService1.DataTypes
             return "";
         }
 
-        public MetaDataMap GetMetaDataMap()
+        public Cs4rsaMetaData GetMetaDataMap()
         {
-            return new MetaDataMap(GetSchedule(), GetDayPlaceMetaData());
+            return new Cs4rsaMetaData(GetSchedule(), GetDayPlaceMetaData());
         }
 
         public ImplementType GetImplementType()

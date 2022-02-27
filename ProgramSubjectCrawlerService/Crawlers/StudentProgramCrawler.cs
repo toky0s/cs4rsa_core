@@ -366,7 +366,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
         /// </summary>
         /// <param name="folderNode">Một html folder node.</param>
         /// <returns></returns>
-        private string GetStudyModeText(HtmlNode folderNode)
+        private static string GetStudyModeText(HtmlNode folderNode)
         {
             string html = folderNode.InnerHtml;
             HtmlDocument doc = new();

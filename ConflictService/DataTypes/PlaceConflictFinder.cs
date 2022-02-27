@@ -34,8 +34,8 @@ namespace ConflictService.DataTypes
                 {
                     // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
                     // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
-                    List<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
-                    List<Place> schoolClass2Places = _schoolClass2.DayPlaceMetaData.GetPlaces();
+                    IEnumerable<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
+                    IEnumerable<Place> schoolClass2Places = _schoolClass2.DayPlaceMetaData.GetPlaces();
                     List<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct().ToList();
                     if (dinstictPlaces.Count > 1)
                     {
@@ -43,8 +43,8 @@ namespace ConflictService.DataTypes
                         // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
                         foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
                         {
-                            List<PlaceMap> placeMap1 = _schoolClass1.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
-                            List<PlaceMap> placeMap2 = _schoolClass2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                            IEnumerable<PlaceMap> placeMap1 = _schoolClass1.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                            IEnumerable<PlaceMap> placeMap2 = _schoolClass2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
                             List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
 
                             List<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
@@ -63,7 +63,7 @@ namespace ConflictService.DataTypes
             return null;
         }
 
-        public ConflictType GetConflictType()
+        public static ConflictType GetConflictType()
         {
             return ConflictType.Place;
         }

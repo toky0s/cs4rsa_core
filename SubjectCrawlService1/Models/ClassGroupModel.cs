@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace cs4rsa_core.Models
+namespace SubjectCrawlService1.Models
 {
     /// <summary>
     /// ClassGroupModel và ClassGroup:
@@ -19,7 +19,7 @@ namespace cs4rsa_core.Models
         private string _currentRegisterCode;
 
         public ClassGroup ClassGroup { get; }
-        public ushort EmptySeat { get; }
+        public short EmptySeat { get; }
         public string Name => ClassGroup.Name;
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }

@@ -1,8 +1,9 @@
-﻿using ConflictService.DataTypes;
+﻿using ConflictService.Models;
 using cs4rsa_core.Converters.Controls;
 using cs4rsa_core.Models;
-using cs4rsa_core.Models.Interfaces;
-using SubjectCrawlService1.DataTypes;
+using Cs4rsaCommon.Interfaces;
+using Cs4rsaCommon.Models;
+using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,14 +68,18 @@ namespace cs4rsa_core.Controls
                     {
                         foreach (var item in args.NewItems)
                         {
-                            List<ScheduleBlock> scheduleBlocks;
+                            IEnumerable<ScheduleBlock> scheduleBlocks;
                             if (item.GetType() == typeof(SchoolClassModel))
                             {
                                 scheduleBlocks = scheduleControl.RenderScheduleBlock((SchoolClassModel)item);
                             }
-                            else
+                            else if (item.GetType() == typeof(ConflictModel))
                             {
                                 scheduleBlocks = scheduleControl.RenderScheduleBlock((ConflictModel)item);
+                            }
+                            else
+                            {
+                                scheduleBlocks = scheduleControl.RenderScheduleBlock((PlaceConflictFinderModel)item);
                             }
                             foreach (ScheduleBlock scheduleBlock in scheduleBlocks)
                             {
@@ -131,42 +136,17 @@ namespace cs4rsa_core.Controls
             }
         }
 
-        private List<ScheduleBlock> RenderScheduleBlock(ConflictModel conflictModel)
+        private IEnumerable<ScheduleBlock> RenderScheduleBlock(ICanShowOnScheduleTable canShowOnScheduleTableImpl)
         {
-            string CONFLICT_BLOCK_COLOR = "#e74c3c";
-            List<ScheduleBlock> scheduleBlocks = new();
-            foreach (KeyValuePair<DayOfWeek, List<StudyTimeIntersect>> item in conflictModel.ConflictTime.ConflictTimes)
+            foreach (TimeBlock timeBlock in canShowOnScheduleTableImpl.GetBlocks())
             {
-                foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
-                {
-                    string description = conflictModel.GetFullConflictInfo();
-                    int startIndex = GetTimeIndex(studyTimeIntersect.Start);
-                    int endIndex = GetTimeIndex(studyTimeIntersect.End);
-                    ScheduleBlock scheduleBlock = GetScheduleBlock(CONFLICT_BLOCK_COLOR, startIndex, endIndex, description);
-                    scheduleBlock.DayOfWeek = item.Key;
-                    scheduleBlocks.Add(scheduleBlock);
-                }
+                string description = timeBlock.Desciption;
+                int startIndex = GetTimeIndex(timeBlock.Start);
+                int endIndex = GetTimeIndex(timeBlock.End);
+                ScheduleBlock scheduleBlock = GetScheduleBlock(timeBlock.Background, startIndex, endIndex, description);
+                scheduleBlock.DayOfWeek = timeBlock.DayOfWeek;
+                yield return scheduleBlock;
             }
-            return scheduleBlocks;
-        }
-
-        private List<ScheduleBlock> RenderScheduleBlock(SchoolClassModel schoolClassModel)
-        {
-            List<ScheduleBlock> scheduleBlocks = new();
-            foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in schoolClassModel.Schedule.ScheduleTime)
-            {
-                foreach (StudyTime studyTime in item.Value)
-                {
-                    string description = schoolClassModel.SchoolClassName + " | " + schoolClassModel.SubjectName + "\n" + schoolClassModel.Schedule.ToString();
-                    int startIndex = GetTimeIndex(studyTime.Start);
-                    int endIndex = GetTimeIndex(studyTime.End);
-                    ScheduleBlock scheduleBlock = GetScheduleBlock(schoolClassModel.Color, startIndex, endIndex, description);
-                    scheduleBlock.DayOfWeek = item.Key;
-                    scheduleBlock.SchoolClassModel = schoolClassModel;
-                    scheduleBlocks.Add(scheduleBlock);
-                }
-            }
-            return scheduleBlocks;
         }
 
         private static int GetTimeIndex(DateTime dateTime)
@@ -264,9 +244,10 @@ namespace cs4rsa_core.Controls
 
         private void ScheduleBlock_MouseLeave(object sender, MouseEventArgs e)
         {
-            // Set mấy line vừa tô về màu cũ khi hover out
-
-            // Hai line dư lúc vẽ bảng
+            /** 
+             * Set mấy line vừa tô về màu cũ khi hover out
+             * Hai line dư lúc vẽ bảng
+             */
             int UNEXPECTED_LINE_QTY = 2;
 
             ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
@@ -321,8 +302,10 @@ namespace cs4rsa_core.Controls
 
 
             var converter = new BrushConverter();
-            // Hạ tone màu của các line còn lại để làm nổi bật
-            // line của block đang hover
+            /**
+             * Hạ tone màu của các line còn lại để làm nổi bật
+             * line của block đang hover
+             */
             for (int i = 2; i < lines.Count; i++)
             {
                 if (i != scheduleBlock.StartIndex + UNEXPECTED_LINE_QTY || i != scheduleBlock.EndIndex + UNEXPECTED_LINE_QTY)

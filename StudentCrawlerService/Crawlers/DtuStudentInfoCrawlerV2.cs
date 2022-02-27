@@ -70,11 +70,11 @@ namespace StudentCrawlerService.Crawlers
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
             Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
-            
+
             if (existCurriculum == null)
             {
-                 await _unitOfWork.Curriculums.AddAsync(curriculum);
-                 await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Curriculums.AddAsync(curriculum);
+                await _unitOfWork.CompleteAsync();
             }
             Student studentExist = await _unitOfWork.Students.GetByStudentIdAsync(studentId);
             if (studentExist == null)
@@ -92,8 +92,8 @@ namespace StudentCrawlerService.Crawlers
                     AvatarImage = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
-                 _unitOfWork.Students.Add(student);
-                 _unitOfWork.Complete();
+                _unitOfWork.Students.Add(student);
+                _unitOfWork.Complete();
                 return student;
             }
             return studentExist;

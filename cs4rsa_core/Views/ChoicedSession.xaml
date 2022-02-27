@@ -187,7 +187,6 @@
                                 Height="10"
                                 Fill="#f1c40f" />
                         </Canvas>
-
                         <TextBlock FontSize="10">
                             <Run Text="{Binding FirstSchoolClass.ClassGroupName, Mode=OneWay}" />
                             <Run Text=" - " />

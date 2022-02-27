@@ -43,12 +43,12 @@ namespace SubjectCrawlService1.Utils
 
         public static DayOfWeek ToDayOfWeek(string day)
         {
-            if (day.Contains("2") || day.Contains("Hai") || day.Contains("hai")) return DayOfWeek.Monday;
-            if (day.Contains("3") || day.Contains("Ba") || day.Contains("ba")) return DayOfWeek.Tuesday;
-            if (day.Contains("4") || day.Contains("Tư") || day.Contains("tư")) return DayOfWeek.Wednesday;
-            if (day.Contains("5") || day.Contains("Năm") || day.Contains("năm")) return DayOfWeek.Thursday;
-            if (day.Contains("6") || day.Contains("Sáu") || day.Contains("sáu")) return DayOfWeek.Friday;
-            if (day.Contains("7") || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
+            if (day.Contains('2') || day.Contains("Hai") || day.Contains("hai")) return DayOfWeek.Monday;
+            if (day.Contains('3') || day.Contains("Ba") || day.Contains("ba")) return DayOfWeek.Tuesday;
+            if (day.Contains('4') || day.Contains("Tư") || day.Contains("tư")) return DayOfWeek.Wednesday;
+            if (day.Contains('5') || day.Contains("Năm") || day.Contains("năm")) return DayOfWeek.Thursday;
+            if (day.Contains('6') || day.Contains("Sáu") || day.Contains("sáu")) return DayOfWeek.Friday;
+            if (day.Contains('7') || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
             return DayOfWeek.Sunday;
         }
 
@@ -85,21 +85,15 @@ namespace SubjectCrawlService1.Utils
 
         public static string ToStringFromPlace(Place place)
         {
-            switch (place)
+            return place switch
             {
-                case Place.HOAKHANH:
-                    return "Hoà Khánh Nam";
-                case Place.NVL_137:
-                    return "137 Nguyễn Văn Linh";
-                case Place.NVL_254:
-                    return "254 Nguyễn Văn Linh";
-                case Place.PHANTHANH:
-                    return "Phan Thanh";
-                case Place.QUANGTRUNG:
-                    return "03 Quang Trung";
-                default:
-                    return "334/4 Nguyễn Văn Linh (Việt Tin)";
-            }
+                Place.HOAKHANH => "Hoà Khánh Nam",
+                Place.NVL_137 => "137 Nguyễn Văn Linh",
+                Place.NVL_254 => "254 Nguyễn Văn Linh",
+                Place.PHANTHANH => "Phan Thanh",
+                Place.QUANGTRUNG => "03 Quang Trung",
+                _ => "334/4 Nguyễn Văn Linh (Việt Tin)",
+            };
         }
     }
 }

@@ -173,7 +173,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         {
             foreach (IProgramNode item in nodes)
             {
-                if (!(item is ProgramSubject))
+                if (item is not ProgramSubject)
                     return false;
             }
             return true;

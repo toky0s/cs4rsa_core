@@ -35,8 +35,9 @@
             </TextBlock>
             <TextBlock
                 Grid.Row="1"
+                Margin="0,0,0,5"
                 HorizontalAlignment="Center"
-                Style="{StaticResource MaterialDesignBody2TextBlock}">
+                Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
                 <Run Text="{Binding ClassGroup1Name}" />
                 <Run Text="hoặc" />
                 <Run Text="{Binding ClassGroup2Name}" />
@@ -61,6 +62,7 @@
                     Command="{Binding RemoveClassGroup1Command}"
                     Content="{Binding ClassGroup1Name, StringFormat=Bỏ chọn {0} (viên màu đỏ)}"
                     Foreground="White"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     ToolTip="Giải quyết xung đột và xem như chưa có chuyện gì xảy ra" />
                 <Button
                     Grid.Column="1"

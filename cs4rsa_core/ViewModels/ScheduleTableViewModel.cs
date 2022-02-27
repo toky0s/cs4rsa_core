@@ -1,12 +1,14 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using ConflictService.Models;
+using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
-using cs4rsa_core.Models.Interfaces;
 using cs4rsa_core.ViewModels.Interfaces;
+using Cs4rsaCommon.Interfaces;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
+using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,10 +18,12 @@ namespace cs4rsa_core.ViewModels
     class ScheduleTableViewModel : ViewModelBase, IScheduleTableViewModel,
         IMessageHandler<ChoicesChangedMessage>,
         IMessageHandler<ConflictCollectionChangeMessage>,
+        IMessageHandler<PlaceConflictCollectionChangeMessage>,
         IMessageHandler<DeleteClassGroupChoiceMessage>
     {
         private List<ClassGroupModel> _classGroupModels;
         private List<ConflictModel> _conflictModels;
+        private List<PlaceConflictFinderModel> _placeConflictFinderModels;
 
         public ObservableCollection<ICanShowOnScheduleTable> Phase1 { get; set; }
         public ObservableCollection<ICanShowOnScheduleTable> Phase2 { get; set; }
@@ -28,10 +32,12 @@ namespace cs4rsa_core.ViewModels
         {
             MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<ConflictCollectionChangeMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<PlaceConflictCollectionChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
 
             _classGroupModels = new();
             _conflictModels = new();
+            _placeConflictFinderModels = new();
             Phase1 = new();
             Phase2 = new();
         }
@@ -82,6 +88,21 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
+        private void DividePlaceConflictByPhase()
+        {
+            foreach (PlaceConflictFinderModel conflict in _placeConflictFinderModels)
+            {
+                if (conflict.GetPhase() == Phase.First || conflict.GetPhase() == Phase.All)
+                {
+                    Phase1.Add(conflict);
+                }
+                else
+                {
+                    Phase2.Add(conflict);
+                }
+            }
+        }
+
         private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
         {
             SchoolClassModel schoolClassModel = new(schoolClass);
@@ -93,6 +114,7 @@ namespace cs4rsa_core.ViewModels
         {
             CleanPhase();
             DivideSchoolClassesByPhases();
+            DividePlaceConflictByPhase();
             DivideConflictByPhase();
         }
 
@@ -117,6 +139,12 @@ namespace cs4rsa_core.ViewModels
         public void Handle(DeleteClassGroupChoiceMessage message)
         {
             _classGroupModels = message.Source;
+            ReloadSchedule();
+        }
+
+        public void Handle(PlaceConflictCollectionChangeMessage message)
+        {
+            _placeConflictFinderModels = message.Source;
             ReloadSchedule();
         }
     }

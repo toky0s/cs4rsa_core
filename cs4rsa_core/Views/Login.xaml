@@ -49,27 +49,30 @@
                     </TextBlock.Style>
                 </TextBlock>
                 <Button
-                    Width="15"
-                    Height="15"
-                    Command="{Binding ExpandedCommand}">
+                    Width="17"
+                    Height="17"
+                    Command="{Binding ExpandedCommand}"
+                    Cursor="Hand">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Grid>
-                                <materialDesign:PackIcon
+                                <TextBlock
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Cursor="Hand"
-                                    Kind="HelpCircle">
-                                    <materialDesign:PackIcon.Style>
-                                        <Style TargetType="materialDesign:PackIcon">
+                                    FontSize="20"
+                                    FontWeight="Bold"
+                                    Text="?">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
                                             <Setter Property="Foreground" Value="Black" />
                                             <Style.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Foreground" Value="{DynamicResource Cs4rsa_MainThemeLightColor}" />
+                                                    <Setter Property="Foreground" Value="{StaticResource Cs4rsa_MainThemeColor}" />
                                                 </Trigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </materialDesign:PackIcon.Style>
-                                </materialDesign:PackIcon>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </Grid>
                         </ControlTemplate>
                     </Button.Template>

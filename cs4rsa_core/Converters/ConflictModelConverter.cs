@@ -1,4 +1,4 @@
-﻿using cs4rsa_core.Models.Interfaces;
+﻿using ConflictService.Interfaces;
 using System;
 using System.Globalization;
 using System.Windows.Data;

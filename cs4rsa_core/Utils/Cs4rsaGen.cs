@@ -1,4 +1,4 @@
-﻿using cs4rsa_core.Models;
+﻿using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Text.Json;
 

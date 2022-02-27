@@ -48,8 +48,8 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             SpecialStringCrawler specialStringCrawlerV1 = new();
             SpecialStringCrawlerV2 specialStringCrawlerV2 = new();
-            Task<string> specialStringV1 =  specialStringCrawlerV1.GetSpecialString(_sessionId);
-            Task<string> specialStringV2 =  specialStringCrawlerV2.GetSpecialString(_sessionId);
+            Task<string> specialStringV1 = specialStringCrawlerV1.GetSpecialString(_sessionId);
+            Task<string> specialStringV2 = specialStringCrawlerV2.GetSpecialString(_sessionId);
             string[] specialStrings = await Task.WhenAll(specialStringV1, specialStringV2);
             if (specialStrings[0] is null && specialStrings[1] is null)
             {

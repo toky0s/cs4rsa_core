@@ -40,8 +40,8 @@ namespace SubjectCrawlService1.Utils
             string[] times = CleanTimeItem(dataFromTrTag);
             // Convert to generic data;
             Dictionary<DayOfWeek, List<StudyTime>> scheduleTime = new();
-            Regex regexDate = new (@"^T[2-7]:$|^CN:$");
-            Regex regexTime = new (@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            Regex regexDate = new(@"^T[2-7]:$|^CN:$");
+            Regex regexTime = new(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
             int i = 0;
             DayOfWeek dayOfWeek = DayOfWeek.Sunday;
@@ -87,7 +87,7 @@ namespace SubjectCrawlService1.Utils
         /// <returns>Trả về array time item đã được clean.</returns>
         private static string[] CleanTimeItem(string[] tdTagSplitDatas)
         {
-            Regex timeRegex = new (@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            Regex timeRegex = new(@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
             string[] times = tdTagSplitDatas.Where(item => timeRegex.IsMatch(item)).ToArray();
             return times;
         }

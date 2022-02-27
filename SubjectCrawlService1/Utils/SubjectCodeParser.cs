@@ -28,7 +28,7 @@ namespace cs4rsa.Helpers
                 return new List<string>();
             //  CS 211 - Lập Trình Cơ Sở, IS 301 - Cơ Sở Dữ Liệu
             // CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng
-            Regex regex = new ("\\((.*?)\\)");
+            Regex regex = new("\\((.*?)\\)");
             if (from == GetFrom.Course)
             {
                 MatchCollection matchList = regex.Matches(text);
@@ -36,8 +36,8 @@ namespace cs4rsa.Helpers
                 List<string> output = new();
                 foreach (string item in stringList)
                 {
-                    byte start = (byte) (item.IndexOf("(") + 1);
-                    byte length = (byte) (item.IndexOf(")") - start);
+                    byte start = (byte)(item.IndexOf("(") + 1);
+                    byte length = (byte)(item.IndexOf(")") - start);
                     string subjectCode = item.Substring(start, length);
                     output.Add(subjectCode);
                 }

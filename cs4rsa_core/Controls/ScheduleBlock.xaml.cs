@@ -1,5 +1,4 @@
-﻿using cs4rsa_core.Controls.Enums;
-using cs4rsa_core.Models;
+﻿using SubjectCrawlService1.Models;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,17 +15,6 @@ namespace cs4rsa_core.Controls
         {
             InitializeComponent();
         }
-
-        public BlockType BlockType
-        {
-            get { return (BlockType)GetValue(BlockTypeProperty); }
-            set { SetValue(BlockTypeProperty, value); }
-        }
-
-        public static readonly DependencyProperty BlockTypeProperty =
-            DependencyProperty.Register("BlockType", typeof(BlockType), typeof(ScheduleBlock), new PropertyMetadata());
-
-
 
         #region propdp BlockColor
         public string BlockColor
@@ -132,7 +120,7 @@ namespace cs4rsa_core.Controls
 
         private void MenuItem_Remove_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Removw");
+            MessageBox.Show("Remove");
             //var message = new RemoveAChoiceClassGroupMessage(SchoolClassModel.);
             //MessageBus.Default.Publish<RemoveAChoiceClassGroupMessage>()
         }

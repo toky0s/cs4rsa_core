@@ -21,7 +21,7 @@ namespace SubjectCrawlService1.DataTypes
             return _scheduleTime.Keys;
         }
 
-        public List<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
+        public IEnumerable<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
         {
             return _scheduleTime[DayOfWeek];
         }
@@ -33,7 +33,7 @@ namespace SubjectCrawlService1.DataTypes
         public double TotalHours()
         {
             double total = 0;
-            foreach (List<StudyTime> studyTimes in _scheduleTime.Values)
+            foreach (IEnumerable<StudyTime> studyTimes in _scheduleTime.Values)
             {
                 foreach (StudyTime studyTime in studyTimes)
                 {
@@ -46,7 +46,7 @@ namespace SubjectCrawlService1.DataTypes
         public IEnumerable<Session> GetSessions()
         {
             List<Session> sessions = new();
-            foreach (List<StudyTime> studyTimes in _scheduleTime.Values)
+            foreach (IEnumerable<StudyTime> studyTimes in _scheduleTime.Values)
             {
                 sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
             }

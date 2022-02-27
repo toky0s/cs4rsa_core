@@ -5,21 +5,20 @@ using System.Linq;
 
 namespace SubjectCrawlService1.DataTypes
 {
+    /// <summary>
+    /// Theo thiết kế, một SchoolClass sẽ có thể có nhiều tiết học
+    /// tương ứng với đó là SchoolClassUnit.
+    /// </summary>
     public class DayPlaceMetaData
     {
-        private Dictionary<DayOfWeek, DayPlacePair> _dayPlacePairs = new Dictionary<DayOfWeek, DayPlacePair>();
+        private readonly Dictionary<DayOfWeek, DayRoomPlace> _dayPlacePairs;
 
         public DayPlaceMetaData()
         {
-
+            _dayPlacePairs = new();
         }
 
-        public DayPlaceMetaData(Dictionary<DayOfWeek, DayPlacePair> dayPlacePairs)
-        {
-            _dayPlacePairs = dayPlacePairs;
-        }
-
-        public void AddDayTimePair(DayOfWeek day, DayPlacePair dayPlacePair)
+        public void AddDayTimePair(DayOfWeek day, DayRoomPlace dayPlacePair)
         {
             _dayPlacePairs.Add(day, dayPlacePair);
         }
@@ -29,14 +28,19 @@ namespace SubjectCrawlService1.DataTypes
             return _dayPlacePairs[day].Place;
         }
 
-        public List<Place> GetPlaces()
+        public DayRoomPlace GetDayPlacePairAtDay(DayOfWeek day)
         {
-            List<Place> places = new List<Place>();
-            foreach (DayPlacePair pair in _dayPlacePairs.Values)
+            return _dayPlacePairs[day];
+        }
+
+        public IEnumerable<Place> GetPlaces()
+        {
+            IEnumerable<Place> places = new List<Place>();
+            foreach (DayRoomPlace pair in _dayPlacePairs.Values)
             {
-                places.Add(pair.Place);
+                _ = places.Append(pair.Place);
             }
-            return places.Distinct().ToList();
+            return places.Distinct();
         }
     }
 }

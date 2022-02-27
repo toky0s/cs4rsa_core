@@ -17,7 +17,6 @@ namespace SubjectCrawlService1.Crawlers
         private readonly IFolderManager _folderManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        private readonly ITeacherCrawler _teacherCrawler;
         #endregion
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace SubjectCrawlService1.Crawlers
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
-            _teacherCrawler = teacherCrawler;
             _folderManager = folderManager;
         }
 
@@ -70,7 +68,7 @@ namespace SubjectCrawlService1.Crawlers
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
                 return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork, _folderManager);
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _unitOfWork, _folderManager);
             }
             return null;
         }
@@ -105,7 +103,7 @@ namespace SubjectCrawlService1.Crawlers
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
                 return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _teacherCrawler, _unitOfWork, _folderManager);
+                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _unitOfWork, _folderManager);
             }
             return null;
         }

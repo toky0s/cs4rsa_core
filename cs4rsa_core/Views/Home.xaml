@@ -97,7 +97,7 @@
                 HorizontalAlignment="Right">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="180" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Image
@@ -168,11 +168,12 @@
                         <ColumnDefinition Width="160" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Image
-                        Margin="20,20,0,0"
+                    <materialDesign:PackIcon
+                        Width="160"
+                        Height="160"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Source="../Images/github.png" />
+                        VerticalAlignment="Center"
+                        Kind="Github" />
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />

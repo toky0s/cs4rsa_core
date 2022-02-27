@@ -1,13 +1,16 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.DataTypes.Enums;
-using cs4rsa_core.Models.Interfaces;
+using ConflictService.Interfaces;
+using Cs4rsaCommon.Enums;
+using Cs4rsaCommon.Interfaces;
+using Cs4rsaCommon.Models;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Models
+namespace ConflictService.Models
 {
     public class ConflictModel : IConflictModel, ICanShowOnScheduleTable
     {
@@ -108,9 +111,8 @@ namespace cs4rsa_core.Models
             return Phase.All;
         }
 
-        public List<TimeBlock> GetBlocks()
+        public IEnumerable<TimeBlock> GetBlocks()
         {
-            List<TimeBlock> timeBlocks = new();
             foreach (var item in ConflictTime.ConflictTimes)
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
@@ -119,14 +121,14 @@ namespace cs4rsa_core.Models
                     {
                         Start = studyTimeIntersect.Start,
                         End = studyTimeIntersect.End,
-                        Desciption = "Xung đột",
+                        Desciption = GetFullConflictInfo(),
                         Background = "Red",
-                        DayOfWeek = item.Key
+                        DayOfWeek = item.Key,
+                        BlockType = BlockType.TimeConflict
                     };
-                    timeBlocks.Add(timeBlock);
+                    yield return timeBlock;
                 }
             }
-            return timeBlocks;
         }
     }
 }

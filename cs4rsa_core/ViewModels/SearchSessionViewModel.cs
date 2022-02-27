@@ -18,6 +18,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
+using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -222,7 +223,7 @@ namespace cs4rsa_core.ViewModels
 
             if (text.Contains(' '))
             {
-                string[] textSplit = text.Split(new char[] {' '}, StringSplitOptions.None);
+                string[] textSplit = text.Split(new char[] { ' ' }, StringSplitOptions.None);
                 string discipline = textSplit[0];
                 string keyword1 = textSplit[1];
                 List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
@@ -385,7 +386,6 @@ namespace cs4rsa_core.ViewModels
             Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1);
             if (subject != null)
             {
-                await subject.GetClassGroups();
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
                 AddSubjectAndReload(subjectModel);
                 (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();

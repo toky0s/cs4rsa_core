@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Models
+namespace SubjectCrawlService1.Models
 {
     public class SubjectModel
     {

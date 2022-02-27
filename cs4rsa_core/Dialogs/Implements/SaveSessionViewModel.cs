@@ -1,10 +1,10 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Models;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using Microsoft.Toolkit.Mvvm.Input;
+using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

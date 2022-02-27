@@ -5,20 +5,25 @@ namespace ConflictService.DataTypes
 {
     /// <summary>
     /// Đại diện cho xung đột vị trí của hai giờ học đầu và hai giờ sau.
+    /// 
+    /// Ngang cấp với ConflictTime.
     /// </summary>
     public class PlaceAdjacent
     {
-        private DateTime _start { get; set; }
-        private DateTime _end { get; set; }
-        public string Start { get { return _start.ToString("HH:mm"); } }
-        public string End { get { return _end.ToString("HH:mm"); } }
-        public Place PlaceStart { get; set; }
-        public Place PlaceEnd { get; set; }
+        public readonly DateTime Start;
+        public readonly DateTime End;
+
+        public readonly Place PlaceStart;
+        public readonly Place PlaceEnd;
+
+        public string StartAsString { get { return Start.ToString("HH:mm"); } }
+
+        public string EndAsString { get { return End.ToString("HH:mm"); } }
 
         public PlaceAdjacent(DateTime start, DateTime end, Place placeStart, Place placeEnd)
         {
-            _start = start;
-            _end = end;
+            Start = start;
+            End = end;
             PlaceStart = placeStart;
             PlaceEnd = placeEnd;
         }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CourseSearchService\CourseSearchService.csproj" />
+    <ProjectReference Include="..\Cs4rsaCommon\Cs4rsaCommon.csproj" />
     <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
     <ProjectReference Include="..\HelperService\HelperService.csproj" />
     <ProjectReference Include="..\TeacherCrawlerService1\TeacherCrawlerService1.csproj" />

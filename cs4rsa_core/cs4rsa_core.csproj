@@ -146,4 +146,8 @@
     <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Interfaces\" />
+  </ItemGroup>
+
 </Project>

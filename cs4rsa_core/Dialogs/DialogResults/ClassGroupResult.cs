@@ -1,4 +1,4 @@
-﻿using cs4rsa_core.Models;
+﻿using SubjectCrawlService1.Models;
 
 namespace cs4rsa_core.Dialogs.DialogResults
 {

@@ -8,17 +8,11 @@ namespace SubjectCrawlService1.DataTypes
     public class Room
     {
         public string Name { get; private set; }
-        public Place Place { get; private set; }
+        public Place Place { get; set; }
 
         public Room(string name)
         {
             Name = name;
-        }
-
-        public Room(string name, Place place)
-        {
-            Name = name;
-            Place = place;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Models;
+using SubjectCrawlService1.Models;
 
 namespace cs4rsa_core.Messages
 {

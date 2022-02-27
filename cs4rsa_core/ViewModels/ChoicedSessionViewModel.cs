@@ -1,4 +1,5 @@
 ﻿using ConflictService.DataTypes;
+using ConflictService.Models;
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
@@ -11,6 +12,7 @@ using LightMessageBus.Interfaces;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.DataTypes;
+using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -58,13 +60,11 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         #region Services
-        private readonly ImportSessionViewModel _importSessionViewModel;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
         public ChoicedSessionViewModel(ImportSessionViewModel importSessionViewModel,
             ISnackbarMessageQueue snackbarMessageQueue)
         {
-            _importSessionViewModel = importSessionViewModel;
             _snackbarMessageQueue = snackbarMessageQueue;
 
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
@@ -232,7 +232,7 @@ namespace cs4rsa_core.ViewModels
         private void UpdateConflictModelCollection()
         {
             ConflictModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
@@ -244,7 +244,7 @@ namespace cs4rsa_core.ViewModels
                 {
                     if (schoolClasses[i].ClassGroupName.Equals(schoolClasses[k].ClassGroupName))
                         continue;
-                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
+                    Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -256,10 +256,14 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.Publish(new ConflictCollectionChangeMessage(ConflictModels.ToList()));
         }
 
+        /**
+         * Thực hiện bắt cặp tất cả các ClassGroupModel có 
+         * trong Collection để phát hiện các Conflict Place.
+         */
         private void UpdatePlaceConflictCollection()
         {
             PlaceConflictFinderModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
@@ -269,11 +273,11 @@ namespace cs4rsa_core.ViewModels
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
+                    PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
-                        PlaceConflictFinderModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
+                        PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);
                     }
                 }

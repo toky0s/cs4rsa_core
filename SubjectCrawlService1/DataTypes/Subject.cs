@@ -11,13 +11,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TeacherCrawlerService1.Crawlers;
-using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace SubjectCrawlService1.DataTypes
 {
     public class Subject
     {
-        private readonly ITeacherCrawler _teacherCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFolderManager _folderManager;
 
@@ -49,10 +47,9 @@ namespace SubjectCrawlService1.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, ushort courseId,
-                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
+                        IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
-            _teacherCrawler = teacherCrawler;
             _folderManager = folderManager;
 
             _studyUnit = studyUnit;
@@ -113,6 +110,8 @@ namespace SubjectCrawlService1.DataTypes
 
         /// <summary>
         /// Trả về danh sách các nhóm lớp.
+        /// 
+        /// Bằng cách match các tên và các schoolClass nó tên giống.
         /// </summary>
         /// <returns>List các ClassGroup.</returns>
         public async Task GetClassGroups()
@@ -122,18 +121,17 @@ namespace SubjectCrawlService1.DataTypes
                 List<SchoolClass> schoolClasses = await GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
-                    ClassGroup classGroup = new(classGroupName, SubjectCode, Name);
-
                     string pattern = $@"^({classGroupName})[0-9]*$";
                     Regex regexName = new(pattern);
-                    for (int i = 0; i < schoolClasses.Count; i++)
+                    IEnumerable<SchoolClass> schoolClassesByName = schoolClasses
+                        .Where(sc => regexName.IsMatch(sc.SchoolClassName));
+                    foreach (SchoolClass schoolClass in schoolClassesByName)
                     {
-                        if (regexName.IsMatch(schoolClasses[i].SchoolClassName))
-                        {
-                            schoolClasses[i].ClassGroupName = classGroupName;
-                            classGroup.AddSchoolClass(schoolClasses[i]);
-                        }
+                        schoolClass.ClassGroupName = classGroupName;
                     }
+
+                    ClassGroup classGroup = new(classGroupName, SubjectCode, Name);
+                    classGroup.AddRangeSchoolClass(schoolClassesByName);
                     _classGroups.Add(classGroup);
                 }
             }
@@ -163,10 +161,12 @@ namespace SubjectCrawlService1.DataTypes
             string urlToSubjectDetailPage = GetSubjectDetailPageURL(aTag);
 
             #region Teacher Parser
-            // ACC 448 - Thực Tập Tốt Nghiệp, cái môn củ chuối này nó không có
-            // tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
-            // tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
-            // Ngày Mùng 5 Tết 2022
+            /** 
+             * ACC 448 - Thực Tập Tốt Nghiệp, cái môn củ chuối này nó không có
+             * tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
+             * tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
+             * Ngày Mùng 5 Tết 2022 
+             */
             string teacherName = GetTeacherName(trTagClassLop);
             Teacher teacher = await GetTeacherFromURL(urlToSubjectDetailPage);
 
@@ -208,7 +208,7 @@ namespace SubjectCrawlService1.DataTypes
 
             Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
 
-            string[] rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct().ToArray();
+            IEnumerable<string> rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct();
 
             Regex regexSpace = new(@"^ *$");
             List<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText).ToList();
@@ -224,6 +224,7 @@ namespace SubjectCrawlService1.DataTypes
             List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays().ToList();
             int metaCount = dayOfWeeks.Count;
             List<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).ToList();
+            // Lúc này Room được set Name và chưa được set Place.
             List<Room> roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();
             List<string> locationsForMetaData = locations.Select(item => item.Trim()).ToList();
             List<Place> placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
@@ -231,7 +232,9 @@ namespace SubjectCrawlService1.DataTypes
             DayPlaceMetaData metaData = new();
             for (int i = 0; i < metaCount; i++)
             {
-                DayPlacePair dayPlacePair = new(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
+                // Set Place cho Room ở đây.
+                roomsForMetaData[i].Place = placesForMetaData[i];
+                DayRoomPlace dayPlacePair = new(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
                 metaData.AddDayTimePair(dayOfWeeks[i], dayPlacePair);
             }
             #endregion
@@ -250,7 +253,7 @@ namespace SubjectCrawlService1.DataTypes
         /// temp teachers nhằm đảm bảo không thất thoát các teacher không có detail page.
         /// Cải thiện độ chính xác của bộ lọc teacher.
         /// </summary>
-        /// <param name="trTagClassLop"></param>
+        /// <param name="trTagClassLop">HtmlNode với giá trị class="lop".</param>
         /// <returns>Tên giảng viên</returns>
         private string GetTeacherName(HtmlNode trTagClassLop)
         {
@@ -350,11 +353,11 @@ namespace SubjectCrawlService1.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, ushort courseId,
-                        ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork, IFolderManager folderManager)
+                        IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, teacherCrawler, unitOfWork, folderManager);
+                rawSoup, courseId, unitOfWork, folderManager);
             return ret.InitializeAsync();
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Controls.Enums
+﻿namespace Cs4rsaCustomControl.Controls.Enums
 {
     public enum BlockType
     {

@@ -1,10 +1,12 @@
-﻿using cs4rsa_core.Models.Interfaces;
+﻿using Cs4rsaCommon.Enums;
+using Cs4rsaCommon.Interfaces;
+using Cs4rsaCommon.Models;
 using Cs4rsaDatabaseService.Models;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Models
+namespace SubjectCrawlService1.Models
 {
     public class SchoolClassModel : ICanShowOnScheduleTable
     {
@@ -85,29 +87,29 @@ namespace cs4rsa_core.Models
             set { _schedule = value; }
         }
 
-        private string[] _rooms;
-        public string[] Rooms
+        private IEnumerable<string> _rooms;
+        public IEnumerable<string> Rooms
         {
-            get { return _rooms; }
-            set { _rooms = value; }
+            get => _rooms;
+            set => _rooms = value;
         }
 
-        private List<Place> _places;
-        public List<Place> Places
+        private IEnumerable<Place> _places;
+        public IEnumerable<Place> Places
         {
             get { return _places; }
             set { _places = value; }
         }
 
-        private List<Teacher> _teachers;
-        public List<Teacher> Teachers
+        private IEnumerable<Teacher> _teachers;
+        public IEnumerable<Teacher> Teachers
         {
             get { return _teachers; }
             set { _teachers = value; }
         }
 
-        private List<string> _tempTeachers;
-        public List<string> TempTeachers
+        private IEnumerable<string> _tempTeachers;
+        public IEnumerable<string> TempTeachers
         {
             get { return _tempTeachers; }
             set { _tempTeachers = value; }
@@ -157,25 +159,21 @@ namespace cs4rsa_core.Models
             _subjectName = schoolClass.SubjectName;
         }
 
-        public List<TimeBlock> GetBlocks()
+        public IEnumerable<TimeBlock> GetBlocks()
         {
-            List<TimeBlock> timeBlocks = new();
-            foreach (var item in Schedule.ScheduleTime)
+            foreach (SchoolClassUnit item in _schoolClass.GetSchoolClassUnits())
             {
-                foreach (var studyTime in item.Value)
+                TimeBlock timeBlock = new()
                 {
-                    TimeBlock timeBlock = new()
-                    {
-                        Start = studyTime.Start,
-                        End = studyTime.End,
-                        Background = Color,
-                        DayOfWeek = item.Key,
-                        Desciption = $"{SchoolClassName} | {SubjectName}"
-                    };
-                    timeBlocks.Add(timeBlock);
-                }
+                    Start = item.Start,
+                    End = item.End,
+                    Background = Color,
+                    DayOfWeek = item.DayOfWeek,
+                    Desciption = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}",
+                    BlockType = BlockType.SchoolClass
+                };
+                yield return timeBlock;
             }
-            return timeBlocks;
         }
     }
 }
