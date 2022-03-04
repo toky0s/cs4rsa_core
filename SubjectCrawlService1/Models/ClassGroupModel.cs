@@ -20,11 +20,11 @@ namespace SubjectCrawlService1.Models
 
         public ClassGroup ClassGroup { get; }
         public short EmptySeat { get; }
-        public string Name => ClassGroup.Name;
+        public string Name { get; }
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }
-        public List<string> TempTeacher => ClassGroup.GetTempTeachers();
-        public string SubjectCode => ClassGroup.SubjectCode;
+        public IEnumerable<string> TempTeacher { get; }
+        public string SubjectCode { get; }
         public string RegisterCode
         {
             get
@@ -32,10 +32,10 @@ namespace SubjectCrawlService1.Models
                 return _currentRegisterCode ?? ClassGroup.GetRegisterCode();
             }
         }
-        public Phase Phase => ClassGroup.GetPhase();
-        public Schedule Schedule => ClassGroup.GetSchedule();
-        public ImplementType ImplementType => ClassGroup.GetImplementType();
-        public RegistrationType RegistrationType => ClassGroup.GetRegistrationType();
+        public Phase Phase { get; }
+        public Schedule Schedule { get; }
+        public ImplementType ImplementType { get; }
+        public RegistrationType RegistrationType { get; }
         public string Color { get; }
 
         /// <summary>
@@ -50,10 +50,17 @@ namespace SubjectCrawlService1.Models
         public ClassGroupModel(ClassGroup classGroup, bool isBelongSpecialSubject, ColorGenerator colorGenerator)
         {
             ClassGroup = classGroup;
+            Name = classGroup.Name;
+            SubjectCode = classGroup.SubjectCode;
             Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
             EmptySeat = classGroup.GetEmptySeat();
             HaveSchedule = IsHaveSchedule();
+            TempTeacher = classGroup.GetTempTeachers();
             Color = colorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
+            Phase = classGroup.GetPhase();
+            Schedule = classGroup.GetSchedule();
+            ImplementType = classGroup.GetImplementType();
+            RegistrationType = classGroup.GetRegistrationType();
             IsBelongSpecialSubject = isBelongSpecialSubject;
         }
 
@@ -70,25 +77,6 @@ namespace SubjectCrawlService1.Models
         public bool IsHaveSchedule()
         {
             return ClassGroup.GetSchedule().ScheduleTime.Count > 0;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ClassGroupModel other)
-            {
-                return Name.Equals(other.Name);
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return ClassGroup.Name.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
 
         public List<SchoolClassModel> GetSchoolClassModels()
@@ -117,16 +105,6 @@ namespace SubjectCrawlService1.Models
                 string message = $"SchoolClass with code {registerCode} is not belong special subject!";
                 throw new ArgumentException(message);
             }
-        }
-
-        /// <summary>
-        /// Với các ClassGroup thuộc Special Subject thì ta có thể
-        /// lấy ra Mã đăng ký hiện tại mà người dùng đã chọn.
-        /// </summary>
-        /// <returns>Mã đăng ký mà người dùng đã từng chọn cho ClassGroupModel này.</returns>
-        public string GetCurrentRegisterCode()
-        {
-            return _currentRegisterCode;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace SubjectCrawlService1.DataTypes
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
+        private readonly string _rawSoup;
 
         private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
@@ -37,11 +38,11 @@ namespace SubjectCrawlService1.DataTypes
         public string StudyUnitType => _studyUnitType;
         public string StudyType => _studyType;
         public string Semester => _semester;
-        public List<string> MustStudySubject { get; }
-        public List<string> ParallelSubject { get; }
+        public IEnumerable<string> MustStudySubject { get; }
+        public IEnumerable<string> ParallelSubject { get; }
         public string Desciption { get; }
-        public string RawSoup { get; }
         public ushort CourseId { get; }
+
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
@@ -56,6 +57,7 @@ namespace SubjectCrawlService1.DataTypes
             _studyUnitType = studyUnitType;
             _studyType = studyType;
             _semester = semester;
+            _rawSoup = rawSoup;
 
             _teachers = new();
             _tempTeachers = new();
@@ -66,7 +68,6 @@ namespace SubjectCrawlService1.DataTypes
             MustStudySubject = SubjectSpliter(mustStudySubject);
             ParallelSubject = SubjectSpliter(parallelSubject);
             Desciption = description;
-            RawSoup = rawSoup;
             CourseId = courseId;
         }
 
@@ -109,16 +110,15 @@ namespace SubjectCrawlService1.DataTypes
         }
 
         /// <summary>
-        /// Trả về danh sách các nhóm lớp.
-        /// 
-        /// Bằng cách match các tên và các schoolClass nó tên giống.
+        /// Lấy ra các ClassGroup và thêm chúng vào danh sách chứa
+        /// ClassGroup của đối tượng này bằng cách match các tên 
+        /// với các SchoolClass nó tên giống.
         /// </summary>
-        /// <returns>List các ClassGroup.</returns>
         public async Task GetClassGroups()
         {
             if (_classGroups.Count == 0)
             {
-                List<SchoolClass> schoolClasses = await GetSchoolClasses();
+                IEnumerable<SchoolClass> schoolClasses = await GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
                     string pattern = $@"^({classGroupName})[0-9]*$";
@@ -137,7 +137,7 @@ namespace SubjectCrawlService1.DataTypes
             }
         }
 
-        private async Task<List<SchoolClass>> GetSchoolClasses()
+        private async Task<IEnumerable<SchoolClass>> GetSchoolClasses()
         {
             List<SchoolClass> schoolClasses = new();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
@@ -152,7 +152,7 @@ namespace SubjectCrawlService1.DataTypes
         /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
         /// </summary>
         /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
-        /// <returns></returns>
+        /// <returns><see cref="SchoolClass"/> - Lớp thành phần là con của một <seealso cref="ClassGroup"/></returns>
         private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
             HtmlNodeCollection tdTags = trTagClassLop.SelectNodes("td");
@@ -211,22 +211,20 @@ namespace SubjectCrawlService1.DataTypes
             IEnumerable<string> rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct();
 
             Regex regexSpace = new(@"^ *$");
-            List<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText).ToList();
-            // remove space in locations
-            locations = locations.Where(item => regexSpace.IsMatch(item) == false).ToList();
+            IEnumerable<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText)
+                .Where(item => regexSpace.IsMatch(item) == false);
 
-            List<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct().ToList();
-            List<Place> places = new();
-            places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item)).ToList();
+            IEnumerable<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct();
+            IEnumerable<Place> places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item));
 
             #region MetaData
             // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
             List<DayOfWeek> dayOfWeeks = schedule.GetSchoolDays().ToList();
             int metaCount = dayOfWeeks.Count;
-            List<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).ToList();
+            IEnumerable<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText);
             // Lúc này Room được set Name và chưa được set Place.
             List<Room> roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();
-            List<string> locationsForMetaData = locations.Select(item => item.Trim()).ToList();
+            IEnumerable<string> locationsForMetaData = locations.Select(item => item.Trim());
             List<Place> placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
 
             DayPlaceMetaData metaData = new();
@@ -242,9 +240,11 @@ namespace SubjectCrawlService1.DataTypes
             string registrationStatus = tdTags[10].InnerText.Trim();
             string implementationStatus = tdTags[11].InnerText.Trim();
 
-            SchoolClass schoolClass = new(schoolClassName, registerCode, studyType,
-                                        emptySeat, registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, teachers, tempTeachers, registrationStatus, implementationStatus, urlToSubjectDetailPage, metaData);
+            SchoolClass schoolClass = new(schoolClassName, registerCode, studyType, emptySeat,
+                                        registrationTermEnd, registrationTermStart, studyWeek, schedule,
+                                        rooms, places, teachers, tempTeachers, 
+                                        registrationStatus, implementationStatus, 
+                                        urlToSubjectDetailPage, metaData);
             return schoolClass;
         }
 
@@ -273,15 +273,13 @@ namespace SubjectCrawlService1.DataTypes
         private IEnumerable<HtmlNode> GetTrTagsWithClassLop()
         {
             IEnumerable<HtmlNode> trTags = GetListTrTagInCalendar();
-            IEnumerable<HtmlNode> trTagsWithClassLop = trTags
-                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit");
-            return trTagsWithClassLop;
+            return trTags.Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit");
         }
 
         private IEnumerable<HtmlNode> GetListTrTagInCalendar()
         {
             HtmlDocument htmlDocument = new();
-            htmlDocument.LoadHtml(RawSoup);
+            htmlDocument.LoadHtml(_rawSoup);
             HtmlNode tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
             HtmlNode bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             IEnumerable<HtmlNode> trTags = bodyCalendar.Descendants("tr");
@@ -302,7 +300,8 @@ namespace SubjectCrawlService1.DataTypes
         }
 
         /// <summary>
-        /// Nạp Teacher mới (nếu chưa có) vào Subject này thông qua url đồng thời trả về một teacher vừa mới được parse.
+        /// Nạp Teacher mới (nếu chưa có) vào Subject này thông qua 
+        /// url đồng thời trả về một teacher vừa mới được parse.
         /// </summary>
         /// <param name="url">Chuỗi url tới trang chi tiết nhóm lớp.</param>
         /// <returns></returns>
@@ -311,36 +310,31 @@ namespace SubjectCrawlService1.DataTypes
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
             TeacherCrawler teacherCrawler = new(_unitOfWork, _folderManager);
             Teacher teacher = await teacherCrawler.Crawl(teacherDetailPageURL);
-
             if (teacher != null && !_teachers.Contains(teacher))
             {
                 _teachers.Add(teacher);
             }
-
             return teacher;
         }
 
         /// <summary>
-        /// Tách mã môn từ một chuỗi, nếu không phát hiện nó trả về null.
+        /// Tách mã môn từ một chuỗi.
         /// </summary>
         /// <returns>Mã môn (ví dụ CS 414)</returns>
-        private static List<string> SubjectSpliter(string text)
+        private static IEnumerable<string> SubjectSpliter(string text)
         {
             if (text.Equals("(Không có Môn học Tiên quyết)") ||
                 text.Equals("(Không có Môn học Song hành)", StringComparison.Ordinal))
             {
-                return new List<string>();
+                yield break;
             }
 
             Regex regex = new(@"(?<=\()(.*?)(?=\))");
             MatchCollection matchSubject = regex.Matches(text);
-            List<string> subjects = new();
             for (int i = 0; i < matchSubject.Count; ++i)
             {
-                subjects.Add(matchSubject[i].Value);
+                yield return matchSubject[i].Value;
             }
-
-            return subjects;
         }
 
         private async Task<Subject> InitializeAsync()
@@ -349,6 +343,23 @@ namespace SubjectCrawlService1.DataTypes
             return this;
         }
 
+        /// <summary>
+        /// Khởi tạo một Subject thông qua một Async Factory method.
+        /// </summary>
+        /// <param name="name">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="studyUnit">Số đơn vị học tập</param>
+        /// <param name="studyUnitType">Loại đơn vị học tập</param>
+        /// <param name="studyType"></param>
+        /// <param name="semester">Học kỳ</param>
+        /// <param name="mustStudySubject">Các môn tiên quyết</param>
+        /// <param name="parallelSubject">Các môn song hành</param>
+        /// <param name="description">Mô tả môn học</param>
+        /// <param name="rawSoup">Chuỗi phân tích HTML gốc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <param name="unitOfWork"><see cref="IUnitOfWork"/> - Lớp thao tác với cơ sở dữ liệu</param>
+        /// <param name="folderManager"><see cref="IFolderManager"/> - Trình quản lý thư mục</param>
+        /// <returns></returns>
         public static Task<Subject> CreateAsync(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,

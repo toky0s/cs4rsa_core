@@ -8,7 +8,7 @@ namespace SubjectCrawlService1.DataTypes
 {
     public class Schedule
     {
-        private Dictionary<DayOfWeek, List<StudyTime>> _scheduleTime;
+        private readonly Dictionary<DayOfWeek, List<StudyTime>> _scheduleTime;
         public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime => _scheduleTime;
 
         public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
@@ -26,23 +26,6 @@ namespace SubjectCrawlService1.DataTypes
             return _scheduleTime[DayOfWeek];
         }
 
-        /// <summary>
-        /// Tổng thời gian học.
-        /// </summary>
-        /// <returns></returns>
-        public double TotalHours()
-        {
-            double total = 0;
-            foreach (IEnumerable<StudyTime> studyTimes in _scheduleTime.Values)
-            {
-                foreach (StudyTime studyTime in studyTimes)
-                {
-                    total += studyTime.TotalHours();
-                }
-            }
-            return total;
-        }
-
         public IEnumerable<Session> GetSessions()
         {
             List<Session> sessions = new();
@@ -51,34 +34,6 @@ namespace SubjectCrawlService1.DataTypes
                 sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
             }
             return sessions.Distinct();
-        }
-
-        /// <summary>
-        /// Lấy ra tất cả StudyTime bất kế DayOfWeek.
-        /// </summary>
-        /// <returns></returns>
-        public List<StudyTime> GetStudyTimes()
-        {
-            List<StudyTime> studyTimes = new List<StudyTime>();
-            foreach (List<StudyTime> item in _scheduleTime.Values)
-            {
-                studyTimes.AddRange(item);
-            }
-            return studyTimes.Distinct().ToList();
-        }
-
-        /// <summary>
-        /// Lấy về LearnState xác định bạn học hay rảnh buổi nào đó.
-        /// </summary>
-        /// <param name="dayOfWeek"></param>
-        /// <param name="session"></param>
-        /// <returns></returns>
-        public LearnState GetLearnState(DayOfWeek dayOfWeek, Enums.Session session)
-        {
-            if (!_scheduleTime.ContainsKey(dayOfWeek)) return LearnState.Free;
-            List<StudyTime> studyTimes = _scheduleTime[dayOfWeek]
-                                         .Where(item => item.GetSession() == session).ToList();
-            return studyTimes.Count == 0 ? LearnState.Free : LearnState.Learn;
         }
 
         public override string ToString()

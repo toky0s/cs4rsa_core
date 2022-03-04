@@ -183,9 +183,9 @@ namespace SubjectCrawlService1.DataTypes
             return _schoolClasses;
         }
 
-        public List<string> GetTempTeachers()
+        public IEnumerable<string> GetTempTeachers()
         {
-            List<string> tempTeachers = new List<string>();
+            List<string> tempTeachers = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 tempTeachers.AddRange(schoolClass.TempTeachers);
@@ -239,9 +239,10 @@ namespace SubjectCrawlService1.DataTypes
         }
 
         /// <summary>
-        /// Chỗ còn trống.
+        /// Lấy ra số chỗ còn trống. 
+        /// <list type="bullet">LƯU Ý: Số chỗ còn trống có thể là số âm</list> 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Số chỗ còn trống</returns>
         public short GetEmptySeat()
         {
             if (_schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
@@ -259,11 +260,6 @@ namespace SubjectCrawlService1.DataTypes
                 }
             }
             return "";
-        }
-
-        public Cs4rsaMetaData GetMetaDataMap()
-        {
-            return new Cs4rsaMetaData(GetSchedule(), GetDayPlaceMetaData());
         }
 
         public ImplementType GetImplementType()

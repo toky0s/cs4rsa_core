@@ -15,28 +15,12 @@ namespace SubjectCrawlService1.DataTypes
         public string StartAsString => _startAsString;
         public string EndAsString => _endAsString;
 
-        public StudyTime()
-        {
-
-        }
-
-        public StudyTime(DateTime start, DateTime end)
-        {
-            _start = start;
-            _end = end;
-        }
-
         public StudyTime(string start, string end)
         {
             _startAsString = start;
             _endAsString = end;
             _start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             _end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-        }
-
-        public double TotalHours()
-        {
-            return (_end - _start).TotalHours;
         }
 
         public Session GetSession()

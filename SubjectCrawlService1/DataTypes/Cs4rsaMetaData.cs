@@ -10,8 +10,8 @@ namespace SubjectCrawlService1.DataTypes
     /// </summary>
     public class Cs4rsaMetaData
     {
-        private Schedule _schedule;
-        private DayPlaceMetaData _dayPlaceMetaData;
+        private readonly Schedule _schedule;
+        private readonly DayPlaceMetaData _dayPlaceMetaData;
         public Cs4rsaMetaData(Schedule schedule, DayPlaceMetaData dayPlaceMetaData)
         {
             _schedule = schedule;
@@ -24,14 +24,12 @@ namespace SubjectCrawlService1.DataTypes
             Place place = _dayPlaceMetaData.GetPlaceAtDay(dayOfWeek);
             if (studyTimes != null)
             {
-                List<PlaceMap> placeMaps = new();
                 foreach (StudyTime studyTime in studyTimes)
                 {
-                    placeMaps.Add(new PlaceMap(studyTime, place));
+                    yield return new PlaceMap(studyTime, place);
                 }
-                return placeMaps;
             }
-            return null;
+            yield break;
         }
     }
 }

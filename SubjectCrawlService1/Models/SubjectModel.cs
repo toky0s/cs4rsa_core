@@ -72,7 +72,7 @@ namespace SubjectCrawlService1.Models
 
         public string GetMustStudySubjectsAsString()
         {
-            if (_subject.MustStudySubject.Count == 0)
+            if (_subject.MustStudySubject.Count() == 0)
             {
                 return "Không có môn tiên quyết";
             }
@@ -81,7 +81,7 @@ namespace SubjectCrawlService1.Models
 
         public string GetParallelSubjectsAsString()
         {
-            if (_subject.ParallelSubject.Count == 0)
+            if (_subject.ParallelSubject.Count() == 0)
             {
                 return "Không có môn song hành";
             }

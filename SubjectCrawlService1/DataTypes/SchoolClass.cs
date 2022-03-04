@@ -30,9 +30,9 @@ namespace SubjectCrawlService1.DataTypes
          * 
          * Tương ứng với TempTeachers.
          */
-        public List<Teacher> Teachers { get; set; }
-        public List<string> TempTeachers { get; set; }
-        public List<Place> Places { get; set; }
+        public IEnumerable<Teacher> Teachers { get; set; }
+        public IEnumerable<string> TempTeachers { get; set; }
+        public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
         public string Url { get; set; }
@@ -42,8 +42,8 @@ namespace SubjectCrawlService1.DataTypes
 
         public SchoolClass(string schoolClassName, string registerCode, string type,
             string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule,
-            IEnumerable<string> rooms, List<Place> places,
-            List<Teacher> teachers, List<string> tempTeachers,
+            IEnumerable<string> rooms, IEnumerable<Place> places,
+            IEnumerable<Teacher> teachers, IEnumerable<string> tempTeachers,
             string registrationStatus, string implementationStatus,
             string url, DayPlaceMetaData dayPlaceMetaData)
         {

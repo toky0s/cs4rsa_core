@@ -13,17 +13,6 @@ namespace SubjectCrawlService1.DataTypes
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
         /// </summary>
-        /// <param name="startWeek">Tuần bắt đầu.</param>
-        /// <param name="endWeek">Tuần kết thúc.</param>
-        public StudyWeek(byte startWeek, byte endWeek)
-        {
-            this.startWeek = startWeek;
-            this.endWeek = endWeek;
-        }
-
-        /// <summary>
-        /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
-        /// </summary>
         /// <param name="studyWeek">Một chuỗi như match với pattern ^[1-9]*--[1-9]*$</param>
         public StudyWeek(string studyWeek)
         {

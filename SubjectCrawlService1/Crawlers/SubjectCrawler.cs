@@ -44,7 +44,9 @@ namespace SubjectCrawlService1.Crawlers
             HtmlWeb htmlWeb = new();
             HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(url);
 
-            // kiểm tra sự tồn tại của môn học
+            /**
+             * Kiểm tra sự tồn tại của môn học
+             */
             HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
             if (span == null)
             {
