@@ -5,9 +5,9 @@ namespace ConflictService.DataTypes
 {
     public class ConflictPlace
     {
-        public Dictionary<DayOfWeek, List<PlaceAdjacent>> PlaceAdjacents { get; private set; } = new Dictionary<DayOfWeek, List<PlaceAdjacent>>();
+        public Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> PlaceAdjacents { get; private set; }
 
-        public ConflictPlace(Dictionary<DayOfWeek, List<PlaceAdjacent>> placeAdjacents)
+        public ConflictPlace(Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> placeAdjacents)
         {
             PlaceAdjacents = placeAdjacents;
         }

@@ -15,21 +15,20 @@ namespace ConflictService.Utils
         /// </summary>
         /// <param name="studyTimes">List các PlaceMap.</param>
         /// <returns>List các Tuple là cặp các PlaceMap.</returns>
-        public static List<Tuple<PlaceMap, PlaceMap>> PairPlaceMaps(List<PlaceMap> placeMaps)
+        public static IEnumerable<Tuple<PlaceMap, PlaceMap>> PairPlaceMaps(List<PlaceMap> placeMaps)
         {
-            List<Tuple<PlaceMap, PlaceMap>> tuplePlaceMaps = new List<Tuple<PlaceMap, PlaceMap>>();
             int index = 0;
-            while (index < placeMaps.Count() - 1)
+            int placeMapsCount = placeMaps.Count;
+            while (index < placeMapsCount - 1)
             {
                 PlaceMap firstItem = placeMaps[index];
-                for (int j = index + 1; j <= placeMaps.Count() - 1; ++j)
+                for (int j = index + 1; j <= placeMaps.Count - 1; ++j)
                 {
-                    Tuple<PlaceMap, PlaceMap> tuplePlaceMap = new Tuple<PlaceMap, PlaceMap>(firstItem, placeMaps[j]);
-                    tuplePlaceMaps.Add(tuplePlaceMap);
+                    Tuple<PlaceMap, PlaceMap> tuplePlaceMap = new(firstItem, placeMaps[j]);
+                    yield return tuplePlaceMap;
                 }
                 index++;
             }
-            return tuplePlaceMaps;
         }
 
 
@@ -40,21 +39,19 @@ namespace ConflictService.Utils
         /// <param name="timeDelta">TimeDelta đại diện cho một khoảng thời gian tối thiểu để
         /// chấp nhận một xung đột vị trí giữa hai nơi học.</param>
         /// <returns></returns>
-        public static List<PlaceAdjacent> GetPlaceAdjacents(List<Tuple<PlaceMap, PlaceMap>> placeMapPairs, TimeSpan timeDelta)
+        public static IEnumerable<PlaceAdjacent> GetPlaceAdjacents(IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs, TimeSpan timeDelta)
         {
-            List<PlaceAdjacent> placeAdjacents = new List<PlaceAdjacent>();
             foreach (Tuple<PlaceMap, PlaceMap> placeMapTuple in placeMapPairs)
             {
                 PlaceAdjacent placeAdjacent = GetPlaceAdjacent(placeMapTuple.Item1, placeMapTuple.Item2, timeDelta);
                 if (placeAdjacent != null)
-                    placeAdjacents.Add(placeAdjacent);
+                    yield return placeAdjacent;
             }
-            return placeAdjacents;
         }
 
         private static PlaceAdjacent GetPlaceAdjacent(PlaceMap placeMap1, PlaceMap placeMap2, TimeSpan timeDelta)
         {
-            List<PlaceMap> placeMaps = new List<PlaceMap>() { placeMap1, placeMap2 };
+            List<PlaceMap> placeMaps = new() { placeMap1, placeMap2 };
             placeMaps.Sort();
             // Loại trừ xung đột thời gian
             if (placeMaps[0].StudyTime.End >= placeMaps[1].StudyTime.Start)

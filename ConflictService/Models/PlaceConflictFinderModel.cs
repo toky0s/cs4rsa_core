@@ -46,7 +46,7 @@ namespace cs4rsa_core.Models
         public string GetConflictInfo()
         {
             List<string> resultTimes = new();
-            foreach (KeyValuePair<DayOfWeek, List<PlaceAdjacent>> item in _conflictPlace.PlaceAdjacents)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in _conflictPlace.PlaceAdjacents)
             {
                 string day = BasicDataConverter.ToDayOfWeekText(item.Key);
                 List<string> info = new();

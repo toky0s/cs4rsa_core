@@ -39,7 +39,7 @@ namespace ConflictService.DataTypes
                     List<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct().ToList();
                     if (dinstictPlaces.Count > 1)
                     {
-                        Dictionary<DayOfWeek, List<PlaceAdjacent>> conflictPlaces = new Dictionary<DayOfWeek, List<PlaceAdjacent>>();
+                        Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> conflictPlaces = new();
                         // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
                         foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
                         {
@@ -47,9 +47,9 @@ namespace ConflictService.DataTypes
                             IEnumerable<PlaceMap> placeMap2 = _schoolClass2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
                             List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
 
-                            List<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
-                            List<PlaceAdjacent> placeAdjacents = PlaceMapManipulation.GetPlaceAdjacents(placeMapPairs, _timeDelta);
-                            if (placeAdjacents.Count > 0)
+                            IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
+                            IEnumerable<PlaceAdjacent> placeAdjacents = PlaceMapManipulation.GetPlaceAdjacents(placeMapPairs, _timeDelta);
+                            if (placeAdjacents.Any())
                                 conflictPlaces.Add(dayOfWeek, placeAdjacents);
                         }
                         if (conflictPlaces.Count != 0)
