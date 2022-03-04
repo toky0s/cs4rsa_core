@@ -68,6 +68,7 @@ namespace cs4rsa_core.ViewModels
         private string _shareString;
         public RelayCommand OpenSettingCommand { get; set; }
         public RelayCommand OpenUpdateWindowCommand { get; set; }
+        public RelayCommand OpenTextFileWindowCommand { get; set; }
         public RelayCommand OpenAutoScheduling { get; set; }
         public RelayCommand OpenShareStringWindowCommand { get; set; }
 
@@ -81,10 +82,18 @@ namespace cs4rsa_core.ViewModels
             CurrentSemesterInfo = courseCrawler.GetCurrentSemesterInfo();
             CurrentYearInfo = courseCrawler.GetCurrentYearInfo();
 
-            OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow, () => true);
-            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow, () => true);
+            OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
+            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
+            OpenTextFileWindowCommand = new RelayCommand(OnOpenTextFileWindow);
+
             TotalCredit = 0;
             TotalSubject = 0;
+        }
+
+        private void OnOpenTextFileWindow()
+        {
+            string value = System.Configuration.ConfigurationManager.AppSettings["SesionsFolderPath"];
+            MessageBox.Show($"Mở dialog quản lý danh sách file xếp lịch đã lưu {value}");
         }
 
         private void OnOpenShareStringWindow()

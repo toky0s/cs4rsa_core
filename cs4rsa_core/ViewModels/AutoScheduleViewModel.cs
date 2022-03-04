@@ -582,7 +582,6 @@ namespace cs4rsa_core.ViewModels
         {
             return _selectedProSubject != null
                 && _selectedProSubject.IsAvaiable
-                && !_selectedProSubject.IsDone
                 && !ChoicedProSubjectModels.Contains(_selectedProSubject);
         }
 

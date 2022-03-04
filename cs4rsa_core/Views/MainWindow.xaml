@@ -63,52 +63,6 @@
                             x:Name="Grid_Menu"
                             Grid.Row="1"
                             HorizontalAlignment="Left">
-                            <!--<Grid.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard x:Name="BeginExpandMenuAnimation">
-                                                <Storyboard>
-                                                    <DoubleAnimation
-                                                        Storyboard.TargetProperty="Width"
-                                                        From="65"
-                                                        To="200"
-                                                        Duration="0:0:0.3">
-                                                        <DoubleAnimation.EasingFunction>
-                                                            <PowerEase EasingMode="EaseOut" />
-                                                        </DoubleAnimation.EasingFunction>
-                                                    </DoubleAnimation>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-                                        <DataTrigger.ExitActions>
-                                            <StopStoryboard BeginStoryboardName="BeginExpandMenuAnimation" />
-                                        </DataTrigger.ExitActions>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard x:Name="EndExpandMenuAnimation">
-                                                <Storyboard>
-                                                    <DoubleAnimation
-                                                        Storyboard.TargetProperty="Width"
-                                                        From="200"
-                                                        To="65"
-                                                        Duration="0:0:0.3">
-                                                        <DoubleAnimation.EasingFunction>
-                                                            <PowerEase EasingMode="EaseOut" />
-                                                        </DoubleAnimation.EasingFunction>
-                                                    </DoubleAnimation>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-                                        <DataTrigger.ExitActions>
-                                            <StopStoryboard BeginStoryboardName="EndExpandMenuAnimation" />
-                                        </DataTrigger.ExitActions>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>-->
                             <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.3}">
                                 <Grid
                                     x:Name="GridCursor"

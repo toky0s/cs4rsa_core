@@ -69,7 +69,7 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Rectangle
@@ -92,16 +92,15 @@
         </ListView>
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
             <Button
+                Grid.Column="0"
                 Height="30"
                 Margin="0,0,0,5"
                 Command="{Binding SaveCommand}"
-                Content="Lưu bộ lịch này"
-                Foreground="White" />
+                Content="Lưu" />
             <Button
                 Height="30"
                 Command="{Binding DeleteAllCommand}"
-                Content="Bỏ chọn hết"
-                Foreground="White" />
+                Content="Bỏ chọn hết" />
         </StackPanel>
         <TextBlock
             Grid.Row="3"

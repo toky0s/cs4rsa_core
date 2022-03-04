@@ -326,16 +326,8 @@
                             <Button
                                 Margin="0,0,5,0"
                                 Command="{Binding AddCommand}"
-                                Content="{materialDesign:PackIcon Kind=Plus,
-                                                                  Size=20}"
+                                Content="{materialDesign:PackIcon Kind=Plus}"
                                 ToolTip="Thêm" />
-                            <!--<Button
-                                Margin="0,0,5,0"
-                                Command="{Binding WatchDetailCommand}"
-                                Content="{materialDesign:PackIcon Kind=Details,
-                                                                  Size=20}"
-                                ToolTip="Xem chi tiết" />-->
-                            <!--<Button Content="{materialDesign:PackIcon Kind=OpenInApp, Size=20}" ToolTip="Mở trong trình duyệt" />-->
                         </StackPanel>
                     </Grid>
                 </materialDesign:Card>
@@ -810,24 +802,22 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <materialDesign:Card Margin="2" IsEnabled="False">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="10" />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Rectangle
-                                                        Grid.Column="0"
-                                                        Width="10"
-                                                        Fill="{Binding Color}"
-                                                        IsEnabled="False" />
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        Padding="5"
-                                                        FontSize="10"
-                                                        Text="{Binding Name}" />
-                                                </Grid>
-                                            </materialDesign:Card>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="10" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle
+                                                    Grid.Column="0"
+                                                    Width="10"
+                                                    Fill="{Binding Color}"
+                                                    IsEnabled="False" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Padding="5"
+                                                    FontSize="10"
+                                                    Text="{Binding Name}" />
+                                            </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

@@ -13,6 +13,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -62,8 +63,7 @@ namespace cs4rsa_core.ViewModels
         #region Services
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
-        public ChoicedSessionViewModel(ImportSessionViewModel importSessionViewModel,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public ChoicedSessionViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
             _snackbarMessageQueue = snackbarMessageQueue;
 

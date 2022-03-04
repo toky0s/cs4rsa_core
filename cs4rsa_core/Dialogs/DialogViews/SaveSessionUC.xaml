@@ -19,7 +19,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="555">
+    <materialDesign:Card Width="555" Height="333">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -43,33 +43,33 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Grid Grid.Row="1" Margin="7">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="1" Margin="7">
                 <TextBox
                     x:Name="txtName"
-                    Grid.Column="1"
+                    Margin="0,0,0,5"
                     materialDesign:HintAssist.Hint="Tên bộ lịch của bạn"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                     Text="{Binding Name, Mode=TwoWay}" />
-            </Grid>
-            <StackPanel
+                <CheckBox Content="Lưu kèm với file văn bản (.txt)" />
+            </StackPanel>
+            <Grid
                 Grid.Row="2"
                 Margin="0,0,7,7"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
+                HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Button
+                    x:Name="Button_SaveInDb"
+                    Grid.Column="0"
                     Width="100"
-                    Margin="0,0,10,0"
                     Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
                     Content="Lưu"
                     Foreground="White"
                     IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}" />
-            </StackPanel>
+            </Grid>
         </Grid>
     </materialDesign:Card>
-
 </UserControl>

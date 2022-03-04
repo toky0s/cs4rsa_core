@@ -102,5 +102,12 @@ namespace cs4rsa_core
 
             return services.BuildServiceProvider();
         }
+
+        private bool CreateSessionFolder()
+        {
+            string value = System.Configuration.ConfigurationManager.AppSettings["SesionsFolderPath"];
+            MessageBox.Show(value);
+            return true;
+        }
     }
 }
