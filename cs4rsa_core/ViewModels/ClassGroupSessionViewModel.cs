@@ -492,20 +492,22 @@ namespace cs4rsa_core.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Hiển thị chi tiết của một SchoolClass
+        /// </summary>
         public void OnShowDetailsSchoolClasses()
         {
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
             ShowDetailsSchoolClassesViewModel vm = new();
             vm.ClassGroupModel = _selectedClassGroup;
             vm.CloseDialogCallback = CloseDialogAndHandleClassGroupResult;
-            _selectedClassGroup.GetSchoolClassModels()
-                .ForEach(scm =>
+            foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
+            {
+                if (scm.Type == "LAB")
                 {
-                    if (scm.Type == "LAB")
-                    {
-                        vm.SchoolClassModels.Add(scm);
-                    }
-                });
+                    vm.SchoolClassModels.Add(scm);
+                }
+            }
             showDetailsSchoolClassesUC.DataContext = vm;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(showDetailsSchoolClassesUC);
         }

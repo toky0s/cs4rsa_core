@@ -28,7 +28,7 @@ namespace cs4rsa_core.ViewModelFunctions
         /// </summary>
         /// <param name="subjectModels"></param>
         /// <param name="subjectInfoDatas"></param>
-        public static void Start(List<SubjectModel> subjectModels, List<SubjectInfoData> subjectInfoDatas)
+        public static void Start(List<SubjectModel> subjectModels, IEnumerable<SubjectInfoData> subjectInfoDatas)
         {
             foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
             {
@@ -61,7 +61,7 @@ namespace cs4rsa_core.ViewModelFunctions
             }
         }
 
-        private static SubjectModel GetSubjectModelWithSubjectCode(List<SubjectModel> subjectModels, string subjectCode)
+        private static SubjectModel GetSubjectModelWithSubjectCode(IEnumerable<SubjectModel> subjectModels, string subjectCode)
         {
             foreach (SubjectModel subject in subjectModels)
             {

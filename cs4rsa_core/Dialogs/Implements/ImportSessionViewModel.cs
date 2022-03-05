@@ -9,6 +9,7 @@ using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using LightMessageBus;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -82,15 +83,17 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ICourseCrawler _courseCrawler;
         private readonly SessionExtension _sessionExtension;
         private readonly IMessageBox _messageBox;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler,
-            SessionExtension sessionExtension, IMessageBox messageBox)
+            SessionExtension sessionExtension, IMessageBox messageBox, ISnackbarMessageQueue snackbarMessageQueue)
         {
             _messageBox = messageBox;
             _sessionExtension = sessionExtension;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
 
             ScheduleSessions = new();
             ScheduleSessionDetails = new();
@@ -147,7 +150,6 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 IsAvailableSession = -1;
             }
-
         }
 
         private void OnCloseDialog()
@@ -229,6 +231,17 @@ namespace cs4rsa_core.Dialogs.Implements
             ScheduleSessionDetails.Clear();
             SessionSchoolClasses.Clear();
             await LoadScheduleSession();
+        }
+
+        /// <summary>
+        /// Sao chép mã đăng ký của lớp hiện tại.
+        /// </summary>
+        public void OnCopyRegisterCodeAtCurrentClassGroup()
+        {
+            string registerCode = _selectedSessionDetail.RegisterCode;
+            Clipboard.SetData(DataFormats.Text, registerCode);
+            string message = $"Đã sao chép {_selectedSessionDetail.SubjectCode}::{_selectedSessionDetail.RegisterCode}";
+            _snackbarMessageQueue.Enqueue(message);
         }
     }
 }

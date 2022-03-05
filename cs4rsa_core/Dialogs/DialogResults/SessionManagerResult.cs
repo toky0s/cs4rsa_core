@@ -18,8 +18,8 @@ namespace cs4rsa_core.Dialogs.DialogResults
     /// </summary>
     public class SessionManagerResult
     {
-        private List<SubjectInfoData> _subjectInfoDatas;
-        public List<SubjectInfoData> SubjectInfoDatas
+        private IEnumerable<SubjectInfoData> _subjectInfoDatas;
+        public IEnumerable<SubjectInfoData> SubjectInfoDatas
         {
             get
             {
@@ -30,14 +30,9 @@ namespace cs4rsa_core.Dialogs.DialogResults
                 _subjectInfoDatas = value;
             }
         }
-        public SessionManagerResult(List<SubjectInfoData> subjectInfoDatas)
+        public SessionManagerResult(IEnumerable<SubjectInfoData> subjectInfoDatas)
         {
             _subjectInfoDatas = subjectInfoDatas;
-        }
-
-        public void Add(SubjectInfoData subjectInfo)
-        {
-            _subjectInfoDatas.Add(subjectInfo);
         }
     }
 }

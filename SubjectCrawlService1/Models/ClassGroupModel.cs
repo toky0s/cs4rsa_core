@@ -79,9 +79,9 @@ namespace SubjectCrawlService1.Models
             return ClassGroup.GetSchedule().ScheduleTime.Count > 0;
         }
 
-        public List<SchoolClassModel> GetSchoolClassModels()
+        public IEnumerable<SchoolClassModel> GetSchoolClassModels()
         {
-            return ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc)).ToList();
+            return ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc));
         }
 
         public void PickSchoolClass(string registerCode)

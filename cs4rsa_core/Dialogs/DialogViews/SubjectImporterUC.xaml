@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator" xmlns:implements="clr-namespace:cs4rsa_core.Dialogs.Implements" d:DataContext="{d:DesignInstance Type=implements:SubjectImporterViewModel}"
     d:DesignHeight="200"
     d:DesignWidth="400"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"

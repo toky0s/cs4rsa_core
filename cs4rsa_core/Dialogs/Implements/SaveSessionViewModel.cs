@@ -9,15 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
     public class SaveSessionViewModel : ViewModelBase
     {
-        public List<ClassGroupModel> ClassGroupModels { get; set; }
+        public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public string Name { get; set; }
+        public bool IsSaveAsJsonFile { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public Action<SaveResult> CloseDialogCallback { get; set; }
 
@@ -27,6 +29,7 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            IsSaveAsJsonFile = true;
             ScheduleSessions = new();
             SaveCommand = new RelayCommand(Save);
         }

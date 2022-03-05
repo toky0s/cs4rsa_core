@@ -20,104 +20,100 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <materialDesign:Card Width="999" Padding="10">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Margin="0,0,0,10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Margin="0,0,0,10" Orientation="Vertical">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />
-                <Grid x:Uid="GridSessions" Height="200">
+                <Grid Height="300" Margin="0,0,5,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Margin="0,0,5,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <ListView
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedScheduleSession}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <ListView
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedSessionDetail}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <ListView
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            ItemsSource="{Binding SessionSchoolClasses, IsAsync=True}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Lớp thành phần" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Loại hình" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                        <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
-                            <TextBlock Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Text="Hiệu lực của phiên đã chọn" />
-                            <TextBlock>
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
-                                                <Setter Property="Text" Value="Chưa tính toán" />
-                                                <Setter Property="Foreground" Value="Gray" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
-                                                <Setter Property="Text" Value="Đã hết hạn" />
-                                                <Setter Property="Foreground" Value="Red" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
-                                                <Setter Property="Text" Value="Có thể sử dụng" />
-                                                <Setter Property="Foreground" Value="Green" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Grid>
+                    <ListView
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        SelectedItem="{Binding SelectedScheduleSession}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <DataGrid
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        SelectedItem="{Binding SelectedSessionDetail}">
+                        <DataGrid.Resources>
+                            <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
+                                <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Mã môn" />
+                            <DataGridTextColumn Binding="{Binding SubjectName}" Header="Tên môn" />
+                            <DataGridTextColumn Binding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
+                            <DataGridTextColumn Binding="{Binding RegisterCode}" Header="Mã đăng ký" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+                        <TextBlock Style="{StaticResource Caption}" Text="Hiệu lực của phiên đã chọn" />
+                        <TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
+                                            <Setter Property="Text" Value="Chưa tính toán" />
+                                            <Setter Property="Foreground" Value="Gray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
+                                            <Setter Property="Text" Value="Đã hết hạn" />
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
+                                            <Setter Property="Text" Value="Có thể sử dụng" />
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
                     <StackPanel
-                        Grid.Column="2"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
                         Margin="0,7,7,0"
-                        Orientation="Vertical">
+                        Orientation="Horizontal">
+                        <Button
+                            Width="100"
+                            Height="30"
+                            Margin="0,0,5,0"
+                            Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
+                            Content="Xoá" />
                         <Button
                             Width="100"
                             Height="30"
                             Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
                             Content="Nhập" />
-                        <Button
-                            Height="30"
-                            Margin="0,5,0,0"
-                            Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
-                            Content="Xoá" />
                     </StackPanel>
                 </Grid>
-
             </StackPanel>
-            <StackPanel>
+            <StackPanel Grid.Row="1">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ ShareString" />
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -130,6 +126,7 @@
                         Height="40"
                         Margin="0,0,5,0"
                         materialDesign:HintAssist.Hint="Share String của bạn"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                         Text="{Binding ShareString}" />
                     <Button
@@ -142,6 +139,6 @@
                         IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}" />
                 </Grid>
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </materialDesign:Card>
 </UserControl>
