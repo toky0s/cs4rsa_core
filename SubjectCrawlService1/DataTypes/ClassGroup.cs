@@ -1,6 +1,8 @@
 ﻿using Cs4rsaDatabaseService.Models;
+
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +90,7 @@ namespace SubjectCrawlService1.DataTypes
             }
             else
             {
-                List<Teacher> teachers = new List<Teacher>();
+                List<Teacher> teachers = new();
                 foreach (SchoolClass schoolClass in schoolClasses)
                 {
                     teachers.AddRange(schoolClass.Teachers);

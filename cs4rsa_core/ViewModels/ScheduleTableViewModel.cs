@@ -1,14 +1,19 @@
 ﻿using ConflictService.Models;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModels.Interfaces;
+
 using Cs4rsaCommon.Interfaces;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,8 +30,8 @@ namespace cs4rsa_core.ViewModels
         private List<ConflictModel> _conflictModels;
         private List<PlaceConflictFinderModel> _placeConflictFinderModels;
 
-        public ObservableCollection<ICanShowOnScheduleTable> Phase1 { get; set; }
-        public ObservableCollection<ICanShowOnScheduleTable> Phase2 { get; set; }
+        public ObservableCollection<IScheduleTableItem> Phase1 { get; set; }
+        public ObservableCollection<IScheduleTableItem> Phase2 { get; set; }
 
         public ScheduleTableViewModel()
         {

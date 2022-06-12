@@ -1,9 +1,14 @@
 ﻿using ConflictService.Models;
+
 using cs4rsa_core.Converters.Controls;
 using cs4rsa_core.Models;
+
+using Cs4rsaCommon.Enums;
 using Cs4rsaCommon.Interfaces;
 using Cs4rsaCommon.Models;
+
 using SubjectCrawlService1.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +29,10 @@ namespace cs4rsa_core.Controls
     ///   lưu ý sửa thêm các phần code liên quan sau:
     ///   + Các Converter liên quan đến control này.
     ///   + Các giá trị truyền vào set width height
-    ///     ScheduleBlock binding với các ConverterParamters
+    ///     ScheduleBlock binding với các ConverterParamters <summary>
+    /// Control này đại diện cho Lịch mô phỏng, bạn cần lưu ý các ưu tố sau khi custom trên Control này.
+    /// https://stackoverflow.com/questions/5913792/wpf-canvas-how-to-add-children-dynamically-with-mvvm-code-behind
+    /// </summary>
     public partial class ScheduleControl : UserControl
     {
         public ScheduleControl()
@@ -32,16 +40,16 @@ namespace cs4rsa_core.Controls
             InitializeComponent();
         }
 
-        public ObservableCollection<ICanShowOnScheduleTable> BlocksSource
+        public ObservableCollection<IScheduleTableItem> BlocksSource
         {
-            get { return (ObservableCollection<ICanShowOnScheduleTable>)GetValue(BlocksSourceProperty); }
+            get { return (ObservableCollection<IScheduleTableItem>)GetValue(BlocksSourceProperty); }
             set { SetValue(BlocksSourceProperty, value); }
         }
 
         public static readonly DependencyProperty BlocksSourceProperty =
             DependencyProperty.Register(
                 "BlocksSource",
-                typeof(ObservableCollection<ICanShowOnScheduleTable>),
+                typeof(ObservableCollection<IScheduleTableItem>),
                 typeof(ScheduleControl),
                 new PropertyMetadata(OnBlocksSourceChanged)
                 );
@@ -96,7 +104,7 @@ namespace cs4rsa_core.Controls
             }
             if (e.NewValue != null)
             {
-                var collection = (ObservableCollection<ICanShowOnScheduleTable>)e.NewValue;
+                var collection = (ObservableCollection<IScheduleTableItem>)e.NewValue;
                 collection.CollectionChanged += action;
             }
         }
@@ -136,16 +144,11 @@ namespace cs4rsa_core.Controls
             }
         }
 
-        private IEnumerable<ScheduleBlock> RenderScheduleBlock(ICanShowOnScheduleTable canShowOnScheduleTableImpl)
+        private IEnumerable<ScheduleBlock> RenderScheduleBlock(IScheduleTableItem scheduleTableItem)
         {
-            foreach (TimeBlock timeBlock in canShowOnScheduleTableImpl.GetBlocks())
+            foreach (TimeBlock timeBlock in scheduleTableItem.GetBlocks())
             {
-                string description = timeBlock.Desciption;
-                int startIndex = GetTimeIndex(timeBlock.Start);
-                int endIndex = GetTimeIndex(timeBlock.End);
-                ScheduleBlock scheduleBlock = GetScheduleBlock(timeBlock.Background, startIndex, endIndex, description);
-                scheduleBlock.DayOfWeek = timeBlock.DayOfWeek;
-                yield return scheduleBlock;
+                yield return GetScheduleBlock(timeBlock);
             }
         }
 
@@ -174,67 +177,99 @@ namespace cs4rsa_core.Controls
             return Array.IndexOf(timelines, time);
         }
 
-        private ScheduleBlock GetScheduleBlock(
-            string blockColor, int startIndex, int endIndex,
-            string description)
+        private ScheduleBlock GetScheduleBlock(TimeBlock timeBlock)
         {
-            ScheduleBlock scheduleBlock = new();
-            scheduleBlock.BlockColor = blockColor;
-            scheduleBlock.StartIndex = startIndex;
-            scheduleBlock.EndIndex = endIndex;
-            scheduleBlock.Description = description;
+            ScheduleBlock scheduleBlock = new()
+            {
+                DayOfWeek = timeBlock.DayOfWeek,
+                BlockType = timeBlock.BlockType,
 
-            #region widthBinding
-            Binding widthBinding = new();
-            widthBinding.RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(Canvas), 1);
-            widthBinding.Path = new PropertyPath(ActualWidthProperty);
-            widthBinding.Converter = new ScheduleBlockWidthConverter();
+                IsClass = timeBlock.BlockType.Equals(BlockType.SchoolClass),
+                IsTimeConflict = timeBlock.BlockType.Equals(BlockType.TimeConflict),
+                IsPlaceConflict = timeBlock.BlockType.Equals(BlockType.PlaceConflict),
+
+                BlockName = timeBlock.Content,
+                BlockColor = timeBlock.Background,
+                Description = timeBlock.Description,
+                StartIndex = GetTimeIndex(timeBlock.Start),
+                EndIndex = GetTimeIndex(timeBlock.End),
+            };
+
+            if (timeBlock.BlockType.Equals(BlockType.SchoolClass))
+            {
+                scheduleBlock.Code = timeBlock.Code;
+            }
+            else
+            {
+                scheduleBlock.Class1 = timeBlock.Class1;
+                scheduleBlock.Class2 = timeBlock.Class2;
+            }
+
+            #region widthBinding | Tính toán chiều rộng
+            Binding widthBinding = new()
+            {
+                RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(Canvas), 1),
+                Path = new PropertyPath(ActualWidthProperty),
+                Converter = new ScheduleBlockWidthConverter()
+            };
             #endregion
 
-
-            #region heightMultiBinding
+            #region heightMultiBinding | Tính toán chiều cao
             MultiBinding heightMultiBinding = new();
             heightMultiBinding.Converter = new ScheduleBlockHeightConverter();
 
-            Binding bindingCnvTimelineActualHeight = new();
-            bindingCnvTimelineActualHeight.ElementName = "Canvas_Timelines";
-            bindingCnvTimelineActualHeight.Path = new PropertyPath("ActualHeight");
+            Binding bindingCnvTimelineActualHeight = new()
+            {
+                ElementName = "Canvas_Timelines",
+                Path = new PropertyPath("ActualHeight")
+            };
 
-            Binding bindingStartIndex2 = new();
-            bindingStartIndex2.RelativeSource = new RelativeSource(RelativeSourceMode.Self);
-            bindingStartIndex2.Path = new PropertyPath(ScheduleBlock.StartIndexProperty);
+            Binding bindingStartIndex2 = new()
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+                Path = new PropertyPath(ScheduleBlock.StartIndexProperty)
+            };
 
-            Binding bindingEndIndex = new();
-            bindingEndIndex.RelativeSource = new RelativeSource(RelativeSourceMode.Self);
-            bindingEndIndex.Path = new PropertyPath(ScheduleBlock.EndIndexProperty);
+            Binding bindingEndIndex = new()
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+                Path = new PropertyPath(ScheduleBlock.EndIndexProperty)
+            };
 
             heightMultiBinding.Bindings.Add(bindingCnvTimelineActualHeight);
             heightMultiBinding.Bindings.Add(bindingStartIndex2);
             heightMultiBinding.Bindings.Add(bindingEndIndex);
             #endregion
 
+            #region canvasTopMultiBinding | Tính toán khoảng cách phía trên so với Canvas
+            MultiBinding canvasTopMultiBinding = new()
+            {
+                Converter = new TopRangeConverter()
+            };
 
-            #region canvasTopMultiBinding
-            MultiBinding canvasTopMultiBinding = new();
-            canvasTopMultiBinding.Converter = new TopRangeConverter();
+            Binding bindingTimelineCanvasHeight = new()
+            {
+                ElementName = "Canvas_Timelines",
+                Path = new PropertyPath("ActualHeight")
+            };
 
-            Binding bindingTimelineCanvasHeight = new();
-            bindingTimelineCanvasHeight.ElementName = "Canvas_Timelines";
-            bindingTimelineCanvasHeight.Path = new PropertyPath("ActualHeight");
-
-            Binding bindingStartIndex = new();
-            bindingStartIndex.RelativeSource = new RelativeSource(RelativeSourceMode.Self);
-            bindingStartIndex.Path = new PropertyPath(ScheduleBlock.StartIndexProperty);
+            Binding bindingStartIndex = new()
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+                Path = new PropertyPath(ScheduleBlock.StartIndexProperty)
+            };
 
             canvasTopMultiBinding.Bindings.Add(bindingTimelineCanvasHeight);
             canvasTopMultiBinding.Bindings.Add(bindingStartIndex);
             #endregion
 
-            scheduleBlock.SetBinding(Canvas.WidthProperty, widthBinding);
-            scheduleBlock.SetBinding(Canvas.HeightProperty, heightMultiBinding);
+            #region Set Binding
+            scheduleBlock.SetBinding(WidthProperty, widthBinding);
+            scheduleBlock.SetBinding(HeightProperty, heightMultiBinding);
             scheduleBlock.SetBinding(Canvas.TopProperty, canvasTopMultiBinding);
+            #endregion
 
-            #region Events
+            #region Events | Đặt hai sự kiện rê chuột
             scheduleBlock.MouseEnter += ScheduleBlock_MouseEnter;
             scheduleBlock.MouseLeave += ScheduleBlock_MouseLeave;
             #endregion

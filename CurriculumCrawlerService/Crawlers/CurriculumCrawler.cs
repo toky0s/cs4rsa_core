@@ -1,7 +1,11 @@
 ﻿using Cs4rsaDatabaseService.Models;
+
 using CurriculumCrawlerService.Crawlers.Interfaces;
+
 using HelperService;
+
 using HtmlAgilityPack;
+
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -21,7 +25,7 @@ namespace CurriculumCrawlerService.Crawlers
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode scriptNode = docNode.SelectSingleNode("//td/script");
             HtmlNode nameNode = docNode.SelectSingleNode("//li/a");
-            string name = StringHelper.CleanString(nameNode.InnerText);
+            string name = nameNode.InnerText.Trim();
             string content = scriptNode.InnerText;
 
             Regex regex = new("curid=[0-9]*");

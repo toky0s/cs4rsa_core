@@ -1,5 +1,7 @@
 ﻿using ConflictService.Utils;
+
 using SubjectCrawlService1.DataTypes;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +25,7 @@ namespace ConflictService.DataTypes
                 // Check date
                 if (DayOfWeeks.Count > 0)
                 {
-                    Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new Dictionary<DayOfWeek, List<StudyTimeIntersect>>();
+                    Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new();
                     //check time
                     foreach (DayOfWeek DayOfWeek in DayOfWeeks)
                     {

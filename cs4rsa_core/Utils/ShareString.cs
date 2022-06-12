@@ -1,8 +1,12 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.Dialogs.DialogResults;
+
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using SubjectCrawlService1.DataTypes;
+
 using System.Collections.Generic;
 using System.Linq;
 

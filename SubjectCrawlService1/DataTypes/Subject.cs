@@ -1,15 +1,20 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using HelperService;
 using HelperService.Interfaces;
+
 using HtmlAgilityPack;
+
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
 using TeacherCrawlerService1.Crawlers;
 
 namespace SubjectCrawlService1.DataTypes
@@ -242,8 +247,8 @@ namespace SubjectCrawlService1.DataTypes
 
             SchoolClass schoolClass = new(schoolClassName, registerCode, studyType, emptySeat,
                                         registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, teachers, tempTeachers, 
-                                        registrationStatus, implementationStatus, 
+                                        rooms, places, teachers, tempTeachers,
+                                        registrationStatus, implementationStatus,
                                         urlToSubjectDetailPage, metaData);
             return schoolClass;
         }

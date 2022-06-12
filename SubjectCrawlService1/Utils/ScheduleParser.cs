@@ -1,5 +1,7 @@
 ﻿using HtmlAgilityPack;
+
 using SubjectCrawlService1.DataTypes;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +106,7 @@ namespace SubjectCrawlService1.Utils
             int i = 0;
             while (i < timeStrings.Count)
             {
-                StudyTime studyTime = new StudyTime(timeStrings[i], timeStrings[i + 1]);
+                StudyTime studyTime = new(timeStrings[i], timeStrings[i + 1]);
                 studyTimes.Add(studyTime);
                 i += 2;
             }

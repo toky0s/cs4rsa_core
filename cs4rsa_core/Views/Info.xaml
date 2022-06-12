@@ -22,28 +22,10 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="Thông tin" />
-        <TextBlock
-            Grid.Row="1"
-            Margin="0,0,0,5"
-            Text="{Binding Version, StringFormat=Phiên bản: {0}}" />
-        <Button
-            Grid.Row="2"
-            Width="160"
-            Margin="0,0,0,5"
-            HorizontalAlignment="Left"
-            materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding IsChecking}"
-            materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
-            materialDesign:ButtonProgressAssist.Value="-1"
-            Command="{Binding CheckUpdateCommand}"
-            Content="Kiểm tra cập nhật" />
-        <Separator Grid.Row="3" />
-        <ScrollViewer Grid.Row="4">
+        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Thông tin" />
+        <ScrollViewer Grid.Row="2">
             <StackPanel Width="700" Margin="0,0,0,10">
                 <Grid>
                     <Grid.RowDefinitions>

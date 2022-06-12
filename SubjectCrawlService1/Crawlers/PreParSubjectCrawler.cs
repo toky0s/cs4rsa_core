@@ -1,10 +1,15 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa.Helpers;
+
 using HelperService;
+
 using HtmlAgilityPack;
+
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

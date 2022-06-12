@@ -1,6 +1,8 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.Implements;
+
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace cs4rsa_core.Dialogs.DialogViews
 {
@@ -15,7 +17,7 @@ namespace cs4rsa_core.Dialogs.DialogViews
             return true;
         }
 
-        private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             (DataContext as ImportSessionViewModel).OnCopyRegisterCodeAtCurrentClassGroup();
         }

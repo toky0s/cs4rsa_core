@@ -1,12 +1,15 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.DataTypes.Enums;
 using ConflictService.Interfaces;
+
 using Cs4rsaCommon.Enums;
 using Cs4rsaCommon.Interfaces;
 using Cs4rsaCommon.Models;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
+
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +18,7 @@ namespace cs4rsa_core.Models
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
     /// </summary>
-    public class PlaceConflictFinderModel : IConflictModel, ICanShowOnScheduleTable
+    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem
     {
         private SchoolClass _schoolClass1;
         private SchoolClass _schoolClass2;
@@ -82,22 +85,41 @@ namespace cs4rsa_core.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
+            const string BACKGROUND = "#f1f2f6";
+            const string NAME = "Xung đột vị trí";
             foreach (var item in _conflictPlace.PlaceAdjacents)
             {
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
-                    TimeBlock timeBlock = new()
-                    {
-                        Start = placeAdjacent.Start,
-                        End = placeAdjacent.End,
-                        Desciption = $"Vị trí {nameof(placeAdjacent.PlaceStart)}",
-                        Background = "#f1f2f6",
-                        DayOfWeek = item.Key,
-                        BlockType = BlockType.PlaceConflict
-                    };
+                    TimeBlock timeBlock = new(
+                        BACKGROUND,
+                        $"Vị trí {nameof(placeAdjacent.PlaceStart)}",
+                        item.Key,
+                        placeAdjacent.Start,
+                        placeAdjacent.End,
+                        BlockType.PlaceConflict,
+                        NAME,
+                        class1: _schoolClass1.ClassGroupName,
+                        class2: _schoolClass2.ClassGroupName
+                    );
                     yield return timeBlock;
                 }
             }
+        }
+
+        public object GetValue()
+        {
+            return this;
+        }
+
+        public ContextType GetContextType()
+        {
+            return ContextType.PConflict;
+        }
+
+        public string GetId()
+        {
+            return _schoolClass1.SchoolClassName + _schoolClass2.SchoolClassName;
         }
     }
 }

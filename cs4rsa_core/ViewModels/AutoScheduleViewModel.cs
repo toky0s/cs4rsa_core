@@ -1,4 +1,5 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
@@ -7,20 +8,29 @@ using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Models;
 using cs4rsa_core.Utils;
+
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using CurriculumCrawlerService.Crawlers.Interfaces;
+
 using HelperService;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using ProgramSubjectCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.DataTypes;
+
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -149,13 +159,15 @@ namespace cs4rsa_core.ViewModels
 
         #region Command
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
-        public RelayCommand AddCommand { get; set; }
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
+        public AsyncRelayCommand ShowDependenciesCommand { get; set; }
+        public AsyncRelayCommand WatchDetailCommand { get; set; }
+
+        public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
-        public AsyncRelayCommand WatchDetailCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
         public RelayCommand FilterChangedCommand { get; set; }
@@ -268,12 +280,14 @@ namespace cs4rsa_core.ViewModels
             _classGroupModelsOfClass = new List<List<ClassGroupModel>>();
 
             ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
-            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
+            WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
+            ShowDependenciesCommand = new AsyncRelayCommand(OnShowDependencies);
+
+            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
-            WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
             ShowOnSimuCommand = new RelayCommand(OnShowOnSimu, CanShowOnSimu);
             FilterChangedCommand = new RelayCommand(OnFiltering);
             ResetFilterCommand = new RelayCommand(OnResetFilter);
@@ -293,6 +307,11 @@ namespace cs4rsa_core.ViewModels
             _genIndex = 0;
         }
 
+        private Task OnShowDependencies()
+        {
+            throw new NotImplementedException();
+        }
+
         private void OnValidGen()
         {
             for (int i = _genIndex; i < _tempResult.Count; i++)
@@ -303,7 +322,7 @@ namespace cs4rsa_core.ViewModels
                     int where = _tempResult[_genIndex][j];
                     classGroupModels.Add(_classGroupModelsOfClass[j][where]);
                 }
-                CombinationModel combinationModel = new CombinationModel(SubjectModels.ToList(), classGroupModels);
+                CombinationModel combinationModel = new(SubjectModels.ToList(), classGroupModels);
                 CombinationModels.Add(combinationModel);
                 _genIndex++;
                 if (!combinationModel.IsHaveTimeConflicts() && !combinationModel.IsHavePlaceConflicts() && combinationModel.IsCanShow)
@@ -325,7 +344,7 @@ namespace cs4rsa_core.ViewModels
         private void OnCalculate()
         {
             OnFiltering();
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            BackgroundWorker backgroundWorker = new();
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
             if (_filteredClassGroupModels.Count > 0)
@@ -413,10 +432,9 @@ namespace cs4rsa_core.ViewModels
             return flagIsRemoveClassGroupInValid && flagIsPlaceFiltering && flagIsFreeDayFilter;
         }
 
-        #region FilteringMethod
+        #region FilteringMethod / Chứa danh sách các phương thức lọc
         private bool IsPlaceFilter(ClassGroupModel classGroupModel)
         {
-
             Dictionary<Place, bool> placeFilters = new()
             {
                 { Place.QUANGTRUNG, QuangTrung },
@@ -443,6 +461,12 @@ namespace cs4rsa_core.ViewModels
         {
             return IsRemoveClassGroupInvalid ? classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0 : true;
         }
+
+        /// <summary>
+        /// Bộ lọc những ngày rảnh
+        /// </summary>
+        /// <param name="classGroupModel"></param>
+        /// <returns></returns>
         private bool IsFreeDayFilter(ClassGroupModel classGroupModel)
         {
             Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Mon = new()

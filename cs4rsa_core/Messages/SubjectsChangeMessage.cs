@@ -1,5 +1,7 @@
 ﻿using cs4rsa_core.BaseClasses;
+
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 
 namespace SubjectCrawlService1.Messages

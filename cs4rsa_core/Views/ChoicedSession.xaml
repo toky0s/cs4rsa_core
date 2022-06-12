@@ -42,7 +42,7 @@
         <TextBlock
             Grid.Row="0"
             Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-            Text="Đã chọn" />
+            Text="{Binding ClassGroupModels.Count, StringFormat=Đã chọn ({0})}" />
         <ListView
             x:Name="Listbox_Choiced"
             Grid.Row="1"
@@ -106,7 +106,7 @@
             Grid.Row="3"
             Margin="0,0,0,5"
             FontWeight="Bold"
-            Text="Xung đột" />
+            Text="{Binding ConflictModels.Count, StringFormat=Xung đột ({0})}" />
         <ListView
             Grid.Row="4"
             ItemsSource="{Binding ConflictModels}"
@@ -164,7 +164,7 @@
             Grid.Row="5"
             Margin="0,5,0,0"
             FontWeight="Bold"
-            Text="Xung đột vị trí" />
+            Text="{Binding PlaceConflictFinderModels.Count, StringFormat=Xung đột vị trí ({0})}" />
         <ListBox
             Grid.Row="6"
             ItemsSource="{Binding PlaceConflictFinderModels}"

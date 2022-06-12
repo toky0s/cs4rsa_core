@@ -1,18 +1,21 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.DataTypes.Enums;
 using ConflictService.Interfaces;
+
 using Cs4rsaCommon.Enums;
 using Cs4rsaCommon.Interfaces;
 using Cs4rsaCommon.Models;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Utils;
+
 using System;
 using System.Collections.Generic;
 
 namespace ConflictService.Models
 {
-    public class ConflictModel : IConflictModel, ICanShowOnScheduleTable
+    public class ConflictModel : IConflictModel, IScheduleTableItem
     {
         private SchoolClass _schoolClass1;
         private SchoolClass _schoolClass2;
@@ -113,22 +116,40 @@ namespace ConflictService.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
+            const string BACKGROUND = "#e74c3c";
             foreach (var item in ConflictTime.ConflictTimes)
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    TimeBlock timeBlock = new()
-                    {
-                        Start = studyTimeIntersect.Start,
-                        End = studyTimeIntersect.End,
-                        Desciption = GetFullConflictInfo(),
-                        Background = "Red",
-                        DayOfWeek = item.Key,
-                        BlockType = BlockType.TimeConflict
-                    };
+                    TimeBlock timeBlock = new(
+                        BACKGROUND,
+                        GetFullConflictInfo(),
+                        item.Key,
+                        studyTimeIntersect.Start,
+                        studyTimeIntersect.End,
+                        BlockType.TimeConflict,
+                        _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        class1: _schoolClass1.ClassGroupName,
+                        class2: _schoolClass2.ClassGroupName
+                    );
                     yield return timeBlock;
                 }
             }
+        }
+
+        public object GetValue()
+        {
+            return this;
+        }
+
+        public ContextType GetContextType()
+        {
+            return ContextType.Conflict;
+        }
+
+        public string GetId()
+        {
+            return _schoolClass1.SchoolClassName + _schoolClass2.SchoolClassName;
         }
     }
 }

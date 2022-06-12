@@ -1,4 +1,5 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
@@ -6,11 +7,16 @@ using cs4rsa_core.Messages;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Utils;
 using cs4rsa_core.ViewModels;
+
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using LightMessageBus;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -1,14 +1,17 @@
 ﻿using Cs4rsaCommon.Enums;
 using Cs4rsaCommon.Interfaces;
 using Cs4rsaCommon.Models;
+
 using Cs4rsaDatabaseService.Models;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
+
 using System.Collections.Generic;
 
 namespace SubjectCrawlService1.Models
 {
-    public class SchoolClassModel : ICanShowOnScheduleTable
+    public class SchoolClassModel : IScheduleTableItem
     {
         private readonly SchoolClass _schoolClass;
 
@@ -161,19 +164,37 @@ namespace SubjectCrawlService1.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
+
             foreach (SchoolClassUnit item in _schoolClass.GetSchoolClassUnits())
             {
-                TimeBlock timeBlock = new()
-                {
-                    Start = item.Start,
-                    End = item.End,
-                    Background = Color,
-                    DayOfWeek = item.DayOfWeek,
-                    Desciption = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}",
-                    BlockType = BlockType.SchoolClass
-                };
+                string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
+                TimeBlock timeBlock = new(
+                            Color,
+                            description,
+                            item.DayOfWeek,
+                            item.Start,
+                            item.End,
+                            BlockType.SchoolClass,
+                            _schoolClassName,
+                            code: _schoolClass.ClassGroupName
+                        );
                 yield return timeBlock;
             }
+        }
+
+        public object GetValue()
+        {
+            return this;
+        }
+
+        public ContextType GetContextType()
+        {
+            return ContextType.Class;
+        }
+
+        public string GetId()
+        {
+            return _schoolClassName;
         }
     }
 }

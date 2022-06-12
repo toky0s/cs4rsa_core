@@ -1,8 +1,11 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.Models;
+
 using cs4rsa_core.ViewModelFunctions;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -34,7 +37,7 @@ namespace cs4rsa_core.Models
             set => _conflictModels = value;
         }
 
-        private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+        private ObservableCollection<PlaceConflictFinderModel> _placeConflictFinderModels = new();
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels
         {
             get { return _placeConflictFinderModels; }
@@ -140,7 +143,7 @@ namespace cs4rsa_core.Models
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder conflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
+                    PlaceConflictFinder conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = conflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {

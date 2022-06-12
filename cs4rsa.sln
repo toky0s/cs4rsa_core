@@ -32,7 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurriculumCrawlerService", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebaseService", "FirebaseService\FirebaseService.csproj", "{04988B79-DAB1-463A-A736-F7D9A3587A0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsaCommon", "Cs4rsaCommon\Cs4rsaCommon.csproj", "{B3252665-0606-4647-9FEB-A95E4F6F09B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaCommon", "Cs4rsaCommon\Cs4rsaCommon.csproj", "{B3252665-0606-4647-9FEB-A95E4F6F09B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopologicalSort", "TopologycalSort\TopologicalSort.csproj", "{F15D7C17-A982-4370-8576-B803E390B019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,6 +310,26 @@ Global
 		{B3252665-0606-4647-9FEB-A95E4F6F09B1}.Release|x64.Build.0 = Release|Any CPU
 		{B3252665-0606-4647-9FEB-A95E4F6F09B1}.Release|x86.ActiveCfg = Release|Any CPU
 		{B3252665-0606-4647-9FEB-A95E4F6F09B1}.Release|x86.Build.0 = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|x64.Build.0 = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Debug|x86.Build.0 = Debug|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|ARM.Build.0 = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|ARM64.Build.0 = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|x64.ActiveCfg = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|x64.Build.0 = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|x86.ActiveCfg = Release|Any CPU
+		{F15D7C17-A982-4370-8576-B803E390B019}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
