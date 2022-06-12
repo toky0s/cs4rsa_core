@@ -1,18 +1,21 @@
 ﻿using HelperService;
+
 using HtmlAgilityPack;
+
 using ProgramSubjectCrawlerService.DataTypes.Enums;
 using ProgramSubjectCrawlerService.DataTypes.Interfaces;
+
 using System.Collections.Generic;
 
 namespace ProgramSubjectCrawlerService.DataTypes
 {
     public class ProgramFolder : IProgramNode
     {
-        private string _id;
+        private readonly string _id;
         private readonly string _childOfNode;
         private string _name;
-        private List<ProgramFolder> _childProgramFolders = new List<ProgramFolder>();
-        private List<ProgramSubject> _childProgramSubjects = new List<ProgramSubject>();
+        private readonly List<ProgramFolder> _childProgramFolders;
+        private readonly List<ProgramSubject> _childProgramSubjects;
         private readonly string _rawHtml;
         private readonly StudyMode _studyMode;
         private readonly string _description;
@@ -46,17 +49,9 @@ namespace ProgramSubjectCrawlerService.DataTypes
             _studyMode = studyMode;
             _description = description;
             _rawHtml = rawHtml;
-        }
 
-        /// <summary>
-        /// Kiểm tra một mã môn có tồn tại trong folder này hay không.
-        /// Nó sẽ đệ quy qua tất cả các folder con bên trong.
-        /// </summary>
-        /// <param name="subjectCode"></param>
-        /// <returns></returns>
-        public bool IsExistsSubject(string subjectCode)
-        {
-            return false;
+            _childProgramFolders = new();
+            _childProgramSubjects = new();
         }
 
         /// <summary>
@@ -103,32 +98,6 @@ namespace ProgramSubjectCrawlerService.DataTypes
         }
 
         /// <summary>
-        /// Trả về số lượng môn cần học để hoàn thành folder này.
-        /// </summary>
-        /// <returns></returns>
-        public int NeedLearnToComplete()
-        {
-            return MustComplete() - GetCompletedProSubjects().Count;
-        }
-
-        /// <summary>
-        /// Kiểm tra xem một Program Subject có nằm trong folder này hay không.
-        /// (Phương thức này thực hiện đệ quy sâu vào tất cả các program folder con bên trong)
-        /// </summary>
-        /// <param name="proSubjectCode"></param>
-        /// <returns></returns>
-        public bool Contains(string proSubjectCode)
-        {
-            List<ProgramSubject> programSubjects = GetProgramSubjects();
-            foreach (ProgramSubject item in programSubjects)
-            {
-                if (item.SubjectCode == proSubjectCode)
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Trả về tất cả các ProSubject có trong folder này
         /// bằng cách gọi đệ quy đi sâu vào trong từ folder.
         /// </summary>
@@ -152,17 +121,6 @@ namespace ProgramSubjectCrawlerService.DataTypes
             return programSubjects;
         }
 
-        private List<ProgramSubject> GetCompletedProSubjects()
-        {
-            List<ProgramSubject> proSubjects = new List<ProgramSubject>();
-            foreach (ProgramSubject item in _childProgramSubjects)
-            {
-                if (item.IsDone())
-                    proSubjects.Add(item);
-            }
-            return proSubjects;
-        }
-
         /// <summary>
         /// Kiểm tra xem danh sách các IProgramNode truyền vào có phải
         /// toàn là ProgramSubject hay không.
@@ -181,7 +139,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
 
         public List<IProgramNode> GetAllChildNodes()
         {
-            List<IProgramNode> nodes = new List<IProgramNode>();
+            List<IProgramNode> nodes = new();
             nodes.AddRange(_childProgramFolders);
             nodes.AddRange(_childProgramSubjects);
             return nodes;
@@ -243,7 +201,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         {
             if (StudyMode == StudyMode.AllowSelection)
             {
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(_rawHtml);
                 HtmlNode docNode = doc.DocumentNode;
                 HtmlNode span = docNode.SelectSingleNode("//span/span");
@@ -276,38 +234,9 @@ namespace ProgramSubjectCrawlerService.DataTypes
                 _childProgramFolders.Add(node as ProgramFolder);
         }
 
-        public void AddNodes(List<IProgramNode> nodes)
-        {
-            foreach (IProgramNode node in nodes)
-            {
-                AddNode(node);
-            }
-        }
-
         public void AddNodes(List<ProgramSubject> nodes)
         {
             _childProgramSubjects.AddRange(nodes);
-        }
-
-
-        /// <summary>
-        /// Trả về mô tả của Folder là Chọn k trong n môn hoặc Bắt buộc.
-        /// </summary>
-        /// <returns></returns>
-        public string GetDescription()
-        {
-            return "";
-        }
-
-        public override bool Equals(object obj)
-        {
-            ProgramFolder folder = obj as ProgramFolder;
-            return _id.Equals(folder.Id);
-        }
-
-        public override int GetHashCode()
-        {
-            return _id.GetHashCode();
         }
 
         public NodeType GetNodeType()

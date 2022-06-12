@@ -1,9 +1,13 @@
 ﻿using ConflictService.Models;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages;
+
 using LightMessageBus;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System;
 
 namespace cs4rsa_core.Dialogs.Implements
@@ -48,17 +52,23 @@ namespace cs4rsa_core.Dialogs.Implements
             RemoveClassGroup2Command = new RelayCommand(OnRemoveClassGroup2);
         }
 
+        /// <summary>
+        /// Loại bỏ Class2
+        /// </summary>
         private void OnRemoveClassGroup2()
         {
-            MessageBus.Default.Publish<RemoveAChoiceClassGroupMessage>(new RemoveAChoiceClassGroupMessage(_classGroup2Name));
-            SolveConflictResult result = new SolveConflictResult(_classGroup2Name);
+            MessageBus.Default.Publish(new RemoveChoicedClassMessage(_classGroup2Name));
+            SolveConflictResult result = new(_classGroup2Name);
             CloseDialogCallback.Invoke(result);
         }
 
+        /// <summary>
+        /// Loại bỏ Class1
+        /// </summary>
         private void OnRemoveClassGroup1()
         {
-            MessageBus.Default.Publish<RemoveAChoiceClassGroupMessage>(new RemoveAChoiceClassGroupMessage(_classGroup1Name));
-            SolveConflictResult result = new SolveConflictResult(_classGroup1Name);
+            MessageBus.Default.Publish(new RemoveChoicedClassMessage(_classGroup1Name));
+            SolveConflictResult result = new(_classGroup1Name);
             CloseDialogCallback.Invoke(result);
         }
     }

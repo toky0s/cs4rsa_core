@@ -1,8 +1,12 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using HelperService;
+
 using HtmlAgilityPack;
+
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;

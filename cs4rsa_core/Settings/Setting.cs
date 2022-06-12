@@ -1,7 +1,10 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.Settings.Interfaces;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using System;
 using System.IO;
 
@@ -21,7 +24,7 @@ namespace cs4rsa_core.Settings
 
         public void Init()
         {
-            Cs4rsaSetting defaultSettings = new Cs4rsaSetting
+            Cs4rsaSetting defaultSettings = new()
             {
                 CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue(),
                 CurrentYearValue = _courseCrawler.GetCurrentYearValue(),
@@ -37,7 +40,7 @@ namespace cs4rsa_core.Settings
             else
             {
                 using (StreamReader file = File.OpenText(SettingsFileName))
-                using (JsonTextReader reader = new JsonTextReader(file))
+                using (JsonTextReader reader = new(file))
                 {
                     JObject settingJson = (JObject)JToken.ReadFrom(reader);
                     CurrentSetting = settingJson.ToObject<Cs4rsaSetting>();

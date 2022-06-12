@@ -1,9 +1,14 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using CurriculumCrawlerService.Crawlers.Interfaces;
+
 using HelperService;
+
 using HtmlAgilityPack;
+
 using StudentCrawlerService.Crawlers.Interfaces;
+
 using System;
 using System.Globalization;
 using System.Threading.Tasks;

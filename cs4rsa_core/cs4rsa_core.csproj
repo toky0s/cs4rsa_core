@@ -11,13 +11,9 @@
 
   <ItemGroup>
     <Compile Remove="DataTypes\**" />
-    <Compile Remove="Enums\**" />
     <EmbeddedResource Remove="DataTypes\**" />
-    <EmbeddedResource Remove="Enums\**" />
     <None Remove="DataTypes\**" />
-    <None Remove="Enums\**" />
     <Page Remove="DataTypes\**" />
-    <Page Remove="Enums\**" />
   </ItemGroup>
 
   <ItemGroup>

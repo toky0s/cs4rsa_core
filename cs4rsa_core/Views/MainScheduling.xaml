@@ -34,11 +34,6 @@
                                 Header="Cập nhật cơ sở dữ liệu môn học..."
                                 Icon="{materialDesign:PackIcon Kind=DatabaseSyncOutline}" />
                             <MenuItem
-                                Command="{Binding OpenTextFileWindowCommand}"
-                                FontSize="13"
-                                Header="Quản lý file văn bản..."
-                                Icon="{materialDesign:PackIcon Kind=FileDocumentOutline}" />
-                            <MenuItem
                                 Command="{Binding OpenShareStringWindowCommand}"
                                 FontSize="13"
                                 Header="Xuất dưới CS4RSA String..."

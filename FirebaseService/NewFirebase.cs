@@ -1,7 +1,9 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+
 using FirebaseService.Interfaces;
 using FirebaseService.Requests;
+
 using System.Linq;
 using System.Threading.Tasks;
 

@@ -1,4 +1,5 @@
 ﻿using Cs4rsaDatabaseService.Models;
+
 using System.Threading.Tasks;
 
 namespace CurriculumCrawlerService.Crawlers.Interfaces

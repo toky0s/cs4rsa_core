@@ -1,8 +1,11 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using HelperService;
 using HelperService.Interfaces;
+
 using HtmlAgilityPack;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace TeacherCrawlerService1.Crawlers

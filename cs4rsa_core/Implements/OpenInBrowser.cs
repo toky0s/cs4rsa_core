@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.Interfaces;
+
 using System.Diagnostics;
 
 namespace cs4rsa_core.Implements

@@ -3,11 +3,16 @@ using cs4rsa_core.Dialogs.DialogServices;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using cs4rsa_core.ViewModels;
+
 using Cs4rsaDatabaseService.Models;
+
 using LightMessageBus;
+
 using MaterialDesignThemes.Wpf;
+
 using StudentCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers.Interfaces;
+
 using System.Threading.Tasks;
 using System.Windows;
 

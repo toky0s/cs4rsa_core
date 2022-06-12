@@ -1,4 +1,5 @@
 ﻿using Cs4rsaDatabaseService.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Cs4rsaDatabaseService.DataProviders

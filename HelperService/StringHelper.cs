@@ -4,11 +4,6 @@ namespace HelperService
 {
     public class StringHelper
     {
-        public static string CleanString(string text)
-        {
-            return text.Trim();
-        }
-
         public static string[] SplitAndRemoveAllSpace(string text)
         {
             char[] separatingStrings = { ' ', '\n', '\r' };
@@ -32,7 +27,7 @@ namespace HelperService
         public static string ParseDateTime(string text)
         {
             text = text.Replace("\r\n", string.Empty);
-            return CleanString(text);
+            return text.Trim();
         }
     }
 }

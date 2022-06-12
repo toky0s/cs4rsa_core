@@ -1,6 +1,8 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using CourseSearchService.DataTypes;
+
 using HtmlAgilityPack;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,7 +49,7 @@ namespace CourseSearchService.Crawlers
 
         private static List<CourseYear> GetCourseYears(HtmlDocument document)
         {
-            List<CourseYear> courseYears = new List<CourseYear>();
+            List<CourseYear> courseYears = new();
             List<HtmlNode> optionElements = document.DocumentNode.Descendants()
                 .Where(node => node.Name == "option")
                 .ToList();
@@ -65,12 +67,12 @@ namespace CourseSearchService.Crawlers
 
         private static List<CourseSemester> GetCourseSemesters(string yearValue)
         {
-            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlWeb htmlWeb = new();
             string urlTemplate = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}";
             string url = string.Format(urlTemplate, yearValue);
             HtmlDocument document = htmlWeb.Load(url);
 
-            List<CourseSemester> courseSemesters = new List<CourseSemester>();
+            List<CourseSemester> courseSemesters = new();
             List<HtmlNode> optionElements = document.DocumentNode.Descendants()
                 .Where(node => node.Name == "option")
                 .ToList();

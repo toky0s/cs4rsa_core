@@ -1,5 +1,8 @@
 ﻿using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
+
+using Microsoft.EntityFrameworkCore.Storage;
+
 using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Implements
@@ -45,6 +48,26 @@ namespace Cs4rsaDatabaseService.Implements
 
         public ISessionSchoolClassRepository SessionSchoolClassRepository { get; private set; }
 
+        public IDbContextTransaction BeginTrans()
+        {
+            return _context.Database.BeginTransaction();
+        }
+
+        public Task<IDbContextTransaction> BeginTransAsync()
+        {
+            return _context.Database.BeginTransactionAsync();
+        }
+
+        public void Commit()
+        {
+            _context.Database.CommitTransaction();
+        }
+
+        public Task CommitAsync()
+        {
+            return _context.Database.CommitTransactionAsync();
+        }
+
         public int Complete()
         {
             return _context.SaveChanges();
@@ -55,9 +78,14 @@ namespace Cs4rsaDatabaseService.Implements
             return await _context.SaveChangesAsync();
         }
 
-        public void Dispose()
+        public void Rollback()
         {
-            _context.Dispose();
+            _context.Database.RollbackTransaction();
+        }
+
+        public Task RollbackAsync()
+        {
+            return _context.Database.RollbackTransactionAsync();
         }
     }
 }

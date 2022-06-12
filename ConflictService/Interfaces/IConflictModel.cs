@@ -1,5 +1,6 @@
 ﻿
 using ConflictService.DataTypes.Enums;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 

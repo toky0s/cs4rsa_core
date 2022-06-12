@@ -1,9 +1,14 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using CurriculumCrawlerService.Crawlers.Interfaces;
+
 using HelperService;
+
 using ProgramSubjectCrawlerService.DataTypes;
+
 using SubjectCrawlService1.Crawlers.Interfaces;
+
 using System;
 using System.Threading.Tasks;
 
@@ -20,8 +25,12 @@ namespace ProgramSubjectCrawlerService.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
 
-        public ProgramDiagramCrawler(string sessionId, string specialString,
-            ICurriculumCrawler curriculumCrawler, IUnitOfWork unitOfWork, IPreParSubjectCrawler preParSubjectCrawler)
+        public ProgramDiagramCrawler(
+            string sessionId,
+            string specialString,
+            ICurriculumCrawler curriculumCrawler,
+            IUnitOfWork unitOfWork,
+            IPreParSubjectCrawler preParSubjectCrawler)
         {
             _sessionId = sessionId;
             _specialString = specialString;
@@ -33,13 +42,22 @@ namespace ProgramSubjectCrawlerService.Crawlers
         public Func<ProgramFolder, Task> AddProgramFolder { get; set; }
         public async Task ToProgramDiagram()
         {
+            #region Clean các môn chương trình học trong DB
+            await _unitOfWork.BeginTransAsync();
+            _unitOfWork.PreProDetails.RemoveRange(_unitOfWork.PreProDetails.GetAll());
+            _unitOfWork.ParProDetails.RemoveRange(_unitOfWork.ParProDetails.GetAll());
+            _unitOfWork.ProgramSubjects.RemoveRange(_unitOfWork.ProgramSubjects.GetAll());
+            _unitOfWork.PreParSubjects.RemoveRange(_unitOfWork.PreParSubjects.GetAll());
+            await _unitOfWork.CommitAsync();
+            #endregion
+
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(_specialString);
             int curid = curriculum.CurriculumId;
             string t = Helpers.GetTimeFromEpoch();
-            string url1 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={_specialString}&acaLevid=3&curid={curid}&cursectionid=2001";
-            string url2 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={_specialString}&acaLevid=3&curid={curid}&cursectionid=2002";
-            string url3 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={_specialString}&acaLevid=3&curid={curid}&cursectionid=2003";
-            string url4 = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={_specialString}&acaLevid=3&curid={curid}&cursectionid=2004";
+            string url1 = LoadChuongTrinhHocEachPart(t, curid, PhanHoc.DAI_CUONG);
+            string url2 = LoadChuongTrinhHocEachPart(t, curid, PhanHoc.GIAO_DUC_THE_CHAT_VA_QUOC_PHONG);
+            string url3 = LoadChuongTrinhHocEachPart(t, curid, PhanHoc.DAI_CUONG_NGANH);
+            string url4 = LoadChuongTrinhHocEachPart(t, curid, PhanHoc.CHUYEN_NGANH);
 
             StudentProgramCrawler programCrawler1 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
             StudentProgramCrawler programCrawler2 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
@@ -57,6 +75,35 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
             ProgramFolder task4 = await programCrawler4.GetNode(url4);
             await AddProgramFolder.Invoke(task4);
+        }
+
+        /// <summary>
+        /// Lấy ra đường dẫn tới phần học
+        /// </summary>
+        /// <param name="t">Epoch</param>
+        /// <param name="curid">Mã ngành</param>
+        /// <param name="cursectionid">PhanHoc</param>
+        /// <returns></returns>
+        private string LoadChuongTrinhHocEachPart(string t, int curid, PhanHoc phanHoc)
+        {
+            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={_specialString}&acaLevid=3&curid={curid}&cursectionid={phanHoc.MaPhanHoc}";
+        }
+
+        /// <summary>
+        /// Enum chứa mã phần học
+        /// </summary>
+        private class PhanHoc
+        {
+            public readonly static PhanHoc DAI_CUONG = new("2001");
+            public readonly static PhanHoc GIAO_DUC_THE_CHAT_VA_QUOC_PHONG = new("2002");
+            public readonly static PhanHoc DAI_CUONG_NGANH = new("2003");
+            public readonly static PhanHoc CHUYEN_NGANH = new("2004");
+
+            public readonly string MaPhanHoc;
+            private PhanHoc(string maPhanHoc)
+            {
+                MaPhanHoc = maPhanHoc;
+            }
         }
     }
 }

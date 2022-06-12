@@ -1,12 +1,18 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
+
 using HelperService.Interfaces;
+
 using HtmlAgilityPack;
+
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
+
 using System.Linq;
 using System.Threading.Tasks;
+
 using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace SubjectCrawlService1.Crawlers

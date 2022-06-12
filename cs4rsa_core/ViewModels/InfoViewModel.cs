@@ -1,9 +1,13 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Settings.Interfaces;
+
 using FirebaseService.Interfaces;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System;
 using System.Threading.Tasks;
 

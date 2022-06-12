@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
+
 using System.Windows;
 
 namespace cs4rsa_core.Dialogs.DialogServices

@@ -18,18 +18,15 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+    <materialDesign:Card Padding="10">
+        <StackPanel>
             <TextBlock
-                Margin="15,20,15,5"
-                HorizontalAlignment="Center"
-                Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                TextAlignment="Left">
+                Giải quyết xung đột
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
                 Xung đột này có thể được giải quyết
                 bằng cách bỏ chọn một trong hai lớp
             </TextBlock>
@@ -38,9 +35,9 @@
                 Margin="0,0,0,5"
                 HorizontalAlignment="Center"
                 Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-                <Run Text="{Binding ClassGroup1Name}" />
+                <Run FontWeight="Bold" Text="{Binding ClassGroup1Name}" />
                 <Run Text="hoặc" />
-                <Run Text="{Binding ClassGroup2Name}" />
+                <Run FontWeight="Bold" Text="{Binding ClassGroup2Name}" />
                 <Run Text="?" />
             </TextBlock>
             <Image
@@ -48,7 +45,7 @@
                 Height="200"
                 Margin="0,0,0,10"
                 Source="/Images/choice.jpg" />
-            <Grid Grid.Row="3">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -73,6 +70,6 @@
                     Foreground="White"
                     ToolTip="Cũng như thế nhưng vị dưa hấu" />
             </Grid>
-        </Grid>
+        </StackPanel>
     </materialDesign:Card>
 </UserControl>

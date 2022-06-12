@@ -1,5 +1,7 @@
 ﻿using ConflictService.DataTypes;
+
 using SubjectCrawlService1.DataTypes;
+
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +20,7 @@ namespace ConflictService.Utils
         /// <returns>StudyTimeIntersect đại diện cho một khoảng giao về thời gian giữa hai StudyTime. Phục vụ cho việc phát hiện xung đột.</returns>
         public static StudyTimeIntersect GetStudyTimeIntersect(StudyTime studyTime1, StudyTime studyTime2)
         {
-            List<DateTime> studyTimes = new List<DateTime>
+            List<DateTime> studyTimes = new()
             {
                 studyTime1.Start,
                 studyTime1.End,
@@ -68,14 +70,14 @@ namespace ConflictService.Utils
         /// <returns>List các Tuple là cặp các StudyTime.</returns>
         public static List<Tuple<StudyTime, StudyTime>> PairStudyTimes(List<StudyTime> studyTimes)
         {
-            List<Tuple<StudyTime, StudyTime>> tupleStudyTimes = new List<Tuple<StudyTime, StudyTime>>();
+            List<Tuple<StudyTime, StudyTime>> tupleStudyTimes = new();
             int index = 0;
             while (index < studyTimes.Count - 1)
             {
                 StudyTime firstItem = studyTimes[index];
                 for (int j = index + 1; j <= studyTimes.Count - 1; ++j)
                 {
-                    Tuple<StudyTime, StudyTime> tupleStudyTime = new Tuple<StudyTime, StudyTime>(firstItem, studyTimes[j]);
+                    Tuple<StudyTime, StudyTime> tupleStudyTime = new(firstItem, studyTimes[j]);
                     tupleStudyTimes.Add(tupleStudyTime);
                 }
                 index++;
@@ -90,7 +92,7 @@ namespace ConflictService.Utils
         /// <returns>Danh sách các StudyTimeIntersect.</returns>
         public static List<StudyTimeIntersect> GetStudyTimeIntersects(List<Tuple<StudyTime, StudyTime>> studyTimeTuples)
         {
-            List<StudyTimeIntersect> studyTimeIntersects = new List<StudyTimeIntersect>();
+            List<StudyTimeIntersect> studyTimeIntersects = new();
             foreach (Tuple<StudyTime, StudyTime> item in studyTimeTuples)
             {
                 StudyTimeIntersect studyTimeIntersect = GetStudyTimeIntersect(item.Item1, item.Item2);

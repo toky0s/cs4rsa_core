@@ -1,4 +1,5 @@
 ﻿using SubjectCrawlService1.DataTypes;
+
 using System.Threading.Tasks;
 
 namespace SubjectCrawlService1.Crawlers.Interfaces

@@ -1,5 +1,6 @@
 ﻿using CourseSearchService.Crawlers;
 using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Implements;
@@ -9,25 +10,37 @@ using cs4rsa_core.Settings;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.Utils;
 using cs4rsa_core.ViewModels;
+
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Implements;
 using Cs4rsaDatabaseService.Interfaces;
+
 using CurriculumCrawlerService.Crawlers;
 using CurriculumCrawlerService.Crawlers.Interfaces;
+
 using DisciplineCrawlerService.Crawlers;
+
 using FirebaseService;
 using FirebaseService.Interfaces;
+
 using HelperService;
 using HelperService.Interfaces;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using ProgramSubjectCrawlerService.Crawlers;
+
 using StudentCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers.Interfaces;
+
 using SubjectCrawlService1.Crawlers;
 using SubjectCrawlService1.Crawlers.Interfaces;
+
 using System;
 using System.Windows;
+
 using TeacherCrawlerService1.Crawlers;
 using TeacherCrawlerService1.Crawlers.Interfaces;
 

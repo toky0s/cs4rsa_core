@@ -1,4 +1,5 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using Cs4rsaDatabaseService.Models;
 
 namespace cs4rsa_core.ModelExtensions

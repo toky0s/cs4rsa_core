@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
+
 using MaterialDesignThemes.Wpf;
 
 namespace cs4rsa_core.ViewModels
@@ -18,8 +19,8 @@ namespace cs4rsa_core.ViewModels
             set { _isExpanded = value; OnPropertyChanged(); }
         }
 
-        private byte _selectedIndex;
-        public byte SelectedIndex
+        private int _selectedIndex;
+        public int SelectedIndex
         {
             get => _selectedIndex;
             set

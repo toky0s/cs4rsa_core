@@ -37,40 +37,48 @@
                         <ColumnDefinition Width="0.5*" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ListView
+                    <StackPanel
                         Grid.Row="0"
                         Grid.Column="0"
-                        ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        SelectedItem="{Binding SelectedScheduleSession}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Tên phiên" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <DataGrid
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        AutoGenerateColumns="False"
-                        CanUserAddRows="False"
-                        CanUserDeleteRows="False"
-                        IsReadOnly="True"
-                        ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        SelectedItem="{Binding SelectedSessionDetail}">
-                        <DataGrid.Resources>
-                            <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
-                                <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Mã môn" />
-                            <DataGridTextColumn Binding="{Binding SubjectName}" Header="Tên môn" />
-                            <DataGridTextColumn Binding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
-                            <DataGridTextColumn Binding="{Binding RegisterCode}" Header="Mã đăng ký" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        Orientation="Vertical">
+                        <TextBlock Style="{StaticResource Header2}" Text="Danh sách các phiên đã lưu" />
+                        <ListView
+                            ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedItem="{Binding SelectedScheduleSession}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Style="{StaticResource Header2}" Text="Chi tiết" />
+                        <TextBlock Style="{StaticResource Caption}" Text="Double Click để sao chép mã" />
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedItem="{Binding SelectedSessionDetail}">
+                            <DataGrid.Resources>
+                                <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Mã môn" />
+                                <DataGridTextColumn Binding="{Binding SubjectName}" Header="Tên môn" />
+                                <DataGridTextColumn Binding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
+                                <DataGridTextColumn Binding="{Binding RegisterCode}" Header="Mã đăng ký" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
                         <TextBlock Style="{StaticResource Caption}" Text="Hiệu lực của phiên đã chọn" />
                         <TextBlock>

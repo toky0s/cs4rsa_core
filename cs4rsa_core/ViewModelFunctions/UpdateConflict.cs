@@ -1,8 +1,11 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.Models;
+
 using cs4rsa_core.Models;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -21,7 +24,7 @@ namespace cs4rsa_core.ViewModelFunctions
         public static void UpdateConflictModelCollection(ref ObservableCollection<ConflictModel> conflictModels, ref List<ClassGroupModel> classGroupModels)
         {
             conflictModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
@@ -33,11 +36,11 @@ namespace cs4rsa_core.ViewModelFunctions
                 {
                     if (schoolClasses[i].ClassGroupName.Equals(schoolClasses[k].ClassGroupName))
                         continue;
-                    Conflict conflict = new Conflict(schoolClasses[i], schoolClasses[k]);
+                    Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
-                        ConflictModel conflictModel = new ConflictModel(conflict);
+                        ConflictModel conflictModel = new(conflict);
                         conflictModels.Add(conflictModel);
                     }
                 }
@@ -47,7 +50,7 @@ namespace cs4rsa_core.ViewModelFunctions
         public static void UpdatePlaceConflictCollection(ref ObservableCollection<PlaceConflictFinderModel> placeConflictFinderModels, ref List<ClassGroupModel> classGroupModels)
         {
             placeConflictFinderModels.Clear();
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
@@ -57,11 +60,11 @@ namespace cs4rsa_core.ViewModelFunctions
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new PlaceConflictFinder(schoolClasses[i], schoolClasses[k]);
+                    PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
-                        PlaceConflictFinderModel placeConflictModel = new PlaceConflictFinderModel(placeConflict);
+                        PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         placeConflictFinderModels.Add(placeConflictModel);
                     }
                 }

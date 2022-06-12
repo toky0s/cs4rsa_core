@@ -1,6 +1,8 @@
 ﻿using ProgramSubjectCrawlerService.DataTypes.Enums;
 using ProgramSubjectCrawlerService.DataTypes.Interfaces;
+
 using SubjectCrawlService1.DataTypes.Enums;
+
 using System;
 using System.Collections.Generic;
 
@@ -53,17 +55,10 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// <summary>
         /// Kiểm tra xem môn học này đã học qua hay chưa.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True nếu đã pass, ngược lại trả về false.</returns>
         public bool IsDone()
         {
             if (StudyState == StudyState.Completed)
-                return true;
-            return false;
-        }
-
-        public bool IsUnLearn()
-        {
-            if (StudyState == StudyState.UnLearned)
                 return true;
             return false;
         }

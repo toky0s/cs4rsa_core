@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
 using System.Threading.Tasks;
 
 namespace Cs4rsaDatabaseService.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         ICurriculumRepository Curriculums { get; }
         IDisciplineRepository Disciplines { get; }
@@ -18,5 +19,11 @@ namespace Cs4rsaDatabaseService.Interfaces
         ISessionSchoolClassRepository SessionSchoolClassRepository { get; }
         int Complete();
         Task<int> CompleteAsync();
+        IDbContextTransaction BeginTrans();
+        Task<IDbContextTransaction> BeginTransAsync();
+        void Commit();
+        Task CommitAsync();
+        void Rollback();
+        Task RollbackAsync();
     }
 }

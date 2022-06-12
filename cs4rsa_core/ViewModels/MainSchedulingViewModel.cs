@@ -1,15 +1,20 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Utils;
 using cs4rsa_core.ViewModels.Interfaces;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -19,7 +24,8 @@ namespace cs4rsa_core.ViewModels
     public class MainSchedulingViewModel : ViewModelBase,
         IMessageHandler<SubjectItemChangeMessage>,
         IMessageHandler<ChoicesChangedMessage>,
-        IMessageHandler<UpdateSubjectDatabase>, IMainSchedulingViewModel
+        IMessageHandler<UpdateSubjectDatabase>,
+        IMainSchedulingViewModel
     {
         private string _currentYearInfo;
         private string _currentSemesterInfo;
@@ -68,7 +74,6 @@ namespace cs4rsa_core.ViewModels
         private string _shareString;
         public RelayCommand OpenSettingCommand { get; set; }
         public RelayCommand OpenUpdateWindowCommand { get; set; }
-        public RelayCommand OpenTextFileWindowCommand { get; set; }
         public RelayCommand OpenAutoScheduling { get; set; }
         public RelayCommand OpenShareStringWindowCommand { get; set; }
 
@@ -84,16 +89,9 @@ namespace cs4rsa_core.ViewModels
 
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
             OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
-            OpenTextFileWindowCommand = new RelayCommand(OnOpenTextFileWindow);
 
             TotalCredit = 0;
             TotalSubject = 0;
-        }
-
-        private void OnOpenTextFileWindow()
-        {
-            string value = System.Configuration.ConfigurationManager.AppSettings["SesionsFolderPath"];
-            MessageBox.Show($"Mở dialog quản lý danh sách file xếp lịch đã lưu {value}");
         }
 
         private void OnOpenShareStringWindow()

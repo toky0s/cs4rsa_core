@@ -1,12 +1,16 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System.Windows;
 
 namespace cs4rsa_core.ViewModels

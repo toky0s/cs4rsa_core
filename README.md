@@ -3,6 +3,10 @@
 </p>
 
 ## Các chức năng chính
+Phiên bản 2.1.x
+- 🔮 Chức năng thông báo tiên quyết chưa hoàn thành (đang phát triển)
+
+
 Phiên bản 2.0.x
 - 🏫 Cải thiện hiển thị trên mô hỏng.
 - 🔍 Thêm ô tìm kiếm môn học.
