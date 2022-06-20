@@ -1,32 +1,39 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogServices;
-
 using MaterialDesignThemes.Wpf;
-
 using Microsoft.Toolkit.Mvvm.Input;
-
-using System;
 using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
     public class ShareStringViewModel : DialogViewModelBase<ShareStringResult>
     {
+        private static readonly string _defaultShareString = "Không có Share String nào ở đây cả.";
+
+        #region Bindings
         private string _shareString;
         public string ShareString
         {
-            get { return _shareString ?? "Không có Share String nào ở đây cả."; }
+            get
+            {
+                if (_shareString == string.Empty)
+                {
+                    return _defaultShareString;
+                }
+                return _shareString;
+            }
             set
             {
                 _shareString = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
 
+        #region Commands
         public RelayCommand CopyCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
-
-        public Action CloseDialogCallback { get; set; }
+        #endregion
 
         #region Service
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
@@ -37,12 +44,7 @@ namespace cs4rsa_core.Dialogs.Implements
             _snackbarMessageQueue = snackbarMessageQueue;
 
             CopyCommand = new RelayCommand(OnCopy, CanCopy);
-            CloseDialogCommand = new RelayCommand(OnCloseDialog);
-        }
-
-        private void OnCloseDialog()
-        {
-            CloseDialogCallback.Invoke();
+            CloseDialogCommand = new RelayCommand(CloseD);
         }
 
         private bool CanCopy()

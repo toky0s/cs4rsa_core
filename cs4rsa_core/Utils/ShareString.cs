@@ -1,14 +1,12 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.Dialogs.DialogResults;
-
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-
+using HelperService;
 using SubjectCrawlService1.DataTypes;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace cs4rsa_core.Utils
 {
@@ -20,8 +18,11 @@ namespace cs4rsa_core.Utils
     /// </summary>
     public class ShareString
     {
-        private IUnitOfWork _unitOfWork;
-        private ICourseCrawler _courseCrawler;
+        #region DI
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICourseCrawler _courseCrawler;
+        #endregion
+
         public ShareString(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler)
         {
             _unitOfWork = unitOfWork;
@@ -29,44 +30,56 @@ namespace cs4rsa_core.Utils
         }
         public string GetShareString(List<ClassGroup> classGroupModels)
         {
+            if (classGroupModels.Count == 0)
+            {
+                return "";
+            }
             List<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item)).ToList();
             string SubjectHassesJoin = string.Join("?", SubjectHasses);
             string Count = classGroupModels.Count.ToString();
             string currentYear = _courseCrawler.GetCurrentYearValue();
             string currentSemester = _courseCrawler.GetCurrentSemesterValue();
-            return $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '-');
+            string raw = $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '-');
+            return StringHelper.EncodeTo64(raw);
         }
 
         public SessionManagerResult GetSubjectFromShareString(string shareString)
         {
-            // cs4rsa!69!73!2!%ACC 201|ACC201202103003%?%ACC 411|ACC411202103001%
-            string[] shareStringSlices = shareString.Split(new char[] { '!' });
-
-            // ACC-201|ACC201202103003?ACC-411|ACC411202103001
-            string subjectHasses = shareStringSlices[4].Replace('-', ' ');
-            string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
-            List<SubjectInfoData> subjectInfoDatas = new();
-            foreach (string item in subjectHassesSlices)
+            try
             {
-                string[] infoes = item.Split(new char[] { '|' });
-                string subjectCode = infoes[0];
-                string classGroupName = infoes[1];
-                string registerCode = infoes[2];
+                shareString = StringHelper.DecodeFrom64(shareString);
+                string[] shareStringSlices = shareString.Split(new char[] { '!' });
 
-                string discipline = subjectCode.Split(new char[] { ' ' })[0];
-                string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
-                Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
-                string subjectName = keyword.SubjectName;
-                SubjectInfoData subjectInfoData = new()
+                string subjectHasses = shareStringSlices[4].Replace('-', ' ');
+                string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
+                List<SubjectInfoData> subjectInfoDatas = new();
+                foreach (string item in subjectHassesSlices)
                 {
-                    SubjectCode = subjectCode,
-                    ClassGroup = classGroupName,
-                    SubjectName = subjectName,
-                    RegisterCode = registerCode
-                };
-                subjectInfoDatas.Add(subjectInfoData);
+                    string[] infoes = item.Split(new char[] { '|' });
+                    string subjectCode = infoes[0];
+                    string classGroupName = infoes[1];
+                    string registerCode = infoes[2];
+
+                    string discipline = subjectCode.Split(new char[] { ' ' })[0];
+                    string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
+                    Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+                    string subjectName = keyword.SubjectName;
+                    SubjectInfoData subjectInfoData = new()
+                    {
+                        SubjectCode = subjectCode,
+                        ClassGroup = classGroupName,
+                        SubjectName = subjectName,
+                        RegisterCode = registerCode
+                    };
+                    subjectInfoDatas.Add(subjectInfoData);
+                }
+                return new SessionManagerResult(subjectInfoDatas);
             }
-            return new SessionManagerResult(subjectInfoDatas);
+            catch
+            {
+                MessageBox.Show("ShareString có vấn đề 🤔");
+                return null;
+            }
         }
 
         private static string SubjectCodeVsRegisterCode(ClassGroup classGroup)

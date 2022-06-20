@@ -84,7 +84,8 @@ namespace Cs4rsaDatabaseService.Implements
         public Task<List<Keyword>> GetBySubjectNameContains(string subjectName)
         {
             subjectName = subjectName.Trim();
-            return _context.Keywords.Where(kw => kw.SubjectName.Contains(subjectName))
+            return _context.Keywords
+                .Where(kw => kw.SubjectName.ToLower().Contains(subjectName))
                 .Take(20)
                 .ToListAsync();
         }
@@ -99,9 +100,10 @@ namespace Cs4rsaDatabaseService.Implements
 
         public Task<List<Keyword>> GetByDisciplineStartWith(string text)
         {
-            return _context.Keywords.Where(kw =>
-                kw.Discipline.Name.StartsWith(text.ToUpper())
-            ).Take(20).ToListAsync();
+            return _context.Keywords
+                .Where(kw => kw.Discipline.Name.ToUpper().StartsWith(text.ToUpper()))
+                .Take(20)
+                .ToListAsync();
         }
     }
 }

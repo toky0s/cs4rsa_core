@@ -1,22 +1,14 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.ViewModels;
-
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
-
 using DisciplineCrawlerService.Crawlers;
-
 using LightMessageBus;
-
 using MaterialDesignThemes.Wpf;
-
 using Microsoft.Toolkit.Mvvm.Input;
-
-using System;
 using System.ComponentModel;
 using System.Windows;
 
@@ -38,8 +30,6 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        public Action CloseDialogCallback { get; set; }
-
         #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly Cs4rsaDbContext _cs4rsaDbContext;
@@ -60,17 +50,12 @@ namespace cs4rsa_core.Dialogs.Implements
             _snackbarMessageQueue = snackbarMessageQueue;
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
-            CloseDialogCommand = new RelayCommand(OnCloseDialog, CanClose);
+            CloseDialogCommand = new RelayCommand(CloseD, CanClose);
         }
 
         private bool CanClose()
         {
             return _progressValue == 0;
-        }
-
-        private void OnCloseDialog()
-        {
-            CloseDialogCallback.Invoke();
         }
 
         private void OnStartUpdate()
@@ -101,7 +86,7 @@ namespace cs4rsa_core.Dialogs.Implements
             string message = $"Hoàn tất cập nhật {result} môn";
             MessageBus.Default.Publish(new UpdateSuccessMessage(null));
             _snackbarMessageQueue.Enqueue(message);
-            CloseDialogCallback.Invoke();
+            CloseD();
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

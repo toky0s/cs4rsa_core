@@ -207,14 +207,15 @@ namespace cs4rsa_core.ViewModels
 
         public async Task LoadSearchItemSource(string text)
         {
-            text = text.Trim();
+            text = text.Trim().ToLower();
             if (text.Equals("")) return;
 
             FullMatchSearchingKeywords.Clear();
 
             Task<List<Keyword>> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
-            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text.FirstCharToUpper());
+            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
             List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
+            //List<Keyword>[] whenAllResult = await Task.WhenAll(result2);
             foreach (List<Keyword> keywords in whenAllResult)
             {
                 foreach (Keyword keyword in keywords)

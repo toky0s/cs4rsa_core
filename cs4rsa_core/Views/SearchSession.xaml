@@ -103,6 +103,7 @@
                         BorderThickness="2.5"
                         CornerRadius="5">
                         <ListView
+                            x:Name="ListView_Search"
                             MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
                             MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
                             Background="White"

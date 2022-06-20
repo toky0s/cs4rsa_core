@@ -1,6 +1,5 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.Models;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
@@ -8,17 +7,13 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Models;
-
+using cs4rsa_core.Utils;
 using LightMessageBus;
 using LightMessageBus.Interfaces;
-
 using MaterialDesignThemes.Wpf;
-
 using Microsoft.Toolkit.Mvvm.Input;
-
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,6 +27,8 @@ namespace cs4rsa_core.ViewModels
         IMessageHandler<DeleteSubjectMessage>,
         IMessageHandler<RemoveChoicedClassMessage>
     {
+        private string _shareString;
+
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
 
         private ClassGroupModel _selectedClassGroupModel;
@@ -63,14 +60,17 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
         public RelayCommand SolveConflictCommand { get; set; }
+        public RelayCommand OpenShareStringWindowCommand { get; set; }
         #endregion
 
         #region Services
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly ShareString _shareStringGenerator;
         #endregion
-        public ChoicedSessionViewModel(ISnackbarMessageQueue snackbarMessageQueue)
+        public ChoicedSessionViewModel(ISnackbarMessageQueue snackbarMessageQueue, ShareString shareString)
         {
             _snackbarMessageQueue = snackbarMessageQueue;
+            _shareStringGenerator = shareString;
 
             MessageBus.Default.FromAny().Where<ClassGroupAddedMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
@@ -81,6 +81,7 @@ namespace cs4rsa_core.ViewModels
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
+            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new();
             ConflictModels = new();
@@ -95,12 +96,15 @@ namespace cs4rsa_core.ViewModels
             SolveConflictUC solveConflictUC = new();
             SolveConflictViewModel vm = new(_selectedConflictModel)
             {
-                CloseDialogCallback = (r) => CloseDialog()
+                CloseDialogCallback = (r) => CloseD()
             };
             solveConflictUC.DataContext = vm;
-            OpenDialog(solveConflictUC);
+            OpenD(solveConflictUC);
         }
 
+        /// <summary>
+        /// Sao chép mã môn
+        /// </summary>
         private void OnCopyCode()
         {
             string registerCode = _selectedClassGroupModel.RegisterCode;
@@ -109,6 +113,9 @@ namespace cs4rsa_core.ViewModels
             _snackbarMessageQueue.Enqueue(message);
         }
 
+        /// <summary>
+        /// Xoá tất cả
+        /// </summary>
         private void OnDeleteAll()
         {
             List<ClassGroupModel> actionData = new();
@@ -120,18 +127,28 @@ namespace cs4rsa_core.ViewModels
             ClassGroupModels.Clear();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
+            UpdateShareString();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
-            _snackbarMessageQueue.Enqueue<List<ClassGroupModel>>("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
         }
 
+        /// <summary>
+        /// Hoàn tác
+        /// </summary>
+        /// <param name="obj">Danh sách lớp hoàn tác</param>
         private void OnRestore(List<ClassGroupModel> obj)
         {
             foreach (ClassGroupModel classGroupModel in obj)
             {
                 AddClassGroupModelAndReload(classGroupModel);
             }
+        }
+
+        private void OnRestore(ClassGroupModel obj)
+        {
+            AddClassGroupModelAndReload(obj);
         }
 
         private void OnDelete()
@@ -146,12 +163,8 @@ namespace cs4rsa_core.ViewModels
             DeleteCommand.NotifyCanExecuteChanged();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
+            UpdateShareString();
             MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(ClassGroupModels.ToList()));
-        }
-
-        private void OnRestore(ClassGroupModel obj)
-        {
-            AddClassGroupModelAndReload(obj);
         }
 
         /// <summary>
@@ -164,8 +177,16 @@ namespace cs4rsa_core.ViewModels
             SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
             vm.ClassGroupModels = ClassGroupModels.ToList();
             vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
-            OpenDialog(saveSessionUC);
+            OpenD(saveSessionUC);
             await vm.LoadScheduleSessions();
+        }
+
+        private void OnOpenShareStringWindow()
+        {
+            ShareStringUC shareStringUC = new();
+            ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
+            vm.ShareString = _shareString;
+            OpenD(shareStringUC);
         }
 
         private void CloseDialogAndHandleSaveResult(SaveResult result)
@@ -276,6 +297,13 @@ namespace cs4rsa_core.ViewModels
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            UpdateShareString();
+        }
+
+        private void UpdateShareString()
+        {
+            List<ClassGroup> classGroups = ClassGroupModels.Select(classGroupModels => classGroupModels.ClassGroup).ToList();
+            _shareString = _shareStringGenerator.GetShareString(classGroups);
         }
 
         #region Điều kiện thực thi command
@@ -315,7 +343,6 @@ namespace cs4rsa_core.ViewModels
                 {
                     actionData = ClassGroupModels[i].DeepClone();
                     ClassGroupModels.RemoveAt(i);
-                    MessageBus.Default.Publish(new DeleteClassGroupChoiceMessage(ClassGroupModels.ToList()));
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, "HOÀN TÁC", OnRestore, actionData);
 
@@ -348,6 +375,7 @@ namespace cs4rsa_core.ViewModels
             UpdatePlaceConflictCollection();
             SaveCommand.NotifyCanExecuteChanged();
             MessageBus.Default.Publish(new ChoicesChangedMessage(ClassGroupModels.ToList()));
+            UpdateShareString();
         }
 
         /// <summary>
