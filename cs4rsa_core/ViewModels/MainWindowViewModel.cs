@@ -1,6 +1,7 @@
 ﻿using cs4rsa_core.BaseClasses;
-
+using cs4rsa_core.Dialogs.DialogViews;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -12,6 +13,7 @@ namespace cs4rsa_core.ViewModels
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
+        #region Bindings
         private bool _isExpanded;
         public bool IsExpanded
         {
@@ -57,14 +59,27 @@ namespace cs4rsa_core.ViewModels
             get { return _snackBarMessageQueue; }
             set { _snackBarMessageQueue = value; OnPropertyChanged(); }
         }
+        #endregion
+
+        #region Commands
+        public RelayCommand OpenUpdateWindowCommand { get; set; }
+        #endregion
 
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
             SnackbarMessageQueue = (SnackbarMessageQueue)snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
 
+            OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
+
             SelectedIndex = 0;
             IsExpanded = false;
+        }
+
+        private void OnOpenUpdateWindow()
+        {
+            UpdateUC updateUC = new();
+            OpenDialog(updateUC);
         }
 
         public void OpenDialog(IDialog uc)

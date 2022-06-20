@@ -1,9 +1,7 @@
 ﻿using cs4rsa_core.ViewModels;
-
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace cs4rsa_core.BaseClasses
 {
@@ -22,15 +20,15 @@ namespace cs4rsa_core.BaseClasses
         /// Mở Dialog
         /// </summary>
         /// <param name="uc">Dialog UC</param>
-        protected void OpenDialog(UserControl uc)
+        protected void OpenD(IDialog uc)
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(uc);
         }
 
         /// <summary>
-        /// Đóng Dialog
+        /// Đóng Dialog hiện tại đang hiển thị
         /// </summary>
-        protected void CloseDialog()
+        protected void CloseD()
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
         }

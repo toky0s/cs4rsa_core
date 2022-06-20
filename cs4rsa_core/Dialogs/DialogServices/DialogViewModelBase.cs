@@ -1,7 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
 
-using System.Windows;
-
 namespace cs4rsa_core.Dialogs.DialogServices
 {
     /// <summary>
@@ -27,30 +25,5 @@ namespace cs4rsa_core.Dialogs.DialogServices
         }
 
         public T UserDialogResult { get; set; }
-
-        /// <summary>
-        /// Đóng Dialog thông qua một CommandParameter truyền vào chính Dialog Window
-        /// đó để thực hiện gán DialogResult.
-        /// </summary>
-        /// <param name="dialog">Một Window (dialog) được truyền thông qua XAML.</param>
-        /// <param name="result">Kết quả trả về của Dialog</param>
-        public void CloseDialogWithResult(Window dialog, T result)
-        {
-            UserDialogResult = result;
-            if (dialog != null)
-                dialog.DialogResult = true;
-        }
-
-
-        /// <summary>
-        /// Đóng dialog thông qua một attacted property Result của dialog được binding
-        /// với Result của view model này.
-        /// </summary>
-        /// <param name="result"></param>
-        public void CloseDialogWithResult(T result)
-        {
-            UserDialogResult = result;
-            Result = true;
-        }
     }
 }

@@ -691,7 +691,7 @@
                 </ListView>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1.6*" />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
@@ -705,13 +705,14 @@
                     <Button
                         Grid.Column="1"
                         Height="30"
-                        Margin="5"
+                        Margin="0,5,5,5"
                         Command="{Binding SubjectDownloadCommand}"
                         Content="Tải"
                         Foreground="White" />
                     <Button
                         Grid.Column="2"
                         Height="30"
+                        Margin="0,5,5,5"
                         Command="{Binding DeleteAllCommand}"
                         Content="Xoá hết"
                         Foreground="White" />
@@ -761,7 +762,7 @@
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Column="0"
-                        Margin="0,0,5,0"
+                        Margin="5,0,5,0"
                         Content="Xếp lịch thủ công" />
                     <Button
                         Grid.Column="1"

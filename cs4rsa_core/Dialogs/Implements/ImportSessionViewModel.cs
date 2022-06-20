@@ -108,7 +108,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
-            ShareStringCommand = new RelayCommand(OnParseShareString, CanParse);
+            ShareStringCommand = new RelayCommand(OnParseShareString);
             CloseDialogCommand = new RelayCommand(OnCloseDialog);
         }
 
@@ -163,17 +163,19 @@ namespace cs4rsa_core.Dialogs.Implements
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
         }
 
-        private bool CanParse()
-        {
-            return true;
-        }
-
         private void OnParseShareString()
         {
             ShareString shareString = new(_unitOfWork, _courseCrawler);
             SessionManagerResult result = shareString.GetSubjectFromShareString(ShareString);
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-            MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
+            if (result != null)
+            {
+                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
+            }
+            else
+            {
+                ShareString = "";
+            }
         }
 
         private bool CanImport()

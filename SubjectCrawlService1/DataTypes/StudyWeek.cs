@@ -19,7 +19,20 @@ namespace SubjectCrawlService1.DataTypes
             string[] separatingStrings = { "--" };
             string[] startAndEnd = studyWeek.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
             startWeek = byte.Parse(startAndEnd[0]);
-            endWeek = byte.Parse(startAndEnd[1]);
+
+            /// MED 362:  Y Học Cổ Truyền
+            /// Trường hợp parse: 49--
+            /// Không có tuần kết thúc ở một ClassGroup quăng lỗi IndexOutOfRangeException
+            /// Phát hiện 19/6/2022 trước ngày đi bảo vệ NCKH cấp trường một hôm
+            /// XinTA
+            try
+            {
+                endWeek = byte.Parse(startAndEnd[1]);
+            }
+            catch
+            {
+                endWeek = 0;
+            }
         }
 
         /// <summary>
@@ -27,6 +40,10 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         public Phase GetPhase()
         {
+            if (startWeek >= 34 && endWeek == 0)
+            {
+                return Phase.Second;
+            }
             if ((startWeek >= 1 && endWeek <= 8) || (startWeek >= 20 && endWeek <= 33))
             {
                 return Phase.First;
