@@ -26,6 +26,11 @@
         AUTO,
 
         /// <summary>
+        /// Màn hình tìm kiếm hình ảnh thẻ SV bằng mã SV
+        /// </summary>
+        SEARCH,
+
+        /// <summary>
         /// Màn hình thông tin ứng dụng
         /// </summary>
         INFO,

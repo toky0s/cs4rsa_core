@@ -18,6 +18,7 @@ namespace Cs4rsaDatabaseService.Implements
             Keywords = new KeywordRepository(_context);
             Sessions = new SessionRepository(_context);
             Students = new StudentRepository(_context);
+            StudentImages = new StudentImageRepository(_context);
             Teachers = new TeacherRepository(_context);
             ProgramSubjects = new ProgramSubjectRepository(_context);
             PreParSubjects = new PreParSubjectRepository(_context);
@@ -47,6 +48,8 @@ namespace Cs4rsaDatabaseService.Implements
         public IParProDetailsRepository ParProDetails { get; private set; }
 
         public ISessionSchoolClassRepository SessionSchoolClassRepository { get; private set; }
+
+        public IStudentImageRepository StudentImages { get; private set; }
 
         public IDbContextTransaction BeginTrans()
         {

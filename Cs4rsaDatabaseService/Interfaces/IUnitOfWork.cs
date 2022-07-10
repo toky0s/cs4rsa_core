@@ -11,6 +11,7 @@ namespace Cs4rsaDatabaseService.Interfaces
         IKeywordRepository Keywords { get; }
         ISessionRepository Sessions { get; }
         IStudentRepository Students { get; }
+        IStudentImageRepository StudentImages { get; }
         ITeacherRepository Teachers { get; }
         IProgramSubjectRepository ProgramSubjects { get; }
         IPreParSubjectRepository PreParSubjects { get; }

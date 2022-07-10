@@ -1,7 +1,10 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogServices;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements

@@ -35,48 +35,18 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="0,0,5,0" VerticalAlignment="Center">
-                    <TextBlock.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="TextBlock">
-                            <Setter Property="Text" Value="Danh sách các tài khoản" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Students.Count}" Value="0">
-                                    <Setter Property="Text" Value="Chưa có tài khoản nào hết" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+            <StackPanel Orientation="Vertical">
+                <TextBlock
+                    Margin="0,0,5,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                    Text="Danh sách tài khoản" />
                 <Button
-                    Width="17"
-                    Height="17"
+                    Width="160"
+                    HorizontalAlignment="Left"
                     Command="{Binding ExpandedCommand}"
-                    Cursor="Hand">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Grid>
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    FontWeight="Bold"
-                                    Text="?">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Foreground" Value="Black" />
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Foreground" Value="{StaticResource Cs4rsa_MainThemeColor}" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </Grid>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                    Content="Xem hướng dẫn"
+                    Cursor="Hand" />
             </StackPanel>
             <ListBox ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                 <ListBox.Resources>

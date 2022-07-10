@@ -59,9 +59,15 @@ namespace cs4rsa_core.Views
             Goto((int)ScreenIndex.AUTO);
         }
 
+        private void GotoSearch(object sender, RoutedEventArgs e)
+        {
+            Goto((int)ScreenIndex.SEARCH);
+        }
+
         private void GotoThongTin(object sender, RoutedEventArgs e)
         {
             Goto((int)ScreenIndex.INFO);
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.Models;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
@@ -8,12 +9,17 @@ using cs4rsa_core.Messages;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Models;
 using cs4rsa_core.Utils;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

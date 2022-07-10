@@ -1,6 +1,8 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
 
 namespace cs4rsa_core.ViewModels

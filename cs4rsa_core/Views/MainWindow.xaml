@@ -31,7 +31,7 @@
             x:Key="Style_Cs4rsa_SnackbarActionButton"
             BasedOn="{StaticResource MaterialDesignSnackbarActionButton}"
             TargetType="Button">
-            <Setter Property="Foreground" Value="{DynamicResource Cs4rsa_MainThemeLightColor}" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidBrush}" />
         </Style>
     </Window.Resources>
     <materialDesign:DialogHost
@@ -44,7 +44,7 @@
                 Grid.Row="0"
                 Grid.ColumnSpan="2">
                 <materialDesign:DrawerHost.LeftDrawerContent>
-                    <Grid Background="{StaticResource Cs4rsa_MainThemeColor}">
+                    <Grid Background="{StaticResource PrimaryHueMidBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
@@ -71,7 +71,7 @@
                                     Margin="0,100,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
-                                    Background="{StaticResource Cs4rsa_MainThemeLightColor}" />
+                                    Background="{StaticResource PrimaryHueMidBrush}" />
                             </materialDesign:TransitioningContent>
                             <ListView
                                 x:Name="ListViewMenu"
@@ -146,6 +146,21 @@
                                             Height="30"
                                             Margin="10,0,10,0"
                                             VerticalAlignment="Center"
+                                            Kind="CreditCardSearch" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="15"
+                                            Text="Bạn thi cùng phòng ?" />
+                                    </StackPanel>
+                                </ListViewItem>
+                                <ListViewItem Height="60">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="10,0,10,0"
+                                            VerticalAlignment="Center"
                                             Kind="Information" />
                                         <TextBlock
                                             Margin="5,0"
@@ -179,7 +194,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                    Text="Ứng dụng xếp lịch siêu cấp vũ trụ của Trường Đại học Top 500 Thế giới" />
+                                    Text="Credit Simulation 4nd Register Support Application" />
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <Button
@@ -221,6 +236,15 @@
                                 <Button
                                     Margin="16,0,0,0"
                                     materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
+                                    Click="GotoSearch"
+                                    Content="{materialDesign:PackIcon Kind=CreditCardSearch,
+                                                                      Size=24}"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                    Style="{StaticResource MaterialDesignToolButton}"
+                                    ToolTip="Bạn thi cùng phòng?" />
+                                <Button
+                                    Margin="16,0,0,0"
+                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
                                     Click="GotoThongTin"
                                     Content="{materialDesign:PackIcon Kind=Information,
                                                                       Size=24}"
@@ -250,6 +274,7 @@
                             <local:Login />
                             <local:MainScheduling />
                             <local:AutoSchedule />
+                            <local:StudentSearch />
                             <local:Info />
                             <!--<materialDesign:TransitionerSlide>
                                 <materialDesign:TransitionerSlide.BackwardWipe>

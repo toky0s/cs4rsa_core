@@ -1,9 +1,12 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.ViewModels.Interfaces;
+
 using LightMessageBus;
 using LightMessageBus.Interfaces;
+
 using Microsoft.Toolkit.Mvvm.Input;
 
 namespace cs4rsa_core.ViewModels
@@ -68,7 +71,7 @@ namespace cs4rsa_core.ViewModels
         public MainSchedulingViewModel(ICourseCrawler courseCrawler)
         {
             MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
-            
+
             CurrentSemesterInfo = courseCrawler.GetCurrentSemesterInfo();
             CurrentYearInfo = courseCrawler.GetCurrentYearInfo();
 

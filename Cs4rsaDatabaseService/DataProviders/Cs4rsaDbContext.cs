@@ -23,6 +23,7 @@ namespace Cs4rsaDatabaseService.DataProviders
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
         public DbSet<SessionSchoolClass> SessionSchoolClasses { get; set; }
+        public DbSet<StudentImage> StudentImages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

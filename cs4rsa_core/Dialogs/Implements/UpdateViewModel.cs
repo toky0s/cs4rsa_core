@@ -1,14 +1,21 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
+
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.ViewModels;
+
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
+
 using DisciplineCrawlerService.Crawlers;
+
 using LightMessageBus;
+
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.Input;
+
 using System.ComponentModel;
 using System.Windows;
 

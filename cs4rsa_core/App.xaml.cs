@@ -20,9 +20,6 @@ using CurriculumCrawlerService.Crawlers.Interfaces;
 
 using DisciplineCrawlerService.Crawlers;
 
-using FirebaseService;
-using FirebaseService.Interfaces;
-
 using HelperService;
 using HelperService.Interfaces;
 
@@ -77,7 +74,7 @@ namespace cs4rsa_core
             services.AddSingleton<IPreParSubjectRepository, PreParSubjectRepository>();
             services.AddSingleton<IPreProDetailsRepository, PreProDetailRepository>();
             services.AddSingleton<IParProDetailsRepository, ParProDetailRepository>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<ICourseCrawler, CourseCrawler>();
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
@@ -97,7 +94,6 @@ namespace cs4rsa_core
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
             services.AddSingleton<IFolderManager, FolderManager>();
             services.AddSingleton<ISnackbarMessageQueue>(new SnackbarMessageQueue(TimeSpan.FromSeconds(2)));
-            services.AddSingleton<IFirebase, NewFirebase>();
 
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
@@ -112,15 +108,9 @@ namespace cs4rsa_core
             services.AddScoped<LoginViewModel>();
             services.AddScoped<StudentInputViewModel>();
             services.AddScoped<AutoSortSubjectLoadViewModel>();
+            services.AddScoped<StudentSearchViewModel>();
 
             return services.BuildServiceProvider();
-        }
-
-        private bool CreateSessionFolder()
-        {
-            string value = System.Configuration.ConfigurationManager.AppSettings["SesionsFolderPath"];
-            MessageBox.Show(value);
-            return true;
         }
     }
 }

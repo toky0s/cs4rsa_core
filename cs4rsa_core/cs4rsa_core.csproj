@@ -26,6 +26,7 @@
     <None Remove="Images\cockieeditor3.png" />
     <None Remove="Images\cockieeditor5.png" />
     <None Remove="Images\cookie_v1.png" />
+    <None Remove="Images\default_avatar.png" />
     <None Remove="Images\donate.png" />
     <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
@@ -49,7 +50,6 @@
     <ProjectReference Include="..\ConflictService\ConflictService.csproj" />
     <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
     <ProjectReference Include="..\DisciplineCrawlerService\DisciplineCrawlerService.csproj" />
-    <ProjectReference Include="..\FirebaseService\FirebaseService.csproj" />
     <ProjectReference Include="..\HelperService\HelperService.csproj" />
     <ProjectReference Include="..\ProgramSubjectCrawlerService\ProgramSubjectCrawlerService.csproj" />
     <ProjectReference Include="..\StudentCrawlerService\StudentCrawlerService.csproj" />
@@ -131,6 +131,7 @@
     <Resource Include="Images\cockieeditor3.png" />
     <Resource Include="Images\cockieeditor5.png" />
     <Resource Include="Images\cookie_v1.png" />
+    <Resource Include="Images\default_avatar.png" />
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />
