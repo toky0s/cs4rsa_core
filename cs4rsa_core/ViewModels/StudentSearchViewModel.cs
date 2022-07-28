@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Commons;
 
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
@@ -111,49 +112,6 @@ namespace cs4rsa_core.ViewModels
             CurrentImageFolderPath = _folderManager.CreateFolderIfNotExists(DEFAULT_IMAGE_FOLDER_NAME);
         }
 
-        private async Task DownloadImage()
-        {
-            // check db
-            // check ton tai file
-
-            await GetStudentImageByCode(_code);
-        }
-
-        private async Task GetStudentImageByCode(string code)
-        {
-            string endpoint = GetEndpointByCode(code);
-            Uri uri = new(endpoint);
-            string result = await DownloadImageAsync(CurrentImageFolderPath, code, uri);
-            if (result == string.Empty)
-            {
-                _snackbarMessageQueue.Enqueue("Mã sinh viên này không tồn tại hoặc đã bị xoá khỏi hệ thống");
-            }
-
-            StudentImage studentImage = new()
-            {
-                Code = code,
-                Path = result,
-                FirstName = "",
-                LastName = "",
-            };
-            try
-            {
-                await _unitOfWork.BeginTransAsync();
-                await _unitOfWork.StudentImages.AddAsync(studentImage);
-                await _unitOfWork.CompleteAsync();
-                await _unitOfWork.CommitAsync();
-                _studentImages.Add(studentImage);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error {ex.Message}"
-                    , "CS4RSA"
-                    , MessageBoxButton.OK
-                    , MessageBoxImage.Error);
-            }
-            string message = $"Đã lưu {code} vào thư mục";
-            _snackbarMessageQueue.Enqueue(message, "MỞ THƯ MỤC", OpenImageFolder);
-        }
 
         /// <summary>
         /// Lấy ra danh sách hình ảnh sinh viên đã thu được.
@@ -165,6 +123,68 @@ namespace cs4rsa_core.ViewModels
             foreach (StudentImage studentImage in studentImages)
             {
                 _studentImages.Add(studentImage);
+            }
+        }
+
+        private async Task DownloadImage()
+        {
+            if (_code == string.Empty)
+            {
+                GetStudentImages();
+                return;
+            }
+            StudentImage si = _unitOfWork.StudentImages.GetByStudentCode(_code);
+            if (si != null)
+            {
+                if (File.Exists(si.Path))
+                {
+                    _studentImages.Clear();
+                    _studentImages.Add(si);
+                    return;
+                }
+            }
+            StudentImage result = await GetStudentImageByCode(_code);
+            if (result != null)
+            {
+                _studentImages.Add(result);
+                string message = $"Đã lưu {result.Code} vào thư mục";
+                _snackbarMessageQueue.Enqueue(message, "MỞ THƯ MỤC", OpenImageFolder);
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue(Msg.SI__SAVING_PROCESS_ERROR);
+            }
+        }
+
+        private async Task<StudentImage> GetStudentImageByCode(string code)
+        {
+            string endpoint = GetEndpointByCode(code);
+            Uri uri = new(endpoint);
+            string result = await DownloadImageAsync(CurrentImageFolderPath, code, uri);
+            if (result == string.Empty)
+            {
+                _snackbarMessageQueue.Enqueue(Msg.SI__CODE_NOT_EXIST_OR_REMOVED);
+            }
+
+            StudentImage studentImage = new()
+            {
+                Code = code,
+                Path = result,
+                FirstName = "",
+                LastName = "",
+            };
+
+            try
+            {
+                await _unitOfWork.BeginTransAsync();
+                await _unitOfWork.StudentImages.AddAsync(studentImage);
+                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CommitAsync();
+                return studentImage;
+            }
+            catch
+            {
+                return null;
             }
         }
 

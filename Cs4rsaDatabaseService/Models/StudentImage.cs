@@ -26,6 +26,16 @@ namespace Cs4rsaDatabaseService.Models
         public string LastName { get; set; }
 
         /// <summary>
+        /// Lớp sinh hoạt
+        /// </summary>
+        public string Class { get; set; }
+
+        /// <summary>
+        /// Ngành
+        /// </summary>
+        public string Major { get; set; }
+
+        /// <summary>
         /// Đường dẫn tới hình ảnh
         /// </summary>
         public string Path { get; set; }

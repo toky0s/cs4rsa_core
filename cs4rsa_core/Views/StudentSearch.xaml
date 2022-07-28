@@ -22,129 +22,185 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="0,0,5,10" Orientation="Vertical">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBox
                     Grid.Column="0"
+                    Width="150"
+                    Margin="0,0,5,7"
                     VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Mã sinh viên"
-                    Style="{StaticResource MaterialDesignTextBox}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     Text="{Binding Code}" />
                 <Button
                     Grid.Column="1"
-                    Margin="0,0,0,5"
+                    Margin="0,0,0,7"
                     Command="{Binding SearchCommand}"
                     Content="Tìm kiếm" />
-            </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
                 <TextBox
+                    Grid.Row="1"
                     Grid.Column="0"
+                    Width="150"
+                    Margin="0,0,5,7"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Từ URL"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    Text="{Binding Code}" />
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,0,5"
+                    Content="Tìm kiếm" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Width="150"
+                    Margin="0,0,5,5"
                     VerticalAlignment="Top"
                     materialDesign:HintAssist.Hint="Từ Excel"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     Text="{Binding Code}" />
                 <Button
+                    Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,0,0,5"
                     Content="Duyệt..." />
             </Grid>
+            <Button Content="Mở thư mục" />
         </StackPanel>
 
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding StudentImages}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <materialDesign:Flipper
-                        Margin="0,0,10,10"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                        Style="{StaticResource MaterialDesignCardFlipper}">
-                        <materialDesign:Flipper.FrontContent>
-                            <Grid>
-                                <Image Width="100" Source="{Binding Path}" />
-                            </Grid>
-                        </materialDesign:Flipper.FrontContent>
-                        <materialDesign:Flipper.BackContent>
-                            <Grid Width="200" Height="256">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <materialDesign:ColorZone Padding="6" Mode="SecondaryMid">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button
-                                            HorizontalAlignment="Left"
-                                            Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}">
-                                            <materialDesign:PackIcon HorizontalAlignment="Right" Kind="ArrowLeft" />
-                                        </Button>
-                                        <TextBlock
-                                            Margin="8,0,0,0"
-                                            VerticalAlignment="Center"
-                                            Text="EDIT USER" />
-                                    </StackPanel>
-                                </materialDesign:ColorZone>
-                                <Grid
-                                    Grid.Row="1"
-                                    Width="172"
-                                    Margin="0,6,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <TextBox
-                                        Margin="0,12,0,0"
-                                        materialDesign:HintAssist.Hint="First name"
-                                        materialDesign:HintAssist.IsFloating="True"
-                                        Text="James" />
-                                    <TextBox
-                                        Grid.Row="1"
-                                        Margin="0,12,0,0"
-                                        materialDesign:HintAssist.Hint="Last name"
-                                        materialDesign:HintAssist.IsFloating="True"
-                                        Text="Willock" />
-                                    <StackPanel
-                                        Grid.Row="2"
-                                        Margin="0,12,0,0"
-                                        HorizontalAlignment="Right"
-                                        Orientation="Horizontal">
-                                        <TextBlock VerticalAlignment="Center" Text="Email Contact" />
-                                        <ToggleButton Margin="8,0,0,0" />
-                                    </StackPanel>
-                                    <StackPanel
-                                        Grid.Row="3"
-                                        Margin="0,12,0,0"
-                                        HorizontalAlignment="Right"
-                                        Orientation="Horizontal">
-                                        <TextBlock VerticalAlignment="Center" Text="Telephone Contact" />
-                                        <ToggleButton Margin="8,0,0,0" />
-                                    </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="Danh sách tìm được" />
+            <DataGrid
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                ItemsSource="{Binding StudentImages}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn>
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="Họ" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn>
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="Tên" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Code}" IsReadOnly="True">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="Mã sinh viên" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="Ngành" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="Lớp sinh hoạt" />
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal" />
+            <!--<ItemsControl ItemsSource="{Binding StudentImages}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <materialDesign:Flipper
+                            Margin="0,0,10,10"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                            Style="{StaticResource MaterialDesignCardFlipper}">
+                            <materialDesign:Flipper.FrontContent>
+                                <Grid>
+                                    <Image Width="100" Source="{Binding Path}" />
                                 </Grid>
-                            </Grid>
-                        </materialDesign:Flipper.BackContent>
-                    </materialDesign:Flipper>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                            </materialDesign:Flipper.FrontContent>
+                            <materialDesign:Flipper.BackContent>
+                                <Grid Width="200" Height="256">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <materialDesign:ColorZone Padding="6" Mode="SecondaryMid">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button
+                                                HorizontalAlignment="Left"
+                                                Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                                                Style="{StaticResource MaterialDesignToolForegroundButton}">
+                                                <materialDesign:PackIcon HorizontalAlignment="Right" Kind="ArrowLeft" />
+                                            </Button>
+                                            <TextBlock
+                                                Margin="8,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="EDIT USER" />
+                                        </StackPanel>
+                                    </materialDesign:ColorZone>
+                                    <Grid
+                                        Grid.Row="1"
+                                        Width="172"
+                                        Margin="0,6,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBox
+                                            Margin="0,12,0,0"
+                                            materialDesign:HintAssist.Hint="First name"
+                                            materialDesign:HintAssist.IsFloating="True"
+                                            Text="James" />
+                                        <TextBox
+                                            Grid.Row="1"
+                                            Margin="0,12,0,0"
+                                            materialDesign:HintAssist.Hint="Last name"
+                                            materialDesign:HintAssist.IsFloating="True"
+                                            Text="Willock" />
+                                        <StackPanel
+                                            Grid.Row="2"
+                                            Margin="0,12,0,0"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Email Contact" />
+                                            <ToggleButton Margin="8,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel
+                                            Grid.Row="3"
+                                            Margin="0,12,0,0"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Telephone Contact" />
+                                            <ToggleButton Margin="8,0,0,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </materialDesign:Flipper.BackContent>
+                        </materialDesign:Flipper>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>-->
+        </StackPanel>
+
     </Grid>
 </UserControl>

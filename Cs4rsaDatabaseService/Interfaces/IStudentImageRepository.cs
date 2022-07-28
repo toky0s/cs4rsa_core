@@ -11,5 +11,7 @@ namespace Cs4rsaDatabaseService.Interfaces
     public interface IStudentImageRepository: IGenericRepository<StudentImage>
     {
         IEnumerable<StudentImage> Get(Func<StudentImage, object> func, int pageIndex = 1, int take = 50);
+
+        StudentImage GetByStudentCode(string studentCode);
     }
 }

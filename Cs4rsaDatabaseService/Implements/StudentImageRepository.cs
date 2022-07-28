@@ -33,5 +33,12 @@ namespace Cs4rsaDatabaseService.Implements
                 .Skip(skip)
                 .Take(take);
         }
+
+        public StudentImage GetByStudentCode(string studentCode)
+        {
+            return _context.StudentImages
+                .Where(si => si.Code.Equals(studentCode))
+                .FirstOrDefault();
+        }
     }
 }
