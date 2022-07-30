@@ -1,14 +1,12 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using LightMessageBus.Interfaces;
 
 namespace cs4rsa_core.Messages
 {
     /// <summary>
-    /// Yêu cầu update cơ sở dữ liệu môn học tới MainSchedulingViewModel.
+    /// Update subject database message.
     /// </summary>
-    public class UpdateSubjectDatabase : Cs4rsaMessage
+    public class UpdateSubjectDatabase : IMessage
     {
-        public UpdateSubjectDatabase(object source) : base(source)
-        {
-        }
+        public object Source { get; set; }
     }
 }

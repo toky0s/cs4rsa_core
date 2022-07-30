@@ -106,7 +106,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnUpdate()
         {
-            MessageBus.Default.Publish(new UpdateSubjectDatabase(null));
+            MessageBus.Default.Publish(new UpdateSubjectDatabase());
         }
 
         public void LoadIsNewSemester()
