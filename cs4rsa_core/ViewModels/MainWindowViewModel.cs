@@ -1,5 +1,10 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
+using cs4rsa_core.Messages;
+
+using LightMessageBus;
+using LightMessageBus.Interfaces;
+
 using MaterialDesignThemes.Wpf;
 using Microsoft.Toolkit.Mvvm.Input;
 
@@ -11,7 +16,7 @@ namespace cs4rsa_core.ViewModels
     /// trong các View. Thực hiện khai báo các dịch vụ triển khai DI. Thực hiện
     /// các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IMessageHandler<UpdateSubjectDatabase>
     {
         #region Bindings
         private bool _isExpanded;
@@ -70,6 +75,8 @@ namespace cs4rsa_core.ViewModels
             SnackbarMessageQueue = (SnackbarMessageQueue)snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
 
+            MessageBus.Default.FromAny().Where<UpdateSubjectDatabase>().Notify(this);
+
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
 
             SelectedIndex = 0;
@@ -93,5 +100,10 @@ namespace cs4rsa_core.ViewModels
         }
 
         public void CloseDialog() => IsOpenDialog = false;
+
+        public void Handle(UpdateSubjectDatabase message)
+        {
+            OnOpenUpdateWindow();
+        }
     }
 }
