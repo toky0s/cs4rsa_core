@@ -8,7 +8,7 @@ Phiên bản 2.1.x
 
 
 Phiên bản 2.0.x
-- 🏫 Cải thiện hiển thị trên mô hỏng.
+- 🏫 Cải thiện hiển thị trên mô phỏng.
 - 🔍 Thêm ô tìm kiếm môn học.
 - 🧪 Cải thiện bộ lọc.
 - ✔ Bạn có thể hoàn tác các tác vụ xoá.
