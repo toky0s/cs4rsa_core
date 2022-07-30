@@ -127,21 +127,23 @@
                         </StackPanel>
                         <Button
                             Grid.Row="2"
+                            Width="120"
                             Margin="15,0,0,5"
                             HorizontalAlignment="Left"
-                            Command="{Binding GotoFacebookCommand}"
+                            Command="{Binding GotoFormCommand}"
                             Style="{StaticResource MaterialDesignOutlinedButton}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                                     Width="20"
                                     Height="20"
                                     Margin="0,0,2,0"
-                                    Kind="Facebook" />
-                                <TextBlock VerticalAlignment="Center" Text="Facebook" />
+                                    Kind="GoogleDrive" />
+                                <TextBlock VerticalAlignment="Center" Text="Góp ý" />
                             </StackPanel>
                         </Button>
                         <Button
                             Grid.Row="3"
+                            Width="120"
                             Margin="15,0,0,0"
                             HorizontalAlignment="Left"
                             Command="{Binding DonateCommand}"
@@ -152,7 +154,7 @@
                                     Height="20"
                                     Margin="0,0,2,0"
                                     Kind="Donate" />
-                                <TextBlock VerticalAlignment="Center" Text="Donate nào mấy bạn" />
+                                <TextBlock VerticalAlignment="Center" Text="Ủng hộ tôi" />
                             </StackPanel>
                         </Button>
                     </Grid>

@@ -53,7 +53,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
-        public RelayCommand GotoFacebookCommand { get; set; }
+        public RelayCommand GotoFormCommand { get; set; }
         public RelayCommand DonateCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
         public RelayCommand ManualCommand { get; set; }
@@ -75,7 +75,7 @@ namespace cs4rsa_core.ViewModels
             _currentYearInfo = _courseCrawler.GetCurrentYearInfo();
 
             UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
-            GotoFacebookCommand = new RelayCommand(OnGotoFaceBook);
+            GotoFormCommand = new RelayCommand(OnGotoForm);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
             ManualCommand = new RelayCommand(OnGotoManualCommand);
             DonateCommand = new RelayCommand(OnDonate);
@@ -99,9 +99,9 @@ namespace cs4rsa_core.ViewModels
             _openInBrowser.Open("https://github.com/toky0s/cs4rsa_core");
         }
 
-        private void OnGotoFaceBook()
+        private void OnGotoForm()
         {
-            _openInBrowser.Open("https://www.facebook.com/truongaxin/");
+            _openInBrowser.Open("https://forms.gle/JHipUM7knjbqKGKWA");
         }
 
         private void OnUpdate()
