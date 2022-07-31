@@ -21,6 +21,7 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <materialDesign:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
         <converter:PlaceToStringConverter x:Key="PlaceToStringConverter" />
     </UserControl.Resources>
@@ -152,64 +153,63 @@
                             <ColumnDefinition Width="40*" />
                             <ColumnDefinition Width="60*" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <GroupBox Margin="5,0,5,5">
-                                <GroupBox.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,5,0"
-                                            Foreground="White"
-                                            Kind="CalendarMonth" />
-                                        <TextBlock Foreground="White" Text="Thứ" />
-                                    </StackPanel>
-                                </GroupBox.Header>
-                                <StackPanel>
-                                    <CheckBox Content="Hai" IsChecked="{Binding Monday}" />
-                                    <CheckBox Content="Ba" IsChecked="{Binding Tuesday}" />
-                                    <CheckBox Content="Tư" IsChecked="{Binding Wednesday}" />
-                                    <CheckBox Content="Năm" IsChecked="{Binding Thursday}" />
-                                    <CheckBox Content="Sáu" IsChecked="{Binding Friday}" />
-                                    <CheckBox Content="Bảy" IsChecked="{Binding Saturday}" />
-                                    <CheckBox Content="CN" IsChecked="{Binding Sunday}" />
+                        <GroupBox Grid.Column="0" Margin="5,0,5,5">
+                            <GroupBox.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Margin="0,0,5,0"
+                                        Foreground="White"
+                                        Kind="CalendarMonth" />
+                                    <TextBlock Foreground="White" Text="Thứ" />
                                 </StackPanel>
-                            </GroupBox>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <GroupBox Margin="0,0,5,5">
-                                <GroupBox.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,5,0"
-                                            Foreground="White"
-                                            Kind="MapMarkerOutline" />
-                                        <TextBlock Foreground="White" Text="Nơi học" />
-                                    </StackPanel>
-                                </GroupBox.Header>
-                                <StackPanel x:Name="CheckBoxContainer_Place">
-                                    <CheckBox Content="Quang Trung" IsChecked="{Binding PlaceQuangTrung}" />
-                                    <CheckBox
-                                        x:Name="CheckBox_phanthanh"
-                                        Content="Phan Thanh"
-                                        IsChecked="{Binding PlacePhanThanh}" />
-                                    <CheckBox
-                                        x:Name="CheckBox_viettin"
-                                        Content="Việt Tin"
-                                        IsChecked="{Binding PlaceVietTin}" />
-                                    <CheckBox
-                                        x:Name="CheckBox_hoakhanh"
-                                        Content="Hoà Khánh"
-                                        IsChecked="{Binding PlaceHoaKhanh}" />
-                                    <CheckBox
-                                        x:Name="CheckBox_137_nvl"
-                                        Content="137 NVL"
-                                        IsChecked="{Binding Place137NVL}" />
-                                    <CheckBox
-                                        x:Name="CheckBox_254_nvl"
-                                        Content="254 NVL"
-                                        IsChecked="{Binding Place254NVL}" />
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <CheckBox Content="Hai" IsChecked="{Binding Monday}" />
+                                <CheckBox Content="Ba" IsChecked="{Binding Tuesday}" />
+                                <CheckBox Content="Tư" IsChecked="{Binding Wednesday}" />
+                                <CheckBox Content="Năm" IsChecked="{Binding Thursday}" />
+                                <CheckBox Content="Sáu" IsChecked="{Binding Friday}" />
+                                <CheckBox Content="Bảy" IsChecked="{Binding Saturday}" />
+                                <CheckBox Content="CN" IsChecked="{Binding Sunday}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Column="1"
+                            Height="180"
+                            Margin="0,0,5,5">
+                            <GroupBox.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Margin="0,0,5,0"
+                                        Foreground="White"
+                                        Kind="MapMarkerOutline" />
+                                    <TextBlock Foreground="White" Text="Nơi học" />
                                 </StackPanel>
-                            </GroupBox>
-                        </StackPanel>
+                            </GroupBox.Header>
+                            <StackPanel x:Name="CheckBoxContainer_Place">
+                                <CheckBox Content="Quang Trung" IsChecked="{Binding PlaceQuangTrung}" />
+                                <CheckBox
+                                    x:Name="CheckBox_phanthanh"
+                                    Content="Phan Thanh"
+                                    IsChecked="{Binding PlacePhanThanh}" />
+                                <CheckBox
+                                    x:Name="CheckBox_viettin"
+                                    Content="Việt Tin"
+                                    IsChecked="{Binding PlaceVietTin}" />
+                                <CheckBox
+                                    x:Name="CheckBox_hoakhanh"
+                                    Content="Hoà Khánh"
+                                    IsChecked="{Binding PlaceHoaKhanh}" />
+                                <CheckBox
+                                    x:Name="CheckBox_137_nvl"
+                                    Content="137 NVL"
+                                    IsChecked="{Binding Place137NVL}" />
+                                <CheckBox
+                                    x:Name="CheckBox_254_nvl"
+                                    Content="254 NVL"
+                                    IsChecked="{Binding Place254NVL}" />
+                            </StackPanel>
+                        </GroupBox>
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
