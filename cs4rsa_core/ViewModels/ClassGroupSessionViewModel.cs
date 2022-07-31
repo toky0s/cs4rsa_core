@@ -30,7 +30,8 @@ namespace cs4rsa_core.ViewModels
     public class ClassGroupSessionViewModel : ViewModelBase,
         IMessageHandler<SelectedSubjectChangeMessage>,
         IMessageHandler<DeleteClassGroupChoiceMessage>,
-        IMessageHandler<DeleteSubjectMessage>
+        IMessageHandler<DeleteSubjectMessage>,
+        IMessageHandler<DelAllSubjectMsg>
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -325,6 +326,7 @@ namespace cs4rsa_core.ViewModels
             MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
             MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
+            MessageBus.Default.FromAny().Where<DelAllSubjectMsg>().Notify(this);
 
             ClassGroupModels = new();
             _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
@@ -589,6 +591,13 @@ namespace cs4rsa_core.ViewModels
         public void Handle(DeleteSubjectMessage message)
         {
             ClassGroupModels.Clear();
+            SubjectModel = null;
+        }
+
+        public void Handle(DelAllSubjectMsg message)
+        {
+            ClassGroupModels.Clear();
+            SubjectModel = null;
         }
     }
 }

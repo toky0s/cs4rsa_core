@@ -215,7 +215,6 @@ namespace cs4rsa_core.ViewModels
             Task<List<Keyword>> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
             Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
             List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
-            //List<Keyword>[] whenAllResult = await Task.WhenAll(result2);
             foreach (List<Keyword> keywords in whenAllResult)
             {
                 foreach (Keyword keyword in keywords)
@@ -268,18 +267,18 @@ namespace cs4rsa_core.ViewModels
         private void OnDeleteAll()
         {
             List<SubjectModel> actionData = new();
-            for (int i = SubjectModels.Count - 1; i >= 0; --i)
+            foreach(SubjectModel item in SubjectModels)
             {
-                MessageBus.Default.Publish(new DeleteSubjectMessage(SubjectModels[i]));
-                SubjectModel restoreSubject = SubjectModels[i].DeepClone();
+                SubjectModel restoreSubject = item.DeepClone();
                 actionData.Add(restoreSubject);
-                SubjectModels.RemoveAt(i);
             }
+            SubjectModels.Clear();
+            MessageBus.Default.Publish(new DelAllSubjectMsg());
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
-            _snackbarMessageQueue.Enqueue<List<SubjectModel>>("Đã xoá hết", "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", OnRestore, actionData);
         }
 
         private void OnRestore(List<SubjectModel> obj)
