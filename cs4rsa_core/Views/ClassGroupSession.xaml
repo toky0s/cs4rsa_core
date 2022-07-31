@@ -21,7 +21,6 @@
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <materialDesign:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
         <converter:PlaceToStringConverter x:Key="PlaceToStringConverter" />
     </UserControl.Resources>
