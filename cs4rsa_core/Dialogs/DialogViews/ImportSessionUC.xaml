@@ -57,6 +57,7 @@
                         <TextBlock Style="{StaticResource Header2}" Text="Chi tiết" />
                         <TextBlock Style="{StaticResource Caption}" Text="Double Click để sao chép mã" />
                         <DataGrid
+                            Height="200"
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             CanUserDeleteRows="False"
