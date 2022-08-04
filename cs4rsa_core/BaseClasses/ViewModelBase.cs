@@ -1,21 +1,11 @@
 ﻿using cs4rsa_core.ViewModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Windows;
 
 namespace cs4rsa_core.BaseClasses
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : ObservableRecipient
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string property = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
-
         /// <summary>
         /// Mở Dialog
         /// </summary>
