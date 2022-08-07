@@ -1,5 +1,4 @@
 ﻿using Cs4rsaDatabaseService.Interfaces;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,16 +10,24 @@ namespace ProgramSubjectCrawlerService.DataTypes
     /// </summary>
     public class ProgramDiagram
     {
-        public List<ProgramFolder> ProgramFolders { get; set; } = new List<ProgramFolder>();
+        public List<ProgramFolder> ProgramFolders { get; set; }
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProgramDiagram(ProgramFolder outlineRoot, ProgramFolder physicalEducationRoot,
-                              ProgramFolder industryOutlineRoot, ProgramFolder specializedRoot, IUnitOfWork unitOfWork)
+        public ProgramDiagram(
+            ProgramFolder outlineRoot, 
+            ProgramFolder physicalEducationRoot,
+            ProgramFolder industryOutlineRoot, 
+            ProgramFolder specializedRoot,
+            IUnitOfWork unitOfWork
+        )
         {
-            ProgramFolders.Add(outlineRoot);
-            ProgramFolders.Add(physicalEducationRoot);
-            ProgramFolders.Add(industryOutlineRoot);
-            ProgramFolders.Add(specializedRoot);
+            ProgramFolders = new()
+            {
+                outlineRoot,
+                physicalEducationRoot,
+                industryOutlineRoot,
+                specializedRoot
+            };
             _unitOfWork = unitOfWork;
         }
 
@@ -73,28 +80,23 @@ namespace ProgramSubjectCrawlerService.DataTypes
         /// <summary>
         /// Lấy ra danh sách các môn tiên quyết của một ProgramSubject.
         /// </summary>
-        /// <param name="programSubject">ProgramSubject</param>
-        /// <returns></returns>
-        public List<ProgramSubject> GetPreProgramSubjects(ProgramSubject programSubject)
+        public IEnumerable<ProgramSubject> GetPreProgramSubjects(ProgramSubject programSubject)
         {
             List<string> subjectCodes = programSubject.PrerequisiteSubjects;
-            return subjectCodes.Select(item => GetProgramSubject(item)).ToList();
+            return subjectCodes.Select(item => GetProgramSubject(item));
         }
 
         /// <summary>
         /// Lấy ra danh sách các môn song hành của một ProgramSubject.
         /// </summary>
-        /// <param name="programSubject">ProgramSubject</param>
-        /// <returns></returns>
-        public async Task<List<ProgramSubject>> GetParProgramSubject(ProgramSubject programSubject)
+        public async Task<IEnumerable<ProgramSubject>> GetParProgramSubject(ProgramSubject programSubject)
         {
             Cs4rsaDatabaseService.Models.ProgramSubject programSubjectModel = await _unitOfWork.ProgramSubjects.GetByCourseIdAsync(programSubject.CourseId);
-            List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = programSubjectModel.ParProDetails
-                .Select(parProDetail => parProDetail.PreParSubject)
-                .ToList();
+            IEnumerable<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = programSubjectModel.ParProDetails
+                .Select(parProDetail => parProDetail.PreParSubject);
 
-            List<string> subjectCodes = preParSubjects.Select(preParSubject => preParSubject.SubjectCode).ToList();
-            return subjectCodes.Select(item => GetProgramSubject(item)).ToList();
+            IEnumerable<string> subjectCodes = preParSubjects.Select(preParSubject => preParSubject.SubjectCode);
+            return subjectCodes.Select(item => GetProgramSubject(item));
         }
     }
 }

@@ -1,22 +1,18 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Messages;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
+using cs4rsa_core.Messages.Publishers;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace cs4rsa_core.ViewModels
 {
-
     /// <summary>
     /// MainWindowViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
     /// trong các View. Thực hiện khai báo các dịch vụ triển khai DI. Thực hiện
     /// các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    public class MainWindowViewModel : ViewModelBase, IMessageHandler<UpdateSubjectDatabase>
+    public class MainWindowViewModel : ViewModelBase
     {
         #region Bindings
         private bool _isExpanded;
@@ -58,8 +54,8 @@ namespace cs4rsa_core.ViewModels
             set { _isCloseOnClickAway = value; OnPropertyChanged(); }
         }
 
-        private SnackbarMessageQueue _snackBarMessageQueue;
-        public SnackbarMessageQueue SnackbarMessageQueue
+        private ISnackbarMessageQueue _snackBarMessageQueue;
+        public ISnackbarMessageQueue SnackbarMessageQueue
         {
             get { return _snackBarMessageQueue; }
             set { _snackBarMessageQueue = value; OnPropertyChanged(); }
@@ -72,10 +68,13 @@ namespace cs4rsa_core.ViewModels
 
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
-            SnackbarMessageQueue = (SnackbarMessageQueue)snackbarMessageQueue;
+            _snackBarMessageQueue = snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
 
-            MessageBus.Default.FromAny().Where<UpdateSubjectDatabase>().Notify(this);
+            WeakReferenceMessenger.Default.Register<HomeVmMsgs.UpdateSubjectDbMsg>(this, (r, m) =>
+            {
+                OnOpenUpdateWindow();
+            });
 
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
 
@@ -86,10 +85,10 @@ namespace cs4rsa_core.ViewModels
         private void OnOpenUpdateWindow()
         {
             UpdateUC updateUC = new();
-            OpenDialog(updateUC);
+            OpenModal(updateUC);
         }
 
-        public void OpenDialog(IDialog uc)
+        public void OpenModal(IDialog uc)
         {
             if (uc != null)
             {
@@ -99,11 +98,6 @@ namespace cs4rsa_core.ViewModels
             IsCloseOnClickAway = uc.IsCloseOnClickAway();
         }
 
-        public void CloseDialog() => IsOpenDialog = false;
-
-        public void Handle(UpdateSubjectDatabase message)
-        {
-            OnOpenUpdateWindow();
-        }
+        public void CloseModal() => IsOpenDialog = false;
     }
 }

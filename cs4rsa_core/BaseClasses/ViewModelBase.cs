@@ -1,36 +1,26 @@
 ﻿using cs4rsa_core.ViewModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
 namespace cs4rsa_core.BaseClasses
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : ObservableRecipient
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string property = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
-
         /// <summary>
         /// Mở Dialog
         /// </summary>
         /// <param name="uc">Dialog UC</param>
-        protected void OpenD(IDialog uc)
+        protected void OpenDialog(IDialog uc)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(uc);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenModal(uc);
         }
 
         /// <summary>
         /// Đóng Dialog hiện tại đang hiển thị
         /// </summary>
-        protected void CloseD()
+        protected void CloseDialog()
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
         }
     }
 }

@@ -1,48 +1,35 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Interfaces;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModelFunctions;
-
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-
 using HelperService;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
 using MaterialDesignThemes.Wpf;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows;
-
 
 
 namespace cs4rsa_core.ViewModels
 {
-    public class SearchSessionViewModel : ViewModelBase,
-        IMessageHandler<UpdateSuccessMessage>,
-        IMessageHandler<ShowOnSimuMessage>,
-        IMessageHandler<ExitImportSubjectMessage>
+    public sealed class SearchSessionViewModel : ViewModelBase
     {
         #region Commands
         public IAsyncRelayCommand AddCommand { get; set; }
@@ -126,7 +113,7 @@ namespace cs4rsa_core.ViewModels
             {
                 _selectedSubjectModel = value;
                 DeleteCommand.NotifyCanExecuteChanged();
-                MessageBus.Default.Publish(new SelectedSubjectChangeMessage(value));
+                Messenger.Send(new SearchVmMsgs.SelectedSubjectChangedMsg(value));
             }
         }
 
@@ -151,9 +138,14 @@ namespace cs4rsa_core.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public SearchSessionViewModel(ICourseCrawler courseCrawler, IUnitOfWork unitOfWork,
-            ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator, IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public SearchSessionViewModel(
+            ICourseCrawler courseCrawler, 
+            IUnitOfWork unitOfWork,
+            ISubjectCrawler subjectCrawler, 
+            ColorGenerator colorGenerator, 
+            IOpenInBrowser openInBrowser,
+            ISnackbarMessageQueue snackbarMessageQueue
+        )
         {
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
@@ -162,9 +154,20 @@ namespace cs4rsa_core.ViewModels
             _openInBrowser = openInBrowser;
             _snackbarMessageQueue = snackbarMessageQueue;
 
-            MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<ShowOnSimuMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<ExitImportSubjectMessage>().Notify(this);
+            WeakReferenceMessenger.Default.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, async (r, m) =>
+            {
+                await CloseDialogAndHandleSessionManagerResult(m.Value);
+            });
+
+            WeakReferenceMessenger.Default.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
+            {
+                ShowOnSimuMsgHandler(m.Value);
+            });
+
+            WeakReferenceMessenger.Default.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, async (r, m) =>
+            {
+                await UpdateSuccessMsgHandler();
+            });
 
             DisciplineKeywordModels = new();
             SubjectModels = new();
@@ -184,7 +187,7 @@ namespace cs4rsa_core.ViewModels
         private void OnDetail()
         {
             (showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(showDetailsSubjectUC);
+            OpenDialog(showDetailsSubjectUC);
         }
 
         public async Task LoadDiscipline()
@@ -267,13 +270,14 @@ namespace cs4rsa_core.ViewModels
         private void OnDeleteAll()
         {
             List<SubjectModel> actionData = new();
-            foreach(SubjectModel item in SubjectModels)
+            foreach(SubjectModel subjectModel in SubjectModels)
             {
-                SubjectModel restoreSubject = item.DeepClone();
+                Messenger.Send(new SearchVmMsgs.DelSubjectMsg(subjectModel));
+                SubjectModel restoreSubject = subjectModel.DeepClone();
                 actionData.Add(restoreSubject);
             }
             SubjectModels.Clear();
-            MessageBus.Default.Publish(new DelAllSubjectMsg());
+            Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -281,7 +285,7 @@ namespace cs4rsa_core.ViewModels
             _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", OnRestore, actionData);
         }
 
-        private void OnRestore(List<SubjectModel> obj)
+        private void OnRestore(IEnumerable<SubjectModel> obj)
         {
             foreach (SubjectModel subjectModel in obj)
             {
@@ -313,30 +317,31 @@ namespace cs4rsa_core.ViewModels
         private async Task OnOpenImportDialog()
         {
             ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(_importSessionUC);
+            OpenDialog(_importSessionUC);
             await vm.LoadScheduleSession();
         }
 
         private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
         {
             Cs4rsaMessageBox messageBoxService = new();
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            CloseDialog();
             if (result != null)
             {
                 SubjectImporterUC subjectImporterUC = new();
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
                 vm.SessionManagerResult = result;
                 vm.CloseDialogCallback = CloseDialogAndHandleImportResult;
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(subjectImporterUC);
+                OpenDialog(subjectImporterUC);
                 await vm.Run();
             }
         }
 
         private void CloseDialogAndHandleImportResult(ImportResult importResult, SessionManagerResult sessionManagerResult)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            CloseDialog();
             ImportSubjects(importResult.SubjectModels);
-            ClassGroupChoicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
+            var choicer = new ClassGroupChoicer();
+            choicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
             SelectedSubjectModel = SubjectModels[0];
         }
 
@@ -347,7 +352,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDeleteSubject()
         {
-            MessageBus.Default.Publish(new DeleteSubjectMessage(_selectedSubjectModel));
+            Messenger.Send(new SearchVmMsgs.DelSubjectMsg(_selectedSubjectModel));
 
             SubjectModel actionData = _selectedSubjectModel.DeepClone();
 
@@ -388,19 +393,19 @@ namespace cs4rsa_core.ViewModels
             string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
             vm.SubjectName = subjectName;
             vm.SubjectCode = subjectCode;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(subjectDownloadingUC);
+            OpenDialog(subjectDownloadingUC);
 
             Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1);
             if (subject != null)
             {
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
                 AddSubjectAndReload(subjectModel);
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                CloseDialog();
                 SelectedSubjectModel = SubjectModels.Last();
             }
             else
             {
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                CloseDialog();
                 _snackbarMessageQueue.Enqueue("Môn học không tồn tại trong học kỳ này");
                 CanAddSubjectChange();
             }
@@ -433,7 +438,7 @@ namespace cs4rsa_core.ViewModels
         private void UpdateSubjectAmount()
         {
             TotalSubject = SubjectModels.Count;
-            MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
+            Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }
 
         /// <summary>
@@ -446,7 +451,7 @@ namespace cs4rsa_core.ViewModels
             {
                 TotalCredits += subject.StudyUnit;
             }
-            MessageBus.Default.Publish(new SubjectItemChangeMessage(this));
+            Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }
 
         private void CanAddSubjectChange(bool? value = null)
@@ -467,11 +472,11 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        private void ImportSubjects(List<SubjectModel> importSubjects)
+        private void ImportSubjects(IEnumerable<SubjectModel> importSubjects)
         {
             foreach (SubjectModel subject in SubjectModels)
             {
-                MessageBus.Default.Publish(new DeleteSubjectMessage(subject));
+                Messenger.Send(new SearchVmMsgs.DelSubjectMsg(subject));
             }
 
             SubjectModels.Clear();
@@ -489,7 +494,6 @@ namespace cs4rsa_core.ViewModels
         /// Thêm một SubjectModel vào danh sách.
         /// Load lại các thông tin cần thiết.
         /// </summary>
-        /// <param name="subjectModel"></param>
         private void AddSubjectAndReload(SubjectModel subjectModel)
         {
             SubjectModels.Add(subjectModel);
@@ -499,25 +503,18 @@ namespace cs4rsa_core.ViewModels
             UpdateSubjectAmount();
         }
 
-        public async void Handle(UpdateSuccessMessage message)
+        private async Task UpdateSuccessMsgHandler()
         {
             DisciplineKeywordModels.Clear();
             Disciplines.Clear();
             await ReloadDisciplineAndKeyWord();
         }
 
-        public void Handle(ShowOnSimuMessage message)
+        private void ShowOnSimuMsgHandler(CombinationModel combination)
         {
-            List<SubjectModel> subjectModels = message.Source.SubjecModels;
-            ImportSubjects(subjectModels);
-
-            List<ClassGroupModel> classGroupModels = message.Source.ClassGroupModels;
-            ClassGroupChoicer.Start(classGroupModels);
-        }
-
-        public async void Handle(ExitImportSubjectMessage message)
-        {
-            await CloseDialogAndHandleSessionManagerResult(message.Source);
+            ImportSubjects(combination.SubjecModels);
+            ClassGroupChoicer choicer = new();
+            choicer.Start(combination.ClassGroupModels);
         }
     }
 }

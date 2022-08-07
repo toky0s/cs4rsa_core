@@ -3,35 +3,25 @@ using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Interfaces;
-using cs4rsa_core.Messages;
-
+using cs4rsa_core.Messages.Publishers;
 using Cs4rsaDatabaseService.Models;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using MaterialDesignThemes.Wpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 
 using Session = SubjectCrawlService1.DataTypes.Enums.Session;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class ClassGroupSessionViewModel : ViewModelBase,
-        IMessageHandler<SelectedSubjectChangeMessage>,
-        IMessageHandler<DeleteClassGroupChoiceMessage>,
-        IMessageHandler<DeleteSubjectMessage>,
-        IMessageHandler<DelAllSubjectMsg>
+    public sealed class ClassGroupSessionViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -51,7 +41,7 @@ namespace cs4rsa_core.ViewModels
                     }
                     else
                     {
-                        MessageBus.Default.Publish(new ClassGroupAddedMessage(value));
+                        Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
                     }
                 }
             }
@@ -317,16 +307,40 @@ namespace cs4rsa_core.ViewModels
 
         #region Services
         private readonly IOpenInBrowser _openInBrowser;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ClassGroupSessionViewModel(IOpenInBrowser openInBrowser)
+        public ClassGroupSessionViewModel(
+            IOpenInBrowser openInBrowser,
+            ISnackbarMessageQueue snackbarMessageQueue
+        )
         {
             _openInBrowser = openInBrowser;
+            _snackbarMessageQueue = snackbarMessageQueue;
 
-            MessageBus.Default.FromAny().Where<SelectedSubjectChangeMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<DeleteSubjectMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<DelAllSubjectMsg>().Notify(this);
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            {
+                _snackbarMessageQueue.Enqueue("Call SearchVmMsgs.DelSubjectMsg");
+                ClassGroupModels.Clear();
+                SubjectModel = null;
+            });
+
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            {
+                _snackbarMessageQueue.Enqueue("Call SearchVmMsgs.DelAllSubjectMsg");
+                ClassGroupModels.Clear();
+                SubjectModel = null;
+            });
+
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
+            {
+                SelectedSubjectChangedHandler(m.Value);
+            });
+
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            {
+                SelectedClassGroup = null;
+            });
 
             ClassGroupModels = new();
             _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
@@ -506,9 +520,11 @@ namespace cs4rsa_core.ViewModels
         public void OnShowDetailsSchoolClasses()
         {
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
-            ShowDetailsSchoolClassesViewModel vm = new();
-            vm.ClassGroupModel = _selectedClassGroup;
-            vm.CloseDialogCallback = CloseDialogAndHandleClassGroupResult;
+            ShowDetailsSchoolClassesViewModel vm = new()
+            {
+                ClassGroupModel = _selectedClassGroup,
+                CloseDialogCallback = CloseDialogAndHandleClassGroupResult
+            };
             foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
             {
                 if (scm.Type == "LAB")
@@ -517,18 +533,18 @@ namespace cs4rsa_core.ViewModels
                 }
             }
             showDetailsSchoolClassesUC.DataContext = vm;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(showDetailsSchoolClassesUC);
+            OpenDialog(showDetailsSchoolClassesUC);
         }
 
         private void CloseDialogAndHandleClassGroupResult(ClassGroupResult classGroupResult)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            CloseDialog();
             ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
             string registerCode = classGroupResult.SelectedRegisterCode;
             foreach (var classGroupMD in ClassGroupModels.Where(classGroupMD => classGroupMD.Name.Equals(classGroupModel.Name)))
             {
                 classGroupMD.PickSchoolClass(registerCode);
-                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupMD));
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupMD));
             }
         }
 
@@ -538,9 +554,9 @@ namespace cs4rsa_core.ViewModels
             _openInBrowser.Open(url);
         }
 
-        public void Handle(SelectedSubjectChangeMessage message)
+        private void SelectedSubjectChangedHandler(SubjectModel subjectModel)
         {
-            SubjectModel = message.Source;
+            SubjectModel = subjectModel;
             ClassGroupModels.Clear();
             Teachers.Clear();
             if (SubjectModel != null)
@@ -581,23 +597,6 @@ namespace cs4rsa_core.ViewModels
 
                 _classGroupModelsView.Refresh();
             }
-        }
-
-        public void Handle(DeleteClassGroupChoiceMessage message)
-        {
-            SelectedClassGroup = null;
-        }
-
-        public void Handle(DeleteSubjectMessage message)
-        {
-            ClassGroupModels.Clear();
-            SubjectModel = null;
-        }
-
-        public void Handle(DelAllSubjectMsg message)
-        {
-            ClassGroupModels.Clear();
-            SubjectModel = null;
         }
     }
 }

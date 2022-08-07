@@ -1,47 +1,36 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Interfaces;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Models;
 using cs4rsa_core.Utils;
-
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-
 using CurriculumCrawlerService.Crawlers.Interfaces;
-
 using HelperService;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
 using MaterialDesignThemes.Wpf;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ProgramSubjectCrawlerService.Crawlers;
 using ProgramSubjectCrawlerService.DataTypes;
-
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class AutoScheduleViewModel : ViewModelBase, IMessageHandler<ExitLoginMessage>
+    public class AutoScheduleViewModel : ViewModelBase
     {
         #region Properties
 
@@ -257,10 +246,15 @@ namespace cs4rsa_core.ViewModels
 
         #endregion
 
-        public AutoScheduleViewModel(ICourseCrawler courseCrawler,
-            ColorGenerator colorGenerator, IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler, IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public AutoScheduleViewModel(
+            ICourseCrawler courseCrawler,
+            ColorGenerator colorGenerator, 
+            IUnitOfWork unitOfWork, 
+            ICurriculumCrawler curriculumCrawler,
+            IPreParSubjectCrawler preParSubjectCrawler, 
+            IOpenInBrowser openInBrowser,
+            ISnackbarMessageQueue snackbarMessageQueue
+        )
         {
             _openInBrowser = openInBrowser;
             _curriculumCrawler = curriculumCrawler;
@@ -270,7 +264,10 @@ namespace cs4rsa_core.ViewModels
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
 
-            MessageBus.Default.FromAny().Where<ExitLoginMessage>().Notify(this);
+            WeakReferenceMessenger.Default.Register<StudentInputVmMsgs.ExitLoginMsg>(this, async (r, m) =>
+            {
+                await LoadStudent(m.Value);
+            });
 
             ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
             ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
@@ -465,8 +462,6 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Bộ lọc những ngày rảnh
         /// </summary>
-        /// <param name="classGroupModel"></param>
-        /// <returns></returns>
         private bool IsFreeDayFilter(ClassGroupModel classGroupModel)
         {
             Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Mon = new()
@@ -550,7 +545,7 @@ namespace cs4rsa_core.ViewModels
         {
             StudentInputUC studentInputUC = new();
             StudentInputViewModel vm = studentInputUC.DataContext as StudentInputViewModel;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(studentInputUC);
+            OpenDialog(studentInputUC);
             await vm.LoadStudentInfos();
         }
 
@@ -579,8 +574,10 @@ namespace cs4rsa_core.ViewModels
             _classGroupModelsOfClass.Clear();
             _filteredClassGroupModels.Clear();
             _tempResult.Clear();
+            
             _genIndex = 0;
             IsCalculated = false;
+
             DeleteAllCommand.NotifyCanExecuteChanged();
             AddCommand.NotifyCanExecuteChanged();
             ValidGenCommand.NotifyCanExecuteChanged();
@@ -590,8 +587,16 @@ namespace cs4rsa_core.ViewModels
         {
             IsFinding = true;
             ProgramFolderModels.Clear();
-            ProgramDiagramCrawler programDiagramCrawler = new("", _student.SpecialString, _curriculumCrawler, _unitOfWork, _preParSubjectCrawler);
-            programDiagramCrawler.AddProgramFolder = AddProgramFolder;
+            ProgramDiagramCrawler programDiagramCrawler = new(
+                ""
+                , _student.SpecialString
+                , _curriculumCrawler
+                , _unitOfWork
+                , _preParSubjectCrawler
+            )
+            {
+                AddProgramFolder = AddProgramFolder
+            };
             await programDiagramCrawler.ToProgramDiagram();
             IsFinding = false;
         }
@@ -618,8 +623,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnShowOnSimu()
         {
-            ShowOnSimuMessage showOnSimuMessage = new(_selectedCombinationModel);
-            MessageBus.Default.Publish(showOnSimuMessage);
+            Messenger.Send(new AutoScheduleVmMsgs.ShowOnSimuMsg(_selectedCombinationModel));
         }
 
         private bool CanDownload()
@@ -634,10 +638,9 @@ namespace cs4rsa_core.ViewModels
             vm.ProgramDiagram = _programDiagram;
             vm.ProgramSubjectModel = _selectedProSubject;
             vm.AddCallback = OnAddSubject;
-            vm.CloseDialogCallback = (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog;
             await vm.LoadPreProSubjectModels();
             await vm.LoadParProSubjectModels();
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(proSubjectDetailUC);
+            OpenDialog(proSubjectDetailUC);
         }
 
         private void OnGoToCourse()
@@ -677,7 +680,6 @@ namespace cs4rsa_core.ViewModels
         /// giữa đã chọn và đã tải nhằm tối ưu tốc độ, thay vì việc thực hiện tải lại
         /// rất mất thời gian.
         /// </summary>
-        /// <param name="obj"></param>
         private async Task OnDownload()
         {
             CombinationModels.Clear();
@@ -689,18 +691,19 @@ namespace cs4rsa_core.ViewModels
                 wereDownloadedSubjectCodes.Clear();
             }
 
-            List<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes).ToList();
-            List<ProgramSubjectModel> needDownload = ChoicedProSubjectModels.Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode)).ToList();
+            IEnumerable<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes);
+            IEnumerable<ProgramSubjectModel> needDownload = ChoicedProSubjectModels
+                .Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode));
 
-            if (needDownload.Count > 0)
+            if (needDownload.Any())
             {
                 AutoSortSubjectLoadUC autoSortSubjectLoadUC = new();
                 AutoSortSubjectLoadViewModel vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadViewModel;
                 vm.ProgramSubjectModels = needDownload;
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(autoSortSubjectLoadUC);
-                List<SubjectModel> subjectModels = await vm.Download();
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-                foreach (SubjectModel subjectModel in subjectModels)
+                OpenDialog(autoSortSubjectLoadUC);
+                IAsyncEnumerable<SubjectModel> subjectModels = vm.Download();
+                CloseDialog();
+                await foreach (SubjectModel subjectModel in subjectModels)
                 {
                     SubjectModels.Add(subjectModel);
                 }
@@ -734,11 +737,6 @@ namespace cs4rsa_core.ViewModels
             {
                 CreditCount += subjectModel.StudyUnit;
             }
-        }
-
-        public async void Handle(ExitLoginMessage message)
-        {
-            await LoadStudent(message.Source);
         }
     }
 }

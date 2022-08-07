@@ -1,22 +1,15 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Utils;
-using cs4rsa_core.ViewModels;
-
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-
-using LightMessageBus;
-
 using MaterialDesignThemes.Wpf;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,8 +21,6 @@ namespace cs4rsa_core.Dialogs.Implements
 {
     public class ImportSessionViewModel : ViewModelBase
     {
-        public Action<SessionManagerResult> CloseDialogCallback { get; set; }
-
         #region Properties
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; }
@@ -81,7 +72,6 @@ namespace cs4rsa_core.Dialogs.Implements
         public RelayCommand ImportCommand { get; set; }
         public RelayCommand ShareStringCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
-
         #endregion
 
         #region Services
@@ -92,8 +82,12 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler,
-            SessionExtension sessionExtension, IMessageBox messageBox, ISnackbarMessageQueue snackbarMessageQueue)
+        public ImportSessionViewModel(
+            IUnitOfWork unitOfWork, 
+            ICourseCrawler courseCrawler,
+            IMessageBox messageBox, 
+            ISnackbarMessageQueue snackbarMessageQueue,
+            SessionExtension sessionExtension)
         {
             _messageBox = messageBox;
             _sessionExtension = sessionExtension;
@@ -109,7 +103,7 @@ namespace cs4rsa_core.Dialogs.Implements
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new RelayCommand(OnParseShareString);
-            CloseDialogCommand = new RelayCommand(OnCloseDialog);
+            CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
         private void LoadScheduleSessionDetail(Session value)
@@ -158,19 +152,14 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private void OnCloseDialog()
-        {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-        }
-
         private void OnParseShareString()
         {
             ShareString shareString = new(_unitOfWork, _courseCrawler);
             SessionManagerResult result = shareString.GetSubjectFromShareString(ShareString);
             if (result != null)
             {
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-                MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
+                CloseDialog();
+                Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
             }
             else
             {
@@ -214,8 +203,8 @@ namespace cs4rsa_core.Dialogs.Implements
                 subjectInfoDatas.Add(data);
             }
             SessionManagerResult result = new(subjectInfoDatas);
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
-            MessageBus.Default.Publish(new ExitImportSubjectMessage(result));
+            CloseDialog();
+            Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
         }
 
         private async Task OnDelete()

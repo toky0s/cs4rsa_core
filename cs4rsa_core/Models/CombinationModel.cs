@@ -1,11 +1,8 @@
 ﻿using ConflictService.DataTypes;
 using ConflictService.Models;
-
 using cs4rsa_core.ViewModelFunctions;
-
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,7 +14,7 @@ namespace cs4rsa_core.Models
     /// </summary>
     public class CombinationModel
     {
-        public List<SubjectModel> SubjecModels { get; set; }
+        public IEnumerable<SubjectModel> SubjecModels { get; set; }
 
         private List<ClassGroupModel> _classGroupModels;
         public List<ClassGroupModel> ClassGroupModels
@@ -73,7 +70,6 @@ namespace cs4rsa_core.Models
         /// Kiểm tra xem combination này có chứa một class group mà class group đó không có schedule
         /// hay không. Nếu không có trả về true,ngược lại trả về false.
         /// </summary>
-        /// <returns></returns>
         private bool IsHaveAClassGroupHaveNotSchedule()
         {
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
@@ -90,7 +86,6 @@ namespace cs4rsa_core.Models
         /// Kiểm tra xem Bộ này có hợp lệ hay không. Một Bộ hợp lệ là khi từng ClassGroupModel
         /// bên trong thuộc một Subject, mà mỗi Subject là duy nhất.
         /// </summary>
-        /// <returns></returns>
         public bool IsValid()
         {
             int count = 0;
@@ -109,7 +104,6 @@ namespace cs4rsa_core.Models
         /// <summary>
         /// Kiểm tra xem bộ này có chứa xung đột về thời gian hay không.
         /// </summary>
-        /// <returns></returns>
         public bool IsHaveTimeConflicts()
         {
             List<SchoolClass> schoolClasses = new();
@@ -156,7 +150,7 @@ namespace cs4rsa_core.Models
 
         public Schedule GetSchedule()
         {
-            List<Schedule> schedules = _classGroupModels.Select(item => item.ClassGroup.GetSchedule()).ToList();
+            IEnumerable<Schedule> schedules = _classGroupModels.Select(item => item.ClassGroup.GetSchedule());
             return ScheduleManipulation.MergeSchedule(schedules);
         }
     }

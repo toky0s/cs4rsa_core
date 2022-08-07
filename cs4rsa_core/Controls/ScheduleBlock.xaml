@@ -13,38 +13,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <ContextMenu x:Key="ChoicedContextMenu" Opened="ContextMenu_Opened">
-            <MenuItem
-                x:Name="MenuItem_Remove"
-                Click="MenuItem_Remove_Click"
-                FontSize="13"
-                Icon="{materialDesign:PackIcon Kind=BookMinusOutline}"
-                Visibility="{Binding IsClass, Converter={StaticResource BoolToVisibilityConverter}}">
-                <MenuItem.Header>
-                    <TextBlock Text="{Binding Code, StringFormat=Bỏ chọn {0}}" />
-                </MenuItem.Header>
-            </MenuItem>
-            <MenuItem
-                x:Name="MenuItem_Remove_Class1"
-                Click="MenuItem_Remove_Class1_Click"
-                FontSize="13"
-                Icon="{materialDesign:PackIcon Kind=BookMinusOutline}"
-                Visibility="{Binding IsNotClass, Converter={StaticResource BoolToVisibilityConverter}}">
-                <MenuItem.Header>
-                    <TextBlock Text="{Binding Class1, StringFormat=Bỏ chọn {0}}" />
-                </MenuItem.Header>
-            </MenuItem>
-            <MenuItem
-                x:Name="MenuItem_Remove_Class2"
-                Click="MenuItem_Remove_Class2_Click"
-                FontSize="13"
-                Icon="{materialDesign:PackIcon Kind=BookMinusOutline}"
-                Visibility="{Binding IsNotClass, Converter={StaticResource BoolToVisibilityConverter}}">
-                <MenuItem.Header>
-                    <TextBlock Text="{Binding Class2, StringFormat=Bỏ chọn {0}}" />
-                </MenuItem.Header>
-            </MenuItem>
-        </ContextMenu>
     </UserControl.Resources>
     <Border
         x:Name="Border_ScheduleBlock"
@@ -54,7 +22,6 @@
         Height="{Binding Path=Height, ElementName=UC_ScheduleBlock}"
         Padding="5"
         Background="{Binding BlockColor}"
-        ContextMenu="{StaticResource ChoicedContextMenu}"
         CornerRadius="5"
         Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">

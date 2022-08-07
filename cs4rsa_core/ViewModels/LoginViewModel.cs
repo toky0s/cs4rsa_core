@@ -3,26 +3,21 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
 using MaterialDesignThemes.Wpf;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class LoginViewModel : ViewModelBase, IMessageHandler<ExitSessionInputMessage>
+    public class LoginViewModel : ViewModelBase
     {
         #region Properties
         private bool _isExpanded;
@@ -57,14 +52,20 @@ namespace cs4rsa_core.ViewModels
         private readonly IMessageBox _cs4RsaMessageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
-        public LoginViewModel(IMessageBox cs4rsaMessageBox, IUnitOfWork unitOfWork,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public LoginViewModel(
+            IMessageBox cs4rsaMessageBox, 
+            IUnitOfWork unitOfWork,
+            ISnackbarMessageQueue snackbarMessageQueue
+        )
         {
             _cs4RsaMessageBox = cs4rsaMessageBox;
             _unitOfWork = unitOfWork;
             _snackbarMessageQueue = snackbarMessageQueue;
 
-            MessageBus.Default.FromAny().Where<ExitSessionInputMessage>().Notify(this);
+            WeakReferenceMessenger.Default.Register<SessionInputVmMsgs.ExitSearchAccountMsg>(this, async (r, m) =>
+            {
+                await LoadStudentInfos();
+            });
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
@@ -109,7 +110,7 @@ namespace cs4rsa_core.ViewModels
             SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
             vm.MessageBox = _cs4RsaMessageBox;
             vm.SessionId = _sessionId;
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(sessionInputUC);
+            OpenDialog(sessionInputUC);
             await vm.Find();
         }
 
@@ -121,11 +122,6 @@ namespace cs4rsa_core.ViewModels
             {
                 Students.Add(student);
             }
-        }
-
-        public async void Handle(ExitSessionInputMessage message)
-        {
-            await LoadStudentInfos();
         }
     }
 }

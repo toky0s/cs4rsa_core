@@ -183,11 +183,6 @@ namespace cs4rsa_core.Controls
             {
                 DayOfWeek = timeBlock.DayOfWeek,
                 BlockType = timeBlock.BlockType,
-
-                IsClass = timeBlock.BlockType.Equals(BlockType.SchoolClass),
-                IsTimeConflict = timeBlock.BlockType.Equals(BlockType.TimeConflict),
-                IsPlaceConflict = timeBlock.BlockType.Equals(BlockType.PlaceConflict),
-
                 BlockName = timeBlock.Content,
                 BlockColor = timeBlock.Background,
                 Description = timeBlock.Description,
