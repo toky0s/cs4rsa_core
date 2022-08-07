@@ -1,13 +1,9 @@
 ﻿using ConflictService.Models;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Messages;
-
-using LightMessageBus;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using cs4rsa_core.Messages.Publishers.Dialogs;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 
 namespace cs4rsa_core.Dialogs.Implements
@@ -57,7 +53,7 @@ namespace cs4rsa_core.Dialogs.Implements
         /// </summary>
         private void OnRemoveClassGroup2()
         {
-            MessageBus.Default.Publish(new RemoveChoicedClassMessage(_classGroup2Name));
+            Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_classGroup2Name));
             SolveConflictResult result = new(_classGroup2Name);
             CloseDialogCallback.Invoke(result);
         }
@@ -67,7 +63,7 @@ namespace cs4rsa_core.Dialogs.Implements
         /// </summary>
         private void OnRemoveClassGroup1()
         {
-            MessageBus.Default.Publish(new RemoveChoicedClassMessage(_classGroup1Name));
+            Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_classGroup1Name));
             SolveConflictResult result = new(_classGroup1Name);
             CloseDialogCallback.Invoke(result);
         }

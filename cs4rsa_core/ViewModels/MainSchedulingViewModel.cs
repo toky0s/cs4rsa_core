@@ -1,15 +1,14 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.ViewModels.Interfaces;
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-using Microsoft.Toolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace cs4rsa_core.ViewModels
 {
     public class MainSchedulingViewModel : ViewModelBase,
-        IMessageHandler<SubjectItemChangeMessage>,
         IMainSchedulingViewModel
     {
         #region Fields
@@ -65,21 +64,21 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand OpenAutoScheduling { get; set; }
         #endregion
 
-        public MainSchedulingViewModel(ICourseCrawler courseCrawler)
+        public MainSchedulingViewModel(ICourseCrawler courseCrawler, ISnackbarMessageQueue snackbarMessageQueue)
         {
-            MessageBus.Default.FromAny().Where<SubjectItemChangeMessage>().Notify(this);
-            
+
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>
+            {
+                snackbarMessageQueue.Enqueue("Call SearchVmMsgs.SubjectItemChangedMsg");
+                TotalCredit = m.Value.Item1;
+                TotalSubject = m.Value.Item2;
+            });
+
             CurrentSemesterInfo = courseCrawler.GetCurrentSemesterInfo();
             CurrentYearInfo = courseCrawler.GetCurrentYearInfo();
 
             TotalCredit = 0;
             TotalSubject = 0;
-        }
-
-        public void Handle(SubjectItemChangeMessage message)
-        {
-            TotalCredit = message.Source.TotalCredits;
-            TotalSubject = message.Source.TotalSubject;
         }
     }
 }

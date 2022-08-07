@@ -1,9 +1,6 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
 using SubjectCrawlService1.Models;
-
 using System;
 using System.Collections.ObjectModel;
 

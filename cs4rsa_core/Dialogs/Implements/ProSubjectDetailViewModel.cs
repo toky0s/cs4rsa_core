@@ -1,14 +1,9 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Models;
-
 using Cs4rsaDatabaseService.Interfaces;
-
 using HelperService;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
+using CommunityToolkit.Mvvm.Input;
 using ProgramSubjectCrawlerService.DataTypes;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,7 +62,6 @@ namespace cs4rsa_core.Dialogs.Implements
         public ObservableCollection<ProgramSubjectModel> PreProgramSubjectModels { get; set; }
         public ObservableCollection<ProgramSubjectModel> ParProgramSubjectModels { get; set; }
 
-        public Action CloseDialogCallback { get; set; }
         public Action AddCallback { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
         public RelayCommand AddCommand { get; set; }
@@ -76,17 +70,17 @@ namespace cs4rsa_core.Dialogs.Implements
         #region Services
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
-
         #endregion
 
         public ProSubjectDetailViewModel(ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
-            CloseDialogCommand = new RelayCommand(OnCloseDialog);
+
             AddCommand = new RelayCommand(OnAdd);
-            PreProgramSubjectModels = new ObservableCollection<ProgramSubjectModel>();
-            ParProgramSubjectModels = new ObservableCollection<ProgramSubjectModel>();
+            
+            PreProgramSubjectModels = new();
+            ParProgramSubjectModels = new();
         }
 
         private void OnAdd()
@@ -98,7 +92,7 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             if (_programSubjectModel != null)
             {
-                List<ProgramSubject> preProgramSubjects = ProgramDiagram.GetPreProgramSubjects(_programSubjectModel.ProgramSubject);
+                IEnumerable<ProgramSubject> preProgramSubjects = ProgramDiagram.GetPreProgramSubjects(_programSubjectModel.ProgramSubject);
                 foreach (ProgramSubject programSubject in preProgramSubjects)
                 {
                     if (programSubject != null)
@@ -114,18 +108,13 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             if (_programSubjectModel != null)
             {
-                List<ProgramSubject> parProgramSubject = await ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
+                IEnumerable<ProgramSubject> parProgramSubject = await ProgramDiagram.GetParProgramSubject(_programSubjectModel.ProgramSubject);
                 foreach (ProgramSubject programSubject in parProgramSubject)
                 {
                     ProgramSubjectModel programSubjectModel = await ProgramSubjectModel.CreateAsync(programSubject, _colorGenerator, _unitOfWork);
                     ParProgramSubjectModels.Add(programSubjectModel);
                 }
             }
-        }
-
-        private void OnCloseDialog()
-        {
-            CloseDialogCallback.Invoke();
         }
     }
 }

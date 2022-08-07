@@ -1,48 +1,58 @@
 ﻿using ConflictService.Models;
-
 using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModels.Interfaces;
-
 using Cs4rsaCommon.Interfaces;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
+using CommunityToolkit.Mvvm.Messaging;
 using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.DataTypes.Enums;
 using SubjectCrawlService1.Models;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace cs4rsa_core.ViewModels
 {
-    class ScheduleTableViewModel : ViewModelBase, IScheduleTableViewModel,
-        IMessageHandler<ChoicesChangedMessage>,
-        IMessageHandler<ConflictCollectionChangeMessage>,
-        IMessageHandler<PlaceConflictCollectionChangeMessage>,
-        IMessageHandler<DeleteClassGroupChoiceMessage>
+    class ScheduleTableViewModel : ViewModelBase, IScheduleTableViewModel
     {
-        private List<ClassGroupModel> _classGroupModels;
-        private List<ConflictModel> _conflictModels;
-        private List<PlaceConflictFinderModel> _placeConflictFinderModels;
+        private IEnumerable<ClassGroupModel> _classGroupModels;
+        private IEnumerable<ConflictModel> _conflictModels;
+        private IEnumerable<PlaceConflictFinderModel> _placeConflictFinderModels;
 
         public ObservableCollection<IScheduleTableItem> Phase1 { get; set; }
         public ObservableCollection<IScheduleTableItem> Phase2 { get; set; }
 
         public ScheduleTableViewModel()
         {
-            MessageBus.Default.FromAny().Where<ChoicesChangedMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<ConflictCollectionChangeMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<PlaceConflictCollectionChangeMessage>().Notify(this);
-            MessageBus.Default.FromAny().Where<DeleteClassGroupChoiceMessage>().Notify(this);
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
+            {
+                _classGroupModels = m.Value.ToList();
+                ReloadSchedule();
+            });
 
-            _classGroupModels = new();
-            _conflictModels = new();
-            _placeConflictFinderModels = new();
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
+            {
+                _conflictModels = m.Value;
+                ReloadSchedule();
+            });
+
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
+            {
+                _placeConflictFinderModels = m.Value;
+                ReloadSchedule();
+            });
+
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            {
+                _classGroupModels = m.Value;
+                ReloadSchedule();
+            });
+
+            _classGroupModels = new List<ClassGroupModel>();
+            _conflictModels = new List<ConflictModel>();
+            _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
+
             Phase1 = new();
             Phase2 = new();
         }
@@ -78,6 +88,7 @@ namespace cs4rsa_core.ViewModels
                 }
             }
         }
+
         private void DivideConflictByPhase()
         {
             foreach (ConflictModel conflict in _conflictModels)
@@ -110,8 +121,10 @@ namespace cs4rsa_core.ViewModels
 
         private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
         {
-            SchoolClassModel schoolClassModel = new(schoolClass);
-            schoolClassModel.Color = color;
+            SchoolClassModel schoolClassModel = new(schoolClass)
+            {
+                Color = color
+            };
             return schoolClassModel;
         }
 
@@ -127,30 +140,6 @@ namespace cs4rsa_core.ViewModels
         {
             Phase1.Clear();
             Phase2.Clear();
-        }
-
-        public void Handle(ChoicesChangedMessage message)
-        {
-            _classGroupModels = message.Source;
-            ReloadSchedule();
-        }
-
-        public void Handle(ConflictCollectionChangeMessage message)
-        {
-            _conflictModels = message.Source;
-            ReloadSchedule();
-        }
-
-        public void Handle(DeleteClassGroupChoiceMessage message)
-        {
-            _classGroupModels = message.Source;
-            ReloadSchedule();
-        }
-
-        public void Handle(PlaceConflictCollectionChangeMessage message)
-        {
-            _placeConflictFinderModels = message.Source;
-            ReloadSchedule();
         }
     }
 }

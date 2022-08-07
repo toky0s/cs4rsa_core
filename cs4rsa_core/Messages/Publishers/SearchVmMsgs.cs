@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 using SubjectCrawlService1.Models;
 using System;
 

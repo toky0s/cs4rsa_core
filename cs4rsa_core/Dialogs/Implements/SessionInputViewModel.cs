@@ -1,18 +1,12 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogServices;
+﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Messages;
-using cs4rsa_core.ViewModels;
-
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using Cs4rsaDatabaseService.Models;
-
-using LightMessageBus;
-
 using MaterialDesignThemes.Wpf;
-
+using CommunityToolkit.Mvvm.Messaging;
 using StudentCrawlerService.Crawlers;
 using StudentCrawlerService.Crawlers.Interfaces;
-
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -23,7 +17,7 @@ namespace cs4rsa_core.Dialogs.Implements
     /// view model này là sử dụng chính DtuStudentInfoCrawler để cào thông tin sinh viên.
     /// Ngoài ra không có bất cứ viewmodel nào được sử dụng crawler này.
     /// </summary>
-    public class SessionInputViewModel : DialogViewModelBase<StudentResult>
+    public class SessionInputViewModel : ViewModelBase
     {
         private string _sessionId;
         public string SessionId
@@ -43,7 +37,7 @@ namespace cs4rsa_core.Dialogs.Implements
         public SessionInputViewModel(
             IDtuStudentInfoCrawler dtuStudentInfoCrawler,
             ISnackbarMessageQueue snackbarMessageQueue
-            )
+        )
         {
             _dtuStudentInfoCrawler = dtuStudentInfoCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
@@ -64,17 +58,16 @@ namespace cs4rsa_core.Dialogs.Implements
                                         "Thông báo",
                                         MessageBoxButton.OK,
                                         MessageBoxImage.Exclamation);
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                CloseDialog();
             }
             else
             {
                 Student student = await _dtuStudentInfoCrawler.Crawl(specialStrings[0] ?? specialStrings[1]);
-                //await _firebase.PostUser(student.StudentId, student.SpecialString);
                 string message = $"Xin chào {student.Name}";
                 _snackbarMessageQueue.Enqueue(message);
                 StudentResult result = new() { Student = student };
-                MessageBus.Default.Publish(new ExitSessionInputMessage(result));
-                (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+                Messenger.Send(new SessionInputVmMsgs.ExitSearchAccountMsg(result));
+                CloseDialog();
             }
         }
     }

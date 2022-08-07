@@ -1,5 +1,5 @@
 ﻿using cs4rsa_core.ViewModels;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
 namespace cs4rsa_core.BaseClasses
@@ -10,17 +10,17 @@ namespace cs4rsa_core.BaseClasses
         /// Mở Dialog
         /// </summary>
         /// <param name="uc">Dialog UC</param>
-        protected void OpenD(IDialog uc)
+        protected void OpenDialog(IDialog uc)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(uc);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenModal(uc);
         }
 
         /// <summary>
         /// Đóng Dialog hiện tại đang hiển thị
         /// </summary>
-        protected void CloseD()
+        protected void CloseDialog()
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseDialog();
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
         }
     }
 }

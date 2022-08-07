@@ -1,14 +1,14 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
 using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.DataProviders;
 using Cs4rsaDatabaseService.Interfaces;
 using DisciplineCrawlerService.Crawlers;
-using LightMessageBus;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.ComponentModel;
 using System.Windows;
 
@@ -38,9 +38,14 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly DisciplineCrawler _disciplineCrawler;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
-        public UpdateViewModel(IUnitOfWork unitOfWork, Cs4rsaDbContext cs4rsaDbContext,
-            ICourseCrawler courseCrawler, ISetting setting, DisciplineCrawler disciplineCrawler,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public UpdateViewModel(
+            IUnitOfWork unitOfWork,
+            ICourseCrawler courseCrawler, 
+            ISetting setting,
+            ISnackbarMessageQueue snackbarMessageQueue,
+            Cs4rsaDbContext cs4rsaDbContext,
+            DisciplineCrawler disciplineCrawler
+        )
         {
             _cs4rsaDbContext = cs4rsaDbContext;
             _unitOfWork = unitOfWork;
@@ -50,7 +55,7 @@ namespace cs4rsa_core.Dialogs.Implements
             _snackbarMessageQueue = snackbarMessageQueue;
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
-            CloseDialogCommand = new RelayCommand(CloseD, CanClose);
+            CloseDialogCommand = new RelayCommand(CloseDialog, CanClose);
         }
 
         private bool CanClose()
@@ -78,15 +83,14 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             ProgressValue = 1000;
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = true;
-            short result = (short)e.Result;
-
             _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _setting.CurrentSetting.CurrentYearValue = _courseCrawler.GetCurrentYearValue();
             _setting.Save();
+            CloseDialog();
+            Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg(null));
+            short result = (short)e.Result;
             string message = $"Hoàn tất cập nhật {result} môn";
-            MessageBus.Default.Publish(new UpdateSuccessMessage(null));
             _snackbarMessageQueue.Enqueue(message);
-            CloseD();
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

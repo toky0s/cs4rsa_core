@@ -1,7 +1,7 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogServices;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
@@ -44,7 +44,7 @@ namespace cs4rsa_core.Dialogs.Implements
             _snackbarMessageQueue = snackbarMessageQueue;
 
             CopyCommand = new RelayCommand(OnCopy, CanCopy);
-            CloseDialogCommand = new RelayCommand(CloseD);
+            CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
         private bool CanCopy()

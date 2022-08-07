@@ -1,10 +1,8 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Messages;
-
-using LightMessageBus;
-
+using cs4rsa_core.Messages.Publishers;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using SubjectCrawlService1.Models;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,13 +12,13 @@ namespace cs4rsa_core.ViewModelFunctions
     /// Bộ chọn class group. Khi bộ chọn này Start nó thực hiện import các class group Model
     /// được truyền vào method tới choiced sesion.
     /// </summary>
-    public static class ClassGroupChoicer
+    public sealed class ClassGroupChoicer : ObservableRecipient
     {
-        public static void Start(List<ClassGroupModel> classGroupModels)
+        public void Start(IEnumerable<ClassGroupModel> classGroupModels)
         {
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
-                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupModel));
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             }
         }
 
@@ -31,7 +29,7 @@ namespace cs4rsa_core.ViewModelFunctions
         /// </summary>
         /// <param name="subjectModels"></param>
         /// <param name="subjectInfoDatas"></param>
-        public static void Start(List<SubjectModel> subjectModels, IEnumerable<SubjectInfoData> subjectInfoDatas)
+        public void Start(IEnumerable<SubjectModel> subjectModels, IEnumerable<SubjectInfoData> subjectInfoDatas)
         {
             foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
             {
@@ -40,7 +38,7 @@ namespace cs4rsa_core.ViewModelFunctions
             }
         }
 
-        private static void Choose(SubjectModel subjectModel, string classGroupName, string registerCode)
+        private void Choose(SubjectModel subjectModel, string classGroupName, string registerCode)
         {
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
             bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()
@@ -56,11 +54,11 @@ namespace cs4rsa_core.ViewModelFunctions
             if (classGroupModel.IsBelongSpecialSubject)
             {
                 classGroupModel.PickSchoolClass(registerCode);
-                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupModel));
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             }
             else
             {
-                MessageBus.Default.Publish(new ClassGroupAddedMessage(classGroupModel));
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             }
         }
 

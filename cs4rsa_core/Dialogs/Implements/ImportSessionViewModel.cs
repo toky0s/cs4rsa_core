@@ -8,8 +8,8 @@ using cs4rsa_core.Utils;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -82,8 +82,12 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ImportSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler,
-            SessionExtension sessionExtension, IMessageBox messageBox, ISnackbarMessageQueue snackbarMessageQueue)
+        public ImportSessionViewModel(
+            IUnitOfWork unitOfWork, 
+            ICourseCrawler courseCrawler,
+            IMessageBox messageBox, 
+            ISnackbarMessageQueue snackbarMessageQueue,
+            SessionExtension sessionExtension)
         {
             _messageBox = messageBox;
             _sessionExtension = sessionExtension;
@@ -99,7 +103,7 @@ namespace cs4rsa_core.Dialogs.Implements
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new RelayCommand(OnParseShareString);
-            CloseDialogCommand = new RelayCommand(CloseD);
+            CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
         private void LoadScheduleSessionDetail(Session value)
@@ -154,7 +158,7 @@ namespace cs4rsa_core.Dialogs.Implements
             SessionManagerResult result = shareString.GetSubjectFromShareString(ShareString);
             if (result != null)
             {
-                CloseD();
+                CloseDialog();
                 Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
             }
             else
@@ -199,7 +203,7 @@ namespace cs4rsa_core.Dialogs.Implements
                 subjectInfoDatas.Add(data);
             }
             SessionManagerResult result = new(subjectInfoDatas);
-            CloseD();
+            CloseDialog();
             Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
         }
 

@@ -1,22 +1,22 @@
 ﻿using CourseSearchService.Crawlers.Interfaces;
-
 using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Interfaces;
-using cs4rsa_core.Messages;
+using cs4rsa_core.Messages.Publishers;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Settings.Interfaces;
-
-using LightMessageBus;
-using LightMessageBus.Interfaces;
-
-using Microsoft.Toolkit.Mvvm.Input;
-
-using System.Windows;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class HomeViewModel : ViewModelBase, IMessageHandler<UpdateSuccessMessage>
+    public class HomeViewModel : ViewModelBase
     {
+        #region Fields
+        private static DonateUC _donateUC;
+        #endregion
+
+        #region Props
         private string _currentYearValue;
         public string CurrentYearValue
         {
@@ -51,24 +51,37 @@ namespace cs4rsa_core.ViewModels
             get { return _isNewSemester; }
             set { _isNewSemester = value; OnPropertyChanged(); }
         }
+        #endregion
 
+        #region Commands
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
         public RelayCommand GotoFormCommand { get; set; }
         public RelayCommand DonateCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
         public RelayCommand ManualCommand { get; set; }
+        #endregion
 
+        #region DI
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly IOpenInBrowser _openInBrowser;
+        #endregion
 
-        public HomeViewModel(ICourseCrawler courseCrawler, ISetting setting, IOpenInBrowser openInBrowser)
+        public HomeViewModel(
+            ICourseCrawler courseCrawler, 
+            ISetting setting, 
+            IOpenInBrowser openInBrowser
+        )
         {
             _courseCrawler = courseCrawler;
             _setting = setting;
             _openInBrowser = openInBrowser;
 
-            MessageBus.Default.FromAny().Where<UpdateSuccessMessage>().Notify(this);
+            WeakReferenceMessenger.Default.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            {
+                LoadIsNewSemester();
+            });
+
             _currentYearValue = _courseCrawler.GetCurrentYearValue();
             _currentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _currentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
@@ -80,13 +93,14 @@ namespace cs4rsa_core.ViewModels
             ManualCommand = new RelayCommand(OnGotoManualCommand);
             DonateCommand = new RelayCommand(OnDonate);
 
+            _donateUC = new();
+
             LoadIsNewSemester();
         }
 
         private void OnDonate()
         {
-            DonateUC donateUC = new();
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenDialog(donateUC);
+            OpenDialog(_donateUC);
         }
 
         private void OnGotoManualCommand()
@@ -106,17 +120,13 @@ namespace cs4rsa_core.ViewModels
 
         private void OnUpdate()
         {
-            MessageBus.Default.Publish(new UpdateSubjectDatabase());
+            Messenger.Send(new HomeVmMsgs.UpdateSubjectDbMsg(null));
         }
 
         public void LoadIsNewSemester()
         {
-            IsNewSemester = _setting.CurrentSetting.CurrentSemesterValue != _currentSemesterValue || _setting.CurrentSetting.CurrentYearValue != _currentYearValue;
-        }
-
-        public void Handle(UpdateSuccessMessage message)
-        {
-            LoadIsNewSemester();
+            IsNewSemester = _setting.CurrentSetting.CurrentSemesterValue != _currentSemesterValue 
+                || _setting.CurrentSetting.CurrentYearValue != _currentYearValue;
         }
     }
 }
