@@ -198,3 +198,5 @@ obj
 
 .fake
 .ionide
+/cs4rsa_core/cs4rsa.db
+/cs4rsa_core/cs4rsa_settings.json
