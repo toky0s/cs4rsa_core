@@ -31,7 +31,7 @@ using TeacherCrawlerService1.Crawlers.Interfaces;
 
 namespace cs4rsa_core
 {
-    public partial class App : Application
+    public sealed partial class App : Application
     {
         public IServiceProvider Container { get; set; }
         protected override void OnStartup(StartupEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 using System;
 using System.ComponentModel;
@@ -36,7 +37,16 @@ namespace cs4rsa_core.ViewModelLocator
             Type viewType = d.GetType();
 
             string str = viewType.FullName;
-            str = str.Replace(".Views.", ".ViewModels.");
+            if (str.Contains("UC")) 
+            {
+                str = str
+                .Replace("UC", "")
+                .Replace(".DialogViews.", ".Implements.");
+            }
+            else 
+            {
+                str = str.Replace(".Views.", ".ViewModels.");
+            }
 
             string viewTypeName;
             string viewModelTypeName;
