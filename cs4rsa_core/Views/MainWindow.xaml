@@ -44,8 +44,10 @@
                 Grid.Row="0"
                 Grid.ColumnSpan="2">
                 <materialDesign:DrawerHost.LeftDrawerContent>
-                    <Grid Background="{StaticResource Cs4rsa_MainThemeColor}">
+                    <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
@@ -56,106 +58,92 @@
                             VerticalAlignment="Center"
                             Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
                             CommandParameter="{x:Static Dock.Left}"
-                            Foreground="White"
                             IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
                             Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
-                        <Grid
-                            x:Name="Grid_Menu"
-                            Grid.Row="1"
-                            HorizontalAlignment="Left">
-                            <materialDesign:TransitioningContent x:Name="TrainsitionigContentSlide" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.3}">
-                                <Grid
-                                    x:Name="GridCursor"
-                                    Width="10"
-                                    Height="60"
-                                    Margin="0,100,0,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Background="{StaticResource Cs4rsa_MainThemeLightColor}" />
-                            </materialDesign:TransitioningContent>
-                            <ListView
-                                x:Name="ListViewMenu"
-                                FontSize="13"
-                                Foreground="White"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                SelectionChanged="ListViewMenu_SelectionChanged">
-                                <ListViewItem Height="60">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="30"
-                                            Height="30"
-                                            Margin="10,0,10,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Home" />
-                                        <TextBlock
-                                            Margin="5,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="15"
-                                            Text="Trang chủ" />
-                                    </StackPanel>
-                                </ListViewItem>
-                                <ListViewItem Height="60">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="30"
-                                            Height="30"
-                                            Margin="10,0,10,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Account" />
-                                        <TextBlock
-                                            Margin="5,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="15"
-                                            Text="Tài khoản DTU" />
-                                    </StackPanel>
-                                </ListViewItem>
-                                <ListViewItem Height="60">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="30"
-                                            Height="30"
-                                            Margin="10,0,10,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Calendar" />
-                                        <TextBlock
-                                            Margin="5,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="15"
-                                            Text="Xếp lịch thủ công" />
-                                    </StackPanel>
-                                </ListViewItem>
-                                <ListViewItem Height="60">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="30"
-                                            Height="30"
-                                            Margin="10,0,10,0"
-                                            VerticalAlignment="Center"
-                                            Kind="AutoFix" />
-                                        <TextBlock
-                                            Margin="5,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="15"
-                                            Text="Xếp lịch tự động" />
-                                    </StackPanel>
-                                </ListViewItem>
-                                <ListViewItem Height="60">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="30"
-                                            Height="30"
-                                            Margin="10,0,10,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Information" />
-                                        <TextBlock
-                                            Margin="5,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="15"
-                                            Text="Thông tin" />
-                                    </StackPanel>
-                                </ListViewItem>
-                            </ListView>
+                        <Separator Grid.Row="1" />
+                        <Grid Grid.Row="2" Height="64">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="26,0,0,0"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                Text="Chức năng" />
                         </Grid>
+                        <ListView
+                            x:Name="ListViewMenu"
+                            Grid.Row="3"
+                            Width="256"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            SelectionChanged="ListViewMenu_SelectionChanged">
+                            <ListView.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBoxItem}" TargetType="ListViewItem">
+                                    <Setter Property="Height" Value="43" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="HomeOutline" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Trang chủ" />
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="AccountOutline" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Tài khoản DTU" />
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="CursorDefaultOutline" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Xếp lịch thủ công" />
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="LightbulbOutline" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Xếp lịch tự động" />
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
+                                        Kind="InformationOutline" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Thông tin" />
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
                     </Grid>
                 </materialDesign:DrawerHost.LeftDrawerContent>
                 <Grid>

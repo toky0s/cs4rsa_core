@@ -11,9 +11,13 @@
 
   <ItemGroup>
     <Compile Remove="DataTypes\**" />
+    <Compile Remove="Models\Interfaces\**" />
     <EmbeddedResource Remove="DataTypes\**" />
+    <EmbeddedResource Remove="Models\Interfaces\**" />
     <None Remove="DataTypes\**" />
+    <None Remove="Models\Interfaces\**" />
     <Page Remove="DataTypes\**" />
+    <Page Remove="Models\Interfaces\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -134,10 +138,6 @@
 
   <ItemGroup>
     <SplashScreen Include="SplashScreen.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Interfaces\" />
   </ItemGroup>
 
 </Project>

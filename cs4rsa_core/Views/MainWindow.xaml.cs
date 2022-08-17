@@ -15,12 +15,6 @@ namespace cs4rsa_core.Views
             Goto((int)ScreenIndex.HOME);
         }
 
-        private void MoveCursorMenu(int index)
-        {
-            TrainsitionigContentSlide.OnApplyTemplate();
-            GridCursor.Margin = new Thickness(0, 0 + (60 * index), 0, 0);
-        }
-
         private void Goto(int index)
         {
             if (ListViewMenu.SelectedIndex != index)
@@ -29,7 +23,6 @@ namespace cs4rsa_core.Views
             }
             MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
             mainWindowViewModel.SelectedIndex = index;
-            MoveCursorMenu(index);
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
