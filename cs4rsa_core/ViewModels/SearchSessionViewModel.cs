@@ -94,6 +94,11 @@ namespace cs4rsa_core.ViewModels
         public ObservableCollection<Discipline> Disciplines { get; set; }
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
 
+        /// <summary>
+        /// Danh sách các bộ lịch đã lưu
+        /// </summary>
+        public ObservableCollection<Session> SavedSchedules { get; set; }
+
         private int _totalSubject;
         public int TotalSubject
         {
@@ -127,6 +132,15 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private int _currentView;
+
+        public int CurrentView
+        {
+            get { return _currentView; }
+            set { _currentView = value; OnPropertyChanged(); }
+        }
+
         #endregion
 
         #region Services
@@ -173,7 +187,9 @@ namespace cs4rsa_core.ViewModels
             SubjectModels = new();
             Disciplines = new();
             FullMatchSearchingKeywords = new();
+            SavedSchedules = new();
             SearchText = "";
+            CurrentView = 0;
 
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
@@ -181,6 +197,20 @@ namespace cs4rsa_core.ViewModels
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll);
             DetailCommand = new RelayCommand(OnDetail);
+        }
+
+        /// <summary>
+        /// Load danh sách các bộ lịch đã lưu
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadSavedSchedules()
+        {
+            SavedSchedules.Clear();
+            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            foreach (Session session in sessions)
+            {
+                SavedSchedules.Add(session);
+            }
         }
 
         private readonly ShowDetailsSubjectUC showDetailsSubjectUC = new();
@@ -260,9 +290,11 @@ namespace cs4rsa_core.ViewModels
                 {
                     Name = "Không tìm thấy mã môn này"
                 };
-                FullMatchSearchingKeyword fullMatchSearchingKeyword = new();
-                fullMatchSearchingKeyword.Keyword = keyword;
-                fullMatchSearchingKeyword.Discipline = discipline;
+                FullMatchSearchingKeyword fullMatchSearchingKeyword = new()
+                {
+                    Keyword = keyword,
+                    Discipline = discipline
+                };
                 FullMatchSearchingKeywords.Add(fullMatchSearchingKeyword);
             }
         }
@@ -442,7 +474,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         /// <summary>
-        /// Cập nhật tổng số tín chỉ.
+        /// Cập nhật tổng số tín chỉ
         /// </summary>
         private void UpdateCreditTotal()
         {
@@ -492,7 +524,7 @@ namespace cs4rsa_core.ViewModels
 
         /// <summary>
         /// Thêm một SubjectModel vào danh sách.
-        /// Load lại các thông tin cần thiết.
+        /// Load lại tổng số tín chỉ và tổng số môn học
         /// </summary>
         private void AddSubjectAndReload(SubjectModel subjectModel)
         {

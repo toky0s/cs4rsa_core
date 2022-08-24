@@ -14,13 +14,6 @@
     d:DesignHeight="700"
     d:DesignWidth="1600"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -818,13 +811,11 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Rectangle
                                                     Grid.Column="0"
-                                                    Width="10"
                                                     Fill="{Binding Color}"
                                                     IsEnabled="False" />
                                                 <TextBlock
                                                     Grid.Column="1"
                                                     Padding="5"
-                                                    FontSize="10"
                                                     Text="{Binding Name}" />
                                             </Grid>
                                         </DataTemplate>
@@ -887,7 +878,7 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <TextBlock FontSize="10">
+                <TextBlock>
                     <Run Text="Số môn đã chọn" />
                     <Run Text="{Binding ChoicedCount}" />
                     <Run Text="với tổng số tín chỉ" />
