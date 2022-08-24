@@ -12,14 +12,7 @@
     d:DesignHeight="450"
     d:DesignWidth="400"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
     Loaded="UserControl_Loaded"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -28,9 +21,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="5,0,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -41,19 +33,13 @@
             <ColumnDefinition />
             <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Grid.ColumnSpan="2"
-            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-            Text="Tìm kiếm" />
         <ComboBox
             x:Name="DisciplineComboBox"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="0"
             Margin="0,0,5,0"
             materialDesign:ComboBoxAssist.ClassicMode="True"
             DisplayMemberPath="Name"
-            FontSize="12"
             FontWeight="Normal"
             IsEditable="True"
             ItemsSource="{Binding Disciplines, Mode=OneWay}"
@@ -61,11 +47,9 @@
             SelectionChanged="DisciplineComboBox_SelectionChanged" />
         <ComboBox
             x:Name="Keyword1ComboxBox"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="1"
             materialDesign:ComboBoxAssist.ClassicMode="True"
-            FontSize="12"
-            FontWeight="Normal"
             ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
             SelectedItem="{Binding SelectedKeyword}"
             SelectedValuePath="Keyword1"
@@ -83,7 +67,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.ColumnSpan="2"
             Margin="0,7,0,0"
             Orientation="Vertical">
@@ -125,11 +109,10 @@
                                         <StackPanel Grid.Column="1" Orientation="Vertical">
                                             <TextBlock
                                                 Margin="5,10,0,0"
-                                                FontSize="14"
-                                                FontWeight="DemiBold"
+                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
                                                 Text="{Binding Keyword.SubjectName, Mode=OneWay}"
                                                 TextWrapping="WrapWithOverflow" />
-                                            <TextBlock Margin="5,0,0,0" Style="{StaticResource Caption}">
+                                            <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
                                                 <Run Text="{Binding Discipline.Name}" />
                                                 <Run Text="{Binding Keyword.Keyword1}" />
                                             </TextBlock>
@@ -144,17 +127,15 @@
         </StackPanel>
         <Button
             x:Name="DisciplineKeywordButton"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Height="30"
-            Margin="0,5,0,5"
             Command="{Binding AddCommand}"
-            Content="Thêm"
+            Content="THÊM"
             IsEnabled="{Binding CanRunAddCommand}" />
         <ListBox
             x:Name="DownloadSubjects"
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,0,0,5"
@@ -167,18 +148,15 @@
                 <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
                         Command="{Binding DetailCommand}"
-                        FontSize="13"
                         Header="Chi tiết"
                         Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
-                        FontSize="13"
                         Header="Mở trong Course"
                         Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding DeleteCommand}"
-                        FontSize="13"
                         Header="Xoá"
                         Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
                 </ContextMenu>
@@ -198,8 +176,7 @@
                         <StackPanel Grid.Column="1" Orientation="Vertical">
                             <TextBlock
                                 Margin="5,10,0,0"
-                                FontSize="14"
-                                FontWeight="DemiBold"
+                                Style="{StaticResource MaterialDesignBody2TextBlock}"
                                 TextWrapping="WrapWithOverflow">
                                 <Run Text="{Binding SubjectName, Mode=OneWay}" />
                                 <Run>
@@ -217,11 +194,11 @@
                             </TextBlock>
                             <TextBlock
                                 Margin="5,0,0,0"
-                                Style="{StaticResource Caption}"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                 Text="{Binding SubjectCode}" />
                             <TextBlock
                                 Margin="5,0,0,10"
-                                Style="{StaticResource Caption}"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                 Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
                         </StackPanel>
                     </Grid>
@@ -254,7 +231,7 @@
                 Height="30"
                 Margin="3,0,0,0"
                 Command="{Binding ImportDialogCommand}"
-                Content="Nhập..." />
+                Content="ĐÃ LƯU" />
         </Grid>
     </Grid>
 </UserControl>

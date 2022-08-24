@@ -35,6 +35,7 @@ namespace cs4rsa_core.Views
         {
             SearchSessionViewModel searchViewModel = DataContext as SearchSessionViewModel;
             await searchViewModel.LoadDiscipline();
+            await searchViewModel.LoadSavedSchedules();
         }
 
         private async void SearchingTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)

@@ -24,7 +24,10 @@
     <UserControl.Resources>
         <converter:Base64ImageConverter x:Key="Base64ImageConverter" />
     </UserControl.Resources>
-    <materialDesign:Card Width="370" Height="600">
+    <materialDesign:Card
+        Width="370"
+        Height="600"
+        UniformCornerRadius="6">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />

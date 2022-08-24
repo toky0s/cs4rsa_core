@@ -69,7 +69,6 @@ namespace cs4rsa_core.ViewModels
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>
             {
-                snackbarMessageQueue.Enqueue("Call SearchVmMsgs.SubjectItemChangedMsg");
                 TotalCredit = m.Value.Item1;
                 TotalSubject = m.Value.Item2;
             });

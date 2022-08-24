@@ -12,13 +12,6 @@
     d:DesignHeight="900"
     d:DesignWidth="300"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
@@ -28,7 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <TextBlock
@@ -59,12 +52,10 @@
                 <ContextMenu x:Key="ClassGroupContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
-                        FontSize="13"
                         Header="Xem chi tiết trong Course"
                         Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                     <MenuItem
                         Command="{Binding ShowDetailsSchoolClassesCommand}"
-                        FontSize="13"
                         Header="Xem danh sách lớp thành phần"
                         Icon="{materialDesign:PackIcon Kind=ListStatus}"
                         IsEnabled="{Binding SelectedClassGroup.IsBelongSpecialSubject}" />
@@ -85,24 +76,13 @@
                             Grid.Column="1"
                             Margin="0,5,0,0"
                             Orientation="Vertical">
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                FontSize="13"
-                                Text="{Binding Name}" />
+                            <TextBlock Margin="5,0,0,0" Text="{Binding Name}" />
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="5,0,0,0"
-                                    FontSize="10"
-                                    Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
+                                <TextBlock Margin="5,0,0,0" Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
                                     <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="12" />
-                                            <Setter Property="FontWeight" Value="Normal" />
+                                        <Style BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" TargetType="TextBlock">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=5}" Value="True">
-                                                    <Setter Property="Foreground" Value="#c0392b" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=0}" Value="True">
                                                     <Setter Property="Foreground" Value="#c0392b" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -111,7 +91,6 @@
                                 </TextBlock>
                                 <TextBlock
                                     Margin="5,0,0,0"
-                                    FontSize="10"
                                     Foreground="#c0392b"
                                     Text="Không có lịch">
                                     <TextBlock.Style>
