@@ -136,7 +136,7 @@ namespace SubjectCrawlService1.DataTypes
                     }
 
                     ClassGroup classGroup = new(classGroupName, SubjectCode, Name);
-                    classGroup.AddRangeSchoolClass(schoolClassesByName);
+                    classGroup.AddRangeSchoolClass(schoolClassesByName.ToEnumerable());
                     _classGroups.Add(classGroup);
                 }
             }
