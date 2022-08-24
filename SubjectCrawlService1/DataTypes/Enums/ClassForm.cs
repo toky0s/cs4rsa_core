@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+
 namespace SubjectCrawlService1.DataTypes.Enums {
 
     /**
+    * Danh sách hình thức lớp
     * Tham khảo
     * http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listpolproc&infowebpartid=5 
     */
@@ -34,6 +37,35 @@ namespace SubjectCrawlService1.DataTypes.Enums {
         public static ClassForm VOL = new ClassForm("VOL", "VOLuntary work", "Tình Nguyện", "Tự nguyện tham gia");
         public static ClassForm WOR = new ClassForm("WOR", "WORkshop", "Workshop", "Thực hành qua việc trực tiếp làm một việc gì đó, với sự góp mặt của nhiều người khác");
 
+        private static ClassForm[] _classForms = {
+            ClassForm.CLC,
+            ClassForm.COL,
+            ClassForm.CON,
+            ClassForm.DEM,
+            ClassForm.DIS,
+
+            ClassForm.FLD,
+            ClassForm.GRP,
+            ClassForm.IND,
+            ClassForm.INT,
+            ClassForm.LAB,
+
+            ClassForm.LEC,
+            ClassForm.PRJ,
+            ClassForm.REA,
+            ClassForm.REC,
+            ClassForm.SEM,
+
+            ClassForm.SES,
+            ClassForm.SLF,
+            ClassForm.STD,
+            ClassForm.SUP,
+            ClassForm.TUT,
+
+            ClassForm.VOL,
+            ClassForm.WOR
+        };
+
         private string _code;
         public string Code { get => _code; }
         private string _fullEn;
@@ -48,6 +80,50 @@ namespace SubjectCrawlService1.DataTypes.Enums {
             _fullEn = fullEn;
             _fullVn = fullVn;
             _description = description;
+        }
+
+        public static bool operator ==(ClassForm left, ClassForm right) {
+            return left.Code == right.Code;
+        }
+
+        public static bool operator !=(ClassForm left, ClassForm right) {
+            return left.Code != right.Code;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(obj, null))
+            {
+                return false;
+            }
+
+            ClassForm other = (ClassForm)obj;
+            return this.Code.Equals(other.Code);
+        }
+
+        public override int GetHashCode()
+        {
+            return _code.GetHashCode();
+        }
+
+        public static ClassForm[] GetClassForms() {
+            return _classForms;
+        }
+
+        public static ClassForm Find(string code) {
+            code = code.ToLower();
+            foreach (ClassForm classForm in _classForms) {
+                if (classForm.Code.ToLower() == code || classForm._fullEn.ToLower() == code)
+                {
+                    return classForm;
+                }
+            }
+            throw new System.Exception("Class Form is not found");
         }
     }
 }
