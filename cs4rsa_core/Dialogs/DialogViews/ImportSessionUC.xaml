@@ -9,7 +9,6 @@
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DataContext="{d:DesignInstance Type=implements:ImportSessionViewModel}"
     d:DesignHeight="450"
-    d:DesignWidth="800"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
@@ -19,67 +18,34 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <materialDesign:Card Width="999" Padding="10">
+    <materialDesign:Card Padding="10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <StackPanel Margin="0,0,0,10" Orientation="Vertical">
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ cơ sở dữ liệu" />
                 <Grid Height="300" Margin="0,0,5,0">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.5*" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Orientation="Vertical">
-                        <TextBlock Style="{StaticResource Header2}" Text="Danh sách các phiên đã lưu" />
-                        <ListView
-                            ItemsSource="{Binding ScheduleSessions, IsAsync=True}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedScheduleSession}">
-                            <ListView.ItemTemplate>
+                    <StackPanel Grid.Row="0" Orientation="Vertical">
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Danh sách các bộ lịch đã lưu" />
+                        <ListBox ItemsSource="{Binding ScheduleSessions}" SelectedItem="{Binding SelectedScheduleSession}">
+                            <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Name}" />
+                                    <StackPanel>
+                                        <TextBlock FontWeight="Bold" Text="{Binding Name}" />
+                                        <TextBlock Text="{Binding SaveDate}" />
+                                    </StackPanel>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1">
-                        <TextBlock Style="{StaticResource Header2}" Text="Chi tiết" />
-                        <TextBlock Style="{StaticResource Caption}" Text="Double Click để sao chép mã" />
-                        <DataGrid
-                            Height="200"
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding ScheduleSessionDetails, IsAsync=True}"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedSessionDetail}">
-                            <DataGrid.Resources>
-                                <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
-                                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Mã môn" />
-                                <DataGridTextColumn Binding="{Binding SubjectName}" Header="Tên môn" />
-                                <DataGridTextColumn Binding="{Binding ClassGroup}" Header="Tên nhóm lớp" />
-                                <DataGridTextColumn Binding="{Binding RegisterCode}" Header="Mã đăng ký" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
-                        <TextBlock Style="{StaticResource Caption}" Text="Hiệu lực của phiên đã chọn" />
+                        <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
                         <TextBlock>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -111,12 +77,12 @@
                             Height="30"
                             Margin="0,0,5,0"
                             Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
-                            Content="Xoá" />
+                            Content="XOÁ" />
                         <Button
                             Width="100"
                             Height="30"
                             Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
-                            Content="Nhập" />
+                            Content="SỬ DỤNG" />
                     </StackPanel>
                 </Grid>
             </StackPanel>

@@ -320,14 +320,12 @@ namespace cs4rsa_core.ViewModels
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
-                _snackbarMessageQueue.Enqueue("Call SearchVmMsgs.DelSubjectMsg");
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
-                _snackbarMessageQueue.Enqueue("Call SearchVmMsgs.DelAllSubjectMsg");
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
