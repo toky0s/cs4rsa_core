@@ -12,6 +12,7 @@ using SubjectCrawlService1.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -123,14 +124,13 @@ namespace SubjectCrawlService1.DataTypes
         {
             if (_classGroups.Count == 0)
             {
-                IEnumerable<SchoolClass> schoolClasses = await GetSchoolClasses();
+                IAsyncEnumerable<SchoolClass> schoolClasses = GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
                     string pattern = $@"^({classGroupName})[0-9]*$";
                     Regex regexName = new(pattern);
-                    IEnumerable<SchoolClass> schoolClassesByName = schoolClasses
-                        .Where(sc => regexName.IsMatch(sc.SchoolClassName));
-                    foreach (SchoolClass schoolClass in schoolClassesByName)
+                    IAsyncEnumerable<SchoolClass> schoolClassesByName = schoolClasses.Where(sc => regexName.IsMatch(sc.SchoolClassName));
+                    await foreach (SchoolClass schoolClass in schoolClassesByName)
                     {
                         schoolClass.ClassGroupName = classGroupName;
                     }
@@ -142,15 +142,12 @@ namespace SubjectCrawlService1.DataTypes
             }
         }
 
-        private async Task<IEnumerable<SchoolClass>> GetSchoolClasses()
+        private async IAsyncEnumerable<SchoolClass> GetSchoolClasses()
         {
-            List<SchoolClass> schoolClasses = new();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
             {
-                SchoolClass schoolClass = await GetSchoolClass(trTag);
-                schoolClasses.Add(schoolClass);
+                yield return await GetSchoolClass(trTag);
             }
-            return schoolClasses;
         }
 
         /// <summary>
