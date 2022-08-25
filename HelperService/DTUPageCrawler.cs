@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace HelperService
@@ -12,33 +13,24 @@ namespace HelperService
         /// </summary>
         /// <param name="sessionId">Giá trị của ASP.NET_SessionId trong cookies trang MyDTU.</param>
         /// <param name="url">Url của một trang thuộc MyDTU.</param>
-        /// <returns></returns>
+        /// <returns>Trang HTML.</returns>
         public static async Task<string> GetHtml(string sessionId, string url)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            CookieContainer cookieContainer = new();
-            Cookie cookie = new("ASP.NET_SessionId", sessionId) { Domain = request.Host };
-            cookieContainer.Add(cookie);
-            request.CookieContainer = cookieContainer;
-
-            WebResponse response = await request.GetResponseAsync();
-            HttpWebResponse httpWebResponse = (HttpWebResponse)response;
-
-            if (httpWebResponse.StatusCode == HttpStatusCode.OK)
+            Uri baseAddress = new Uri(url);
+            CookieContainer cookieContainer = new CookieContainer();
+            using (HttpClientHandler handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (HttpClient client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
-                Stream receiveStream = response.GetResponseStream();
+                cookieContainer.Add(baseAddress, new Cookie("ASP.NET_SessionId", sessionId));
+                HttpResponseMessage message = await client.GetAsync(url);
+                message.EnsureSuccessStatusCode();
+                Stream receiveStream = await message.Content.ReadAsStreamAsync();
                 StreamReader readStream;
-                if (string.IsNullOrWhiteSpace(httpWebResponse.CharacterSet))
-                    readStream = new StreamReader(receiveStream);
-                else
-                    readStream = new StreamReader(receiveStream,
-                        Encoding.GetEncoding(httpWebResponse.CharacterSet));
+                readStream = new StreamReader(receiveStream);
                 string data = readStream.ReadToEnd();
-                response.Close();
                 readStream.Close();
                 return data;
             }
-            return null;
         }
     }
 }
