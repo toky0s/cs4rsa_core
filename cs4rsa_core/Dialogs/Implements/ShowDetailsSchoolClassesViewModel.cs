@@ -10,8 +10,27 @@ namespace cs4rsa_core.Dialogs.Implements
 {
     public class ShowDetailsSchoolClassesViewModel: ViewModelBase
     {
-        public ClassGroupModel ClassGroupModel { get; set; }
-        public SchoolClassModel SelectedSchoolClassModel { get; set; }
+        private ClassGroupModel _classGroupModel;
+        public ClassGroupModel ClassGroupModel
+        {
+            get => _classGroupModel;
+            set
+            {
+                _classGroupModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private SchoolClassModel _selectedSchoolClassModel;
+        public SchoolClassModel SelectedSchoolClassModel 
+        {   
+            get => _selectedSchoolClassModel; 
+            set
+            {
+                _selectedSchoolClassModel = value; 
+                OnPropertyChanged(); 
+            } 
+        }
         public ObservableCollection<SchoolClassModel> SchoolClassModels { get; set; }
         public RelayCommand PickCommand { get; set; }
 

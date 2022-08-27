@@ -6,8 +6,10 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    vml:DialogVMLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     TextElement.FontSize="13"
@@ -16,9 +18,6 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
-    <UserControl.DataContext>
-        <vm:ShowDetailsSchoolClassesViewModel />
-    </UserControl.DataContext>
     <materialDesign:Card Padding="10">
         <Grid>
             <Grid.RowDefinitions>
@@ -30,17 +29,17 @@
             </Grid.RowDefinitions>
             <TextBlock
                 Grid.Row="0"
-                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                 Text="{Binding ClassGroupModel.Name}" />
             <TextBlock
                 Grid.Row="1"
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text="{Binding ClassGroupModel.ClassGroup.Name}" />
-                <TextBlock Text=" LEC + " />
-                <TextBlock Text="{Binding SelectedSchoolClassModel.SchoolClassName}" />
-                <TextBlock Text=" LAB" />
+                <TextBlock Text="{Binding ClassGroupModel.ClassGroup.Name, StringFormat='{}{0} '}" />
+                <TextBlock FontWeight="Bold" Text="{Binding ClassGroupModel.CompulsoryClass.Type.Code, StringFormat='{}{0} '}" />
+                <TextBlock Text="{Binding SelectedSchoolClassModel.SchoolClassName, StringFormat='{}+ {0} '}" />
+                <TextBlock FontWeight="Bold" Text="{Binding SelectedSchoolClassModel.Type.Code, StringFormat='{}{0} '}" />
             </StackPanel>
             <ListView
                 Grid.Row="3"

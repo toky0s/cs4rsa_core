@@ -528,19 +528,16 @@ namespace cs4rsa_core.ViewModels
         public void OnShowDetailsSchoolClasses()
         {
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
-            ShowDetailsSchoolClassesViewModel vm = new()
-            {
-                ClassGroupModel = _selectedClassGroup
-            };
-            SchoolClassModel baseSchoolClass = _selectedClassGroup.GetCompulsoryClass();
+            ShowDetailsSchoolClassesViewModel vm = showDetailsSchoolClassesUC.DataContext as ShowDetailsSchoolClassesViewModel;
+            vm.ClassGroupModel = _selectedClassGroup;
+            
             foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
             {
-                if (scm.Type != baseSchoolClass.Type)
+                if (scm.Type != _selectedClassGroup.CompulsoryClass.Type)
                 {
                     vm.SchoolClassModels.Add(scm);
                 }
             }
-            showDetailsSchoolClassesUC.DataContext = vm;
             OpenDialog(showDetailsSchoolClassesUC);
         }
 
