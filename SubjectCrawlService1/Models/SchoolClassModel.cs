@@ -48,8 +48,8 @@ namespace SubjectCrawlService1.Models
             set { _registerCode = value; }
         }
 
-        private string _type;
-        public string Type
+        private ClassForm _type;
+        public ClassForm Type
         {
             get { return _type; }
             set { _type = value; }

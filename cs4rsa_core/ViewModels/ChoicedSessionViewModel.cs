@@ -115,7 +115,7 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnCopyCode()
         {
-            string registerCode = _selectedClassGroupModel.RegisterCode;
+            string registerCode = _selectedClassGroupModel.CurrentRegisterCode;
             Clipboard.SetData(DataFormats.Text, registerCode);
             string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
             _snackbarMessageQueue.Enqueue(message);
@@ -310,8 +310,7 @@ namespace cs4rsa_core.ViewModels
 
         private void UpdateShareString()
         {
-            List<ClassGroup> classGroups = ClassGroupModels.Select(classGroupModels => classGroupModels.ClassGroup).ToList();
-            _shareString = _shareStringGenerator.GetShareString(classGroups);
+            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels.ToList());
         }
 
         #region Điều kiện thực thi command

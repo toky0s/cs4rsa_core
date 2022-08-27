@@ -3,7 +3,8 @@ using cs4rsa_core.Dialogs.DialogResults;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
 using HelperService;
-using SubjectCrawlService1.DataTypes;
+using SubjectCrawlService1.Models;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -28,15 +29,15 @@ namespace cs4rsa_core.Utils
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
         }
-        public string GetShareString(List<ClassGroup> classGroupModels)
+        public string GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            if (classGroupModels.Count == 0)
+            if (!classGroupModels.Any())
             {
                 return "";
             }
             List<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item)).ToList();
             string SubjectHassesJoin = string.Join("?", SubjectHasses);
-            string Count = classGroupModels.Count.ToString();
+            string Count = classGroupModels.Count().ToString();
             string currentYear = _courseCrawler.GetCurrentYearValue();
             string currentSemester = _courseCrawler.GetCurrentSemesterValue();
             string raw = $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '-');
@@ -82,9 +83,9 @@ namespace cs4rsa_core.Utils
             }
         }
 
-        private static string SubjectCodeVsRegisterCode(ClassGroup classGroup)
+        private static string SubjectCodeVsRegisterCode(ClassGroupModel classGroupModel)
         {
-            return classGroup.SubjectCode + "|" + classGroup.Name + "|" + classGroup.GetRegisterCode();
+            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentRegisterCode;
         }
     }
 }

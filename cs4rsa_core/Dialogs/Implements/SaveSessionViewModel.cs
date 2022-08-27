@@ -51,7 +51,7 @@ namespace cs4rsa_core.Dialogs.Implements
                     SessionSchoolClass sessionSchoolClass = new()
                     {
                         Name = ssc.SchoolClassName,
-                        Type = ssc.Type
+                        Type = ssc.Type.Code
                     };
                     sessionSchoolClasses.Add(sessionSchoolClass);
                 }
@@ -61,7 +61,7 @@ namespace cs4rsa_core.Dialogs.Implements
                     ClassGroup = classGroupModel.ClassGroup.Name,
                     SubjectName = _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode).SubjectName,
                     SessionSchoolClasses = sessionSchoolClasses,
-                    RegisterCode = classGroupModel.RegisterCode
+                    RegisterCode = classGroupModel.CurrentRegisterCode
                 };
                 sessionDetails.Add(sessionDetail);
             }

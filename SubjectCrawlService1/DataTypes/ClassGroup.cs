@@ -12,43 +12,51 @@ namespace SubjectCrawlService1.DataTypes
     public class ClassGroup
     {
         private readonly List<SchoolClass> _schoolClasses;
-        private readonly List<SchoolClass> _reRenderSchoolClasses;
-        private string _currentRegisterCodeForBelongSpecialSubject;
+        private readonly List<string> _registerCodes;
+
         public string Name { get; }
         public string SubjectCode { get; }
         public string SubjectName { get; }
-        public List<SchoolClass> SchoolClasses => MergeTeacherInfoInSchoolClasses();
+
+        public bool _isSpecialClassGroup;
+        public bool IsSpecialClassGroup { get => _isSpecialClassGroup; }
+        public List<string> RegisterCodes { 
+            get 
+            {
+                if (_registerCodes.Count == 0)
+                {
+                    throw new Exception("Too soon to get register codes, because list of school class is empty!");
+                }
+                return _registerCodes;
+            } 
+        }
+
+        private List<SchoolClass> _mergedSchoolClasses;
+        public List<SchoolClass> SchoolClasses { 
+            get
+            {
+                if (_mergedSchoolClasses != null || !_mergedSchoolClasses.Any())
+                {
+                    _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
+                }
+                return _mergedSchoolClasses;
+            }
+        } 
 
         public ClassGroup(string name, string subjectCode, string subjectName)
         {
             _schoolClasses = new();
-            _reRenderSchoolClasses = new();
+            _registerCodes = new();
+            _mergedSchoolClasses = new();
             Name = name;
             SubjectCode = subjectCode;
             SubjectName = subjectName;
         }
 
-        public void ReRenderScheduleRequest(string registerCode)
-        {
-            _currentRegisterCodeForBelongSpecialSubject = registerCode;
-            SchoolClass lecSchoolClass = _schoolClasses
-                .Where(schoolClass => schoolClass.Type == "LEC")
-                .FirstOrDefault();
-            _reRenderSchoolClasses.Add(lecSchoolClass);
-            SchoolClass labSchoolClass = _schoolClasses
-                .Where(schoolClass => schoolClass.RegisterCode == registerCode)
-                .FirstOrDefault();
-            _reRenderSchoolClasses.Add(labSchoolClass);
-        }
-
-        public void AddSchoolClass(SchoolClass schoolClass)
-        {
-            _schoolClasses.Add(schoolClass);
-        }
-
         public void AddRangeSchoolClass(IEnumerable<SchoolClass> schoolClasses)
         {
             _schoolClasses.AddRange(schoolClasses);
+            GetRegisterCode();
         }
 
         /// <summary>
@@ -83,7 +91,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns>Danh sách các Teacher của các SchoolClass trên.</returns>
         private static List<Teacher> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
-            if (DinstictSchoolClassName(schoolClasses).Length > 1)
+            if (DinstictSchoolClassName(schoolClasses).Count() > 1)
             {
                 Exception ex = new("SchoolClass's Name is difference!");
                 throw ex;
@@ -108,7 +116,7 @@ namespace SubjectCrawlService1.DataTypes
         /// <returns>Danh sách các TempTeacher của các SchoolClass trên.</returns>
         private static List<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
-            if (DinstictSchoolClassName(schoolClasses).Length > 1)
+            if (DinstictSchoolClassName(schoolClasses).Count() > 1)
                 throw new Exception("SchoolClass's Name is difference!");
             else
             {
@@ -126,9 +134,9 @@ namespace SubjectCrawlService1.DataTypes
         /// </summary>
         /// <param name="schoolClasses"></param>
         /// <returns></returns>
-        private static string[] DinstictSchoolClassName(IEnumerable<SchoolClass> schoolClasses)
+        private static IEnumerable<string> DinstictSchoolClassName(IEnumerable<SchoolClass> schoolClasses)
         {
-            return schoolClasses.Select(item => item.ClassGroupName).Distinct().ToArray();
+            return schoolClasses.Select(item => item.ClassGroupName).Distinct();
         }
 
         private List<SchoolClass> GetSchoolClassesWithName(string schoolClassName)
@@ -144,10 +152,6 @@ namespace SubjectCrawlService1.DataTypes
 
         private IEnumerable<string> GetSchoolClassNames()
         {
-            if (_currentRegisterCodeForBelongSpecialSubject != null)
-            {
-                return _reRenderSchoolClasses.Select(item => item.SchoolClassName).Distinct();
-            }
             return _schoolClasses.Select(item => item.SchoolClassName).Distinct();
         }
 
@@ -163,7 +167,7 @@ namespace SubjectCrawlService1.DataTypes
         public Schedule GetSchedule()
         {
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
-            foreach (SchoolClass schoolClass in GetSchoolClasses())
+            foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
@@ -176,13 +180,24 @@ namespace SubjectCrawlService1.DataTypes
             return schedule;
         }
 
-        private List<SchoolClass> GetSchoolClasses()
+        /// <summary>
+        /// Hợp nhất Schedule của các SchoolClass được truyền vào này thành một.
+        /// </summary>
+        /// <returns>Trả về một Schedule.</returns>
+        public static Schedule GetSchedule(IEnumerable<SchoolClass> schoolClasses)
         {
-            if (_currentRegisterCodeForBelongSpecialSubject != null)
+            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
+            foreach (SchoolClass schoolClass in schoolClasses)
             {
-                return _reRenderSchoolClasses;
+                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
+                foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
+                {
+                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                }
             }
-            return _schoolClasses;
+            Schedule schedule = new(DayOfWeekStudyTimePairs);
+            return schedule;
         }
 
         public IEnumerable<string> GetTempTeachers()
@@ -230,14 +245,17 @@ namespace SubjectCrawlService1.DataTypes
             return places.Distinct();
         }
 
-        public string GetRegisterCode()
+        private void GetRegisterCode()
         {
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                if (schoolClass.RegisterCode.Trim() != "")
-                    return schoolClass.RegisterCode;
+                // Trường hợp hai mã giống nhau mà khác giảng viên
+                if (schoolClass.RegisterCode.Trim() != "" && !_registerCodes.Contains(schoolClass.RegisterCode))
+                {
+                    _registerCodes.Add(schoolClass.RegisterCode);
+                }
             }
-            return "";
+            _isSpecialClassGroup = _registerCodes.Count > 1;
         }
 
         /// <summary>

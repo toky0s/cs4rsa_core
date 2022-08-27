@@ -19,7 +19,21 @@ namespace SubjectCrawlService1.Models
     /// </summary>
     public class ClassGroupModel
     {
+        /// <summary>
+        /// Một Class Group Model có duy nhất một Register Code được chọn.
+        /// </summary>
         private string _currentRegisterCode;
+        public string CurrentRegisterCode { get => _currentRegisterCode; }
+
+        /// <summary>
+        /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
+        /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
+        /// </summary>
+        private List<SchoolClassModel> _currentSchoolClassModels = new();
+        public List<SchoolClassModel> CurrentSchoolClassModels
+        {
+            get { return _currentSchoolClassModels; }
+        }
 
         public ClassGroup ClassGroup { get; }
         public short EmptySeat { get; }
@@ -28,15 +42,11 @@ namespace SubjectCrawlService1.Models
         public ObservableCollection<Place> Places { get; }
         public IEnumerable<string> TempTeacher { get; }
         public string SubjectCode { get; }
-        public string RegisterCode
-        {
-            get
-            {
-                return _currentRegisterCode ?? ClassGroup.GetRegisterCode();
-            }
-        }
+        public List<string> RegisterCodes { get; }
         public Phase Phase { get; }
-        public Schedule Schedule { get; }
+
+        private Schedule _schedule;
+        public Schedule Schedule { get => _schedule; }
         public ImplementType ImplementType { get; }
         public RegistrationType RegistrationType { get; }
         public string Color { get; }
@@ -45,9 +55,26 @@ namespace SubjectCrawlService1.Models
         /// Quyết định xem ClassGroupModel có thuộc một Multi Register Code Subject (SpecialSubject)
         /// hay không. Các vấn đề của môn CHE 101 hay BIO 101 dù đã được giải quyết nhưng tôi vẫn
         /// để comment này ở đây giúp bạn lưu ý về vấn đề này tương lai bạn refactor lại nó.
+        /// 
+        /// 25/08/2022 A Xin
+        /// Với môn ART 161 (Special Subject) solution hiện tại là check xem đâu là Compulsory Class
+        /// của một ClassGroup và check xem class group nào có nhiều hơn 1 mã đăng ký.
         /// </summary>
         public bool IsBelongSpecialSubject { get; }
 
+        /// <summary>
+        /// 27/08/2022 A Xin
+        /// Với môn ART 161 (Special Subject)
+        /// - Có class group có nhiều mã đăng ký
+        /// - Và cũng có class group chỉ có một mã đăng ký
+        /// 
+        /// Nên thuộc tính này sẽ ảnh hưởng tới việc render trên mô phỏng.
+        /// </summary>
+        public bool IsSpecialClassGroup { get; }
+
+        /// <summary>
+        /// Dùng để Deep Clone, CẤM XOÁ
+        /// </summary>
         public ClassGroupModel() { }
 
         public ClassGroupModel(ClassGroup classGroup, bool isBelongSpecialSubject, ColorGenerator colorGenerator)
@@ -61,10 +88,12 @@ namespace SubjectCrawlService1.Models
             TempTeacher = classGroup.GetTempTeachers();
             Color = colorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
             Phase = classGroup.GetPhase();
-            Schedule = classGroup.GetSchedule();
+            _schedule = classGroup.GetSchedule();
             ImplementType = classGroup.GetImplementType();
             RegistrationType = classGroup.GetRegistrationType();
             IsBelongSpecialSubject = isBelongSpecialSubject;
+            IsSpecialClassGroup = classGroup.IsSpecialClassGroup;
+            RegisterCodes = classGroup.RegisterCodes;
         }
 
         public IEnumerable<Teacher> GetTeacherModels()
@@ -96,7 +125,7 @@ namespace SubjectCrawlService1.Models
                 if (isValidRegisterCode)
                 {
                     _currentRegisterCode = registerCode;
-                    ClassGroup.ReRenderScheduleRequest(registerCode);
+                    ReRenderScheduleRequest(registerCode);
                 }
                 else
                 {
@@ -108,6 +137,44 @@ namespace SubjectCrawlService1.Models
                 string message = $"SchoolClass with code {registerCode} is not belong special subject!";
                 throw new ArgumentException(message);
             }
+        }
+
+        /// <summary>
+        /// Trả về lớp học base của một class group. Cái mà không có mã đăng ký.
+        /// </summary>
+        public SchoolClassModel GetCompulsoryClass()
+        {
+            foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses)
+            {
+                if (schoolClass.RegisterCode == string.Empty)
+                {
+                    return new SchoolClassModel(schoolClass);
+                }
+            }
+            throw new Exception("Base SchoolClassModel not found!");
+        }
+
+        /// <summary>
+        /// 1. ClassGroupModel là một hình thức duy nhất của một ClassGroup
+        /// 2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký
+        /// </summary>
+        public void ReRenderScheduleRequest(string registerCode)
+        {
+            SchoolClassModel compulsorySchoolClassModel = ClassGroup.SchoolClasses
+                .Where(schoolClass => schoolClass.RegisterCode == string.Empty)
+                .Select(schoolClass => new SchoolClassModel(schoolClass))
+                .FirstOrDefault();
+
+            SchoolClassModel codeSchoolClassModel = ClassGroup.SchoolClasses
+                .Where(schoolClass => schoolClass.RegisterCode == registerCode)
+                .Select(schoolClass => new SchoolClassModel(schoolClass))
+                .FirstOrDefault();
+
+            _currentSchoolClassModels.Clear();
+            _currentSchoolClassModels.Add(compulsorySchoolClassModel);
+            _currentSchoolClassModels.Add(codeSchoolClassModel);
+            _currentRegisterCode = registerCode;
+            _schedule = ClassGroup.GetSchedule(_currentSchoolClassModels.Select(scm => scm.SchoolClass));
         }
     }
 }

@@ -124,30 +124,33 @@ namespace SubjectCrawlService1.DataTypes
         {
             if (_classGroups.Count == 0)
             {
-                IAsyncEnumerable<SchoolClass> schoolClasses = GetSchoolClasses();
+                IEnumerable<SchoolClass> schoolClasses = await GetSchoolClasses();
                 foreach (string classGroupName in GetClassGroupNames())
                 {
                     string pattern = $@"^({classGroupName})[0-9]*$";
                     Regex regexName = new(pattern);
-                    IAsyncEnumerable<SchoolClass> schoolClassesByName = schoolClasses.Where(sc => regexName.IsMatch(sc.SchoolClassName));
-                    await foreach (SchoolClass schoolClass in schoolClassesByName)
+                    IEnumerable<SchoolClass> schoolClassesByName = schoolClasses.Where(sc => regexName.IsMatch(sc.SchoolClassName));
+                    foreach (SchoolClass schoolClass in schoolClassesByName)
                     {
                         schoolClass.ClassGroupName = classGroupName;
                     }
 
                     ClassGroup classGroup = new(classGroupName, SubjectCode, Name);
-                    classGroup.AddRangeSchoolClass(schoolClassesByName.ToEnumerable());
+                    classGroup.AddRangeSchoolClass(schoolClassesByName);
                     _classGroups.Add(classGroup);
                 }
             }
         }
 
-        private async IAsyncEnumerable<SchoolClass> GetSchoolClasses()
+        private async Task<IEnumerable<SchoolClass>> GetSchoolClasses()
         {
+            List<SchoolClass> schoolClasses = new List<SchoolClass>();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
             {
-                yield return await GetSchoolClass(trTag);
+                SchoolClass schoolClass = await GetSchoolClass(trTag);
+                schoolClasses.Add(schoolClass);
             }
+            return schoolClasses;
         }
 
         /// <summary>
