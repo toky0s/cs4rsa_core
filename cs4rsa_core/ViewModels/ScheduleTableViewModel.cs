@@ -61,11 +61,21 @@ namespace cs4rsa_core.ViewModels
         {
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                List<SchoolClassModel> schoolClassModels = classGroupModel
+                IEnumerable<SchoolClassModel> schoolClassModels;
+                if (classGroupModel.IsSpecialClassGroup)
+                {
+                    schoolClassModels = classGroupModel
+                    .CurrentSchoolClassModels
+                    .Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
+                } 
+                else
+                {
+                    schoolClassModels = classGroupModel
                     .ClassGroup
                     .SchoolClasses
-                    .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color))
-                    .ToList();
+                    .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
+                }
+
                 foreach (SchoolClassModel schoolClassModel in schoolClassModels)
                 {
                     switch (schoolClassModel.StudyWeek.GetPhase())

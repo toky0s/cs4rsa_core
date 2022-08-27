@@ -47,6 +47,11 @@
                 Margin="0,0,0,5"
                 ItemsSource="{Binding SchoolClassModels}"
                 SelectedItem="{Binding SelectedSchoolClassModel}">
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource MaterialDesignGridViewItem}" TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding SchoolClassName}" Header="Tên" />
@@ -61,7 +66,7 @@
                 Grid.Row="4"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
-                <Button Command="{Binding PickCommand}" Content="Chọn lớp này" />
+                <Button Command="{Binding PickCommand}" Content="CHỌN LỚP NÀY" />
             </StackPanel>
         </Grid>
     </materialDesign:Card>

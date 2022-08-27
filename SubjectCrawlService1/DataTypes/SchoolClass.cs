@@ -13,7 +13,7 @@ namespace SubjectCrawlService1.DataTypes
         public string ClassGroupName { get; set; }
         public string SchoolClassName { get; set; }
         public string RegisterCode { get; set; }
-        public string Type { get; set; }
+        public ClassForm Type { get; set; }
         public string RegistrationTermEnd { get; set; }
         public string RegistrationTermStart { get; set; }
         public string EmptySeat { get; set; }
@@ -51,7 +51,7 @@ namespace SubjectCrawlService1.DataTypes
         {
             SchoolClassName = schoolClassName;
             RegisterCode = registerCode;
-            Type = type;
+            Type = ClassForm.Find(type);
             EmptySeat = emptySeat;
             RegistrationTermStart = registrationTermStart;
             RegistrationTermEnd = registrationTermEnd;

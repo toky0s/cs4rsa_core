@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using SubjectCrawlService1.DataTypes.Enums;
 
 namespace SubjectCrawlService1
 {
@@ -6,7 +8,7 @@ namespace SubjectCrawlService1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }

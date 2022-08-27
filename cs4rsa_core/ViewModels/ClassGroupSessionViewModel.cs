@@ -5,7 +5,6 @@ using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
 using Cs4rsaDatabaseService.Models;
-using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SubjectCrawlService1.DataTypes.Enums;
@@ -18,6 +17,7 @@ using System.Linq;
 using System.Windows.Data;
 
 using Session = SubjectCrawlService1.DataTypes.Enums.Session;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -35,7 +35,8 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
                 if (value != null)
                 {
-                    if (value.IsBelongSpecialSubject)
+                    // Nếu thuộc Special Subject và có nhiều hơn 1 mã đăng ký.
+                    if (value.IsBelongSpecialSubject && value.RegisterCodes.Count > 1)
                     {
                         OnShowDetailsSchoolClasses();
                     }
@@ -307,16 +308,13 @@ namespace cs4rsa_core.ViewModels
 
         #region Services
         private readonly IOpenInBrowser _openInBrowser;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public ClassGroupSessionViewModel(
-            IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue
+            IOpenInBrowser openInBrowser
         )
         {
             _openInBrowser = openInBrowser;
-            _snackbarMessageQueue = snackbarMessageQueue;
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
@@ -338,6 +336,18 @@ namespace cs4rsa_core.ViewModels
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 SelectedClassGroup = null;
+            });
+
+            /**
+             * Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
+             **/
+            WeakReferenceMessenger.Default.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
+            {
+                ClassGroupResult classGroupResult = m.Value;
+                ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
+                string registerCode = classGroupResult.SelectedRegisterCode;
+                classGroupModel.ReRenderScheduleRequest(registerCode);
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 
             ClassGroupModels = new();
@@ -520,30 +530,18 @@ namespace cs4rsa_core.ViewModels
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
             ShowDetailsSchoolClassesViewModel vm = new()
             {
-                ClassGroupModel = _selectedClassGroup,
-                CloseDialogCallback = CloseDialogAndHandleClassGroupResult
+                ClassGroupModel = _selectedClassGroup
             };
+            SchoolClassModel baseSchoolClass = _selectedClassGroup.GetCompulsoryClass();
             foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
             {
-                if (scm.Type == "LAB")
+                if (scm.Type != baseSchoolClass.Type)
                 {
                     vm.SchoolClassModels.Add(scm);
                 }
             }
             showDetailsSchoolClassesUC.DataContext = vm;
             OpenDialog(showDetailsSchoolClassesUC);
-        }
-
-        private void CloseDialogAndHandleClassGroupResult(ClassGroupResult classGroupResult)
-        {
-            CloseDialog();
-            ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
-            string registerCode = classGroupResult.SelectedRegisterCode;
-            foreach (var classGroupMD in ClassGroupModels.Where(classGroupMD => classGroupMD.Name.Equals(classGroupModel.Name)))
-            {
-                classGroupMD.PickSchoolClass(registerCode);
-                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupMD));
-            }
         }
 
         private void OnGotoCourse()
