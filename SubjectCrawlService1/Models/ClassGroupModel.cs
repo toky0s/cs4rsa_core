@@ -29,7 +29,7 @@ namespace SubjectCrawlService1.Models
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
-        private List<SchoolClassModel> _currentSchoolClassModels = new();
+        private readonly List<SchoolClassModel> _currentSchoolClassModels = new();
         public List<SchoolClassModel> CurrentSchoolClassModels
         {
             get { return _currentSchoolClassModels; }
@@ -50,6 +50,7 @@ namespace SubjectCrawlService1.Models
         public ImplementType ImplementType { get; }
         public RegistrationType RegistrationType { get; }
         public string Color { get; }
+        public SchoolClassModel CompulsoryClass { get; }
 
         /// <summary>
         /// Quyết định xem ClassGroupModel có thuộc một Multi Register Code Subject (SpecialSubject)
@@ -94,6 +95,7 @@ namespace SubjectCrawlService1.Models
             IsBelongSpecialSubject = isBelongSpecialSubject;
             IsSpecialClassGroup = classGroup.IsSpecialClassGroup;
             RegisterCodes = classGroup.RegisterCodes;
+            CompulsoryClass = GetCompulsoryClass();
         }
 
         public IEnumerable<Teacher> GetTeacherModels()
@@ -142,7 +144,7 @@ namespace SubjectCrawlService1.Models
         /// <summary>
         /// Trả về lớp học base của một class group. Cái mà không có mã đăng ký.
         /// </summary>
-        public SchoolClassModel GetCompulsoryClass()
+        private SchoolClassModel GetCompulsoryClass()
         {
             foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses)
             {

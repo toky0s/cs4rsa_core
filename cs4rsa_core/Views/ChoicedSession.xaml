@@ -92,19 +92,19 @@
                     Height="30"
                     Margin="0,0,5,5"
                     Command="{Binding OpenShareStringWindowCommand}"
-                    Content="Chia sẻ"
+                    Content="CHIA SẺ"
                     IsEnabled="{Binding ClassGroupModels.Count}" />
                 <Button
                     Grid.Column="1"
                     Height="30"
                     Margin="0,0,0,5"
                     Command="{Binding SaveCommand}"
-                    Content="Lưu" />
+                    Content="LƯU" />
             </Grid>
             <Button
                 Height="30"
                 Command="{Binding DeleteAllCommand}"
-                Content="Bỏ chọn hết" />
+                Content="BỎ CHỌN HẾT" />
         </StackPanel>
         <TextBlock
             Grid.Row="3"
