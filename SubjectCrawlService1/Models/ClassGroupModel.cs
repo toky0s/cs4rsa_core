@@ -142,10 +142,17 @@ namespace SubjectCrawlService1.Models
         }
 
         /// <summary>
-        /// Trả về lớp học base của một class group. Cái mà không có mã đăng ký.
+        /// Trả về Compulsory Class của một class group.
+        /// 1. Trường hợp có duy nhất một SchoolClass, nó sẽ là Compulsory Class.
+        /// 2. Trường hợp lớp có hai SchoolClass trở lên, 
+        ///    SchoolClass thằng không có mã đăng ký sẽ là Compulsory Class.
         /// </summary>
         private SchoolClassModel GetCompulsoryClass()
         {
+            if (ClassGroup.SchoolClasses.Count == 1)
+            {
+                return new SchoolClassModel(ClassGroup.SchoolClasses[0]);
+            }
             foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses)
             {
                 if (schoolClass.RegisterCode == string.Empty)
