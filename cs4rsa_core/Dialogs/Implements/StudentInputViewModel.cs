@@ -1,5 +1,4 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogServices;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using Cs4rsaDatabaseService.Interfaces;
 using Cs4rsaDatabaseService.Models;
@@ -9,10 +8,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using cs4rsa_core.BaseClasses;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    public sealed class StudentInputViewModel : DialogViewModelBase<LoginResult>
+    public sealed class StudentInputViewModel : ViewModelBase
     {
         public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }

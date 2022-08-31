@@ -1,7 +1,9 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogServices;
-
+﻿using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogResults;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using Cs4rsaDatabaseService.Interfaces;
+
+using CommunityToolkit.Mvvm.Messaging;
 
 using HelperService;
 
@@ -21,7 +23,7 @@ namespace cs4rsa_core.Dialogs.Implements
     /// <strong>Trình Quản lý Phiên:</strong>
     /// Bộ ra lệnh cho SearchViewModel thực hiện import các Subject được truyền vào.
     /// </summary>
-    public class SubjectImporterViewModel : DialogViewModelBase<ImportResult>
+    public class SubjectImporterViewModel : ViewModelBase
     {
         public ObservableCollection<SubjectInfoData> SubjectInfoDatas { get; set; } = new ObservableCollection<SubjectInfoData>();
         public List<ISubjectCrawler> SubjectCrawlers { get; set; }
@@ -40,8 +42,6 @@ namespace cs4rsa_core.Dialogs.Implements
                 }
             }
         }
-
-        public Action<ImportResult, SessionManagerResult> CloseDialogCallback { get; set; }
 
         private readonly IKeywordRepository _keywordRepository;
         private readonly ISubjectCrawler _subjectCrawler;
@@ -72,8 +72,12 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 subject.Color = await colorGenerator.GetColorAsync(subject.CourseId);
             }
+            
             ImportResult importResult = new() { SubjectModels = subjectModels };
-            CloseDialogCallback.Invoke(importResult, _sessionManagerResult);
+            Tuple<ImportResult, SessionManagerResult> tup = new(importResult, _sessionManagerResult);
+            SubjectImporterVmMsgs.ExitImportSubjectMsg message = new(tup);
+            Messenger.Send(message);
+            CloseDialog();
         }
     }
 }
