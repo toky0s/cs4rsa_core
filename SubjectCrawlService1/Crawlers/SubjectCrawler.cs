@@ -81,7 +81,7 @@ namespace SubjectCrawlService1.Crawlers
             return null;
         }
 
-        public async Task<Subject> Crawl(ushort courseId)
+        public async Task<Subject> Crawl(int courseId)
         {
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
@@ -110,8 +110,20 @@ namespace SubjectCrawlService1.Crawlers
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
-                return await Subject.CreateAsync(name, subjectCode, studyUnit, studyUnitType,
-                           studyType, semester, mustStudySubject, parallelSubject, description, rawSoup, courseId, _unitOfWork, _folderManager);
+                return await Subject.CreateAsync(
+                    name, 
+                    subjectCode, 
+                    studyUnit, 
+                    studyUnitType,
+                    studyType, 
+                    semester, 
+                    mustStudySubject, 
+                    parallelSubject, 
+                    description, 
+                    rawSoup, 
+                    courseId, 
+                    _unitOfWork, 
+                    _folderManager);
             }
             return null;
         }

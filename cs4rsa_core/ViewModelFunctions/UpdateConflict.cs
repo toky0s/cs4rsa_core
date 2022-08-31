@@ -21,7 +21,7 @@ namespace cs4rsa_core.ViewModelFunctions
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
-        public static void UpdateConflictModelCollection(ref ObservableCollection<ConflictModel> conflictModels, ref List<ClassGroupModel> classGroupModels)
+        public static void UpdateConflictModelCollection(ref ObservableCollection<ConflictModel> conflictModels, ref IEnumerable<ClassGroupModel> classGroupModels)
         {
             conflictModels.Clear();
             List<SchoolClass> schoolClasses = new();
@@ -47,7 +47,7 @@ namespace cs4rsa_core.ViewModelFunctions
             }
         }
 
-        public static void UpdatePlaceConflictCollection(ref ObservableCollection<PlaceConflictFinderModel> placeConflictFinderModels, ref List<ClassGroupModel> classGroupModels)
+        public static void UpdatePlaceConflictCollection(ref ObservableCollection<PlaceConflictFinderModel> placeConflictFinderModels, ref IEnumerable<ClassGroupModel> classGroupModels)
         {
             placeConflictFinderModels.Clear();
             List<SchoolClass> schoolClasses = new();

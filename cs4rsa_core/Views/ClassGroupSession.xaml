@@ -94,7 +94,7 @@
                                     Foreground="#c0392b"
                                     Text="Không có lịch">
                                     <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
+                                        <Style BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Hidden" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding HaveSchedule}" Value="false">

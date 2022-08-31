@@ -76,8 +76,13 @@ namespace TeacherCrawlerService1.Crawlers
                         string subject = StringHelper.SuperCleanString(infoNodes[7].InnerText);
                         string form = StringHelper.SuperCleanString(infoNodes[8].InnerText);
                         string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
-                        List<HtmlNode> liNodes = _htmlDocument.DocumentNode.SelectNodes(xpathLiNode).ToList();
-                        List<string> teachedSubjects = liNodes.Select(item => item.InnerText).ToList();
+
+                        /// TODO: Danh sách môn học giảng viên đang dạy
+                        /// Tham khảo CS0026 https://github.com/toky0s/cs4rsa_core/issues/37
+                        IEnumerable<string> teachedSubjects = _htmlDocument.DocumentNode
+                            .SelectNodes(xpathLiNode)
+                            .Select(item => item.InnerText);
+
                         string strPath = await OnDownloadImage(id);
                         Teacher teacher = new()
                         {

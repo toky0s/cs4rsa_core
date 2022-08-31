@@ -47,13 +47,13 @@ namespace SubjectCrawlService1.DataTypes
         public IEnumerable<string> MustStudySubject { get; }
         public IEnumerable<string> ParallelSubject { get; }
         public string Desciption { get; }
-        public ushort CourseId { get; }
+        public int CourseId { get; }
 
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, ushort courseId,
+                        string description, string rawSoup, int courseId,
                         IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             _unitOfWork = unitOfWork;
@@ -368,7 +368,7 @@ namespace SubjectCrawlService1.DataTypes
         public static Task<Subject> CreateAsync(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, ushort courseId,
+                        string description, string rawSoup, int courseId,
                         IUnitOfWork unitOfWork, IFolderManager folderManager)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,

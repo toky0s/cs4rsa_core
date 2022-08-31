@@ -37,7 +37,10 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             ScheduleSessions.Clear();
             IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
-            sessions.ToList().ForEach(session => ScheduleSessions.Add(session));
+            foreach (Session session in sessions)
+            {
+                ScheduleSessions.Add(session);
+            }
         }
 
         private void Save()

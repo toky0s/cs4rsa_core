@@ -40,7 +40,10 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             Students.Clear();
             IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            students.ToList().ForEach(student => Students.Add(student));
+            foreach (Student student in students)
+            {
+                Students.Add(student);
+            }
         }
     }
 }

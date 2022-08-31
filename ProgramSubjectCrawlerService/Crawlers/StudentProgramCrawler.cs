@@ -273,18 +273,17 @@ namespace ProgramSubjectCrawlerService.Crawlers
                     }
                     List<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
                     List<string> parallelSubjects = preParContainer.ParallelSubjects;
-                    List<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects).ToList();
+                    IEnumerable<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects);
                     List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = new();
-                    sPreParSubjects.ForEach(
-                        sPreParSubject =>
+
+                    foreach(string strPreParSubject in sPreParSubjects)
+                    {
+                        Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new()
                         {
-                            Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new()
-                            {
-                                SubjectCode = sPreParSubject
-                            };
-                            preParSubjects.Add(preParSubject);
-                        }
-                    );
+                            SubjectCode = strPreParSubject
+                        };
+                        preParSubjects.Add(preParSubject);
+                    }
 
                     // study state
                     StudyState studyState;

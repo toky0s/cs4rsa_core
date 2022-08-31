@@ -183,7 +183,7 @@ namespace cs4rsa_core.ViewModels
         {
             SaveSessionUC saveSessionUC = new();
             SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
-            vm.ClassGroupModels = ClassGroupModels.ToList();
+            vm.ClassGroupModels = ClassGroupModels;
             vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
             OpenDialog(saveSessionUC);
             await vm.LoadScheduleSessions();
@@ -310,7 +310,7 @@ namespace cs4rsa_core.ViewModels
 
         private void UpdateShareString()
         {
-            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels.ToList());
+            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
         }
 
         #region Điều kiện thực thi command

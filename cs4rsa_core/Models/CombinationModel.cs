@@ -16,8 +16,8 @@ namespace cs4rsa_core.Models
     {
         public IEnumerable<SubjectModel> SubjecModels { get; set; }
 
-        private List<ClassGroupModel> _classGroupModels;
-        public List<ClassGroupModel> ClassGroupModels
+        private IEnumerable<ClassGroupModel> _classGroupModels;
+        public IEnumerable<ClassGroupModel> ClassGroupModels
         {
             get => _classGroupModels;
             set => _classGroupModels = value;
@@ -44,7 +44,7 @@ namespace cs4rsa_core.Models
         public bool IsCanShow { get; set; }
         public bool IsConflict { get; set; }
 
-        public CombinationModel(List<SubjectModel> subjectModels, List<ClassGroupModel> classGroupModels)
+        public CombinationModel(IEnumerable<SubjectModel> subjectModels, IEnumerable<ClassGroupModel> classGroupModels)
         {
             SubjecModels = subjectModels;
             _classGroupModels = classGroupModels;
@@ -98,7 +98,7 @@ namespace cs4rsa_core.Models
                     count++;
                 }
             }
-            return count == _classGroupModels.Count;
+            return count == _classGroupModels.Count();
         }
 
         /// <summary>

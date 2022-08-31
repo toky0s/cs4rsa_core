@@ -31,7 +31,7 @@ namespace SubjectCrawlService1.DataTypes
             List<Session> sessions = new();
             foreach (IEnumerable<StudyTime> studyTimes in _scheduleTime.Values)
             {
-                sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()).ToList());
+                sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()));
             }
             return sessions.Distinct();
         }
@@ -64,9 +64,9 @@ namespace SubjectCrawlService1.DataTypes
         /// Giao các thứ của hai Schedule. Dùng để phát hiện xung đột giữa hai Schedule.
         /// </summary>
         /// <returns>Trả về DayOfWeek mà cả hai Schedule cùng có.</returns>
-        public static List<DayOfWeek> GetIntersectDate(Schedule schedule1, Schedule schedule2)
+        public static IEnumerable<DayOfWeek> GetIntersectDate(Schedule schedule1, Schedule schedule2)
         {
-            return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays()).ToList();
+            return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays());
         }
 
 
@@ -80,7 +80,7 @@ namespace SubjectCrawlService1.DataTypes
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
             foreach (Schedule item in schedules)
             {
-                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = item.ScheduleTime.ToList();
+                IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = item.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
                     if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))

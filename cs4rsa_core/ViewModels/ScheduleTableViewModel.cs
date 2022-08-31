@@ -27,7 +27,7 @@ namespace cs4rsa_core.ViewModels
         {
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
             {
-                _classGroupModels = m.Value.ToList();
+                _classGroupModels = m.Value;
                 ReloadSchedule();
             });
 
