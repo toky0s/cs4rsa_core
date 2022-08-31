@@ -16,7 +16,6 @@ using SubjectCrawlService1.DataTypes;
 using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -135,7 +134,6 @@ namespace cs4rsa_core.ViewModels
             ClassGroupModels.Clear();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
-            UpdateShareString();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
@@ -171,7 +169,6 @@ namespace cs4rsa_core.ViewModels
             DeleteCommand.NotifyCanExecuteChanged();
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
-            UpdateShareString();
             Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
         }
 
@@ -193,6 +190,7 @@ namespace cs4rsa_core.ViewModels
         {
             ShareStringUC shareStringUC = new();
             ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
+            UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
         }
@@ -305,7 +303,6 @@ namespace cs4rsa_core.ViewModels
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
-            UpdateShareString();
         }
 
         private void UpdateShareString()
@@ -378,7 +375,6 @@ namespace cs4rsa_core.ViewModels
             }
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
-            UpdateShareString();
             SaveCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }

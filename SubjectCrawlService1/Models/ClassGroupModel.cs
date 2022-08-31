@@ -96,6 +96,10 @@ namespace SubjectCrawlService1.Models
             IsSpecialClassGroup = classGroup.IsSpecialClassGroup;
             RegisterCodes = classGroup.RegisterCodes;
             CompulsoryClass = GetCompulsoryClass();
+            if (classGroup.RegisterCodes.Count == 1)
+            {
+                _currentRegisterCode = classGroup.RegisterCodes[0];
+            }
         }
 
         public IEnumerable<Teacher> GetTeacherModels()
