@@ -58,7 +58,7 @@ namespace ConflictService.Models
         public string GetConflictInfo()
         {
             List<string> resultTimes = new();
-            foreach (KeyValuePair<DayOfWeek, List<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
                 string day = BasicDataConverter.ToDayOfWeekText(item.Key);
                 List<string> times = new();
@@ -79,7 +79,7 @@ namespace ConflictService.Models
         public string GetFullConflictInfo()
         {
             List<string> resultTimes = new();
-            foreach (KeyValuePair<DayOfWeek, List<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
                 string day = BasicDataConverter.ToDayOfWeekText(item.Key);
                 List<string> times = new();

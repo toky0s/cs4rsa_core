@@ -20,16 +20,16 @@
         Grid.ColumnSpan="2"
         Width="{Binding ElementName=UC_ScheduleBlock, Path=Width}"
         Height="{Binding Path=Height, ElementName=UC_ScheduleBlock}"
-        Padding="5"
+        Padding="2"
         Background="{Binding BlockColor}"
+        BorderBrush="Silver"
+        BorderThickness=".5"
         CornerRadius="5"
         Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">
-        <StackPanel VerticalAlignment="Center">
+        <StackPanel>
             <TextBlock
-                FontSize="12"
-                FontWeight="Bold"
-                Foreground="White"
+                FontSize="10"
                 Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 TextWrapping="WrapWithOverflow" />
         </StackPanel>

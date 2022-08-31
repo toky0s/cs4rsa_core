@@ -55,12 +55,11 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task Run()
         {
             ColorGenerator colorGenerator = new(_keywordRepository);
-            List<int> courseIds = _sessionManagerResult.SubjectInfoDatas
-                                            .Select(item => _keywordRepository.GetCourseId(item.SubjectCode))
-                                            .ToList();
+            IEnumerable<int> courseIds = _sessionManagerResult.SubjectInfoDatas
+                                        .Select(item => _keywordRepository.GetCourseId(item.SubjectCode));
 
             List<SubjectModel> subjectModels = new();
-            foreach (ushort courseId in courseIds)
+            foreach (int courseId in courseIds)
             {
                 Subject subject = await _subjectCrawler.Crawl(courseId);
                 await subject.GetClassGroups();

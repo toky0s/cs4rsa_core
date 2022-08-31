@@ -169,7 +169,7 @@ namespace SubjectCrawlService1.DataTypes
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
+                IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
                     if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
@@ -189,7 +189,7 @@ namespace SubjectCrawlService1.DataTypes
             Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
             foreach (SchoolClass schoolClass in schoolClasses)
             {
-                List<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime.ToList();
+                IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
                     if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))

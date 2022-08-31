@@ -68,21 +68,18 @@ namespace ConflictService.Utils
         /// </summary>
         /// <param name="studyTimes">List các StudyTime.</param>
         /// <returns>List các Tuple là cặp các StudyTime.</returns>
-        public static List<Tuple<StudyTime, StudyTime>> PairStudyTimes(List<StudyTime> studyTimes)
+        public static IEnumerable<Tuple<StudyTime, StudyTime>> PairStudyTimes(List<StudyTime> studyTimes)
         {
-            List<Tuple<StudyTime, StudyTime>> tupleStudyTimes = new();
             int index = 0;
             while (index < studyTimes.Count - 1)
             {
                 StudyTime firstItem = studyTimes[index];
                 for (int j = index + 1; j <= studyTimes.Count - 1; ++j)
                 {
-                    Tuple<StudyTime, StudyTime> tupleStudyTime = new(firstItem, studyTimes[j]);
-                    tupleStudyTimes.Add(tupleStudyTime);
+                    yield return new(firstItem, studyTimes[j]);
                 }
                 index++;
             }
-            return tupleStudyTimes;
         }
 
         /// <summary>
@@ -90,16 +87,16 @@ namespace ConflictService.Utils
         /// </summary>
         /// <param name="studyTimeTuples">List các Tuple StudyTime.</param>
         /// <returns>Danh sách các StudyTimeIntersect.</returns>
-        public static List<StudyTimeIntersect> GetStudyTimeIntersects(List<Tuple<StudyTime, StudyTime>> studyTimeTuples)
+        public static IEnumerable<StudyTimeIntersect> GetStudyTimeIntersects(IEnumerable<Tuple<StudyTime, StudyTime>> studyTimeTuples)
         {
-            List<StudyTimeIntersect> studyTimeIntersects = new();
             foreach (Tuple<StudyTime, StudyTime> item in studyTimeTuples)
             {
                 StudyTimeIntersect studyTimeIntersect = GetStudyTimeIntersect(item.Item1, item.Item2);
-                studyTimeIntersects.Add(studyTimeIntersect);
+                if (studyTimeIntersect != null)
+                {
+                    yield return studyTimeIntersect;
+                }
             }
-            studyTimeIntersects.RemoveAll(item => item == null);
-            return studyTimeIntersects;
         }
     }
 }

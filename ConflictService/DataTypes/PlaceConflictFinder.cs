@@ -31,15 +31,15 @@ namespace ConflictService.DataTypes
                 // chắc chắn không xảy ra xung đột.
                 Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
                 Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
-                List<DayOfWeek> intersectDayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
-                if (intersectDayOfWeeks.Count > 0)
+                IEnumerable<DayOfWeek> intersectDayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
+                if (intersectDayOfWeeks.Any())
                 {
                     // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
                     // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
                     IEnumerable<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
                     IEnumerable<Place> schoolClass2Places = _schoolClass2.DayPlaceMetaData.GetPlaces();
-                    List<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct().ToList();
-                    if (dinstictPlaces.Count > 1)
+                    IEnumerable<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct();
+                    if (dinstictPlaces.Count() > 1)
                     {
                         Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> conflictPlaces = new();
                         // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
@@ -55,12 +55,11 @@ namespace ConflictService.DataTypes
                                 conflictPlaces.Add(dayOfWeek, placeAdjacents);
                         }
                         if (conflictPlaces.Count != 0)
+                        {
                             return new ConflictPlace(conflictPlaces);
-                        return null;
+                        }
                     }
-                    return null;
                 }
-                return null;
             }
             return null;
         }

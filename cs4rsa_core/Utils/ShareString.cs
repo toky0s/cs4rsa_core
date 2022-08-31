@@ -35,7 +35,7 @@ namespace cs4rsa_core.Utils
             {
                 return "";
             }
-            List<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item)).ToList();
+            IEnumerable<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item));
             string SubjectHassesJoin = string.Join("?", SubjectHasses);
             string Count = classGroupModels.Count().ToString();
             string currentYear = _courseCrawler.GetCurrentYearValue();

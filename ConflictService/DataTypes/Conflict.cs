@@ -21,20 +21,20 @@ namespace ConflictService.DataTypes
             {
                 Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
                 Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
-                List<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
+                IEnumerable<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
                 // Check date
-                if (DayOfWeeks.Count > 0)
+                if (DayOfWeeks.Any())
                 {
-                    Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes = new();
+                    Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes = new();
                     //check time
                     foreach (DayOfWeek DayOfWeek in DayOfWeeks)
                     {
                         IEnumerable<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(DayOfWeek);
                         IEnumerable<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(DayOfWeek);
-                        List<StudyTime> studyTimeJoin = studyTimesClassGroup1.Concat(studyTimesClassGroup2).ToList();
-                        List<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimeJoin);
-                        List<StudyTimeIntersect> studyTimeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(studyTimePairs);
-                        if (studyTimeIntersects.Count != 0)
+                        IEnumerable<StudyTime> studyTimeJoin = studyTimesClassGroup1.Concat(studyTimesClassGroup2);
+                        IEnumerable<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimeJoin.ToList());
+                        IEnumerable<StudyTimeIntersect> studyTimeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(studyTimePairs);
+                        if (studyTimeIntersects.Count() != 0)
                             conflictTimes.Add(DayOfWeek, studyTimeIntersects);
                     }
                     return conflictTimes.Count != 0 ? new ConflictTime(conflictTimes) : null;

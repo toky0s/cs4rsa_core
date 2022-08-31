@@ -493,7 +493,7 @@ namespace cs4rsa_core.ViewModels
         {
             if (value == null)
             {
-                List<int> courseIds = SubjectModels.Select(item => item.CourseId).ToList();
+                IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
                 if (selectedKeyword == null)
                 {
                     CanRunAddCommand = true;

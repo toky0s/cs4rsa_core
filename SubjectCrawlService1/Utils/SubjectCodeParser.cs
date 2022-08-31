@@ -34,7 +34,7 @@ namespace cs4rsa.Helpers
             if (from == GetFrom.Course)
             {
                 MatchCollection matchList = regex.Matches(text);
-                List<string> stringList = matchList.Cast<Match>().Select(match => match.Value).ToList();
+                IEnumerable<string> stringList = matchList.Cast<Match>().Select(match => match.Value);
                 List<string> output = new();
                 foreach (string item in stringList)
                 {

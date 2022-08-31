@@ -319,7 +319,7 @@ namespace cs4rsa_core.ViewModels
                     int where = _tempResult[_genIndex][j];
                     classGroupModels.Add(_classGroupModelsOfClass[j][where]);
                 }
-                CombinationModel combinationModel = new(SubjectModels.ToList(), classGroupModels);
+                CombinationModel combinationModel = new(SubjectModels, classGroupModels);
                 CombinationModels.Add(combinationModel);
                 _genIndex++;
                 if (!combinationModel.IsHaveTimeConflicts() && !combinationModel.IsHavePlaceConflicts() && combinationModel.IsCanShow)
@@ -528,7 +528,7 @@ namespace cs4rsa_core.ViewModels
                         if (isHasDayOfWeek)
                         {
                             List<StudyTime> studyTimes = classGroupModel.Schedule.ScheduleTime[dayOfWeekFilter.Key];
-                            List<SubjectCrawlService1.DataTypes.Enums.Session> sessions = studyTimes.Select(item => item.GetSession()).ToList();
+                            IEnumerable<SubjectCrawlService1.DataTypes.Enums.Session> sessions = studyTimes.Select(item => item.GetSession());
                             if (sessions.Contains(sessionKeyValuePair.Key))
                             {
                                 return false;
@@ -683,12 +683,12 @@ namespace cs4rsa_core.ViewModels
         private async Task OnDownload()
         {
             CombinationModels.Clear();
-            List<string> choiceSubjectCodes = ChoicedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode).ToList();
-            List<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode).ToList();
+            IEnumerable<string> choiceSubjectCodes = ChoicedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode);
+            IEnumerable<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode);
 
-            if (choiceSubjectCodes.Count == 0)
+            if (!choiceSubjectCodes.Any())
             {
-                wereDownloadedSubjectCodes.Clear();
+                wereDownloadedSubjectCodes = new List<string>();
             }
 
             IEnumerable<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes);

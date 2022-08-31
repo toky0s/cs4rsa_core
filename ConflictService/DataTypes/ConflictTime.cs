@@ -12,28 +12,12 @@ namespace ConflictService.DataTypes
     /// </summary>
     public class ConflictTime
     {
-        private readonly Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes;
-        public Dictionary<DayOfWeek, List<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
+        private readonly Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes;
+        public Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
 
-        public ConflictTime(Dictionary<DayOfWeek, List<StudyTimeIntersect>> conflictTimes)
+        public ConflictTime(Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes)
         {
             this.conflictTimes = conflictTimes;
         }
-
-        public List<StudyTimeIntersect> GetStudyTimeIntersects(DayOfWeek DayOfWeek)
-        {
-            return conflictTimes[DayOfWeek];
-        }
-
-        public List<DayOfWeek> GetSchoolDays()
-        {
-            List<DayOfWeek> dayOfWeeks = new();
-            foreach (DayOfWeek dayOfWeek in conflictTimes.Keys)
-            {
-                dayOfWeeks.Add(dayOfWeek);
-            }
-            return dayOfWeeks;
-        }
     }
-
 }
