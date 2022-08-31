@@ -1,12 +1,11 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogServices;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows;
+using cs4rsa_core.BaseClasses;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    public class ShareStringViewModel : DialogViewModelBase<ShareStringResult>
+    public class ShareStringViewModel : ViewModelBase
     {
         private static readonly string _defaultShareString = "Không có Share String nào ở đây cả.";
 
