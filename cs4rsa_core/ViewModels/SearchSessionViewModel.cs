@@ -183,6 +183,11 @@ namespace cs4rsa_core.ViewModels
                 await UpdateSuccessMsgHandler();
             });
 
+            WeakReferenceMessenger.Default.Register<SubjectImporterVmMsgs.ExitImportSubjectMsg>(this, (r, m) =>
+            {
+                ExitImportSubjectMsgHandler(m.Value.Item1, m.Value.Item2);
+            });
+
             DisciplineKeywordModels = new();
             SubjectModels = new();
             Disciplines = new();
@@ -362,15 +367,13 @@ namespace cs4rsa_core.ViewModels
                 SubjectImporterUC subjectImporterUC = new();
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
                 vm.SessionManagerResult = result;
-                vm.CloseDialogCallback = CloseDialogAndHandleImportResult;
                 OpenDialog(subjectImporterUC);
                 await vm.Run();
             }
         }
 
-        private void CloseDialogAndHandleImportResult(ImportResult importResult, SessionManagerResult sessionManagerResult)
+        private void ExitImportSubjectMsgHandler(ImportResult importResult, SessionManagerResult sessionManagerResult)
         {
-            CloseDialog();
             ImportSubjects(importResult.SubjectModels);
             var choicer = new ClassGroupChoicer();
             choicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
