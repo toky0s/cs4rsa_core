@@ -18,7 +18,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         public string ChildOfNode { get; }
         public string SubjectCode { get; set; }
         public string SubjectName { get; set; }
-        public byte StudyUnit { get; }
+        public int StudyUnit { get; }
         public StudyUnitType StudyUnitType { get; }
         public List<string> PrerequisiteSubjects { get; }
         public List<string> ParallelSubjects { get; }
@@ -26,7 +26,7 @@ namespace ProgramSubjectCrawlerService.DataTypes
         public string CourseId { get; }
         public string ParentNodeName { get; }
 
-        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, byte studyUnit, StudyUnitType studyUnitType,
+        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
             List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
         {
             Id = id;

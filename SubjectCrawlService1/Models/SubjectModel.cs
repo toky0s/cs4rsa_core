@@ -20,7 +20,7 @@ namespace SubjectCrawlService1.Models
         public List<ClassGroupModel> ClassGroupModels { get; set; }
         public string SubjectName => _subject.Name;
         public string SubjectCode => _subject.SubjectCode;
-        public byte StudyUnit { get; set; }
+        public int StudyUnit { get; set; }
         public int CourseId => _subject.CourseId;
         public string StudyUnitType => _subject.StudyUnitType;
         public string StudyType => _subject.StudyType;

@@ -4,11 +4,11 @@ namespace SubjectCrawlService1.DataTypes
 {
     public class StudyWeek
     {
-        private readonly byte startWeek;
-        private readonly byte endWeek;
+        private readonly int startWeek;
+        private readonly int endWeek;
 
-        public byte StartWeek { get { return startWeek; } }
-        public byte EndWeek { get { return endWeek; } }
+        public int StartWeek { get { return startWeek; } }
+        public int EndWeek { get { return endWeek; } }
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
@@ -18,7 +18,7 @@ namespace SubjectCrawlService1.DataTypes
         {
             string[] separatingStrings = { "--" };
             string[] startAndEnd = studyWeek.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
-            startWeek = byte.Parse(startAndEnd[0]);
+            startWeek = int.Parse(startAndEnd[0]);
 
             /// MED 362:  Y Học Cổ Truyền
             /// Trường hợp parse: 49--
@@ -27,7 +27,7 @@ namespace SubjectCrawlService1.DataTypes
             /// XinTA
             try
             {
-                endWeek = byte.Parse(startAndEnd[1]);
+                endWeek = int.Parse(startAndEnd[1]);
             }
             catch
             {

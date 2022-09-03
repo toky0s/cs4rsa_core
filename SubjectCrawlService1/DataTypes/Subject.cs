@@ -29,7 +29,9 @@ namespace SubjectCrawlService1.DataTypes
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
+
         private readonly string _rawSoup;
+        public string RawSoup { get => _rawSoup; }
 
         private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
@@ -40,7 +42,7 @@ namespace SubjectCrawlService1.DataTypes
 
         public string Name { get; }
         public string SubjectCode { get; }
-        public byte StudyUnit => byte.Parse(_studyUnit);
+        public int StudyUnit => int.Parse(_studyUnit);
         public string StudyUnitType => _studyUnitType;
         public string StudyType => _studyType;
         public string Semester => _semester;

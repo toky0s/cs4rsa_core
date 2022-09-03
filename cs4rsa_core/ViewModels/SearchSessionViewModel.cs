@@ -141,6 +141,14 @@ namespace cs4rsa_core.ViewModels
             set { _currentView = value; OnPropertyChanged(); }
         }
 
+        private bool _isUseCache;
+
+        public bool IsUseCache
+        {
+            get { return _isUseCache; }
+            set { _isUseCache = value; OnPropertyChanged(); }
+        }
+
         #endregion
 
         #region Services
@@ -195,6 +203,7 @@ namespace cs4rsa_core.ViewModels
             SavedSchedules = new();
             SearchText = "";
             CurrentView = 0;
+            IsUseCache = true;
 
             AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
@@ -430,7 +439,7 @@ namespace cs4rsa_core.ViewModels
             vm.SubjectCode = subjectCode;
             OpenDialog(subjectDownloadingUC);
 
-            Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1);
+            Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1, IsUseCache);
             if (subject != null)
             {
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);

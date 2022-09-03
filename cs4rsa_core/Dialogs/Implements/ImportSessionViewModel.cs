@@ -55,8 +55,8 @@ namespace cs4rsa_core.Dialogs.Implements
 
         public string ShareString { get; set; }
 
-        private sbyte _isAvailableSession;
-        public sbyte IsAvailableSession
+        private int _isAvailableSession;
+        public int IsAvailableSession
         {
             get => _isAvailableSession;
             set
@@ -126,7 +126,7 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 SessionSchoolClasses.Clear();
                 IEnumerable<SessionSchoolClass> sessionSchoolClasses = _unitOfWork
-                    .SessionSchoolClassRepository
+                    .SessionSchoolClasses
                     .GetSessionSchoolClass(value);
                 foreach (SessionSchoolClass sessionSchoolClass in sessionSchoolClasses)
                 {
@@ -141,8 +141,8 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 string semester = session.SemesterValue;
                 string year = session.YearValue;
-                sbyte available = 1;
-                sbyte unavailable = 0;
+                int available = 1;
+                int unavailable = 0;
                 IsAvailableSession = semester.Equals(_courseCrawler.GetCurrentSemesterValue(), StringComparison.Ordinal)
                     && year.Equals(_courseCrawler.GetCurrentYearValue(), StringComparison.Ordinal) ? available : unavailable;
             }

@@ -6,18 +6,18 @@ namespace cs4rsa_core.Converters.Controls
 {
     public class TimeLineTextPositionConverter : IValueConverter
     {
-        public static readonly byte BYTE_TIMELINES_COUNT = 15;
-        public static readonly byte BYTE_CURRENT_TIMELINE_FONT_SIZE = 10;
+        public static readonly int INT_TIMELINES_COUNT = 15;
+        public static readonly int INT_CURRENT_TIMELINE_FONT_SIZE = 10;
 
         // Khoảng cách tính từ bottom của text với line ngay bên dưới
-        public static readonly byte BYTE_EXTRA_SPACE = 7;
+        public static readonly int INT_EXTRA_SPACE = 7;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double douCanvasHeight = (double)value;
-            byte timelineIndex = byte.Parse((string)parameter);
-            double douRange = douCanvasHeight / BYTE_TIMELINES_COUNT;
-            double douPosition = douRange * timelineIndex - (BYTE_CURRENT_TIMELINE_FONT_SIZE + BYTE_EXTRA_SPACE);
+            int timelineIndex = int.Parse((string)parameter);
+            double douRange = douCanvasHeight / INT_TIMELINES_COUNT;
+            double douPosition = douRange * timelineIndex - (INT_CURRENT_TIMELINE_FONT_SIZE + INT_EXTRA_SPACE);
             return douPosition;
         }
 
