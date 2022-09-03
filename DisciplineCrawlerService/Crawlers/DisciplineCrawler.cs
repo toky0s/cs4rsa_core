@@ -84,7 +84,7 @@ namespace DisciplineCrawlerService.Crawlers
                     Keyword keyword = new()
                     {
                         Keyword1 = keyword1,
-                        CourseId = ushort.Parse(courseId),
+                        CourseId = int.Parse(courseId),
                         DisciplineId = disciplineId,
                         SubjectName = subjectName,
                         Color = color

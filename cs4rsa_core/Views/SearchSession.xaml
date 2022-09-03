@@ -125,14 +125,34 @@
                 </StackPanel>
             </Popup>
         </StackPanel>
-        <Button
-            x:Name="DisciplineKeywordButton"
+        <Grid
             Grid.Row="2"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Command="{Binding AddCommand}"
-            Content="THÊM"
-            IsEnabled="{Binding CanRunAddCommand}" />
+            Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ToggleButton Content="{materialDesign:PackIcon Kind=Cached, Size=21}" IsChecked="{Binding IsUseCache}">
+                <ToggleButton.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
+                        <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsUseCache}" Value="true">
+                                <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <Button
+                x:Name="DisciplineKeywordButton"
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                Command="{Binding AddCommand}"
+                Content="THÊM"
+                IsEnabled="{Binding CanRunAddCommand}" />
+        </Grid>
         <ListBox
             x:Name="DownloadSubjects"
             Grid.Row="3"
@@ -143,6 +163,7 @@
             AllowDrop="True"
             Drop="DownloadSubjects_Drop"
             ItemsSource="{Binding SubjectModels}"
+            ScrollViewer.CanContentScroll="False"
             SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.Resources>
                 <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">

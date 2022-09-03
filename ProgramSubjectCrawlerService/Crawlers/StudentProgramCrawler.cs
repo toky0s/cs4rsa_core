@@ -254,7 +254,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
                     //study unit
                     HtmlNode tdStudyUnitTag = docNode.SelectSingleNode("//td[3]");
-                    byte studyUnit = byte.Parse(StringHelper.SuperCleanString(tdStudyUnitTag.InnerText));
+                    int studyUnit = int.Parse(StringHelper.SuperCleanString(tdStudyUnitTag.InnerText));
 
                     //studyunit type
                     HtmlNode tdStudyUnitTypeTag = docNode.SelectSingleNode("//td[4]");

@@ -26,8 +26,8 @@ namespace cs4rsa_core.Models
         public string FolderName { get; set; }
         public string Color { get; set; }
 
-        private byte _studyUnit;
-        public byte StudyUnit
+        private int _studyUnit;
+        public int StudyUnit
         {
             get => _studyUnit == 0 ? ProgramSubject.StudyUnit : _studyUnit;
             set => _studyUnit = value;

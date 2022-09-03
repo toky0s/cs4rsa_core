@@ -65,5 +65,10 @@ namespace Cs4rsaDatabaseService.Implements
         {
             _context.Set<T>().RemoveRange(entities);
         }
+
+        public void Update(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+        }
     }
 }
