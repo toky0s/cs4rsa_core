@@ -33,14 +33,14 @@ namespace HelperService
 
         public static string EncodeTo64(string toEncode)
         {
-            byte[] toEncodeAints = Encoding.UTF8.GetBytes(toEncode);
-            return Convert.ToBase64String(toEncodeAints);
+            byte[] toEncodeAsBytes = Encoding.UTF8.GetBytes(toEncode);
+            return Convert.ToBase64String(toEncodeAsBytes);
         }
 
         public static string DecodeFrom64(string encodedData)
         {
-            byte[] encodedDataAints = Convert.FromBase64String(encodedData);
-            return Encoding.UTF8.GetString(encodedDataAints);
+            byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
+            return Encoding.UTF8.GetString(encodedDataAsBytes);
         }
     }
 }
