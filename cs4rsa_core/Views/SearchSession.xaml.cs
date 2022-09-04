@@ -4,6 +4,7 @@ using cs4rsa_core.ViewModels;
 using Cs4rsaDatabaseService.Models;
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -52,13 +53,13 @@ namespace cs4rsa_core.Views
             await (DataContext as SearchSessionViewModel).LoadSearchItemSource(text);
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listView = sender as ListView;
             FullMatchSearchingKeyword fullMatch = (listView.SelectedValue as FullMatchSearchingKeyword);
             if (fullMatch != null)
             {
-                (DataContext as SearchSessionViewModel).LoadSelectedDisciplineAndKeyword(fullMatch.Discipline, fullMatch.Keyword);
+                await (DataContext as SearchSessionViewModel).LoadSelectedDisciplineAndKeyword(fullMatch.Discipline, fullMatch.Keyword);
                 (DataContext as SearchSessionViewModel).SearchText = "";
             }
         }

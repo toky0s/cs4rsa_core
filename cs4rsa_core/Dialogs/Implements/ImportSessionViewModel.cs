@@ -219,8 +219,10 @@ namespace cs4rsa_core.Dialogs.Implements
                                     MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                await _unitOfWork.BeginTransAsync();
                 _unitOfWork.Sessions.Remove(_selectedScheduleSession);
-                _unitOfWork.Complete();
+                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CommitAsync();
                 await Reload();
             }
         }

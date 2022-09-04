@@ -19,11 +19,8 @@ namespace Cs4rsaDatabaseService.Interfaces
         ISessionSchoolClassRepository SessionSchoolClasses { get; }
         int Complete();
         Task<int> CompleteAsync();
-        IDbContextTransaction BeginTrans();
         Task<IDbContextTransaction> BeginTransAsync();
-        void Commit();
         Task CommitAsync();
-        void Rollback();
         Task RollbackAsync();
     }
 }
