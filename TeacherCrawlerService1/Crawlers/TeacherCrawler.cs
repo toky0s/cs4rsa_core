@@ -45,9 +45,9 @@ namespace TeacherCrawlerService1.Crawlers
             return intructorIdParam.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)[1];
         }
 
-        private bool IsTeacherHasInDatabase(int instructorId)
+        private async Task<bool> IsTeacherHasInDatabase(int instructorId)
         {
-            return _unitOfWork.Teachers.GetById(instructorId) is not null;
+            return await _unitOfWork.Teachers.GetByIdAsync(instructorId) is not null;
         }
 
         public async Task<Teacher> Crawl(string url)
@@ -55,9 +55,9 @@ namespace TeacherCrawlerService1.Crawlers
             if (url != null)
             {
                 int teacherId = int.Parse(GetIntructorId(url));
-                if (IsTeacherHasInDatabase(teacherId))
+                if (await IsTeacherHasInDatabase(teacherId))
                 {
-                    return _unitOfWork.Teachers.GetById(teacherId);
+                    return await _unitOfWork.Teachers.GetByIdAsync(teacherId);
                 }
                 else
                 {
@@ -97,11 +97,10 @@ namespace TeacherCrawlerService1.Crawlers
                             Form = form,
                             Path = strPath
                         };
-                        _unitOfWork.Teachers.Add(teacher);
-                        _unitOfWork.Complete();
+                        await _unitOfWork.Teachers.AddAsync(teacher);
+                        await _unitOfWork.CompleteAsync();
                         return teacher;
                     }
-                    return null;
                 }
             }
             return null;

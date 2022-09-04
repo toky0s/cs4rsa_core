@@ -97,12 +97,14 @@ namespace StudentCrawlerService.Crawlers
                     AvatarImage = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
-                _unitOfWork.Students.Add(student);
-                _unitOfWork.Complete();
+                await _unitOfWork.BeginTransAsync();
+                await _unitOfWork.Students.AddAsync(student);
+                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CommitAsync();
                 return student;
             }
             return studentExist;
-        }
+        } 
 
         public Task<Student> CrawlWithSessionId(string sessionId)
         {

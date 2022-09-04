@@ -8,7 +8,6 @@ using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
@@ -19,7 +18,7 @@ namespace cs4rsa_core.Dialogs.Implements
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public string Name { get; set; }
         public bool IsSaveAsJsonFile { get; set; }
-        public RelayCommand SaveCommand { get; set; }
+        public AsyncRelayCommand SaveCommand { get; set; }
         public Action<SaveResult> CloseDialogCallback { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +29,7 @@ namespace cs4rsa_core.Dialogs.Implements
             _courseCrawler = courseCrawler;
             IsSaveAsJsonFile = true;
             ScheduleSessions = new();
-            SaveCommand = new RelayCommand(Save);
+            SaveCommand = new AsyncRelayCommand(Save);
         }
 
         public async Task LoadScheduleSessions()
@@ -43,7 +42,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private void Save()
+        private async Task Save()
         {
             List<SessionDetail> sessionDetails = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
@@ -78,8 +77,8 @@ namespace cs4rsa_core.Dialogs.Implements
                 SessionDetails = sessionDetails
             };
 
-            _unitOfWork.Sessions.Add(session);
-            _unitOfWork.Complete();
+            await _unitOfWork.Sessions.AddAsync(session);
+            await _unitOfWork.CompleteAsync();
             SaveResult result = new() { Name = Name };
             CloseDialogCallback.Invoke(result);
         }

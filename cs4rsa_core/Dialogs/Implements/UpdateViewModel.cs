@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.ComponentModel;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

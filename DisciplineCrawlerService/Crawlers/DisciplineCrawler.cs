@@ -7,9 +7,11 @@ using HelperService;
 
 using HtmlAgilityPack;
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DisciplineCrawlerService.Crawlers
 {
@@ -48,9 +50,9 @@ namespace DisciplineCrawlerService.Crawlers
 
             HtmlWeb htmlWeb = new();
             HtmlDocument document = htmlWeb.Load(URL);
-            HtmlNode[] trTags = document.DocumentNode.Descendants("tr").ToArray();
-
-            trTags = trTags.Where(node => node.HasClass("lop")).ToArray();
+            IEnumerable<HtmlNode> trTags = document.DocumentNode
+                .Descendants("tr")
+                .Where(node => node.HasClass("lop"));
 
             string currentDiscipline = null;
             int disciplineId = 0;

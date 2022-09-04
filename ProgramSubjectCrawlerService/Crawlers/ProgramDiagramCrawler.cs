@@ -43,12 +43,10 @@ namespace ProgramSubjectCrawlerService.Crawlers
         public async Task ToProgramDiagram()
         {
             #region Clean các môn chương trình học trong DB
-            await _unitOfWork.BeginTransAsync();
-            _unitOfWork.PreProDetails.RemoveRange(_unitOfWork.PreProDetails.GetAll());
-            _unitOfWork.ParProDetails.RemoveRange(_unitOfWork.ParProDetails.GetAll());
-            _unitOfWork.ProgramSubjects.RemoveRange(_unitOfWork.ProgramSubjects.GetAll());
-            _unitOfWork.PreParSubjects.RemoveRange(_unitOfWork.PreParSubjects.GetAll());
-            await _unitOfWork.CommitAsync();
+            _unitOfWork.PreProDetails.RemoveRange(await _unitOfWork.PreProDetails.GetAllAsync());
+            _unitOfWork.ParProDetails.RemoveRange(await _unitOfWork.ParProDetails.GetAllAsync());
+            _unitOfWork.ProgramSubjects.RemoveRange(await _unitOfWork.ProgramSubjects.GetAllAsync());
+            _unitOfWork.PreParSubjects.RemoveRange(await _unitOfWork.PreParSubjects.GetAllAsync());
             #endregion
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(_specialString);

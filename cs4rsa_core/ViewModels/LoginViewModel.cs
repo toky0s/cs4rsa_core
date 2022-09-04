@@ -89,15 +89,17 @@ namespace cs4rsa_core.ViewModels
             await _unitOfWork.CompleteAsync();
             await LoadStudentInfos();
 
-            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", async (obj) => await OnRestore(obj), actionData);
         }
 
-        private void OnRestore(Student obj)
+        private async Task OnRestore(Student obj)
         {
-            _unitOfWork.Students.Add(obj);
-            _unitOfWork.Complete();
+            await _unitOfWork.BeginTransAsync();
+            await _unitOfWork.Students.AddAsync(obj);
+            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.CommitAsync();
             Students.Clear();
-            IEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
             foreach (Student student in students)
             {
                 Students.Add(student);

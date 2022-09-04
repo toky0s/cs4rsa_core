@@ -244,10 +244,10 @@ namespace cs4rsa_core.ViewModels
             SelectedDiscipline = Disciplines[0];
         }
 
-        internal void LoadSelectedDisciplineAndKeyword(Discipline discipline, Keyword keyword)
+        internal async Task LoadSelectedDisciplineAndKeyword(Discipline discipline, Keyword keyword)
         {
-            Discipline actualDiscipline = _unitOfWork.Disciplines.GetById(discipline.DisciplineId);
-            Keyword actualKeyword = _unitOfWork.Keywords.GetById(keyword.KeywordId);
+            Discipline actualDiscipline = await _unitOfWork.Disciplines.GetByIdAsync(discipline.DisciplineId);
+            Keyword actualKeyword = await _unitOfWork.Keywords.GetByIdAsync(keyword.KeywordId);
             SelectedDiscipline = actualDiscipline;
             SelectedKeyword = actualKeyword;
         }
