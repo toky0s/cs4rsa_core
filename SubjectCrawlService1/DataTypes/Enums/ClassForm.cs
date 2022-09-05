@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace SubjectCrawlService1.DataTypes.Enums {
     /**
     * Danh sách hình thức lớp
@@ -18,7 +20,7 @@ namespace SubjectCrawlService1.DataTypes.Enums {
         public static readonly ClassForm LEC = new("LEC", "LECture", "Giảng Lý Thuyết", "Nghe giảng lý thuyết");
         public static readonly ClassForm PRJ = new("PRJ", "PRoJect", "Đồ Án", "Học qua việc làm đồ án và/hoặc dự án");
         public static readonly ClassForm REA = new("REA", "REAding", "Đọc", "Học qua tự đọc hay đọc theo hướng dẫn");
-        public static readonly ClassForm REC = new("REC", "RECitation", "Ôn Tập", "Ôn tập lại những kiến thức đã học trong các hình thức lớp khác (thường là lý thuyết)");
+        public static readonly ClassForm REC = new("REC", "RECitation", "Ôn Tập", "Ôn tập lại những kiến thức đã học trong các hình thức lớp khác (thường là lý thuyết)", "ôn tập (thường xuyên)");
         public static readonly ClassForm SEM = new("SEM", "SEMinar", "Seminar", "Hội họp");
         public static readonly ClassForm SES = new("SES", "SESsion", "Trình Bày \\ Thảo Luận", "Trình bày nội dung và ngay sau đó, thảo luận về nội dung đó");
         public static readonly ClassForm SLF = new("SLF", "SeLF-study", "Tự Học", "Tự học theo những yêu cầu cụ thể (ví dụ qua việc làm danh sách bài học)");
@@ -46,12 +48,16 @@ namespace SubjectCrawlService1.DataTypes.Enums {
         
         private readonly string _description;
         public string Description { get => _description;}
-        
-        private ClassForm(string code, string fullEn, string fullVn, string description) {
+
+        private readonly string[] _patterns;
+        public string[] Patterns { get => _patterns; }
+
+        private ClassForm(string code, string fullEn, string fullVn, string description, params string[] patterns) {
             _code = code;
             _fullEn = fullEn;
             _fullVn = fullVn;
             _description = description;
+            _patterns = patterns;
         }
 
         public static bool operator ==(ClassForm left, ClassForm right) {
@@ -69,7 +75,7 @@ namespace SubjectCrawlService1.DataTypes.Enums {
                 return true;
             }
 
-            if (ReferenceEquals(obj, null))
+            if (obj is null)
             {
                 return false;
             }
@@ -97,7 +103,8 @@ namespace SubjectCrawlService1.DataTypes.Enums {
             foreach (ClassForm classForm in _classForms) {
                 if (classForm.Code.ToLower() == code 
                     || classForm._fullEn.ToLower() == code
-                    || classForm._fullVn.ToLower() == code)
+                    || classForm._fullVn.ToLower() == code
+                    || classForm._patterns.ToList().Contains(code))
                 {
                     return classForm;
                 }
