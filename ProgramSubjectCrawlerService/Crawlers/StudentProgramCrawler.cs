@@ -263,7 +263,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
                     //prerequisiteSubjects and parallelSubjects
                     PreParContainer preParContainer;
-                    if (_sessionId != null)
+                    if (_sessionId != null && _sessionId != string.Empty)
                     {
                         preParContainer = await _preParSubjectCrawler.Run(courseId, _sessionId);
                     }
