@@ -369,7 +369,6 @@ namespace cs4rsa_core.ViewModels
 
         private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
         {
-            Cs4rsaMessageBox messageBoxService = new();
             CloseDialog();
             if (result != null)
             {
@@ -443,6 +442,10 @@ namespace cs4rsa_core.ViewModels
             if (subject != null)
             {
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                if (subjectModel.ClassGroupModels.Count == 1)
+                {
+                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(subjectModel.ClassGroupModels[0]));
+                }
                 AddSubjectAndReload(subjectModel);
                 CloseDialog();
                 SelectedSubjectModel = SubjectModels.Last();
