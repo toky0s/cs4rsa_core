@@ -783,8 +783,7 @@
                             <MenuItem
                                 Command="{Binding ShowOnSimuCommand}"
                                 Header="Hiển thị trên mô phỏng"
-                                Icon="{materialDesign:PackIcon Kind=Calendar}"
-                                Style="{StaticResource MenuItemFontSize}" />
+                                Icon="{materialDesign:PackIcon Kind=Calendar}" />
                         </ContextMenu>
                         <ToolTip x:Key="CannotShowOnSimuContentTooltip" Width="300">
                             <TextBlock TextWrapping="WrapWithOverflow">

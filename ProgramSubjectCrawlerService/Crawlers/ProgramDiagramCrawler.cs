@@ -68,6 +68,7 @@ namespace ProgramSubjectCrawlerService.Crawlers
             Task<ProgramFolder> task3 = programCrawler3.GetNode(url3);
             Task<ProgramFolder> task4 = programCrawler4.GetNode(url4);
 
+            await _unitOfWork.CompleteAsync();
             await _unitOfWork.CommitAsync();
             return await Task.WhenAll(task1, task2, task3, task4);
         }
