@@ -593,11 +593,13 @@ namespace cs4rsa_core.ViewModels
                 , _curriculumCrawler
                 , _unitOfWork
                 , _preParSubjectCrawler
-            )
-            {
-                AddProgramFolder = AddProgramFolder
-            };
-            await programDiagramCrawler.ToProgramDiagram();
+            );
+            ProgramFolder[] folders = await programDiagramCrawler.ToProgramDiagram();
+            
+            foreach (ProgramFolder folder in folders) {
+                await AddProgramFolder(folder);
+            }
+
             IsFinding = false;
         }
 

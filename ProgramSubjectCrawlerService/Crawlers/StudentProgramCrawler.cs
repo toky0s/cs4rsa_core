@@ -214,135 +214,124 @@ namespace ProgramSubjectCrawlerService.Crawlers
 
         public async Task<List<DataTypes.ProgramSubject>> GetProgramSubjects(List<HtmlNode> fileNodes)
         {
-            try
+            List<DataTypes.ProgramSubject> programSubjects = new();
+            foreach (HtmlNode node in fileNodes)
             {
-                await _unitOfWork.BeginTransAsync();
+                HtmlDocument doc = new();
+                doc.LoadHtml(node.InnerHtml);
+                HtmlNode docNode = doc.DocumentNode;
 
-                List<DataTypes.ProgramSubject> programSubjects = new();
-                foreach (HtmlNode node in fileNodes)
+                // id and child of node
+                string idValue = node.Attributes["id"].Value;
+                string[] classSlices = StringHelper.SplitAndRemoveAllSpace(node.Attributes["class"].Value);
+                string classValue = classSlices[0];
+                string childOfNode;
+                string id = idValue.Split(new char[] { '-' })[1];
+                if (classValue.Equals("toptitle", System.StringComparison.Ordinal))
                 {
-                    HtmlDocument doc = new();
-                    doc.LoadHtml(node.InnerHtml);
-                    HtmlNode docNode = doc.DocumentNode;
-
-                    // id and child of node
-                    string idValue = node.Attributes["id"].Value;
-                    string[] classSlices = StringHelper.SplitAndRemoveAllSpace(node.Attributes["class"].Value);
-                    string classValue = classSlices[0];
-                    string childOfNode;
-                    string id = idValue.Split(new char[] { '-' })[1];
-                    if (classValue.Equals("toptitle", System.StringComparison.Ordinal))
-                    {
-                        childOfNode = "0";
-                    }
-                    else
-                    {
-                        childOfNode = classValue.Split(new char[] { '-' })[3];
-                    }
-
-                    string parrentNodeName = GetParrentNodeWithId(childOfNode);
-
-                    // other infomations
-                    HtmlNode aTag = docNode.SelectSingleNode("//span/a");
-                    string subjectCode = StringHelper.SuperCleanString(aTag.InnerText);
-                    string name = aTag.Attributes["title"].Value;
-
-                    // course id
-                    string urlToDetailPage = aTag.Attributes["href"].Value;
-                    string[] splits = urlToDetailPage.Split(new char[] { '&' });
-                    string courseId = splits[1].Split(new char[] { '=' })[1];
-
-                    //study unit
-                    HtmlNode tdStudyUnitTag = docNode.SelectSingleNode("//td[3]");
-                    int studyUnit = int.Parse(StringHelper.SuperCleanString(tdStudyUnitTag.InnerText));
-
-                    //studyunit type
-                    HtmlNode tdStudyUnitTypeTag = docNode.SelectSingleNode("//td[4]");
-                    string studyUnitTypeString = StringHelper.SuperCleanString(tdStudyUnitTypeTag.InnerText);
-                    StudyUnitType studyUnitType = BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
-
-                    //prerequisiteSubjects and parallelSubjects
-                    PreParContainer preParContainer;
-                    if (_sessionId != null && _sessionId != string.Empty)
-                    {
-                        preParContainer = await _preParSubjectCrawler.Run(courseId, _sessionId);
-                    }
-                    else
-                    {
-                        preParContainer = await _preParSubjectCrawler.Run(_sessionId);
-                    }
-                    List<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
-                    List<string> parallelSubjects = preParContainer.ParallelSubjects;
-                    IEnumerable<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects);
-                    List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = new();
-
-                    foreach(string strPreParSubject in sPreParSubjects)
-                    {
-                        Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new()
-                        {
-                            SubjectCode = strPreParSubject
-                        };
-                        preParSubjects.Add(preParSubject);
-                    }
-
-                    // study state
-                    StudyState studyState;
-                    string nodeContent = StringHelper.SuperCleanString(node.InnerText);
-                    if (nodeContent.Contains("Đã hoàn tất"))
-                    {
-                        studyState = StudyState.Completed;
-                    }
-                    else
-                    {
-                        if (nodeContent.Contains("Chưa có Điểm"))
-                        {
-                            studyState = StudyState.NoHavePoint;
-                        }
-                        else
-                        {
-                            studyState = StudyState.UnLearned;
-                        }
-                    }
-
-                    DataTypes.ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
-                        studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
-                    programSubjects.Add(subject);
-                    Cs4rsaDatabaseService.Models.ProgramSubject programSubject = new()
-                    {
-                        SubjectCode = subjectCode,
-                        CourseId = courseId,
-                        Name = name,
-                        Credit = studyUnit,
-                    };
-
-                    await _unitOfWork.ProgramSubjects.AddAsync(programSubject);
-                    foreach (Cs4rsaDatabaseService.Models.PreParSubject preParSubject in preParSubjects)
-                    {
-                        await _unitOfWork.PreParSubjects.AddAsync(preParSubject);
-                        PreProDetail preProDetail = new()
-                        {
-                            ProgramSubject = programSubject,
-                            PreParSubject = preParSubject
-                        };
-                        await _unitOfWork.PreProDetails.AddAsync(preProDetail);
-
-                        ParProDetail parProDetail = new()
-                        {
-                            ProgramSubject = programSubject,
-                            PreParSubject = preParSubject
-                        };
-                        await _unitOfWork.ParProDetails.AddAsync(parProDetail);
-                    }
-                    await _unitOfWork.CompleteAsync();
+                    childOfNode = "0";
                 }
-                await _unitOfWork.CommitAsync();
-                return programSubjects;
+                else
+                {
+                    childOfNode = classValue.Split(new char[] { '-' })[3];
+                }
+
+                string parrentNodeName = GetParrentNodeWithId(childOfNode);
+
+                // other infomations
+                HtmlNode aTag = docNode.SelectSingleNode("//span/a");
+                string subjectCode = StringHelper.SuperCleanString(aTag.InnerText);
+                string name = aTag.Attributes["title"].Value;
+
+                // course id
+                string urlToDetailPage = aTag.Attributes["href"].Value;
+                string[] splits = urlToDetailPage.Split(new char[] { '&' });
+                string courseId = splits[1].Split(new char[] { '=' })[1];
+
+                //study unit
+                HtmlNode tdStudyUnitTag = docNode.SelectSingleNode("//td[3]");
+                int studyUnit = int.Parse(StringHelper.SuperCleanString(tdStudyUnitTag.InnerText));
+
+                //studyunit type
+                HtmlNode tdStudyUnitTypeTag = docNode.SelectSingleNode("//td[4]");
+                string studyUnitTypeString = StringHelper.SuperCleanString(tdStudyUnitTypeTag.InnerText);
+                StudyUnitType studyUnitType = BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
+
+                //prerequisiteSubjects and parallelSubjects
+                PreParContainer preParContainer;
+                if (_sessionId != null && _sessionId != string.Empty)
+                {
+                    preParContainer = await _preParSubjectCrawler.Run(courseId, _sessionId);
+                }
+                else
+                {
+                    preParContainer = await _preParSubjectCrawler.Run(_sessionId);
+                }
+                List<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
+                List<string> parallelSubjects = preParContainer.ParallelSubjects;
+                IEnumerable<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects);
+                List<Cs4rsaDatabaseService.Models.PreParSubject> preParSubjects = new();
+
+                foreach(string strPreParSubject in sPreParSubjects)
+                {
+                    Cs4rsaDatabaseService.Models.PreParSubject preParSubject = new()
+                    {
+                        SubjectCode = strPreParSubject
+                    };
+                    preParSubjects.Add(preParSubject);
+                }
+
+                // study state
+                StudyState studyState;
+                string nodeContent = StringHelper.SuperCleanString(node.InnerText);
+                if (nodeContent.Contains("Đã hoàn tất"))
+                {
+                    studyState = StudyState.Completed;
+                }
+                else
+                {
+                    if (nodeContent.Contains("Chưa có Điểm"))
+                    {
+                        studyState = StudyState.NoHavePoint;
+                    }
+                    else
+                    {
+                        studyState = StudyState.UnLearned;
+                    }
+                }
+
+                DataTypes.ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
+                    studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
+                programSubjects.Add(subject);
+                Cs4rsaDatabaseService.Models.ProgramSubject programSubject = new()
+                {
+                    SubjectCode = subjectCode,
+                    CourseId = courseId,
+                    Name = name,
+                    Credit = studyUnit,
+                };
+
+                await _unitOfWork.ProgramSubjects.AddAsync(programSubject);
+                foreach (Cs4rsaDatabaseService.Models.PreParSubject preParSubject in preParSubjects)
+                {
+                    await _unitOfWork.PreParSubjects.AddAsync(preParSubject);
+                    PreProDetail preProDetail = new()
+                    {
+                        ProgramSubject = programSubject,
+                        PreParSubject = preParSubject
+                    };
+                    await _unitOfWork.PreProDetails.AddAsync(preProDetail);
+
+                    ParProDetail parProDetail = new()
+                    {
+                        ProgramSubject = programSubject,
+                        PreParSubject = preParSubject
+                    };
+                    await _unitOfWork.ParProDetails.AddAsync(parProDetail);
+                }
             }
-            catch
-            {
-                await _unitOfWork.RollbackAsync();
-                throw;
-            }
+            await _unitOfWork.CompleteAsync();
+            return programSubjects;
         }
 
         private string GetParrentNodeWithId(string id)
