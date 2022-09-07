@@ -50,6 +50,14 @@ namespace cs4rsa_core
             }
         }
 
+        private void Application_DispatcherUnhandledException(object sender,
+                       System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            //Handling the exception within the UnhandledException handler.
+            MessageBox.Show(e.Exception.Message, "Exception Caught",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         private static IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();

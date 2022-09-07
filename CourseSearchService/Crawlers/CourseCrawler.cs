@@ -17,7 +17,7 @@ namespace CourseSearchService.Crawlers
         public string CurrentYearInfo { get; }
         public string CurrentSemesterValue { get; }
         public string CurrentSemesterInfo { get; }
-        public List<CourseYear> CourseYears { get; }
+        public IEnumerable<CourseYear> CourseYears { get; }
 
         public CourseCrawler()
         {
@@ -47,44 +47,37 @@ namespace CourseSearchService.Crawlers
             return optionElements.Last().InnerText.Trim();
         }
 
-        private static List<CourseYear> GetCourseYears(HtmlDocument document)
+        private static IEnumerable<CourseYear> GetCourseYears(HtmlDocument document)
         {
-            List<CourseYear> courseYears = new();
-            List<HtmlNode> optionElements = document.DocumentNode.Descendants()
-                .Where(node => node.Name == "option")
-                .ToList();
-            optionElements.RemoveAt(0);
+            IEnumerable<HtmlNode> optionElements = document.DocumentNode
+                .Descendants()
+                .Where(node => node.Name == "option" && node.Attributes["value"].Value != "0");
             foreach (HtmlNode node in optionElements)
             {
                 string name = node.InnerText.Trim();
                 string value = node.Attributes["value"].Value;
-                List<CourseSemester> courseSemesters = GetCourseSemesters(value);
+                IEnumerable<CourseSemester> courseSemesters = GetCourseSemesters(value);
                 CourseYear courseYear = new() { Name = name, Value = value, CourseSemesters = courseSemesters };
-                courseYears.Add(courseYear);
+                yield return courseYear;
             }
-            return courseYears;
         }
 
-        private static List<CourseSemester> GetCourseSemesters(string yearValue)
+        private static IEnumerable<CourseSemester> GetCourseSemesters(string yearValue)
         {
             HtmlWeb htmlWeb = new();
             string urlTemplate = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}";
             string url = string.Format(urlTemplate, yearValue);
             HtmlDocument document = htmlWeb.Load(url);
 
-            List<CourseSemester> courseSemesters = new();
-            List<HtmlNode> optionElements = document.DocumentNode.Descendants()
-                .Where(node => node.Name == "option")
-                .ToList();
-            optionElements.RemoveAt(0);
+            IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants()
+                .Where(node => node.Name == "option" && node.Attributes["value"].Value != "0");
             foreach (HtmlNode node in optionElements)
             {
                 string name = node.InnerText.Trim();
                 string value = node.Attributes["value"].Value;
                 CourseSemester courseSemester = new() { Name = name, Value = value };
-                courseSemesters.Add(courseSemester);
+                yield return courseSemester;
             }
-            return courseSemesters;
         }
 
         public string GetCurrentSemesterValue()
