@@ -45,38 +45,36 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private readonly IKeywordRepository _keywordRepository;
         private readonly ISubjectCrawler _subjectCrawler;
+        private readonly ColorGenerator _colorGenerator;
 
         public SubjectImporterViewModel(IKeywordRepository keywordRepository, ISubjectCrawler subjectCrawler)
         {
             _keywordRepository = keywordRepository;
             _subjectCrawler = subjectCrawler;
+            _colorGenerator = new ColorGenerator(keywordRepository);
         }
 
         public async Task Run()
         {
-            ColorGenerator colorGenerator = new(_keywordRepository);
             IEnumerable<int> courseIds = _sessionManagerResult.SubjectInfoDatas
-                                        .Select(item => _keywordRepository.GetCourseId(item.SubjectCode));
-
-            List<SubjectModel> subjectModels = new();
-            foreach (int courseId in courseIds)
-            {
-                Subject subject = await _subjectCrawler.Crawl(courseId);
-                await subject.GetClassGroups();
-                SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, colorGenerator);
-                subjectModels.Add(subjectModel);
-            }
-
-            foreach (SubjectModel subject in subjectModels)
-            {
-                subject.Color = await colorGenerator.GetColorAsync(subject.CourseId);
-            }
-            
-            ImportResult importResult = new() { SubjectModels = subjectModels };
+                                        .Select(item => _keywordRepository
+                                        .GetCourseId(item.SubjectCode));
+            IEnumerable<Task<SubjectModel>> subjectTasks = courseIds.Select(courseId => ToSubjectModel(courseId));
+            SubjectModel[] subjectModels = await Task.WhenAll(subjectTasks);
+            ImportResult importResult = new() { SubjectModels = subjectModels.ToList() };
             Tuple<ImportResult, SessionManagerResult> tup = new(importResult, _sessionManagerResult);
             SubjectImporterVmMsgs.ExitImportSubjectMsg message = new(tup);
             Messenger.Send(message);
             CloseDialog();
+        }
+
+        private async Task<SubjectModel> ToSubjectModel(int courseId)
+        {
+            Subject subject = await _subjectCrawler.Crawl(courseId);
+            await subject.GetClassGroups();
+            SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
+            subjectModel.Color = await _colorGenerator.GetColorAsync(subject.CourseId);
+            return subjectModel;
         }
     }
 }
