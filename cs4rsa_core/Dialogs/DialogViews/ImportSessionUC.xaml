@@ -10,13 +10,6 @@
     d:DataContext="{d:DesignInstance Type=implements:ImportSessionViewModel}"
     d:DesignHeight="450"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <materialDesign:Card Padding="10">
         <Grid>

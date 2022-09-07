@@ -12,13 +12,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <materialDesign:Card Width="500" Padding="10">
         <Grid>

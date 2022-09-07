@@ -10,13 +10,6 @@
     d:DataContext="{d:DesignInstance Type=vm:SolveConflictViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    TextElement.FontSize="13"
-    TextElement.FontWeight="Regular"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    TextOptions.TextFormattingMode="Ideal"
-    TextOptions.TextRenderingMode="Auto"
     mc:Ignorable="d">
     <materialDesign:Card Padding="10">
         <StackPanel>
