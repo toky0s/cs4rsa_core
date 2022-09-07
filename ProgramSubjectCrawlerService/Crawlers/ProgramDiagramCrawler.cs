@@ -10,6 +10,7 @@ using ProgramSubjectCrawlerService.DataTypes;
 using SubjectCrawlService1.Crawlers.Interfaces;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProgramSubjectCrawlerService.Crawlers
@@ -39,10 +40,10 @@ namespace ProgramSubjectCrawlerService.Crawlers
             _preParSubjectCrawler = preParSubjectCrawler;
         }
 
-        public Func<ProgramFolder, Task> AddProgramFolder { get; set; }
-        public async Task ToProgramDiagram()
+        public async Task<ProgramFolder[]> ToProgramDiagram()
         {
             #region Clean các môn chương trình học trong DB
+            await _unitOfWork.BeginTransAsync();
             _unitOfWork.PreProDetails.RemoveRange(await _unitOfWork.PreProDetails.GetAllAsync());
             _unitOfWork.ParProDetails.RemoveRange(await _unitOfWork.ParProDetails.GetAllAsync());
             _unitOfWork.ProgramSubjects.RemoveRange(await _unitOfWork.ProgramSubjects.GetAllAsync());
@@ -62,17 +63,13 @@ namespace ProgramSubjectCrawlerService.Crawlers
             StudentProgramCrawler programCrawler3 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
             StudentProgramCrawler programCrawler4 = new(_sessionId, _unitOfWork, _preParSubjectCrawler);
 
-            ProgramFolder task1 = await programCrawler1.GetNode(url1);
-            await AddProgramFolder.Invoke(task1);
+            Task<ProgramFolder> task1 = programCrawler1.GetNode(url1);
+            Task<ProgramFolder> task2 = programCrawler2.GetNode(url2);
+            Task<ProgramFolder> task3 = programCrawler3.GetNode(url3);
+            Task<ProgramFolder> task4 = programCrawler4.GetNode(url4);
 
-            ProgramFolder task2 = await programCrawler2.GetNode(url2);
-            await AddProgramFolder.Invoke(task2);
-
-            ProgramFolder task3 = await programCrawler3.GetNode(url3);
-            await AddProgramFolder.Invoke(task3);
-
-            ProgramFolder task4 = await programCrawler4.GetNode(url4);
-            await AddProgramFolder.Invoke(task4);
+            await _unitOfWork.CommitAsync();
+            return await Task.WhenAll(task1, task2, task3, task4);
         }
 
         /// <summary>
