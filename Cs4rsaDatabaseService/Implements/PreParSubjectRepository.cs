@@ -9,5 +9,10 @@ namespace Cs4rsaDatabaseService.Implements
         public PreParSubjectRepository(Cs4rsaDbContext context) : base(context)
         {
         }
+
+        public PreParSubject GetById(int id)
+        {
+            return _context.PreParSubjects.Find(id);
+        }
     }
 }
