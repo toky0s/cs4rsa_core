@@ -6,7 +6,7 @@ on:
       - "cs4rsa/v*"
 
 env:
-  PROJECT_PATH: cs4rsa_core.csproj
+  PROJECT_PATH: cs4rsa_core/cs4rsa_core.csproj
 
 jobs:
   deploys:
@@ -23,6 +23,13 @@ jobs:
 
       - run: dotnet publish ${{ env.PROJECT_PATH }}
 
+      - uses: actions/checkout@master
+        - name: Archive Release
+          uses: thedoctor0/zip-release@main
+          with:
+            type: 'zip'
+            filename: 'release.zip'
+
       - uses: actions/create-release@v1
         id: create_release
         env:
@@ -34,5 +41,5 @@ jobs:
       - uses: csexton/release-asset-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish
+          pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish/*.exe
           release-url: ${{ steps.create_release.outputs.upload_url }}
