@@ -6,7 +6,7 @@ on:
       - "cs4rsa/v*"
 
 env:
-  PROJECT_PATH: cs4rsa_core.csproj
+  PROJECT_PATH: cs4rsa_core/cs4rsa_core.csproj
 
 jobs:
   deploys:
