@@ -23,13 +23,6 @@ jobs:
 
       - run: dotnet publish ${{ env.PROJECT_PATH }}
 
-      - uses: actions/checkout@master
-        - name: Archive Release
-          uses: thedoctor0/zip-release@main
-          with:
-            type: 'zip'
-            filename: 'release.zip'
-
       - uses: actions/create-release@v1
         id: create_release
         env:
