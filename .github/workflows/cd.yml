@@ -41,5 +41,5 @@ jobs:
       - uses: csexton/release-asset-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish/*
+          pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish/*.exe
           release-url: ${{ steps.create_release.outputs.upload_url }}
