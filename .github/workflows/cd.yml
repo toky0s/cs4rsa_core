@@ -35,4 +35,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish
-          release-url: ${{ step.create_release.outputs.upload_url }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}
