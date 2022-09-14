@@ -1,0 +1,38 @@
+name: "CS4RSA Deploy"
+
+on:
+  push:
+    tags:
+      - "cs4rsa/v*"
+
+env:
+  PROJECT_PATH: cs4rsa_core.csproj
+
+jobs:
+  deploys:
+    runs-on: windows-latest
+    steps: 
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      
+      - run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - run: dotnet build ${{ env.PROJECT_PATH }}
+
+      - run: dotnet publish ${{ env.PROJECT_PATH }}
+
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+
+      - uses: csexton/release-asset-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: cs4rsa_core/bin/Release/net6.0-windows8.0/publish
+          release-url: ${{ step.create_release.outputs.upload_url }}

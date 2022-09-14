@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows8.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>logo.ico</ApplicationIcon>
-	<RuntimeIdentifiers>win10-x86</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x86</RuntimeIdentifiers>
     <Win32Resource />
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
