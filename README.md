@@ -3,7 +3,10 @@
 </p>
 
 ## Các chức năng chính
-Phiên bản 2.1.x
+Phiên bản 2.1.x (là phiên bản cuối cùng)
+- ⚔ Fix một xí về giao diện
+- 🐛 Fix một vài bug nghiêm trọng, còn một số bug ở xếp lịch tự động, nói chung là không fix nữa.
+- 👌 Tăng tốc độ tìm kiếm, tốc độ mô phỏng, các thao tác thêm, xóa cũng nhanh hơn trước.
 - 🔮 Chức năng thông báo tiên quyết chưa hoàn thành (đang phát triển)
 
 
