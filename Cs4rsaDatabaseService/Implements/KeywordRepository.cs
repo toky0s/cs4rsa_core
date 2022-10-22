@@ -41,14 +41,14 @@ namespace Cs4rsaDatabaseService.Implements
                 .CourseId;
         }
 
-        public Keyword GetKeyword(string discipline, string keyword1)
+        public async Task<Keyword> GetKeyword(string discipline, string keyword1)
         {
             IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from ds in _context.Disciplines
                                                                       from kw in _context.Keywords
                                                                       where ds.Name == discipline && kw.Keyword1 == keyword1
                                                                       && ds.DisciplineId == kw.DisciplineId
                                                                       select kw;
-            return keywordByDisciplineAndKeyword1Query.FirstOrDefault();
+            return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
         }
 
         public bool IsHasColor(string color)
@@ -64,11 +64,11 @@ namespace Cs4rsaDatabaseService.Implements
             return keywordByDisciplineAndKeyword1Query.FirstOrDefault();
         }
 
-        public Keyword GetKeyword(string subjectCode)
+        public async Task<Keyword> GetKeyword(string subjectCode)
         {
             char[] splitChars = { ' ' };
             string[] slices = subjectCode.Split(splitChars);
-            return GetKeyword(slices[0], slices[1]);
+            return await GetKeyword(slices[0], slices[1]);
         }
 
         public async Task<int> CountAsync(string discipline, string keyword)

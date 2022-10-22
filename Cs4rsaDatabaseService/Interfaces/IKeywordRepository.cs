@@ -8,9 +8,9 @@ namespace Cs4rsaDatabaseService.Interfaces
     public interface IKeywordRepository : IGenericRepository<Keyword>
     {
         int GetCourseId(string subjectCode);
-        Keyword GetKeyword(string discipline, string keyword1);
+        Task<Keyword> GetKeyword(string discipline, string keyword1);
         Keyword GetKeyword(int courseId);
-        Keyword GetKeyword(string subjectCode);
+        Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
         bool IsHasColor(string color);

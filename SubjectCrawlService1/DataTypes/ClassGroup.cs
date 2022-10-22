@@ -25,7 +25,7 @@ namespace SubjectCrawlService1.DataTypes
             {
                 if (_registerCodes.Count == 0)
                 {
-                    throw new Exception("Too soon to get register codes, because list of school class is empty!");
+                    return _registerCodes;
                 }
                 return _registerCodes;
             } 

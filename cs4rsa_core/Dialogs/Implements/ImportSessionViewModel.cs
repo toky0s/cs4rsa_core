@@ -70,7 +70,7 @@ namespace cs4rsa_core.Dialogs.Implements
         #region Commands
         public AsyncRelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
-        public RelayCommand ShareStringCommand { get; set; }
+        public AsyncRelayCommand ShareStringCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
         #endregion
 
@@ -102,7 +102,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
             ImportCommand = new RelayCommand(OnImport, CanImport);
-            ShareStringCommand = new RelayCommand(OnParseShareString);
+            ShareStringCommand = new AsyncRelayCommand(OnParseShareString);
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
@@ -152,10 +152,10 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private void OnParseShareString()
+        private async Task OnParseShareString()
         {
             ShareString shareString = new(_unitOfWork, _courseCrawler);
-            SessionManagerResult result = shareString.GetSubjectFromShareString(ShareString);
+            SessionManagerResult result = await shareString.GetSubjectFromShareString(ShareString);
             if (result != null)
             {
                 CloseDialog();

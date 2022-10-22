@@ -10,6 +10,7 @@ using HtmlAgilityPack;
 using SubjectCrawlService1.Crawlers.Interfaces;
 using SubjectCrawlService1.DataTypes;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace SubjectCrawlService1.Crawlers
 
         public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache = true)
         {
-            Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
             {
                 HtmlDocument htmlDocument = new();
@@ -67,9 +68,7 @@ namespace SubjectCrawlService1.Crawlers
 
         public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId)
         {            
-            // kiểm tra sự tồn tại của môn học
-            HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
-            if (span == null)
+            if (IsSubjectExists(htmlDocument))
             {
                 HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
                 HtmlNode[] trTags = table.Descendants("tr").ToArray();
@@ -114,6 +113,17 @@ namespace SubjectCrawlService1.Crawlers
             _unitOfWork.Keywords.Update(keyword);
             await _unitOfWork.CompleteAsync();
             await _unitOfWork.CommitAsync();
+        }
+
+        private static bool IsSubjectExists(HtmlDocument htmlDocument)
+        {
+            HtmlNode span = htmlDocument.DocumentNode.SelectSingleNode("div[2]/span");
+            if (span != null)
+            {
+                return false;
+            }
+            IEnumerable<HtmlNode> tables = htmlDocument.DocumentNode.Descendants("table");
+            return tables.Any();
         }
     }
 }

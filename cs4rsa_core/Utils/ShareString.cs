@@ -7,6 +7,7 @@ using SubjectCrawlService1.Models;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace cs4rsa_core.Utils
@@ -44,7 +45,7 @@ namespace cs4rsa_core.Utils
             return StringHelper.EncodeTo64(raw);
         }
 
-        public SessionManagerResult GetSubjectFromShareString(string shareString)
+        public async Task<SessionManagerResult> GetSubjectFromShareString(string shareString)
         {
             try
             {
@@ -63,7 +64,7 @@ namespace cs4rsa_core.Utils
 
                     string discipline = subjectCode.Split(new char[] { ' ' })[0];
                     string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
-                    Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+                    Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
                     string subjectName = keyword.SubjectName;
                     SubjectInfoData subjectInfoData = new()
                     {

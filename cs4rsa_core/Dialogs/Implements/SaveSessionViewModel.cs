@@ -61,7 +61,7 @@ namespace cs4rsa_core.Dialogs.Implements
                 {
                     SubjectCode = classGroupModel.SubjectCode,
                     ClassGroup = classGroupModel.ClassGroup.Name,
-                    SubjectName = _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode).SubjectName,
+                    SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
                     SessionSchoolClasses = sessionSchoolClasses,
                     RegisterCode = classGroupModel.CurrentRegisterCode
                 };
