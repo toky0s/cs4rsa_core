@@ -187,7 +187,7 @@ namespace cs4rsa_core.Controls
                 EndIndex = GetTimeIndex(timeBlock.End),
             };
 
-            if (timeBlock.BlockType.Equals(BlockType.SchoolClass))
+            if (timeBlock.BlockType == BlockType.SchoolClass)
             {
                 scheduleBlock.Code = timeBlock.Code;
             }
