@@ -1,10 +1,10 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using CommunityToolkit.Mvvm.Input;
-using SubjectCrawlService1.Models;
 using System.Collections.ObjectModel;
 using cs4rsa_core.BaseClasses;
 using CommunityToolkit.Mvvm.Messaging;
 using static cs4rsa_core.Messages.Publishers.Dialogs.ShowDetailsSchoolClassesVmMsgs;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

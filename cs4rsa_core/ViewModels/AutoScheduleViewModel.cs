@@ -1,5 +1,4 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
@@ -8,25 +7,25 @@ using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Models;
 using cs4rsa_core.Utils;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
-using CurriculumCrawlerService.Crawlers.Interfaces;
-using HelperService;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using ProgramSubjectCrawlerService.Crawlers;
-using ProgramSubjectCrawlerService.DataTypes;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using SubjectCrawlService1.DataTypes;
-using SubjectCrawlService1.DataTypes.Enums;
-using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -464,50 +463,50 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private bool IsFreeDayFilter(ClassGroupModel classGroupModel)
         {
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Mon = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Mon = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Mon_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Mon_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Mon_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Mon_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Mon_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Mon_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Tue = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Tue = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Tue_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Tue_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Tue_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Tue_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Tue_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Tue_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Wed = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Wed = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Wed_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Wed_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Wed_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Wed_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Wed_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Wed_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Thur = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Thur = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Thur_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Thur_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Thur_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Thur_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Thur_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Thur_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Fri = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Fri = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Fri_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Fri_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Fri_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Fri_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Fri_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Fri_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Sat = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Sat = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Sat_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Sat_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Sat_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Sat_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Sat_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Sat_Nig },
             };
-            Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool> Sun = new()
+            Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> Sun = new()
             {
-                { SubjectCrawlService1.DataTypes.Enums.Session.Morning, Sun_Mor },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Afternoon, Sun_Aft },
-                { SubjectCrawlService1.DataTypes.Enums.Session.Night, Sun_Nig },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Morning, Sun_Mor },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Afternoon, Sun_Aft },
+                { Services.SubjectCrawlerSvc.DataTypes.Enums.Session.Night, Sun_Nig },
             };
 
-            Dictionary<DayOfWeek, Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool>> DayOfWeekAndSessionFilter = new()
+            Dictionary<DayOfWeek, Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool>> DayOfWeekAndSessionFilter = new()
             {
                 { DayOfWeek.Monday, Mon },
                 { DayOfWeek.Tuesday, Tue },
@@ -518,9 +517,9 @@ namespace cs4rsa_core.ViewModels
                 { DayOfWeek.Sunday, Sun },
             };
 
-            foreach (KeyValuePair<DayOfWeek, Dictionary<SubjectCrawlService1.DataTypes.Enums.Session, bool>> dayOfWeekFilter in DayOfWeekAndSessionFilter)
+            foreach (KeyValuePair<DayOfWeek, Dictionary<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool>> dayOfWeekFilter in DayOfWeekAndSessionFilter)
             {
-                foreach (KeyValuePair<SubjectCrawlService1.DataTypes.Enums.Session, bool> sessionKeyValuePair in dayOfWeekFilter.Value)
+                foreach (KeyValuePair<Services.SubjectCrawlerSvc.DataTypes.Enums.Session, bool> sessionKeyValuePair in dayOfWeekFilter.Value)
                 {
                     if (sessionKeyValuePair.Value)
                     {
@@ -528,7 +527,7 @@ namespace cs4rsa_core.ViewModels
                         if (isHasDayOfWeek)
                         {
                             List<StudyTime> studyTimes = classGroupModel.Schedule.ScheduleTime[dayOfWeekFilter.Key];
-                            IEnumerable<SubjectCrawlService1.DataTypes.Enums.Session> sessions = studyTimes.Select(item => item.GetSession());
+                            IEnumerable<Services.SubjectCrawlerSvc.DataTypes.Enums.Session> sessions = studyTimes.Select(item => item.GetSession());
                             if (sessions.Contains(sessionKeyValuePair.Key))
                             {
                                 return false;

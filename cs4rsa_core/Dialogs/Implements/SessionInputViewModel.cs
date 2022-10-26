@@ -2,13 +2,13 @@
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using Cs4rsaDatabaseService.Models;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Messaging;
-using StudentCrawlerService.Crawlers;
-using StudentCrawlerService.Crawlers.Interfaces;
 using System.Threading.Tasks;
 using System.Windows;
+using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

@@ -1,4 +1,5 @@
-﻿using Cs4rsaCommon.Enums;
+﻿using cs4rsa_core.Commons.Enums;
+
 using System;
 using System.Windows;
 using System.Windows.Controls;

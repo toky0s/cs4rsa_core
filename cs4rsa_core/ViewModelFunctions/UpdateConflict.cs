@@ -1,10 +1,7 @@
-﻿using ConflictService.DataTypes;
-using ConflictService.Models;
-
-using cs4rsa_core.Models;
-
-using SubjectCrawlService1.DataTypes;
-using SubjectCrawlService1.Models;
+﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
+using cs4rsa_core.Services.ConflictSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

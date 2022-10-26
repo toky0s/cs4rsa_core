@@ -1,4 +1,4 @@
-﻿using ConflictService.DataTypes.Enums;
+﻿using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;

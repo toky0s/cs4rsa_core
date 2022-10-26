@@ -649,13 +649,11 @@
                             <MenuItem
                                 Command="{Binding DeleteCommand}"
                                 Header="Xoá"
-                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}"
-                                Style="{StaticResource MenuItemFontSize}" />
+                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}"/>
                             <MenuItem
                                 Command="{Binding GotoCourseCommand}"
                                 Header="Mở trong Courses"
-                                Icon="{materialDesign:PackIcon Kind=OpenInApp}"
-                                Style="{StaticResource MenuItemFontSize}" />
+                                Icon="{materialDesign:PackIcon Kind=OpenInApp}"/>
                         </ContextMenu>
                     </ListView.Resources>
                     <ListView.ItemTemplate>

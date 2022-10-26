@@ -4,11 +4,8 @@ using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
-using Cs4rsaDatabaseService.Models;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using SubjectCrawlService1.DataTypes.Enums;
-using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,8 +13,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 
-using Session = SubjectCrawlService1.DataTypes.Enums.Session;
+using Session = cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums.Session;
 using cs4rsa_core.Messages.Publishers.Dialogs;
+using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 namespace cs4rsa_core.ViewModels
 {

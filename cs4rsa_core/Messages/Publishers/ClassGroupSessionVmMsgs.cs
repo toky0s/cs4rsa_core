@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using SubjectCrawlService1.Models;
+
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 namespace cs4rsa_core.Messages.Publishers
 {

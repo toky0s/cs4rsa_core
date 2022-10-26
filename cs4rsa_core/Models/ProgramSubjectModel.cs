@@ -1,13 +1,8 @@
-﻿using cs4rsa_core.Models.Bases;
-
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
-
-using HelperService;
-
-using ProgramSubjectCrawlerService.DataTypes;
-using ProgramSubjectCrawlerService.DataTypes.Enums;
-
+﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Models.Bases;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Utils;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Models
@@ -20,7 +15,7 @@ namespace cs4rsa_core.Models
     /// </summary>
     public class ProgramSubjectModel : TreeItem
     {
-        public ProgramSubjectCrawlerService.DataTypes.ProgramSubject ProgramSubject { get; set; }
+        public ProgramSubject ProgramSubject { get; set; }
         public string SubjectCode { get; set; }
         public string SubjectName { get; set; }
         public string FolderName { get; set; }
@@ -41,7 +36,7 @@ namespace cs4rsa_core.Models
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
-        private ProgramSubjectModel(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject,
+        private ProgramSubjectModel(ProgramSubject programSubject,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork) : base(programSubject.SubjectName, programSubject.Id)
         {
             _unitOfWork = unitOfWork;
@@ -74,7 +69,7 @@ namespace cs4rsa_core.Models
             return this;
         }
 
-        public static Task<ProgramSubjectModel> CreateAsync(ProgramSubjectCrawlerService.DataTypes.ProgramSubject programSubject,
+        public static Task<ProgramSubjectModel> CreateAsync(ProgramSubject programSubject,
             ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
         {
             ProgramSubjectModel ret = new(programSubject, colorGenerator, unitOfWork);

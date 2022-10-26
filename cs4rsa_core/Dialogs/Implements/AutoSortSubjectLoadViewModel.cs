@@ -1,9 +1,10 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Models;
-using HelperService;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using SubjectCrawlService1.DataTypes;
-using SubjectCrawlService1.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Utils;
+
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,10 +1,10 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.ViewModels.Interfaces;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {

@@ -1,14 +1,14 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
 using CommunityToolkit.Mvvm.Input;
-using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

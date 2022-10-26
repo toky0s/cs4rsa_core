@@ -1,4 +1,4 @@
-﻿using SubjectCrawlService1.Models;
+﻿using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 

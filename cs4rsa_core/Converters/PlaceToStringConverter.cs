@@ -1,4 +1,4 @@
-﻿using SubjectCrawlService1.DataTypes.Enums;
+﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;

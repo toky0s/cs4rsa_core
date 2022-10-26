@@ -1,6 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
-
-using SubjectCrawlService1.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

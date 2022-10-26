@@ -1,4 +1,4 @@
-﻿using Cs4rsaDatabaseService.Models;
+﻿using cs4rsa_core.Cs4rsaDatabase.Models;
 
 namespace cs4rsa_core.Models
 {

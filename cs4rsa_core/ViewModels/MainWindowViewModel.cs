@@ -4,13 +4,15 @@ using cs4rsa_core.Messages.Publishers;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModels
 {
     /// <summary>
     /// MainWindowViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
-    /// trong các View. Thực hiện khai báo các dịch vụ triển khai DI. Thực hiện
-    /// các chức năng liên quan đến đóng mở Dialog.
+    /// trong các View. 
+    /// Thực hiện khai báo các dịch vụ triển khai DI. 
+    /// Thực hiện các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
@@ -69,7 +71,7 @@ namespace cs4rsa_core.ViewModels
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
             _snackBarMessageQueue = snackbarMessageQueue;
-            _snackBarMessageQueue.Enqueue("Chào mừng đến với CS4RSA");
+            _snackBarMessageQueue.Enqueue(ViewConstants.WELCOME_TEXT);
 
             WeakReferenceMessenger.Default.Register<HomeVmMsgs.UpdateSubjectDbMsg>(this, (r, m) =>
             {

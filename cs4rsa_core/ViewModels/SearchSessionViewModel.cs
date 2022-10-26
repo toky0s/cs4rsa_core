@@ -1,5 +1,4 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
@@ -10,22 +9,22 @@ using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Models;
 using cs4rsa_core.ViewModelFunctions;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
-using HelperService;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using SubjectCrawlService1.Crawlers.Interfaces;
-using SubjectCrawlService1.DataTypes;
-using SubjectCrawlService1.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-
+using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Utils;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 namespace cs4rsa_core.ViewModels
 {

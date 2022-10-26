@@ -1,18 +1,15 @@
-﻿using ConflictService.Models;
-
+﻿using cs4rsa_core.Commons.Enums;
+using cs4rsa_core.Commons.Interfaces;
+using cs4rsa_core.Commons.Models;
 using cs4rsa_core.Converters.Controls;
-using cs4rsa_core.Models;
-
-using Cs4rsaCommon.Enums;
-using Cs4rsaCommon.Interfaces;
-using Cs4rsaCommon.Models;
-
-using SubjectCrawlService1.Models;
+using cs4rsa_core.Services.ConflictSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -173,7 +170,7 @@ namespace cs4rsa_core.Controls
                 "21:00"
             };
 
-            string time = dateTime.ToString("HH:mm");
+            string time = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             return Array.IndexOf(timelines, time);
         }
 

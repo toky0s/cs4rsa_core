@@ -1,5 +1,5 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-
+﻿using cs4rsa_core.Constants;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Settings.Interfaces;
 
 using Newtonsoft.Json;
@@ -56,8 +56,7 @@ namespace cs4rsa_core.Settings
             }
             catch
             {
-                Exception exception = new("Setting is not exist");
-                throw exception;
+                throw new Exception(VMConstants.EX_SETTING_DOES_NOT_EXIST);
             }
         }
 

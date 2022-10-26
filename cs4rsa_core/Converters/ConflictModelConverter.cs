@@ -1,4 +1,4 @@
-﻿using ConflictService.Interfaces;
+﻿using cs4rsa_core.Services.ConflictSvc.Interfaces;
 
 using System;
 using System.Globalization;

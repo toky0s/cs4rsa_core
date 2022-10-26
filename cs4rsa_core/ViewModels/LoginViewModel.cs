@@ -5,15 +5,14 @@ using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
-
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 
 namespace cs4rsa_core.ViewModels
 {

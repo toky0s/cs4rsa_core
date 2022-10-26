@@ -2,9 +2,11 @@
 using cs4rsa_core.Messages.Publishers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Linq;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using System;
+using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModelFunctions
 {
@@ -45,11 +47,11 @@ namespace cs4rsa_core.ViewModelFunctions
                 .Any(scm => scm.RegisterCode == registerCode);
             if (classGroupModel == null)
             {
-                throw new System.Exception("ClassGroupModel was null!");
+                throw new Exception(VMConstants.EX_CLASSGROUP_MODEL_WAS_NULL);
             }
             if (!isValidRegisterCode)
             {
-                throw new System.Exception("Register code for choose is invalid");
+                throw new Exception(VMConstants.EX_INVALID_REGISTER_CODE);
             }
             if (classGroupModel.IsBelongSpecialSubject)
             {

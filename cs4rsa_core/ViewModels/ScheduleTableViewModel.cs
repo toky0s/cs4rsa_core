@@ -1,16 +1,15 @@
-﻿using ConflictService.Models;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Models;
 using cs4rsa_core.ViewModels.Interfaces;
-using Cs4rsaCommon.Interfaces;
 using CommunityToolkit.Mvvm.Messaging;
-using SubjectCrawlService1.DataTypes;
-using SubjectCrawlService1.DataTypes.Enums;
-using SubjectCrawlService1.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using cs4rsa_core.Commons.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.ConflictSvc.Models;
 
 namespace cs4rsa_core.ViewModels
 {

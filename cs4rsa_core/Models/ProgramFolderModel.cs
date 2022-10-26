@@ -1,10 +1,7 @@
-﻿using cs4rsa_core.Models.Bases;
-
-using Cs4rsaDatabaseService.Interfaces;
-
-using HelperService;
-
-using ProgramSubjectCrawlerService.DataTypes;
+﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Models.Bases;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Utils;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

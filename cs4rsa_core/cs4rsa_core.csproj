@@ -42,18 +42,11 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ConflictService\ConflictService.csproj" />
-    <ProjectReference Include="..\Cs4rsaDatabaseService\Cs4rsaDatabaseService.csproj" />
-    <ProjectReference Include="..\DisciplineCrawlerService\DisciplineCrawlerService.csproj" />
-    <ProjectReference Include="..\HelperService\HelperService.csproj" />
-    <ProjectReference Include="..\ProgramSubjectCrawlerService\ProgramSubjectCrawlerService.csproj" />
-    <ProjectReference Include="..\StudentCrawlerService\StudentCrawlerService.csproj" />
-    <ProjectReference Include="..\SubjectCrawlService1\SubjectCrawlService1.csproj" />
+    <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.116" />
   </ItemGroup>
 
   <ItemGroup>

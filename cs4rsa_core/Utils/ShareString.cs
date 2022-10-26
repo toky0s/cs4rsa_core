@@ -1,9 +1,8 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
+﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
-using Cs4rsaDatabaseService.Interfaces;
-using Cs4rsaDatabaseService.Models;
-using HelperService;
-using SubjectCrawlService1.Models;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 using System.Linq;

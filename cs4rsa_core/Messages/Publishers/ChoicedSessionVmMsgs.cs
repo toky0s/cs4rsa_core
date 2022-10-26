@@ -1,8 +1,7 @@
-﻿using ConflictService.Models;
-using cs4rsa_core.Models;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using SubjectCrawlService1.Models;
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 using System.Collections.Generic;
+using cs4rsa_core.Services.ConflictSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 namespace cs4rsa_core.Messages.Publishers
 {

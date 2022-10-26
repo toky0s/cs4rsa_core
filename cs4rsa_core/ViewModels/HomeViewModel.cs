@@ -1,5 +1,4 @@
-﻿using CourseSearchService.Crawlers.Interfaces;
-using cs4rsa_core.BaseClasses;
+﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
@@ -7,13 +6,14 @@ using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Settings.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
         #region Fields
-        private static DonateUC _donateUC;
+        private readonly DonateUC _donateUC;
         #endregion
 
         #region Props

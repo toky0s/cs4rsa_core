@@ -1,4 +1,5 @@
-﻿using ProgramSubjectCrawlerService.DataTypes.Enums;
+﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+
 namespace cs4rsa_core.Models.Bases
 {
     public class TreeItem
