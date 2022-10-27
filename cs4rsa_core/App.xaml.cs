@@ -2,7 +2,6 @@
 using cs4rsa_core.Cs4rsaDatabase.DataProviders;
 using cs4rsa_core.Cs4rsaDatabase.Implements;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.ModelExtensions;
