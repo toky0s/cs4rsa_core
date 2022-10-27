@@ -17,6 +17,7 @@ using cs4rsa_core.Services.ConflictSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.ConflictSvc.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -136,7 +137,7 @@ namespace cs4rsa_core.ViewModels
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
-            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace cs4rsa_core.ViewModels
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             ClassGroupModels.Remove(_selectedClassGroupModel);
-            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -335,7 +336,7 @@ namespace cs4rsa_core.ViewModels
         {
             if (className == string.Empty || className == null)
             {
-                _snackbarMessageQueue.Enqueue("Tên lớp cần bỏ chọn không hợp lệ");
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_INVALID_UNSELECT_SUBJECT_NAME);
                 return;
             }
             ClassGroupModel actionData;
@@ -346,7 +347,7 @@ namespace cs4rsa_core.ViewModels
                     actionData = ClassGroupModels[i].DeepClone();
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
-                    _snackbarMessageQueue.Enqueue(messageContent, "HOÀN TÁC", OnRestore, actionData);
+                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
 
                     SaveCommand.NotifyCanExecuteChanged();
                     DeleteAllCommand.NotifyCanExecuteChanged();

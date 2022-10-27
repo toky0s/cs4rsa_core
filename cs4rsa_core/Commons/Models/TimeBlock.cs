@@ -7,7 +7,7 @@ namespace cs4rsa_core.Commons.Models
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.
     /// </summary>
-    public class TimeBlock
+    public record TimeBlock
     {
         /// <summary>
         /// Màu nền

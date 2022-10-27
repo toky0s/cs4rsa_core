@@ -1,13 +1,15 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+﻿using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
+using MaterialDesignThemes.Wpf;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace cs4rsa_core.Utils
 {
@@ -22,12 +24,17 @@ namespace cs4rsa_core.Utils
         #region DI
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ShareString(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler)
+        public ShareString(
+            IUnitOfWork unitOfWork, 
+            ICourseCrawler courseCrawler,
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
         }
         public string GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
@@ -78,7 +85,7 @@ namespace cs4rsa_core.Utils
             }
             catch
             {
-                MessageBox.Show("ShareString có vấn đề 🤔");
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_INVALID_SHARESTRING);
                 return null;
             }
         }

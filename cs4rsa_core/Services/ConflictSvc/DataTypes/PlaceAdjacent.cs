@@ -32,10 +32,5 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             StartAsString = Start.ToString("HH:mm", CultureInfo.CurrentCulture);
             EndAsString = End.ToString("HH:mm", CultureInfo.CurrentCulture);
         }
-
-        public static PlaceAdjacent Build()
-        {
-            return Instance;
-        }
     }
 }

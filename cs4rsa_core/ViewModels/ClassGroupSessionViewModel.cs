@@ -2,7 +2,6 @@
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -18,6 +17,7 @@ using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {

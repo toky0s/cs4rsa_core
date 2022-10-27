@@ -2,6 +2,10 @@
 {
     internal abstract class VMConstants
     {
+        #region DB
+        public static readonly string DB_CONN = @"Data Source=cs4rsa.db";
+        #endregion
+
         #region Exceptions
         public static readonly string EX_UNKNOWN_ERROR = "Lỗi không xác định";
         public static readonly string EX_INTERNET_ERROR = "Lỗi kết nối mạng";
@@ -15,7 +19,27 @@
         #endregion
 
         #region Setting Props
-        public static readonly string IS_DATABASE_CREATED = "IsDatabaseCreated";
+        public static readonly string STPROPS_IS_DATABASE_CREATED = "IsDatabaseCreated";
+        public static readonly string STPROPS_VERSION = "Version";
+        #endregion
+
+        #region Links
+        public static readonly string LK_PROJECT = "https://toky0s.github.io/cs4rsa_core/";
+        public static readonly string LK_PROJECT_PAGE = "https://github.com/toky0s/cs4rsa_core";
+        public static readonly string LK_PROJECT_GG_SHEET = "https://forms.gle/JHipUM7knjbqKGKWA";
+        #endregion
+
+        #region Snackbars
+        public static readonly string SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER = "Môn học không tồn tại trong học kỳ này";
+        public static readonly string SNB_INVALID_UNSELECT_SUBJECT_NAME = "Tên lớp cần bỏ chọn không hợp lệ";
+        public static readonly string SNB_UNSELECT_ALL = "Đã bỏ chọn tất cả";
+        public static readonly string SNB_DELETE_ALL = "Đã xoá tất cả";
+        public static readonly string SNB_INVALID_SHARESTRING = "ShareString có vấn đề 🤔";
+        public static readonly string SNB_AT_LAST_SCHEDULE = "Đã đến bộ lịch cuối";
+        #endregion
+
+        #region Snackbar Actions
+        public static readonly string SNBAC_RESTORE = "HOÀN TÁC";
         #endregion
     }
 }

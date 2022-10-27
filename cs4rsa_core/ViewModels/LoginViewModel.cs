@@ -2,7 +2,6 @@
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Messages;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 using MaterialDesignThemes.Wpf;
@@ -13,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -88,7 +88,7 @@ namespace cs4rsa_core.ViewModels
             await _unitOfWork.CompleteAsync();
             await LoadStudentInfos();
 
-            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", async (obj) => await OnRestore(obj), actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, async (obj) => await OnRestore(obj), actionData);
         }
 
         private async Task OnRestore(Student obj)

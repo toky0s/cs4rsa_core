@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
@@ -80,6 +79,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private readonly SessionExtension _sessionExtension;
         private readonly IMessageBox _messageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly ShareString _shareString;
         #endregion
 
         public ImportSessionViewModel(
@@ -87,13 +87,15 @@ namespace cs4rsa_core.Dialogs.Implements
             ICourseCrawler courseCrawler,
             IMessageBox messageBox, 
             ISnackbarMessageQueue snackbarMessageQueue,
-            SessionExtension sessionExtension)
+            SessionExtension sessionExtension,
+            ShareString shareString)
         {
             _messageBox = messageBox;
             _sessionExtension = sessionExtension;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _shareString = shareString;
 
             ScheduleSessions = new();
             ScheduleSessionDetails = new();
@@ -101,8 +103,8 @@ namespace cs4rsa_core.Dialogs.Implements
             _isAvailableSession = -1;
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
-            ImportCommand = new RelayCommand(OnImport, CanImport);
             ShareStringCommand = new AsyncRelayCommand(OnParseShareString);
+            ImportCommand = new RelayCommand(OnImport, CanImport);
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
@@ -154,8 +156,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private async Task OnParseShareString()
         {
-            ShareString shareString = new(_unitOfWork, _courseCrawler);
-            SessionManagerResult result = await shareString.GetSubjectFromShareString(ShareString);
+            SessionManagerResult result = await _shareString.GetSubjectFromShareString(ShareString);
             if (result != null)
             {
                 CloseDialog();

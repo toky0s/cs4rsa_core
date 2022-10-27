@@ -75,7 +75,7 @@
                     Command="{Binding ChoiceAccountCommand}">
                     <Button.Style>
                         <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
-                            <Setter Property="Content" Value="Đang tải chương trình học" />
+                            <Setter Property="Content" Value="ĐANG TẢI CHƯƠNG TRÌNH HỌC" />
                             <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
                             <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
                             <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="True" />
@@ -86,14 +86,14 @@
                                     <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
                                     <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
                                     <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="True" />
-                                    <Setter Property="Content" Value="Đang tải chương trình học" />
+                                    <Setter Property="Content" Value="ĐANG TẢI CHƯƠNG TRÌNH HỌC" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsFinding}" Value="False">
                                     <Setter Property="IsEnabled" Value="False" />
                                     <Setter Property="materialDesign:ButtonProgressAssist.Value" Value="-1" />
                                     <Setter Property="materialDesign:ButtonProgressAssist.IsIndicatorVisible" Value="True" />
                                     <Setter Property="materialDesign:ButtonProgressAssist.IsIndeterminate" Value="False" />
-                                    <Setter Property="Content" Value="Chọn tài khoản..." />
+                                    <Setter Property="Content" Value="CHỌN TÀI KHOẢN..." />
                                     <Setter Property="IsEnabled" Value="True" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -682,30 +682,23 @@
                 </ListView>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.6*" />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Column="0"
                         Height="30"
-                        Margin="5"
-                        Command="{Binding ShowDependenciesCommand}"
-                        Content="Cây phụ thuộc"
+                        Margin="0,5,5,5"
+                        Command="{Binding SubjectDownloadCommand}"
+                        Content="TẢI"
+                        IsEnabled="{Binding ProgramFolderModels.Count}"
                         Foreground="White" />
                     <Button
                         Grid.Column="1"
                         Height="30"
                         Margin="0,5,5,5"
-                        Command="{Binding SubjectDownloadCommand}"
-                        Content="Tải"
-                        Foreground="White" />
-                    <Button
-                        Grid.Column="2"
-                        Height="30"
-                        Margin="0,5,5,5"
                         Command="{Binding DeleteAllCommand}"
-                        Content="Xoá hết"
+                        Content="XOÁ HẾT"
                         Foreground="White" />
                 </Grid>
                 <StackPanel Grid.Row="3" Orientation="Vertical">
@@ -754,11 +747,11 @@
                     <Button
                         Grid.Column="0"
                         Margin="5,0,5,0"
-                        Content="Xếp lịch thủ công" />
+                        Content="CHUYỂN SANG XẾP LỊCH THỦ CÔNG" />
                     <Button
                         Grid.Column="1"
                         Command="{Binding CalculateCommand}"
-                        Content="Tính toán" />
+                        Content="TÍNH TOÁN" />
                 </Grid>
 
             </Grid>

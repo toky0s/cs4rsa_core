@@ -2,8 +2,6 @@
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
@@ -25,6 +23,8 @@ using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -327,7 +327,7 @@ namespace cs4rsa_core.ViewModels
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
-            _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_DELETE_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
         private void OnRestore(IEnumerable<SubjectModel> obj)
@@ -373,9 +373,8 @@ namespace cs4rsa_core.ViewModels
             {
                 SubjectImporterUC subjectImporterUC = new();
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
-                vm.SessionManagerResult = result;
                 OpenDialog(subjectImporterUC);
-                await vm.Run();
+                await vm.Run(result);
             }
         }
 
@@ -400,7 +399,7 @@ namespace cs4rsa_core.ViewModels
 
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
-            _snackbarMessageQueue.Enqueue(message, "HOÀN TÁC", OnRestoreSubjectModel, actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestoreSubjectModel, actionData);
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -452,7 +451,7 @@ namespace cs4rsa_core.ViewModels
             else
             {
                 CloseDialog();
-                _snackbarMessageQueue.Enqueue("Môn học không tồn tại trong học kỳ này");
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
                 CanAddSubjectChange();
             }
         }

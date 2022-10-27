@@ -2,10 +2,9 @@
 using cs4rsa_core.Cs4rsaDatabase.DataProviders;
 using cs4rsa_core.Cs4rsaDatabase.Implements;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Implements;
-using cs4rsa_core.Interfaces;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
@@ -43,7 +42,7 @@ namespace cs4rsa_core
 
             Container = CreateServiceProvider();
             ISetting setting = Container.GetRequiredService<ISetting>();
-            string isDatabaseCreated = setting.Read(VMConstants.IS_DATABASE_CREATED);
+            string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
             if (isDatabaseCreated == "false")
             {
                 Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
@@ -84,6 +83,7 @@ namespace cs4rsa_core
 
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
+            services.AddSingleton<ShareString> ();
             services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();

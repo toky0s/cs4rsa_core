@@ -23,44 +23,36 @@ namespace cs4rsa_core.Dialogs.Implements
     /// </summary>
     public class SubjectImporterViewModel : ViewModelBase
     {
-        public ObservableCollection<SubjectInfoData> SubjectInfoDatas { get; set; } = new ObservableCollection<SubjectInfoData>();
-        public List<ISubjectCrawler> SubjectCrawlers { get; set; }
-
-        private SessionManagerResult _sessionManagerResult;
-
-        public SessionManagerResult SessionManagerResult
-        {
-            get { return _sessionManagerResult; }
-            set
-            {
-                _sessionManagerResult = value;
-                foreach (SubjectInfoData item in _sessionManagerResult.SubjectInfoDatas)
-                {
-                    SubjectInfoDatas.Add(item);
-                }
-            }
-        }
-
+        public ObservableCollection<SubjectInfoData> SubjectInfoDatas { get; set; }
         private readonly IKeywordRepository _keywordRepository;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;
 
-        public SubjectImporterViewModel(IKeywordRepository keywordRepository, ISubjectCrawler subjectCrawler)
+        public SubjectImporterViewModel(
+            IKeywordRepository keywordRepository,
+            ISubjectCrawler subjectCrawler,
+            ColorGenerator colorGenerator)
         {
+            SubjectInfoDatas = new();
             _keywordRepository = keywordRepository;
             _subjectCrawler = subjectCrawler;
-            _colorGenerator = new ColorGenerator(keywordRepository);
+            _colorGenerator = colorGenerator;
         }
 
-        public async Task Run()
+        public async Task Run(SessionManagerResult sessionManagerResult)
         {
-            IEnumerable<int> courseIds = _sessionManagerResult.SubjectInfoDatas
+            foreach (SubjectInfoData item in sessionManagerResult.SubjectInfoDatas)
+            {
+                SubjectInfoDatas.Add(item);
+            }
+
+            IEnumerable<int> courseIds = sessionManagerResult.SubjectInfoDatas
                                         .Select(item => _keywordRepository
                                         .GetCourseId(item.SubjectCode));
             IEnumerable<Task<SubjectModel>> subjectTasks = courseIds.Select(courseId => ToSubjectModel(courseId));
             SubjectModel[] subjectModels = await Task.WhenAll(subjectTasks);
             ImportResult importResult = new() { SubjectModels = subjectModels.ToList() };
-            Tuple<ImportResult, SessionManagerResult> tup = new(importResult, _sessionManagerResult);
+            Tuple<ImportResult, SessionManagerResult> tup = new(importResult, sessionManagerResult);
             SubjectImporterVmMsgs.ExitImportSubjectMsg message = new(tup);
             Messenger.Send(message);
             CloseDialog();

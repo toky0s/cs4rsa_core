@@ -4,7 +4,6 @@ using cs4rsa_core.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace cs4rsa_core.Views
 {
@@ -55,12 +54,6 @@ namespace cs4rsa_core.Views
         {
             ContextMenu menu = sender as ContextMenu;
             menu.DataContext = DataContext;
-        }
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Window window = sender as Window;
-            window.Topmost = true;
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
