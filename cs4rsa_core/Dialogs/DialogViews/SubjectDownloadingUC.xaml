@@ -3,16 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:cs4rsa_core.Dialogs.DialogViews"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
     d:DesignHeight="200"
     d:DesignWidth="300"
-    mc:Ignorable="d">
-    <UserControl.DataContext>
-        <vm:SubjectDownloadingViewModel />
-    </UserControl.DataContext>
+    mc:Ignorable="d"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    vml:DialogVMLocator.AutoHookedUpViewModel="True">
     <materialDesign:Card>
         <Grid>
             <Grid.RowDefinitions>

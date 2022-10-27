@@ -1,4 +1,5 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=cs4rsa.db");
+            optionsBuilder.UseSqlite(VMConstants.DB_CONN);
             base.OnConfiguring(optionsBuilder);
         }
 

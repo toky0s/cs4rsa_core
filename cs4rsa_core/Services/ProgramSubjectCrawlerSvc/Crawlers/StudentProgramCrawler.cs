@@ -42,7 +42,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
 
         public async Task<ProgramFolder> GetNode(string url)
         {
-            List<HtmlNode> allNodes = await GetAllTrTag(url);
+            HtmlNodeCollection allNodes = await GetAllTrTag(url);
             GetFileAnhFolderNodes(allNodes);
             ProgramFolders = GetProgramFolders(_folderNodes);
             ProgramSubjects = await GetProgramSubjects(_fileNodes);
@@ -130,11 +130,11 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
             return childSubjects;
         }
 
-        public static async Task<List<HtmlNode>> GetAllTrTag(string url)
+        public static async Task<HtmlNodeCollection> GetAllTrTag(string url)
         {
             HtmlWeb web = new();
             HtmlDocument doc = await web.LoadFromWebAsync(url);
-            List<HtmlNode> trTags = doc.DocumentNode.SelectNodes("//tr").ToList();
+            HtmlNodeCollection trTags = doc.DocumentNode.SelectNodes("//tr");
             trTags.RemoveAt(0);
             return trTags;
         }
@@ -143,7 +143,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// Chia list node thành các fileNode và FolderNode.
         /// </summary>
         /// <param name="trNodes">Danh sách tất cả các tr node trong chương trình học.</param>
-        public void GetFileAnhFolderNodes(List<HtmlNode> trNodes)
+        public void GetFileAnhFolderNodes(HtmlNodeCollection trNodes)
         {
             List<HtmlNode> folderNodes = new();
             List<HtmlNode> fileNodes = new();

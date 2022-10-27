@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace cs4rsa_core.BaseClasses
 {
-    public class ViewModelBase : ObservableRecipient
+    public abstract class ViewModelBase : ObservableRecipient
     {
         /// <summary>
         /// Mở Dialog

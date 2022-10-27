@@ -12,7 +12,6 @@ namespace cs4rsa_core.Dialogs.Implements
 {
     public class AutoSortSubjectLoadViewModel : ViewModelBase
     {
-        public IEnumerable<ProgramSubjectModel> ProgramSubjectModels { get; set; }
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;
         public AutoSortSubjectLoadViewModel(ISubjectCrawler subjectCrawler, ColorGenerator colorGenerator)
@@ -20,9 +19,9 @@ namespace cs4rsa_core.Dialogs.Implements
             _subjectCrawler = subjectCrawler;
             _colorGenerator = colorGenerator;
         }
-        public async IAsyncEnumerable<SubjectModel> Download()
+        public async IAsyncEnumerable<SubjectModel> Download(IEnumerable<ProgramSubjectModel> programSubjectModels)
         {
-            IEnumerable<string> courseIds = ProgramSubjectModels.Select(item => item.CourseId);
+            IEnumerable<string> courseIds = programSubjectModels.Select(item => item.CourseId);
             foreach (string courseId in courseIds)
             {
                 Subject subject = await _subjectCrawler.Crawl(int.Parse(courseId));

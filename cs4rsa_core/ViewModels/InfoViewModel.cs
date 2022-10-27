@@ -1,5 +1,5 @@
 ﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Interfaces;
+using cs4rsa_core.Constants;
 using cs4rsa_core.Settings.Interfaces;
 
 namespace cs4rsa_core.ViewModels
@@ -21,7 +21,7 @@ namespace cs4rsa_core.ViewModels
         {
             _setting = setting;
 
-            Version = _setting.Read("Version");
+            Version = _setting.Read(VMConstants.STPROPS_VERSION);
             IsChecking = false;
         }
     }

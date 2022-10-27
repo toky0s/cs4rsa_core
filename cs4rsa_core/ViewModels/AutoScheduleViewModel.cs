@@ -2,7 +2,6 @@
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Models;
@@ -26,6 +25,8 @@ using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -149,7 +150,6 @@ namespace cs4rsa_core.ViewModels
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
-        public AsyncRelayCommand ShowDependenciesCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
 
         public RelayCommand AddCommand { get; set; }
@@ -278,7 +278,6 @@ namespace cs4rsa_core.ViewModels
             ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
-            ShowDependenciesCommand = new AsyncRelayCommand(OnShowDependencies);
 
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
@@ -303,11 +302,6 @@ namespace cs4rsa_core.ViewModels
             _genIndex = 0;
         }
 
-        private Task OnShowDependencies()
-        {
-            throw new NotImplementedException();
-        }
-
         private void OnValidGen()
         {
             for (int i = _genIndex; i < _tempResult.Count; i++)
@@ -328,7 +322,7 @@ namespace cs4rsa_core.ViewModels
             }
             if (_genIndex == _tempResult.Count)
             {
-                _snackbarMessageQueue.Enqueue("Đã đến bộ lịch cuối");
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_AT_LAST_SCHEDULE);
                 IsCalculated = false;
             }
         }
@@ -700,9 +694,8 @@ namespace cs4rsa_core.ViewModels
             {
                 AutoSortSubjectLoadUC autoSortSubjectLoadUC = new();
                 AutoSortSubjectLoadViewModel vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadViewModel;
-                vm.ProgramSubjectModels = needDownload;
                 OpenDialog(autoSortSubjectLoadUC);
-                IAsyncEnumerable<SubjectModel> subjectModels = vm.Download();
+                IAsyncEnumerable<SubjectModel> subjectModels = vm.Download(needDownload);
                 CloseDialog();
                 await foreach (SubjectModel subjectModel in subjectModels)
                 {

@@ -56,12 +56,12 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
             return _context.Keywords.Where(kw => kw.Color == color).Any();
         }
 
-        public Keyword GetKeyword(int courseId)
+        public async Task<Keyword> GetKeyword(int courseId)
         {
             IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from kw in _context.Keywords
                                                                       where kw.CourseId == courseId
                                                                       select kw;
-            return keywordByDisciplineAndKeyword1Query.FirstOrDefault();
+            return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
         }
 
         public async Task<Keyword> GetKeyword(string subjectCode)
@@ -104,6 +104,16 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
                 .Where(kw => kw.Discipline.Name.ToUpper().StartsWith(text.ToUpper()))
                 .Take(20)
                 .ToListAsync();
+        }
+
+        public async Task<string> GetSubjectCode(int courseId)
+        {
+            var result = await (from dis in _context.Disciplines
+                                     join kw in _context.Keywords
+                                     on new { jprop1 = dis.DisciplineId, jprop2 = courseId,}
+                                     equals new { jprop1 = kw.DisciplineId, jprop2 = kw.CourseId,}
+                                     select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
+            return result.Name + " " + result.Keyword1;
         }
     }
 }

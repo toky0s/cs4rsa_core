@@ -3,7 +3,13 @@
 </p>
 
 ## Các chức năng chính
-Phiên bản 2.1.x (là phiên bản cuối cùng)
+Phiên bản 2.2.x
+- 👓 Tăng tốc xử lý.
+- 🔍 Giờ đây bạn có thể kéo thả url môn học từ course vào phần Search của xếp lịch tự động để tìm kiếm nhanh.
+- 👩‍🏫 Màn hình quản lý giảng viên cào được.
+- 🐛 Fix một vài bug nghiêm trọng.
+
+Phiên bản 2.1.x (là phiên bản cuối cùng 🐧)
 - ⚔ Fix một xí về giao diện
 - 🐛 Fix một vài bug nghiêm trọng, còn một số bug ở xếp lịch tự động, nói chung là không fix nữa.
 - 👌 Tăng tốc độ tìm kiếm, tốc độ mô phỏng, các thao tác thêm, xóa cũng nhanh hơn trước.

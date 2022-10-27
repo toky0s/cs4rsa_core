@@ -1,21 +1,18 @@
 ﻿using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Interfaces;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Settings.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        #region Fields
-        private readonly DonateUC _donateUC;
-        #endregion
-
         #region Props
         private string _currentYearValue;
         public string CurrentYearValue
@@ -93,29 +90,28 @@ namespace cs4rsa_core.ViewModels
             ManualCommand = new RelayCommand(OnGotoManualCommand);
             DonateCommand = new RelayCommand(OnDonate);
 
-            _donateUC = new();
 
             LoadIsNewSemester();
         }
 
         private void OnDonate()
         {
-            OpenDialog(_donateUC);
+            OpenDialog(new DonateUC());
         }
 
         private void OnGotoManualCommand()
         {
-            _openInBrowser.Open("https://toky0s.github.io/cs4rsa_core/");
+            _openInBrowser.Open(VMConstants.LK_PROJECT);
         }
 
         private void OnGotoGithubCommand()
         {
-            _openInBrowser.Open("https://github.com/toky0s/cs4rsa_core");
+            _openInBrowser.Open(VMConstants.LK_PROJECT_PAGE);
         }
 
         private void OnGotoForm()
         {
-            _openInBrowser.Open("https://forms.gle/JHipUM7knjbqKGKWA");
+            _openInBrowser.Open(VMConstants.LK_PROJECT_GG_SHEET);
         }
 
         private void OnUpdate()

@@ -5,34 +5,23 @@ namespace cs4rsa_core.Dialogs.DialogResults
     /// <summary>
     /// Là một item trong kết quả trả về của Trình Quản lý Phiên.
     /// </summary>
-    public class SubjectInfoData
+    public record SubjectInfoData
     {
-        public string SubjectCode { get; set; }
-        public string ClassGroup { get; set; }
-        public string SubjectName { get; set; }
-        public string RegisterCode { get; set; }
+        public string SubjectCode { get; init; }
+        public string ClassGroup { get; init; }
+        public string SubjectName { get; init; }
+        public string RegisterCode { get; init; }
     }
 
     /// <summary>
     /// Là kết quả trả về của Trình Quản lý Phiên.
     /// </summary>
-    public class SessionManagerResult
+    public record SessionManagerResult
     {
-        private IEnumerable<SubjectInfoData> _subjectInfoDatas;
-        public IEnumerable<SubjectInfoData> SubjectInfoDatas
-        {
-            get
-            {
-                return _subjectInfoDatas;
-            }
-            set
-            {
-                _subjectInfoDatas = value;
-            }
-        }
+        public readonly IEnumerable<SubjectInfoData> SubjectInfoDatas;
         public SessionManagerResult(IEnumerable<SubjectInfoData> subjectInfoDatas)
         {
-            _subjectInfoDatas = subjectInfoDatas;
+            SubjectInfoDatas = subjectInfoDatas;
         }
     }
 }

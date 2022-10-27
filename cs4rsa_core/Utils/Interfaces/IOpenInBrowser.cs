@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Interfaces
+﻿namespace cs4rsa_core.Utils.Interfaces
 {
     public interface IOpenInBrowser
     {
