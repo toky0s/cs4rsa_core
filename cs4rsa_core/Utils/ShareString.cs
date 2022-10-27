@@ -33,14 +33,14 @@ namespace cs4rsa_core.Utils
         {
             if (!classGroupModels.Any())
             {
-                return "";
+                return string.Empty;
             }
             IEnumerable<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item));
             string SubjectHassesJoin = string.Join("?", SubjectHasses);
             string Count = classGroupModels.Count().ToString();
             string currentYear = _courseCrawler.GetCurrentYearValue();
             string currentSemester = _courseCrawler.GetCurrentSemesterValue();
-            string raw = $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '-');
+            string raw = $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '$');
             return StringHelper.EncodeTo64(raw);
         }
 
@@ -51,13 +51,13 @@ namespace cs4rsa_core.Utils
                 shareString = StringHelper.DecodeFrom64(shareString);
                 string[] shareStringSlices = shareString.Split(new char[] { '!' });
 
-                string subjectHasses = shareStringSlices[4].Replace('-', ' ');
+                string subjectHasses = shareStringSlices[4].Replace('$', ' ');
                 string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
                 List<SubjectInfoData> subjectInfoDatas = new();
                 foreach (string item in subjectHassesSlices)
                 {
                     string[] infoes = item.Split(new char[] { '|' });
-                    string subjectCode = infoes[0];
+                    string subjectCode = infoes[0]; 
                     string classGroupName = infoes[1];
                     string registerCode = infoes[2];
 
