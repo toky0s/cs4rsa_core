@@ -63,7 +63,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
                     HtmlDocument _htmlDocument = await web.LoadFromWebAsync(url);
                     if (_htmlDocument != null)
                     {
-                        List<HtmlNode> infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]").ToList();
+                        HtmlNodeCollection infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]");
                         string id = StringHelper.SuperCleanString(infoNodes[0].InnerText);
                         string name = StringHelper.SuperCleanString(infoNodes[1].InnerText);
                         string sex = StringHelper.SuperCleanString(infoNodes[2].InnerText);

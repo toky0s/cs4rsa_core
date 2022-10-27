@@ -103,6 +103,7 @@ namespace cs4rsa_core
             services.AddScoped<LoginViewModel>();
             services.AddScoped<StudentInputViewModel>();
             services.AddScoped<AutoSortSubjectLoadViewModel>();
+            services.AddScoped<SubjectDownloadingViewModel>();
 
             return services.BuildServiceProvider();
         }

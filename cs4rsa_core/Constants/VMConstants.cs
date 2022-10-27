@@ -36,6 +36,7 @@
         public static readonly string SNB_DELETE_ALL = "Đã xoá tất cả";
         public static readonly string SNB_INVALID_SHARESTRING = "ShareString có vấn đề 🤔";
         public static readonly string SNB_AT_LAST_SCHEDULE = "Đã đến bộ lịch cuối";
+        public static readonly string SNB_ALREADY_DOWNLOADED = "Đã được tải xuống";
         #endregion
 
         #region Snackbar Actions

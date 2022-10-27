@@ -9,7 +9,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
     {
         int GetCourseId(string subjectCode);
         Task<Keyword> GetKeyword(string discipline, string keyword1);
-        Keyword GetKeyword(int courseId);
+        Task<Keyword> GetKeyword(int courseId);
         Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
@@ -18,5 +18,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
         Task<List<Keyword>> GetBySubjectNameContains(string subjectName);
         Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword);
         Task<List<Keyword>> GetByDisciplineStartWith(string text);
+        Task<string> GetSubjectCode(int courseId);
     }
 }

@@ -23,17 +23,6 @@ namespace cs4rsa_core.Dialogs.Implements
             set { _classGroup2Name = value; OnPropertyChanged(); }
         }
 
-        private ConflictModel _conflictModel;
-
-        public ConflictModel ConflictModel
-        {
-            get { return _conflictModel; }
-            set
-            {
-                _conflictModel = value;
-            }
-        }
-
         public RelayCommand RemoveClassGroup1Command { get; set; }
         public RelayCommand RemoveClassGroup2Command { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }

@@ -71,7 +71,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
                 HtmlNode[] trTags = table.Descendants("tr").ToArray();
                 string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
 
-                string name = _unitOfWork.Keywords.GetKeyword(courseId).SubjectName;
+                string name = (await _unitOfWork.Keywords.GetKeyword(courseId)).SubjectName;
 
                 string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
                 string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();

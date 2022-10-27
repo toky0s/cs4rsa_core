@@ -25,6 +25,7 @@ using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Constants;
 using cs4rsa_core.Utils.Interfaces;
+using System.Collections.Specialized;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -427,16 +428,37 @@ namespace cs4rsa_core.ViewModels
         private async Task OnAddSubjectAsync()
         {
             CanAddSubjectChange(false);
+            await OpenDownloadSubjectDialog(
+                selectedDiscipline.Name, 
+                selectedKeyword.Keyword1, 
+                0,
+                IsUseCache);
+        }
 
+        private async Task OpenDownloadSubjectDialog(
+            string discipline, 
+            string keyword1, 
+            int courseId, 
+            bool isUseCache)
+        {
             SubjectDownloadingUC subjectDownloadingUC = new();
             SubjectDownloadingViewModel vm = subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
-            string subjectName = selectedKeyword.SubjectName;
-            string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
-            vm.SubjectName = subjectName;
-            vm.SubjectCode = subjectCode;
+            if (courseId > 0)
+            {
+                await vm.ReEvaluated(courseId);
+            }
+            else
+            {
+                string subjectName = selectedKeyword.SubjectName;
+                string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
+                vm.SubjectName = subjectName;
+                vm.SubjectCode = subjectCode;
+            }
             OpenDialog(subjectDownloadingUC);
 
-            Subject subject = await _subjectCrawler.Crawl(selectedDiscipline.Name, selectedKeyword.Keyword1, IsUseCache);
+            Subject subject = courseId > 0 
+                ? await _subjectCrawler.Crawl(courseId, isUseCache) 
+                : await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
             if (subject != null)
             {
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
@@ -456,9 +478,9 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        public void OnAddSubjectFromUriAsync(Uri uri)
+        public async void OnAddSubjectFromUriAsync(Uri uri)
         {
-            var queries = HttpUtility.ParseQueryString(uri.Query);
+            NameValueCollection queries = HttpUtility.ParseQueryString(uri.Query);
             string courseId = queries.Get("courseid");
             string p = queries.Get("p");
             string timespan = queries.Get("timespan");
@@ -469,7 +491,21 @@ namespace cs4rsa_core.ViewModels
 
             if (courseId != null && p != null && timespan != null && t != null && isDtuCourseHost && isRightAbsPath)
             {
-                _snackbarMessageQueue.Enqueue("Đúng đường dẫn");
+                int intCourseId = int.Parse(courseId);
+                if (IsAlreadyDownloaded(intCourseId))
+                {
+                    _snackbarMessageQueue.Enqueue(VMConstants.SNB_ALREADY_DOWNLOADED);
+                    return;
+                }
+
+                IEnumerable<Keyword> keywords = _unitOfWork.Keywords.Find(kw => kw.CourseId == intCourseId);
+                if (!keywords.Any())
+                {
+                    _snackbarMessageQueue.Enqueue("Không tồn tại " + courseId);
+                    return;
+                }
+
+                await OpenDownloadSubjectDialog(null, null, intCourseId, IsUseCache);
             }
             else
             {
@@ -503,18 +539,29 @@ namespace cs4rsa_core.ViewModels
         {
             if (value == null)
             {
-                IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
                 if (selectedKeyword == null)
                 {
                     CanRunAddCommand = true;
                     return;
                 }
-                CanRunAddCommand = !courseIds.Contains(SelectedKeyword.CourseId);
+                CanRunAddCommand = !IsAlreadyDownloaded(SelectedKeyword.CourseId);
             }
             else
             {
                 CanRunAddCommand = value.Value;
             }
+        }
+
+        /// <summary>
+        /// Kiếm tra xem rằng một Subject đã có 
+        /// sẵn trong danh sách đã tải xuống hay chưa.
+        /// </summary>
+        /// <param name="courseId">Course ID</param>
+        /// <returns></returns>
+        private bool IsAlreadyDownloaded(int courseId)
+        {
+            IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
+            return courseIds.Contains(courseId);
         }
 
         private void ImportSubjects(IEnumerable<SubjectModel> importSubjects)
