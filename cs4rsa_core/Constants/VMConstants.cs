@@ -16,6 +16,7 @@
         public static readonly string EX_CLASSGROUP_MODEL_WAS_NULL = "ClassGroupModel was null!";
         public static readonly string EX_NOT_FOUND_CLASSFORM = "Class Form could not be found!";
         public static readonly string EX_NOT_FOUND_BASE_SCHOOLCLASS_MODEL = "Base school class model cound not be found";
+        public static readonly string EX_NOT_FOUND_VIEWMODEL = "ViewModel cound not be found";
         #endregion
 
         #region Setting Props

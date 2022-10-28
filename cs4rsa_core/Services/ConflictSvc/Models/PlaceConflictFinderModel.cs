@@ -49,12 +49,12 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
             List<string> resultTimes = new();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in _conflictPlace.PlaceAdjacents)
             {
-                string day = BasicDataConverter.ToDayOfWeekText(item.Key);
+                string day = item.Key.ToDayOfWeekText();
                 List<string> info = new();
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
-                    string from = $"Từ {placeAdjacent.StartAsString} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceStart)}";
-                    string to = $"đến {placeAdjacent.EndAsString} ở {BasicDataConverter.ToStringFromPlace(placeAdjacent.PlaceEnd)}";
+                    string from = $"Từ {placeAdjacent.StartAsString} ở {placeAdjacent.PlaceStart.ToActualPlace()}";
+                    string to = $"đến {placeAdjacent.EndAsString} ở {placeAdjacent.PlaceEnd.ToActualPlace()}";
                     info.Add(from + " " + to);
                 }
                 string placeString = string.Join("\n", info);

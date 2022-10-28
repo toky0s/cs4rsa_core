@@ -17,6 +17,13 @@ namespace cs4rsa_core.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Bindings
+        private string _appName;
+        public string AppName
+        {
+            get { return _appName; }
+            set { _appName = value; OnPropertyChanged(); }
+        }
+
         private bool _isExpanded;
         public bool IsExpanded
         {
@@ -82,6 +89,7 @@ namespace cs4rsa_core.ViewModels
 
             SelectedIndex = 0;
             IsExpanded = false;
+            AppName = ViewConstants.APP_NAME;
         }
 
         private void OnOpenUpdateWindow()

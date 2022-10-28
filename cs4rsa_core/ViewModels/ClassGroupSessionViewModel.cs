@@ -298,6 +298,15 @@ namespace cs4rsa_core.ViewModels
                 OnFilter();
             }
         }
+
+        private bool _placeOnline;
+
+        public bool PlaceOnline
+        {
+            get { return _placeOnline; }
+            set { _placeOnline = value; OnPropertyChanged(); OnFilter(); }
+        }
+
         #endregion
 
         #region Commands
@@ -373,6 +382,7 @@ namespace cs4rsa_core.ViewModels
             PlacePhanThanh = false;
             PlaceQuangTrung = false;
             PlaceVietTin = false;
+            PlaceOnline = false;
 
             PhaseFirst = false;
             PhaseSecond = false;
@@ -500,7 +510,8 @@ namespace cs4rsa_core.ViewModels
                 && _placePhanThanh == false
                 && _placeHoaKhanh == false
                 && _place137NVL == false
-                && _place254NVL == false)
+                && _place254NVL == false
+                && _placeOnline == false)
                 return true;
             Dictionary<Place, bool> checkboxAndPlace = new()
             {
@@ -509,7 +520,8 @@ namespace cs4rsa_core.ViewModels
                 { Place.PHANTHANH, _placePhanThanh },
                 { Place.HOAKHANH, _placeHoaKhanh },
                 { Place.NVL_137, _place137NVL },
-                { Place.NVL_254, _place254NVL }
+                { Place.NVL_254, _place254NVL },
+                { Place.ONLINE, _placeOnline }
             };
             checkboxAndPlace = checkboxAndPlace
                 .Where(pair => pair.Value)

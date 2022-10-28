@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:cs4rsa_core.ViewModels"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
-    Title="Crediz"
+    Title="{Binding AppName, Mode=OneTime}"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -19,8 +19,8 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     WindowStartupLocation="CenterScreen"
-    Loaded="Window_Loaded"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Name="MainWd">
     <Window.Resources>
         <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -177,7 +177,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                    Text="Ứng dụng xếp lịch siêu cấp vũ trụ của Trường Đại học Top 500 Thế giới" />
+                                    Text="{Binding ElementName=MainWd, Path=Title}" />
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <Button

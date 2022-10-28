@@ -26,6 +26,8 @@ using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Constants;
 using cs4rsa_core.Utils.Interfaces;
 using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -86,7 +88,25 @@ namespace cs4rsa_core.ViewModels
         public FullMatchSearchingKeyword SelectedFullMatchSearchingKeyword
         {
             get { return _selectedFullMatchSearchingKeyword; }
-            set { _selectedFullMatchSearchingKeyword = value; OnPropertyChanged(); }
+            set {
+                _selectedFullMatchSearchingKeyword = value; 
+                OnPropertyChanged();
+                if (value != null
+                    && value.Discipline.DisciplineId != 0
+                    && value.Keyword != null)
+                {
+                    SelectedDiscipline = value.Discipline;
+                    SelectedKeyword = value.Keyword;
+                    SearchText = string.Empty;
+                    CanAddSubjectChange();
+                    if (!IsAlreadyDownloaded(value.Keyword.CourseId))
+                    {
+                        DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
+                            async () => await OpenDownloadSubjectDialog(value.Discipline.Name, value.Keyword.Keyword1, 0, IsUseCache)
+                        );
+                    }
+                }
+            }
         }
 
         public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; }
@@ -244,14 +264,6 @@ namespace cs4rsa_core.ViewModels
             SelectedDiscipline = Disciplines[0];
         }
 
-        internal async Task LoadSelectedDisciplineAndKeyword(Discipline discipline, Keyword keyword)
-        {
-            Discipline actualDiscipline = await _unitOfWork.Disciplines.GetByIdAsync(discipline.DisciplineId);
-            Keyword actualKeyword = await _unitOfWork.Keywords.GetByIdAsync(keyword.KeywordId);
-            SelectedDiscipline = actualDiscipline;
-            SelectedKeyword = actualKeyword;
-        }
-
         public async Task LoadSearchItemSource(string text)
         {
             text = text.Trim().ToLower();
@@ -315,13 +327,27 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDeleteAll()
         {
-            List<SubjectModel> actionData = new();
-            foreach(SubjectModel subjectModel in SubjectModels)
+            #region Subjects
+            List<SubjectModel> subjects = new();
+            foreach (SubjectModel subjectModel in SubjectModels)
             {
-                Messenger.Send(new SearchVmMsgs.DelSubjectMsg(subjectModel));
                 SubjectModel restoreSubject = subjectModel.DeepClone();
-                actionData.Add(restoreSubject);
+                subjects.Add(restoreSubject);
             }
+            #endregion
+
+            #region ClassGroupModels
+            List<ClassGroupModel> classGroupModels = new();
+            ChoicedSessionViewModel choicedSessionViewModel = GetViewModel<ChoicedSessionViewModel>();
+            ObservableCollection<ClassGroupModel> classGroupColl = choicedSessionViewModel.ClassGroupModels;
+            foreach (ClassGroupModel classGroupModel in classGroupColl)
+            {
+                classGroupModels.Add(classGroupModel.DeepClone());
+            }
+            #endregion
+
+            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjects, classGroupModels);
+
             SubjectModels.Clear();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
             CanAddSubjectChange();
@@ -331,12 +357,12 @@ namespace cs4rsa_core.ViewModels
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_DELETE_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
-        private void OnRestore(IEnumerable<SubjectModel> obj)
+        private void OnRestore(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> obj)
         {
-            foreach (SubjectModel subjectModel in obj)
-            {
-                AddSubjectAndReload(subjectModel);
-            }
+            IEnumerable<SubjectModel> subjectModels = obj.Item1;
+            IEnumerable<ClassGroupModel> classGroupModels = obj.Item2;
+            AddSubjectAndReload(subjectModels);
+            Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(classGroupModels));
         }
 
         private void OnGotoCourse()
@@ -394,22 +420,27 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDeleteSubject()
         {
-            Messenger.Send(new SearchVmMsgs.DelSubjectMsg(_selectedSubjectModel));
+            ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
+                .First();
 
-            SubjectModel actionData = _selectedSubjectModel.DeepClone();
+            Messenger.Send(new SearchVmMsgs.DelSubjectMsg(_selectedSubjectModel));
+            SubjectModel subjectModel = _selectedSubjectModel.DeepClone();
+
+            List<SubjectModel> subjectModels = new()
+            {
+                subjectModel
+            };
+
+            Tuple<List<SubjectModel>, ClassGroupModel> actionData = new(subjectModels, classGroupModel.DeepClone());
 
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
-            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestoreSubjectModel, actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, AddSubjectAndReload, actionData);
             CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
-        }
-
-        private void OnRestoreSubjectModel(SubjectModel obj)
-        {
-            AddSubjectAndReload(obj);
         }
 
         /// <summary>
@@ -438,14 +469,18 @@ namespace cs4rsa_core.ViewModels
         private async Task OpenDownloadSubjectDialog(
             string discipline, 
             string keyword1, 
-            int courseId, 
+            int courseId,
             bool isUseCache)
         {
             SubjectDownloadingUC subjectDownloadingUC = new();
             SubjectDownloadingViewModel vm = subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
+            OpenDialog(subjectDownloadingUC);
+
+            Subject subject;
             if (courseId > 0)
             {
                 await vm.ReEvaluated(courseId);
+                subject = await _subjectCrawler.Crawl(courseId, isUseCache);
             }
             else
             {
@@ -453,20 +488,19 @@ namespace cs4rsa_core.ViewModels
                 string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
                 vm.SubjectName = subjectName;
                 vm.SubjectCode = subjectCode;
+                subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
             }
-            OpenDialog(subjectDownloadingUC);
-
-            Subject subject = courseId > 0 
-                ? await _subjectCrawler.Crawl(courseId, isUseCache) 
-                : await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
+            
             if (subject != null)
             {
+                List<SubjectModel> subjectModels = new();
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                subjectModels.Add(subjectModel);
                 if (subjectModel.ClassGroupModels.Count == 1)
                 {
                     Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(subjectModel.ClassGroupModels[0]));
                 }
-                AddSubjectAndReload(subjectModel);
+                AddSubjectAndReload(subjectModels);
                 CloseDialog();
                 SelectedSubjectModel = SubjectModels.Last();
             }
@@ -586,9 +620,9 @@ namespace cs4rsa_core.ViewModels
         /// Thêm một SubjectModel vào danh sách.
         /// Load lại tổng số tín chỉ và tổng số môn học
         /// </summary>
-        private void AddSubjectAndReload(SubjectModel subjectModel)
+        private void AddSubjectAndReload(IEnumerable<SubjectModel> subjectModels)
         {
-            SubjectModels.Add(subjectModel);
+            foreach (SubjectModel subjectModel in subjectModels) SubjectModels.Add(subjectModel);
             TotalSubject = SubjectModels.Count;
             CanAddSubjectChange();
             UpdateCreditTotal();

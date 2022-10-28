@@ -12,6 +12,7 @@ namespace cs4rsa_core.Views
         public MainWindow()
         {
             InitializeComponent();
+            Goto((int)ScreenIndex.HAND);
         }
 
         public void LoadPage(ScreenIndex screenIndex)

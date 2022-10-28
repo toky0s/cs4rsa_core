@@ -3,6 +3,8 @@
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace cs4rsa_core.Messages.Publishers
 {
@@ -55,6 +57,16 @@ namespace cs4rsa_core.Messages.Publishers
         internal sealed class SelectedSubjectChangedMsg : ValueChangedMessage<SubjectModel>
         {
             public SelectedSubjectChangedMsg(SubjectModel value) : base(value)
+            {
+            }
+        }
+        
+        /// <summary>
+        /// Select danh sách các ClassGroupModel
+        /// </summary>
+        internal sealed class SelectClassGroupModelsMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>
+        {
+            public SelectClassGroupModelsMsg(IEnumerable<ClassGroupModel> value) : base(value)
             {
             }
         }
