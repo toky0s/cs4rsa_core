@@ -94,16 +94,16 @@ namespace cs4rsa_core
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
 
-            services.AddScoped<MainWindowViewModel>();
-            services.AddScoped<SearchSessionViewModel>();
-            services.AddScoped<ClassGroupSessionViewModel>();
-            services.AddScoped<ChoicedSessionViewModel>();
-            services.AddScoped<ScheduleTableViewModel>();
-            services.AddScoped<MainSchedulingViewModel>();
-            services.AddScoped<LoginViewModel>();
-            services.AddScoped<StudentInputViewModel>();
-            services.AddScoped<AutoSortSubjectLoadViewModel>();
-            services.AddScoped<SubjectDownloadingViewModel>();
+            services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<SearchSessionViewModel>();
+            services.AddSingleton<ClassGroupSessionViewModel>();
+            services.AddSingleton<ChoicedSessionViewModel>();
+            services.AddSingleton<ScheduleTableViewModel>();
+            services.AddSingleton<MainSchedulingViewModel>();
+            services.AddSingleton<LoginViewModel>();
+            services.AddSingleton<StudentInputViewModel>();
+            services.AddSingleton<AutoSortSubjectLoadViewModel>();
+            services.AddSingleton<SubjectDownloadingViewModel>();
 
             return services.BuildServiceProvider();
         }

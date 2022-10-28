@@ -92,8 +92,7 @@
                             MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
                             Background="White"
                             ItemsSource="{Binding FullMatchSearchingKeywords}"
-                            SelectedItem="{Binding SelectedFullMatchSearchingKeyword}"
-                            SelectionChanged="ListView_SelectionChanged">
+                            SelectedItem="{Binding SelectedFullMatchSearchingKeyword}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>

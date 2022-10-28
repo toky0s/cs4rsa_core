@@ -12,7 +12,7 @@ namespace cs4rsa_core.Views
         public MainWindow()
         {
             InitializeComponent();
-            Goto((int)ScreenIndex.HOME);
+            Goto((int)ScreenIndex.HAND);
         }
 
         private void Goto(int index)

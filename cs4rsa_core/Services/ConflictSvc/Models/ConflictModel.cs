@@ -7,6 +7,7 @@ using cs4rsa_core.Services.ConflictSvc.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
+using cs4rsa_core.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
             List<string> resultTimes = new();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
-                string day = BasicDataConverter.ToDayOfWeekText(item.Key);
+                string day = item.Key.ToDayOfWeekText();
                 List<string> times = new();
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
@@ -79,7 +80,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
             List<string> resultTimes = new();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
-                string day = BasicDataConverter.ToDayOfWeekText(item.Key);
+                string day = item.Key.ToDayOfWeekText();
                 List<string> times = new();
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {

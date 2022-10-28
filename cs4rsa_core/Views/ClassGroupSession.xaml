@@ -186,6 +186,10 @@
                                     x:Name="CheckBox_254_nvl"
                                     Content="254 NVL"
                                     IsChecked="{Binding Place254NVL}" />
+                                <CheckBox
+                                    x:Name="CheckBox_online"
+                                    Content="Online"
+                                    IsChecked="{Binding PlaceOnline}" />
                             </StackPanel>
                         </GroupBox>
                     </Grid>

@@ -73,9 +73,23 @@ namespace cs4rsa_core.ViewModels
                 DelSubjectMsgHandler(m.Value);
             });
 
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(DelAllSubjectMsgHandler);
+            });
+
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 AddClassGroupModelAndReload(m.Value);
+            });
+
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectClassGroupModelsMsg>(this, (r, m) =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    AddClassGroupModelsAndReload(m.Value);
+                    return Task.CompletedTask;
+                });
             });
 
             WeakReferenceMessenger.Default.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
@@ -305,6 +319,21 @@ namespace cs4rsa_core.ViewModels
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
+        private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
+        {
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            {
+                ClassGroupModels.Add(classGroupModel);
+            }
+
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
+
+            SaveCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
+            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+        }
+
         private void UpdateShareString()
         {
             _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
@@ -376,6 +405,21 @@ namespace cs4rsa_core.ViewModels
             UpdateConflictModelCollection();
             UpdatePlaceConflictCollection();
             SaveCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
+            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+        }
+
+        /// <summary>
+        /// Xử lý sự kiện xoá toàn bộ môn học
+        /// </summary>
+        /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
+        private void DelAllSubjectMsgHandler()
+        {
+            ClassGroupModels.Clear();
+            UpdateConflictModelCollection();
+            UpdatePlaceConflictCollection();
+            SaveCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
         #endregion

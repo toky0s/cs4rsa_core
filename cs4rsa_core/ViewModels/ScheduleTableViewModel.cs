@@ -10,6 +10,8 @@ using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.ConflictSvc.Models;
+using System.Windows;
+using System.Threading.Tasks;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -26,8 +28,12 @@ namespace cs4rsa_core.ViewModels
         {
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
             {
-                _classGroupModels = m.Value;
-                ReloadSchedule();
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    _classGroupModels = m.Value;
+                    ReloadSchedule();
+                    return Task.CompletedTask;
+                });
             });
 
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>

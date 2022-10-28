@@ -9,7 +9,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
     /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData hoặc Model
     /// và ngược lại.
     /// </summary>
-    public class BasicDataConverter
+    public static class BasicDataConverter
     {
         /// <summary>
         /// Chuyển một chuỗi về Place. Xác định nơi học của một lớp học.
@@ -30,8 +30,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
                 return Place.VIETTIN;
             if (slideds.Contains("254"))
                 return Place.NVL_254;
-            else
+            if (slideds.Contains("137"))
                 return Place.NVL_137;
+            return Place.ONLINE;
         }
 
         public static Phase ToPhase(string phase)
@@ -77,24 +78,11 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
             return ImplementType.Unstart;
         }
 
-        public static string ToDayOfWeekText(DayOfWeek day)
+        public static string ToDayOfWeekText(this DayOfWeek day)
         {
             if (day == DayOfWeek.Sunday)
                 return "Chủ Nhật";
             return $"Thứ {(int)day + 1}";
-        }
-
-        public static string ToStringFromPlace(Place place)
-        {
-            return place switch
-            {
-                Place.HOAKHANH => "Hoà Khánh Nam",
-                Place.NVL_137 => "137 Nguyễn Văn Linh",
-                Place.NVL_254 => "254 Nguyễn Văn Linh",
-                Place.PHANTHANH => "Phan Thanh",
-                Place.QUANGTRUNG => "03 Quang Trung",
-                _ => "334/4 Nguyễn Văn Linh (Việt Tin)",
-            };
         }
     }
 }

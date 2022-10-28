@@ -52,17 +52,6 @@ namespace cs4rsa_core.Views
             await (DataContext as SearchSessionViewModel).LoadSearchItemSource(text);
         }
 
-        private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ListView listView = sender as ListView;
-            FullMatchSearchingKeyword fullMatch = (listView.SelectedValue as FullMatchSearchingKeyword);
-            if (fullMatch != null)
-            {
-                await (DataContext as SearchSessionViewModel).LoadSelectedDisciplineAndKeyword(fullMatch.Discipline, fullMatch.Keyword);
-                (DataContext as SearchSessionViewModel).SearchText = "";
-            }
-        }
-
         private void SearchingTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             Popup_Recommend.IsOpen = false;
