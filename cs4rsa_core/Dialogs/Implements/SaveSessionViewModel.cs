@@ -17,7 +17,6 @@ namespace cs4rsa_core.Dialogs.Implements
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public string Name { get; set; }
-        public bool IsSaveAsJsonFile { get; set; }
         public AsyncRelayCommand SaveCommand { get; set; }
         public Action<SaveResult> CloseDialogCallback { get; set; }
 
@@ -27,7 +26,6 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
-            IsSaveAsJsonFile = true;
             ScheduleSessions = new();
             SaveCommand = new AsyncRelayCommand(Save);
         }

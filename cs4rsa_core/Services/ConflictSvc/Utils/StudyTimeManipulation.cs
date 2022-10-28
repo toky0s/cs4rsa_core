@@ -91,7 +91,10 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
             foreach (Tuple<StudyTime, StudyTime> item in studyTimeTuples)
             {
                 StudyTimeIntersect studyTimeIntersect = GetStudyTimeIntersect(item.Item1, item.Item2);
-                yield return studyTimeIntersect;
+                if (!studyTimeIntersect.Equals(StudyTimeIntersect.Instance))
+                {
+                    yield return studyTimeIntersect;
+                }
             }
         }
     }

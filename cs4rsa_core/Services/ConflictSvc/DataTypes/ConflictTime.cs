@@ -10,14 +10,15 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
     /// 
     /// Ngang cấp với PlaceAdjacent.
     /// </summary>
-    public class ConflictTime
+    public struct ConflictTime
     {
-        private readonly Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes;
-        public Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> ConflictTimes { get { return conflictTimes; } }
+        public static readonly ConflictTime NullInstance = new();
+
+        public readonly Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> ConflictTimes;
 
         public ConflictTime(Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes)
         {
-            this.conflictTimes = conflictTimes;
+            ConflictTimes = conflictTimes;
         }
     }
 }

@@ -247,7 +247,7 @@ namespace cs4rsa_core.ViewModels
                     }
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (conflictTime != null)
+                    if (!conflictTime.Equals(ConflictTime.NullInstance))
                     {
                         ConflictModel conflictModel = new(conflict);
                         ConflictModels.Add(conflictModel);

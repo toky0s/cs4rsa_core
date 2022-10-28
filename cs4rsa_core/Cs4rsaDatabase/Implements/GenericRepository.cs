@@ -32,6 +32,12 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
         {
             await _context.Set<T>().AddRangeAsync(entities);
         }
+
+        public async Task<int> CountPageAsync(int limit, Expression<Func<T, bool>> expression)
+        {
+            return (await _context.Set<T>().Where(expression).CountAsync() + limit - 1) / limit;
+        }
+
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
         {
             return _context.Set<T>().Where(expression);
