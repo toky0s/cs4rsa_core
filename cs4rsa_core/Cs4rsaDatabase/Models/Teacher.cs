@@ -11,6 +11,14 @@
         public string Position { get; set; }
         public string Subject { get; set; }
         public string Form { get; set; }
+
+        /// <summary>
+        /// Các môn đã giảng dạy
+        /// 
+        /// Khúc này tính tạo thêm một bảng, nhưng suy đi xét lại về
+        /// performance thì điều này vẫn thật sự chưa cần thiết.
+        /// </summary>
+        public string TeachedSubjects { get; set; }
         public string Path { get; set; }
     }
 }

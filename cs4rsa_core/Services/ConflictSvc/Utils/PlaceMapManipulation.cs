@@ -43,7 +43,11 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         {
             foreach (Tuple<PlaceMap, PlaceMap> placeMapTuple in placeMapPairs)
             {
-                yield return GetPlaceAdjacent(placeMapTuple.Item1, placeMapTuple.Item2, timeDelta);
+                PlaceAdjacent placeAdjacent = GetPlaceAdjacent(placeMapTuple.Item1, placeMapTuple.Item2, timeDelta);
+                if (!placeAdjacent.Equals(PlaceAdjacent.Instance))
+                {
+                    yield return placeAdjacent;
+                }
             }
         }
 

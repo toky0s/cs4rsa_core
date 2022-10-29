@@ -134,6 +134,18 @@
                                     <materialDesign:PackIcon
                                         Width="24"
                                         Height="24"
+                                        Kind="Teacher" />
+                                    <TextBlock
+                                        Margin="30,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="Danh sách giảng viên" />
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon
+                                        Width="24"
+                                        Height="24"
                                         Kind="InformationOutline" />
                                     <TextBlock
                                         Margin="30,0,0,0"
@@ -231,12 +243,15 @@
                         </DockPanel>
                     </materialDesign:ColorZone>
                     <Grid Grid.Row="1">
-                        <materialDesign:Transitioner SelectedIndex="{Binding SelectedIndex}">
-                            <local:Home />
-                            <local:Login />
-                            <local:MainScheduling />
-                            <local:AutoSchedule />
-                            <local:Info />
+                        <materialDesign:Transitioner 
+                            x:Name="Transitioner"
+                            SelectedIndex="{Binding SelectedIndex}">
+                            <local:Home x:Name="Home"/>
+                            <local:Login x:Name="Login"/>
+                            <local:MainScheduling x:Name="MainScheduling" />
+                            <local:AutoSchedule x:Name="AutoSchedule"/>
+                            <local:Lecture x:Name="Lecture"/>
+                            <local:Info x:Name="Info"/>
                             <!--<materialDesign:TransitionerSlide>
                                 <materialDesign:TransitionerSlide.BackwardWipe>
                                     <materialDesign:SlideWipe Direction="Down" />

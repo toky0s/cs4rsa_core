@@ -359,9 +359,8 @@ namespace cs4rsa_core.ViewModels
 
         private void OnRestore(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> obj)
         {
-            IEnumerable<SubjectModel> subjectModels = obj.Item1;
             IEnumerable<ClassGroupModel> classGroupModels = obj.Item2;
-            AddSubjectAndReload(subjectModels);
+            AddSubjectAndReload(obj);
             Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(classGroupModels));
         }
 
@@ -423,6 +422,8 @@ namespace cs4rsa_core.ViewModels
             ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
                 .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                 .First();
+            ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
+            IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
 
             Messenger.Send(new SearchVmMsgs.DelSubjectMsg(_selectedSubjectModel));
             SubjectModel subjectModel = _selectedSubjectModel.DeepClone();
@@ -432,7 +433,7 @@ namespace cs4rsa_core.ViewModels
                 subjectModel
             };
 
-            Tuple<List<SubjectModel>, ClassGroupModel> actionData = new(subjectModels, classGroupModel.DeepClone());
+            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjectModels, classGroupModels);
 
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
@@ -500,7 +501,9 @@ namespace cs4rsa_core.ViewModels
                 {
                     Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(subjectModel.ClassGroupModels[0]));
                 }
-                AddSubjectAndReload(subjectModels);
+
+                Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> data = new(subjectModels, null);
+                AddSubjectAndReload(data);
                 CloseDialog();
                 SelectedSubjectModel = SubjectModels.Last();
             }
@@ -618,11 +621,16 @@ namespace cs4rsa_core.ViewModels
 
         /// <summary>
         /// Thêm một SubjectModel vào danh sách.
-        /// Load lại tổng số tín chỉ và tổng số môn học
+        /// Load lại tổng số tín chỉ và tổng số môn học.
+        /// Đồng thời thêm select thêm các ClassGroup nếu có.
         /// </summary>
-        private void AddSubjectAndReload(IEnumerable<SubjectModel> subjectModels)
+        private void AddSubjectAndReload(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
         {
-            foreach (SubjectModel subjectModel in subjectModels) SubjectModels.Add(subjectModel);
+            foreach (SubjectModel subjectModel in actionData.Item1) SubjectModels.Add(subjectModel);
+            if (actionData.Item2 != null)
+            {
+                Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(actionData.Item2));
+            }
             TotalSubject = SubjectModels.Count;
             CanAddSubjectChange();
             UpdateCreditTotal();

@@ -1,5 +1,4 @@
 ﻿using cs4rsa_core.Commons.Enums;
-using cs4rsa_core.Utils;
 using cs4rsa_core.ViewModels;
 
 using System.Windows;
@@ -9,12 +8,19 @@ namespace cs4rsa_core.Views
 {
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
             Goto((int)ScreenIndex.HAND);
         }
 
+        public void LoadPage(ScreenIndex screenIndex)
+        {
+            Goto((int)screenIndex);
+        }
+
+        #region Util functions
         private void Goto(int index)
         {
             if (ListViewMenu.SelectedIndex != index)
@@ -24,14 +30,28 @@ namespace cs4rsa_core.Views
             MainWindowViewModel mainWindowViewModel = DataContext as MainWindowViewModel;
             mainWindowViewModel.SelectedIndex = index;
         }
+        #endregion
 
-        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #region Event handlers
+        private async void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listView = sender as ListView;
             Goto(listView.SelectedIndex);
+            if (listView.SelectedIndex == (int)ScreenIndex.LECTURE)
+            {
+                await (Lecture.DataContext as LectureViewModel).LoadTeachers();
+            }
+            // Close Drawer
             MaterialDesignThemes.Wpf.DrawerHost.CloseDrawerCommand.Execute(null, null);
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadPage(ScreenIndex.HOME);
+        }
+        #endregion
+
+        #region Go to menus
         private void GotoHome(object sender, RoutedEventArgs e)
         {
             Goto((int)ScreenIndex.HOME);
@@ -56,5 +76,6 @@ namespace cs4rsa_core.Views
         {
             Goto((int)ScreenIndex.INFO);
         }
+        #endregion
     }
 }

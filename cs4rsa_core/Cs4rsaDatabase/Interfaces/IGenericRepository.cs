@@ -16,5 +16,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
         void Update(T entity);
+        Task<int> CountPageAsync(int limit, Expression<Func<T, bool>> expression);
     }
 }

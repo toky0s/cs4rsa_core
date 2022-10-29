@@ -44,7 +44,6 @@
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                     Text="{Binding Name, Mode=TwoWay}" />
-                <CheckBox Content="Lưu kèm với file văn bản (.json)" IsChecked="{Binding IsSaveAsJsonFile}" />
             </StackPanel>
             <Grid
                 Grid.Row="2"
@@ -59,7 +58,7 @@
                     Grid.Column="0"
                     Width="100"
                     Command="{Binding SaveCommand, UpdateSourceTrigger=PropertyChanged}"
-                    Content="Lưu"
+                    Content="LƯU"
                     Foreground="White"
                     IsEnabled="{Binding ElementName=txtName, Path=Text.Length, Mode=OneWay}" />
             </Grid>
