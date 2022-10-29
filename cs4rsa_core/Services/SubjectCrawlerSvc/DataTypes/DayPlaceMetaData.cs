@@ -36,12 +36,12 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         public IEnumerable<Place> GetPlaces()
         {
-            IEnumerable<Place> places = new List<Place>();
+            List<Place> places = new();
             foreach (DayRoomPlace pair in _dayPlacePairs.Values)
             {
-                _ = places.Append(pair.Place);
+                places.Add(pair.Place);
             }
-            return places.Distinct();
+            return places;
         }
     }
 }

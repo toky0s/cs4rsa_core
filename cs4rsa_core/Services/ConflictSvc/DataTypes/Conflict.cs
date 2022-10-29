@@ -27,7 +27,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             IEnumerable<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
 
             // Check date
-            if (DayOfWeeks.Any())
+            if (!DayOfWeeks.Any())
             {
                 return ConflictTime.NullInstance;
             }
