@@ -1,4 +1,5 @@
 ﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
+using cs4rsa_core.Services.ConflictSvc.Constants;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
@@ -31,7 +32,6 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
             }
         }
 
-
         /// <summary>
         /// Phát hiện xung đột Vị trí học.
         /// </summary>
@@ -39,11 +39,17 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         /// <param name="timeDelta">TimeDelta đại diện cho một khoảng thời gian tối thiểu để
         /// chấp nhận một xung đột vị trí giữa hai nơi học.</param>
         /// <returns></returns>
-        public static IEnumerable<PlaceAdjacent> GetPlaceAdjacents(IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs, TimeSpan timeDelta)
+        public static IEnumerable<PlaceAdjacent> GetPlaceAdjacents(
+            IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs, 
+            TimeSpan timeDelta)
         {
             foreach (Tuple<PlaceMap, PlaceMap> placeMapTuple in placeMapPairs)
             {
-                PlaceAdjacent placeAdjacent = GetPlaceAdjacent(placeMapTuple.Item1, placeMapTuple.Item2, timeDelta);
+                PlaceAdjacent placeAdjacent = GetPlaceAdjacent(
+                    placeMapTuple.Item1,
+                    placeMapTuple.Item2,
+                    timeDelta
+                );
                 if (!placeAdjacent.Equals(PlaceAdjacent.Instance))
                 {
                     yield return placeAdjacent;
@@ -51,7 +57,10 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
             }
         }
 
-        private static PlaceAdjacent GetPlaceAdjacent(PlaceMap placeMap1, PlaceMap placeMap2, TimeSpan timeDelta)
+        private static PlaceAdjacent GetPlaceAdjacent(
+            PlaceMap placeMap1, 
+            PlaceMap placeMap2, 
+            TimeSpan timeDelta)
         {
             List<PlaceMap> placeMaps = new() { placeMap1, placeMap2 };
             placeMaps.Sort();
@@ -60,15 +69,44 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
             {
                 return PlaceAdjacent.Instance;
             }
+
+            // Loại trừ các Place trong list exclude
+            if (IsInExcludedList(placeMap1.Place, placeMap2.Place))
+            {
+                return PlaceAdjacent.Instance;
+            }
+
             if (placeMaps[1].StudyTime.Start - placeMaps[0].StudyTime.End <= timeDelta)
             {
                 DateTime Start = placeMaps[0].StudyTime.End;
                 DateTime End = placeMaps[1].StudyTime.Start;
                 Place PlaceStart = placeMaps[0].Place;
                 Place PlaceEnd = placeMaps[1].Place;
-                return new PlaceAdjacent(Start, End, PlaceStart, PlaceEnd);
+                return new PlaceAdjacent(
+                    Start,
+                    End,
+                    PlaceStart,
+                    PlaceEnd,
+                    placeMaps[0].SchoolClass,
+                    placeMaps[1].SchoolClass
+                );
             }
             return PlaceAdjacent.Instance;
+        }
+
+        /// <summary>
+        /// Kiểm tra xem hai place bất kỳ có thuộc danh sách bị loại trừ hay không
+        /// </summary>
+        private static bool IsInExcludedList(Place place1, Place place2)
+        {
+            foreach (Tuple<Place, Place> exclude in Constants.Constants.EXCLUDED_CONFLICT_PLACES)
+            {
+                if ((place1 == exclude.Item1 && place2 == exclude.Item2) 
+                || (place1 == exclude.Item2 && place2 == exclude.Item1)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

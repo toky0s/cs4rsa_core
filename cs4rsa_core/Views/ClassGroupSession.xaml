@@ -68,10 +68,11 @@
                             <ColumnDefinition Width="15" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Rectangle
+                        <Border
+                            CornerRadius="4"
                             Grid.Column="0"
                             Width="15"
-                            Fill="{Binding Color}" />
+                            Background="{Binding Color}" />
                         <StackPanel
                             Grid.Column="1"
                             Margin="0,5,0,0"

@@ -63,10 +63,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Rectangle
+                        <Border
+                            CornerRadius="4"
                             Grid.Column="0"
                             Width="10"
-                            Fill="{Binding Color}" />
+                            Background="{Binding Color}" />
                         <TextBlock
                             Grid.Column="1"
                             Margin="5,0,0,0"

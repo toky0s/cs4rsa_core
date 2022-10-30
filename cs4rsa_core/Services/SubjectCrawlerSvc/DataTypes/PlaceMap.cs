@@ -11,11 +11,16 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
     {
         public StudyTime StudyTime { get; set; }
         public Place Place { get; set; }
+        public SchoolClass SchoolClass { get; set; }
 
-        public PlaceMap(StudyTime studyTime, Place place)
+        public PlaceMap(
+            StudyTime studyTime, 
+            Place place,
+            SchoolClass schoolClass)
         {
             StudyTime = studyTime;
             Place = place;
+            SchoolClass = schoolClass;
         }
 
         public int CompareTo(PlaceMap other)

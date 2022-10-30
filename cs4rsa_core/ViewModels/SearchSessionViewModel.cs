@@ -354,14 +354,7 @@ namespace cs4rsa_core.ViewModels
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
-            _snackbarMessageQueue.Enqueue(VMConstants.SNB_DELETE_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
-        }
-
-        private void OnRestore(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> obj)
-        {
-            IEnumerable<ClassGroupModel> classGroupModels = obj.Item2;
-            AddSubjectAndReload(obj);
-            Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(classGroupModels));
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_DELETE_ALL, VMConstants.SNBAC_RESTORE, AddSubjectAndReload, actionData);
         }
 
         private void OnGotoCourse()

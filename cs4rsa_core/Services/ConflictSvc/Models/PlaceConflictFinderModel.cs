@@ -91,7 +91,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new(
                         BACKGROUND,
-                        $"Vị trí {nameof(placeAdjacent.PlaceStart)}",
+                        GetTimeBlockDescription(placeAdjacent),
                         item.Key,
                         placeAdjacent.Start,
                         placeAdjacent.End,
@@ -103,6 +103,12 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
                     yield return timeBlock;
                 }
             }
+        }
+
+        private static string GetTimeBlockDescription(PlaceAdjacent placeAdjacent)
+        {
+            return $"{placeAdjacent.SchoolClass1.SchoolClassName} kết thúc lúc {placeAdjacent.StartAsString} - {placeAdjacent.PlaceStart.ToActualPlace()}\n" +
+                   $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
         }
 
         public object GetValue()

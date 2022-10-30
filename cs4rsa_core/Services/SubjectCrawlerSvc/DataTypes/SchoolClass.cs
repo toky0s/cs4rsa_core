@@ -1,8 +1,10 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 {
@@ -41,12 +43,23 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         public string Color { get; set; }
 
-        public SchoolClass(string schoolClassName, string registerCode, string type,
-            string emptySeat, string registrationTermEnd, string registrationTermStart, StudyWeek studyWeek, Schedule schedule,
-            IEnumerable<string> rooms, IEnumerable<Place> places,
-            IEnumerable<Teacher> teachers, IEnumerable<string> tempTeachers,
-            string registrationStatus, string implementationStatus,
-            string url, DayPlaceMetaData dayPlaceMetaData)
+        public SchoolClass(
+            string schoolClassName, 
+            string registerCode,
+            string type,
+            string emptySeat,
+            string registrationTermEnd, 
+            string registrationTermStart, 
+            StudyWeek studyWeek, 
+            Schedule schedule,
+            IEnumerable<string> rooms,
+            IEnumerable<Place> places,
+            IEnumerable<Teacher> teachers, 
+            IEnumerable<string> tempTeachers,
+            string registrationStatus, 
+            string implementationStatus,
+            string url, 
+            DayPlaceMetaData dayPlaceMetaData)
         {
             SchoolClassName = schoolClassName;
             RegisterCode = registerCode;
@@ -73,7 +86,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         public Cs4rsaMetaData GetMetaDataMap()
         {
-            return new Cs4rsaMetaData(Schedule, DayPlaceMetaData);
+            return new Cs4rsaMetaData(Schedule, DayPlaceMetaData, this);
         }
 
         /**

@@ -17,6 +17,7 @@
         public static readonly string EX_NOT_FOUND_CLASSFORM = "Class Form could not be found!";
         public static readonly string EX_NOT_FOUND_BASE_SCHOOLCLASS_MODEL = "Base school class model cound not be found";
         public static readonly string EX_NOT_FOUND_VIEWMODEL = "ViewModel cound not be found";
+        public static readonly string EX_SCHOOLCLASS_STUDYTIME_NOT_ONLY_ONE = "SchoolClass's StudyTimes does not have only one item";
         #endregion
 
         #region Setting Props
