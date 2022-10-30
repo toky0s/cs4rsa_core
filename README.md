@@ -4,6 +4,7 @@
 
 ## Các chức năng chính
 Phiên bản 2.2.x
+- 🐱‍🐉 Cải thiện một chút về giao diện bo tròn ở Color Area, nhìn sẽ trông mềm mại hơn
 - 👓 Tăng tốc xử lý.
 - 🔍 Giờ đây bạn có thể kéo thả url môn học từ course vào phần Search của xếp lịch tự động để tìm kiếm nhanh.
 - 👩‍🏫 Màn hình quản lý giảng viên cào được.
