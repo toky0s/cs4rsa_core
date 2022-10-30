@@ -13,10 +13,16 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
     {
         private readonly Schedule _schedule;
         private readonly DayPlaceMetaData _dayPlaceMetaData;
-        public Cs4rsaMetaData(Schedule schedule, DayPlaceMetaData dayPlaceMetaData)
+        private readonly SchoolClass _schoolClass;
+
+        public Cs4rsaMetaData(
+            Schedule schedule, 
+            DayPlaceMetaData dayPlaceMetaData,
+            SchoolClass schoolClass)
         {
             _schedule = schedule;
             _dayPlaceMetaData = dayPlaceMetaData;
+            _schoolClass = schoolClass;
         }
 
         public IEnumerable<PlaceMap> GetPlaceMapsAtDay(DayOfWeek dayOfWeek)
@@ -27,7 +33,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             {
                 foreach (StudyTime studyTime in studyTimes)
                 {
-                    yield return new PlaceMap(studyTime, place);
+                    yield return new PlaceMap(studyTime, place, _schoolClass);
                 }
             }
             yield break;

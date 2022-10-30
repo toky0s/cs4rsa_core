@@ -1,4 +1,5 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;
@@ -23,7 +24,13 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         public readonly string StartAsString;
         public readonly string EndAsString;
 
-        public PlaceAdjacent(DateTime start, DateTime end, Place placeStart, Place placeEnd)
+        public readonly SchoolClass SchoolClass1;
+        public readonly SchoolClass SchoolClass2;
+
+        public PlaceAdjacent(
+            DateTime start, DateTime end, 
+            Place placeStart, Place placeEnd,
+            SchoolClass schoolClass1, SchoolClass schoolClass2)
         {
             Start = start;
             End = end;
@@ -31,6 +38,8 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             PlaceEnd = placeEnd;
             StartAsString = Start.ToString("HH:mm", CultureInfo.CurrentCulture);
             EndAsString = End.ToString("HH:mm", CultureInfo.CurrentCulture);
+            SchoolClass1 = schoolClass1;
+            SchoolClass2 = schoolClass2;
         }
     }
 }
