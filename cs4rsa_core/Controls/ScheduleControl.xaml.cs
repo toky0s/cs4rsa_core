@@ -149,31 +149,6 @@ namespace cs4rsa_core.Controls
             }
         }
 
-        private static int GetTimeIndex(DateTime dateTime)
-        {
-            string[] timelines = new string[15]
-            {
-                "07:00",
-                "09:00",
-                "09:15",
-                "10:15",
-                "11:15",
-                "12:00",
-                "13:00",
-                "14:00",
-                "15:00",
-                "15:15",
-                "16:15",
-                "17:15",
-                "17:45",
-                "18:45",
-                "21:00"
-            };
-
-            string time = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
-            return Array.IndexOf(timelines, time);
-        }
-
         private ScheduleBlock GetScheduleBlock(TimeBlock timeBlock)
         {
             ScheduleBlock scheduleBlock = new()
@@ -183,8 +158,8 @@ namespace cs4rsa_core.Controls
                 BlockName = timeBlock.Content,
                 BlockColor = timeBlock.Background,
                 Description = timeBlock.Description,
-                StartIndex = GetTimeIndex(timeBlock.Start),
-                EndIndex = GetTimeIndex(timeBlock.End),
+                StartIndex = Utils.GetTimeIndex(timeBlock.Start),
+                EndIndex = Utils.GetTimeIndex(timeBlock.End),
             };
 
             if (timeBlock.BlockType == BlockType.SchoolClass)
@@ -196,70 +171,6 @@ namespace cs4rsa_core.Controls
                 scheduleBlock.Class1 = timeBlock.Class1;
                 scheduleBlock.Class2 = timeBlock.Class2;
             }
-
-            #region widthBinding | Tính toán chiều rộng
-            Binding widthBinding = new()
-            {
-                RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(Canvas), 1),
-                Path = new PropertyPath(ActualWidthProperty),
-                Converter = new ScheduleBlockWidthConverter()
-            };
-            #endregion
-
-            #region heightMultiBinding | Tính toán chiều cao
-            MultiBinding heightMultiBinding = new();
-            heightMultiBinding.Converter = new ScheduleBlockHeightConverter();
-
-            Binding bindingCnvTimelineActualHeight = new()
-            {
-                ElementName = "Canvas_Timelines",
-                Path = new PropertyPath("ActualHeight")
-            };
-
-            Binding bindingStartIndex2 = new()
-            {
-                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
-                Path = new PropertyPath(ScheduleBlock.StartIndexProperty)
-            };
-
-            Binding bindingEndIndex = new()
-            {
-                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
-                Path = new PropertyPath(ScheduleBlock.EndIndexProperty)
-            };
-
-            heightMultiBinding.Bindings.Add(bindingCnvTimelineActualHeight);
-            heightMultiBinding.Bindings.Add(bindingStartIndex2);
-            heightMultiBinding.Bindings.Add(bindingEndIndex);
-            #endregion
-
-            #region canvasTopMultiBinding | Tính toán khoảng cách phía trên so với Canvas
-            MultiBinding canvasTopMultiBinding = new()
-            {
-                Converter = new TopRangeConverter()
-            };
-
-            Binding bindingTimelineCanvasHeight = new()
-            {
-                ElementName = "Canvas_Timelines",
-                Path = new PropertyPath("ActualHeight")
-            };
-
-            Binding bindingStartIndex = new()
-            {
-                RelativeSource = new RelativeSource(RelativeSourceMode.Self),
-                Path = new PropertyPath(ScheduleBlock.StartIndexProperty)
-            };
-
-            canvasTopMultiBinding.Bindings.Add(bindingTimelineCanvasHeight);
-            canvasTopMultiBinding.Bindings.Add(bindingStartIndex);
-            #endregion
-
-            #region Set Binding
-            scheduleBlock.SetBinding(WidthProperty, widthBinding);
-            scheduleBlock.SetBinding(HeightProperty, heightMultiBinding);
-            scheduleBlock.SetBinding(Canvas.TopProperty, canvasTopMultiBinding);
-            #endregion
 
             #region Events | Đặt hai sự kiện rê chuột
             scheduleBlock.MouseEnter += ScheduleBlock_MouseEnter;
