@@ -1,4 +1,4 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         public DateTime End { get; set; }
         public Room Room { get; set; }
         public StudyWeek StudyWeek { get; set; }
-        public IEnumerable<Teacher> Teachers { get; set; }
+        public IEnumerable<TeacherModel> Teachers { get; set; }
         public string ClassName { get; set; }
     }
 }

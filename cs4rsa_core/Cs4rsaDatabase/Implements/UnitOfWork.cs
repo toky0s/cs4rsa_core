@@ -24,6 +24,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
             PreProDetails = new PreProDetailRepository(_context);
             ParProDetails = new ParProDetailRepository(_context);
             SessionSchoolClasses = new SessionSchoolClassRepository(_context);
+            KeywordTeachers = new KeywordTeacherRepository(_context);
         }
 
         public ICurriculumRepository Curriculums { get; private set; }
@@ -47,6 +48,8 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
         public IParProDetailsRepository ParProDetails { get; private set; }
 
         public ISessionSchoolClassRepository SessionSchoolClasses { get; private set; }
+
+        public IKeywordTeacherRepository KeywordTeachers { get; private set; }
 
         public IDbContextTransaction BeginTrans()
         {

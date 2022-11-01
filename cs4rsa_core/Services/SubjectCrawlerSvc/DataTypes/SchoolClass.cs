@@ -1,6 +1,7 @@
 ﻿using cs4rsa_core.Constants;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
          * 
          * Tương ứng với TempTeachers.
          */
-        public IEnumerable<Teacher> Teachers { get; set; }
+        public IEnumerable<TeacherModel> Teachers { get; set; }
         public IEnumerable<string> TempTeachers { get; set; }
         public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }
@@ -54,7 +55,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             Schedule schedule,
             IEnumerable<string> rooms,
             IEnumerable<Place> places,
-            IEnumerable<Teacher> teachers, 
+            IEnumerable<TeacherModel> teachers, 
             IEnumerable<string> tempTeachers,
             string registrationStatus, 
             string implementationStatus,

@@ -1,6 +1,8 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+﻿using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
 using cs4rsa_core.Utils.Interfaces;
 
@@ -25,12 +27,17 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
         #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFolderManager _folderManager;
+        private readonly HtmlWeb _htmlWeb;
         #endregion
 
-        public TeacherCrawler(IUnitOfWork unitOfWork, IFolderManager folderManager)
+        public TeacherCrawler(
+            IUnitOfWork unitOfWork, 
+            IFolderManager folderManager,
+            HtmlWeb htmlWeb)
         {
             _unitOfWork = unitOfWork;
             _folderManager = folderManager;
+            _htmlWeb = htmlWeb;
 
             _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists("TeacherImages");
         }
@@ -48,60 +55,94 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
             return await _unitOfWork.Teachers.GetByIdAsync(instructorId) is not null;
         }
 
-        public async Task<Teacher> Crawl(string url)
+        public async Task<TeacherModel> Crawl(string url, int courseId = VMConstants.INT_INVALID_COURSEID)
         {
-            if (url != null)
+            if (url == null)
             {
-                int teacherId = int.Parse(GetIntructorId(url));
-                if (await IsTeacherHasInDatabase(teacherId))
-                {
-                    return await _unitOfWork.Teachers.GetByIdAsync(teacherId);
-                }
-                else
-                {
-                    HtmlWeb web = new();
-                    HtmlDocument _htmlDocument = await web.LoadFromWebAsync(url);
-                    if (_htmlDocument != null)
-                    {
-                        HtmlNodeCollection infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]");
-                        string id = StringHelper.SuperCleanString(infoNodes[0].InnerText);
-                        string name = StringHelper.SuperCleanString(infoNodes[1].InnerText);
-                        string sex = StringHelper.SuperCleanString(infoNodes[2].InnerText);
-                        string place = StringHelper.SuperCleanString(infoNodes[3].InnerText);
-                        string degree = StringHelper.SuperCleanString(infoNodes[4].InnerText);
-                        string workUnit = StringHelper.SuperCleanString(infoNodes[5].InnerText);
-                        string position = StringHelper.SuperCleanString(infoNodes[6].InnerText);
-                        string subject = StringHelper.SuperCleanString(infoNodes[7].InnerText);
-                        string form = StringHelper.SuperCleanString(infoNodes[8].InnerText);
-                        string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
-
-                        /// TODO: Danh sách môn học giảng viên đang dạy
-                        /// Tham khảo CS0026 https://github.com/toky0s/cs4rsa_core/issues/37
-                        IEnumerable<string> teachedSubjects = _htmlDocument.DocumentNode
-                            .SelectNodes(xpathLiNode)
-                            .Select(item => item.InnerText);
-
-                        string strPath = await OnDownloadImage(id);
-                        Teacher teacher = new()
-                        {
-                            TeacherId = int.Parse(id),
-                            Name = name,
-                            Sex = sex,
-                            Place = place,
-                            Degree = degree,
-                            WorkUnit = workUnit,
-                            Position = position,
-                            Subject = subject,
-                            Form = form,
-                            Path = strPath
-                        };
-                        await _unitOfWork.Teachers.AddAsync(teacher);
-                        await _unitOfWork.CompleteAsync();
-                        return teacher;
-                    }
-                }
+                return null;
             }
-            return null;
+
+            int teacherId = int.Parse(GetIntructorId(url));
+            TeacherModel teacherModel;
+            if (await IsTeacherHasInDatabase(teacherId))
+            {
+                Teacher teacher = await _unitOfWork.Teachers.GetByIdAsync(teacherId);
+                teacherModel = new TeacherModel(teacher);
+            }
+            else
+            {
+                HtmlDocument _htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                if (_htmlDocument == null)
+                {
+                    return null;
+                }
+                HtmlNodeCollection infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]");
+                string id = StringHelper.SuperCleanString(infoNodes[0].InnerText);
+                string name = StringHelper.SuperCleanString(infoNodes[1].InnerText);
+                string sex = StringHelper.SuperCleanString(infoNodes[2].InnerText);
+                string place = StringHelper.SuperCleanString(infoNodes[3].InnerText);
+                string degree = StringHelper.SuperCleanString(infoNodes[4].InnerText);
+                string workUnit = StringHelper.SuperCleanString(infoNodes[5].InnerText);
+                string position = StringHelper.SuperCleanString(infoNodes[6].InnerText);
+                string subject = StringHelper.SuperCleanString(infoNodes[7].InnerText);
+                string form = StringHelper.SuperCleanString(infoNodes[8].InnerText);
+                string xpathLiNode = "//ul[contains(@class, 'thugio')]/li";
+
+                /// Tham khảo CS0026 https://github.com/toky0s/cs4rsa_core/issues/37
+                IEnumerable<string> teachedSubjects = _htmlDocument.DocumentNode
+                    .SelectNodes(xpathLiNode)
+                    .Select(item => StringHelper.SuperCleanString(item.InnerText));
+
+                string strPath = await OnDownloadImage(id);
+                Teacher teacher = new()
+                {
+                    TeacherId = int.Parse(id),
+                    Name = name,
+                    Sex = sex,
+                    Place = place,
+                    Degree = degree,
+                    WorkUnit = workUnit,
+                    Position = position,
+                    Subject = subject,
+                    Form = form,
+                    Path = strPath,
+                    TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects)
+                };
+                await _unitOfWork.Teachers.AddAsync(teacher);
+                await _unitOfWork.CompleteAsync();
+                teacherModel = new TeacherModel(
+                    int.Parse(id),
+                    name,
+                    sex,
+                    place,
+                    degree,
+                    workUnit,
+                    position,
+                    subject,
+                    form,
+                    teachedSubjects,
+                    strPath
+                );
+            }
+
+            await CreateKeywordSubjectIfNotExist(teacherId, courseId);
+            return teacherModel;
+        }
+
+        private async Task CreateKeywordSubjectIfNotExist(int teacherId, int courseId)
+        {
+            if (!_unitOfWork.KeywordTeachers
+                .Find(kt => kt.CourseId == courseId && kt.TeacherId == teacherId)
+                .Any())
+            {
+                KeywordTeacher kt = new()
+                {
+                    CourseId = courseId,
+                    TeacherId = teacherId
+                };
+                await _unitOfWork.KeywordTeachers.AddAsync(kt);
+                await _unitOfWork.CompleteAsync();
+            }
         }
 
         private static string GetTeacherImagePath(string teacherId)

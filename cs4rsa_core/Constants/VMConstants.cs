@@ -44,5 +44,11 @@
         #region Snackbar Actions
         public static readonly string SNBAC_RESTORE = "HOÀN TÁC";
         #endregion
+
+        #region SePaRaTors
+        public static readonly char SPRT_TEACHER_SUBJECTS = '$';
+        #endregion
+
+        public const int INT_INVALID_COURSEID = 0;
     }
 }

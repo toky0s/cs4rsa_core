@@ -78,30 +78,33 @@
             Grid.Column="1"
             Padding="10"
             materialDesign:ElevationAssist.Elevation="Dp3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+            <materialDesign:Transitioner 
+                x:Name="Transitioner"
+                SelectedIndex="{Binding CurrentIndex}">
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Image 
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Image 
                         Grid.Row="0"
                         Margin="0 0 0 10"
                         Source="{Binding SelectedTeacher.Path}" 
                         Stretch="UniformToFill"></Image>
-                    <TextBlock 
+                        <TextBlock 
                         Grid.Row="1"
                         TextWrapping="WrapWithOverflow"
                         HorizontalAlignment="Center"
                         TextAlignment="Center"
                         Text="{Binding SelectedTeacher.Name}"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
-                    <TextBlock 
+                        <TextBlock 
                         Grid.Row="2"
                         Margin="0 0 0 10"
                         TextWrapping="WrapWithOverflow"
@@ -109,22 +112,58 @@
                         TextAlignment="Center"
                         Text="{Binding SelectedTeacher.TeacherId}"
                         Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
+                    </Grid>
+                    <StackPanel Grid.Row="1">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Button
+                                IsEnabled="{Binding SelectedTeacher, TargetNullValue=False}"
+                                Command="{Binding OpenOnWebCommand}"
+                                Margin="5 5 0 5"
+                                Content="{materialDesign:PackIcon Kind=OpenInNew}"
+                                ToolTip="Mở trong trình duyệt"></Button>
+                            <Button 
+                                Command="{Binding SubjectsViewCommand}"
+                                Margin="5 5 0 5"
+                                Content="{materialDesign:PackIcon Kind=Teacher}"
+                                ToolTip="Danh sách môn đã/đang giảng dạy"></Button>
+                            <Button 
+                                Command="{Binding SubjectsViewCommand}"
+                                Margin="5"
+                                Content="{materialDesign:PackIcon Kind=Refresh}"
+                                ToolTip="Danh sách môn đã/đang giảng dạy"></Button>
+                        </StackPanel>
+                        <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}"></TextBlock>
+                        <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}"></TextBlock>
+                    </StackPanel>
                 </Grid>
-                <StackPanel Grid.Row="1">
-                    <Button
-                        IsEnabled="{Binding SelectedTeacher, TargetNullValue=False}"
-                        Command="{Binding OpenOnWebCommand}"
-                        Content="MỞ TRÊN WEB"
-                        Margin="0 0 0 5"></Button>
-                    <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}"></TextBlock>
-                    <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}"></TextBlock>
+                <StackPanel Orientation="Vertical">
+                    <Button 
+                        Command="{Binding DetailsViewCommand}"
+                        Content="QUAY LẠI THÔNG TIN CHI TIẾT"></Button>
+                    <ListBox ItemsSource="{Binding SelectedTeacher.TeachedSubjects}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
-            </Grid>
+                <!--<materialDesign:TransitionerSlide>
+                                <materialDesign:TransitionerSlide.BackwardWipe>
+                                    <materialDesign:SlideWipe Direction="Down" />
+                                </materialDesign:TransitionerSlide.BackwardWipe>
+                                <materialDesign:TransitionerSlide.ForwardWipe>
+                                    <materialDesign:SlideWipe Direction="Up" />
+                                </materialDesign:TransitionerSlide.ForwardWipe>
+                                <local:Info />
+                            </materialDesign:TransitionerSlide>-->
+            </materialDesign:Transitioner>
         </materialDesign:Card>
     </Grid>
 </UserControl>

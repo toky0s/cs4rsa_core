@@ -23,6 +23,8 @@ using cs4rsa_core.Utils;
 using cs4rsa_core.Utils.Interfaces;
 using cs4rsa_core.ViewModels;
 
+using HtmlAgilityPack;
+
 using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -82,7 +84,8 @@ namespace cs4rsa_core
 
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
-            services.AddSingleton<ShareString> ();
+            services.AddSingleton<ShareString>();
+            services.AddSingleton(new HtmlWeb());
             services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();

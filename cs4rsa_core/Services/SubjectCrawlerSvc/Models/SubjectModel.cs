@@ -1,5 +1,5 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
 
 using System;
@@ -13,7 +13,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
     {
         private readonly Subject _subject;
 
-        public List<Teacher> Teachers => _subject.Teachers;
+        public List<TeacherModel> Teachers => _subject.Teachers;
         public List<string> TempTeachers => _subject.TempTeachers;
         public List<ClassGroupModel> ClassGroupModels { get; set; }
         public string SubjectName => _subject.Name;
