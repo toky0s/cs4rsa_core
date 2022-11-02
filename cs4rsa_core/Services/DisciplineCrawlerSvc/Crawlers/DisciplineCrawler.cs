@@ -16,7 +16,6 @@ namespace cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers
     {
         private readonly ICourseCrawler _homeCourseSearch;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ColorGenerator _colorGenerator;
         private readonly HtmlWeb _htmlWeb;
 
         public DisciplineCrawler(
@@ -27,7 +26,6 @@ namespace cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers
         {
             _homeCourseSearch = courseCrawler;
             _unitOfWork = unitOfWork;
-            _colorGenerator = colorGenerator;
             _htmlWeb = htmlWeb;
         }
 
@@ -58,14 +56,11 @@ namespace cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers
             foreach (HtmlNode trTag in trTags)
             {
                 HtmlNode[] tdTags = trTag.Descendants("td").ToArray();
-
                 HtmlNode disciplineAnchorTag = tdTags[0].Element("a");
                 string courseId = GetCourseIdFromHref(disciplineAnchorTag.Attributes["href"].Value);
                 string disciplineAndKeyword = disciplineAnchorTag.InnerText.Trim();
                 string[] disciplineAndKeywordSplit = StringHelper.SplitAndRemoveAllSpace(disciplineAndKeyword);
-
                 string discipline = disciplineAndKeywordSplit[0];
-
 
                 if (currentDiscipline == null || currentDiscipline != discipline)
                 {
@@ -79,7 +74,7 @@ namespace cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers
                 if (discipline == currentDiscipline)
                 {
                     string keyword1 = disciplineAndKeywordSplit[1];
-                    string color = _colorGenerator.GenerateColor();
+                    string color = ColorGenerator.GenerateColor();
                     HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
                     string subjectName = subjectNameAnchorTag.InnerText.Trim();
                     Keyword keyword = new()
