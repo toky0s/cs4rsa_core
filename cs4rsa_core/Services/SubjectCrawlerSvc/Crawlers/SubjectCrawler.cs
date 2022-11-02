@@ -3,6 +3,7 @@ using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Utils.Interfaces;
 
 using HtmlAgilityPack;
@@ -19,6 +20,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         private readonly IFolderManager _folderManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
+        private readonly ITeacherCrawler _teacherCrawler;
+        private readonly HtmlWeb _htmlWeb;
         #endregion
 
         /// <summary>
@@ -29,12 +32,16 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         public SubjectCrawler(
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            IFolderManager folderManager
+            IFolderManager folderManager,
+            ITeacherCrawler teacherCrawler,
+            HtmlWeb htmlWeb
         )
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _folderManager = folderManager;
+            _teacherCrawler = teacherCrawler;
+            _htmlWeb = htmlWeb;
         }
 
         public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache = true)
@@ -58,8 +65,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         {
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
             string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            HtmlWeb htmlWeb = new();
-            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(url);
+            HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
             return await Crawl(htmlDocument, courseId);
         }
 
@@ -97,7 +103,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
                     rawSoup,
                     courseId,
                     _unitOfWork,
-                    _folderManager);
+                    _folderManager,
+                    _teacherCrawler,
+                    _htmlWeb);
             }
             return null;
         }

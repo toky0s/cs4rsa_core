@@ -1,9 +1,9 @@
 ﻿using cs4rsa_core.Commons.Enums;
 using cs4rsa_core.Commons.Interfaces;
 using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 using System.Collections.Generic;
 
@@ -102,8 +102,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             set { _places = value; }
         }
 
-        private IEnumerable<Teacher> _teachers;
-        public IEnumerable<Teacher> Teachers
+        private IEnumerable<TeacherModel> _teachers;
+        public IEnumerable<TeacherModel> Teachers
         {
             get { return _teachers; }
             set { _teachers = value; }

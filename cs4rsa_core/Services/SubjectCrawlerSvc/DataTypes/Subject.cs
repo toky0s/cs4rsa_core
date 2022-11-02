@@ -3,6 +3,8 @@ using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
 using cs4rsa_core.Utils.Interfaces;
 
@@ -21,6 +23,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFolderManager _folderManager;
+        private readonly ITeacherCrawler _teacherCrawler;
+        private readonly HtmlWeb _htmlWeb;
 
         private readonly string _studyUnit;
         private readonly string _studyUnitType;
@@ -32,8 +36,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
-        private readonly List<Teacher> _teachers;
-        public List<Teacher> Teachers => _teachers;
+        private readonly List<TeacherModel> _teachers;
+        public List<TeacherModel> Teachers => _teachers;
         private readonly List<ClassGroup> _classGroups;
         public List<ClassGroup> ClassGroups => _classGroups;
 
@@ -46,17 +50,22 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         public IEnumerable<string> MustStudySubject { get; }
         public IEnumerable<string> ParallelSubject { get; }
         public string Desciption { get; }
-        public int CourseId { get; }
+        public readonly int CourseId;
 
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        IUnitOfWork unitOfWork, IFolderManager folderManager)
+                        IUnitOfWork unitOfWork, 
+                        IFolderManager folderManager,
+                        ITeacherCrawler teacherCrawler,
+                        HtmlWeb htmlWeb)
         {
             _unitOfWork = unitOfWork;
             _folderManager = folderManager;
+            _teacherCrawler = teacherCrawler;
+            _htmlWeb = htmlWeb;
 
             _studyUnit = studyUnit;
             _studyUnitType = studyUnitType;
@@ -172,7 +181,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
              * Ngày Mùng 5 Tết 2022 
              */
             string teacherName = GetTeacherName(trTagClassLop);
-            Teacher teacher = await GetTeacherFromURL(urlToSubjectDetailPage);
+            TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
 
             List<string> tempTeachers = new();
             if (teacherName != "")
@@ -180,10 +189,10 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                 tempTeachers.Add(teacherName);
             }
 
-            List<Teacher> teachers = new();
-            if (teacher != null)
+            List<TeacherModel> teachers = new();
+            if (teacherModel != null)
             {
-                teachers.Add(teacher);
+                teachers.Add(teacherModel);
             }
             #endregion
 
@@ -253,9 +262,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         }
 
         /// <summary>
-        /// Trả về teacher Name của một school class. Đồng thời thêm teacher Name này vào
-        /// temp teachers nhằm đảm bảo không thất thoát các teacher không có detail page.
-        /// Cải thiện độ chính xác của bộ lọc teacher.
+        /// Trả về teacherModel Name của một school class. Đồng thời thêm teacherModel Name này vào
+        /// temp teachers nhằm đảm bảo không thất thoát các teacherModel không có detail page.
+        /// Cải thiện độ chính xác của bộ lọc teacherModel.
         /// </summary>
         /// <param name="trTagClassLop">HtmlNode với giá trị class="lop".</param>
         /// <returns>Tên giảng viên</returns>
@@ -290,10 +299,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             return trTags;
         }
 
-        private static async Task<string> GetTeacherInfoPageURL(string urlSubjectDetailPage)
+        private async Task<string> GetTeacherInfoPageURL(string urlSubjectDetailPage)
         {
-            HtmlWeb htmlWeb = new();
-            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(urlSubjectDetailPage);
+            HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(urlSubjectDetailPage);
             HtmlNode aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
             return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
@@ -305,20 +313,19 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         /// <summary>
         /// Nạp Teacher mới (nếu chưa có) vào Subject này thông qua 
-        /// url đồng thời trả về một teacher vừa mới được parse.
+        /// url đồng thời trả về một teacherModel vừa mới được parse.
         /// </summary>
         /// <param name="url">Chuỗi url tới trang chi tiết nhóm lớp.</param>
         /// <returns></returns>
-        private async Task<Teacher> GetTeacherFromURL(string url)
+        private async Task<TeacherModel> GetTeacherFromURL(string url)
         {
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
-            TeacherCrawler teacherCrawler = new(_unitOfWork, _folderManager);
-            Teacher teacher = await teacherCrawler.Crawl(teacherDetailPageURL);
-            if (teacher != null && !_teachers.Contains(teacher))
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(teacherDetailPageURL, CourseId, false);
+            if (teacherModel != null && !_teachers.Contains(teacherModel))
             {
-                _teachers.Add(teacher);
+                _teachers.Add(teacherModel);
             }
-            return teacher;
+            return teacherModel;
         }
 
         /// <summary>
@@ -368,11 +375,14 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        IUnitOfWork unitOfWork, IFolderManager folderManager)
+                        IUnitOfWork unitOfWork, 
+                        IFolderManager folderManager, 
+                        ITeacherCrawler teacherCrawler, 
+                        HtmlWeb htmlWeb)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, unitOfWork, folderManager);
+                rawSoup, courseId, unitOfWork, folderManager, teacherCrawler, htmlWeb);
             return ret.InitializeAsync();
         }
     }

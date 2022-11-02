@@ -1,7 +1,7 @@
 ﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
 
 using System;
@@ -101,7 +101,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             }
         }
 
-        public IEnumerable<Teacher> GetTeacherModels()
+        public IEnumerable<TeacherModel> GetTeacherModels()
         {
             return ClassGroup.GetTeachers();
         }

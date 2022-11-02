@@ -14,6 +14,8 @@ namespace cs4rsa_core.Utils
             "#111111"
         };
 
+        private static readonly List<string> _generatedColors = new();
+
         private readonly IKeywordRepository _keywordRepository;
 
         public ColorGenerator(IKeywordRepository keywordRepository)
@@ -31,7 +33,7 @@ namespace cs4rsa_core.Utils
             return _keywordRepository.GetColorWithSubjectCode(subjectCode);
         }
 
-        public string GenerateColor()
+        public static string GenerateColor()
         {
             RandomNumberGenerator.Create();
             string color;
@@ -42,13 +44,9 @@ namespace cs4rsa_core.Utils
                 int blue = (RandomNumberGenerator.GetInt32(256) + 255) / 2;
                 color = $"#{red:X2}{green:X2}{blue:X2}";
             }
-            while (IsHasColor(color) || _excludeColors.Contains(color));
+            while (_excludeColors.Contains(color) || _generatedColors.Contains(color));
+            _generatedColors.Add(color);
             return color;
-        }
-
-        private bool IsHasColor(string color)
-        {
-            return _keywordRepository.IsHasColor(color);
         }
     }
 }

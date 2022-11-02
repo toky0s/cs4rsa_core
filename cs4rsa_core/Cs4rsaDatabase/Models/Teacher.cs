@@ -20,5 +20,6 @@
         /// </summary>
         public string TeachedSubjects { get; set; }
         public string Path { get; set; }
+        public string Url { get; set; }
     }
 }

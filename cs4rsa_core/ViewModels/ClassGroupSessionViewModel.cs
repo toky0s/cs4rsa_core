@@ -14,10 +14,10 @@ using System.Windows.Data;
 
 using Session = cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums.Session;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Utils.Interfaces;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -50,9 +50,17 @@ namespace cs4rsa_core.ViewModels
 
         public ICollectionView _classGroupModelsView;
 
-        public ObservableCollection<Teacher> Teachers { get; set; }
-        private Teacher selectedTeacher;
-        public Teacher SelectedTeacher
+        public ObservableCollection<TeacherModel> Teachers { get; set; }
+        private int _teacherCount;
+
+        public int TeacherCount
+        {
+            get { return _teacherCount; }
+            set { _teacherCount = value; OnPropertyChanged(); }
+        }
+
+        private TeacherModel selectedTeacher;
+        public TeacherModel SelectedTeacher
         {
             get => selectedTeacher;
             set
@@ -393,6 +401,7 @@ namespace cs4rsa_core.ViewModels
             Morning = false;
             Afternoon = false;
             Night = false;
+            TeacherCount = 0;
         }
 
         private bool ClassGroupFilter(object obj)
@@ -574,13 +583,14 @@ namespace cs4rsa_core.ViewModels
                 #endregion
 
                 #region Add Teacher
-                Teacher allTeacher = new() { TeacherId = 0, Name = "TẤT CẢ" };
+                TeacherModel allTeacher = new(0, "TẤT CẢ");
                 Teachers.Add(allTeacher);
 
                 List<string> tempTeachers = SubjectModel.TempTeachers;
-                foreach (Teacher teacher in SubjectModel.Teachers)
+                // Chống trùng lặp giảng viên
+                foreach (TeacherModel teacher in SubjectModel.Teachers)
                 {
-                    if (!Teachers.Contains(teacher) && teacher != null)
+                    if (teacher != null && !Teachers.Where(t => t.TeacherId == teacher.TeacherId).Any())
                     {
                         Teachers.Add(teacher);
                         tempTeachers.Remove(teacher.Name);
@@ -593,13 +603,15 @@ namespace cs4rsa_core.ViewModels
                 {
                     for (int i = 0; i < tempTeachers.Count; i++)
                     {
-                        Teacher guestLecturer = new() { TeacherId = i + 1, Name = tempTeachers[i] };
+                        TeacherModel guestLecturer = new(i + 1, tempTeachers[i]);
                         Teachers.Add(guestLecturer);
                     }
                 }
                 SelectedTeacher = Teachers[0];
                 #endregion
 
+                // Count teacher exclude ALL option
+                TeacherCount = Teachers.Count - 1;
                 _classGroupModelsView.Refresh();
             }
         }
