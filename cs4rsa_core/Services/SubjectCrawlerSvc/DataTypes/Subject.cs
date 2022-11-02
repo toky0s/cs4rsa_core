@@ -320,7 +320,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private async Task<TeacherModel> GetTeacherFromURL(string url)
         {
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
-            TeacherModel teacherModel = await _teacherCrawler.Crawl(teacherDetailPageURL, CourseId);
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(teacherDetailPageURL, CourseId, false);
             if (teacherModel != null && !_teachers.Contains(teacherModel))
             {
                 _teachers.Add(teacherModel);

@@ -1,6 +1,8 @@
 ﻿using cs4rsa_core.Constants;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
@@ -15,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
 {
@@ -55,7 +58,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
             return await _unitOfWork.Teachers.GetByIdAsync(instructorId) is not null;
         }
 
-        public async Task<TeacherModel> Crawl(string url, int courseId = VMConstants.INT_INVALID_COURSEID)
+        public async Task<TeacherModel> Crawl(string url, int courseId, bool isUpdate)
         {
             if (url == null)
             {
@@ -64,9 +67,12 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
 
             int teacherId = int.Parse(GetIntructorId(url));
             TeacherModel teacherModel;
-            if (await IsTeacherHasInDatabase(teacherId))
+            if (await IsTeacherHasInDatabase(teacherId) && !isUpdate)
             {
                 Teacher teacher = await _unitOfWork.Teachers.GetByIdAsync(teacherId);
+                teacher.Url = url;
+                _unitOfWork.Teachers.Update(teacher);
+                await _unitOfWork.CompleteAsync();
                 teacherModel = new TeacherModel(teacher);
             }
             else
@@ -94,21 +100,42 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
                     .Select(item => StringHelper.SuperCleanString(item.InnerText));
 
                 string strPath = await OnDownloadImage(id);
-                Teacher teacher = new()
+
+                if (isUpdate && await IsTeacherHasInDatabase(teacherId))
                 {
-                    TeacherId = int.Parse(id),
-                    Name = name,
-                    Sex = sex,
-                    Place = place,
-                    Degree = degree,
-                    WorkUnit = workUnit,
-                    Position = position,
-                    Subject = subject,
-                    Form = form,
-                    Path = strPath,
-                    TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects)
-                };
-                await _unitOfWork.Teachers.AddAsync(teacher);
+                    Teacher teacher = await _unitOfWork.Teachers.GetByIdAsync(teacherId);
+                    teacher.Name = name;
+                    teacher.Sex = sex;
+                    teacher.Place = place;
+                    teacher.Degree = degree;
+                    teacher.WorkUnit = workUnit;
+                    teacher.Position = position;
+                    teacher.Subject = subject;
+                    teacher.Form = form;
+                    teacher.Path = strPath;
+                    teacher.TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects);
+                    _unitOfWork.Teachers.Update(teacher);
+                }
+                else
+                {
+                    Teacher teacher = new()
+                    {
+                        TeacherId = int.Parse(id),
+                        Name = name,
+                        Sex = sex,
+                        Place = place,
+                        Degree = degree,
+                        WorkUnit = workUnit,
+                        Position = position,
+                        Subject = subject,
+                        Form = form,
+                        Path = strPath,
+                        TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects),
+                        Url = url
+                    };
+                    await _unitOfWork.Teachers.AddAsync(teacher);
+                    await CreateKeywordSubjectIfNotExist(teacherId, courseId);
+                }
                 await _unitOfWork.CompleteAsync();
                 teacherModel = new TeacherModel(
                     int.Parse(id),
@@ -121,11 +148,11 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
                     subject,
                     form,
                     teachedSubjects,
-                    strPath
+                    strPath,
+                    url
                 );
             }
 
-            await CreateKeywordSubjectIfNotExist(teacherId, courseId);
             return teacherModel;
         }
 

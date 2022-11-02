@@ -1,5 +1,7 @@
 ﻿using cs4rsa_core.ViewModels;
 
+using MaterialDesignThemes.Wpf;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,14 @@ namespace cs4rsa_core.Views
         public Lecture()
         {
             InitializeComponent();
+        }
+
+        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int teacherId = (DataContext as LectureViewModel).SelectedTeacher.TeacherId;
+            Clipboard.SetData(DataFormats.Text, teacherId);
+            ISnackbarMessageQueue snackbar = (ISnackbarMessageQueue) ((App)Application.Current).Container.GetService(typeof(ISnackbarMessageQueue));
+            snackbar.Enqueue($"Đã sao chép mã {teacherId} vào Clipboard");
         }
     }
 }

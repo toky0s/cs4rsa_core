@@ -18,6 +18,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
         public string Form { get; init; }
         public IEnumerable<string> TeachedSubjects { get; set; }
         public string Path { get; init; }
+        public string Url { get; init; }
 
         public TeacherModel(Teacher teacher)
         {
@@ -39,6 +40,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
                 TeachedSubjects = teacher.TeachedSubjects.Split(VMConstants.SPRT_TEACHER_SUBJECTS);
             }
             Path = teacher.Path;
+            Url = teacher.Url;
         }
 
         public TeacherModel(
@@ -52,7 +54,8 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
             string subject, 
             string form, 
             IEnumerable<string> teachedSubjects, 
-            string path)
+            string path,
+            string url)
         {
             TeacherId = teacherId;
             Name = name;
@@ -65,6 +68,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
             Form = form;
             TeachedSubjects = teachedSubjects;
             Path = path;
+            Url = url;
         }
 
         public TeacherModel(int teacherId, string name)

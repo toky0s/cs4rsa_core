@@ -49,6 +49,8 @@
         public static readonly char SPRT_TEACHER_SUBJECTS = '$';
         #endregion
 
+        #region Consts
         public const int INT_INVALID_COURSEID = 0;
+        #endregion
     }
 }

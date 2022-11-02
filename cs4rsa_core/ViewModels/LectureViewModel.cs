@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
 using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils.Interfaces;
 
@@ -17,15 +19,22 @@ namespace cs4rsa_core.ViewModels
     {
         private static readonly int SIZE = 20;
 
+        #region Commands
         public RelayCommand OpenOnWebCommand { get; set; }
         public RelayCommand DetailsViewCommand { get; set; }
         public RelayCommand SubjectsViewCommand { get; set; }
+        public AsyncRelayCommand UpdateCommand { get; set; }
         public AsyncRelayCommand PreviousPageCommand { get; set; }
         public AsyncRelayCommand NextPageCommand { get; set; }
+        #endregion
 
+        #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
+        private readonly ITeacherCrawler _teacherCrawler;
+        #endregion
 
+        #region Properties
         public ObservableCollection<TeacherModel> Lectures { get; set; }
 
         private TeacherModel _selectedTeacher;
@@ -47,8 +56,8 @@ namespace cs4rsa_core.ViewModels
         public string SearchText
         {
             get { return _searchText; }
-            set 
-            { 
+            set
+            {
                 _searchText = value;
                 OnPropertyChanged();
                 Filter(value);
@@ -84,16 +93,25 @@ namespace cs4rsa_core.ViewModels
         }
 
         private int _currentIndex;
-
         public int CurrentIndex
         {
             get { return _currentIndex; }
             set { _currentIndex = value; OnPropertyChanged(); }
         }
 
+        private bool isUpdating;
+
+        public bool IsUpdating
+        {
+            get { return isUpdating; }
+            set { isUpdating = value; }
+        }
+
+        #endregion
 
         public LectureViewModel(
             IUnitOfWork unitOfWork,
+            ITeacherCrawler teacherCrawler,
             IOpenInBrowser openInBrowser
         )
         {
@@ -107,16 +125,33 @@ namespace cs4rsa_core.ViewModels
                 CurrentIndex = 0;
             });
 
+            UpdateCommand = new(OnUpdate);
             OpenOnWebCommand = new(OnOpenOnWeb);
             PreviousPageCommand = new(OnPreviousPage);
             NextPageCommand = new(OnNextPage);
 
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
+            _teacherCrawler = teacherCrawler;
 
             Lectures = new();
             CurrentPage = 1;
             CurrentIndex = 0;
+            IsUpdating = false;
+        }
+
+        private async Task OnUpdate()
+        {
+            IsUpdating = true;
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(_selectedTeacher.Url, VMConstants.INT_INVALID_COURSEID, true);
+            int selectedTeacherIndex = Lectures.IndexOf(_selectedTeacher);
+            if (selectedTeacherIndex >= 0)
+            {
+                Lectures.RemoveAt(selectedTeacherIndex);
+                Lectures.Insert(selectedTeacherIndex, teacherModel);
+                SelectedTeacher = Lectures[selectedTeacherIndex];
+            }
+            IsUpdating = false;
         }
 
         private async Task OnPreviousPage()
@@ -138,7 +173,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         /// <summary>
-        /// Tính toán lại Enable của các 
+        /// Tính toán lại Enable của các button điều hướng
         /// </summary>
         private void ReEvaluatePreviousNextButton()
         {
@@ -148,8 +183,7 @@ namespace cs4rsa_core.ViewModels
 
         private void OnOpenOnWeb()
         {
-            string url = $"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_lecturerdetail&intructorid={SelectedTeacher.TeacherId}";
-            _openInBrowser.Open(url);
+            _openInBrowser.Open(_selectedTeacher.Url);
         }
 
         private void Filter(string searchText)
