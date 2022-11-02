@@ -12,157 +12,220 @@
     d:DesignWidth="800"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
     mc:Ignorable="d">
-    <Grid Margin="10">
+    <Grid Margin="10" IsEnabled="{Binding IsUpdating, Converter={StaticResource InvertBooleanConverter}}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <TextBox
                 Grid.Row="0"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 VerticalAlignment="Top"
                 materialDesign:HintAssist.Hint="Tên giảng viên hoặc mã giảng viên"
-                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <ListView
                 Grid.Row="1"
-                Margin="0 0 0 5"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                Margin="0,0,0,5"
                 ItemsSource="{Binding Lectures}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectedItem="{Binding SelectedTeacher}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Tên" Width="200" DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Giới tính" Width="auto" DisplayMemberBinding="{Binding Sex}" />
-                        <GridViewColumn Header="Quê quán" Width="auto" DisplayMemberBinding="{Binding Place}" />
-                        <GridViewColumn Header="Chức vụ" Width="auto" DisplayMemberBinding="{Binding Degree}" />
-                        <GridViewColumn Header="Đơn vị công tác" Width="auto" DisplayMemberBinding="{Binding WorkUnit}" />
-                        <GridViewColumn Header="Vị trí" Width="auto" DisplayMemberBinding="{Binding Position}" />
-                        <GridViewColumn Header="Bộ môn" Width="auto" DisplayMemberBinding="{Binding Subject}" />
-                        <GridViewColumn Header="Hình thức" Width="auto" DisplayMemberBinding="{Binding Form}" />
+                        <GridViewColumn
+                            Width="200"
+                            DisplayMemberBinding="{Binding Name}"
+                            Header="Tên" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Sex}"
+                            Header="Giới tính" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Place}"
+                            Header="Quê quán" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Degree}"
+                            Header="Chức vụ" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding WorkUnit}"
+                            Header="Đơn vị công tác" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Position}"
+                            Header="Vị trí" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Subject}"
+                            Header="Bộ môn" />
+                        <GridViewColumn
+                            Width="auto"
+                            DisplayMemberBinding="{Binding Form}"
+                            Header="Hình thức" />
                     </GridView>
                 </ListView.View>
             </ListView>
             <StackPanel
-                HorizontalAlignment="Right"
                 Grid.Row="2"
+                HorizontalAlignment="Right"
                 Orientation="Horizontal">
-                <TextBlock 
+                <TextBlock
+                    Margin="0,0,5,0"
                     VerticalAlignment="Center"
-                    Margin="0 0 5 0"
                     Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                    <Run Text="{Binding CurrentPage, StringFormat=Trang hiện tại {0}/}"></Run>
-                    <Run Text="{Binding TotalPage}"></Run>
+                    <Run Text="{Binding CurrentPage, StringFormat=Trang hiện tại {0}/}" />
+                    <Run Text="{Binding TotalPage}" />
                 </TextBlock>
                 <Button
-                    Margin="0 0 5 0"
-                    Content="TRANG TRƯỚC"
+                    Margin="0,0,5,0"
                     Command="{Binding PreviousPageCommand}"
-                    IsEnabled="{Binding CanPreviousPage}">
-                </Button>
-                <Button 
+                    Content="TRANG TRƯỚC"
+                    IsEnabled="{Binding CanPreviousPage}" />
+                <Button
+                    Command="{Binding NextPageCommand}"
                     Content="TRANG SAU"
-                    IsEnabled="{Binding CanNextPage}"
-                    Command="{Binding NextPageCommand}">
-                </Button>
+                    IsEnabled="{Binding CanNextPage}" />
             </StackPanel>
         </Grid>
-
         <materialDesign:Card
-            Margin="10 0 0 0"
             Grid.Column="1"
-            Padding="10"
-            materialDesign:ElevationAssist.Elevation="Dp3">
-            <materialDesign:Transitioner 
-                x:Name="Transitioner"
-                SelectedIndex="{Binding CurrentIndex}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
+            Margin="10,0,0,0"
+            Padding="10">
+            <materialDesign:Transitioner x:Name="Transitioner" SelectedIndex="{Binding CurrentIndex}">
+                <materialDesign:TransitionerSlide>
+                    <materialDesign:TransitionerSlide.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromRight" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitionerSlide.OpeningEffects>
+                    <materialDesign:TransitionerSlide.BackwardWipe>
+                        <materialDesign:SlideWipe Direction="Left" />
+                    </materialDesign:TransitionerSlide.BackwardWipe>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="2*" />
+                                </Grid.RowDefinitions>
+                                <Image
+                                    Grid.Row="0"
+                                    Margin="0,0,0,10"
+                                    Source="{Binding SelectedTeacher.Path}"
+                                    Stretch="UniformToFill" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                    Text="{Binding SelectedTeacher.Name}"
+                                    TextAlignment="Center"
+                                    TextWrapping="WrapWithOverflow" />
+                                <StackPanel
+                                    Grid.Row="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                        Text="{Binding SelectedTeacher.TeacherId}"
+                                        TextWrapping="WrapWithOverflow" />
+                                    <Label
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Content="{materialDesign:PackIcon Kind=ContentCopy}"
+                                        Cursor="Hand"
+                                        MouseDown="Label_MouseDown"
+                                        ToolTip="Sao chép">
+                                        <Label.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignLabel}" TargetType="Label">
+                                                <Setter Property="Foreground" Value="SlateGray" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="Black" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Grid.Row="1">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button
+                                        Margin="5,5,0,5"
+                                        Command="{Binding OpenOnWebCommand}"
+                                        Content="{materialDesign:PackIcon Kind=OpenInNew}"
+                                        IsEnabled="{Binding SelectedTeacher, TargetNullValue=False}"
+                                        ToolTip="Mở trong trình duyệt" />
+                                    <Button
+                                        Margin="5,5,0,5"
+                                        Command="{Binding SubjectsViewCommand}"
+                                        Content="{materialDesign:PackIcon Kind=Teacher}"
+                                        ToolTip="Danh sách môn đã/đang giảng dạy" />
+                                    <Button
+                                        Margin="5"
+                                        Command="{Binding UpdateCommand}"
+                                        Content="{materialDesign:PackIcon Kind=Refresh}"
+                                        ToolTip="Danh sách môn đã/đang giảng dạy" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
+                                <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}" />
+                                <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}" />
+                                <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}" TextWrapping="WrapWithOverflow" />
+                                <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}" />
+                                <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />
+                                <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}" />
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </materialDesign:TransitionerSlide>
+                <materialDesign:TransitionerSlide>
+                    <materialDesign:TransitionerSlide.OpeningEffects>
+                        <materialDesign:TransitionEffect Kind="SlideInFromRight" />
+                        <materialDesign:TransitionEffect Kind="ExpandIn" />
+                    </materialDesign:TransitionerSlide.OpeningEffects>
+                    <materialDesign:TransitionerSlide.BackwardWipe>
+                        <materialDesign:SlideWipe Direction="Right" />
+                    </materialDesign:TransitionerSlide.BackwardWipe>
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="auto"></RowDefinition>
-                            <RowDefinition Height="auto"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Image 
-                        Grid.Row="0"
-                        Margin="0 0 0 10"
-                        Source="{Binding SelectedTeacher.Path}" 
-                        Stretch="UniformToFill"></Image>
-                        <TextBlock 
-                        Grid.Row="1"
-                        TextWrapping="WrapWithOverflow"
-                        HorizontalAlignment="Center"
-                        TextAlignment="Center"
-                        Text="{Binding SelectedTeacher.Name}"
-                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
-                        <TextBlock 
-                        Grid.Row="2"
-                        Margin="0 0 0 10"
-                        TextWrapping="WrapWithOverflow"
-                        HorizontalAlignment="Center"
-                        TextAlignment="Center"
-                        Text="{Binding SelectedTeacher.TeacherId}"
-                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}"></TextBlock>
-                    </Grid>
-                    <StackPanel Grid.Row="1">
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center">
+                        <StackPanel
+                            Grid.Row="0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
                             <Button
-                                IsEnabled="{Binding SelectedTeacher, TargetNullValue=False}"
-                                Command="{Binding OpenOnWebCommand}"
-                                Margin="5 5 0 5"
-                                Content="{materialDesign:PackIcon Kind=OpenInNew}"
-                                ToolTip="Mở trong trình duyệt"></Button>
-                            <Button 
-                                Command="{Binding SubjectsViewCommand}"
-                                Margin="5 5 0 5"
-                                Content="{materialDesign:PackIcon Kind=Teacher}"
-                                ToolTip="Danh sách môn đã/đang giảng dạy"></Button>
-                            <Button 
-                                Command="{Binding SubjectsViewCommand}"
-                                Margin="5"
-                                Content="{materialDesign:PackIcon Kind=Refresh}"
-                                ToolTip="Danh sách môn đã/đang giảng dạy"></Button>
+                                Command="{Binding DetailsViewCommand}"
+                                Content="{materialDesign:PackIcon Kind=ArrowBack}"
+                                Style="{StaticResource MaterialDesignIconButton}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="Danh sách các môn" />
                         </StackPanel>
-                        <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}"></TextBlock>
-                        <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}"></TextBlock>
-                    </StackPanel>
-                </Grid>
-                <StackPanel Orientation="Vertical">
-                    <Button 
-                        Command="{Binding DetailsViewCommand}"
-                        Content="QUAY LẠI THÔNG TIN CHI TIẾT"></Button>
-                    <ListBox ItemsSource="{Binding SelectedTeacher.TeachedSubjects}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"></TextBlock>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </StackPanel>
-                <!--<materialDesign:TransitionerSlide>
-                                <materialDesign:TransitionerSlide.BackwardWipe>
-                                    <materialDesign:SlideWipe Direction="Down" />
-                                </materialDesign:TransitionerSlide.BackwardWipe>
-                                <materialDesign:TransitionerSlide.ForwardWipe>
-                                    <materialDesign:SlideWipe Direction="Up" />
-                                </materialDesign:TransitionerSlide.ForwardWipe>
-                                <local:Info />
-                            </materialDesign:TransitionerSlide>-->
+                        <ListBox Grid.Row="1" ItemsSource="{Binding SelectedTeacher.TeachedSubjects}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </materialDesign:TransitionerSlide>
             </materialDesign:Transitioner>
         </materialDesign:Card>
     </Grid>
