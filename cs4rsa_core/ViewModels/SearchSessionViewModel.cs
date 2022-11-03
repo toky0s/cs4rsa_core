@@ -418,7 +418,9 @@ namespace cs4rsa_core.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels.Count > 0)
+            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                    .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
+                    .Any())
             {
                 ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
