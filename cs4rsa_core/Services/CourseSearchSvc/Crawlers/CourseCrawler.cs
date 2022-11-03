@@ -13,15 +13,18 @@ namespace cs4rsa_core.Services.CourseSearchSvc.Crawlers
     /// </summary>
     public class CourseCrawler : ICourseCrawler
     {
+        private readonly HtmlWeb _htmlWeb;
+
         public string CurrentYearValue { get; }
         public string CurrentYearInfo { get; }
         public string CurrentSemesterValue { get; }
         public string CurrentSemesterInfo { get; }
         public IEnumerable<CourseYear> CourseYears { get; }
 
-        public CourseCrawler()
+        public CourseCrawler(HtmlWeb htmlWeb)
         {
-            HtmlWeb htmlWeb = new();
+            _htmlWeb = htmlWeb;
+
             string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
             HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
             CourseYears = GetCourseYears(document);
@@ -47,7 +50,7 @@ namespace cs4rsa_core.Services.CourseSearchSvc.Crawlers
             return optionElements.Last().InnerText.Trim();
         }
 
-        private static IEnumerable<CourseYear> GetCourseYears(HtmlDocument document)
+        private IEnumerable<CourseYear> GetCourseYears(HtmlDocument document)
         {
             IEnumerable<HtmlNode> optionElements = document.DocumentNode
                 .Descendants()
@@ -62,12 +65,11 @@ namespace cs4rsa_core.Services.CourseSearchSvc.Crawlers
             }
         }
 
-        private static IEnumerable<CourseSemester> GetCourseSemesters(string yearValue)
+        private IEnumerable<CourseSemester> GetCourseSemesters(string yearValue)
         {
-            HtmlWeb htmlWeb = new();
             string urlTemplate = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}";
             string url = string.Format(urlTemplate, yearValue);
-            HtmlDocument document = htmlWeb.Load(url);
+            HtmlDocument document = _htmlWeb.Load(url);
 
             IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants()
                 .Where(node => node.Name == "option" && node.Attributes["value"].Value != "0");

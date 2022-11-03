@@ -24,16 +24,21 @@ namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurriculumCrawler _curriculumCrawler;
-        public DtuStudentInfoCrawlerV2(IUnitOfWork unitOfWork, ICurriculumCrawler curriculumCrawler)
+        private readonly HtmlWeb _htmlWeb;
+
+        public DtuStudentInfoCrawlerV2(
+            IUnitOfWork unitOfWork, 
+            ICurriculumCrawler curriculumCrawler,
+            HtmlWeb htmlWeb)
         {
             _unitOfWork = unitOfWork;
             _curriculumCrawler = curriculumCrawler;
+            _htmlWeb = htmlWeb;
         }
         public async Task<Student> Crawl(string specialString)
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/mentor/WarningDetail.aspx?t={Helpers.GetTimeFromEpoch()}&stid={specialString}";
-            HtmlWeb web = new();
-            HtmlDocument doc = await web.LoadFromWebAsync(url);
+            HtmlDocument doc = await _htmlWeb.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
 
             HtmlNode nameNode = docNode.SelectSingleNode("//tr/td[2]/table/tr[1]/td[2]/strong");
@@ -101,11 +106,6 @@ namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
                 return student;
             }
             return studentExist;
-        }
-
-        public Task<Student> CrawlWithSessionId(string sessionId)
-        {
-            throw new NotImplementedException();
         }
 
         public async static Task<string> LoadImage(Uri uri)

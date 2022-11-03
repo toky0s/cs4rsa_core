@@ -20,9 +20,11 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         public bool IsAvailableSubject { get; set; }
 
         private readonly ICourseCrawler _courseCrawler;
-        public PreParSubjectCrawler(ICourseCrawler courseCrawler)
+        private readonly HtmlWeb _htmlWeb;
+        public PreParSubjectCrawler(ICourseCrawler courseCrawler, HtmlWeb htmlWeb)
         {
             _courseCrawler = courseCrawler;
+            _htmlWeb = htmlWeb;
         }
 
         /// <summary>
@@ -41,8 +43,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
             string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            HtmlWeb htmlWeb = new();
-            HtmlDocument htmlDocument = await htmlWeb.LoadFromWebAsync(url);
+            HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
 
             if (IsExistSubject(htmlDocument))
             {

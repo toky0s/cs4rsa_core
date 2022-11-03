@@ -34,7 +34,8 @@ Phiên bản 1.1.2
 
 ## Lưu ý
 1. *Ứng dụng này không hỗ trợ bạn đăng ký tín chỉ, nó chỉ giúp bạn xếp lịch với tốc độ thần tốc.*
-2. Xem lại lưu ý 1.
+2. Các dữ liệu mà ứng dụng này thu thập đều được public trên trang [http://courses.duytan.edu.vn/](http://courses.duytan.edu.vn/), các dữ liệu của sinh viên đều do sinh viên nhập, ứng dụng không tự thu thập thông tin của sinh viên.
+3. Ứng dụng này mang mục đích giáo dục.
 
 ## Các tài liệu liên quan
 - ✨ Nhớ xem qua hướng dẫn sử dụng [ở đây](https://toky0s.github.io/cs4rsa_core/)

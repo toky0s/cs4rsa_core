@@ -14,12 +14,18 @@ namespace cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers
     /// </summary>
     public class CurriculumCrawler : ICurriculumCrawler
     {
+        private readonly HtmlWeb _htmlWeb;
+
+        public CurriculumCrawler(HtmlWeb htmlWeb)
+        {
+            _htmlWeb = htmlWeb;
+        }
+
         public async Task<Curriculum> GetCurriculum(string specialString)
         {
             string t = Helpers.GetTimeFromEpoch();
             string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHoc.aspx?t={t}&studentidnumber={specialString}";
-            HtmlWeb web = new();
-            HtmlDocument doc = await web.LoadFromWebAsync(url);
+            HtmlDocument doc = await _htmlWeb.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode scriptNode = docNode.SelectSingleNode("//td/script");
             HtmlNode nameNode = docNode.SelectSingleNode("//li/a");

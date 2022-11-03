@@ -102,7 +102,11 @@ namespace cs4rsa_core.ViewModels
                     if (!IsAlreadyDownloaded(value.Keyword.CourseId))
                     {
                         DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
-                            async () => await OpenDownloadSubjectDialog(value.Discipline.Name, value.Keyword.Keyword1, 0, IsUseCache)
+                            async () => await OpenDownloadSubjectDialog(
+                                value.Discipline.Name, 
+                                value.Keyword.Keyword1, 
+                                courseId: VMConstants.INT_INVALID_COURSEID, 
+                                IsUseCache)
                         );
                     }
                 }
@@ -412,11 +416,18 @@ namespace cs4rsa_core.ViewModels
 
         private void OnDeleteSubject()
         {
-            ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
-                .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
-                .First();
-            ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
-            IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
+            IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
+
+            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                    .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
+                    .Any())
+            {
+                ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                    .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
+                    .First();
+                ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
+                classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
+            }
 
             Messenger.Send(new SearchVmMsgs.DelSubjectMsg(_selectedSubjectModel));
             SubjectModel subjectModel = _selectedSubjectModel.DeepClone();
@@ -456,7 +467,7 @@ namespace cs4rsa_core.ViewModels
             await OpenDownloadSubjectDialog(
                 selectedDiscipline.Name, 
                 selectedKeyword.Keyword1, 
-                0,
+                VMConstants.INT_INVALID_COURSEID,
                 IsUseCache);
         }
 
@@ -471,7 +482,7 @@ namespace cs4rsa_core.ViewModels
             OpenDialog(subjectDownloadingUC);
 
             Subject subject;
-            if (courseId > 0)
+            if (courseId != VMConstants.INT_INVALID_COURSEID)
             {
                 await vm.ReEvaluated(courseId);
                 subject = await _subjectCrawler.Crawl(courseId, isUseCache);

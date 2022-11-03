@@ -1,7 +1,7 @@
 ﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             foreach (string schoolClassName in schoolClassNames)
             {
                 List<SchoolClass> schoolClassesWithName = GetSchoolClassesWithName(schoolClassName);
-                List<Teacher> teachers = GetTeachersOfSchoolClasses(schoolClassesWithName);
+                List<TeacherModel> teachers = GetTeachersOfSchoolClasses(schoolClassesWithName);
                 List<string> tempTeachers = GetTempTeachersOfSchoolClasses(schoolClassesWithName);
                 schoolClassesWithName[0].Teachers = teachers;
                 schoolClassesWithName[0].TempTeachers = tempTeachers;
@@ -91,7 +91,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         /// </summary>
         /// <param name="schoolClasses">Danh sách các SchoolClass cùng tên.</param>
         /// <returns>Danh sách các Teacher của các SchoolClass trên.</returns>
-        private static List<Teacher> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
+        private static List<TeacherModel> GetTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             if (DinstictSchoolClassName(schoolClasses).Count() > 1)
             {
@@ -100,7 +100,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             }
             else
             {
-                List<Teacher> teachers = new();
+                List<TeacherModel> teachers = new();
                 foreach (SchoolClass schoolClass in schoolClasses)
                 {
                     teachers.AddRange(schoolClass.Teachers);
@@ -226,11 +226,11 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             return phases.Count == 2 ? Phase.All : phases[0];
         }
 
-        public IEnumerable<Teacher> GetTeachers()
+        public IEnumerable<TeacherModel> GetTeachers()
         {
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                foreach (Teacher teacher in schoolClass.Teachers)
+                foreach (TeacherModel teacher in schoolClass.Teachers)
                 {
                     yield return teacher;
                 }
