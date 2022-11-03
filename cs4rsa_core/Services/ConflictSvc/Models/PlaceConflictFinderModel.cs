@@ -89,17 +89,19 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
             {
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
-                    TimeBlock timeBlock = new(
-                        BACKGROUND,
-                        GetTimeBlockDescription(placeAdjacent),
-                        item.Key,
-                        placeAdjacent.Start,
-                        placeAdjacent.End,
-                        BlockType.PlaceConflict,
-                        NAME,
-                        class1: _schoolClass1.ClassGroupName,
-                        class2: _schoolClass2.ClassGroupName
-                    );
+                    TimeBlock timeBlock = new()
+                    {
+                        Background = BACKGROUND,
+                        Content = GetTimeBlockDescription(placeAdjacent),
+                        DayOfWeek = item.Key,
+                        Start = placeAdjacent.Start,
+                        End = placeAdjacent.End,
+                        BlockType = BlockType.TimeConflict,
+                        Description = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        Class1 = _schoolClass1.ClassGroupName,
+                        Class2 = _schoolClass2.ClassGroupName
+                    };
+
                     yield return timeBlock;
                 }
             }

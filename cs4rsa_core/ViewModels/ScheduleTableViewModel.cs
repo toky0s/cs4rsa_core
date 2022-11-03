@@ -14,6 +14,7 @@ using cs4rsa_core.Commons.Models;
 using cs4rsa_core.Commons.Enums;
 using System;
 using cs4rsa_core.Controls;
+using System.Collections;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -22,6 +23,7 @@ namespace cs4rsa_core.ViewModels
         private IEnumerable<ClassGroupModel> _classGroupModels;
         private IEnumerable<ConflictModel> _conflictModels;
         private IEnumerable<PlaceConflictFinderModel> _placeConflictFinderModels;
+        private Dictionary<string, Dictionary<int, List<int>>> _schoolClassModelLocationMaps;
 
         public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
@@ -77,6 +79,7 @@ namespace cs4rsa_core.ViewModels
             _classGroupModels = new List<ClassGroupModel>();
             _conflictModels = new List<ConflictModel>();
             _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
+            _schoolClassModelLocationMaps = new();
 
             Phase1_Monday = new();
             Phase1_Tuesday = new();
@@ -143,9 +146,9 @@ namespace cs4rsa_core.ViewModels
                 }
                 
 
-                foreach (var item in schoolClassModels)
+                foreach (SchoolClassModel schoolClassModel in schoolClassModels)
                 {
-                    AddSchoolClassModel(item);
+                    AddSchoolClassModel(schoolClassModel);
                 } 
             }
         }
@@ -156,42 +159,18 @@ namespace cs4rsa_core.ViewModels
             Phase phase = schoolClassModel.SchoolClass.GetPhase();
             foreach (TimeBlock timeBlock in timeBlocks)
             {
-                ReplaceTimeBlock(timeBlock, phase);
+                int dayIndex = (int)timeBlock.DayOfWeek;
+                if (phase != Phase.Non)
+                {
+                    ObservableCollection<TimeBlock>[] week = phase == Phase.First ? week1 : week2;
+                    week[dayIndex].Add(timeBlock);
+                }
+                else if (phase == Phase.All)
+                {
+                    week1[dayIndex].Add(timeBlock);
+                    week2[dayIndex].Add(timeBlock);
+                }
             }
-        }
-
-        private void ReplaceTimeBlock(TimeBlock timeBlock, Phase phase)
-        {
-            int dayIndex = (int)timeBlock.DayOfWeek;
-            if (phase != Phase.Non)
-            {
-                ObservableCollection<TimeBlock>[] week = phase == Phase.First ? week1 : week2;
-                ObservableCollection<TimeBlock> timeBlocks = week[dayIndex];
-
-                AddTimeBlockToDay(timeBlock, dayIndex, timeBlocks, week);
-            }
-            else if (phase == Phase.All)
-            {
-                ObservableCollection<TimeBlock> timeBlocksFirst = week1[dayIndex];
-                ObservableCollection<TimeBlock> timeBlocksSecond = week2[dayIndex];
-                AddTimeBlockToDay(timeBlock, dayIndex, timeBlocksFirst, week1);
-                AddTimeBlockToDay(timeBlock, dayIndex, timeBlocksSecond, week2);
-            }
-        }
-
-        private void AddTimeBlockToDay(TimeBlock timeBlock, int dayIndex, ObservableCollection<TimeBlock> timeBlocks, ObservableCollection<TimeBlock>[] week)
-        {
-            TimeBlock alreadyTimeBlock = timeBlocks
-                .Where(tb => tb.SubjectCode == timeBlock.SubjectCode && tb.ClassGroupName != timeBlock.ClassGroupName)
-                .FirstOrDefault();
-
-            if (alreadyTimeBlock != null)
-            {
-                int timeBlockIndex = timeBlocks.IndexOf(alreadyTimeBlock);
-                timeBlocks.RemoveAt(timeBlockIndex);
-            }
-
-            week[dayIndex].Add(timeBlock);
         }
 
         private void DivideConflictByPhase()
@@ -235,9 +214,29 @@ namespace cs4rsa_core.ViewModels
 
         private void ReloadSchedule()
         {
+            CleanDays();
             DivideSchoolClassesByPhases();
             DividePlaceConflictByPhase();
             DivideConflictByPhase();
+        }
+
+        private void CleanDays()
+        {
+            Phase1_Monday.Clear();
+            Phase1_Tuesday.Clear();
+            Phase1_Wednesday.Clear();
+            Phase1_Thursday.Clear();
+            Phase1_Friday.Clear();
+            Phase1_Saturday.Clear();
+            Phase1_Sunday.Clear();
+
+            Phase2_Monday.Clear();
+            Phase2_Tuesday.Clear();
+            Phase2_Wednesday.Clear();
+            Phase2_Thursday.Clear();
+            Phase2_Friday.Clear();
+            Phase2_Saturday.Clear();
+            Phase2_Sunday.Clear();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
         {
             char[] splitChars = { ' ' };
             string[] slideds = place.Split(splitChars);
-            if (slideds.Contains("03"))
+            if (slideds.Contains("Quang"))
                 return Place.QUANGTRUNG;
             if (slideds.Contains("Nam"))
                 return Place.HOAKHANH;

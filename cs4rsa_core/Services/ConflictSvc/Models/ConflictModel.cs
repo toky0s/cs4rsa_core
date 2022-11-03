@@ -120,17 +120,18 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    TimeBlock timeBlock = new(
-                        BACKGROUND,
-                        GetFullConflictInfo(),
-                        item.Key,
-                        studyTimeIntersect.Start,
-                        studyTimeIntersect.End,
-                        BlockType.TimeConflict,
-                        _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
-                        class1: _schoolClass1.ClassGroupName,
-                        class2: _schoolClass2.ClassGroupName
-                    );
+                    TimeBlock timeBlock = new()
+                    {
+                        Background = BACKGROUND,
+                        Content = GetFullConflictInfo(),
+                        DayOfWeek = item.Key,
+                        Start = studyTimeIntersect.Start,
+                        End = studyTimeIntersect.End,
+                        BlockType = BlockType.TimeConflict,
+                        Description = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        Class1= _schoolClass1.ClassGroupName,
+                        Class2= _schoolClass2.ClassGroupName
+                    };
                     yield return timeBlock;
                 }
             }

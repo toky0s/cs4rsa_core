@@ -15,16 +15,14 @@ namespace cs4rsa_core.Controls
 {
     internal class TimeLinePanel: Panel
     {
-        private static double _unitHeight = 0d;
-
         protected override Size MeasureOverride(Size availableSize)
         {
-            _unitHeight = availableSize.Height / Utils.TIME_LINES.Length;
             return base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            double _unitHeight = finalSize.Height / Utils.TIME_LINES.Length;
             for (int i = 0; i < InternalChildren.Count; i++)
             {
                 double x = 0;

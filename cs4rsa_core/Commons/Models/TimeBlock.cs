@@ -9,81 +9,56 @@ namespace cs4rsa_core.Commons.Models
     /// </summary>
     public class TimeBlock
     {
-        public readonly string SubjectCode;
+        public string SubjectCode { get; set; }
 
         /// <summary>
         /// Màu nền
         /// </summary>
-        public readonly string Background;
+        public string Background { get; set; }
 
         /// <summary>
         /// Mô tả
         /// </summary>
-        public readonly string Description;
+        public string Description { get; set; }
 
         /// <summary>
         /// Nội dung
         /// </summary>
-        public readonly string Content;
+        public string Content { get; set; }
 
         /// <summary>
         /// Thứ trong tuần
         /// </summary>
-        public readonly DayOfWeek DayOfWeek;
+        public DayOfWeek DayOfWeek { get; set; }
 
         /// <summary>
         /// Ngày bắt đầu
         /// </summary>
-        public readonly DateTime Start;
+        public DateTime Start { get; set; }
 
         /// <summary>
         /// Ngày kết thúc
         /// </summary>
-        public readonly DateTime End;
+        public DateTime End { get; set; }
 
         /// <summary>
         /// Loại block
         /// </summary>
-        public readonly BlockType BlockType;
+        public BlockType BlockType { get; set; }
 
         /// <summary>
         /// Tên class group nếu có - mặc định Empty
         /// </summary>
-        public readonly string ClassGroupName;
+        public string ClassGroupName { get; set; }
 
         /// <summary>
         /// Tên class 1 nếu có xung đột - mặc đinh Empty
         /// </summary>
-        public readonly string Class1;
+        public string Class1 { get; set; }
 
         /// <summary>
         /// Tên class 2 nếu có xung đột - mặc đinh Empty
         /// </summary>
-        public readonly string Class2;
-
-        public TimeBlock(
-            string background,
-            string description,
-            DayOfWeek dayOfWeek,
-            DateTime start, DateTime end,
-            BlockType blockType,
-            string content,
-            string subjectCode = "",
-            string classGroupName = "",
-            string class1 = "",
-            string class2 = "")
-        {
-            Background = background;
-            Description = description;
-            DayOfWeek = dayOfWeek;
-            Start = start;
-            End = end;
-            BlockType = blockType;
-            Content = content;
-            SubjectCode = subjectCode;
-            ClassGroupName = classGroupName;
-            Class1 = class1;
-            Class2 = class2;
-        }
+        public string Class2 { get; set; }
     }
 }

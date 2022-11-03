@@ -1,6 +1,7 @@
 ﻿using cs4rsa_core.Commons.Enums;
 using cs4rsa_core.Commons.Interfaces;
 using cs4rsa_core.Commons.Models;
+using cs4rsa_core.Services.ConflictSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
@@ -165,18 +166,17 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             foreach (SchoolClassUnit item in _schoolClass.GetSchoolClassUnits())
             {
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
-                TimeBlock timeBlock = 
-                new(
-                        Color,
-                        description,
-                        item.DayOfWeek,
-                        item.Start,
-                        item.End,
-                        BlockType.SchoolClass,
-                        _schoolClassName,
-                        subjectCode: _subjectCode,
-                        classGroupName: _schoolClass.ClassGroupName
-                    );
+                TimeBlock timeBlock = new()
+                {
+                    Background = Color,
+                    Content = description,
+                    DayOfWeek = item.DayOfWeek,
+                    Start = item.Start,
+                    End = item.End,
+                    BlockType = BlockType.SchoolClass,
+                    Description = _schoolClassName,
+                    ClassGroupName = _schoolClass.ClassGroupName
+                };
                 yield return timeBlock;
             }
         }
