@@ -151,7 +151,7 @@ namespace cs4rsa_core.Controls
 
         private static int GetTimeIndex(DateTime dateTime)
         {
-            string[] timelines = new string[15]
+            string[] timelines = new string[16]
             {
                 "07:00",
                 "09:00",
@@ -167,6 +167,7 @@ namespace cs4rsa_core.Controls
                 "17:15",
                 "17:45",
                 "18:45",
+                "19:45", // SPM 300 Chăm sóc sức khoẻ cộng đồng
                 "21:00"
             };
 

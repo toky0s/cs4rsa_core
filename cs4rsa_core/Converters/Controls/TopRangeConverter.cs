@@ -9,7 +9,7 @@ namespace cs4rsa_core.Converters.Controls
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             double timelineCanvasHeight = (double)values[0];
-            double range = timelineCanvasHeight / 15;
+            double range = timelineCanvasHeight / 16;
             int lineIndex = (int)values[1];
             double result = lineIndex * range;
             return result;

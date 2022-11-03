@@ -6,7 +6,7 @@ namespace cs4rsa_core.Converters.Controls
 {
     public class TimeLineTextPositionConverter : IValueConverter
     {
-        public static readonly int INT_TIMELINES_COUNT = 15;
+        public static readonly int INT_TIMELINES_COUNT = 16;
         public static readonly int INT_CURRENT_TIMELINE_FONT_SIZE = 10;
 
         // Khoảng cách tính từ bottom của text với line ngay bên dưới
