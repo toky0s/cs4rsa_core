@@ -164,7 +164,7 @@ namespace cs4rsa_core.Controls
 
             if (timeBlock.BlockType == BlockType.SchoolClass)
             {
-                scheduleBlock.Code = timeBlock.Code;
+                scheduleBlock.Code = timeBlock.ClassGroupName;
             }
             else
             {
@@ -272,7 +272,7 @@ namespace cs4rsa_core.Controls
             endTextBlock.Foreground = (Brush)converter.ConvertFromString("Black");
         }
 
-        private void CleanCanvas(Canvas canvas)
+        private void CleanCanvas(Panel canvas)
         {
             canvas.Children.Clear();
             canvas.UpdateLayout();

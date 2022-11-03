@@ -162,20 +162,21 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
-
             foreach (SchoolClassUnit item in _schoolClass.GetSchoolClassUnits())
             {
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
-                TimeBlock timeBlock = new(
-                            Color,
-                            description,
-                            item.DayOfWeek,
-                            item.Start,
-                            item.End,
-                            BlockType.SchoolClass,
-                            _schoolClassName,
-                            code: _schoolClass.ClassGroupName
-                        );
+                TimeBlock timeBlock = 
+                new(
+                        Color,
+                        description,
+                        item.DayOfWeek,
+                        item.Start,
+                        item.End,
+                        BlockType.SchoolClass,
+                        _schoolClassName,
+                        subjectCode: _subjectCode,
+                        classGroupName: _schoolClass.ClassGroupName
+                    );
                 yield return timeBlock;
             }
         }

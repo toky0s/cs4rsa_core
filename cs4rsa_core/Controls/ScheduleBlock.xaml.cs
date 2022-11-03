@@ -119,7 +119,7 @@ namespace cs4rsa_core.Controls
 
         public static readonly DependencyProperty CodeProperty =
             DependencyProperty.Register(
-                "Code",
+                "ClassGroupName",
                 typeof(string),
                 typeof(ScheduleBlock),
                 new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)

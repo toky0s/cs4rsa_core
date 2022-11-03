@@ -9,7 +9,7 @@ namespace cs4rsa_core.Controls
 {
     internal class Utils
     {
-        public static readonly string[] TIME_LINES = new string[15]
+        public static readonly string[] TIME_LINES = new string[16]
         {
             "07:00",
             "09:00",
@@ -25,6 +25,7 @@ namespace cs4rsa_core.Controls
             "17:15",
             "17:45",
             "18:45",
+            "19:45",
             "21:00"
         };
 

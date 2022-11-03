@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace cs4rsa_core.Controls
 {
-    public class DayPanel: Canvas
+    public class DayPanel: Panel
     {
         private static double _unitHeight = 0d;
 
@@ -22,17 +24,15 @@ namespace cs4rsa_core.Controls
         {
             foreach (UIElement child in InternalChildren)
             {
-                if (child is ScheduleBlock block)
-                {
-                    int start = block.StartIndex;
-                    int end = block.EndIndex;
+                ScheduleBlock block = child as ScheduleBlock;
+                int start = block.StartIndex;
+                int end = block.EndIndex;
 
-                    double x = 0d;
-                    double y = start * _unitHeight;
+                double x = 0d;
+                double y = start * _unitHeight;
 
-                    double height = (end - start) * _unitHeight;
-                    block.Arrange(new Rect(x, y, finalSize.Width, height));
-                }
+                double height = (end - start) * _unitHeight;
+                block.Arrange(new Rect(x, y, finalSize.Width, height));
             }
             return finalSize;
         }

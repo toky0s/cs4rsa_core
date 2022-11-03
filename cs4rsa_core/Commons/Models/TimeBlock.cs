@@ -7,8 +7,10 @@ namespace cs4rsa_core.Commons.Models
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.
     /// </summary>
-    public record TimeBlock
+    public class TimeBlock
     {
+        public readonly string SubjectCode;
+
         /// <summary>
         /// Màu nền
         /// </summary>
@@ -47,7 +49,7 @@ namespace cs4rsa_core.Commons.Models
         /// <summary>
         /// Tên class group nếu có - mặc định Empty
         /// </summary>
-        public readonly string Code;
+        public readonly string ClassGroupName;
 
         /// <summary>
         /// Tên class 1 nếu có xung đột - mặc đinh Empty
@@ -66,7 +68,8 @@ namespace cs4rsa_core.Commons.Models
             DateTime start, DateTime end,
             BlockType blockType,
             string content,
-            string code = "",
+            string subjectCode = "",
+            string classGroupName = "",
             string class1 = "",
             string class2 = "")
         {
@@ -77,7 +80,8 @@ namespace cs4rsa_core.Commons.Models
             End = end;
             BlockType = blockType;
             Content = content;
-            Code = code;
+            SubjectCode = subjectCode;
+            ClassGroupName = classGroupName;
             Class1 = class1;
             Class2 = class2;
         }

@@ -19,7 +19,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
     public class ClassGroupModel
     {
         /// <summary>
-        /// Một Class Group Model có duy nhất một Register Code được chọn.
+        /// Một Class Group Model có duy nhất một Register ClassGroupName được chọn.
         /// </summary>
         private string _currentRegisterCode;
         public string CurrentRegisterCode { get => _currentRegisterCode; }
@@ -52,7 +52,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         public SchoolClassModel CompulsoryClass { get; }
 
         /// <summary>
-        /// Quyết định xem ClassGroupModel có thuộc một Multi Register Code Subject (SpecialSubject)
+        /// Quyết định xem ClassGroupModel có thuộc một Multi Register ClassGroupName Subject (SpecialSubject)
         /// hay không. Các vấn đề của môn CHE 101 hay BIO 101 dù đã được giải quyết nhưng tôi vẫn
         /// để comment này ở đây giúp bạn lưu ý về vấn đề này tương lai bạn refactor lại nó.
         /// 

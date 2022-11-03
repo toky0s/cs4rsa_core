@@ -220,7 +220,7 @@ namespace cs4rsa_core.ViewModels
 
         /// <summary>
         /// Kiểm tra xem một Class Group Model nào đó có tồn tại một
-        /// phiên bản cùng Subject Code nhưng khác tên khác không.
+        /// phiên bản cùng Subject ClassGroupName nhưng khác tên khác không.
         /// </summary>
         /// <param name="classGroupModel">Một Class Group Model.</param>
         /// <returns>Trả về index của ClassGroupModel nếu nó có SubjectCode
