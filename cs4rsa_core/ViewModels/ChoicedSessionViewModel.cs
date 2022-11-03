@@ -18,6 +18,7 @@ using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.ConflictSvc.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Constants;
+using System.Linq;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -146,8 +147,7 @@ namespace cs4rsa_core.ViewModels
             }
 
             ClassGroupModels.Clear();
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
@@ -181,8 +181,7 @@ namespace cs4rsa_core.ViewModels
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             DeleteCommand.NotifyCanExecuteChanged();
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
             Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
         }
 
@@ -242,15 +241,9 @@ namespace cs4rsa_core.ViewModels
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
-        private void UpdateConflictModelCollection()
+        private void UpdateConflictModelCollection(List<SchoolClass> schoolClasses)
         {
             ConflictModels.Clear();
-            List<SchoolClass> schoolClasses = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
-            {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
-            }
-
             for (int i = 0; i < schoolClasses.Count; ++i)
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
@@ -275,15 +268,9 @@ namespace cs4rsa_core.ViewModels
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Place.
         /// </summary>
-        private void UpdatePlaceConflictCollection()
+        private void UpdatePlaceConflictCollection(List<SchoolClass> schoolClasses)
         {
             PlaceConflictFinderModels.Clear();
-            List<SchoolClass> schoolClasses = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
-            {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
-            }
-
             for (int i = 0; i < schoolClasses.Count; ++i)
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
@@ -311,8 +298,7 @@ namespace cs4rsa_core.ViewModels
                     ClassGroupModels.Add(classGroupModel);
             }
 
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -326,8 +312,7 @@ namespace cs4rsa_core.ViewModels
                 ClassGroupModels.Add(classGroupModel);
             }
 
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -337,6 +322,24 @@ namespace cs4rsa_core.ViewModels
         private void UpdateShareString()
         {
             _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
+        }
+
+        private void UpdateConflicts()
+        {
+            List<SchoolClass> schoolClasses = new();
+            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            {
+                if (classGroupModel.IsSpecialClassGroup)
+                {
+                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
+                }
+                else
+                {
+                    schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                }
+            }
+            UpdateConflictModelCollection(schoolClasses);
+            UpdatePlaceConflictCollection(schoolClasses);
         }
 
         #region Điều kiện thực thi command
@@ -381,8 +384,7 @@ namespace cs4rsa_core.ViewModels
                     SaveCommand.NotifyCanExecuteChanged();
                     DeleteAllCommand.NotifyCanExecuteChanged();
                     DeleteCommand.NotifyCanExecuteChanged();
-                    UpdateConflictModelCollection();
-                    UpdatePlaceConflictCollection();
+                    UpdateConflicts();
                     Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
                 }
             }
@@ -402,8 +404,7 @@ namespace cs4rsa_core.ViewModels
                     break;
                 }
             }
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
@@ -416,8 +417,7 @@ namespace cs4rsa_core.ViewModels
         private void DelAllSubjectMsgHandler()
         {
             ClassGroupModels.Clear();
-            UpdateConflictModelCollection();
-            UpdatePlaceConflictCollection();
+            UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
