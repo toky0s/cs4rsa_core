@@ -1,7 +1,5 @@
-﻿using cs4rsa_core.Commons.Enums;
-using cs4rsa_core.Commons.Interfaces;
+﻿using cs4rsa_core.Commons.Interfaces;
 using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Services.ConflictSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
@@ -169,31 +167,20 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                 TimeBlock timeBlock = new()
                 {
                     Background = Color,
-                    Content = description,
+                    Content = _schoolClassName,
                     DayOfWeek = item.DayOfWeek,
                     Start = item.Start,
                     End = item.End,
-                    BlockType = BlockType.SchoolClass,
-                    Description = _schoolClassName,
+                    Description = description,
                     ClassGroupName = _schoolClass.ClassGroupName
                 };
                 yield return timeBlock;
             }
         }
 
-        public object GetValue()
+        public Phase GetPhase()
         {
-            return this;
-        }
-
-        public ContextType GetContextType()
-        {
-            return ContextType.Class;
-        }
-
-        public string GetId()
-        {
-            return _schoolClassName;
+            return _schoolClass.GetPhase();
         }
     }
 }

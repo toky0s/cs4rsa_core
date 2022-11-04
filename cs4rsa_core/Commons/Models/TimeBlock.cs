@@ -1,6 +1,4 @@
-﻿using cs4rsa_core.Commons.Enums;
-
-using System;
+﻿using System;
 
 namespace cs4rsa_core.Commons.Models
 {
@@ -40,11 +38,6 @@ namespace cs4rsa_core.Commons.Models
         /// Ngày kết thúc
         /// </summary>
         public DateTime End { get; set; }
-
-        /// <summary>
-        /// Loại block
-        /// </summary>
-        public BlockType BlockType { get; set; }
 
         /// <summary>
         /// Tên class group nếu có - mặc định Empty

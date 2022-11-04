@@ -1,7 +1,4 @@
-﻿using cs4rsa_core.Commons.Enums;
-
-using System;
-using System.Globalization;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,7 +8,6 @@ namespace cs4rsa_core.Controls
     public partial class ScheduleBlock : UserControl
     {
         public DayOfWeek DayOfWeek { get; set; }
-        public BlockType BlockType { get; set; }
 
         public ScheduleBlock()
         {

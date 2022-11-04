@@ -1,5 +1,5 @@
-﻿using cs4rsa_core.Commons.Enums;
-using cs4rsa_core.Commons.Models;
+﻿using cs4rsa_core.Commons.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System.Collections.Generic;
 
@@ -12,11 +12,6 @@ namespace cs4rsa_core.Commons.Interfaces
     public interface IScheduleTableItem
     {
         IEnumerable<TimeBlock> GetBlocks();
-
-        object GetValue();
-
-        ContextType GetContextType();
-
-        string GetId();
+        Phase GetPhase();
     }
 }
