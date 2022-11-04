@@ -1,12 +1,12 @@
 ﻿using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages.Publishers;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Constants;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.Generic;
 using System.Linq;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using System;
-using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModelFunctions
 {
@@ -49,7 +49,7 @@ namespace cs4rsa_core.ViewModelFunctions
             {
                 throw new Exception(VMConstants.EX_CLASSGROUP_MODEL_WAS_NULL);
             }
-            if (!isValidRegisterCode)
+            if (!isValidRegisterCode && !string.IsNullOrEmpty(registerCode))
             {
                 throw new Exception(VMConstants.EX_INVALID_REGISTER_CODE);
             }

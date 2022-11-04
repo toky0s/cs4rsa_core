@@ -120,7 +120,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
                     return classForm;
                 }
             }
-            throw new Exception(VMConstants.EX_NOT_FOUND_CLASSFORM);
+            return null;
         }
     }
 }

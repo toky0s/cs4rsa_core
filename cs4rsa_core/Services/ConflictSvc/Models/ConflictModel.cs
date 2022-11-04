@@ -1,5 +1,4 @@
-﻿using cs4rsa_core.Commons.Enums;
-using cs4rsa_core.Commons.Interfaces;
+﻿using cs4rsa_core.Commons.Interfaces;
 using cs4rsa_core.Commons.Models;
 using cs4rsa_core.Services.ConflictSvc.DataTypes;
 using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
@@ -7,7 +6,6 @@ using cs4rsa_core.Services.ConflictSvc.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -116,39 +114,24 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
         public IEnumerable<TimeBlock> GetBlocks()
         {
             const string BACKGROUND = "#e74c3c";
-            foreach (var item in ConflictTime.ConflictTimes)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    TimeBlock timeBlock = new(
-                        BACKGROUND,
-                        GetFullConflictInfo(),
-                        item.Key,
-                        studyTimeIntersect.Start,
-                        studyTimeIntersect.End,
-                        BlockType.TimeConflict,
-                        _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
-                        class1: _schoolClass1.ClassGroupName,
-                        class2: _schoolClass2.ClassGroupName
-                    );
+                    TimeBlock timeBlock = new()
+                    {
+                        Background = BACKGROUND,
+                        Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        DayOfWeek = item.Key,
+                        Start = studyTimeIntersect.Start,
+                        End = studyTimeIntersect.End,
+                        Description = GetFullConflictInfo(),
+                        Class1 = _schoolClass1.ClassGroupName,
+                        Class2= _schoolClass2.ClassGroupName
+                    };
                     yield return timeBlock;
                 }
             }
-        }
-
-        public object GetValue()
-        {
-            return this;
-        }
-
-        public ContextType GetContextType()
-        {
-            return ContextType.Conflict;
-        }
-
-        public string GetId()
-        {
-            return _schoolClass1.SchoolClassName + _schoolClass2.SchoolClassName;
         }
     }
 }

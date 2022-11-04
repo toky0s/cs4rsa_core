@@ -11,15 +11,8 @@
     d:DesignHeight="293.2"
     d:DesignWidth="99.2"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </UserControl.Resources>
     <Border
         x:Name="Border_ScheduleBlock"
-        Grid.Row="0"
-        Grid.ColumnSpan="2"
-        Width="{Binding ElementName=UC_ScheduleBlock, Path=Width}"
-        Height="{Binding Path=Height, ElementName=UC_ScheduleBlock}"
         Padding="2"
         Background="{Binding BlockColor}"
         BorderBrush="Silver"
@@ -27,11 +20,11 @@
         CornerRadius="5"
         Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">
-        <StackPanel>
-            <TextBlock
-                FontSize="10"
-                Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                TextWrapping="WrapWithOverflow" />
-        </StackPanel>
+
+        <TextBlock
+            FontSize="10"
+            Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            TextWrapping="Wrap" />
+
     </Border>
 </UserControl>

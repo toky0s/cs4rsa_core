@@ -1,11 +1,8 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 {

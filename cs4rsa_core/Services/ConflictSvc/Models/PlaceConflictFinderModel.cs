@@ -1,5 +1,4 @@
-﻿using cs4rsa_core.Commons.Enums;
-using cs4rsa_core.Commons.Interfaces;
+﻿using cs4rsa_core.Commons.Interfaces;
 using cs4rsa_core.Commons.Models;
 using cs4rsa_core.Services.ConflictSvc.DataTypes;
 using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
@@ -84,22 +83,22 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
         public IEnumerable<TimeBlock> GetBlocks()
         {
             const string BACKGROUND = "#f1f2f6";
-            const string NAME = "Xung đột vị trí";
             foreach (var item in _conflictPlace.PlaceAdjacents)
             {
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
-                    TimeBlock timeBlock = new(
-                        BACKGROUND,
-                        GetTimeBlockDescription(placeAdjacent),
-                        item.Key,
-                        placeAdjacent.Start,
-                        placeAdjacent.End,
-                        BlockType.PlaceConflict,
-                        NAME,
-                        class1: _schoolClass1.ClassGroupName,
-                        class2: _schoolClass2.ClassGroupName
-                    );
+                    TimeBlock timeBlock = new()
+                    {
+                        Background = BACKGROUND,
+                        Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        DayOfWeek = item.Key,
+                        Start = placeAdjacent.Start,
+                        End = placeAdjacent.End,
+                        Description = GetTimeBlockDescription(placeAdjacent),
+                        Class1 = _schoolClass1.ClassGroupName,
+                        Class2 = _schoolClass2.ClassGroupName
+                    };
+
                     yield return timeBlock;
                 }
             }
@@ -109,21 +108,6 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
         {
             return $"{placeAdjacent.SchoolClass1.SchoolClassName} kết thúc lúc {placeAdjacent.StartAsString} - {placeAdjacent.PlaceStart.ToActualPlace()}\n" +
                    $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
-        }
-
-        public object GetValue()
-        {
-            return this;
-        }
-
-        public ContextType GetContextType()
-        {
-            return ContextType.PConflict;
-        }
-
-        public string GetId()
-        {
-            return _schoolClass1.SchoolClassName + _schoolClass2.SchoolClassName;
         }
     }
 }
