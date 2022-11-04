@@ -201,6 +201,7 @@ namespace cs4rsa_core.ViewModels
             _subjectDownloadingUC = new();
             _showDetailsSubjectUC = new();
 
+            _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
