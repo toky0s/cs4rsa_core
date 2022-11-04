@@ -11,10 +11,7 @@ using cs4rsa_core.Services.ConflictSvc.Models;
 using System.Windows;
 using System.Threading.Tasks;
 using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Commons.Enums;
-using System;
-using cs4rsa_core.Controls;
-using System.Collections;
+using cs4rsa_core.Commons.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -23,7 +20,6 @@ namespace cs4rsa_core.ViewModels
         private IEnumerable<ClassGroupModel> _classGroupModels;
         private IEnumerable<ConflictModel> _conflictModels;
         private IEnumerable<PlaceConflictFinderModel> _placeConflictFinderModels;
-        private Dictionary<string, Dictionary<int, List<int>>> _schoolClassModelLocationMaps;
 
         public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
@@ -79,7 +75,6 @@ namespace cs4rsa_core.ViewModels
             _classGroupModels = new List<ClassGroupModel>();
             _conflictModels = new List<ConflictModel>();
             _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
-            _schoolClassModelLocationMaps = new();
 
             Phase1_Monday = new();
             Phase1_Tuesday = new();
@@ -148,19 +143,19 @@ namespace cs4rsa_core.ViewModels
 
                 foreach (SchoolClassModel schoolClassModel in schoolClassModels)
                 {
-                    AddSchoolClassModel(schoolClassModel);
+                    AddScheduleItem(schoolClassModel);
                 } 
             }
         }
 
-        private void AddSchoolClassModel(SchoolClassModel schoolClassModel)
+        private void AddScheduleItem(IScheduleTableItem scheduleItem)
         {
-            IEnumerable<TimeBlock> timeBlocks = schoolClassModel.GetBlocks();
-            Phase phase = schoolClassModel.SchoolClass.GetPhase();
+            IEnumerable<TimeBlock> timeBlocks = scheduleItem.GetBlocks();
+            Phase phase = scheduleItem.GetPhase();
             foreach (TimeBlock timeBlock in timeBlocks)
             {
                 int dayIndex = (int)timeBlock.DayOfWeek;
-                if (phase != Phase.Non)
+                if (phase == Phase.First || phase == Phase.Second)
                 {
                     ObservableCollection<TimeBlock>[] week = phase == Phase.First ? week1 : week2;
                     week[dayIndex].Add(timeBlock);
@@ -175,31 +170,17 @@ namespace cs4rsa_core.ViewModels
 
         private void DivideConflictByPhase()
         {
-            foreach (ConflictModel conflict in _conflictModels)
+            foreach (ConflictModel conflictModel in _conflictModels)
             {
-                //if (conflict.GetPhase() == Phase.First || conflict.GetPhase() == Phase.All)
-                //{
-                //    Phase1.Add(conflict);
-                //}
-                //else
-                //{
-                //    Phase2.Add(conflict);
-                //}
+                AddScheduleItem(conflictModel);
             }
         }
 
         private void DividePlaceConflictByPhase()
         {
-            foreach (PlaceConflictFinderModel conflict in _placeConflictFinderModels)
+            foreach (PlaceConflictFinderModel conflictFinderModel in _placeConflictFinderModels)
             {
-                //if (conflict.GetPhase() == Phase.First || conflict.GetPhase() == Phase.All)
-                //{
-                //    Phase1.Add(conflict);
-                //}
-                //else
-                //{
-                //    Phase2.Add(conflict);
-                //}
+                AddScheduleItem(conflictFinderModel);
             }
         }
 

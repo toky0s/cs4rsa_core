@@ -33,8 +33,14 @@ namespace cs4rsa_core.ViewModels
 {
     public sealed class SearchSessionViewModel : ViewModelBase
     {
+        #region Fields
+        private readonly SubjectDownloadingUC _subjectDownloadingUC;
+        private readonly ShowDetailsSubjectUC _showDetailsSubjectUC;
+        #endregion
+
         #region Commands
-        public IAsyncRelayCommand AddCommand { get; set; }
+        public AsyncRelayCommand AddCommand { get; set; }
+        public AsyncRelayCommand ImportDialogCommand { get; set; }
         private bool canRunAddCommand = true;
         public bool CanRunAddCommand
         {
@@ -47,7 +53,6 @@ namespace cs4rsa_core.ViewModels
         }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
-        public AsyncRelayCommand ImportDialogCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand DetailCommand { get; set; }
         #endregion
@@ -193,7 +198,9 @@ namespace cs4rsa_core.ViewModels
             ISnackbarMessageQueue snackbarMessageQueue
         )
         {
-            _courseCrawler = courseCrawler;
+            _subjectDownloadingUC = new();
+            _showDetailsSubjectUC = new();
+
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
@@ -240,7 +247,6 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Load danh sách các bộ lịch đã lưu
         /// </summary>
-        /// <returns></returns>
         public async Task LoadSavedSchedules()
         {
             SavedSchedules.Clear();
@@ -251,11 +257,10 @@ namespace cs4rsa_core.ViewModels
             }
         }
 
-        private readonly ShowDetailsSubjectUC showDetailsSubjectUC = new();
         private void OnDetail()
         {
-            (showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
-            OpenDialog(showDetailsSubjectUC);
+            (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
+            OpenDialog(_showDetailsSubjectUC);
         }
 
         public async Task LoadDiscipline()
@@ -477,9 +482,8 @@ namespace cs4rsa_core.ViewModels
             int courseId,
             bool isUseCache)
         {
-            SubjectDownloadingUC subjectDownloadingUC = new();
-            SubjectDownloadingViewModel vm = subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
-            OpenDialog(subjectDownloadingUC);
+            SubjectDownloadingViewModel vm = _subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
+            OpenDialog(_subjectDownloadingUC);
 
             Subject subject;
             if (courseId != VMConstants.INT_INVALID_COURSEID)
