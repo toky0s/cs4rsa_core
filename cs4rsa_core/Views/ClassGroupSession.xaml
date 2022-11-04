@@ -69,10 +69,10 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border
-                            CornerRadius="4"
                             Grid.Column="0"
                             Width="15"
-                            Background="{Binding Color}" />
+                            Background="{Binding Color}"
+                            CornerRadius="4" />
                         <StackPanel
                             Grid.Column="1"
                             Margin="0,5,0,0"
@@ -113,6 +113,8 @@
             <ListBox.ItemContainerStyle>
                 <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
                     <Setter Property="ContextMenu" Value="{StaticResource ClassGroupContextMenu}" />
+                    <!--  CS0053 Các ClassGroup không có bất cứ SchoolClass nào sẽ bị Disable và không thể chọn  -->
+                    <Setter Property="IsEnabled" Value="{Binding ClassGroup.SchoolClasses.Count}" />
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
