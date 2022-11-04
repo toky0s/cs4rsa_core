@@ -635,11 +635,15 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void AddSubjectAndReload(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
         {
-            foreach (SubjectModel subjectModel in actionData.Item1) SubjectModels.Add(subjectModel);
+            foreach (SubjectModel subjectModel in actionData.Item1)
+            {
+                SubjectModels.Add(subjectModel);
+            }
             if (actionData.Item2 != null)
             {
                 Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(actionData.Item2));
             }
+            SelectedSubjectModel = SubjectModels[0];
             TotalSubject = SubjectModels.Count;
             CanAddSubjectChange();
             UpdateCreditTotal();
