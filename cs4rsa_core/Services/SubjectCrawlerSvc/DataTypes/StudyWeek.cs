@@ -4,11 +4,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 {
     public struct StudyWeek
     {
-        private readonly int startWeek;
-        private readonly int endWeek;
-
-        public int StartWeek { get { return startWeek; } }
-        public int EndWeek { get { return endWeek; } }
+        public readonly int StartWeek;
+        public readonly int EndWeek;
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
@@ -18,7 +15,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         {
             string[] separatingStrings = { "--" };
             string[] startAndEnd = studyWeek.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
-            startWeek = int.Parse(startAndEnd[0]);
+            StartWeek = int.Parse(startAndEnd[0]);
 
             /// MED 362:  Y Học Cổ Truyền
             /// Trường hợp parse: 49--
@@ -27,40 +24,55 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             /// XinTA
             try
             {
-                endWeek = int.Parse(startAndEnd[1]);
+                EndWeek = int.Parse(startAndEnd[1]);
             }
             catch
             {
-                endWeek = 0;
+                EndWeek = 0;
             }
         }
 
-        /// <summary>
-        /// Phương thức này trả về giai đoạn của khoảng tuần này.
-        /// </summary>
+        /**
+         * Mô tả:
+         *      Phân tích tuần bắt đầu và tuần kết thúc để xác định 
+         *      được giai đoạn 1, giai đoạn 2 hay là cả hai giai đoạn.
+         *  
+         *  
+         * Trả về:
+         *      Delta độ dài 1 Phase = EndWeek - StartWeek >= 7
+         *      Delta độ dài 2 Phase = EndWeek - StartWeek >= 14
+         *      
+         *      Phase.First:
+         *          Bắt đầu từ tuần 1 hoặc tuần 18.
+         *      
+         *      Phase.Second:
+         *          Bắt đầu từ tuần 8 hoặc tuần 34.
+         *      
+         *      Phase.All
+         *          Khác hai trường hợp trên thì các trường hợp còn lại được xem là hai giai đoạn.
+         */
         public Phase GetPhase()
         {
-            if (startWeek >= 34 && endWeek == 0)
+            bool isOnePhaseDelta = EndWeek - StartWeek >= 7;
+            if (StartWeek >= 1 && EndWeek - StartWeek >= 14)
+            {
+                return Phase.All;
+            }
+            else if  (
+                (StartWeek >= 8 || StartWeek >= 34)
+                && isOnePhaseDelta
+            )
             {
                 return Phase.Second;
             }
-            if (startWeek >= 1 && endWeek <= 8 || startWeek >= 20 && endWeek <= 33)
+            else if (
+                (StartWeek >= 1 || StartWeek >= 18)
+                && isOnePhaseDelta
+            )
             {
                 return Phase.First;
             }
-            if (startWeek >= 9 && endWeek <= 18 || startWeek >= 34)
-            {
-                return Phase.Second;
-            }
             return Phase.All;
-        }
-
-        /// <summary>
-        /// Trả về số tuần phải học.
-        /// </summary>
-        public int GetStudyNumberOfWeeks()
-        {
-            return endWeek - startWeek + 1;
         }
     }
 }
