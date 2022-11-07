@@ -82,22 +82,26 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             ClassGroup = classGroup;
             Name = classGroup.Name;
             SubjectCode = classGroup.SubjectCode;
-            Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
-            EmptySeat = classGroup.GetEmptySeat();
             HaveSchedule = IsHaveSchedule();
-            TempTeacher = classGroup.GetTempTeachers();
             Color = colorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
-            Phase = classGroup.GetPhase();
-            _schedule = classGroup.GetSchedule();
-            ImplementType = classGroup.GetImplementType();
-            RegistrationType = classGroup.GetRegistrationType();
-            IsBelongSpecialSubject = isBelongSpecialSubject;
             IsSpecialClassGroup = classGroup.IsSpecialClassGroup;
-            RegisterCodes = classGroup.RegisterCodes;
-            CompulsoryClass = GetCompulsoryClass();
-            if (classGroup.RegisterCodes.Count == 1)
+            IsBelongSpecialSubject = isBelongSpecialSubject;
+
+            if (classGroup.SchoolClasses.Count > 0)
             {
-                _currentRegisterCode = classGroup.RegisterCodes[0];
+                _schedule = classGroup.GetSchedule();
+                Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
+                EmptySeat = classGroup.GetEmptySeat();
+                TempTeacher = classGroup.GetTempTeachers();
+                Phase = classGroup.GetPhase();
+                ImplementType = classGroup.GetImplementType();
+                RegistrationType = classGroup.GetRegistrationType();
+                RegisterCodes = classGroup.RegisterCodes;
+                CompulsoryClass = GetCompulsoryClass();
+                if (classGroup.RegisterCodes.Count == 1)
+                {
+                    _currentRegisterCode = classGroup.RegisterCodes[0];
+                }
             }
         }
 

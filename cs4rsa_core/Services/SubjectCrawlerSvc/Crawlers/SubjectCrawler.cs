@@ -4,7 +4,6 @@ using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -17,7 +16,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
     public class SubjectCrawler : ISubjectCrawler
     {
         #region Services
-        private readonly IFolderManager _folderManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
@@ -32,14 +30,12 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         public SubjectCrawler(
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            IFolderManager folderManager,
             ITeacherCrawler teacherCrawler,
             HtmlWeb htmlWeb
         )
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
-            _folderManager = folderManager;
             _teacherCrawler = teacherCrawler;
             _htmlWeb = htmlWeb;
         }
@@ -102,8 +98,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
                     description,
                     rawSoup,
                     courseId,
-                    _unitOfWork,
-                    _folderManager,
                     _teacherCrawler,
                     _htmlWeb);
             }
