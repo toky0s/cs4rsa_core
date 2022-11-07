@@ -506,10 +506,6 @@ namespace cs4rsa_core.ViewModels
                 List<SubjectModel> subjectModels = new();
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
                 subjectModels.Add(subjectModel);
-                if (subjectModel.ClassGroupModels.Count == 1)
-                {
-                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(subjectModel.ClassGroupModels[0]));
-                }
 
                 Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> data = new(subjectModels, null);
                 AddSubjectAndReload(data);
