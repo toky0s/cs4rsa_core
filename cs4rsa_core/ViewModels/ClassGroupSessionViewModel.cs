@@ -321,6 +321,7 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand ShowDetailsSchoolClassesCommand { get; set; }
         public RelayCommand FilterCommand { get; set; }
+        public RelayCommand ResetFilterCommand { get; set; }
         #endregion
 
         #region Services
@@ -375,7 +376,58 @@ namespace cs4rsa_core.ViewModels
             GotoCourseCommand = new RelayCommand(OnGotoCourse);
             ShowDetailsSchoolClassesCommand = new RelayCommand(OnShowDetailsSchoolClasses);
             FilterCommand = new RelayCommand(OnFilter);
+            ResetFilterCommand = new RelayCommand(OnResetFilter, CanResetFilter);
 
+            InitFilter();
+            TeacherCount = 0;
+        }
+
+        private bool CanResetFilter()
+        {
+            return 
+            Monday != false ||
+            Tuesday != false ||
+            Wednesday != false ||
+            Thursday != false ||
+            Friday != false ||
+            Saturday != false ||
+            Sunday != false ||
+
+            Place137NVL != false ||
+            Place254NVL != false ||
+            PlaceHoaKhanh != false ||
+            PlacePhanThanh != false ||
+            PlaceQuangTrung != false ||
+            PlaceVietTin != false ||
+            PlaceOnline != false ||
+
+            PhaseFirst != false ||
+            PhaseSecond != false ||
+            PhaseBoth != false ||
+
+            HasSeat != true ||
+
+            Morning != false ||
+            Afternoon != false ||
+            Night != false;
+        }
+
+        private bool ClassGroupFilter(object obj)
+        {
+            ClassGroupModel classGroupModel = obj as ClassGroupModel;
+            return CheckDayOfWeek(classGroupModel)
+                && CheckSession(classGroupModel)
+                && CheckSeat(classGroupModel)
+                && CheckPhase(classGroupModel)
+                && CheckTeacher(classGroupModel)
+                && CheckPlace(classGroupModel);
+        }
+
+        /// <summary>
+        /// Khởi tạo bộ lọc mặc định.
+        /// </summary>
+        private void InitFilter()
+        {
             Monday = false;
             Tuesday = false;
             Wednesday = false;
@@ -401,23 +453,23 @@ namespace cs4rsa_core.ViewModels
             Morning = false;
             Afternoon = false;
             Night = false;
-            TeacherCount = 0;
         }
 
-        private bool ClassGroupFilter(object obj)
+        /// <summary>
+        /// Đặt lại bộ lọc.
+        /// </summary>
+        private void OnResetFilter()
         {
-            ClassGroupModel classGroupModel = obj as ClassGroupModel;
-            return CheckDayOfWeek(classGroupModel)
-                && CheckSession(classGroupModel)
-                && CheckSeat(classGroupModel)
-                && CheckPhase(classGroupModel)
-                && CheckTeacher(classGroupModel)
-                && CheckPlace(classGroupModel);
+            InitFilter();
         }
 
+        /// <summary>
+        /// Thực hiện lọc.
+        /// </summary>
         private void OnFilter()
         {
             _classGroupModelsView.Refresh();
+            ResetFilterCommand.NotifyCanExecuteChanged();
         }
 
         private bool CheckSeat(ClassGroupModel classGroupModel)

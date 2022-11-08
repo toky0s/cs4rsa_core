@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -118,7 +119,17 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <Grid Grid.Row="2">
+        <Button
+            Grid.Row="2"
+            Margin="0,-40,16,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Command="{Binding ResetFilterCommand}"
+            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+            ToolTip="Đặt lại bộ lọc">
+            <materialDesign:PackIcon Kind="FilterOffOutline" />
+        </Button>
+        <Grid Grid.Row="3">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel
                     Grid.Row="1"
