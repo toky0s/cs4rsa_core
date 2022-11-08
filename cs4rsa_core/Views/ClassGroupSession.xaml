@@ -136,16 +136,17 @@
                     Grid.Column="0"
                     VerticalAlignment="Bottom"
                     Orientation="Vertical">
+                    <CheckBox Content="Chỉ những lớp còn chỗ" IsChecked="{Binding HasSeat}" />
                     <CheckBox
-                        Margin="5"
-                        Content="Chỉ những lớp còn chỗ"
-                        IsChecked="{Binding HasSeat}" />
+                        Margin="0,0,0,5"
+                        Content="Chỉ những lớp có lịch"
+                        IsChecked="{Binding HasSchedule}" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40*" />
                             <ColumnDefinition Width="60*" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Margin="5,0,5,5">
+                        <GroupBox Grid.Column="0" Margin="0,0,5,5">
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
@@ -168,7 +169,7 @@
                         <GroupBox
                             Grid.Column="1"
                             Height="180"
-                            Margin="0,0,5,5">
+                            Margin="0,0,0,5">
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
@@ -212,7 +213,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Margin="5,0,5,5">
+                        <GroupBox Grid.Column="0" Margin="0,0,0,5">
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
@@ -281,7 +282,7 @@
                             <ColumnDefinition Width="60*" />
                             <ColumnDefinition Width="40*" />
                         </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Margin="5,0,5,5">
+                        <GroupBox Grid.Column="0" Margin="0,0,5,5">
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
@@ -310,7 +311,7 @@
                                     ToolTip="Chỉ những lớp kéo dài cả hai giai đoạn" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Grid.Column="1" Margin="0,0,5,5">
+                        <GroupBox Grid.Column="1" Margin="0,0,0,5">
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
