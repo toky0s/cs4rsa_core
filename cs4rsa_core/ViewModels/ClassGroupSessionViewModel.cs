@@ -416,8 +416,8 @@ namespace cs4rsa_core.ViewModels
             PhaseSecond != false ||
             PhaseBoth != false ||
 
-            HasSeat != true ||
-            HasSchedule != true ||
+            HasSeat != false ||
+            HasSchedule != false ||
 
             Morning != false ||
             Afternoon != false ||
@@ -474,7 +474,32 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnResetFilter()
         {
-            InitFilter();
+            Monday = false;
+            Tuesday = false;
+            Wednesday = false;
+            Thursday = false;
+            Friday = false;
+            Saturday = false;
+            Sunday = false;
+
+            Place137NVL = false;
+            Place254NVL = false;
+            PlaceHoaKhanh = false;
+            PlacePhanThanh = false;
+            PlaceQuangTrung = false;
+            PlaceVietTin = false;
+            PlaceOnline = false;
+
+            PhaseFirst = false;
+            PhaseSecond = false;
+            PhaseBoth = false;
+
+            HasSeat = false;
+            HasSchedule = false;
+
+            Morning = false;
+            Afternoon = false;
+            Night = false;
         }
 
         /// <summary>
