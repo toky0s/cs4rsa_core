@@ -126,7 +126,7 @@
             VerticalAlignment="Bottom"
             Command="{Binding ResetFilterCommand}"
             Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-            ToolTip="Đặt lại bộ lọc">
+            ToolTip="Làm sạch bộ lọc">
             <materialDesign:PackIcon Kind="FilterOffOutline" />
         </Button>
         <Grid Grid.Row="3">
