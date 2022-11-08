@@ -177,6 +177,17 @@ namespace cs4rsa_core.ViewModels
                 OnFilter();
             }
         }
+
+        private bool _hasSchedule;
+        public bool HasSchedule
+        {
+            get { return _hasSchedule; }
+            set
+            {
+                _hasSchedule = value; OnPropertyChanged();
+                OnFilter();
+            }
+        }
         #endregion
 
         #region Session Filters
@@ -406,6 +417,7 @@ namespace cs4rsa_core.ViewModels
             PhaseBoth != false ||
 
             HasSeat != true ||
+            HasSchedule != true ||
 
             Morning != false ||
             Afternoon != false ||
@@ -418,6 +430,7 @@ namespace cs4rsa_core.ViewModels
             return CheckDayOfWeek(classGroupModel)
                 && CheckSession(classGroupModel)
                 && CheckSeat(classGroupModel)
+                && CheckSchedule(classGroupModel)
                 && CheckPhase(classGroupModel)
                 && CheckTeacher(classGroupModel)
                 && CheckPlace(classGroupModel);
@@ -449,6 +462,7 @@ namespace cs4rsa_core.ViewModels
             PhaseBoth = false;
 
             HasSeat = true;
+            HasSchedule = true;
 
             Morning = false;
             Afternoon = false;
@@ -477,6 +491,15 @@ namespace cs4rsa_core.ViewModels
             if (HasSeat)
             {
                 return classGroupModel.EmptySeat > 0;
+            }
+            return true;
+        }
+
+        private bool CheckSchedule(ClassGroupModel classGroupModel)
+        {
+            if (HasSchedule)
+            {
+                return classGroupModel.HaveSchedule;
             }
             return true;
         }
