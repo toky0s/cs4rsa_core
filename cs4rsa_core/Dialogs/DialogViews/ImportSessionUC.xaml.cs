@@ -16,10 +16,5 @@ namespace cs4rsa_core.Dialogs.DialogViews
         {
             return true;
         }
-
-        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            (DataContext as ImportSessionViewModel).OnCopyRegisterCodeAtCurrentClassGroup();
-        }
     }
 }

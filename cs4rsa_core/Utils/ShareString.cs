@@ -60,7 +60,7 @@ namespace cs4rsa_core.Utils
 
                 string subjectHasses = shareStringSlices[4].Replace('$', ' ');
                 string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
-                List<SubjectInfoData> subjectInfoDatas = new();
+                List<UserSubject> subjectInfoDatas = new();
                 foreach (string item in subjectHassesSlices)
                 {
                     string[] infoes = item.Split(new char[] { '|' });
@@ -72,7 +72,7 @@ namespace cs4rsa_core.Utils
                     string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
                     Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
                     string subjectName = keyword.SubjectName;
-                    SubjectInfoData subjectInfoData = new()
+                    UserSubject subjectInfoData = new()
                     {
                         SubjectCode = subjectCode,
                         ClassGroup = classGroupName,

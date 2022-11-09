@@ -31,16 +31,20 @@ namespace cs4rsa_core.ViewModelFunctions
         /// </summary>
         /// <param name="subjectModels"></param>
         /// <param name="subjectInfoDatas"></param>
-        public void Start(IEnumerable<SubjectModel> subjectModels, IEnumerable<SubjectInfoData> subjectInfoDatas)
+        public void Start(IEnumerable<SubjectModel> subjectModels, IEnumerable<UserSubject> userSubjects)
         {
-            foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
+            foreach (UserSubject userSubject in userSubjects)
             {
-                SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, subjectInfoData.SubjectCode);
-                Choose(subjectModel, subjectInfoData.ClassGroup, subjectInfoData.RegisterCode);
+                SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, userSubject.SubjectCode);
+                Choose(subjectModel, userSubject.ClassGroup, userSubject.RegisterCode, userSubject.SchoolClass);
             }
         }
 
-        private void Choose(SubjectModel subjectModel, string classGroupName, string registerCode)
+        private void Choose(
+            SubjectModel subjectModel, 
+            string classGroupName, 
+            string registerCode,
+            string schoolClass)
         {
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
             bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()

@@ -33,7 +33,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         {
             get { return _currentSchoolClassModels; }
         }
-
         public ClassGroup ClassGroup { get; }
         public short EmptySeat { get; }
         public string Name { get; }
@@ -77,7 +76,11 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         /// </summary>
         public ClassGroupModel() { }
 
-        public ClassGroupModel(ClassGroup classGroup, bool isBelongSpecialSubject, ColorGenerator colorGenerator)
+        public ClassGroupModel(
+            ClassGroup classGroup, 
+            bool isBelongSpecialSubject, 
+            ColorGenerator colorGenerator
+        )
         {
             ClassGroup = classGroup;
             Name = classGroup.Name;

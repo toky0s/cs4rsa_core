@@ -194,10 +194,10 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private void OnImport()
         {
-            List<SubjectInfoData> subjectInfoDatas = new();
+            List<UserSubject> subjectInfoDatas = new();
             foreach (SessionDetail item in ScheduleSessionDetails)
             {
-                SubjectInfoData data = new()
+                UserSubject data = new()
                 {
                     SubjectCode = item.SubjectCode,
                     ClassGroup = item.ClassGroup,
@@ -236,15 +236,9 @@ namespace cs4rsa_core.Dialogs.Implements
             await LoadScheduleSession();
         }
 
-        /// <summary>
-        /// Sao chép mã đăng ký của lớp hiện tại.
-        /// </summary>
-        public void OnCopyRegisterCodeAtCurrentClassGroup()
+        private UserSubject ConvertToSubjectData()
         {
-            string registerCode = _selectedSessionDetail.RegisterCode;
-            Clipboard.SetData(DataFormats.Text, registerCode);
-            string message = $"Đã sao chép {_selectedSessionDetail.SubjectCode}::{_selectedSessionDetail.RegisterCode}";
-            _snackbarMessageQueue.Enqueue(message);
+
         }
     }
 }

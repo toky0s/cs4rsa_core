@@ -7,18 +7,26 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    Width="600"
     d:DataContext="{d:DesignInstance Type=implements:ImportSessionViewModel}"
     d:DesignHeight="450"
-    Width="600"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
     mc:Ignorable="d">
-    <materialDesign:Card Padding="10">
+    <materialDesign:Card Grid.Column="0" Padding="10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel Margin="0,0,0,10" Orientation="Vertical">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,0,10"
+                Orientation="Vertical">
                 <Grid Height="300" Margin="0,0,5,0">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -38,73 +46,91 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
-                        <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
-                        <TextBlock>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
-                                            <Setter Property="Text" Value="Chưa tính toán" />
-                                            <Setter Property="Foreground" Value="Gray" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
-                                            <Setter Property="Text" Value="Đã hết hạn" />
-                                            <Setter Property="Foreground" Value="Red" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
-                                            <Setter Property="Text" Value="Có thể sử dụng" />
-                                            <Setter Property="Foreground" Value="Green" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StackPanel>
                     <StackPanel
-                        Grid.Row="2"
-                        Grid.ColumnSpan="2"
-                        Margin="0,7,7,0"
+                        Grid.Row="1"
+                        VerticalAlignment="Center"
                         Orientation="Horizontal">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
+                                                <Setter Property="Text" Value="Chưa tính toán" />
+                                                <Setter Property="Foreground" Value="Gray" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
+                                                <Setter Property="Text" Value="Đã hết hạn" />
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
+                                                <Setter Property="Text" Value="Có thể sử dụng" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
                         <Button
-                            Width="100"
-                            Height="30"
                             Margin="0,0,5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
                             Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
-                            Content="XOÁ" />
-                        <Button
-                            Width="100"
-                            Height="30"
-                            Command="{Binding ImportCommand, UpdateSourceTrigger=PropertyChanged}"
-                            Content="SỬ DỤNG" />
+                            Content="{materialDesign:PackIcon Kind=Trash}"
+                            Style="{StaticResource MaterialDesignIconButton}" />
                     </StackPanel>
+
                 </Grid>
             </StackPanel>
-            <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="1" Grid.Column="0">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Từ ShareString" />
-
-                    <TextBox
-                        Height="100"
-                        VerticalScrollBarVisibility="Auto"
-                        TextWrapping="Wrap"
-                        VerticalAlignment="Stretch"
-                        x:Name="ShareString"
-                        Grid.Column="0"
-                        Margin="0,0,0,5"
-                        materialDesign:HintAssist.Hint="Share String của bạn"
-                        materialDesign:TextFieldAssist.HasClearButton="True"
-                        Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                        Text="{Binding ShareString}" />
-                    <Button
-                        HorizontalAlignment="Right"
-                        Grid.Column="1"
-                        Width="100"
-                        Height="30"
-                        Command="{Binding ShareStringCommand}"
-                        Content="SỬ DỤNG"
-                        IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}" />
-
+                <TextBox
+                    x:Name="ShareString"
+                    Grid.Column="0"
+                    Height="100"
+                    Margin="0,0,0,5"
+                    VerticalAlignment="Stretch"
+                    materialDesign:HintAssist.Hint="Share String của bạn"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    Text="{Binding ShareString}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
             </StackPanel>
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Border
+                    Margin="0,0,0,5"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <ItemsControl>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate />
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+                <Button
+                    Grid.Row="1"
+                    Command="{Binding ShareStringCommand}"
+                    Content="SỬ DỤNG"
+                    IsEnabled="{Binding ElementName=ShareString, Path=Text.Length, Mode=OneWay}" />
+            </Grid>
         </Grid>
     </materialDesign:Card>
 </UserControl>

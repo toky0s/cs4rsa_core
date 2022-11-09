@@ -2,17 +2,19 @@ using cs4rsa_core.Dialogs.DialogResults;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using cs4rsa_core.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using System.Collections.Generic;
 
 namespace cs4rsa_core.Messages.Publishers.Dialogs
 {
     internal sealed class SubjectImporterVmMsgs
     {
-        internal sealed class ExitImportSubjectMsg : ValueChangedMessage<Tuple<ImportResult, SessionManagerResult>>
+        internal sealed class ExitImportSubjectMsg : ValueChangedMessage<Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>>>
         {
             /// <summary>
             /// Thoát import subject vào SearchSessionViewModel
             /// </summary>
-            public ExitImportSubjectMsg(Tuple<ImportResult, SessionManagerResult> value) : base(value)
+            public ExitImportSubjectMsg(Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>> value) : base(value)
             {
             }
         }
