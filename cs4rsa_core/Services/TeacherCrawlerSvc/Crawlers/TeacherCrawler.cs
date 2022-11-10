@@ -1,8 +1,6 @@
 ﻿using cs4rsa_core.Constants;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
@@ -17,7 +15,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
 {
@@ -42,7 +39,8 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
             _folderManager = folderManager;
             _htmlWeb = htmlWeb;
 
-            _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists("TeacherImages");
+            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_TEACHER_IMAGES);
+            _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists(path);
         }
 
         private static string GetIntructorId(string url)

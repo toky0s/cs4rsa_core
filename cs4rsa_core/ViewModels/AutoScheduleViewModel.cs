@@ -17,14 +17,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Constants;
 using cs4rsa_core.Utils.Interfaces;
 
@@ -168,10 +166,9 @@ namespace cs4rsa_core.ViewModels
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        private readonly ICurriculumCrawler _curriculumCrawler;
-        private readonly IPreParSubjectCrawler _preParSubjectCrawler;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly ProgramDiagramCrawler _programDiagramCrawler;
         #endregion
 
         #region Filter Properties
@@ -246,22 +243,20 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         public AutoScheduleViewModel(
-            ICourseCrawler courseCrawler,
-            ColorGenerator colorGenerator, 
+            ColorGenerator colorGenerator,
+            ICourseCrawler courseCrawler,        
             IUnitOfWork unitOfWork, 
-            ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler, 
             IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue
+            ISnackbarMessageQueue snackbarMessageQueue,
+            ProgramDiagramCrawler programDiagramCrawler
         )
         {
             _openInBrowser = openInBrowser;
-            _curriculumCrawler = curriculumCrawler;
-            _preParSubjectCrawler = preParSubjectCrawler;
             _colorGenerator = colorGenerator;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _programDiagramCrawler = programDiagramCrawler;
 
             WeakReferenceMessenger.Default.Register<StudentInputVmMsgs.ExitLoginMsg>(this, async (r, m) =>
             {
@@ -449,7 +444,8 @@ namespace cs4rsa_core.ViewModels
         }
         private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)
         {
-            return IsRemoveClassGroupInvalid ? classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0 : true;
+            return !IsRemoveClassGroupInvalid || classGroupModel.IsHaveSchedule() 
+                && classGroupModel.EmptySeat > 0;
         }
 
         /// <summary>
@@ -580,14 +576,7 @@ namespace cs4rsa_core.ViewModels
         {
             IsFinding = true;
             ProgramFolderModels.Clear();
-            ProgramDiagramCrawler programDiagramCrawler = new(
-                ""
-                , _student.SpecialString
-                , _curriculumCrawler
-                , _unitOfWork
-                , _preParSubjectCrawler
-            );
-            ProgramFolder[] folders = await programDiagramCrawler.ToProgramDiagram();
+            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram("", _student.SpecialString, Student.StudentId);
             
             foreach (ProgramFolder folder in folders) {
                 await AddProgramFolder(folder);

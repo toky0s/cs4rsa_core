@@ -79,8 +79,8 @@ namespace cs4rsa_core
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
             services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
             services.AddSingleton<ProgramDiagramCrawler>();
-            services.AddSingleton<StudentProgramCrawler>();
             services.AddSingleton<DisciplineCrawler>();
+            services.AddTransient<StudentProgramCrawler>();
 
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();

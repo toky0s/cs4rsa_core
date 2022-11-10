@@ -9,6 +9,9 @@ using System.Windows;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Utils.Interfaces;
+using System;
+using System.IO;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -33,14 +36,17 @@ namespace cs4rsa_core.Dialogs.Implements
         public IMessageBox MessageBox { get; set; }
         private readonly IDtuStudentInfoCrawler _dtuStudentInfoCrawler;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly IFolderManager _folderManager;
 
         public SessionInputViewModel(
             IDtuStudentInfoCrawler dtuStudentInfoCrawler,
-            ISnackbarMessageQueue snackbarMessageQueue
+            ISnackbarMessageQueue snackbarMessageQueue,
+            IFolderManager folderManager
         )
         {
             _dtuStudentInfoCrawler = dtuStudentInfoCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _folderManager = folderManager;
         }
 
         public async Task Find()
@@ -57,18 +63,23 @@ namespace cs4rsa_core.Dialogs.Implements
                 MessageBoxResult _ = MessageBox.ShowMessage(message,
                                         "Thông báo",
                                         MessageBoxButton.OK,
-                                        MessageBoxImage.Exclamation);
-                CloseDialog();
+                                        MessageBoxImage.Exclamation);   
             }
             else
             {
+                // Lấy thông tin sinh viên thành công.
                 Student student = await _dtuStudentInfoCrawler.Crawl(specialStrings[0] ?? specialStrings[1]);
+                if (student != null)
+                {
+                    string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, student.StudentId);
+                    _folderManager.CreateFolderIfNotExists(path);
+                }
                 string message = $"Xin chào {student.Name}";
                 _snackbarMessageQueue.Enqueue(message);
                 StudentResult result = new() { Student = student };
                 Messenger.Send(new SessionInputVmMsgs.ExitSearchAccountMsg(result));
-                CloseDialog();
             }
+            CloseDialog();
         }
     }
 }
