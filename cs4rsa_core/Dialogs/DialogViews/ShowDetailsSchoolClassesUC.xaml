@@ -5,12 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
-    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
     xmlns:viewmodels="clr-namespace:cs4rsa_core.Dialogs.Implements"
+    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ShowDetailsSchoolClassesViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    d:DataContext="{d:DesignInstance Type=viewmodels:ShowDetailsSchoolClassesViewModel}"
     vml:DialogVMLocator.AutoHookedUpViewModel="True"
     mc:Ignorable="d">
     <materialDesign:Card Padding="10">
@@ -31,7 +30,7 @@
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text="{Binding ClassGroupModel.ClassGroup.Name, StringFormat='{}{0} '}" />
+                <TextBlock Text="{Binding ClassGroupModel.Name, StringFormat='{}{0} ', Mode=OneWay}" />
                 <TextBlock FontWeight="Bold" Text="{Binding ClassGroupModel.CompulsoryClass.Type.Code, StringFormat='{}{0} '}" />
                 <TextBlock Text="{Binding SelectedSchoolClassModel.SchoolClassName, StringFormat='{}+ {0} '}" />
                 <TextBlock FontWeight="Bold" Text="{Binding SelectedSchoolClassModel.Type.Code, StringFormat='{}{0} '}" />
@@ -60,10 +59,10 @@
                 Grid.Row="4"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
-                <Button 
-                    Command="{Binding PickCommand}" 
-                    Content="CHỌN LỚP NÀY" 
-                    IsEnabled="{Binding SelectedSchoolClassModel, TargetNullValue=False}"/>
+                <Button
+                    Command="{Binding PickCommand}"
+                    Content="CHỌN LỚP NÀY"
+                    IsEnabled="{Binding SelectedSchoolClassModel, TargetNullValue=False}" />
             </StackPanel>
         </Grid>
     </materialDesign:Card>
