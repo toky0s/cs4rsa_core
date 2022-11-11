@@ -51,7 +51,7 @@ namespace cs4rsa_core.Utils
             return StringHelper.EncodeTo64(raw);
         }
 
-        public async Task<SessionManagerResult> GetSubjectFromShareString(string shareString)
+        public async Task<List<UserSubject>> GetSubjectFromShareString(string shareString)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace cs4rsa_core.Utils
                     };
                     subjectInfoDatas.Add(subjectInfoData);
                 }
-                return new SessionManagerResult(subjectInfoDatas);
+                return subjectInfoDatas;
             }
             catch
             {
@@ -92,7 +92,7 @@ namespace cs4rsa_core.Utils
 
         private static string SubjectCodeVsRegisterCode(ClassGroupModel classGroupModel)
         {
-            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentRegisterCode;
+            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentSchoolClassName;
         }
     }
 }

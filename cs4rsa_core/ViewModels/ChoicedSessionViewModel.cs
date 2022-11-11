@@ -129,7 +129,7 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnCopyCode()
         {
-            string registerCode = _selectedClassGroupModel.CurrentRegisterCode;
+            string registerCode = _selectedClassGroupModel.CurrentSchoolClassName;
             Clipboard.SetData(DataFormats.Text, registerCode);
             string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
             _snackbarMessageQueue.Enqueue(message);

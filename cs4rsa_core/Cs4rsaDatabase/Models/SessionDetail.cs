@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace cs4rsa_core.Cs4rsaDatabase.Models
+﻿namespace cs4rsa_core.Cs4rsaDatabase.Models
 {
     public class SessionDetail
     {
@@ -11,6 +9,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.Models
         public string RegisterCode { get; set; }
         public int SessionId { get; set; }
         public Session Session { get; set; }
-        public List<SessionSchoolClass> SessionSchoolClasses { get; set; }
+        public string SelectedSchoolClass { get; set; }
     }
 }

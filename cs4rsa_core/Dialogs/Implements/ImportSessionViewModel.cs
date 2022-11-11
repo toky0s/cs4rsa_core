@@ -23,7 +23,6 @@ namespace cs4rsa_core.Dialogs.Implements
         #region Properties
         public ObservableCollection<Session> ScheduleSessions { get; set; }
         public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; }
-        public ObservableCollection<SessionSchoolClass> SessionSchoolClasses { get; set; }
 
         private Session _selectedScheduleSession;
         public Session SelectedScheduleSession
@@ -48,7 +47,6 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 _selectedSessionDetail = value;
                 OnPropertyChanged();
-                LoadSessionSchoolClasses(value);
             }
         }
 
@@ -99,7 +97,6 @@ namespace cs4rsa_core.Dialogs.Implements
 
             ScheduleSessions = new();
             ScheduleSessionDetails = new();
-            SessionSchoolClasses = new();
             _isAvailableSession = -1;
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
@@ -113,26 +110,10 @@ namespace cs4rsa_core.Dialogs.Implements
             if (value != null)
             {
                 ScheduleSessionDetails.Clear();
-                SessionSchoolClasses.Clear();
                 IEnumerable<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
                 foreach (SessionDetail item in details)
                 {
                     ScheduleSessionDetails.Add(item);
-                }
-            }
-        }
-
-        private void LoadSessionSchoolClasses(SessionDetail value)
-        {
-            if (value != null)
-            {
-                SessionSchoolClasses.Clear();
-                IEnumerable<SessionSchoolClass> sessionSchoolClasses = _unitOfWork
-                    .SessionSchoolClasses
-                    .GetSessionSchoolClass(value);
-                foreach (SessionSchoolClass sessionSchoolClass in sessionSchoolClasses)
-                {
-                    SessionSchoolClasses.Add(sessionSchoolClass);
                 }
             }
         }
@@ -156,7 +137,7 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private async Task OnParseShareString()
         {
-            SessionManagerResult result = await _shareString.GetSubjectFromShareString(ShareString);
+            List<UserSubject> result = await _shareString.GetSubjectFromShareString(ShareString);
             if (result != null)
             {
                 CloseDialog();
@@ -206,9 +187,8 @@ namespace cs4rsa_core.Dialogs.Implements
                 };
                 subjectInfoDatas.Add(data);
             }
-            SessionManagerResult result = new(subjectInfoDatas);
             CloseDialog();
-            Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
+            Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(subjectInfoDatas));
         }
 
         private async Task OnDelete()
@@ -232,13 +212,7 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             ScheduleSessions.Clear();
             ScheduleSessionDetails.Clear();
-            SessionSchoolClasses.Clear();
             await LoadScheduleSession();
-        }
-
-        private UserSubject ConvertToSubjectData()
-        {
-
         }
     }
 }

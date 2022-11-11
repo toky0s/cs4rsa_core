@@ -23,10 +23,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         {
             get
             {
-                if (_registerCodes.Count == 0)
-                {
-                    return _registerCodes;
-                }
                 return _registerCodes;
             }
         }

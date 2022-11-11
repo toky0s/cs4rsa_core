@@ -45,23 +45,22 @@ namespace cs4rsa_core.Dialogs.Implements
             List<SessionDetail> sessionDetails = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
-                List<SessionSchoolClass> sessionSchoolClasses = new();
-                foreach (SchoolClassModel ssc in classGroupModel.GetSchoolClassModels())
+                string selectedSchoolClassName;
+                if (classGroupModel.IsSpecialClassGroup)
                 {
-                    SessionSchoolClass sessionSchoolClass = new()
-                    {
-                        Name = ssc.SchoolClassName,
-                        Type = ssc.Type.Code
-                    };
-                    sessionSchoolClasses.Add(sessionSchoolClass);
+                    selectedSchoolClassName = classGroupModel.UserSelectedSchoolClass.SchoolClassName;
+                } else
+                {
+                    classGroupModel.CodeSchoolClass.SchoolClassName;
                 }
+
                 SessionDetail sessionDetail = new()
                 {
                     SubjectCode = classGroupModel.SubjectCode,
                     ClassGroup = classGroupModel.ClassGroup.Name,
                     SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
-                    SessionSchoolClasses = sessionSchoolClasses,
-                    RegisterCode = classGroupModel.CurrentRegisterCode
+                    SelectedSchoolClass = 
+                    RegisterCode = classGroupModel.CurrentSchoolClassName
                 };
                 sessionDetails.Add(sessionDetail);
             }
