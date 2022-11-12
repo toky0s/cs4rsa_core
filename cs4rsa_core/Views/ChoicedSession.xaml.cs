@@ -15,7 +15,7 @@ namespace cs4rsa_core.Views
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             ChoicedSessionViewModel _choiceSessionViewModel = DataContext as ChoicedSessionViewModel;
-            string registerCode = _choiceSessionViewModel.ClassGroupModels[Listbox_Choiced.SelectedIndex].CurrentRegisterCode;
+            string registerCode = _choiceSessionViewModel.ClassGroupModels[Listbox_Choiced.SelectedIndex].CurrentSchoolClassName;
             Clipboard.SetData(DataFormats.Text, registerCode);
         }
 

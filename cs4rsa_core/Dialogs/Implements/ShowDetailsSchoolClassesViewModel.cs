@@ -44,11 +44,11 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             if (SelectedSchoolClassModel != null)
             {
-                ClassGroupResult classGroupResult = new()
-                {
-                    ClassGroupModel = ClassGroupModel,
-                    SelectedRegisterCode = SelectedSchoolClassModel.RegisterCode
-                };
+                ClassGroupResult classGroupResult = new(
+                    ClassGroupModel,
+                    SelectedSchoolClassModel.RegisterCode,
+                    SelectedSchoolClassModel.SchoolClassName
+                );
                 Messenger.Send(new ExitChooseMsg(classGroupResult));
                 CloseDialog();
             }

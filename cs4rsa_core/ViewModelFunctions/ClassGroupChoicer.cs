@@ -36,15 +36,20 @@ namespace cs4rsa_core.ViewModelFunctions
             foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
             {
                 SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, subjectInfoData.SubjectCode);
-                Choose(subjectModel, subjectInfoData.ClassGroup, subjectInfoData.RegisterCode);
+                Choose(subjectModel, subjectInfoData.ClassGroup, subjectInfoData.RegisterCode, subjectInfoData.SchoolClassName);
             }
         }
 
-        private void Choose(SubjectModel subjectModel, string classGroupName, string registerCode)
+        private void Choose(
+            SubjectModel subjectModel, 
+            string classGroupName,
+            string registerCode,
+            string schoolClassName
+        )
         {
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
             bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()
-                .Any(scm => scm.RegisterCode == registerCode);
+                .Any(scm => scm.RegisterCode == registerCode); // <== Chỗ này isValidRegisterCode sẽ bằng true dùng registerCode có rỗng đi chăng nữa.
             if (classGroupModel == null)
             {
                 throw new Exception(VMConstants.EX_CLASSGROUP_MODEL_WAS_NULL);
@@ -55,7 +60,7 @@ namespace cs4rsa_core.ViewModelFunctions
             }
             if (classGroupModel.IsBelongSpecialSubject)
             {
-                classGroupModel.PickSchoolClass(registerCode);
+                classGroupModel.PickSchoolClass(registerCode, schoolClassName);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             }
             else

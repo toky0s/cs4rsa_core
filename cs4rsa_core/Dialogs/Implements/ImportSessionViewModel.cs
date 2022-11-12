@@ -21,12 +21,12 @@ namespace cs4rsa_core.Dialogs.Implements
     public class ImportSessionViewModel : ViewModelBase
     {
         #region Properties
-        public ObservableCollection<Session> ScheduleSessions { get; set; }
-        public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; }
+        public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
+        public ObservableCollection<ScheduleDetail> ScheduleSessionDetails { get; set; }
         public ObservableCollection<SessionSchoolClass> SessionSchoolClasses { get; set; }
 
-        private Session _selectedScheduleSession;
-        public Session SelectedScheduleSession
+        private UserSchedule _selectedScheduleSession;
+        public UserSchedule SelectedScheduleSession
         {
             get => _selectedScheduleSession;
             set
@@ -40,8 +40,8 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private SessionDetail _selectedSessionDetail;
-        public SessionDetail SelectedSessionDetail
+        private ScheduleDetail _selectedSessionDetail;
+        public ScheduleDetail SelectedSessionDetail
         {
             get { return _selectedSessionDetail; }
             set
@@ -108,21 +108,21 @@ namespace cs4rsa_core.Dialogs.Implements
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
-        private void LoadScheduleSessionDetail(Session value)
+        private void LoadScheduleSessionDetail(UserSchedule value)
         {
             if (value != null)
             {
                 ScheduleSessionDetails.Clear();
                 SessionSchoolClasses.Clear();
-                IEnumerable<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
-                foreach (SessionDetail item in details)
+                IEnumerable<ScheduleDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
+                foreach (ScheduleDetail item in details)
                 {
                     ScheduleSessionDetails.Add(item);
                 }
             }
         }
 
-        private void LoadSessionSchoolClasses(SessionDetail value)
+        private void LoadSessionSchoolClasses(ScheduleDetail value)
         {
             if (value != null)
             {
@@ -137,7 +137,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private void CheckIsAvailableSession(Session session)
+        private void CheckIsAvailableSession(UserSchedule session)
         {
             if (session != null)
             {
@@ -185,8 +185,8 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task LoadScheduleSession()
         {
             ScheduleSessions.Clear();
-            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
-            foreach (Session session in sessions)
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
             }
@@ -195,14 +195,15 @@ namespace cs4rsa_core.Dialogs.Implements
         private void OnImport()
         {
             List<SubjectInfoData> subjectInfoDatas = new();
-            foreach (SessionDetail item in ScheduleSessionDetails)
+            foreach (ScheduleDetail item in ScheduleSessionDetails)
             {
                 SubjectInfoData data = new()
                 {
-                    SubjectCode = item.SubjectCode,
-                    ClassGroup = item.ClassGroup,
-                    SubjectName = item.SubjectName,
-                    RegisterCode = item.RegisterCode
+                    item.SubjectCode,
+                    item.ClassGroup,
+                    item.SubjectName,
+                    item.RegisterCode,
+                    item.Sch
                 };
                 subjectInfoDatas.Add(data);
             }

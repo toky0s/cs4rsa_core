@@ -126,7 +126,7 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Danh sách các bộ lịch đã lưu
         /// </summary>
-        public ObservableCollection<Session> SavedSchedules { get; set; }
+        public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
 
         private int _totalSubject;
         public int TotalSubject
@@ -251,8 +251,8 @@ namespace cs4rsa_core.ViewModels
         public async Task LoadSavedSchedules()
         {
             SavedSchedules.Clear();
-            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
-            foreach (Session session in sessions)
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            foreach (UserSchedule session in sessions)
             {
                 SavedSchedules.Add(session);
             }

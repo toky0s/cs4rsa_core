@@ -15,9 +15,9 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
         {
 
         }
-        public IEnumerable<SessionSchoolClass> GetSessionSchoolClass(SessionDetail sessionDetail)
+        public IEnumerable<SessionSchoolClass> GetSessionSchoolClass(ScheduleDetail sessionDetail)
         {
-            SessionDetail querySessionDetail = _context.SessionDetails
+            ScheduleDetail querySessionDetail = _context.SessionDetails
                 .Where(sd => sd.SessionDetailId == sessionDetail.SessionDetailId)
                 .Include(sd => sd.SessionSchoolClasses)
                 .FirstOrDefault();

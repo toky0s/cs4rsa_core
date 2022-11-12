@@ -7,10 +7,26 @@ namespace cs4rsa_core.Dialogs.DialogResults
     /// </summary>
     public record SubjectInfoData
     {
-        public string SubjectCode { get; init; }
-        public string ClassGroup { get; init; }
-        public string SubjectName { get; init; }
-        public string RegisterCode { get; init; }
+        public readonly string SubjectCode;
+        public readonly string ClassGroup;
+        public readonly string SubjectName;
+        public readonly string RegisterCode;
+        public readonly string SchoolClassName;
+
+        public SubjectInfoData(
+            string subjectCode, 
+            string classGroup,
+            string subjectName,
+            string registerCode,
+            string schoolClassName
+        )
+        {
+            SubjectCode = subjectCode;
+            ClassGroup = classGroup;
+            SubjectName = subjectName;
+            RegisterCode = registerCode;
+            SchoolClassName = schoolClassName;
+        }
     }
 
     /// <summary>

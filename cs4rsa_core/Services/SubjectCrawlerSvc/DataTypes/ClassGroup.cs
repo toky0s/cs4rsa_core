@@ -257,19 +257,31 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                     _registerCodes.Add(schoolClass.RegisterCode);
                 }
             }
-            _isSpecialClassGroup = _registerCodes.Count > 1;
+            EvaluateIsSpecialClassGroup();
         }
 
-        /// <summary>
-        /// Lấy ra số chỗ còn trống. 
-        /// <list type="bullet">LƯU Ý: Số chỗ còn trống có thể là số âm</list> 
-        /// </summary>
-        /// <returns>Số chỗ còn trống</returns>
-        public short GetEmptySeat()
+        private void EvaluateIsSpecialClassGroup()
         {
-            if (_schoolClasses[0].EmptySeat.Equals("Hết chỗ"))
-                return 0;
-            return short.Parse(_schoolClasses[0].EmptySeat);
+            IsSpecialClassGroup = _registerCodes.Distinct().Count() >= 2
+            || SchoolClasses
+                .Where(sc => !sc.SchoolClassName.Equals(Name))
+                .Distinct()
+                .Count() >= 2;
+        }
+
+        /**
+         * Mô tả:
+         *      Lấy ra số chỗ còn trống.
+         * 
+         * Trả về:
+         *      Trả về 0 nếu "Hết chỗ" hoặc số chỗ cào được âm, 
+         *      ngược lại trả về giá trị parse được.
+         */
+        public int GetEmptySeat()
+        {
+            return _schoolClasses[0].EmptySeat.Equals("Hết chỗ") || int.Parse(_schoolClasses[0].EmptySeat) < 0
+                ? 0
+                : int.Parse(_schoolClasses[0].EmptySeat);
         }
 
         public string GetUrl()

@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cs4rsa_core", "cs4rsa_core\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2BB9055-57B8-4383-B9A7-C1F0A15696D2}"
 	ProjectSection(SolutionItems) = preProject
+		cs4rsa_core\bin\Debug\net6.0-windows8.0\cs4rsa.db = cs4rsa_core\bin\Debug\net6.0-windows8.0\cs4rsa.db
 		README.md = README.md
 	EndProjectSection
 EndProject

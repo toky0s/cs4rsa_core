@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace cs4rsa_core.Cs4rsaDatabase.Implements
 {
-    public class SessionRepository : GenericRepository<Session>, ISessionRepository
+    public class SessionRepository : GenericRepository<UserSchedule>, ISessionRepository
     {
         public SessionRepository(Cs4rsaDbContext context) : base(context)
         {
@@ -18,15 +18,15 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
         //public async Task<List<SessionDetail>> GetSessionDetails(int sessionId)
         //{
         //    return await _context.SessionDetails
-        //        .Where(sessionDetail => sessionDetail.SessionId == sessionId)
+        //        .Where(sessionDetail => sessionDetail.UserScheduleId == sessionId)
         //        .AsNoTracking()
         //        .ToListAsync();
         //}
 
-        IEnumerable<SessionDetail> ISessionRepository.GetSessionDetails(int sessionId)
+        IEnumerable<ScheduleDetail> ISessionRepository.GetSessionDetails(int sessionId)
         {
             return _context.SessionDetails
-                .Where(sessionDetail => sessionDetail.SessionId == sessionId)
+                .Where(sessionDetail => sessionDetail.UserScheduleId == sessionId)
                 .AsNoTracking();
         }
     }

@@ -363,7 +363,9 @@ namespace cs4rsa_core.ViewModels
                 ClassGroupResult classGroupResult = m.Value;
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
                 string registerCode = classGroupResult.SelectedRegisterCode;
-                classGroupModel.ReRenderScheduleRequest(registerCode);
+                string schoolClassName = classGroupResult.SelectedSchoolClassName;
+
+                classGroupModel.ReRenderScheduleRequest(registerCode, schoolClassName);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 

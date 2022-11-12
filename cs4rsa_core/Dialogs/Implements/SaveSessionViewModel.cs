@@ -12,10 +12,15 @@ using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
+    /**
+     * Mô tả:
+     *      ViewModel thực hiện việc lưu thông tin bộ lịch
+     *      mà người dùng đã sắp xếp
+     */
     public class SaveSessionViewModel : ViewModelBase
     {
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
-        public ObservableCollection<Session> ScheduleSessions { get; set; }
+        public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
         public string Name { get; set; }
         public AsyncRelayCommand SaveCommand { get; set; }
         public Action<SaveResult> CloseDialogCallback { get; set; }
@@ -33,40 +38,39 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task LoadScheduleSessions()
         {
             ScheduleSessions.Clear();
-            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
-            foreach (Session session in sessions)
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
             }
         }
 
+        // 
+        // Mô tả:
+        //     Lưu bộ lịch đã sắp xếp.
+        //     
+        // 1. Với các lớp chỉ có một base school class duy nhất, chọn lớp này.
+        // 2. Với các lớp có LAB, tức sẽ có một base class và một lớp (thường là LAB), sẽ chọn lớp này.
+        // 3. Với các special class group, chọn lớp khác base class.
+        // 
         private async Task Save()
         {
-            List<SessionDetail> sessionDetails = new();
+            List<ScheduleDetail> sessionDetails = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
-                List<SessionSchoolClass> sessionSchoolClasses = new();
-                foreach (SchoolClassModel ssc in classGroupModel.GetSchoolClassModels())
-                {
-                    SessionSchoolClass sessionSchoolClass = new()
-                    {
-                        Name = ssc.SchoolClassName,
-                        Type = ssc.Type.Code
-                    };
-                    sessionSchoolClasses.Add(sessionSchoolClass);
-                }
-                SessionDetail sessionDetail = new()
+                string selectedSchoolClassName = classGroupModel.Get
+                ScheduleDetail sessionDetail = new()
                 {
                     SubjectCode = classGroupModel.SubjectCode,
                     ClassGroup = classGroupModel.ClassGroup.Name,
                     SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
-                    SessionSchoolClasses = sessionSchoolClasses,
-                    RegisterCode = classGroupModel.CurrentRegisterCode
+                    RegisterCode = classGroupModel.CurrentSchoolClassName,
+                    SelectedSchoolClass = 
                 };
                 sessionDetails.Add(sessionDetail);
             }
 
-            Session session = new()
+            UserSchedule session = new()
             {
                 Name = Name,
                 SaveDate = DateTime.Now,

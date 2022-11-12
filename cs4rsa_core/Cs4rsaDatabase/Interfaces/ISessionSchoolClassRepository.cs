@@ -6,6 +6,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
 {
     public interface ISessionSchoolClassRepository : IGenericRepository<SessionSchoolClass>
     {
-        IEnumerable<SessionSchoolClass> GetSessionSchoolClass(SessionDetail sessionDetail);
+        IEnumerable<SessionSchoolClass> GetSessionSchoolClass(ScheduleDetail sessionDetail);
     }
 }

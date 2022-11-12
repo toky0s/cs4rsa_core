@@ -18,8 +18,8 @@ namespace cs4rsa_core.Controls
 {
     public class DayPanel: Panel
     {
-        private static double _unitHeight;
-        private static double _startPoint;
+        private double _unitHeight;
+        private double _startPoint;
         
         protected override Size MeasureOverride(Size availableSize)
         {

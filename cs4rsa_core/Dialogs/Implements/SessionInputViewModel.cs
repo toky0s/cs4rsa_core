@@ -52,7 +52,7 @@ namespace cs4rsa_core.Dialogs.Implements
             string[] specialStrings = await Task.WhenAll(specialStringV1, specialStringV2);
             if (specialStrings[0] is null && specialStrings[1] is null)
             {
-                string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy Session ID, " +
+                string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy UserSchedule ID, " +
                     "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
                 MessageBoxResult _ = MessageBox.ShowMessage(message,
                                         "Thông báo",

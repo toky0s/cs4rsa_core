@@ -92,7 +92,7 @@ namespace cs4rsa_core.Utils
 
         private static string SubjectCodeVsRegisterCode(ClassGroupModel classGroupModel)
         {
-            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentRegisterCode;
+            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentSchoolClassName;
         }
     }
 }
