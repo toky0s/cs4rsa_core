@@ -53,11 +53,11 @@ namespace cs4rsa_core.ViewModels
 
         #region Commands
         public AsyncRelayCommand SaveCommand { get; set; }
+        public AsyncRelayCommand OpenShareStringWindowCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
         public RelayCommand SolveConflictCommand { get; set; }
-        public RelayCommand OpenShareStringWindowCommand { get; set; }
         #endregion
 
         #region Services
@@ -103,7 +103,7 @@ namespace cs4rsa_core.ViewModels
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
-            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
+            OpenShareStringWindowCommand = new AsyncRelayCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new();
             ConflictModels = new();
@@ -129,7 +129,7 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnCopyCode()
         {
-            string registerCode = _selectedClassGroupModel.CurrentRegisterCode;
+            string registerCode = _selectedClassGroupModel.CurrentSchoolClassName;
             Clipboard.SetData(DataFormats.Text, registerCode);
             string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
             _snackbarMessageQueue.Enqueue(message);
@@ -199,11 +199,11 @@ namespace cs4rsa_core.ViewModels
             await vm.LoadScheduleSessions();
         }
 
-        private void OnOpenShareStringWindow()
+        private async Task OnOpenShareStringWindow()
         {
             ShareStringUC shareStringUC = new();
             ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
-            UpdateShareString();
+            await UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
         }
@@ -319,9 +319,9 @@ namespace cs4rsa_core.ViewModels
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
-        private void UpdateShareString()
+        private async Task UpdateShareString()
         {
-            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
+            _shareString = await _shareStringGenerator.GetShareString(ClassGroupModels);
         }
 
         private void UpdateConflicts()

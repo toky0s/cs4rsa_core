@@ -395,7 +395,7 @@ namespace cs4rsa_core.ViewModels
             await vm.LoadScheduleSession();
         }
 
-        private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
+        private async Task CloseDialogAndHandleSessionManagerResult(IEnumerable<UserSubject> result)
         {
             CloseDialog();
             if (result != null)
@@ -404,14 +404,15 @@ namespace cs4rsa_core.ViewModels
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
                 OpenDialog(subjectImporterUC);
                 await vm.Run(result);
+                CloseDialog();
             }
         }
 
-        private void ExitImportSubjectMsgHandler(ImportResult importResult, SessionManagerResult sessionManagerResult)
+        private void ExitImportSubjectMsgHandler(IEnumerable<SubjectModel> subjectModels, IEnumerable<UserSubject> userSubjects)
         {
-            ImportSubjects(importResult.SubjectModels);
+            ImportSubjects(subjectModels);
             var choicer = new ClassGroupChoicer();
-            choicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
+            choicer.Start(subjectModels, userSubjects);
             SelectedSubjectModel = SubjectModels[0];
         }
 

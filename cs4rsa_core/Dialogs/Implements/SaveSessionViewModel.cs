@@ -4,11 +4,14 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Utils;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -22,10 +25,17 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        public SaveSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler)
+        private readonly ShareString _shareString;
+
+        public SaveSessionViewModel(
+            IUnitOfWork unitOfWork, 
+            ICourseCrawler courseCrawler,
+            ShareString shareString)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _shareString = shareString;
+
             ScheduleSessions = new();
             SaveCommand = new AsyncRelayCommand(Save);
         }
@@ -42,30 +52,15 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private async Task Save()
         {
-            List<SessionDetail> sessionDetails = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
-            {
-                List<SessionSchoolClass> sessionSchoolClasses = new();
-                foreach (SchoolClassModel ssc in classGroupModel.GetSchoolClassModels())
-                {
-                    SessionSchoolClass sessionSchoolClass = new()
-                    {
-                        Name = ssc.SchoolClassName,
-                        Type = ssc.Type.Code
-                    };
-                    sessionSchoolClasses.Add(sessionSchoolClass);
-                }
-                SessionDetail sessionDetail = new()
-                {
-                    SubjectCode = classGroupModel.SubjectCode,
-                    ClassGroup = classGroupModel.ClassGroup.Name,
-                    SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
-                    SessionSchoolClasses = sessionSchoolClasses,
-                    RegisterCode = classGroupModel.CurrentRegisterCode
-                };
-                sessionDetails.Add(sessionDetail);
-            }
-
+            List<SessionDetail> sessionDetails = (await _shareString.ConvertToUserSubjects(ClassGroupModels))
+                                                    .Select(us => new SessionDetail()
+                                                    {
+                                                        SubjectCode = us.SubjectCode,
+                                                        SubjectName = us.SubjectName,
+                                                        ClassGroup = us.ClassGroup,
+                                                        SelectedSchoolClass = us.SchoolClass,
+                                                        RegisterCode = us.RegisterCode
+                                                    }).ToList();
             Session session = new()
             {
                 Name = Name,

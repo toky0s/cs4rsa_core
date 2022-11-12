@@ -23,7 +23,9 @@ namespace cs4rsa_core.Dialogs.Implements
     /// </summary>
     public class SubjectImporterViewModel : ViewModelBase
     {
-        public ObservableCollection<SubjectInfoData> SubjectInfoDatas { get; set; }
+        public ObservableCollection<UserSubject> SubjectInfoDatas { get; set; }
+        public bool IsUseCache { get; set; }
+
         private readonly IKeywordRepository _keywordRepository;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;
@@ -33,34 +35,35 @@ namespace cs4rsa_core.Dialogs.Implements
             ISubjectCrawler subjectCrawler,
             ColorGenerator colorGenerator)
         {
-            SubjectInfoDatas = new();
             _keywordRepository = keywordRepository;
             _subjectCrawler = subjectCrawler;
             _colorGenerator = colorGenerator;
+
+            SubjectInfoDatas = new();
+            IsUseCache = true;
         }
 
-        public async Task Run(SessionManagerResult sessionManagerResult)
+        public async Task Run(IEnumerable<UserSubject> userSubjects)
         {
-            foreach (SubjectInfoData item in sessionManagerResult.SubjectInfoDatas)
+            foreach (UserSubject item in userSubjects)
             {
                 SubjectInfoDatas.Add(item);
             }
 
-            IEnumerable<int> courseIds = sessionManagerResult.SubjectInfoDatas
-                                        .Select(item => _keywordRepository
-                                        .GetCourseId(item.SubjectCode));
+            IEnumerable<int> courseIds = userSubjects
+                                        .Select(item => _keywordRepository.GetCourseId(item.SubjectCode));
             IEnumerable<Task<SubjectModel>> subjectTasks = courseIds.Select(courseId => ToSubjectModel(courseId));
             SubjectModel[] subjectModels = await Task.WhenAll(subjectTasks);
-            ImportResult importResult = new() { SubjectModels = subjectModels.ToList() };
-            Tuple<ImportResult, SessionManagerResult> tup = new(importResult, sessionManagerResult);
+
+            Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>> tup = new(subjectModels, SubjectInfoDatas);
             SubjectImporterVmMsgs.ExitImportSubjectMsg message = new(tup);
             Messenger.Send(message);
-            CloseDialog();
+
         }
 
         private async Task<SubjectModel> ToSubjectModel(int courseId)
         {
-            Subject subject = await _subjectCrawler.Crawl(courseId);
+            Subject subject = await _subjectCrawler.Crawl(courseId, IsUseCache);
             await subject.GetClassGroups();
             SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
             subjectModel.Color = await _colorGenerator.GetColorAsync(subject.CourseId);

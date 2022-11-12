@@ -8,8 +8,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces
 {
     public interface ISubjectCrawler
     {
-        Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache = true);
-        Task<Subject> Crawl(int courseId, bool isUseCache = true);
+        Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache);
+        Task<Subject> Crawl(int courseId, bool isUseCache);
         Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId);
 
         /// <summary>

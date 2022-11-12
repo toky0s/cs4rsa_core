@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using cs4rsa_core.BaseClasses;
 using CommunityToolkit.Mvvm.Messaging;
-using static cs4rsa_core.Messages.Publishers.Dialogs.ShowDetailsSchoolClassesVmMsgs;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -47,9 +47,9 @@ namespace cs4rsa_core.Dialogs.Implements
                 ClassGroupResult classGroupResult = new()
                 {
                     ClassGroupModel = ClassGroupModel,
-                    SelectedRegisterCode = SelectedSchoolClassModel.RegisterCode
+                    SelectedSchoolClassModel = SelectedSchoolClassModel
                 };
-                Messenger.Send(new ExitChooseMsg(classGroupResult));
+                Messenger.Send(new ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg(classGroupResult));
                 CloseDialog();
             }
         }
