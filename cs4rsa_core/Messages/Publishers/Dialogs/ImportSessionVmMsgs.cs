@@ -9,9 +9,9 @@ namespace cs4rsa_core.Messages.Publishers.Dialogs
         /// <summary>
         /// Hoàn thành và thoát việc import subject.
         /// </summary>
-        internal sealed class ExitImportSubjectMsg : ValueChangedMessage<List<UserSubject>>
+        internal sealed class ExitImportSubjectMsg : ValueChangedMessage<IEnumerable<UserSubject>>
         {
-            public ExitImportSubjectMsg(List<UserSubject> value) : base(value)
+            public ExitImportSubjectMsg(IEnumerable<UserSubject> value) : base(value)
             {
             }
         }

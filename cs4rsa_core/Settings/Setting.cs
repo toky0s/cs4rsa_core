@@ -39,12 +39,10 @@ namespace cs4rsa_core.Settings
             }
             else
             {
-                using (StreamReader file = File.OpenText(SettingsFileName))
-                using (JsonTextReader reader = new(file))
-                {
-                    JObject settingJson = (JObject)JToken.ReadFrom(reader);
-                    CurrentSetting = settingJson.ToObject<Cs4rsaSetting>();
-                }
+                using StreamReader file = File.OpenText(SettingsFileName);
+                using JsonTextReader reader = new(file);
+                JObject settingJson = (JObject)JToken.ReadFrom(reader);
+                CurrentSetting = settingJson.ToObject<Cs4rsaSetting>();
             }
         }
 

@@ -95,7 +95,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             SubjectCode = classGroup.SubjectCode;
             HaveSchedule = IsHaveSchedule();
             Color = colorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
-            IsSpecialClassGroup = classGroup.IsSpecialClassGroup;
             IsBelongSpecialSubject = isBelongSpecialSubject;
 
             if (classGroup.SchoolClasses.Count > 0)
@@ -109,13 +108,33 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                 RegistrationType = classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
                 CompulsoryClass = GetCompulsoryClass();
+                IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
                 if (classGroup.SchoolClasses.Count == 1)
                 {
                     _currentSchoolClassName = classGroup.SchoolClasses[0].SchoolClassName;
+                    CodeSchoolClass = CompulsoryClass;
                 }
-
-                
+                else if (classGroup.SchoolClasses.Count >= 2)
+                {
+                    if (!IsSpecialClassGroup)
+                    {
+                        SchoolClass schoolClass = classGroup.SchoolClasses
+                            .Where(sc => !string.IsNullOrEmpty(sc.RegisterCode))
+                            .FirstOrDefault();
+                        if (schoolClass != null)
+                        {
+                            CodeSchoolClass = new SchoolClassModel(schoolClass);
+                        }
+                    }
+                }
             }
+        }
+
+        public bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
+        {
+            return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
+                .Distinct()
+                .Count() >= 2;
         }
 
         public IEnumerable<TeacherModel> GetTeacherModels()

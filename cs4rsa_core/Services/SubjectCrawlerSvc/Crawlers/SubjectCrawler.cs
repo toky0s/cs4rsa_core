@@ -40,7 +40,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
             _htmlWeb = htmlWeb;
         }
 
-        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache = true)
+        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache)
         {
             Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
@@ -51,18 +51,38 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                Subject subject = await Crawl(keyword.CourseId);
+                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={keyword.CourseId}&semesterid={semesterId}&timespan={semesterId}";
+                HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
                 await SaveCache(keyword.KeywordId, subject.RawSoup);
                 return subject;
             }
         }
 
-        public async Task<Subject> Crawl(int courseId, bool isUseCache = true)
+        public async Task<Subject> Crawl(int courseId, bool isUseCache)
         {
-            string semesterId = _courseCrawler.GetCurrentSemesterValue();
-            string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
-            return await Crawl(htmlDocument, courseId);
+            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(courseId);
+            if (keyword == null)
+            {
+                return null;
+            }
+
+            if (isUseCache && keyword.Cache != null)
+            {
+                HtmlDocument htmlDocument = new();
+                htmlDocument.LoadHtml(keyword.Cache);
+                return await Crawl(htmlDocument, keyword.CourseId);
+            }
+            else
+            {
+                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
+                HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
+                await SaveCache(keyword.KeywordId, subject.RawSoup);
+                return subject;
+            }
         }
 
         public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId)

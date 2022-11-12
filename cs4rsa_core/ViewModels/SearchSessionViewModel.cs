@@ -395,7 +395,7 @@ namespace cs4rsa_core.ViewModels
             await vm.LoadScheduleSession();
         }
 
-        private async Task CloseDialogAndHandleSessionManagerResult(List<UserSubject> result)
+        private async Task CloseDialogAndHandleSessionManagerResult(IEnumerable<UserSubject> result)
         {
             CloseDialog();
             if (result != null)

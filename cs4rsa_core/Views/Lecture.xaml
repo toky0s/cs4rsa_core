@@ -122,7 +122,7 @@
                                 <Image
                                     Grid.Row="0"
                                     Margin="0,0,0,10"
-                                    Source="{Binding SelectedTeacher.Path}"
+                                    Source="{Binding SelectedTeacher.Path, TargetNullValue=Null}"
                                     Stretch="UniformToFill" />
                                 <TextBlock
                                     Grid.Row="1"
@@ -167,7 +167,7 @@
                                         Margin="5,5,0,5"
                                         Command="{Binding OpenOnWebCommand}"
                                         Content="{materialDesign:PackIcon Kind=OpenInNew}"
-                                        IsEnabled="{Binding SelectedTeacher, TargetNullValue=False}"
+                                        IsEnabled="{Binding SelectedTeacher, TargetNullValue=False, Converter={StaticResource NullVisibilityConverter}}"
                                         ToolTip="Mở trong trình duyệt" />
                                     <Button
                                         Margin="5,5,0,5"

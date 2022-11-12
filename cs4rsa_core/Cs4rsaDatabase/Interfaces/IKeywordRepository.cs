@@ -9,6 +9,11 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
     {
         int GetCourseId(string subjectCode);
         Task<Keyword> GetKeyword(string discipline, string keyword1);
+
+        /// <summary>
+        /// Get Keyword bằng Course ID
+        /// </summary>
+        /// <param name="courseId">Course ID</param>
         Task<Keyword> GetKeyword(int courseId);
         Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);

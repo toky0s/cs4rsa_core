@@ -35,8 +35,8 @@ namespace cs4rsa_core.ViewModels
                 OnPropertyChanged();
                 if (value != null)
                 {
-                    // Nếu thuộc Special Subject và có nhiều hơn 1 mã đăng ký.
-                    if (value.IsBelongSpecialSubject && value.RegisterCodes.Count > 1)
+                    // Nếu thuộc Special Subject.
+                    if (value.IsBelongSpecialSubject)
                     {
                         OnShowDetailsSchoolClasses();
                     }
@@ -374,8 +374,8 @@ namespace cs4rsa_core.ViewModels
             {
                 ClassGroupResult classGroupResult = m.Value;
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
-                string registerCode = classGroupResult.SelectedRegisterCode;
-                classGroupModel.ReRenderScheduleRequest(registerCode);
+                string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
+                classGroupModel.ReRenderScheduleRequest(schoolClassName);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 

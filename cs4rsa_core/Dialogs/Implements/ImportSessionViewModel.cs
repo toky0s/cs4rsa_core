@@ -2,7 +2,6 @@
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Utils;
 using MaterialDesignThemes.Wpf;
 using CommunityToolkit.Mvvm.Input;
@@ -15,6 +14,8 @@ using System.Windows;
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using System.Linq;
+using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -22,7 +23,7 @@ namespace cs4rsa_core.Dialogs.Implements
     {
         #region Properties
         public ObservableCollection<Session> ScheduleSessions { get; set; }
-        public ObservableCollection<SessionDetail> ScheduleSessionDetails { get; set; }
+        public ObservableCollection<UserSubject> UserSubjects { get; set; }
 
         private Session _selectedScheduleSession;
         public Session SelectedScheduleSession
@@ -32,7 +33,7 @@ namespace cs4rsa_core.Dialogs.Implements
             {
                 _selectedScheduleSession = value;
                 OnPropertyChanged();
-                LoadScheduleSessionDetail(value);
+                LoadUserSubject(value);
                 CheckIsAvailableSession(value);
                 ImportCommand.NotifyCanExecuteChanged();
                 DeleteCommand.NotifyCanExecuteChanged();
@@ -50,8 +51,6 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        public string ShareString { get; set; }
-
         private int _isAvailableSession;
         public int IsAvailableSession
         {
@@ -62,22 +61,23 @@ namespace cs4rsa_core.Dialogs.Implements
                 OnPropertyChanged();
             }
         }
+
+        public string ShareString { get; set; }
+
         #endregion
 
         #region Commands
         public AsyncRelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
-        public AsyncRelayCommand ShareStringCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
         #endregion
 
         #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        private readonly SessionExtension _sessionExtension;
         private readonly IMessageBox _messageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        private readonly ShareString _shareString;
+        private readonly ShareString _shareStringHelper;
         #endregion
 
         public ImportSessionViewModel(
@@ -85,35 +85,61 @@ namespace cs4rsa_core.Dialogs.Implements
             ICourseCrawler courseCrawler,
             IMessageBox messageBox, 
             ISnackbarMessageQueue snackbarMessageQueue,
-            SessionExtension sessionExtension,
             ShareString shareString)
         {
             _messageBox = messageBox;
-            _sessionExtension = sessionExtension;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
-            _shareString = shareString;
+            _shareStringHelper = shareString;
 
             ScheduleSessions = new();
-            ScheduleSessionDetails = new();
+            UserSubjects = new();
             _isAvailableSession = -1;
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
-            ShareStringCommand = new AsyncRelayCommand(OnParseShareString);
             ImportCommand = new RelayCommand(OnImport, CanImport);
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
-        private void LoadScheduleSessionDetail(Session value)
+        public void OnCopyRegisterCode(string registerCode)
         {
-            if (value != null)
+            Clipboard.SetText(registerCode);
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + " " + registerCode);
+        }
+
+        private void LoadUserSubject(Session session)
+        {
+            if (session != null)
             {
-                ScheduleSessionDetails.Clear();
-                IEnumerable<SessionDetail> details = _unitOfWork.Sessions.GetSessionDetails(value.SessionId);
-                foreach (SessionDetail item in details)
+                UserSubjects.Clear();
+                IEnumerable<UserSubject> userSubjects = _unitOfWork.Sessions
+                    .GetSessionDetails(session.SessionId)
+                    .Select(sd => new UserSubject()
+                            {
+                                SubjectCode = sd.SubjectCode,
+                                SubjectName = sd.SubjectName,
+                                ClassGroup = sd.ClassGroup,
+                                SchoolClass = sd.SelectedSchoolClass,
+                                RegisterCode = sd.RegisterCode
+                            }
+                    );
+
+                foreach (UserSubject userSubject in userSubjects) 
+                    UserSubjects.Add(userSubject);
+            }
+        }
+
+        internal void LoadShareString(string shareString)
+        {
+            UserSubjects.Clear();
+            if (!string.IsNullOrEmpty(shareString))
+            {
+                IEnumerable<UserSubject> userSubjects = _shareStringHelper.GetSubjectFromShareString(shareString);
+                if (userSubjects != null)
                 {
-                    ScheduleSessionDetails.Add(item);
+                    foreach (UserSubject userSubject in userSubjects)
+                        UserSubjects.Add(userSubject);
                 }
             }
         }
@@ -135,27 +161,9 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private async Task OnParseShareString()
-        {
-            List<UserSubject> result = await _shareString.GetSubjectFromShareString(ShareString);
-            if (result != null)
-            {
-                CloseDialog();
-                Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(result));
-            }
-            else
-            {
-                ShareString = "";
-            }
-        }
-
         private bool CanImport()
         {
-            if (_selectedScheduleSession != null && _sessionExtension.IsValid(_selectedScheduleSession))
-            {
-                return true;
-            }
-            return false;
+            return UserSubjects.Any();
         }
 
         private bool CanDelete()
@@ -166,6 +174,7 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task LoadScheduleSession()
         {
             ScheduleSessions.Clear();
+            UserSubjects.Clear();
             IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
             foreach (Session session in sessions)
             {
@@ -175,20 +184,8 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private void OnImport()
         {
-            List<UserSubject> subjectInfoDatas = new();
-            foreach (SessionDetail item in ScheduleSessionDetails)
-            {
-                UserSubject data = new()
-                {
-                    SubjectCode = item.SubjectCode,
-                    ClassGroup = item.ClassGroup,
-                    SubjectName = item.SubjectName,
-                    RegisterCode = item.RegisterCode
-                };
-                subjectInfoDatas.Add(data);
-            }
             CloseDialog();
-            Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(subjectInfoDatas));
+            Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(UserSubjects));
         }
 
         private async Task OnDelete()
@@ -211,7 +208,7 @@ namespace cs4rsa_core.Dialogs.Implements
         private async Task Reload()
         {
             ScheduleSessions.Clear();
-            ScheduleSessionDetails.Clear();
+            UserSubjects.Clear();
             await LoadScheduleSession();
         }
     }

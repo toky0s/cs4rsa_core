@@ -73,20 +73,20 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
 
         public string GetMustStudySubjectsAsString()
         {
-            if (_subject.MustStudySubject.Count() == 0)
+            if (_subject.MustStudySubject.Any())
             {
-                return "Không có môn tiên quyết";
+                return string.Join(", ", _subject.MustStudySubject);
             }
-            return string.Join(", ", _subject.MustStudySubject);
+            return "Không có môn tiên quyết";
         }
 
         public string GetParallelSubjectsAsString()
         {
-            if (_subject.ParallelSubject.Count() == 0)
+            if (_subject.ParallelSubject.Any())
             {
-                return "Không có môn song hành";
+                return string.Join(", ", _subject.ParallelSubject);
             }
-            return string.Join(", ", _subject.ParallelSubject);
+            return "Không có môn song hành";
         }
     }
 }
