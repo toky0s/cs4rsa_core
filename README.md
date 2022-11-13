@@ -8,7 +8,9 @@ Phiên bản 2.2.x
 - 👓 Tăng tốc xử lý.
 - 🔍 Giờ đây bạn có thể kéo thả url môn học từ course vào phần Search của xếp lịch tự động để tìm kiếm nhanh.
 - 👩‍🏫 Màn hình quản lý giảng viên cào được.
-- 🐛 Fix một vài bug nghiêm trọng.
+- 🐛 Fix một vài bug nghiêm trọng liên quan đến Special Subject.
+- 🧪 Cải thiện giao diện import bộ lịch đã sắp xếp.
+
 
 Phiên bản 2.1.x (là phiên bản cuối cùng 🐧)
 - ⚔ Fix một xí về giao diện
