@@ -81,5 +81,10 @@ namespace cs4rsa_core.Views
         {
             CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
         }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            await (DataContext as AutoScheduleViewModel).LoadStudents();
+        }
     }
 }

@@ -37,6 +37,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
         #region DI
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
+        #endregion
 
         public StudentProgramCrawler(
             IUnitOfWork unitOfWork,
@@ -46,7 +47,6 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
             _unitOfWork = unitOfWork;
             _preParSubjectCrawler = preParSubjectCrawler;
         }
-        #endregion
 
         /// <summary>
         /// Set thông tin trước khi thực hiện lấy chương trình học.
@@ -67,7 +67,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
         )
         {
             string url = LoadChuongTrinhHocEachPart(specialString, t, nodeName, curid);
-            HtmlNodeCollection allNodes = await GetAllTrTag(url, nodeName, isUseCache: true);
+            HtmlNodeCollection allNodes = await GetAllTrTag(url, nodeName, true);
             GetFileAnhFolderNodes(allNodes);
             ProgramFolders = GetProgramFolders(_folderNodes);
             ProgramSubjects = await GetProgramSubjects(_fileNodes);

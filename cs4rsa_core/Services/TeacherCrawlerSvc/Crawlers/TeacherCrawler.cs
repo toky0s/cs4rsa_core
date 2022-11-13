@@ -31,7 +31,7 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
         #endregion
 
         public TeacherCrawler(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             IFolderManager folderManager,
             HtmlWeb htmlWeb)
         {

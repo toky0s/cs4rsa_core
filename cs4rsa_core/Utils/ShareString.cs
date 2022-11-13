@@ -1,11 +1,8 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
-using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,76 +20,72 @@ namespace cs4rsa_core.Utils
     {
         #region DI
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ShareString(
-            IUnitOfWork unitOfWork, 
-            ICourseCrawler courseCrawler,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public ShareString(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _courseCrawler = courseCrawler;
-            _snackbarMessageQueue = snackbarMessageQueue;
         }
-        public string GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
+        public async Task<string> GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
             if (!classGroupModels.Any())
             {
                 return string.Empty;
             }
-            IEnumerable<string> SubjectHasses = classGroupModels.Select(item => SubjectCodeVsRegisterCode(item));
-            string SubjectHassesJoin = string.Join("?", SubjectHasses);
-            string Count = classGroupModels.Count().ToString();
-            string currentYear = _courseCrawler.GetCurrentYearValue();
-            string currentSemester = _courseCrawler.GetCurrentSemesterValue();
-            string raw = $"cs4rsa!{currentYear}!{currentSemester}!{Count}!{SubjectHassesJoin}".Replace(' ', '$');
-            return StringHelper.EncodeTo64(raw);
+
+            IEnumerable<UserSubject> userSubjects = await ConvertToUserSubjects(classGroupModels);
+            string json = JsonConvert.SerializeObject(userSubjects);
+            return StringHelper.EncodeTo64(json);
         }
 
-        public async Task<SessionManagerResult> GetSubjectFromShareString(string shareString)
+        public static IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
         {
             try
             {
-                shareString = StringHelper.DecodeFrom64(shareString);
-                string[] shareStringSlices = shareString.Split(new char[] { '!' });
-
-                string subjectHasses = shareStringSlices[4].Replace('$', ' ');
-                string[] subjectHassesSlices = subjectHasses.Split(new char[] { '?' });
-                List<SubjectInfoData> subjectInfoDatas = new();
-                foreach (string item in subjectHassesSlices)
-                {
-                    string[] infoes = item.Split(new char[] { '|' });
-                    string subjectCode = infoes[0]; 
-                    string classGroupName = infoes[1];
-                    string registerCode = infoes[2];
-
-                    string discipline = subjectCode.Split(new char[] { ' ' })[0];
-                    string keyword1 = subjectCode.Split(new char[] { ' ' })[1];
-                    Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
-                    string subjectName = keyword.SubjectName;
-                    SubjectInfoData subjectInfoData = new()
-                    {
-                        SubjectCode = subjectCode,
-                        ClassGroup = classGroupName,
-                        SubjectName = subjectName,
-                        RegisterCode = registerCode
-                    };
-                    subjectInfoDatas.Add(subjectInfoData);
-                }
-                return new SessionManagerResult(subjectInfoDatas);
+                string json = StringHelper.DecodeFrom64(shareString);
+                return JsonConvert.DeserializeObject<IEnumerable<UserSubject>>(json);
             }
             catch
             {
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_INVALID_SHARESTRING);
                 return null;
             }
         }
 
-        private static string SubjectCodeVsRegisterCode(ClassGroupModel classGroupModel)
+        public async Task<IEnumerable<UserSubject>> ConvertToUserSubjects(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            return classGroupModel.SubjectCode + "|" + classGroupModel.Name + "|" + classGroupModel.CurrentRegisterCode;
+            List<UserSubject> userSubjects = new();
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            {
+                string selectedSchoolClassName;
+                string registerCode;
+                if (classGroupModel.IsSpecialClassGroup)
+                {
+                    selectedSchoolClassName = classGroupModel.UserSelectedSchoolClass.SchoolClassName;
+                    registerCode = string.IsNullOrEmpty(classGroupModel.UserSelectedSchoolClass.RegisterCode)
+                                 ? string.Empty
+                                 : classGroupModel.UserSelectedSchoolClass.RegisterCode;
+                }
+                else
+                {
+                    selectedSchoolClassName = classGroupModel.CodeSchoolClass.SchoolClassName;
+                    registerCode = string.IsNullOrEmpty(classGroupModel.CompulsoryClass.RegisterCode)
+                       ? string.IsNullOrEmpty(classGroupModel.CodeSchoolClass.RegisterCode)
+                           ? string.Empty
+                           : classGroupModel.CodeSchoolClass.RegisterCode
+                       : classGroupModel.CompulsoryClass.RegisterCode;
+                }
+
+                UserSubject userSubject = new()
+                {
+                    SubjectCode = classGroupModel.SubjectCode,
+                    SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
+                    ClassGroup = classGroupModel.ClassGroup.Name,
+                    SchoolClass = selectedSchoolClassName,
+                    RegisterCode = registerCode
+                };
+                userSubjects.Add(userSubject);
+            }
+            return userSubjects;
         }
     }
 }

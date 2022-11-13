@@ -1,5 +1,4 @@
 ﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Constants;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
@@ -40,7 +39,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         /// chấp nhận một xung đột vị trí giữa hai nơi học.</param>
         /// <returns></returns>
         public static IEnumerable<PlaceAdjacent> GetPlaceAdjacents(
-            IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs, 
+            IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs,
             TimeSpan timeDelta)
         {
             foreach (Tuple<PlaceMap, PlaceMap> placeMapTuple in placeMapPairs)
@@ -58,8 +57,8 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         }
 
         private static PlaceAdjacent GetPlaceAdjacent(
-            PlaceMap placeMap1, 
-            PlaceMap placeMap2, 
+            PlaceMap placeMap1,
+            PlaceMap placeMap2,
             TimeSpan timeDelta)
         {
             List<PlaceMap> placeMaps = new() { placeMap1, placeMap2 };
@@ -101,8 +100,9 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         {
             foreach (Tuple<Place, Place> exclude in Constants.Constants.EXCLUDED_CONFLICT_PLACES)
             {
-                if ((place1 == exclude.Item1 && place2 == exclude.Item2) 
-                || (place1 == exclude.Item2 && place2 == exclude.Item1)) {
+                if ((place1 == exclude.Item1 && place2 == exclude.Item2)
+                || (place1 == exclude.Item2 && place2 == exclude.Item1))
+                {
                     return true;
                 }
             }

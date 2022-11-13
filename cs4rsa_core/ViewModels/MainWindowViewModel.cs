@@ -1,10 +1,12 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Messages.Publishers;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModels
 {

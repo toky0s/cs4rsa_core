@@ -19,7 +19,7 @@ namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
         private readonly HtmlWeb _htmlWeb;
 
         public DtuStudentInfoCrawler(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             ICurriculumCrawler curriculumCrawler,
             HtmlWeb htmlWeb)
         {

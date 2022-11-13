@@ -11,6 +11,7 @@ using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers;
@@ -30,6 +31,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.IO;
 using System.Windows;
 
 namespace cs4rsa_core
@@ -51,11 +53,11 @@ namespace cs4rsa_core
                 setting.CurrentSetting.IsDatabaseCreated = "true";
                 setting.Save();
             }
-        }
 
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show(e.Exception.Message, "Exception Caught", MessageBoxButton.OK, MessageBoxImage.Error);
+            // Create folders
+            IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
+            string studentPlansPath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS);
+            folderManager.CreateFolderIfNotExists(studentPlansPath);
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -78,8 +80,10 @@ namespace cs4rsa_core
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
             services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
-            services.AddSingleton<ProgramDiagramCrawler>();
+            services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();
             services.AddSingleton<DisciplineCrawler>();
+            services.AddSingleton<ProgramDiagramCrawler>();
+
             services.AddTransient<StudentProgramCrawler>();
 
             services.AddSingleton<ShareString>();

@@ -46,8 +46,8 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
                     conflictTimes.Add(DayOfWeek, studyTimeIntersects);
                 }
             }
-            return conflictTimes.Count != 0 
-                ? new ConflictTime(conflictTimes) 
+            return conflictTimes.Count != 0
+                ? new ConflictTime(conflictTimes)
                 : ConflictTime.NullInstance;
         }
     }

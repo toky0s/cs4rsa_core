@@ -33,9 +33,14 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         }
 
         /**
+         * FIXME: Xem lại chiến lược xác định giai đoạn học 
+         * và phát hiện xung đột thời gian.
+         * 
          * Mô tả:
          *      Phân tích tuần bắt đầu và tuần kết thúc để xác định 
          *      được giai đoạn 1, giai đoạn 2 hay là cả hai giai đoạn.
+         *      
+         *      Tham khảo: http://pdaotao.duytan.edu.vn/quydinh_detail/?id=7&lang=VN#:~:text=M%E1%BB%99t%20n%C4%83m%20h%E1%BB%8Dc%20c%C3%B3%20hai%20h%E1%BB%8Dc%20k%E1%BB%B3%20ch%C3%ADnh%2C%20m%E1%BB%97i%20h%E1%BB%8Dc%20k%E1%BB%B3%20ch%C3%ADnh%20c%C3%B3%20%C3%ADt%20nh%E1%BA%A5t%2015%20tu%E1%BA%A7n%20th%E1%BB%B1c%20h%E1%BB%8Dc%20v%C3%A0%203%20tu%E1%BA%A7n%20thi.
          *  
          *  
          * Trả về:
@@ -58,7 +63,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             {
                 return Phase.All;
             }
-            else if  (
+            else if (
                 (StartWeek >= 8 || StartWeek >= 34)
                 && isOnePhaseDelta
             )

@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:cs4rsa_core.ViewModels"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    x:Name="MainWd"
     Title="{Binding AppName, Mode=OneTime}"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
@@ -19,8 +20,7 @@
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d"
-    x:Name="MainWd">
+    mc:Ignorable="d">
     <Window.Resources>
         <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -51,7 +51,7 @@
                         </Grid.RowDefinitions>
                         <ToggleButton
                             Grid.Row="0"
-                            Margin="0,16,10,16"
+                            Margin="0,15,10,14"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
@@ -243,15 +243,13 @@
                         </DockPanel>
                     </materialDesign:ColorZone>
                     <Grid Grid.Row="1">
-                        <materialDesign:Transitioner 
-                            x:Name="Transitioner"
-                            SelectedIndex="{Binding SelectedIndex}">
-                            <local:Home x:Name="Home"/>
-                            <local:Login x:Name="Login"/>
+                        <materialDesign:Transitioner x:Name="Transitioner" SelectedIndex="{Binding SelectedIndex}">
+                            <local:Home x:Name="Home" />
+                            <local:Login x:Name="Login" />
                             <local:MainScheduling x:Name="MainScheduling" />
-                            <local:AutoSchedule x:Name="AutoSchedule"/>
-                            <local:Lecture x:Name="Lecture"/>
-                            <local:Info x:Name="Info"/>
+                            <local:AutoSchedule x:Name="AutoSchedule" />
+                            <local:Lecture x:Name="Lecture" />
+                            <local:Info x:Name="Info" />
                             <!--<materialDesign:TransitionerSlide>
                                 <materialDesign:TransitionerSlide.BackwardWipe>
                                     <materialDesign:SlideWipe Direction="Down" />

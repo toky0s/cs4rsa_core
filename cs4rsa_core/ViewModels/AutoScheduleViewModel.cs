@@ -1,30 +1,35 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Models;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Utils;
+using cs4rsa_core.Utils.Interfaces;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -47,22 +52,31 @@ namespace cs4rsa_core.ViewModels
             set { _isCalculated = value; OnPropertyChanged(); }
         }
 
-        private Student _student;
-        public Student Student
+        private Student _selectedStudent;
+
+        public Student SelectedStudent
         {
-            get => _student;
+            get { return _selectedStudent; }
             set
             {
-                _student = value;
-                OnPropertyChanged();
+                if (value.StudentId == "0")
+                {
+                    _selectedStudent = null;
+                }
+                else
+                {
+                    _selectedStudent = value;
+                }
+                LoadProgramCommand.NotifyCanExecuteChanged();
             }
         }
+
+
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
-
+        public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
-
 
         private ProgramSubjectModel _selectedProSubject;
         public ProgramSubjectModel SelectedProSubject
@@ -144,11 +158,12 @@ namespace cs4rsa_core.ViewModels
         private List<List<ClassGroupModel>> _classGroupModelsOfClass;
         #endregion
 
-        #region Command
+        #region Commands
         public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
+        public AsyncRelayCommand LoadProgramCommand { get; set; }
 
         public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
@@ -243,12 +258,14 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         public AutoScheduleViewModel(
-            ColorGenerator colorGenerator,
-            ICourseCrawler courseCrawler,        
-            IUnitOfWork unitOfWork, 
+            ICourseCrawler courseCrawler,
+            IUnitOfWork unitOfWork,
+            ICurriculumCrawler curriculumCrawler,
+            IPreParSubjectCrawler preParSubjectCrawler,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue,
-            ProgramDiagramCrawler programDiagramCrawler
+            ProgramDiagramCrawler programDiagramCrawler,
+            ColorGenerator colorGenerator
         )
         {
             _openInBrowser = openInBrowser;
@@ -263,16 +280,19 @@ namespace cs4rsa_core.ViewModels
                 await LoadStudent(m.Value);
             });
 
-            ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
-            ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
-            CombinationModels = new ObservableCollection<CombinationModel>();
-            SubjectModels = new ObservableCollection<SubjectModel>();
-            _filteredClassGroupModels = new List<List<ClassGroupModel>>();
-            _classGroupModelsOfClass = new List<List<ClassGroupModel>>();
+            ProgramFolderModels = new();
+            ChoicedProSubjectModels = new();
+            CombinationModels = new();
+            SubjectModels = new();
+            Students = new();
+
+            _filteredClassGroupModels = new();
+            _classGroupModelsOfClass = new();
 
             ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
+            LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, CanLoadProgram);
 
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
@@ -295,6 +315,26 @@ namespace cs4rsa_core.ViewModels
             IsCalculated = false;
             _tempResult = new();
             _genIndex = 0;
+        }
+
+        private bool CanLoadProgram()
+        {
+            return _selectedStudent != null;
+        }
+
+        public async Task LoadStudents()
+        {
+            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
+            Student defaultStudent = new()
+            {
+                StudentId = "0",
+                Name = "Chọn tài khoản..."
+            };
+            Students.Add(defaultStudent);
+            foreach (Student student in students)
+            {
+                Students.Add(student);
+            }
         }
 
         private void OnValidGen()
@@ -406,8 +446,6 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Nơi triển khai bộ lọc trước khi sắp xếp
         /// </summary>
-        /// <param name="classGroupModel"></param>
-        /// <returns></returns>
         private bool Filter(ClassGroupModel classGroupModel)
         {
             bool flagIsRemoveClassGroupInValid = IsRemoveClassGroupInValid(classGroupModel);
@@ -540,14 +578,14 @@ namespace cs4rsa_core.ViewModels
 
         private async Task LoadStudent(LoginResult loginResult)
         {
-            if (loginResult != null)
-            {
-                ChoicedProSubjectModels.Clear();
-                CombinationModels.Clear();
-                SubjectModels.Clear();
-                Student = loginResult.Student;
-                await LoadProgramSubject();
-            }
+            //if (loginResult != null)
+            //{
+            //    ChoicedProSubjectModels.Clear();
+            //    CombinationModels.Clear();
+            //    SubjectModels.Clear();
+            //    Student = loginResult.Student;
+            //    await LoadProgramSubject();
+            //}
         }
 
         private bool CanDeleteAll()
@@ -563,7 +601,7 @@ namespace cs4rsa_core.ViewModels
             _classGroupModelsOfClass.Clear();
             _filteredClassGroupModels.Clear();
             _tempResult.Clear();
-            
+
             _genIndex = 0;
             IsCalculated = false;
 
@@ -576,7 +614,7 @@ namespace cs4rsa_core.ViewModels
         {
             IsFinding = true;
             ProgramFolderModels.Clear();
-            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram("", _student.SpecialString, Student.StudentId);
+            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram("", _selectedStudent.SpecialString, _selectedStudent.StudentId);
             
             foreach (ProgramFolder folder in folders) {
                 await AddProgramFolder(folder);

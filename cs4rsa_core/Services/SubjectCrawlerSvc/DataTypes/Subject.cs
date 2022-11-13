@@ -171,7 +171,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
          */
         private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
-            if(!trTagClassLop.HasChildNodes)
+            if (!trTagClassLop.HasChildNodes)
             {
                 return null;
             }
@@ -383,7 +383,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        ITeacherCrawler teacherCrawler, 
+                        ITeacherCrawler teacherCrawler,
                         HtmlWeb htmlWeb)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,

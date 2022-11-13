@@ -109,10 +109,10 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
         public async Task<string> GetSubjectCode(int courseId)
         {
             var result = await (from dis in _context.Disciplines
-                                     join kw in _context.Keywords
-                                     on new { jprop1 = dis.DisciplineId, jprop2 = courseId,}
-                                     equals new { jprop1 = kw.DisciplineId, jprop2 = kw.CourseId,}
-                                     select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
+                                join kw in _context.Keywords
+                                on new { jprop1 = dis.DisciplineId, jprop2 = courseId, }
+                                equals new { jprop1 = kw.DisciplineId, jprop2 = kw.CourseId, }
+                                select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
             return result.Name + " " + result.Keyword1;
         }
     }

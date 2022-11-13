@@ -3,7 +3,6 @@
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace cs4rsa_core.Messages.Publishers
@@ -60,7 +59,7 @@ namespace cs4rsa_core.Messages.Publishers
             {
             }
         }
-        
+
         /// <summary>
         /// Select danh sách các ClassGroupModel
         /// </summary>

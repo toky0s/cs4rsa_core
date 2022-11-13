@@ -2,6 +2,9 @@
 using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Cs4rsaDatabase.Models;
 
+using Microsoft.EntityFrameworkCore;
+
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Cs4rsaDatabase.Implements
@@ -10,6 +13,13 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
     {
         public StudentRepository(Cs4rsaDbContext context) : base(context)
         {
+        }
+
+        public async Task<Student> GetBySpecialStringAsync(string specialString)
+        {
+            return await _context.Set<Student>()
+                .Where(st => st.SpecialString.Equals(specialString))
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Student> GetByStudentIdAsync(string id)

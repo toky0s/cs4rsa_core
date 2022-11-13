@@ -30,7 +30,7 @@
                 Style="{StaticResource MaterialDesignBody2TextBlock}"
                 Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text="{Binding ClassGroupModel.Name, StringFormat='{}{0} ', Mode=OneWay}" />
+                <TextBlock Text="{Binding ClassGroupModel.Name, StringFormat='{}{0} '}" />
                 <TextBlock FontWeight="Bold" Text="{Binding ClassGroupModel.CompulsoryClass.Type.Code, StringFormat='{}{0} '}" />
                 <TextBlock Text="{Binding SelectedSchoolClassModel.SchoolClassName, StringFormat='{}+ {0} '}" />
                 <TextBlock FontWeight="Bold" Text="{Binding SelectedSchoolClassModel.Type.Code, StringFormat='{}{0} '}" />

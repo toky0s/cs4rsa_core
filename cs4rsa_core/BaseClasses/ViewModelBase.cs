@@ -1,8 +1,9 @@
-﻿using cs4rsa_core.ViewModels;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
 using cs4rsa_core.Constants;
+using cs4rsa_core.ViewModels;
+
+using System.Windows;
 
 namespace cs4rsa_core.BaseClasses
 {

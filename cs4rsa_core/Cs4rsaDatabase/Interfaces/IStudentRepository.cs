@@ -7,5 +7,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
     public interface IStudentRepository : IGenericRepository<Student>
     {
         Task<Student> GetByStudentIdAsync(string id);
+        Task<Student> GetBySpecialStringAsync(string specialString);
     }
 }

@@ -1,14 +1,15 @@
 ﻿using cs4rsa_core.Commons.Models;
+
 using System.Windows;
 using System.Windows.Controls;
 
 namespace cs4rsa_core.Controls
 {
-    public class DayPanel: Panel
+    public class DayPanel : Panel
     {
-        private static double _unitHeight;
-        private static double _startPoint;
-        
+        private double _unitHeight;
+        private double _startPoint;
+
         protected override Size MeasureOverride(Size availableSize)
         {
             _unitHeight = availableSize.Height / Utils.TIME_LINES.Length;
@@ -24,7 +25,7 @@ namespace cs4rsa_core.Controls
 
             return availableSize;
         }
-        
+
         protected override Size ArrangeOverride(Size finalSize)
         {
             foreach (ContentPresenter child in Children)

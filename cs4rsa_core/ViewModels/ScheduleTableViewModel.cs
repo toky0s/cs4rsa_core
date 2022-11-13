@@ -1,17 +1,19 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Commons.Interfaces;
+using cs4rsa_core.Commons.Models;
 using cs4rsa_core.Messages.Publishers;
-using CommunityToolkit.Mvvm.Messaging;
+using cs4rsa_core.Services.ConflictSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using System.Windows;
 using System.Threading.Tasks;
-using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Commons.Interfaces;
+using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -131,7 +133,7 @@ namespace cs4rsa_core.ViewModels
                     schoolClassModels = classGroupModel
                     .CurrentSchoolClassModels
                     .Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
-                } 
+                }
                 else
                 {
                     schoolClassModels = classGroupModel
@@ -139,12 +141,12 @@ namespace cs4rsa_core.ViewModels
                     .SchoolClasses
                     .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
                 }
-                
+
 
                 foreach (SchoolClassModel schoolClassModel in schoolClassModels)
                 {
                     AddScheduleItem(schoolClassModel);
-                } 
+                }
             }
         }
 

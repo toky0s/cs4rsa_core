@@ -15,15 +15,12 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
     /// </summary>
     public class ProgramDiagramCrawler
     {
-        private readonly ICurriculumCrawler _curriculumCrawler;
         private readonly IUnitOfWork _unitOfWork;
 
         public ProgramDiagramCrawler(
-            ICurriculumCrawler curriculumCrawler,
             IUnitOfWork unitOfWork
         )
         {
-            _curriculumCrawler = curriculumCrawler;
             _unitOfWork = unitOfWork;
         }
 
@@ -37,8 +34,8 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
             _unitOfWork.PreParSubjects.RemoveRange(await _unitOfWork.PreParSubjects.GetAllAsync());
             #endregion
 
-            Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
-            int curid = curriculum.CurriculumId;
+            Student student = await _unitOfWork.Students.GetBySpecialStringAsync(specialString);
+            int curid = student.CurriculumId;
             string t = Helpers.GetTimeFromEpoch();
 
             StudentProgramCrawler.SetInfor(sessionId, studentId);

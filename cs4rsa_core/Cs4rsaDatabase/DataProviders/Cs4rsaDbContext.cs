@@ -15,15 +15,14 @@ namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<SessionDetail> SessionDetails { get; set; }
+        public DbSet<UserSchedule> Sessions { get; set; }
+        public DbSet<ScheduleDetail> SessionDetails { get; set; }
         public DbSet<Curriculum> Curriculums { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<ProgramSubject> ProgramSubjects { get; set; }
         public DbSet<PreParSubject> PreParSubjects { get; set; }
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
-        public DbSet<SessionSchoolClass> SessionSchoolClasses { get; set; }
         public DbSet<KeywordTeacher> KeywordTeachers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -39,14 +38,9 @@ namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
             .WithMany(d => d.Keywords)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SessionDetail>()
-                .HasOne(sessionDetail => sessionDetail.Session)
+            modelBuilder.Entity<ScheduleDetail>()
+                .HasOne(sessionDetail => sessionDetail.UserSchedule)
                 .WithMany(session => session.SessionDetails)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<SessionSchoolClass>()
-                .HasOne(sessionSchoolClass => sessionSchoolClass.SessionDetail)
-                .WithMany(sessionDetail => sessionDetail.SessionSchoolClasses)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Keyword>()

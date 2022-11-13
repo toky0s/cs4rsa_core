@@ -1,6 +1,3 @@
-using cs4rsa_core.Constants;
-
-using System;
 using System.Linq;
 
 namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
@@ -42,28 +39,19 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
             SES,SLF,STD,SUP,TUT,VOL,WOR
         };
 
-        private readonly string _code;
-        public string Code { get => _code; }
-
-        private readonly string _fullEn;
-        public string FullEn { get => _fullEn; }
-
-        private readonly string _fullVn;
-        public string FullVn { get => _fullVn; }
-
-        private readonly string _description;
-        public string Description { get => _description; }
-
-        private readonly string[] _patterns;
-        public string[] Patterns { get => _patterns; }
+        public string Code { get; set; }
+        public readonly string FullEn;
+        public readonly string FullVn;
+        public readonly string Description;
+        public readonly string[] Patterns;
 
         private ClassForm(string code, string fullEn, string fullVn, string description, params string[] patterns)
         {
-            _code = code;
-            _fullEn = fullEn;
-            _fullVn = fullVn;
-            _description = description;
-            _patterns = patterns;
+            Code = code;
+            FullEn = fullEn;
+            FullVn = fullVn;
+            Description = description;
+            Patterns = patterns;
         }
 
         public static bool operator ==(ClassForm left, ClassForm right)
@@ -94,7 +82,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
 
         public override int GetHashCode()
         {
-            return _code.GetHashCode();
+            return Code.GetHashCode();
         }
 
         public static ClassForm[] GetClassForms()
@@ -104,7 +92,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
 
         public override string ToString()
         {
-            return _code;
+            return Code;
         }
 
         public static ClassForm Find(string code)
@@ -113,9 +101,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
             foreach (ClassForm classForm in _classForms)
             {
                 if (classForm.Code.ToLower() == code
-                    || classForm._fullEn.ToLower() == code
-                    || classForm._fullVn.ToLower() == code
-                    || classForm._patterns.ToList().Contains(code))
+                    || classForm.FullEn.ToLower() == code
+                    || classForm.FullVn.ToLower() == code
+                    || classForm.Patterns.ToList().Contains(code))
                 {
                     return classForm;
                 }

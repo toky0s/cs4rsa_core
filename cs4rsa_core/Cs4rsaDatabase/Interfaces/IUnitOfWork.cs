@@ -9,14 +9,13 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
         ICurriculumRepository Curriculums { get; }
         IDisciplineRepository Disciplines { get; }
         IKeywordRepository Keywords { get; }
-        ISessionRepository Sessions { get; }
+        IUserScheduleRepository UserSchedule { get; }
         IStudentRepository Students { get; }
         ITeacherRepository Teachers { get; }
         IProgramSubjectRepository ProgramSubjects { get; }
         IPreParSubjectRepository PreParSubjects { get; }
         IPreProDetailsRepository PreProDetails { get; }
         IParProDetailsRepository ParProDetails { get; }
-        ISessionSchoolClassRepository SessionSchoolClasses { get; }
         IKeywordTeacherRepository KeywordTeachers { get; }
         int Complete();
         Task<int> CompleteAsync();
