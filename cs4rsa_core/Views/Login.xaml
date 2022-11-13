@@ -147,7 +147,7 @@
                 Grid.Column="1"
                 Width="100"
                 Command="{Binding FindCommand}"
-                Content="Tìm kiếm"
+                Content="TÌM KIẾM"
                 IsEnabled="{Binding ElementName=SessionIdTextBlock, Path=Text.Length}" />
         </Grid>
 

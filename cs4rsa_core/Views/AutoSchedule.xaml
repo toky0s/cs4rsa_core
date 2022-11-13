@@ -758,7 +758,7 @@
                 <Button
                     Grid.Row="2"
                     Command="{Binding ValidGenCommand}"
-                    Content="Tạo bộ lịch"
+                    Content="TẠO BỘ LỊCH"
                     IsEnabled="{Binding IsCalculated}" />
             </Grid>
         </Grid>

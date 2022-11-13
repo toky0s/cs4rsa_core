@@ -21,7 +21,6 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
                 return ConflictTime.NullInstance;
             }
 
-
             Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
             Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
             IEnumerable<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
