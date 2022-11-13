@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace cs4rsa_core.Cs4rsaDatabase.Models
+﻿namespace cs4rsa_core.Cs4rsaDatabase.Models
 {
     /// <summary>
     /// Thông tin chi tiết về bộ lịch đã lưu.
     ///     
-    ///     SessionDetailId:        ID
+    ///     ScheduleDetailId:        ID
     ///     UserScheduleId:              UserSchedule ID
     /// 
     ///     SubjectCode:            Mã môn (không cần thiết - có thể tính toán)
@@ -16,7 +14,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Models
     /// </summary>
     public class ScheduleDetail
     {
-        public int SessionDetailId { get; set; }
+        public int ScheduleDetailId { get; set; }
         public string SubjectCode { get; set; }
         public string SubjectName { get; set; }
         public string ClassGroup { get; set; }

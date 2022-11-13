@@ -1,12 +1,13 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Settings.Interfaces;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Constants;
+using cs4rsa_core.Settings.Interfaces;
 using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
@@ -65,8 +66,8 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         public HomeViewModel(
-            ICourseCrawler courseCrawler, 
-            ISetting setting, 
+            ICourseCrawler courseCrawler,
+            ISetting setting,
             IOpenInBrowser openInBrowser
         )
         {
@@ -121,7 +122,7 @@ namespace cs4rsa_core.ViewModels
 
         public void LoadIsNewSemester()
         {
-            IsNewSemester = _setting.CurrentSetting.CurrentSemesterValue != _currentSemesterValue 
+            IsNewSemester = _setting.CurrentSetting.CurrentSemesterValue != _currentSemesterValue
                 || _setting.CurrentSetting.CurrentYearValue != _currentYearValue;
         }
     }

@@ -1,8 +1,6 @@
 ﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 using cs4rsa_core.Utils;
@@ -21,8 +19,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 {
     public class Subject
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IFolderManager _folderManager;
         private readonly ITeacherCrawler _teacherCrawler;
         private readonly HtmlWeb _htmlWeb;
 
@@ -30,7 +26,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private readonly string _studyUnitType;
         private readonly string _studyType;
         private readonly string _semester;
-
         private readonly string _rawSoup;
         public string RawSoup { get => _rawSoup; }
 
@@ -57,13 +52,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        IUnitOfWork unitOfWork, 
-                        IFolderManager folderManager,
                         ITeacherCrawler teacherCrawler,
                         HtmlWeb htmlWeb)
         {
-            _unitOfWork = unitOfWork;
-            _folderManager = folderManager;
             _teacherCrawler = teacherCrawler;
             _htmlWeb = htmlWeb;
 
@@ -152,7 +143,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         private async Task<IEnumerable<SchoolClass>> GetSchoolClasses()
         {
-            List<SchoolClass> schoolClasses = new List<SchoolClass>();
+            List<SchoolClass> schoolClasses = new();
             foreach (HtmlNode trTag in GetTrTagsWithClassLop())
             {
                 SchoolClass schoolClass = await GetSchoolClass(trTag);
@@ -161,13 +152,30 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             return schoolClasses;
         }
 
-        /// <summary>
-        /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
-        /// </summary>
-        /// <param name="trTagClassLop">Thẻ tr có class="lop".</param>
-        /// <returns><see cref="SchoolClass"/> - Lớp thành phần là con của một <seealso cref="ClassGroup"/></returns>
+        /**
+         * Mô tả:
+         *  Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
+         *  
+         * Tham số:
+         *  trTagClassLop:
+         *      Thẻ tr có class="lop"
+         * 
+         * Trả về:
+         *  SchoolClass - Lớp thành phần là con của một ClassGroup, 
+         *  sẽ trả về null nếu ClassGroup đấy không chứa bất cứ SchoolClass nào.
+         *  
+         *  Phát hiện lúc đêm  04/11/2022, TOU 151 Tổng quan du lịch, 
+         *  ClassGroup TOU 151 Q không chứa bất cứ SchoolClass nào.
+         *  
+         *  Tham khảo: https://github.com/toky0s/cs4rsa_core/issues/79
+         */
         private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
+            if (!trTagClassLop.HasChildNodes)
+            {
+                return null;
+            }
+
             HtmlNodeCollection tdTags = trTagClassLop.SelectNodes("td");
             HtmlNode aTag = tdTags[0].SelectSingleNode("a");
 
@@ -375,14 +383,12 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
-                        IUnitOfWork unitOfWork, 
-                        IFolderManager folderManager, 
-                        ITeacherCrawler teacherCrawler, 
+                        ITeacherCrawler teacherCrawler,
                         HtmlWeb htmlWeb)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, unitOfWork, folderManager, teacherCrawler, htmlWeb);
+                rawSoup, courseId, teacherCrawler, htmlWeb);
             return ret.InitializeAsync();
         }
     }

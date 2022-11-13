@@ -1,12 +1,13 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.Constants;
+using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Constants;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using System.Collections.Generic;
-using System.Linq;
+
 using System;
+using System.Collections.Generic;
 
 namespace cs4rsa_core.ViewModelFunctions
 {
@@ -31,36 +32,28 @@ namespace cs4rsa_core.ViewModelFunctions
         /// </summary>
         /// <param name="subjectModels"></param>
         /// <param name="subjectInfoDatas"></param>
-        public void Start(IEnumerable<SubjectModel> subjectModels, IEnumerable<SubjectInfoData> subjectInfoDatas)
+        public void Start(IEnumerable<SubjectModel> subjectModels, IEnumerable<UserSubject> userSubjects)
         {
-            foreach (SubjectInfoData subjectInfoData in subjectInfoDatas)
+            foreach (UserSubject userSubject in userSubjects)
             {
-                SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, subjectInfoData.SubjectCode);
-                Choose(subjectModel, subjectInfoData.ClassGroup, subjectInfoData.RegisterCode, subjectInfoData.SchoolClassName);
+                SubjectModel subjectModel = GetSubjectModelWithSubjectCode(subjectModels, userSubject.SubjectCode);
+                Choose(subjectModel, userSubject.ClassGroup, userSubject.SchoolClass);
             }
         }
 
         private void Choose(
-            SubjectModel subjectModel, 
+            SubjectModel subjectModel,
             string classGroupName,
-            string registerCode,
-            string schoolClassName
-        )
+            string schoolClass)
         {
             ClassGroupModel classGroupModel = subjectModel.GetClassGroupModelWithName(classGroupName);
-            bool isValidRegisterCode = classGroupModel.GetSchoolClassModels()
-                .Any(scm => scm.RegisterCode == registerCode); // <== Chỗ này isValidRegisterCode sẽ bằng true dùng registerCode có rỗng đi chăng nữa.
             if (classGroupModel == null)
             {
                 throw new Exception(VMConstants.EX_CLASSGROUP_MODEL_WAS_NULL);
             }
-            if (!isValidRegisterCode && !string.IsNullOrEmpty(registerCode))
-            {
-                throw new Exception(VMConstants.EX_INVALID_REGISTER_CODE);
-            }
             if (classGroupModel.IsBelongSpecialSubject)
             {
-                classGroupModel.PickSchoolClass(registerCode, schoolClassName);
+                classGroupModel.PickSchoolClass(schoolClass);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             }
             else

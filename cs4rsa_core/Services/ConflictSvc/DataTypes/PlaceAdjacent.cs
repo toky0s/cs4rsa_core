@@ -28,7 +28,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         public readonly SchoolClass SchoolClass2;
 
         public PlaceAdjacent(
-            DateTime start, DateTime end, 
+            DateTime start, DateTime end,
             Place placeStart, Place placeEnd,
             SchoolClass schoolClass1, SchoolClass schoolClass2)
         {

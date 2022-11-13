@@ -1,7 +1,10 @@
-﻿using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using System.Windows;
+﻿using CommunityToolkit.Mvvm.Input;
+
 using cs4rsa_core.BaseClasses;
+
+using MaterialDesignThemes.Wpf;
+
+using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

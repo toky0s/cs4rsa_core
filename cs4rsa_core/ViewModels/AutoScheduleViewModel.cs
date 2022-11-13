@@ -1,32 +1,35 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Models;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Utils;
+using cs4rsa_core.Utils.Interfaces;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Utils.Interfaces;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -247,10 +250,10 @@ namespace cs4rsa_core.ViewModels
 
         public AutoScheduleViewModel(
             ICourseCrawler courseCrawler,
-            ColorGenerator colorGenerator, 
-            IUnitOfWork unitOfWork, 
+            ColorGenerator colorGenerator,
+            IUnitOfWork unitOfWork,
             ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler, 
+            IPreParSubjectCrawler preParSubjectCrawler,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue
         )
@@ -567,7 +570,7 @@ namespace cs4rsa_core.ViewModels
             _classGroupModelsOfClass.Clear();
             _filteredClassGroupModels.Clear();
             _tempResult.Clear();
-            
+
             _genIndex = 0;
             IsCalculated = false;
 
@@ -588,8 +591,9 @@ namespace cs4rsa_core.ViewModels
                 , _preParSubjectCrawler
             );
             ProgramFolder[] folders = await programDiagramCrawler.ToProgramDiagram();
-            
-            foreach (ProgramFolder folder in folders) {
+
+            foreach (ProgramFolder folder in folders)
+            {
                 await AddProgramFolder(folder);
             }
 

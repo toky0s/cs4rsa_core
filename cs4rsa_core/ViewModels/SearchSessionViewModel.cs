@@ -1,4 +1,10 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
@@ -6,26 +12,23 @@ using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
 using cs4rsa_core.Models;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Utils;
+using cs4rsa_core.Utils.Interfaces;
 using cs4rsa_core.ViewModelFunctions;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Utils.Interfaces;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -93,8 +96,9 @@ namespace cs4rsa_core.ViewModels
         public FullMatchSearchingKeyword SelectedFullMatchSearchingKeyword
         {
             get { return _selectedFullMatchSearchingKeyword; }
-            set {
-                _selectedFullMatchSearchingKeyword = value; 
+            set
+            {
+                _selectedFullMatchSearchingKeyword = value;
                 OnPropertyChanged();
                 if (value != null
                     && value.Discipline.DisciplineId != 0
@@ -108,9 +112,9 @@ namespace cs4rsa_core.ViewModels
                     {
                         DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
                             async () => await OpenDownloadSubjectDialog(
-                                value.Discipline.Name, 
-                                value.Keyword.Keyword1, 
-                                courseId: VMConstants.INT_INVALID_COURSEID, 
+                                value.Discipline.Name,
+                                value.Keyword.Keyword1,
+                                courseId: VMConstants.INT_INVALID_COURSEID,
                                 IsUseCache)
                         );
                     }
@@ -190,10 +194,10 @@ namespace cs4rsa_core.ViewModels
         #endregion
 
         public SearchSessionViewModel(
-            ICourseCrawler courseCrawler, 
+            ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            ISubjectCrawler subjectCrawler, 
-            ColorGenerator colorGenerator, 
+            ISubjectCrawler subjectCrawler,
+            ColorGenerator colorGenerator,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue
         )
@@ -251,7 +255,7 @@ namespace cs4rsa_core.ViewModels
         public async Task LoadSavedSchedules()
         {
             SavedSchedules.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
             foreach (UserSchedule session in sessions)
             {
                 SavedSchedules.Add(session);
@@ -395,7 +399,7 @@ namespace cs4rsa_core.ViewModels
             await vm.LoadScheduleSession();
         }
 
-        private async Task CloseDialogAndHandleSessionManagerResult(SessionManagerResult result)
+        private async Task CloseDialogAndHandleSessionManagerResult(IEnumerable<UserSubject> result)
         {
             CloseDialog();
             if (result != null)
@@ -404,14 +408,15 @@ namespace cs4rsa_core.ViewModels
                 SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
                 OpenDialog(subjectImporterUC);
                 await vm.Run(result);
+                CloseDialog();
             }
         }
 
-        private void ExitImportSubjectMsgHandler(ImportResult importResult, SessionManagerResult sessionManagerResult)
+        private void ExitImportSubjectMsgHandler(IEnumerable<SubjectModel> subjectModels, IEnumerable<UserSubject> userSubjects)
         {
-            ImportSubjects(importResult.SubjectModels);
+            ImportSubjects(subjectModels);
             var choicer = new ClassGroupChoicer();
-            choicer.Start(importResult.SubjectModels, sessionManagerResult.SubjectInfoDatas);
+            choicer.Start(subjectModels, userSubjects);
             SelectedSubjectModel = SubjectModels[0];
         }
 
@@ -471,15 +476,15 @@ namespace cs4rsa_core.ViewModels
         {
             CanAddSubjectChange(false);
             await OpenDownloadSubjectDialog(
-                selectedDiscipline.Name, 
-                selectedKeyword.Keyword1, 
+                selectedDiscipline.Name,
+                selectedKeyword.Keyword1,
                 VMConstants.INT_INVALID_COURSEID,
                 IsUseCache);
         }
 
         private async Task OpenDownloadSubjectDialog(
-            string discipline, 
-            string keyword1, 
+            string discipline,
+            string keyword1,
             int courseId,
             bool isUseCache)
         {
@@ -500,16 +505,12 @@ namespace cs4rsa_core.ViewModels
                 vm.SubjectCode = subjectCode;
                 subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
             }
-            
+
             if (subject != null)
             {
                 List<SubjectModel> subjectModels = new();
                 SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
                 subjectModels.Add(subjectModel);
-                if (subjectModel.ClassGroupModels.Count == 1)
-                {
-                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(subjectModel.ClassGroupModels[0]));
-                }
 
                 Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> data = new(subjectModels, null);
                 AddSubjectAndReload(data);
@@ -635,11 +636,15 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void AddSubjectAndReload(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
         {
-            foreach (SubjectModel subjectModel in actionData.Item1) SubjectModels.Add(subjectModel);
+            foreach (SubjectModel subjectModel in actionData.Item1)
+            {
+                SubjectModels.Add(subjectModel);
+            }
             if (actionData.Item2 != null)
             {
                 Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(actionData.Item2));
             }
+            SelectedSubjectModel = SubjectModels[0];
             TotalSubject = SubjectModels.Count;
             CanAddSubjectChange();
             UpdateCreditTotal();

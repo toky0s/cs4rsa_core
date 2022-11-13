@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+
 using cs4rsa_core.Dialogs.DialogResults;
 
 namespace cs4rsa_core.Messages.Publishers.Dialogs

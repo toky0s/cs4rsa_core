@@ -23,7 +23,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
         public DbSet<PreParSubject> PreParSubjects { get; set; }
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
-        public DbSet<SessionSchoolClass> SessionSchoolClasses { get; set; }
         public DbSet<KeywordTeacher> KeywordTeachers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -42,11 +41,6 @@ namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
             modelBuilder.Entity<ScheduleDetail>()
                 .HasOne(sessionDetail => sessionDetail.UserSchedule)
                 .WithMany(session => session.SessionDetails)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<SessionSchoolClass>()
-                .HasOne(sessionSchoolClass => sessionSchoolClass.SessionDetail)
-                .WithMany(sessionDetail => sessionDetail.SessionSchoolClasses)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Keyword>()

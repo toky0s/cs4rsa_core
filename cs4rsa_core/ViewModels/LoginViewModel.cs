@@ -1,18 +1,21 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -52,7 +55,7 @@ namespace cs4rsa_core.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
         public LoginViewModel(
-            IMessageBox cs4rsaMessageBox, 
+            IMessageBox cs4rsaMessageBox,
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue
         )

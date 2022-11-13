@@ -1,24 +1,27 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages.Publishers;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.ModelExtensions;
+using cs4rsa_core.Services.ConflictSvc.DataTypes;
+using cs4rsa_core.Services.ConflictSvc.Models;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 using cs4rsa_core.Utils;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Constants;
-using System.Linq;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -53,11 +56,11 @@ namespace cs4rsa_core.ViewModels
 
         #region Commands
         public AsyncRelayCommand SaveCommand { get; set; }
+        public AsyncRelayCommand OpenShareStringWindowCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
         public RelayCommand SolveConflictCommand { get; set; }
-        public RelayCommand OpenShareStringWindowCommand { get; set; }
         #endregion
 
         #region Services
@@ -103,7 +106,7 @@ namespace cs4rsa_core.ViewModels
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
-            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
+            OpenShareStringWindowCommand = new AsyncRelayCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new();
             ConflictModels = new();
@@ -199,11 +202,11 @@ namespace cs4rsa_core.ViewModels
             await vm.LoadScheduleSessions();
         }
 
-        private void OnOpenShareStringWindow()
+        private async Task OnOpenShareStringWindow()
         {
             ShareStringUC shareStringUC = new();
             ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
-            UpdateShareString();
+            await UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
         }
@@ -319,9 +322,9 @@ namespace cs4rsa_core.ViewModels
             Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
-        private void UpdateShareString()
+        private async Task UpdateShareString()
         {
-            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
+            _shareString = await _shareStringGenerator.GetShareString(ClassGroupModels);
         }
 
         private void UpdateConflicts()

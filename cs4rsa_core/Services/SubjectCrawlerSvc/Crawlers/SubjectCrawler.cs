@@ -4,7 +4,6 @@ using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -17,7 +16,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
     public class SubjectCrawler : ISubjectCrawler
     {
         #region Services
-        private readonly IFolderManager _folderManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
@@ -32,19 +30,17 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
         public SubjectCrawler(
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            IFolderManager folderManager,
             ITeacherCrawler teacherCrawler,
             HtmlWeb htmlWeb
         )
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
-            _folderManager = folderManager;
             _teacherCrawler = teacherCrawler;
             _htmlWeb = htmlWeb;
         }
 
-        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache = true)
+        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache)
         {
             Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
@@ -55,18 +51,38 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                Subject subject = await Crawl(keyword.CourseId);
+                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={keyword.CourseId}&semesterid={semesterId}&timespan={semesterId}";
+                HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
                 await SaveCache(keyword.KeywordId, subject.RawSoup);
                 return subject;
             }
         }
 
-        public async Task<Subject> Crawl(int courseId, bool isUseCache = true)
+        public async Task<Subject> Crawl(int courseId, bool isUseCache)
         {
-            string semesterId = _courseCrawler.GetCurrentSemesterValue();
-            string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
-            HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
-            return await Crawl(htmlDocument, courseId);
+            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(courseId);
+            if (keyword == null)
+            {
+                return null;
+            }
+
+            if (isUseCache && keyword.Cache != null)
+            {
+                HtmlDocument htmlDocument = new();
+                htmlDocument.LoadHtml(keyword.Cache);
+                return await Crawl(htmlDocument, keyword.CourseId);
+            }
+            else
+            {
+                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
+                HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
+                await SaveCache(keyword.KeywordId, subject.RawSoup);
+                return subject;
+            }
         }
 
         public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId)
@@ -102,8 +118,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
                     description,
                     rawSoup,
                     courseId,
-                    _unitOfWork,
-                    _folderManager,
                     _teacherCrawler,
                     _htmlWeb);
             }

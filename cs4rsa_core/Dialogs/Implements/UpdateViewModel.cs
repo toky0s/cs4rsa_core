@@ -1,17 +1,19 @@
-﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Settings.Interfaces;
-using cs4rsa_core.ViewModels;
-using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System.ComponentModel;
-using System.Windows;
-using System.Threading.Tasks;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+
+using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Cs4rsaDatabase.DataProviders;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers;
+using cs4rsa_core.Settings.Interfaces;
+using cs4rsa_core.ViewModels;
+
+using MaterialDesignThemes.Wpf;
+
+using System.ComponentModel;
+using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -41,7 +43,7 @@ namespace cs4rsa_core.Dialogs.Implements
         #endregion
         public UpdateViewModel(
             IUnitOfWork unitOfWork,
-            ICourseCrawler courseCrawler, 
+            ICourseCrawler courseCrawler,
             ISetting setting,
             ISnackbarMessageQueue snackbarMessageQueue,
             Cs4rsaDbContext cs4rsaDbContext,

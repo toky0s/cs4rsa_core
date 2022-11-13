@@ -42,21 +42,21 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         public string Color { get; set; }
 
         public SchoolClass(
-            string schoolClassName, 
+            string schoolClassName,
             string registerCode,
             string type,
             string emptySeat,
-            string registrationTermEnd, 
-            string registrationTermStart, 
-            StudyWeek studyWeek, 
+            string registrationTermEnd,
+            string registrationTermStart,
+            StudyWeek studyWeek,
             Schedule schedule,
             IEnumerable<string> rooms,
             IEnumerable<Place> places,
-            IEnumerable<TeacherModel> teachers, 
+            IEnumerable<TeacherModel> teachers,
             IEnumerable<string> tempTeachers,
-            string registrationStatus, 
+            string registrationStatus,
             string implementationStatus,
-            string url, 
+            string url,
             DayPlaceMetaData dayPlaceMetaData)
         {
             SchoolClassName = schoolClassName;

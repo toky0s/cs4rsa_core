@@ -1,14 +1,18 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
-using CommunityToolkit.Mvvm.Input;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -27,10 +31,17 @@ namespace cs4rsa_core.Dialogs.Implements
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        public SaveSessionViewModel(IUnitOfWork unitOfWork, ICourseCrawler courseCrawler)
+        private readonly ShareString _shareString;
+
+        public SaveSessionViewModel(
+            IUnitOfWork unitOfWork,
+            ICourseCrawler courseCrawler,
+            ShareString shareString)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _shareString = shareString;
+
             ScheduleSessions = new();
             SaveCommand = new AsyncRelayCommand(Save);
         }
@@ -38,7 +49,7 @@ namespace cs4rsa_core.Dialogs.Implements
         public async Task LoadScheduleSessions()
         {
             ScheduleSessions.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.Sessions.GetAllAsync();
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
             foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
@@ -55,21 +66,15 @@ namespace cs4rsa_core.Dialogs.Implements
         // 
         private async Task Save()
         {
-            List<ScheduleDetail> sessionDetails = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
-            {
-                string selectedSchoolClassName = classGroupModel.Get
-                ScheduleDetail sessionDetail = new()
-                {
-                    SubjectCode = classGroupModel.SubjectCode,
-                    ClassGroup = classGroupModel.ClassGroup.Name,
-                    SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
-                    RegisterCode = classGroupModel.CurrentSchoolClassName,
-                    SelectedSchoolClass = 
-                };
-                sessionDetails.Add(sessionDetail);
-            }
-
+            List<ScheduleDetail> sessionDetails = (await _shareString.ConvertToUserSubjects(ClassGroupModels))
+                                                    .Select(us => new ScheduleDetail()
+                                                    {
+                                                        SubjectCode = us.SubjectCode,
+                                                        SubjectName = us.SubjectName,
+                                                        ClassGroup = us.ClassGroup,
+                                                        SelectedSchoolClass = us.SchoolClass,
+                                                        RegisterCode = us.RegisterCode
+                                                    }).ToList();
             UserSchedule session = new()
             {
                 Name = Name,
@@ -79,7 +84,7 @@ namespace cs4rsa_core.Dialogs.Implements
                 SessionDetails = sessionDetails
             };
 
-            await _unitOfWork.Sessions.AddAsync(session);
+            await _unitOfWork.UserSchedule.AddAsync(session);
             await _unitOfWork.CompleteAsync();
             SaveResult result = new() { Name = Name };
             CloseDialogCallback.Invoke(result);

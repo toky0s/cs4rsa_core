@@ -16,21 +16,19 @@ namespace cs4rsa_core.Utils
         /// <returns>Trang HTML.</returns>
         public static async Task<string> GetHtml(string sessionId, string url)
         {
-            Uri baseAddress = new Uri(url);
-            CookieContainer cookieContainer = new CookieContainer();
-            using (HttpClientHandler handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (HttpClient client = new HttpClient(handler) { BaseAddress = baseAddress })
-            {
-                cookieContainer.Add(baseAddress, new Cookie("ASP.NET_SessionId", sessionId));
-                HttpResponseMessage message = await client.GetAsync(url);
-                message.EnsureSuccessStatusCode();
-                Stream receiveStream = await message.Content.ReadAsStreamAsync();
-                StreamReader readStream;
-                readStream = new StreamReader(receiveStream);
-                string data = readStream.ReadToEnd();
-                readStream.Close();
-                return data;
-            }
+            Uri baseAddress = new(url);
+            CookieContainer cookieContainer = new();
+            using HttpClientHandler handler = new() { CookieContainer = cookieContainer };
+            using HttpClient client = new(handler) { BaseAddress = baseAddress };
+            cookieContainer.Add(baseAddress, new Cookie("ASP.NET_SessionId", sessionId));
+            HttpResponseMessage message = await client.GetAsync(url);
+            message.EnsureSuccessStatusCode();
+            Stream receiveStream = await message.Content.ReadAsStreamAsync();
+            StreamReader readStream;
+            readStream = new StreamReader(receiveStream);
+            string data = readStream.ReadToEnd();
+            readStream.Close();
+            return data;
         }
     }
 }

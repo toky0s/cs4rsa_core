@@ -14,7 +14,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Models
     /// </summary>
     public class UserSchedule
     {
-        public int SessionId { get; set; }
+        public int UserScheduleId { get; set; }
         public string Name { get; set; }
         public DateTime SaveDate { get; set; }
         public string SemesterValue { get; set; }

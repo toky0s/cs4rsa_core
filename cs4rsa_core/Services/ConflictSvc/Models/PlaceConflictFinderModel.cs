@@ -71,11 +71,13 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
         {
             Phase classGroupPhase1 = _schoolClass1.GetPhase();
             Phase classGroupPhase2 = _schoolClass2.GetPhase();
-            if (classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.First ||
-                    classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.All)
+            if (classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.First
+                || classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.All
+                || classGroupPhase1 == Phase.All && classGroupPhase2 == Phase.First)
                 return Phase.First;
-            if (classGroupPhase1 == Phase.Second && classGroupPhase2 == Phase.Second ||
-                    classGroupPhase1 == Phase.Second && classGroupPhase2 == Phase.All)
+            if (classGroupPhase1 == Phase.Second && classGroupPhase2 == Phase.Second
+                || classGroupPhase1 == Phase.Second && classGroupPhase2 == Phase.All
+                || classGroupPhase1 == Phase.All && classGroupPhase2 == Phase.Second)
                 return Phase.Second;
             return Phase.All;
         }

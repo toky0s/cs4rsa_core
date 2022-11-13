@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace cs4rsa_core.Commons
+namespace cs4rsa_core.Utils
 {
     public abstract class Enumeration : IComparable
     {

@@ -1,9 +1,7 @@
 ﻿using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Models;
 using cs4rsa_core.ViewModels;
 
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 

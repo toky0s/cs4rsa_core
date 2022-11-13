@@ -127,7 +127,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
                         End = studyTimeIntersect.End,
                         Description = GetFullConflictInfo(),
                         Class1 = _schoolClass1.ClassGroupName,
-                        Class2= _schoolClass2.ClassGroupName
+                        Class2 = _schoolClass2.ClassGroupName
                     };
                     yield return timeBlock;
                 }

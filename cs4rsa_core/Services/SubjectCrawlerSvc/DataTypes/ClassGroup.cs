@@ -14,20 +14,14 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private readonly List<SchoolClass> _schoolClasses;
         private readonly List<string> _registerCodes;
 
-        public string Name { get; }
-        public string SubjectCode { get; }
-        public string SubjectName { get; }
+        public readonly string Name;
+        public readonly string SubjectCode;
+        public readonly string SubjectName;
 
-        public bool _isSpecialClassGroup;
-        public bool IsSpecialClassGroup { get => _isSpecialClassGroup; }
         public List<string> RegisterCodes
         {
             get
             {
-                if (_registerCodes.Count == 0)
-                {
-                    return _registerCodes;
-                }
                 return _registerCodes;
             }
         }
@@ -257,16 +251,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                     _registerCodes.Add(schoolClass.RegisterCode);
                 }
             }
-            EvaluateIsSpecialClassGroup();
-        }
-
-        private void EvaluateIsSpecialClassGroup()
-        {
-            IsSpecialClassGroup = _registerCodes.Distinct().Count() >= 2
-            || SchoolClasses
-                .Where(sc => !sc.SchoolClassName.Equals(Name))
-                .Distinct()
-                .Count() >= 2;
         }
 
         /**
