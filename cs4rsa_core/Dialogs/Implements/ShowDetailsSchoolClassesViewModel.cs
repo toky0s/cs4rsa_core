@@ -5,6 +5,7 @@ using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages.Publishers.Dialogs;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Messages.Publishers.Dialogs;
 
 using System.Collections.ObjectModel;
 
