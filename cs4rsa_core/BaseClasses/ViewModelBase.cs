@@ -4,7 +4,6 @@ using cs4rsa_core.Constants;
 using cs4rsa_core.ViewModels;
 
 using System.Windows;
-using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.BaseClasses
 {

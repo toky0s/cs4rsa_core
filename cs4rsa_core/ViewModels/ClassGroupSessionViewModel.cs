@@ -19,8 +19,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 
-using Session = cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums.Session;
-
 namespace cs4rsa_core.ViewModels
 {
     public sealed class ClassGroupSessionViewModel : ViewModelBase
