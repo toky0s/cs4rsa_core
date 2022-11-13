@@ -5,8 +5,6 @@ using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using cs4rsa_core.Utils;
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers

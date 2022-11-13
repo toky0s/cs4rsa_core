@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class LectureViewModel: ViewModelBase
+    public class LectureViewModel : ViewModelBase
     {
         private static readonly int SIZE = 20;
 
@@ -119,7 +119,7 @@ namespace cs4rsa_core.ViewModels
             {
                 CurrentIndex = 1;
             });
-            
+
             DetailsViewCommand = new RelayCommand(() =>
             {
                 CurrentIndex = 0;
@@ -162,7 +162,7 @@ namespace cs4rsa_core.ViewModels
                 await LoadTeachers();
             }
         }
-        
+
         private async Task OnNextPage()
         {
             if (CurrentPage < TotalPage)

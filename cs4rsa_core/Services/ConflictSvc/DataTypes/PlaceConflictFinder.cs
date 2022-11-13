@@ -38,7 +38,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             {
                 return null;
             }
-            
+
             // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
             // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
             IEnumerable<Place> schoolClass1Places = _schoolClass1.DayPlaceMetaData.GetPlaces();
@@ -48,7 +48,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             {
                 return null;
             }
-            
+
             Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> conflictPlaces = new();
             // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
             foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
@@ -59,16 +59,16 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
 
                 IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);
                 IEnumerable<PlaceAdjacent> placeAdjacents = PlaceMapManipulation.GetPlaceAdjacents(
-                    placeMapPairs, 
+                    placeMapPairs,
                     _timeDelta
                 );
-                if (placeAdjacents.Any()) 
+                if (placeAdjacents.Any())
                     conflictPlaces.Add(dayOfWeek, placeAdjacents);
             }
             if (conflictPlaces.Count != 0)
             {
                 return new ConflictPlace(conflictPlaces);
-            } 
+            }
             else
             {
                 return null;

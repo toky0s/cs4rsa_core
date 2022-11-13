@@ -1,14 +1,16 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages.Publishers.Dialogs;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+
+using System.Collections.ObjectModel;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
-    public class ShowDetailsSchoolClassesViewModel: ViewModelBase
+    public class ShowDetailsSchoolClassesViewModel : ViewModelBase
     {
         private ClassGroupModel _classGroupModel;
         public ClassGroupModel ClassGroupModel
@@ -22,14 +24,14 @@ namespace cs4rsa_core.Dialogs.Implements
         }
 
         private SchoolClassModel _selectedSchoolClassModel;
-        public SchoolClassModel SelectedSchoolClassModel 
-        {   
-            get => _selectedSchoolClassModel; 
+        public SchoolClassModel SelectedSchoolClassModel
+        {
+            get => _selectedSchoolClassModel;
             set
             {
-                _selectedSchoolClassModel = value; 
-                OnPropertyChanged(); 
-            } 
+                _selectedSchoolClassModel = value;
+                OnPropertyChanged();
+            }
         }
         public ObservableCollection<SchoolClassModel> SchoolClassModels { get; set; }
         public RelayCommand PickCommand { get; set; }

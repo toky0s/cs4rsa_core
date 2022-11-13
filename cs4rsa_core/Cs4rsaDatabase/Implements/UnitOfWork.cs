@@ -16,7 +16,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
             Curriculums = new CurriculumRepository(_context);
             Disciplines = new DisciplineRepository(_context);
             Keywords = new KeywordRepository(_context);
-            Sessions = new SessionRepository(_context);
+            UserSchedule = new SessionRepository(_context);
             Students = new StudentRepository(_context);
             Teachers = new TeacherRepository(_context);
             ProgramSubjects = new ProgramSubjectRepository(_context);
@@ -32,7 +32,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Implements
 
         public IKeywordRepository Keywords { get; private set; }
 
-        public ISessionRepository Sessions { get; private set; }
+        public IUserScheduleRepository UserSchedule { get; private set; }
 
         public IStudentRepository Students { get; private set; }
 

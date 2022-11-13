@@ -1,32 +1,35 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Constants;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages.Publishers.Dialogs;
+using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Utils;
+
 using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using System.Linq;
-using cs4rsa_core.Constants;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
     public class ImportSessionViewModel : ViewModelBase
     {
         #region Properties
-        public ObservableCollection<Session> ScheduleSessions { get; set; }
+        public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
         public ObservableCollection<UserSubject> UserSubjects { get; set; }
 
-        private Session _selectedScheduleSession;
-        public Session SelectedScheduleSession
+        private UserSchedule _selectedScheduleSession;
+        public UserSchedule SelectedScheduleSession
         {
             get => _selectedScheduleSession;
             set
@@ -40,8 +43,8 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private SessionDetail _selectedSessionDetail;
-        public SessionDetail SelectedSessionDetail
+        private ScheduleDetail _selectedSessionDetail;
+        public ScheduleDetail SelectedSessionDetail
         {
             get { return _selectedSessionDetail; }
             set
@@ -81,9 +84,9 @@ namespace cs4rsa_core.Dialogs.Implements
         #endregion
 
         public ImportSessionViewModel(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
-            IMessageBox messageBox, 
+            IMessageBox messageBox,
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString)
         {
@@ -108,24 +111,24 @@ namespace cs4rsa_core.Dialogs.Implements
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + " " + registerCode);
         }
 
-        private void LoadUserSubject(Session session)
+        private void LoadUserSubject(UserSchedule userSchedule)
         {
-            if (session != null)
+            if (userSchedule != null)
             {
                 UserSubjects.Clear();
-                IEnumerable<UserSubject> userSubjects = _unitOfWork.Sessions
-                    .GetSessionDetails(session.SessionId)
+                IEnumerable<UserSubject> userSubjects = _unitOfWork.UserSchedule
+                    .GetSessionDetails(userSchedule.UserScheduleId)
                     .Select(sd => new UserSubject()
-                            {
-                                SubjectCode = sd.SubjectCode,
-                                SubjectName = sd.SubjectName,
-                                ClassGroup = sd.ClassGroup,
-                                SchoolClass = sd.SelectedSchoolClass,
-                                RegisterCode = sd.RegisterCode
-                            }
+                    {
+                        SubjectCode = sd.SubjectCode,
+                        SubjectName = sd.SubjectName,
+                        ClassGroup = sd.ClassGroup,
+                        SchoolClass = sd.SelectedSchoolClass,
+                        RegisterCode = sd.RegisterCode
+                    }
                     );
 
-                foreach (UserSubject userSubject in userSubjects) 
+                foreach (UserSubject userSubject in userSubjects)
                     UserSubjects.Add(userSubject);
             }
         }
@@ -144,7 +147,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        private void CheckIsAvailableSession(Session session)
+        private void CheckIsAvailableSession(UserSchedule session)
         {
             if (session != null)
             {
@@ -175,8 +178,8 @@ namespace cs4rsa_core.Dialogs.Implements
         {
             ScheduleSessions.Clear();
             UserSubjects.Clear();
-            IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAllAsync();
-            foreach (Session session in sessions)
+            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
+            foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
             }
@@ -198,7 +201,7 @@ namespace cs4rsa_core.Dialogs.Implements
             if (result == MessageBoxResult.Yes)
             {
                 await _unitOfWork.BeginTransAsync();
-                _unitOfWork.Sessions.Remove(_selectedScheduleSession);
+                _unitOfWork.UserSchedule.Remove(_selectedScheduleSession);
                 await _unitOfWork.CompleteAsync();
                 await _unitOfWork.CommitAsync();
                 await Reload();

@@ -1,10 +1,12 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using System;
 using cs4rsa_core.Services.ConflictSvc.Models;
+
+using System;
 
 namespace cs4rsa_core.Dialogs.Implements
 {

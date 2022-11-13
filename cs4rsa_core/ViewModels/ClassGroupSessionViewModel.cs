@@ -1,23 +1,23 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.DialogViews;
 using cs4rsa_core.Dialogs.Implements;
 using cs4rsa_core.Messages.Publishers;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+using cs4rsa_core.Messages.Publishers.Dialogs;
+using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
+using cs4rsa_core.Utils.Interfaces;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
-
-using Session = cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums.Session;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Utils.Interfaces;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
 
 namespace cs4rsa_core.ViewModels
 {
@@ -395,7 +395,7 @@ namespace cs4rsa_core.ViewModels
 
         private bool CanResetFilter()
         {
-            return 
+            return
             Monday != false ||
             Tuesday != false ||
             Wednesday != false ||
@@ -651,7 +651,7 @@ namespace cs4rsa_core.ViewModels
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
             ShowDetailsSchoolClassesViewModel vm = showDetailsSchoolClassesUC.DataContext as ShowDetailsSchoolClassesViewModel;
             vm.ClassGroupModel = _selectedClassGroup;
-            
+
             foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
             {
                 if (scm.Type != _selectedClassGroup.CompulsoryClass.Type)

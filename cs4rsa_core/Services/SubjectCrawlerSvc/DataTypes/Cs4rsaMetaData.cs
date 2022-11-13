@@ -16,7 +16,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private readonly SchoolClass _schoolClass;
 
         public Cs4rsaMetaData(
-            Schedule schedule, 
+            Schedule schedule,
             DayPlaceMetaData dayPlaceMetaData,
             SchoolClass schoolClass)
         {

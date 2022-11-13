@@ -11,7 +11,7 @@ namespace cs4rsa_core.ModelExtensions
             _courseCrawler = courseCrawler;
         }
 
-        public bool IsValid(Session session)
+        public bool IsValid(UserSchedule session)
         {
             return session.SemesterValue.Equals(_courseCrawler.GetCurrentSemesterValue())
                 && session.YearValue.Equals(_courseCrawler.GetCurrentYearValue());

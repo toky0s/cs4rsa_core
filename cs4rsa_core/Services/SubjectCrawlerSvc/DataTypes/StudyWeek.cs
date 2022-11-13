@@ -58,7 +58,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             {
                 return Phase.All;
             }
-            else if  (
+            else if (
                 (StartWeek >= 8 || StartWeek >= 34)
                 && isOnePhaseDelta
             )

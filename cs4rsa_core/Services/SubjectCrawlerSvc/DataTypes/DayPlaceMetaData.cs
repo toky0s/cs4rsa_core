@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 {

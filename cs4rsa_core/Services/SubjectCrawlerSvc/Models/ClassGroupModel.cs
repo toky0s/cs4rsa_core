@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
 {
@@ -19,10 +20,12 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
     public class ClassGroupModel
     {
         /// <summary>
-        /// Một Class Group Model có duy nhất một Register ClassGroupName được chọn.
+        /// Trong trường hợp ClassGroupModel không có mã đăng ký nào
+        /// _currentSchoolClassName sẽ thay thế để đảm nhiệm vai trò tương tự.
         /// </summary>
         private string _currentSchoolClassName;
         public string CurrentSchoolClassName { get => _currentSchoolClassName; }
+
 
         /// <summary>
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
@@ -35,7 +38,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         }
 
         public ClassGroup ClassGroup { get; }
-        public short EmptySeat { get; }
+        public int EmptySeat { get; }
         public string Name { get; }
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }
@@ -85,8 +88,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         public ClassGroupModel() { }
 
         public ClassGroupModel(
-            ClassGroup classGroup, 
-            bool isBelongSpecialSubject, 
+            ClassGroup classGroup,
+            bool isBelongSpecialSubject,
             ColorGenerator colorGenerator
         )
         {
@@ -157,6 +160,17 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             return ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc));
         }
 
+        /**
+         * Mô tả:
+         *      Chọn school class cho một class group thuộc special subject.
+         *      
+         *      
+         * Tham số:
+         *      schoolClassName:
+         *          Với class group chứa nhiều mã đăng ký (special class group), 
+         *          school class name là duy nhất sẽ được quét để tìm kiếm 
+         *          school class mà người dùng đã chọn.
+         */
         public void PickSchoolClass(string schoolClassName)
         {
             if (IsBelongSpecialSubject)
@@ -180,18 +194,33 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             }
         }
 
-        /// <summary>
-        /// Trả về Compulsory Class của một class group.
-        /// 1. Trường hợp có duy nhất một SchoolClass, nó sẽ là Compulsory Class.
-        /// 2. Trường hợp lớp có hai SchoolClass trở lên, 
-        ///    SchoolClass thằng không có mã đăng ký sẽ là Compulsory Class.
-        /// </summary>
+        /**
+         * Mô tả:
+         *      Tìm kiếm base class, school class bắt buộc.
+         *
+         *
+         * Trả về:
+         *      Trả về Compulsory Class của một class group.
+         *      1. Trường hợp có duy nhất một SchoolClass, nó sẽ là Compulsory Class.
+         *      2. Trường hợp lớp có hai SchoolClass trở lên, 
+         *         SchoolClass thằng không có mã đăng ký sẽ là Compulsory Class.
+         */
         private SchoolClassModel GetCompulsoryClass()
         {
-            if (ClassGroup.SchoolClasses.Count == 1)
+            // Early exit and safe check
+            if (ClassGroup.SchoolClasses.Count == 0)
+            {
+                return null;
+            }
+
+            if (ClassGroup.SchoolClasses[0].SchoolClassName.Equals(ClassGroup.Name)
+                || ClassGroup.SchoolClasses.Count == 1)
             {
                 return new SchoolClassModel(ClassGroup.SchoolClasses[0]);
             }
+
+            // Trường hợp có nhiều hơn 1 school class,
+            // chọn school class nào không có mã đăng ký.
             foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses)
             {
                 if (schoolClass.RegisterCode == string.Empty)
@@ -199,19 +228,31 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                     return new SchoolClassModel(schoolClass);
                 }
             }
-            throw new Exception(VMConstants.EX_NOT_FOUND_BASE_SCHOOLCLASS_MODEL);
+
+            MessageBox.Show(VMConstants.EX_NOT_FOUND_BASE_SCHOOLCLASS_MODEL);
+            return null;
         }
 
-        /// <summary>
-        /// 1. ClassGroupModel là một hình thức duy nhất của một ClassGroup
-        /// 2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký
-        /// </summary>
+        /**
+         * Mô tả:
+         *      Trừ school class bắt buộc, các special class group 
+         *      cần một school class đi kèm (có thể có mã đăng ký hoặc không).
+         *      
+         *      1. ClassGroupModel là một đại diện duy nhất của một ClassGroup
+         *      2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký
+         * 
+         * Tham số:
+         *      schoolClassName:
+         *          Trường hợp registerCode là null hoặc empty, 
+         *          schoolClassName sẽ được sử dụng để tìm kiếm school class tương ứng.
+         */
         public void ReRenderScheduleRequest(string schoolClassName)
         {
             _userSelectedSchoolClass = ClassGroup.SchoolClasses
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
                 .Select(schoolClass => new SchoolClassModel(schoolClass))
                 .FirstOrDefault();
+            _currentSchoolClassName = schoolClassName;
 
             _currentSchoolClassModels.Clear();
             _currentSchoolClassModels.Add(CompulsoryClass);

@@ -9,7 +9,7 @@ namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
         ICurriculumRepository Curriculums { get; }
         IDisciplineRepository Disciplines { get; }
         IKeywordRepository Keywords { get; }
-        ISessionRepository Sessions { get; }
+        IUserScheduleRepository UserSchedule { get; }
         IStudentRepository Students { get; }
         ITeacherRepository Teachers { get; }
         IProgramSubjectRepository ProgramSubjects { get; }

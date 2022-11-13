@@ -1,14 +1,12 @@
 ﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
 using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
 
-using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace cs4rsa_core.Utils
 {
@@ -22,18 +20,11 @@ namespace cs4rsa_core.Utils
     {
         #region DI
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ShareString(
-            IUnitOfWork unitOfWork, 
-            ICourseCrawler courseCrawler,
-            ISnackbarMessageQueue snackbarMessageQueue)
+        public ShareString(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _courseCrawler = courseCrawler;
-            _snackbarMessageQueue = snackbarMessageQueue;
         }
         public async Task<string> GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
@@ -47,7 +38,7 @@ namespace cs4rsa_core.Utils
             return StringHelper.EncodeTo64(json);
         }
 
-        public IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
+        public static IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
         {
             try
             {

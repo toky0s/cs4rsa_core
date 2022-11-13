@@ -1,14 +1,17 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Messaging;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Dialogs.DialogResults;
 using cs4rsa_core.Dialogs.MessageBoxService;
 using cs4rsa_core.Messages.Publishers.Dialogs;
-using MaterialDesignThemes.Wpf;
-using CommunityToolkit.Mvvm.Messaging;
-using System.Threading.Tasks;
-using System.Windows;
-using cs4rsa_core.Cs4rsaDatabase.Models;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
 using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+
+using MaterialDesignThemes.Wpf;
+
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -52,7 +55,7 @@ namespace cs4rsa_core.Dialogs.Implements
             string[] specialStrings = await Task.WhenAll(specialStringV1, specialStringV2);
             if (specialStrings[0] is null && specialStrings[1] is null)
             {
-                string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy Session ID, " +
+                string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy UserSchedule ID, " +
                     "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
                 MessageBoxResult _ = MessageBox.ShowMessage(message,
                                         "Thông báo",

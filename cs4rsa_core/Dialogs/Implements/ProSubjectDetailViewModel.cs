@@ -1,13 +1,15 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Input;
+
+using cs4rsa_core.BaseClasses;
+using cs4rsa_core.Cs4rsaDatabase.Interfaces;
 using cs4rsa_core.Models;
-using CommunityToolkit.Mvvm.Input;
+using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using cs4rsa_core.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
 
 namespace cs4rsa_core.Dialogs.Implements
 {
@@ -78,7 +80,7 @@ namespace cs4rsa_core.Dialogs.Implements
             _colorGenerator = colorGenerator;
 
             AddCommand = new RelayCommand(OnAdd);
-            
+
             PreProgramSubjectModels = new();
             ParProgramSubjectModels = new();
         }

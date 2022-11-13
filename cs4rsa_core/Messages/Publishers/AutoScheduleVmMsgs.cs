@@ -1,5 +1,6 @@
-﻿using cs4rsa_core.Models;
-using CommunityToolkit.Mvvm.Messaging.Messages;
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+
+using cs4rsa_core.Models;
 
 namespace cs4rsa_core.Messages.Publishers
 {

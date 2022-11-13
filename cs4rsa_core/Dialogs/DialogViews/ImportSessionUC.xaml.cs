@@ -29,7 +29,7 @@ namespace cs4rsa_core.Dialogs.DialogViews
         /// Xử lý sự kiện Share string được focus.
         /// </summary>
         private void ShareString_GotFocus(object sender, System.Windows.RoutedEventArgs e)
-        {   
+        {
             (DataContext as ImportSessionViewModel).LoadShareString(ShareStringTextBox.Text);
             (DataContext as ImportSessionViewModel).SelectedScheduleSession = null;
         }

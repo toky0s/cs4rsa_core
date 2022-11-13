@@ -44,16 +44,16 @@ namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
         }
 
         public TeacherModel(
-            int teacherId, 
-            string name, 
-            string sex, 
-            string place, 
-            string degree, 
-            string workUnit, 
-            string position, 
-            string subject, 
-            string form, 
-            IEnumerable<string> teachedSubjects, 
+            int teacherId,
+            string name,
+            string sex,
+            string place,
+            string degree,
+            string workUnit,
+            string position,
+            string subject,
+            string form,
+            IEnumerable<string> teachedSubjects,
             string path,
             string url)
         {
