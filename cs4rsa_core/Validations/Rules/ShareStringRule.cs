@@ -18,8 +18,7 @@ namespace cs4rsa_core.Validations.Rules
         {
             try
             {
-                ShareString shareString = (ShareString)((App)Application.Current).Container.GetService(typeof(ShareString));
-                IEnumerable<UserSubject> result = shareString.GetSubjectFromShareString((string)value);
+                IEnumerable<UserSubject> result = ShareString.GetSubjectFromShareString((string)value);
                 if (result == null)
                 {
                     return new ValidationResult(false, $"Share string không hợp lệ");

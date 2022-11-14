@@ -120,7 +120,7 @@
                     VerticalScrollBarVisibility="Auto">
                     <TextBox.Text>
                         <Binding
-                            Path="ShareString"
+                            Path="ShareStringText"
                             UpdateSourceTrigger="PropertyChanged"
                             ValidatesOnExceptions="True">
                             <Binding.ValidationRules>

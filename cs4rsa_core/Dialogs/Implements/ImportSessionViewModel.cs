@@ -65,7 +65,7 @@ namespace cs4rsa_core.Dialogs.Implements
             }
         }
 
-        public string ShareString { get; set; }
+        public string ShareStringText { get; set; }
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace cs4rsa_core.Dialogs.Implements
             UserSubjects.Clear();
             if (!string.IsNullOrEmpty(shareString))
             {
-                IEnumerable<UserSubject> userSubjects = _shareStringHelper.GetSubjectFromShareString(shareString);
+                IEnumerable<UserSubject> userSubjects = ShareString.GetSubjectFromShareString(shareString);
                 if (userSubjects != null)
                 {
                     foreach (UserSubject userSubject in userSubjects)
