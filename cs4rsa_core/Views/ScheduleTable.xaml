@@ -46,7 +46,8 @@
                 SelectedIndex="{Binding PhaseStore.BetweenPointIndex}" />
         </StackPanel>
         <TextBlock Grid.Row="1">
-            <Run Text="{Binding PhaseStore.StartWeek}" />
+            <Run Text="{Binding PhaseStore.StartWeek, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
+            <Run Text="{Binding PhaseStore.CurrentBetweenPointValue, StringFormat={}{0})}" />
         </TextBlock>
         <Grid x:Name="Grid_Schedule" Grid.Row="2">
             <Grid.RowDefinitions>

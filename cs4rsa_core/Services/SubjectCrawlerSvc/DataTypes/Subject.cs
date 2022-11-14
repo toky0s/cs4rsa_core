@@ -265,7 +265,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                                         registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teachers, tempTeachers,
                                         registrationStatus, implementationStatus,
-                                        urlToSubjectDetailPage, metaData);
+                                        urlToSubjectDetailPage, metaData, SubjectCode);
             return schoolClass;
         }
 

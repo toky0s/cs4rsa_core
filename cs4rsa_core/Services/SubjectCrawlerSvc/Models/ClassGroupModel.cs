@@ -111,6 +111,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                 if (classGroup.SchoolClasses.Count == 1)
                 {
                     CodeSchoolClass = CompulsoryClass;
+                    CurrentSchoolClassModels.Add(CompulsoryClass);
                 }
                 // Class Group thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
                 else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
@@ -121,13 +122,9 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                     if (schoolClass != null)
                     {
                         CodeSchoolClass = new SchoolClassModel(schoolClass);
+                        CurrentSchoolClassModels.Add(CompulsoryClass);
+                        CurrentSchoolClassModels.Add(CodeSchoolClass);
                     }
-                }
-
-                if (CodeSchoolClass != null)
-                {
-                    CurrentSchoolClassModels.Add(CompulsoryClass);
-                    CurrentSchoolClassModels.Add(CodeSchoolClass);
                 }
             }
         }

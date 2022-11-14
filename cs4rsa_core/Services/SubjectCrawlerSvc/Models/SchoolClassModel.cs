@@ -149,6 +149,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             _registrationTermStart = schoolClass.RegistrationTermStart;
             _studyWeek = schoolClass.StudyWeek;
             _schedule = schoolClass.Schedule;
+            _subjectCode = schoolClass.SubjectCode;
             _rooms = schoolClass.Rooms;
             _places = schoolClass.Places;
             _teachers = schoolClass.Teachers;

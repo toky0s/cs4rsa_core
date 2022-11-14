@@ -9,6 +9,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
     public class SchoolClass
     {
         public string SubjectName { get; set; }
+        public string SubjectCode { get; set; }
         public string ClassGroupName { get; set; }
         public string SchoolClassName { get; set; }
         public string RegisterCode { get; set; }
@@ -57,7 +58,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             string registrationStatus,
             string implementationStatus,
             string url,
-            DayPlaceMetaData dayPlaceMetaData)
+            DayPlaceMetaData dayPlaceMetaData,
+            string subjectCode)
         {
             SchoolClassName = schoolClassName;
             RegisterCode = registerCode;
@@ -75,6 +77,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             ImplementationStatus = implementationStatus;
             Url = url;
             DayPlaceMetaData = dayPlaceMetaData;
+            SubjectCode = subjectCode;
         }
 
         public Phase GetPhase()

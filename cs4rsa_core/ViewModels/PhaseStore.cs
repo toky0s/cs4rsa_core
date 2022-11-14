@@ -27,8 +27,6 @@ namespace cs4rsa_core.ViewModels
             { 
                 _startWeek = value; 
                 OnPropertyChanged(); 
-                ReEvaluateWeeks();
-                ReEvaluateBetweenPointIndex();
             }
         }
 
@@ -41,8 +39,6 @@ namespace cs4rsa_core.ViewModels
             { 
                 _endWeek = value; 
                 OnPropertyChanged();
-                ReEvaluateWeeks();
-                ReEvaluateBetweenPointIndex();
             }
         }
 
@@ -59,8 +55,18 @@ namespace cs4rsa_core.ViewModels
                 }
                 _betweenPointIndex = value;
                 OnPropertyChanged();
+                ReEvaluateBetweenPointValue();
             }
         }
+
+        private int _currentBetweenPointValue;
+
+        public int CurrentBetweenPointValue
+        {
+            get { return _currentBetweenPointValue; }
+            set { _currentBetweenPointValue = value; OnPropertyChanged(); }
+        }
+
 
         public PhaseStore()
         {
@@ -113,7 +119,7 @@ namespace cs4rsa_core.ViewModels
         private void ReEvaluateWeeks()
         {
             Weeks.Clear();
-            int minStart = _schoolClassModels.Count > 0 ? _schoolClassModels[0].StudyWeek.StartWeek : 0;
+            int minStart = _schoolClassModels.Count > 0 ? _schoolClassModels[0].StudyWeek.StartWeek : 1;
             int maxEnd = _schoolClassModels.Count > 0 ? _schoolClassModels[0].StudyWeek.EndWeek : 0;
 
             if (_schoolClassModels.Count > 0)
@@ -128,7 +134,9 @@ namespace cs4rsa_core.ViewModels
                              ? maxEnd
                              : _schoolClassModels[i].StudyWeek.EndWeek;
                 }
-                for (int i = minStart; i <= maxEnd; i++)
+                StartWeek = minStart;
+                EndWeek = maxEnd;
+                for (int i = minStart + 1; i <= maxEnd - 1; i++)
                 {
                     Weeks.Add(i);
                 }
@@ -138,6 +146,15 @@ namespace cs4rsa_core.ViewModels
         private void ReEvaluateBetweenPointIndex()
         {
             BetweenPointIndex = Weeks.Count / 2;
+            ReEvaluateBetweenPointValue();
+        }
+
+        private void ReEvaluateBetweenPointValue()
+        {
+            if (Weeks.Count > 0)
+            {
+                CurrentBetweenPointValue = Weeks[BetweenPointIndex];
+            }
         }
     }
 }
