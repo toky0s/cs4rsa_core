@@ -40,6 +40,9 @@
         public static readonly string SNB_AT_LAST_SCHEDULE = "Đã đến bộ lịch cuối";
         public static readonly string SNB_ALREADY_DOWNLOADED = "Đã được tải xuống";
         public static readonly string SNB_COPY_SUCCESS = "Đã sao chép";
+
+        // NF: Not Found
+        public static readonly string SNB_NF_REGISTER_CODE = "Lớp này không có mã đăng ký";
         #endregion
 
         #region Snackbar Actions

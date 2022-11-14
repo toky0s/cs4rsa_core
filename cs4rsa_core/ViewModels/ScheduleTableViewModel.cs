@@ -41,11 +41,24 @@ namespace cs4rsa_core.ViewModels
 
         public ObservableCollection<string> Timelines { get; set; }
 
+        public PhaseStore PhaseStore
+        {
+            get
+            {
+                return _phaseStore;
+            }
+        }
+
         private readonly ObservableCollection<TimeBlock>[] week1;
         private readonly ObservableCollection<TimeBlock>[] week2;
 
-        public ScheduleTableViewModel()
+        #region DI
+        private readonly PhaseStore _phaseStore;
+        #endregion
+        public ScheduleTableViewModel(PhaseStore phaseStore)
         {
+            _phaseStore = phaseStore;
+
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>

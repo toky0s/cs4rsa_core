@@ -352,7 +352,7 @@ namespace cs4rsa_core.ViewModels
 
             #region ClassGroupModels
             List<ClassGroupModel> classGroupModels = new();
-            ChoicedSessionViewModel choicedSessionViewModel = GetViewModel<ChoicedSessionViewModel>();
+            ChoosedSessionViewModel choicedSessionViewModel = GetViewModel<ChoosedSessionViewModel>();
             ObservableCollection<ClassGroupModel> classGroupColl = choicedSessionViewModel.ClassGroupModels;
             foreach (ClassGroupModel classGroupModel in classGroupColl)
             {
@@ -429,11 +429,11 @@ namespace cs4rsa_core.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+            if (GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .Any())
             {
-                ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .First();
                 ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();

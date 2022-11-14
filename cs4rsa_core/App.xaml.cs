@@ -91,11 +91,12 @@ namespace cs4rsa_core
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
+            services.AddSingleton<PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchSessionViewModel>();
             services.AddSingleton<ClassGroupSessionViewModel>();
-            services.AddSingleton<ChoicedSessionViewModel>();
+            services.AddSingleton<ChoosedSessionViewModel>();
             services.AddSingleton<ScheduleTableViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();

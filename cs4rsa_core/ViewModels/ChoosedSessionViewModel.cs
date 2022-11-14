@@ -25,8 +25,9 @@ using System.Windows;
 
 namespace cs4rsa_core.ViewModels
 {
-    public class ChoicedSessionViewModel : ViewModelBase
+    public class ChoosedSessionViewModel : ViewModelBase
     {
+        #region Properties
         private string _shareString;
 
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -53,6 +54,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
+        #endregion
 
         #region Commands
         public AsyncRelayCommand SaveCommand { get; set; }
@@ -63,28 +65,41 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand SolveConflictCommand { get; set; }
         #endregion
 
-        #region Services
+        #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
+        private readonly PhaseStore _phaseStore;
         #endregion
-        public ChoicedSessionViewModel(ISnackbarMessageQueue snackbarMessageQueue, ShareString shareString)
+
+        public ChoosedSessionViewModel(
+            ISnackbarMessageQueue snackbarMessageQueue, 
+            ShareString shareString,
+            PhaseStore phaseStore
+        )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
             _shareStringGenerator = shareString;
+            _phaseStore = phaseStore;
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
+                _phaseStore.RemoveSchoolClassBySubjectCode(m.Value.SubjectCode);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
-                Application.Current.Dispatcher.InvokeAsync(DelAllSubjectMsgHandler);
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    DelAllSubjectMsgHandler();
+                    _phaseStore.RemoveAllSchoolClass();
+                });
             });
 
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 AddClassGroupModelAndReload(m.Value);
+                _phaseStore.AddClassGroup(m.Value);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectClassGroupModelsMsg>(this, (r, m) =>
@@ -92,13 +107,12 @@ namespace cs4rsa_core.ViewModels
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     AddClassGroupModelsAndReload(m.Value);
-                    return Task.CompletedTask;
                 });
             });
 
             WeakReferenceMessenger.Default.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
             {
-                RemoveChoicedClassMsgHandler(m.Value);
+                RemoveChoosedClassMsgHandler(m.Value);
             });
 
             SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
@@ -132,10 +146,15 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnCopyCode()
         {
-            string registerCode = _selectedClassGroupModel.CurrentSchoolClassName;
-            Clipboard.SetData(DataFormats.Text, registerCode);
-            string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
-            _snackbarMessageQueue.Enqueue(message);
+            if (SelectedClassGroupModel.RegisterCodes.Count > 0)
+            {
+                string registerCode = SelectedClassGroupModel.RegisterCodes[0];
+                Clipboard.SetData(DataFormats.Text, registerCode);
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NF_REGISTER_CODE);
+            }
         }
 
         /// <summary>
@@ -367,7 +386,7 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Xử lý Remove Choiced Class Message
         /// </summary>
-        private void RemoveChoicedClassMsgHandler(string className)
+        private void RemoveChoosedClassMsgHandler(string className)
         {
             if (className == string.Empty || className == null)
             {

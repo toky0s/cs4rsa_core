@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="clr-namespace:cs4rsa_core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:cs4rsa_core.ViewModels"
     xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
@@ -29,12 +30,25 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition />
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Giai đoạn 1 (Từ tuần 1 - 9)" />
-        <Grid x:Name="Grid_Schedule" Grid.Row="1">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock
+                Margin="0,0,5,0"
+                VerticalAlignment="Center"
+                Text="Chọn tuần ngăn cách giữa hai giai đoạn" />
+            <ComboBox
+                VerticalAlignment="Center"
+                ItemsSource="{Binding PhaseStore.Weeks}"
+                SelectedIndex="{Binding PhaseStore.BetweenPointIndex}" />
+        </StackPanel>
+        <TextBlock Grid.Row="1">
+            <Run Text="{Binding PhaseStore.StartWeek}" />
+        </TextBlock>
+        <Grid x:Name="Grid_Schedule" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
@@ -236,11 +250,8 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-
-        <TextBlock Grid.Row="2" Text="Giai đoạn 1 (Từ tuần 1 - 9)" />
-
-
-        <Grid Grid.Row="3">
+        <TextBlock Grid.Row="3" Text="Giai đoạn 2 (Từ tuần between point value - end Week)" />
+        <Grid Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
