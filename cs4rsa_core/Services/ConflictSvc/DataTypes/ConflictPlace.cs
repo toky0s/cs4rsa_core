@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     public class ConflictPlace
     {

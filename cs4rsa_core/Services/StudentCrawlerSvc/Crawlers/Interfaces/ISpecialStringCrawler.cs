@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces
+namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces
 {
     public interface ISpecialStringCrawler
     {

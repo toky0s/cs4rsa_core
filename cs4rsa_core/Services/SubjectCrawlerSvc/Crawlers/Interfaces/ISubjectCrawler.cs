@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 using HtmlAgilityPack;
 
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces
 {
     public interface ISubjectCrawler
     {

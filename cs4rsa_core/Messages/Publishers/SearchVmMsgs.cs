@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Messages.Publishers
+namespace Cs4rsa.Messages.Publishers
 {
     /// <summary>
     /// Danh sách các Message được sử dụng trong SearchSessionViewModel

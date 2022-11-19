@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     /// <summary>
     /// Mọi Conflict đều phải kế thừa từ lớp này

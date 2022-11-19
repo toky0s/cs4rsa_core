@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Services.ConflictSvc.DataTypes.Enums
+﻿namespace Cs4rsa.Services.ConflictSvc.DataTypes.Enums
 {
     /// <summary>
     /// Đại diện cho kiểu của một xung đột có thể là xung đột thời gian

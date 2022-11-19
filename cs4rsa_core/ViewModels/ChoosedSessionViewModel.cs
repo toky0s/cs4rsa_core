@@ -1,19 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
-using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.ModelExtensions;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using MaterialDesignThemes.Wpf;
 
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public class ChoosedSessionViewModel : ViewModelBase
     {

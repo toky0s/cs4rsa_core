@@ -1,5 +1,5 @@
-﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public class PhaseStore : ViewModelBase
     {
@@ -82,13 +82,6 @@ namespace cs4rsa_core.ViewModels
 
             _schoolClassModels = _schoolClassModels.Where(scm => !replacedSchoolClassModels.Contains(scm.SchoolClassName)).ToList();
             AddSchoolClasses(classGroupModel.CurrentSchoolClassModels);
-        }
-
-        private void AddSchoolClass(SchoolClassModel schoolClassModel)
-        {
-            _schoolClassModels.Add(schoolClassModel);
-            ReEvaluateWeeks();
-            ReEvaluateBetweenPointIndex();
         }
 
         private void AddSchoolClasses(IEnumerable<SchoolClassModel> schoolClassModels)

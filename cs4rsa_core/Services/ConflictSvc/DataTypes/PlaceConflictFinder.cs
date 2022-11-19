@@ -1,13 +1,13 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ConflictSvc.Utils;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
+using Cs4rsa.Services.ConflictSvc.Utils;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
 
     /// <summary>
@@ -24,7 +24,9 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         public ConflictPlace GetPlaceConflict()
         {
             // Hai school class không có giao nhau về giai đoạn chắc chắn không xung đột.
-            if (!CanConflictPhase(_schoolClass1.GetPhase(), _schoolClass2.GetPhase()))
+            // Check phase
+            PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(_schoolClass1.StudyWeek, _schoolClass2.StudyWeek);
+            if (phaseIntersect.Equals(PhaseIntersect.NullInstance))
             {
                 return null;
             }
@@ -73,11 +75,6 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             {
                 return null;
             }
-        }
-
-        public static ConflictType GetConflictType()
-        {
-            return ConflictType.Place;
         }
     }
 }

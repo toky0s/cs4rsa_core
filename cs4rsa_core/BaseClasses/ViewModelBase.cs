@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using cs4rsa_core.Constants;
-using cs4rsa_core.ViewModels;
+using Cs4rsa.Constants;
+using Cs4rsa.ViewModels;
 
 using System.Windows;
 
-namespace cs4rsa_core.BaseClasses
+namespace Cs4rsa.BaseClasses
 {
     public abstract class ViewModelBase : ObservableRecipient
     {

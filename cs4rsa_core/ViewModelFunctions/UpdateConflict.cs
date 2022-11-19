@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace cs4rsa_core.ViewModelFunctions
+namespace Cs4rsa.ViewModelFunctions
 {
     /// <summary>
     /// Mục đích của class này được tạo ra là để các phần xếp lịch thủ công và xếp lịch tự động

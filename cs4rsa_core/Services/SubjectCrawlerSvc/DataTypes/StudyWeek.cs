@@ -1,11 +1,15 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.ViewModels;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+using System;
+using System.Windows;
+
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
-    public struct StudyWeek
+    public readonly struct StudyWeek
     {
-        public readonly int StartWeek;
-        public readonly int EndWeek;
+        public readonly int StartWeek { get; }
+        public readonly int EndWeek { get; }
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.
@@ -32,47 +36,32 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             }
         }
 
-        /**
-         * Mô tả:
-         *      Phân tích tuần bắt đầu và tuần kết thúc để xác định 
-         *      được giai đoạn 1, giai đoạn 2 hay là cả hai giai đoạn.
-         *  
-         *  
-         * Trả về:
-         *      Delta độ dài 1 Phase = EndWeek - StartWeek >= 7
-         *      Delta độ dài 2 Phase = EndWeek - StartWeek >= 14
-         *      
-         *      Phase.First:
-         *          Bắt đầu từ tuần 1 hoặc tuần 18.
-         *      
-         *      Phase.Second:
-         *          Bắt đầu từ tuần 8 hoặc tuần 34.
-         *      
-         *      Phase.All
-         *          Khác hai trường hợp trên thì các trường hợp còn lại được xem là hai giai đoạn.
-         */
+        /// <summary>
+        /// Tuỳ thuộc vào điểm giữa hiện tại của Phase Store,
+        /// Giai đoạn sẽ được xác định tương ứng.
+        /// 
+        /// BetweenPoint là tuần kết thúc của giai đoạn 1.
+        /// </summary>
         public Phase GetPhase()
         {
-            bool isOnePhaseDelta = EndWeek - StartWeek >= 7;
-            if (StartWeek >= 1 && EndWeek - StartWeek >= 14)
-            {
-                return Phase.All;
-            }
-            else if (
-                (StartWeek >= 8 || StartWeek >= 34)
-                && isOnePhaseDelta
-            )
-            {
-                return Phase.Second;
-            }
-            else if (
-                (StartWeek >= 1 || StartWeek >= 18)
-                && isOnePhaseDelta
-            )
+            PhaseStore phaseStore = (PhaseStore)((App)Application.Current).Container.GetService(typeof(PhaseStore));
+            int betweenPointValue = phaseStore.CurrentBetweenPointValue;
+            if (EndWeek <= betweenPointValue)
             {
                 return Phase.First;
             }
-            return Phase.All;
+            else if (StartWeek > betweenPointValue)
+            {
+                return Phase.Second;
+            }
+            else if (StartWeek <= betweenPointValue && EndWeek > betweenPointValue)
+            {
+                return Phase.All;
+            }
+            else
+            {
+                return Phase.Non;
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Cs4rsaDatabase.Models;
 
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces
+namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces
 {
     public interface IDtuStudentInfoCrawler
     {

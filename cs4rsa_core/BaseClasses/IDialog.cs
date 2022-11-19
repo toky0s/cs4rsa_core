@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.BaseClasses
+﻿namespace Cs4rsa.BaseClasses
 {
     /// <summary>
     /// Mọi Dialog trong Cs4rsa phải implement

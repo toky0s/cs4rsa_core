@@ -1,17 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Messages.Publishers.Dialogs;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Messages.Publishers.Dialogs;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public sealed class StudentInputViewModel : ViewModelBase
     {

@@ -1,5 +1,5 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.DataProviders;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.DataProviders;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Implements
+namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

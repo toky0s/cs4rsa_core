@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Constants
+﻿namespace Cs4rsa.Constants
 {
     internal abstract class ViewConstants
     {

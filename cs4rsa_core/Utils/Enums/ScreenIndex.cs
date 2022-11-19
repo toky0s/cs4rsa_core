@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Commons.Enums
+﻿namespace Cs4rsa.Commons.Enums
 {
     /// <summary>
     /// Chỉ mục màn hình

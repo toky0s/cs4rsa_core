@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using Newtonsoft.Json;
 
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     /// <summary>
     /// ShareString là một tính năng quan trọng giúp các

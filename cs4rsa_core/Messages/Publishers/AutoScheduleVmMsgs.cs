@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using cs4rsa_core.Models;
+using Cs4rsa.Models;
 
-namespace cs4rsa_core.Messages.Publishers
+namespace Cs4rsa.Messages.Publishers
 {
     internal sealed class AutoScheduleVmMsgs
     {

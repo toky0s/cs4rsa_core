@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums
 {
     /**
     * Danh sách hình thức lớp

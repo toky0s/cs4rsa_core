@@ -1,14 +1,14 @@
-﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class AutoSortSubjectLoadViewModel : ViewModelBase
     {

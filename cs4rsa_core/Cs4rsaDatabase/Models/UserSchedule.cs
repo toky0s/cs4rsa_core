@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Models
+namespace Cs4rsa.Cs4rsaDatabase.Models
 {
     /// <summary>
     /// Thông tin tổng quan bộ lịch của người dùng đã lưu

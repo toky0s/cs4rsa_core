@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Services.ConflictSvc.Interfaces;
+﻿using Cs4rsa.Services.ConflictSvc.Interfaces;
 
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters
+namespace Cs4rsa.Converters
 {
     /// <summary>
     /// Chuyển một Conflict Model thành một chuỗi thông tin hiển thị.

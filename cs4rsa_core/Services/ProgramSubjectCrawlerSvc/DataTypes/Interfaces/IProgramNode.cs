@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces
 {
     /// <summary>
     /// IProgramNode đại diện cho một node trong chương trình học của một

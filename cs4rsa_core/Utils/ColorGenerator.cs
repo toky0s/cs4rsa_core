@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     public class ColorGenerator
     {

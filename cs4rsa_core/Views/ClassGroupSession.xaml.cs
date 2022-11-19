@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Views
+namespace Cs4rsa.Views
 {
     public partial class ClassGroupSession : UserControl
     {

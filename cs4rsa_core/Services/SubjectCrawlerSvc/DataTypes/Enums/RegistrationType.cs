@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
+﻿namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums
 {
     /// <summary>
     /// Mô tả cho tình trạng đăng ký của một class group

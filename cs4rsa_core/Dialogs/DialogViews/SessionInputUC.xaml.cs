@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.BaseClasses;
+﻿using Cs4rsa.BaseClasses;
 
 using System.Windows.Controls;
-namespace cs4rsa_core.Dialogs.DialogViews
+namespace Cs4rsa.Dialogs.DialogViews
 {
     public partial class SessionInputUC : UserControl, IDialog
     {

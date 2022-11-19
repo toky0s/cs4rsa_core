@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Commons.Interfaces;
-using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Commons.Interfaces;
+using Cs4rsa.Commons.Models;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     class ScheduleTableViewModel : ViewModelBase
     {

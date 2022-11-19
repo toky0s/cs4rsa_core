@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Windows;
 
 
-namespace cs4rsa_core.ViewModelLocator
+namespace Cs4rsa.ViewModelLocator
 {
     public static class ViewModelLocator
     {

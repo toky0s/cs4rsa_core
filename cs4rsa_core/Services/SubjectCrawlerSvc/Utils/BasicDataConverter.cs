@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
 {
     /// <summary>
     /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData hoặc Model

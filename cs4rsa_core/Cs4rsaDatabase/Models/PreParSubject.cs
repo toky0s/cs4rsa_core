@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Models
+namespace Cs4rsa.Cs4rsaDatabase.Models
 {
     /// <summary>
     /// Kho chứa thông tin các môn tiên quyết và song hành.

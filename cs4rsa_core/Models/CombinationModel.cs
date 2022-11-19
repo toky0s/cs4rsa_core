@@ -1,14 +1,14 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.ViewModelFunctions;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.ViewModelFunctions;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace cs4rsa_core.Models
+namespace Cs4rsa.Models
 {
     /// <summary>
     /// Class này đại diện cho sự kết hợp một tập các ClassGroupModel khác nhau.

@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Cs4rsaDatabase.Models
+﻿namespace Cs4rsa.Cs4rsaDatabase.Models
 {
     /// <summary>
     /// Một môn học có nhiều môn song hành.

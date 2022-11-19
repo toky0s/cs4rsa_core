@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Models.Bases;
+﻿using Cs4rsa.Models.Bases;
 
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters
+namespace Cs4rsa.Converters
 {
     public class NodeTypeConverter : IValueConverter
     {

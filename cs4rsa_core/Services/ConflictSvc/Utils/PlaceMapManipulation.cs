@@ -1,11 +1,11 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.Utils
+namespace Cs4rsa.Services.ConflictSvc.Utils
 {
     public class PlaceMapManipulation
     {

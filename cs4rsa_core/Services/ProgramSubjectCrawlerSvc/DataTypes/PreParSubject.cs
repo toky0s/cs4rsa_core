@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
     /// <summary>
     /// Đại diện cho các môn tiên quyết và môn song hành của một môn nào đó.

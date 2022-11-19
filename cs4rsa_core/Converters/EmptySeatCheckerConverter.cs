@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters
+namespace Cs4rsa.Converters
 {
     class EmptySeatCheckerConverter : IValueConverter
     {

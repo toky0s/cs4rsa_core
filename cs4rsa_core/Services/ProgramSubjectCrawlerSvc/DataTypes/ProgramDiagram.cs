@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
     /// <summary>
     /// Đại diện cho toàn bộ chương trình học của một sinh viên nào đó.

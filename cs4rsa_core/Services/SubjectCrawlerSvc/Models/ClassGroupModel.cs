@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     /// <summary>
     /// ClassGroupModel và ClassGroup:
@@ -37,7 +37,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         public IEnumerable<string> TempTeacher { get; }
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
-        public Phase Phase { get; }
+        public Phase Phase { get => ClassGroup.GetPhase(); }
 
         private Schedule _schedule;
         public Schedule Schedule { get => _schedule; }
@@ -100,7 +100,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                 Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
                 EmptySeat = classGroup.GetEmptySeat();
                 TempTeacher = classGroup.GetTempTeachers();
-                Phase = classGroup.GetPhase();
                 ImplementType = classGroup.GetImplementType();
                 RegistrationType = classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;

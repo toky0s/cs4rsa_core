@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cs4rsa_core.Commons.Models
+namespace Cs4rsa.Commons.Models
 {
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.

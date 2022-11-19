@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     /// <summary>
     /// ConflictTime đại diện cho một khoảng thời gian xung đột giữa hai ClassGroup.
@@ -10,7 +10,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
     /// 
     /// Ngang cấp với PlaceAdjacent.
     /// </summary>
-    public struct ConflictTime
+    public readonly struct ConflictTime
     {
         public static readonly ConflictTime NullInstance = new();
 

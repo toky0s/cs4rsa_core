@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Models;
 
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.TeacherCrawlerSvc.Models
+namespace Cs4rsa.Services.TeacherCrawlerSvc.Models
 {
     public class TeacherModel
     {

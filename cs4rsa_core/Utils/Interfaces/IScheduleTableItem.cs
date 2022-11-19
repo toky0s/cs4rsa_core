@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Commons.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Commons.Interfaces
+namespace Cs4rsa.Commons.Interfaces
 {
     /**
      * Mô tả:

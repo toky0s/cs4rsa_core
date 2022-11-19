@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters.DialogConverters
+namespace Cs4rsa.Converters.DialogConverters
 {
     /// <summary>
     /// Converter thực hiện thay thế chuỗi trống 
