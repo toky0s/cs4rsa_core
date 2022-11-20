@@ -649,11 +649,11 @@
                             <MenuItem
                                 Command="{Binding DeleteCommand}"
                                 Header="Xoá"
-                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}"/>
+                                Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
                             <MenuItem
                                 Command="{Binding GotoCourseCommand}"
                                 Header="Mở trong Courses"
-                                Icon="{materialDesign:PackIcon Kind=OpenInApp}"/>
+                                Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
                         </ContextMenu>
                     </ListView.Resources>
                     <ListView.ItemTemplate>
@@ -691,8 +691,8 @@
                         Margin="0,5,5,5"
                         Command="{Binding SubjectDownloadCommand}"
                         Content="TẢI"
-                        IsEnabled="{Binding ProgramFolderModels.Count}"
-                        Foreground="White" />
+                        Foreground="White"
+                        IsEnabled="{Binding ProgramFolderModels.Count}" />
                     <Button
                         Grid.Column="1"
                         Height="30"

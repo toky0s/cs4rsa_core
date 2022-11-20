@@ -39,7 +39,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums
             SES,SLF,STD,SUP,TUT,VOL,WOR
         };
 
-        public readonly string Code;
+        public string Code { get; }
         public readonly string FullEn;
         public readonly string FullVn;
         public readonly string Description;

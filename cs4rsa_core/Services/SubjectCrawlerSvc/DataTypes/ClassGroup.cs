@@ -16,7 +16,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 
         public readonly string Name;
         public readonly string SubjectCode;
-        public readonly string SubjectName;
+        public string SubjectName { get; }
 
         public List<string> RegisterCodes
         {
