@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:Cs4rsa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dialogConverter="clr-namespace:Cs4rsa.Converters.DialogConverters"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
@@ -18,7 +17,6 @@
         <ResourceDictionary>
             <converter:ConflictModelConverter x:Key="ConflictInfoConverter" />
             <converter:ConflictTypeConverter x:Key="ConflictTypeConverter" />
-            <dialogConverter:PhaseConverter x:Key="PhaseConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
             </ResourceDictionary.MergedDictionaries>
