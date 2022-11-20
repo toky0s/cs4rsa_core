@@ -15,6 +15,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IsNotNullConverter x:Key="IsNotNullConverter" />
+        <converter:GetTeacherNameConverter x:Key="GetTeacherNameConverter" />
     </UserControl.Resources>
     <materialDesign:Card Padding="10">
         <Grid>
@@ -55,7 +56,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
                         <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Loại hình" />
                         <GridViewColumn DisplayMemberBinding="{Binding EmptySeat}" Header="Số chỗ còn lại" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Teachers[0].Name}" Header="Tên giảng viên" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Teachers, Converter={StaticResource GetTeacherNameConverter}, ConverterParameter=Không có giá trị}" Header="Tên giảng viên" />
                     </GridView>
                 </ListView.View>
             </ListView>
