@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Cs4rsaDatabase.Models
+﻿namespace Cs4rsa.Cs4rsaDatabase.Models
 {
     /// <summary>
     /// Thông tin chi tiết về bộ lịch đã lưu.

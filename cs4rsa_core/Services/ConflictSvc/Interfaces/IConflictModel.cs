@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
-namespace cs4rsa_core.Services.ConflictSvc.Interfaces
+namespace Cs4rsa.Services.ConflictSvc.Interfaces
 {
     /// <summary>
     /// Triển khai ConflictModel hiển thị các ConflictPlace hoặc ConflictTime

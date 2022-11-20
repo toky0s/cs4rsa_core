@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Utils.Interfaces
+﻿namespace Cs4rsa.Utils.Interfaces
 {
     /// <summary>
     /// Class triển khai Interface này sẽ triển khai

@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     /// <summary>
     /// PlaceMap đại diện cho một khối thời gian đi kèm vị trí nơi học.

@@ -1,16 +1,12 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Validations.Rules
+namespace Cs4rsa.Validations.Rules
 {
     public class ShareStringRule : ValidationRule
     {

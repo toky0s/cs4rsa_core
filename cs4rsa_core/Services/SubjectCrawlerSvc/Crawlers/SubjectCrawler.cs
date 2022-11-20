@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 {
     public class SubjectCrawler : ISubjectCrawler
     {

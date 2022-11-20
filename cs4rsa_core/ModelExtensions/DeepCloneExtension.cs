@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace cs4rsa_core.ModelExtensions
+namespace Cs4rsa.ModelExtensions
 {
     public static class DeepCloneExtension
     {

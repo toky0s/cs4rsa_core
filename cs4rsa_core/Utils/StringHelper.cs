@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     public class StringHelper
     {

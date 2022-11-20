@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.CourseSearchSvc.DataTypes;
+﻿using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.DataTypes;
 
 using HtmlAgilityPack;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.CourseSearchSvc.Crawlers
+namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
 {
     /// <summary>
     /// Đảm nhiệm việc cào thông tin học kỳ và năm học.

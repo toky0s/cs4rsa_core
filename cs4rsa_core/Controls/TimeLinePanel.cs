@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     internal class TimeLinePanel : Panel
     {

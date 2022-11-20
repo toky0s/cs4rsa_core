@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class Subject
     {
@@ -265,7 +265,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                                         registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teachers, tempTeachers,
                                         registrationStatus, implementationStatus,
-                                        urlToSubjectDetailPage, metaData);
+                                        urlToSubjectDetailPage, metaData, SubjectCode);
             return schoolClass;
         }
 

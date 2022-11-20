@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
 {
     public class DisciplineCrawler
     {

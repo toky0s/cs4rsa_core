@@ -1,16 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils.Interfaces;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils.Interfaces;
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public sealed class ClassGroupSessionViewModel : ViewModelBase
     {

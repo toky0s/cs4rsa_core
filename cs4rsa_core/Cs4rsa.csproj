@@ -86,7 +86,7 @@
     <Page Update="Views\AutoSchedule.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ChoicedSession.xaml">
+    <Page Update="Views\ChoosedSession.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\ClassGroupSession.xaml">

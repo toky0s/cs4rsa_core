@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters
+namespace Cs4rsa.Converters
 {
     class StudyStateConverter : IValueConverter
     {

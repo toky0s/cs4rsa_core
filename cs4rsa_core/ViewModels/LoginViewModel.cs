@@ -1,15 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Dialogs.MessageBoxService;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.ModelExtensions;
 
 using MaterialDesignThemes.Wpf;
 
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {

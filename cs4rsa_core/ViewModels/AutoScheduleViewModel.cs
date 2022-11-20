@@ -1,26 +1,26 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -31,7 +31,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public class AutoScheduleViewModel : ViewModelBase
     {

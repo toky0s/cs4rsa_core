@@ -1,27 +1,27 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.DataProviders;
-using cs4rsa_core.Cs4rsaDatabase.Implements;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.ModelExtensions;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Settings;
-using cs4rsa_core.Settings.Interfaces;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
-using cs4rsa_core.ViewModels;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.DataProviders;
+using Cs4rsa.Cs4rsaDatabase.Implements;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Dialogs.MessageBoxService;
+using Cs4rsa.ModelExtensions;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers;
+using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Settings;
+using Cs4rsa.Settings.Interfaces;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.ViewModels;
 
 using HtmlAgilityPack;
 
@@ -32,7 +32,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 
-namespace cs4rsa_core
+namespace Cs4rsa
 {
     public sealed partial class App : Application
     {
@@ -91,11 +91,12 @@ namespace cs4rsa_core
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
+            services.AddSingleton<PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchSessionViewModel>();
             services.AddSingleton<ClassGroupSessionViewModel>();
-            services.AddSingleton<ChoicedSessionViewModel>();
+            services.AddSingleton<ChoosedSessionViewModel>();
             services.AddSingleton<ScheduleTableViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();

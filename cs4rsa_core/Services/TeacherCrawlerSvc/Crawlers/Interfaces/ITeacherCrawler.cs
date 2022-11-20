@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
+﻿using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces
+namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces
 {
     public interface ITeacherCrawler
     {

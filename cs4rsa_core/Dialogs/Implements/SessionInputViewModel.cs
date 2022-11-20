@@ -1,19 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.MessageBoxService;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.MessageBoxService;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     /// <summary>
     /// ViewModel của dialog nhập session id

@@ -1,15 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.Constants;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Constants;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.ViewModelFunctions
+namespace Cs4rsa.ViewModelFunctions
 {
     /// <summary>
     /// Bộ chọn class group. Khi bộ chọn này Start nó thực hiện import các class group Model

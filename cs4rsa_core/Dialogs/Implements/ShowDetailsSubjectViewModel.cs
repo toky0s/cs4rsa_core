@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class ShowDetailsSubjectViewModel : ViewModelBase
     {

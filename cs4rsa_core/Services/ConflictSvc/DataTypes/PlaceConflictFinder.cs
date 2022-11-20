@@ -1,13 +1,12 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ConflictSvc.Utils;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ConflictSvc.Utils;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
 
     /// <summary>
@@ -24,9 +23,11 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         public ConflictPlace GetPlaceConflict()
         {
             // Hai school class không có giao nhau về giai đoạn chắc chắn không xung đột.
-            if (!CanConflictPhase(_schoolClass1.GetPhase(), _schoolClass2.GetPhase()))
+            // Check phase
+            PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(_schoolClass1.StudyWeek, _schoolClass2.StudyWeek);
+            if (phaseIntersect.Equals(PhaseIntersect.NullInstance))
             {
-                return null;
+                return ConflictPlace.NullInstance;
             }
 
             // Kiểm tra hai school class có ngày học chung hay không, nếu không
@@ -36,7 +37,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             IEnumerable<DayOfWeek> intersectDayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
             if (!intersectDayOfWeeks.Any())
             {
-                return null;
+                return ConflictPlace.NullInstance;
             }
 
             // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
@@ -46,7 +47,7 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             IEnumerable<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct();
             if (dinstictPlaces.Count() < 2)
             {
-                return null;
+                return ConflictPlace.NullInstance;
             }
 
             Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> conflictPlaces = new();
@@ -71,13 +72,8 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             }
             else
             {
-                return null;
+                return ConflictPlace.NullInstance;
             }
-        }
-
-        public static ConflictType GetConflictType()
-        {
-            return ConflictType.Place;
         }
     }
 }

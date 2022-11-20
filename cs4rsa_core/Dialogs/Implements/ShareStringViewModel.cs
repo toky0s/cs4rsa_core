@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
-using cs4rsa_core.BaseClasses;
+using Cs4rsa.BaseClasses;
 
 using MaterialDesignThemes.Wpf;
 
 using System.Windows;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class ShareStringViewModel : ViewModelBase
     {

@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums
+﻿namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums
 {
     /// <summary>
     /// Đại diện cho hình thức học của một Folder, có thể là bắt buộc

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace cs4rsa_core.Dialogs.MessageBoxService
+namespace Cs4rsa.Dialogs.MessageBoxService
 {
     public class Cs4rsaMessageBox : IMessageBox
     {

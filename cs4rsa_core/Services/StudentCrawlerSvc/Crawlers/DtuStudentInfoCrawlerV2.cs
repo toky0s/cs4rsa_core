@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
@@ -13,7 +13,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 {
     /// <summary>
     /// 23/1/2022 Version 2 DTU Student Info Crawler

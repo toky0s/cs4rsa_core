@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Settings.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Settings.Interfaces;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace cs4rsa_core.Settings
+namespace Cs4rsa.Settings
 {
     public class Setting : ISetting
     {

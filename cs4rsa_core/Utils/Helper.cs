@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     /// <summary>
     /// Class này chứa những phương thức hữu ích.

@@ -1,19 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
-using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Messages.States;
+using Cs4rsa.ModelExtensions;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using MaterialDesignThemes.Wpf;
 
@@ -23,10 +24,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
-    public class ChoicedSessionViewModel : ViewModelBase
+    public class ChoosedSessionViewModel : ViewModelBase
     {
+        #region Properties
         private string _shareString;
 
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -53,6 +55,7 @@ namespace cs4rsa_core.ViewModels
         }
 
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
+        #endregion
 
         #region Commands
         public AsyncRelayCommand SaveCommand { get; set; }
@@ -63,28 +66,42 @@ namespace cs4rsa_core.ViewModels
         public RelayCommand SolveConflictCommand { get; set; }
         #endregion
 
-        #region Services
+        #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
+        private readonly PhaseStore _phaseStore;
         #endregion
-        public ChoicedSessionViewModel(ISnackbarMessageQueue snackbarMessageQueue, ShareString shareString)
+
+        public ChoosedSessionViewModel(
+            ISnackbarMessageQueue snackbarMessageQueue,
+            ShareString shareString,
+            PhaseStore phaseStore
+        )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
             _shareStringGenerator = shareString;
+            _phaseStore = phaseStore;
 
+            #region WeakReferenceMessengers
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
+                _phaseStore.RemoveSchoolClassBySubjectCode(m.Value.SubjectCode);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
-                Application.Current.Dispatcher.InvokeAsync(DelAllSubjectMsgHandler);
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    DelAllSubjectMsgHandler();
+                    _phaseStore.RemoveAllSchoolClass();
+                });
             });
 
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 AddClassGroupModelAndReload(m.Value);
+                _phaseStore.AddClassGroup(m.Value);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectClassGroupModelsMsg>(this, (r, m) =>
@@ -92,14 +109,19 @@ namespace cs4rsa_core.ViewModels
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     AddClassGroupModelsAndReload(m.Value);
-                    return Task.CompletedTask;
                 });
             });
 
             WeakReferenceMessenger.Default.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
             {
-                RemoveChoicedClassMsgHandler(m.Value);
+                RemoveChoosedClassMsgHandler(m.Value);
             });
+
+            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            {
+                UpdateConflicts();
+            });
+            #endregion
 
             SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
@@ -132,10 +154,15 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void OnCopyCode()
         {
-            string registerCode = _selectedClassGroupModel.CurrentSchoolClassName;
-            Clipboard.SetData(DataFormats.Text, registerCode);
-            string message = $"Đã copy mã của môn {_selectedClassGroupModel.SubjectCode} vào Clipboard";
-            _snackbarMessageQueue.Enqueue(message);
+            if (SelectedClassGroupModel.RegisterCodes.Count > 0)
+            {
+                string registerCode = SelectedClassGroupModel.RegisterCodes[0];
+                Clipboard.SetData(DataFormats.Text, registerCode);
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NF_REGISTER_CODE);
+            }
         }
 
         /// <summary>
@@ -150,6 +177,7 @@ namespace cs4rsa_core.ViewModels
             }
 
             ClassGroupModels.Clear();
+            _phaseStore.RemoveAllSchoolClass();
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -178,6 +206,7 @@ namespace cs4rsa_core.ViewModels
         {
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
+            _phaseStore.RemoveSchoolClassBySubjectCode(_selectedClassGroupModel.SubjectCode);
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
 
@@ -280,7 +309,7 @@ namespace cs4rsa_core.ViewModels
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
+                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);
@@ -301,6 +330,7 @@ namespace cs4rsa_core.ViewModels
                     ClassGroupModels.Add(classGroupModel);
             }
 
+            _phaseStore.AddClassGroup(classGroupModel);
             UpdateConflicts();
 
             SaveCommand.NotifyCanExecuteChanged();
@@ -313,6 +343,7 @@ namespace cs4rsa_core.ViewModels
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
+                _phaseStore.AddClassGroup(classGroupModel);
             }
 
             UpdateConflicts();
@@ -367,7 +398,7 @@ namespace cs4rsa_core.ViewModels
         /// <summary>
         /// Xử lý Remove Choiced Class Message
         /// </summary>
-        private void RemoveChoicedClassMsgHandler(string className)
+        private void RemoveChoosedClassMsgHandler(string className)
         {
             if (className == string.Empty || className == null)
             {
@@ -380,6 +411,7 @@ namespace cs4rsa_core.ViewModels
                 if (ClassGroupModels[i].Name == className)
                 {
                     actionData = ClassGroupModels[i].DeepClone();
+                    _phaseStore.RemoveSchoolClassBySubjectCode(ClassGroupModels[i].SubjectCode);
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);

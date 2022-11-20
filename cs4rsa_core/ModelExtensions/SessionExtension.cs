@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 
-namespace cs4rsa_core.ModelExtensions
+namespace Cs4rsa.ModelExtensions
 {
     public class SessionExtension
     {

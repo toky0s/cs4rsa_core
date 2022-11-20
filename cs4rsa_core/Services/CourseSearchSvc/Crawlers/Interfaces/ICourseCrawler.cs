@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces
+﻿namespace Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces
 {
     public interface ICourseCrawler
     {

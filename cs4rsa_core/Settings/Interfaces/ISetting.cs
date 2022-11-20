@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Settings.Interfaces
+﻿namespace Cs4rsa.Settings.Interfaces
 {
     public interface ISetting
     {

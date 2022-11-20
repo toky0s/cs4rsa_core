@@ -1,16 +1,16 @@
-﻿using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 {
     /// <summary>
     /// Bộ cào này xác định môn tiên quyết và môn song hành.

@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Cs4rsaDatabase.Models;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
+namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IParProDetailsRepository : IGenericRepository<ParProDetail>
     {

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     public partial class ScheduleBlock : UserControl
     {

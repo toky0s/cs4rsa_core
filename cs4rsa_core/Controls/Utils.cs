@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     internal class Utils
     {

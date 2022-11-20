@@ -1,24 +1,24 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
-using cs4rsa_core.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
-using cs4rsa_core.ViewModelFunctions;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.ModelExtensions;
+using Cs4rsa.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.ViewModelFunctions;
 
 using MaterialDesignThemes.Wpf;
 
@@ -32,7 +32,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public sealed class SearchSessionViewModel : ViewModelBase
     {
@@ -352,7 +352,7 @@ namespace cs4rsa_core.ViewModels
 
             #region ClassGroupModels
             List<ClassGroupModel> classGroupModels = new();
-            ChoicedSessionViewModel choicedSessionViewModel = GetViewModel<ChoicedSessionViewModel>();
+            ChoosedSessionViewModel choicedSessionViewModel = GetViewModel<ChoosedSessionViewModel>();
             ObservableCollection<ClassGroupModel> classGroupColl = choicedSessionViewModel.ClassGroupModels;
             foreach (ClassGroupModel classGroupModel in classGroupColl)
             {
@@ -429,11 +429,11 @@ namespace cs4rsa_core.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+            if (GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .Any())
             {
-                ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .First();
                 ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();

@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using cs4rsa_core.Services.ConflictSvc.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Services.ConflictSvc.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Messages.Publishers
+namespace Cs4rsa.Messages.Publishers
 {
     internal sealed class ChoicedSessionVmMsgs
     {

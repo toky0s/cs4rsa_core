@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     /// <summary>
     /// ClassGroupModel và ClassGroup:
@@ -20,18 +20,10 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
     public class ClassGroupModel
     {
         /// <summary>
-        /// Trong trường hợp ClassGroupModel không có mã đăng ký nào
-        /// _currentSchoolClassName sẽ thay thế để đảm nhiệm vai trò tương tự.
-        /// </summary>
-        private string _currentSchoolClassName;
-        public string CurrentSchoolClassName { get => _currentSchoolClassName; }
-
-
-        /// <summary>
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
-        private readonly List<SchoolClassModel> _currentSchoolClassModels = new();
+        private readonly List<SchoolClassModel> _currentSchoolClassModels;
         public List<SchoolClassModel> CurrentSchoolClassModels
         {
             get { return _currentSchoolClassModels; }
@@ -45,7 +37,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
         public IEnumerable<string> TempTeacher { get; }
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
-        public Phase Phase { get; }
+        public Phase Phase { get => ClassGroup.GetPhase(); }
 
         private Schedule _schedule;
         public Schedule Schedule { get => _schedule; }
@@ -103,31 +95,34 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             if (classGroup.SchoolClasses.Count > 0)
             {
                 _schedule = classGroup.GetSchedule();
+                _currentSchoolClassModels = new();
+
                 Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
                 EmptySeat = classGroup.GetEmptySeat();
                 TempTeacher = classGroup.GetTempTeachers();
-                Phase = classGroup.GetPhase();
                 ImplementType = classGroup.GetImplementType();
                 RegistrationType = classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
                 CompulsoryClass = GetCompulsoryClass();
                 IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
+
+                // Class Group thường với duy nhất một SchoolClass
                 if (classGroup.SchoolClasses.Count == 1)
                 {
-                    _currentSchoolClassName = classGroup.SchoolClasses[0].SchoolClassName;
                     CodeSchoolClass = CompulsoryClass;
+                    CurrentSchoolClassModels.Add(CompulsoryClass);
                 }
-                else if (classGroup.SchoolClasses.Count >= 2)
+                // Class Group thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
+                else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
                 {
-                    if (!IsSpecialClassGroup)
+                    SchoolClass schoolClass = classGroup.SchoolClasses
+                        .Where(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName))
+                        .FirstOrDefault();
+                    if (schoolClass != null)
                     {
-                        SchoolClass schoolClass = classGroup.SchoolClasses
-                            .Where(sc => !string.IsNullOrEmpty(sc.RegisterCode))
-                            .FirstOrDefault();
-                        if (schoolClass != null)
-                        {
-                            CodeSchoolClass = new SchoolClassModel(schoolClass);
-                        }
+                        CodeSchoolClass = new SchoolClassModel(schoolClass);
+                        CurrentSchoolClassModels.Add(CompulsoryClass);
+                        CurrentSchoolClassModels.Add(CodeSchoolClass);
                     }
                 }
             }
@@ -179,7 +174,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                     .Any(schoolClass => schoolClass.SchoolClassName == schoolClassName);
                 if (isValidSchoolClassName)
                 {
-                    _currentSchoolClassName = schoolClassName;
                     ReRenderScheduleRequest(schoolClassName);
                 }
                 else
@@ -252,7 +246,6 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
                 .Select(schoolClass => new SchoolClassModel(schoolClass))
                 .FirstOrDefault();
-            _currentSchoolClassName = schoolClassName;
 
             _currentSchoolClassModels.Clear();
             _currentSchoolClassModels.Add(CompulsoryClass);

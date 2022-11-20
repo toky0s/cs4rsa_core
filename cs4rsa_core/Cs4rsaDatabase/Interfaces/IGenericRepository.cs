@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Interfaces
+namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
