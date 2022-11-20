@@ -12,7 +12,6 @@
     d:DesignHeight="450"
     d:DesignWidth="400"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
-    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -42,8 +41,7 @@
             FontWeight="Normal"
             IsEditable="True"
             ItemsSource="{Binding Disciplines, Mode=OneWay}"
-            SelectedItem="{Binding SelectedDiscipline}"
-            SelectionChanged="DisciplineComboBox_SelectionChanged" />
+            SelectedItem="{Binding SelectedDiscipline}" />
         <ComboBox
             x:Name="Keyword1ComboxBox"
             Grid.Row="0"
@@ -153,8 +151,7 @@
                 Grid.Column="1"
                 Margin="5,0,0,0"
                 Command="{Binding AddCommand}"
-                Content="THÊM"
-                IsEnabled="{Binding CanRunAddCommand}" />
+                Content="THÊM" />
         </Grid>
         <ListBox
             x:Name="DownloadSubjects"

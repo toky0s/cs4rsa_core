@@ -44,16 +44,6 @@ namespace Cs4rsa.ViewModels
         #region Commands
         public AsyncRelayCommand AddCommand { get; set; }
         public AsyncRelayCommand ImportDialogCommand { get; set; }
-        private bool canRunAddCommand = true;
-        public bool CanRunAddCommand
-        {
-            get => canRunAddCommand;
-            set
-            {
-                canRunAddCommand = value;
-                OnPropertyChanged();
-            }
-        }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
@@ -69,6 +59,10 @@ namespace Cs4rsa.ViewModels
             set
             {
                 selectedDiscipline = value;
+                if (value != null)
+                {
+                    LoadDisciplineKeyword(value);
+                }
                 OnPropertyChanged();
             }
         }
@@ -80,7 +74,7 @@ namespace Cs4rsa.ViewModels
             set
             {
                 selectedKeyword = value;
-                CanAddSubjectChange();
+                AddCommand.NotifyCanExecuteChanged();
                 OnPropertyChanged();
             }
         }
@@ -107,7 +101,7 @@ namespace Cs4rsa.ViewModels
                     SelectedDiscipline = value.Discipline;
                     SelectedKeyword = value.Keyword;
                     SearchText = string.Empty;
-                    CanAddSubjectChange();
+                    AddCommand.NotifyCanExecuteChanged();
                     if (!IsAlreadyDownloaded(value.Keyword.CourseId))
                     {
                         DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
@@ -232,6 +226,12 @@ namespace Cs4rsa.ViewModels
                 ExitImportSubjectMsgHandler(m.Value.Item1, m.Value.Item2);
             });
 
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await LoadDiscipline();
+                await LoadSavedSchedules();
+            });
+
             DisciplineKeywordModels = new();
             SubjectModels = new();
             Disciplines = new();
@@ -241,7 +241,7 @@ namespace Cs4rsa.ViewModels
             CurrentView = 0;
             IsUseCache = true;
 
-            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
+            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync, () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
@@ -364,7 +364,6 @@ namespace Cs4rsa.ViewModels
 
             SubjectModels.Clear();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
-            CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
@@ -453,7 +452,6 @@ namespace Cs4rsa.ViewModels
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, AddSubjectAndReload, actionData);
-            CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
@@ -474,7 +472,7 @@ namespace Cs4rsa.ViewModels
 
         private async Task OnAddSubjectAsync()
         {
-            CanAddSubjectChange(false);
+
             await OpenDownloadSubjectDialog(
                 selectedDiscipline.Name,
                 selectedKeyword.Keyword1,
@@ -521,7 +519,7 @@ namespace Cs4rsa.ViewModels
             {
                 CloseDialog();
                 _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
-                CanAddSubjectChange();
+                AddCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -582,23 +580,6 @@ namespace Cs4rsa.ViewModels
             Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }
 
-        private void CanAddSubjectChange(bool? value = null)
-        {
-            if (value == null)
-            {
-                if (selectedKeyword == null)
-                {
-                    CanRunAddCommand = true;
-                    return;
-                }
-                CanRunAddCommand = !IsAlreadyDownloaded(SelectedKeyword.CourseId);
-            }
-            else
-            {
-                CanRunAddCommand = value.Value;
-            }
-        }
-
         /// <summary>
         /// Kiếm tra xem rằng một Subject đã có 
         /// sẵn trong danh sách đã tải xuống hay chưa.
@@ -609,6 +590,16 @@ namespace Cs4rsa.ViewModels
         {
             IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
             return courseIds.Contains(courseId);
+        }
+
+        private bool IsAlreadyDownloaded(Keyword keyword)
+        {
+            if (keyword != null)
+            {
+                IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
+                return courseIds.Contains(keyword.CourseId);
+            }
+            return true;
         }
 
         private void ImportSubjects(IEnumerable<SubjectModel> importSubjects)
@@ -624,7 +615,7 @@ namespace Cs4rsa.ViewModels
                 SubjectModels.Add(subject);
             }
             TotalSubject = SubjectModels.Count;
-            CanAddSubjectChange();
+            AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }
@@ -646,7 +637,7 @@ namespace Cs4rsa.ViewModels
             }
             SelectedSubjectModel = SubjectModels[0];
             TotalSubject = SubjectModels.Count;
-            CanAddSubjectChange();
+            AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }
