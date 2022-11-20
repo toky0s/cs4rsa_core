@@ -177,6 +177,7 @@ namespace Cs4rsa.ViewModels
             }
 
             ClassGroupModels.Clear();
+            _phaseStore.RemoveAllSchoolClass();
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -205,6 +206,7 @@ namespace Cs4rsa.ViewModels
         {
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
+            _phaseStore.RemoveSchoolClassBySubjectCode(_selectedClassGroupModel.SubjectCode);
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
 
@@ -328,6 +330,7 @@ namespace Cs4rsa.ViewModels
                     ClassGroupModels.Add(classGroupModel);
             }
 
+            _phaseStore.AddClassGroup(classGroupModel);
             UpdateConflicts();
 
             SaveCommand.NotifyCanExecuteChanged();
@@ -340,6 +343,7 @@ namespace Cs4rsa.ViewModels
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
+                _phaseStore.AddClassGroup(classGroupModel);
             }
 
             UpdateConflicts();
@@ -407,6 +411,7 @@ namespace Cs4rsa.ViewModels
                 if (ClassGroupModels[i].Name == className)
                 {
                     actionData = ClassGroupModels[i].DeepClone();
+                    _phaseStore.RemoveSchoolClassBySubjectCode(ClassGroupModels[i].SubjectCode);
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);

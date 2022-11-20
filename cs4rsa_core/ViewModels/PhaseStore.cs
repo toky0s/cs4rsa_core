@@ -80,6 +80,12 @@ namespace Cs4rsa.ViewModels
             AddSchoolClasses(classGroupModel.CurrentSchoolClassModels);
         }
 
+        /// <summary>
+        /// Thêm một danh sách SchoolClassModel vào PhaseStore.
+        /// 
+        /// Mô tả:
+        ///     Sau đó, thực hiện đánh giá lại các Tuần và BetweenPoint.
+        /// </summary>
         private void AddSchoolClasses(IEnumerable<SchoolClassModel> schoolClassModels)
         {
             _schoolClassModels.AddRange(schoolClassModels);
@@ -134,21 +140,41 @@ namespace Cs4rsa.ViewModels
                 {
                     Weeks.Add(i);
                 }
+            } else
+            {
+                StartWeek = 0;
+                EndWeek = 0;
             }
         }
 
+        /// <summary>
+        /// Đánh giá lại BetweenPointIndex ở giữa thang các Tuần.
+        /// Đồng thời đánh giá lại giá trị của BetweenPoint.
+        /// </summary>
         private void ReEvaluateBetweenPointIndex()
         {
             BetweenPointIndex = Weeks.Count / 2;
             ReEvaluateBetweenPointValue();
         }
 
+        /// <summary>
+        /// Đánh giá lại giá trị của BetweenPoint.
+        /// 
+        /// Mô tả:
+        ///     Việc đánh giá sẽ được thực hiện khi có ít nhất một Tuần trong danh sách Tuần.
+        ///     Sau khi đánh giá, thông báo PhaseStoreMsgs.BetweenPointChangedMsg.
+        /// </summary>
         private void ReEvaluateBetweenPointValue()
         {
             if (Weeks.Count > 0)
             {
                 CurrentBetweenPointValue = Weeks[BetweenPointIndex];
                 Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(Weeks[BetweenPointIndex]));
+            }
+            else
+            {
+                CurrentBetweenPointValue = 0;
+                Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(0));
             }
         }
     }

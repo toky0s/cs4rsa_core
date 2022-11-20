@@ -189,7 +189,7 @@
                 </ToolTip>
                 <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
                     <MenuItem
-                        Command="{Binding SolveConflictCommand}"
+                        Command="{Binding SolveConflictCommand, Mode=OneTime}"
                         Header="Giải quyết xung đột"
                         Icon="{materialDesign:PackIcon Kind=ClockTimeEightOutline}" />
                 </ContextMenu>
