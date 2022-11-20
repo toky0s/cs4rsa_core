@@ -1,9 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Commons.Interfaces;
 using Cs4rsa.Commons.Models;
 using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.States;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
@@ -23,6 +25,7 @@ namespace Cs4rsa.ViewModels
         private IEnumerable<ConflictModel> _conflictModels;
         private IEnumerable<PlaceConflictFinderModel> _placeConflictFinderModels;
 
+        #region Properties
         public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Wednesday { get; set; }
@@ -51,14 +54,21 @@ namespace Cs4rsa.ViewModels
 
         private readonly ObservableCollection<TimeBlock>[] week1;
         private readonly ObservableCollection<TimeBlock>[] week2;
+        #endregion
+
+        #region Commands
+        public RelayCommand ResetBetweenPointCommand { get; set; }
+        #endregion
 
         #region DI
         private readonly PhaseStore _phaseStore;
         #endregion
+        
         public ScheduleTableViewModel(PhaseStore phaseStore)
         {
             _phaseStore = phaseStore;
 
+            #region WeakReferenceMessengers
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
@@ -87,9 +97,19 @@ namespace Cs4rsa.ViewModels
                 ReloadSchedule();
             });
 
+            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            {
+                ReloadSchedule();
+            });
+            #endregion
+
             _classGroupModels = new List<ClassGroupModel>();
             _conflictModels = new List<ConflictModel>();
             _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
+
+            #region Commands
+            ResetBetweenPointCommand = new(() => _phaseStore.ResetBetweenPoint());
+            #endregion
 
             Phase1_Monday = new();
             Phase1_Tuesday = new();
@@ -172,7 +192,9 @@ namespace Cs4rsa.ViewModels
                 int dayIndex = (int)timeBlock.DayOfWeek;
                 if (phase == Phase.First || phase == Phase.Second)
                 {
-                    ObservableCollection<TimeBlock>[] week = phase == Phase.First ? week1 : week2;
+                    ObservableCollection<TimeBlock>[] week = phase == Phase.First 
+                                                           ? week1 
+                                                           : week2;
                     week[dayIndex].Add(timeBlock);
                 }
                 else if (phase == Phase.All)

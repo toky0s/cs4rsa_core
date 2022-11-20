@@ -8,6 +8,7 @@ using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Messages.States;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.Models;
@@ -81,6 +82,7 @@ namespace Cs4rsa.ViewModels
             _shareStringGenerator = shareString;
             _phaseStore = phaseStore;
 
+            #region WeakReferenceMessengers
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
@@ -114,6 +116,12 @@ namespace Cs4rsa.ViewModels
             {
                 RemoveChoosedClassMsgHandler(m.Value);
             });
+
+            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            {
+                UpdateConflicts();
+            });
+            #endregion
 
             SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
@@ -299,7 +307,7 @@ namespace Cs4rsa.ViewModels
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
+                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);

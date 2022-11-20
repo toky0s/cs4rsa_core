@@ -59,7 +59,7 @@ namespace Cs4rsa.ViewModelFunctions
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
+                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         placeConflictFinderModels.Add(placeConflictModel);

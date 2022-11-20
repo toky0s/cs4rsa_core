@@ -1,14 +1,14 @@
-﻿using Cs4rsa.BaseClasses;
+﻿using CommunityToolkit.Mvvm.Messaging;
+
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Messages.States;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Data.Entity.Core.Mapping;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels
 {
@@ -19,7 +19,6 @@ namespace Cs4rsa.ViewModels
         public ObservableCollection<int> Weeks { get; set; }
 
         private int _startWeek;
-
         public int StartWeek
         {
             get { return _startWeek; }
@@ -31,7 +30,6 @@ namespace Cs4rsa.ViewModels
         }
 
         private int _endWeek;
-
         public int EndWeek
         {
             get { return _endWeek; }
@@ -43,7 +41,6 @@ namespace Cs4rsa.ViewModels
         }
 
         private int _betweenPointIndex;
-
         public int BetweenPointIndex
         {
             get { return _betweenPointIndex; }
@@ -60,7 +57,6 @@ namespace Cs4rsa.ViewModels
         }
 
         private int _currentBetweenPointValue;
-
         public int CurrentBetweenPointValue
         {
             get { return _currentBetweenPointValue; }
@@ -109,6 +105,11 @@ namespace Cs4rsa.ViewModels
             }
         }
 
+        public void ResetBetweenPoint()
+        {
+            ReEvaluateBetweenPointIndex();
+        }
+
         private void ReEvaluateWeeks()
         {
             Weeks.Clear();
@@ -147,6 +148,7 @@ namespace Cs4rsa.ViewModels
             if (Weeks.Count > 0)
             {
                 CurrentBetweenPointValue = Weeks[BetweenPointIndex];
+                Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(Weeks[BetweenPointIndex]));
             }
         }
     }

@@ -140,7 +140,7 @@ namespace Cs4rsa.Models
                 {
                     PlaceConflictFinder conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = conflict.GetPlaceConflict();
-                    if (conflictPlace != null)
+                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
                     {
                         return true;
                     }

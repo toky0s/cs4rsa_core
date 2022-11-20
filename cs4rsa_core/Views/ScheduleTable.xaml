@@ -39,11 +39,16 @@
             <TextBlock
                 Margin="0,0,5,0"
                 VerticalAlignment="Center"
-                Text="Chọn tuần ngăn cách giữa hai giai đoạn" />
+                Text="Tuần ngăn cách" />
             <ComboBox
+                Margin="0,0,5,0"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding PhaseStore.Weeks}"
-                SelectedIndex="{Binding PhaseStore.BetweenPointIndex}" />
+                SelectedIndex="{Binding PhaseStore.BetweenPointIndex}"
+                Style="{StaticResource MaterialDesignDataGridComboBox}" />
+            <TextBlock>
+                <Hyperlink Command="{Binding ResetBetweenPointCommand}">Đặt lại tuần ngăn cách</Hyperlink>
+            </TextBlock>
         </StackPanel>
         <TextBlock Grid.Row="1">
             <Run Text="{Binding PhaseStore.StartWeek, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
@@ -67,32 +72,45 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
-                Text="T2" />
+                FontSize="10"
+                Text="T2"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="2"
-                Text="T3" />
+                FontSize="10"
+                Text="T3"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="3"
-                Text="T4" />
+                FontSize="10"
+                Text="T4"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="4"
-                Text="T5" />
+                FontSize="10"
+                Text="T5"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="5"
-                Text="T6" />
+                FontSize="10"
+                Text="T6"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="6"
-                Text="T7" />
+                FontSize="10"
+                Text="T7"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="7"
-                Text="CN" />
-
+                FontSize="10"
+                Text="CN"
+                TextAlignment="Center" />
             <ItemsControl
                 Grid.Row="1"
                 Grid.Column="1"
@@ -251,7 +269,10 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-        <TextBlock Grid.Row="3" Text="Giai đoạn 2 (Từ tuần between point value - end Week)" />
+        <TextBlock Grid.Row="3">
+            <Run Text="{Binding PhaseStore.CurrentBetweenPointValue, Converter={StaticResource MathAddConverter}, ConverterParameter=1, StringFormat=Giai đoạn 2 (bắt đầu từ tuần {0} đến tuần}" />
+            <Run Text="{Binding PhaseStore.EndWeek, StringFormat={}{0})}" />
+        </TextBlock>
         <Grid Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -270,32 +291,45 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
-                Text="T2" />
+                FontSize="10"
+                Text="T2"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="2"
-                Text="T3" />
+                FontSize="10"
+                Text="T3"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="3"
-                Text="T4" />
+                FontSize="10"
+                Text="T4"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="4"
-                Text="T5" />
+                FontSize="10"
+                Text="T5"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="5"
-                Text="T6" />
+                FontSize="10"
+                Text="T6"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="6"
-                Text="T7" />
+                FontSize="10"
+                Text="T7"
+                TextAlignment="Center" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="7"
-                Text="CN" />
-
+                FontSize="10"
+                Text="CN"
+                TextAlignment="Center" />
             <ItemsControl
                 Grid.Row="1"
                 Grid.Column="1"
