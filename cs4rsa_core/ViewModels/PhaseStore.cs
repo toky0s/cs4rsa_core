@@ -22,10 +22,10 @@ namespace Cs4rsa.ViewModels
         public int StartWeek
         {
             get { return _startWeek; }
-            set 
-            { 
-                _startWeek = value; 
-                OnPropertyChanged(); 
+            set
+            {
+                _startWeek = value;
+                OnPropertyChanged();
             }
         }
 
@@ -33,9 +33,9 @@ namespace Cs4rsa.ViewModels
         public int EndWeek
         {
             get { return _endWeek; }
-            set 
-            { 
-                _endWeek = value; 
+            set
+            {
+                _endWeek = value;
                 OnPropertyChanged();
             }
         }
@@ -44,8 +44,8 @@ namespace Cs4rsa.ViewModels
         public int BetweenPointIndex
         {
             get { return _betweenPointIndex; }
-            set 
-            { 
+            set
+            {
                 if (value < 0 || value > Weeks.Count - 1)
                 {
                     _betweenPointIndex = 0;
@@ -140,7 +140,8 @@ namespace Cs4rsa.ViewModels
                 {
                     Weeks.Add(i);
                 }
-            } else
+            }
+            else
             {
                 StartWeek = 0;
                 EndWeek = 0;

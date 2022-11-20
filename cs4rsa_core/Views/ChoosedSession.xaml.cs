@@ -1,9 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.ViewModels;
-
-using MaterialDesignThemes.Wpf;
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Cs4rsa.Views

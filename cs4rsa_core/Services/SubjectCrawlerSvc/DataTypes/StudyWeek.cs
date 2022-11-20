@@ -1,7 +1,6 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.ViewModels;
 
-using System;
 using System.Windows;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes

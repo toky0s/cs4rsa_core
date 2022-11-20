@@ -63,7 +63,7 @@ namespace Cs4rsa.ViewModels
         #region DI
         private readonly PhaseStore _phaseStore;
         #endregion
-        
+
         public ScheduleTableViewModel(PhaseStore phaseStore)
         {
             _phaseStore = phaseStore;
@@ -192,8 +192,8 @@ namespace Cs4rsa.ViewModels
                 int dayIndex = (int)timeBlock.DayOfWeek;
                 if (phase == Phase.First || phase == Phase.Second)
                 {
-                    ObservableCollection<TimeBlock>[] week = phase == Phase.First 
-                                                           ? week1 
+                    ObservableCollection<TimeBlock>[] week = phase == Phase.First
+                                                           ? week1
                                                            : week2;
                     week[dayIndex].Add(timeBlock);
                 }

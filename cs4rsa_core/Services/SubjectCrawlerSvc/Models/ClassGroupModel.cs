@@ -105,7 +105,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 RegisterCodes = classGroup.RegisterCodes;
                 CompulsoryClass = GetCompulsoryClass();
                 IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
-                
+
                 // Class Group thường với duy nhất một SchoolClass
                 if (classGroup.SchoolClasses.Count == 1)
                 {

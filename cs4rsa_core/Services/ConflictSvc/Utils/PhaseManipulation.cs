@@ -25,7 +25,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
             // Case 2
             else if (fStartWeek > sStartWeek && fEndWeek < sEndWeek)
             {
-                return new PhaseIntersect() 
+                return new PhaseIntersect()
                 {
                     StartWeek = fStartWeek,
                     EndWeek = fEndWeek
@@ -60,7 +60,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
                         EndWeek = sEndWeek
                     };
                 }
-            } 
+            }
             else if (fEndWeek == sEndWeek)
             {
                 // Case 7
@@ -83,8 +83,8 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
                 }
             }
             // Case 10
-            else if (fStartWeek > sStartWeek 
-                && fEndWeek > sEndWeek 
+            else if (fStartWeek > sStartWeek
+                && fEndWeek > sEndWeek
                 && sEndWeek >= fStartWeek)
             {
                 return new PhaseIntersect()
@@ -92,7 +92,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
                     StartWeek = fStartWeek,
                     EndWeek = sEndWeek
                 };
-            } 
+            }
             // Case 11
             else
             {

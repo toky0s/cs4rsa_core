@@ -73,7 +73,7 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         public ChoosedSessionViewModel(
-            ISnackbarMessageQueue snackbarMessageQueue, 
+            ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
             PhaseStore phaseStore
         )
