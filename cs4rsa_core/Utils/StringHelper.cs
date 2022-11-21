@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cs4rsa.Constants;
+
+using System;
 using System.Text;
 
 namespace Cs4rsa.Utils
@@ -7,7 +9,7 @@ namespace Cs4rsa.Utils
     {
         public static string[] SplitAndRemoveAllSpace(string text)
         {
-            char[] separatingStrings = { ' ', '\n', '\r' };
+            char[] separatingStrings = { VMConstants.CHAR_SPACE, '\n', '\r' };
             return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -19,9 +21,9 @@ namespace Cs4rsa.Utils
 
         public static string SuperCleanString(string text)
         {
-            char[] separatingStrings = { ' ', '\n', '\r' };
+            char[] separatingStrings = { VMConstants.CHAR_SPACE, '\n', '\r' };
             string[] sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
-            string ouput = string.Join(" ", sliceStrings);
+            string ouput = string.Join(VMConstants.STR_SPACE, sliceStrings);
             return ouput;
         }
 

@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.DataProviders;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 
@@ -26,14 +27,14 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
             Keyword keyword = (from discipline in _context.Disciplines
                                join kw in _context.Keywords on discipline.DisciplineId equals kw.DisciplineId
-                               where discipline.Name + " " + kw.Keyword1 == subjectCode
+                               where discipline.Name + VMConstants.STR_SPACE + kw.Keyword1 == subjectCode
                                select kw).FirstOrDefault();
             return keyword.Color;
         }
 
         public int GetCourseId(string subjectCode)
         {
-            char[] splitChar = { ' ' };
+            char[] splitChar = { VMConstants.CHAR_SPACE };
             string[] slices = subjectCode.Split(splitChar);
             return _context.Keywords
                 .Where(kw => kw.Discipline.Name == slices[0] && kw.Keyword1 == slices[1])
@@ -66,7 +67,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public async Task<Keyword> GetKeyword(string subjectCode)
         {
-            char[] splitChars = { ' ' };
+            char[] splitChars = { VMConstants.CHAR_SPACE };
             string[] slices = subjectCode.Split(splitChars);
             return await GetKeyword(slices[0], slices[1]);
         }
@@ -113,7 +114,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                                 on new { jprop1 = dis.DisciplineId, jprop2 = courseId, }
                                 equals new { jprop1 = kw.DisciplineId, jprop2 = kw.CourseId, }
                                 select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
-            return result.Name + " " + result.Keyword1;
+            return result.Name + VMConstants.STR_SPACE + result.Keyword1;
         }
     }
 }

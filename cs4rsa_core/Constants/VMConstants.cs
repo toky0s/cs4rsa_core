@@ -55,6 +55,9 @@
 
         #region Consts
         public const int INT_INVALID_COURSEID = 0;
+
+        public const string STR_SPACE = " ";
+        public const char CHAR_SPACE = ' ';
         #endregion
     }
 }

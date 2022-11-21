@@ -301,9 +301,9 @@ namespace Cs4rsa.ViewModels
                 }
             }
 
-            if (text.Contains(' '))
+            if (text.Contains(VMConstants.CHAR_SPACE))
             {
-                string[] textSplit = text.Split(new char[] { ' ' }, StringSplitOptions.None);
+                string[] textSplit = text.Split(new char[] { VMConstants.CHAR_SPACE }, StringSplitOptions.None);
                 string discipline = textSplit[0];
                 string keyword1 = textSplit[1];
                 List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
@@ -498,7 +498,7 @@ namespace Cs4rsa.ViewModels
             else
             {
                 string subjectName = selectedKeyword.SubjectName;
-                string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
+                string subjectCode = selectedDiscipline.Name + VMConstants.STR_SPACE + selectedKeyword.Keyword1;
                 vm.SubjectName = subjectName;
                 vm.SubjectCode = subjectCode;
                 subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
