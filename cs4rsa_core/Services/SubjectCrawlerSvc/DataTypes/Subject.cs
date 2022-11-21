@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
@@ -282,7 +283,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             doc.LoadHtml(trTagClassLop.InnerHtml);
             HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
-            string teacherName = string.Join(" ", slices);
+            string teacherName = string.Join(VMConstants.STR_SPACE, slices);
             if (teacherName != "")
             {
                 _tempTeachers.Add(teacherName);

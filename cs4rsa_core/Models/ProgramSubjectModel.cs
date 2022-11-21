@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Models.Bases;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
@@ -56,7 +57,7 @@ namespace Cs4rsa.Models
         /// <returns></returns>
         private async Task IsAvaiableInThisSemester()
         {
-            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { ' ' });
+            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VMConstants.CHAR_SPACE });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
             int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);

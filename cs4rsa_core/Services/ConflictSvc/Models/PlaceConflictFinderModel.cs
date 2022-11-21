@@ -54,7 +54,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     string from = $"Từ {placeAdjacent.StartAsString} ở {placeAdjacent.PlaceStart.ToActualPlace()}";
                     string to = $"đến {placeAdjacent.EndAsString} ở {placeAdjacent.PlaceEnd.ToActualPlace()}";
-                    info.Add(from + " " + to);
+                    info.Add($"{from} {to}");
                 }
                 string placeString = string.Join("\n", info);
                 resultTimes.Add(day + "\n" + placeString);

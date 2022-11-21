@@ -108,7 +108,7 @@ namespace Cs4rsa.Dialogs.Implements
         public void OnCopyRegisterCode(string registerCode)
         {
             Clipboard.SetText(registerCode);
-            _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + " " + registerCode);
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + VMConstants.STR_SPACE + registerCode);
         }
 
         private void LoadUserSubject(UserSchedule userSchedule)

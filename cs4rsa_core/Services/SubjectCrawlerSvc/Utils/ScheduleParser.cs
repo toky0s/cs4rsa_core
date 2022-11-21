@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 using HtmlAgilityPack;
 
@@ -77,7 +78,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <param name="trTag"></param>
         private static string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
-            string[] separatingStrings = { " ", "\n", "\r", "-", "," };
+            string[] separatingStrings = { VMConstants.STR_SPACE, "\n", "\r", "-", "," };
             string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return trTagSplitDatas;
         }

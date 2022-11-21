@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
@@ -95,7 +96,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
                 string name = (await _unitOfWork.Keywords.GetKeyword(courseId)).SubjectName;
 
-                string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
+                string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(VMConstants.CHAR_SPACE)[24];
                 string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
                 string studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
                 string semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
