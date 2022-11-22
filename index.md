@@ -50,12 +50,18 @@ Sau khi xếp xong lịch ưng ý, nhấn nút Lưu, nhập tên rồi Lưu.
 3. Share string để chia sẻ nhanh chóng bộ lịch của mình cho bạn bè.
 4. Click phải ở mọi nơi để khám phá menu chuột phải của nó.
 5. Chúng tôi cũng hỗ trợ bạn hoàn tác các thao tác nhầm, nếu bạn đủ nhanh.
+6. Xếp lịch tự động (xếp lịch thủ công đã nhanh - xếp lịch tự động còn nhanh hơn, nhưng code cũng lỗi vl).
+7. Quản lý thông tin giảng viên liên quan.
+
+## Cập nhật thông tin lỗi thời
+1. Khi tới học kỳ mới ứng dụng sẽ báo bạn cập nhật db ở trang chủ.
+2. Hoặc bạn cũng có thể tự cập nhật bằng nút cập nhật db ở đâu đó trên app.
 
 ## Đặc biệt lưu ý các Special Subject
 🍣 Mỗi lớp của các môn kiểu này sẽ có 2 mã đăng ký trở lên.
 
 ### Hỏi đáp, đề xuất và sửa lỗi
 1. 🍕 Mọi thắc mắc liên hệ mình qua [Facebook](https://www.facebook.com/truongaxin/).
-2. 📁 Hoặc thông qua [Gừ-gư-rừ-shit](https://forms.gle/247DQZ4eGnEiyt7M7)
-
+2. 📁 Hoặc thông qua [Gừ-gư-rừ-shit](https://forms.gle/247DQZ4eGnEiyt7M7).
+3. 🎁 Tôi cũng mong các bạn donate.
 
