@@ -2,35 +2,36 @@
 <img src="https://raw.githubusercontent.com/toky0s/cs4rsa_core/gh-pages/splashScreen.png" width=500/>
 </p>
 
-# ♥️ Đặc biệt cảm ơn
-- 🐈 Mèo Tôm
-- 🕵️‍♂️ Bạn Trần Huy Hoàng
-- 🕵️‍♀️ Bạn Nguyễn Trần Thanh Tâm
-- 🕵️‍♀️ Bạn Hồ Thị Vân
-- 👨‍🏫 Thầy Nguyễn Dũng
-- 🧑‍ Cùng rất nhiều bạn khác...
-Đã góp phần rất lớn giúp mình lên ý tưởng, truyền động lực, cho mượn acc MyDTU, donate, cho feedback để hoàn thành dự án và nhận được thành quả.
-
+# Đặc biệt cảm ơn
+```
+🐈 Mèo Tôm
+🕵️‍♂️ Bạn Trần Huy Hoàng
+🕵️‍♀️ Bạn Nguyễn Trần Thanh Tâm
+🕵️‍♀️ Bạn Hồ Thị Vân
+👨‍🏫 Thầy Nguyễn Dũng
+🧑‍ Cùng rất nhiều bạn khác...
+```
+♥️ Đã góp phần rất lớn giúp mình lên ý tưởng, truyền động lực, cho mượn acc MyDTU, donate, cho feedback để hoàn thành dự án và nhận được thành quả.
+```
 🎉 Best of Session 1 nghiên cứu khoa học năm 2022.
-
 🎉 Được đăng lên báo nghiên cứu khoa học trường Đại học Duy Tân (Hệ thống hỗ trợ sinh viên xếp lịch).
-
 🎉 Đồng thời trả lại sự bình yên cho mỗi kỳ đăng ký tín chỉ của sinh viên Duy Tân.
-
+```
 # Xếp lịch thủ công (nguồn gốc của mọi sự đau khổ)
 Màn hình này bao gồm 4 phần (từ trái sang phải) :
-1. 🔍 Tìm kiếm
-2. 📑 Danh sách lớp học của môn đang chọn hiện tại
-3. 👉 Danh sách các lớp đã chọn
-4. 📅 Bộ mô phỏng
-
+```
+🔍 Tìm kiếm
+📑 Danh sách lớp học của môn đang chọn hiện tại
+🥠 Danh sách các lớp đã chọn
+📅 Bộ mô phỏng
+```
 Sử dụng nhanh:
 1. Tìm kiếm môn bạn cần học, nhấn Tìm kiếm, chờ một xí cho hắn tải.
 2. Tải xong thì click lên môn đã tải, hoặc nó sẽ tự động chọn môn đã tải. Danh sách lớp sẽ hiện ra bên cạnh.
 3. Chọn lớp muốn học, hoặc có thể sử dụng bộ lọc để lọc bớt.
 4. Bộ mô phỏng sẽ làm phần việc còn lại của nó.
 
-**LỊCH CỦA CHÚNG SẼ ĐƯỢC HIỂN THỊ TRÊN MÔ PHỎNG.**
+:zap:**LỊCH CỦA CHÚNG SẼ ĐƯỢC HIỂN THỊ TRÊN MÔ PHỎNG**:zap:
 
 ## Trùng lịch (xung đột)
 1. Phần mềm hỗ trợ phát hiện trùng lịch và phát hiện hai lớp học có vị trí quá xa trong khi thời gian để đi tới chúng qua ngắn (hard code 15 phút).
