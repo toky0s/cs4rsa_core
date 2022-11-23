@@ -31,7 +31,7 @@ Sử dụng nhanh:
 3. Chọn lớp muốn học, hoặc có thể sử dụng bộ lọc để lọc bớt.
 4. Bộ mô phỏng sẽ làm phần việc còn lại của nó.
 
-:zap:**LỊCH CỦA CHÚNG SẼ ĐƯỢC HIỂN THỊ TRÊN MÔ PHỎNG**:zap:
+⚡ **LỊCH CỦA CHÚNG SẼ ĐƯỢC HIỂN THỊ TRÊN MÔ PHỎNG** ⚡
 
 ## Trùng lịch (xung đột)
 1. Phần mềm hỗ trợ phát hiện trùng lịch và phát hiện hai lớp học có vị trí quá xa trong khi thời gian để đi tới chúng qua ngắn (hard code 15 phút).
