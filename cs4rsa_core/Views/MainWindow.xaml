@@ -250,7 +250,7 @@
                             <local:Login x:Name="Login"/>
                             <local:MainScheduling x:Name="MainScheduling" />
                             <local:AutoSchedule x:Name="AutoSchedule"/>
-                            <local:Lecture x:Name="Lecture"/>
+                            <local:Teacher x:Name="Lecture"/>
                             <local:Info x:Name="Info"/>
                             <!--<materialDesign:TransitionerSlide>
                                 <materialDesign:TransitionerSlide.BackwardWipe>

@@ -39,7 +39,7 @@ namespace Cs4rsa.Views
             Goto(listView.SelectedIndex);
             if (listView.SelectedIndex == (int)ScreenIndex.LECTURE)
             {
-                await (Lecture.DataContext as LectureViewModel).LoadTeachers();
+                await (Lecture.DataContext as TeacherViewModel).LoadTeachers();
             }
             // Close Drawer
             MaterialDesignThemes.Wpf.DrawerHost.CloseDrawerCommand.Execute(null, null);

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace Cs4rsa.Converters.DialogConverters
+namespace Cs4rsa.Converters
 {
     class Base64ImageConverter : IValueConverter
     {
