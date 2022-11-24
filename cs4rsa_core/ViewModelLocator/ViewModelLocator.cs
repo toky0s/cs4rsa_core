@@ -39,7 +39,7 @@ namespace Cs4rsa.ViewModelLocator
             if (str.Contains("UC"))
             {
                 str = str
-                .Replace("UC", "")
+                .Replace("UC", string.Empty)
                 .Replace(".DialogViews.", ".Implements.");
             }
             else

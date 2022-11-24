@@ -43,7 +43,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in _scheduleTime)
             {
                 string thu = item.Key.ToCs4rsaThu();
-                string timesRange = "";
+                string timesRange = string.Empty;
                 foreach (StudyTime studyTime in item.Value)
                 {
                     timesRange += $"\nTừ {studyTime.StartAsString} đến {studyTime.EndAsString}";

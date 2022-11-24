@@ -343,7 +343,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                     return programFolder.Name;
                 }
             }
-            return "";
+            return string.Empty;
         }
 
         /// <summary>

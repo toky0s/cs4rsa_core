@@ -46,7 +46,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
             }
             else
             {
-                text = regex.Replace(text, "");
+                text = regex.Replace(text, string.Empty);
                 if (text.Contains(','))
                 {
                     List<string> results = new();

@@ -584,7 +584,7 @@ namespace Cs4rsa.ViewModels
             IsFinding = true;
             ProgramFolderModels.Clear();
             ProgramDiagramCrawler programDiagramCrawler = new(
-                ""
+                string.Empty
                 , _student.SpecialString
                 , _curriculumCrawler
                 , _unitOfWork

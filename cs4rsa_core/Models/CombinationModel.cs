@@ -90,7 +90,7 @@ namespace Cs4rsa.Models
         public bool IsValid()
         {
             int count = 0;
-            string subjecCode = "";
+            string subjecCode = string.Empty;
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
                 if (!classGroupModel.SubjectCode.Equals(subjecCode, System.StringComparison.Ordinal))

@@ -237,7 +237,7 @@ namespace Cs4rsa.ViewModels
             Disciplines = new();
             FullMatchSearchingKeywords = new();
             SavedSchedules = new();
-            SearchText = "";
+            SearchText = string.Empty;
             CurrentView = 0;
             IsUseCache = true;
 
@@ -281,7 +281,7 @@ namespace Cs4rsa.ViewModels
         public async Task LoadSearchItemSource(string text)
         {
             text = text.Trim().ToLower();
-            if (text.Equals("")) return;
+            if (text.Equals(string.Empty)) return;
 
             FullMatchSearchingKeywords.Clear();
 
