@@ -55,7 +55,7 @@
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectedItem="{Binding SelectedClassGroupModel}">
             <ListBox.Resources>
-                <ContextMenu x:Key="ChoicedContextMenu" Opened="ContextMenu_Opened">
+                <ContextMenu x:Key="ChoicedContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                     <MenuItem
                         Command="{Binding CopyCodeCommand}"
                         Header="Sao chép mã"
@@ -185,7 +185,7 @@
                 <ToolTip x:Key="TimeConflictToolTip" Placement="Left">
                     <TextBlock Text="{Binding Converter={StaticResource ResourceKey=ConflictInfoConverter}}" />
                 </ToolTip>
-                <ContextMenu x:Key="ConflictContextMenu" Opened="ContextMenu_Opened">
+                <ContextMenu x:Key="ConflictContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                     <MenuItem
                         Command="{Binding SolveConflictCommand, Mode=OneTime}"
                         Header="Giải quyết xung đột"

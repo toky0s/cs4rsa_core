@@ -50,12 +50,6 @@ namespace Cs4rsa.Views
             return true;
         }
 
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            ContextMenu menu = sender as ContextMenu;
-            menu.DataContext = DataContext;
-        }
-
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue is ProgramSubjectModel ? e.NewValue as ProgramSubjectModel : null;

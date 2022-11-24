@@ -71,7 +71,7 @@
             </StackPanel>
             <ListBox ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}">
                 <ListBox.Resources>
-                    <ContextMenu x:Key="StudentContextMenu" Opened="ContextMenu_Opened">
+                    <ContextMenu x:Key="StudentContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                         <MenuItem
                             Command="{Binding DeleteCommand}"
                             Header="Xoá"
