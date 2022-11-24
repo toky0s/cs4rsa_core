@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:Cs4rsa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Cs4rsa.Dialogs.DialogViews"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Cs4rsa.Dialogs.Implements"
@@ -39,7 +38,7 @@
                 ItemsSource="{Binding Students}"
                 SelectedItem="{Binding SelectedStudent}">
                 <ListView.Resources>
-                    <ContextMenu x:Key="AccountContextMenu" Opened="ContextMenu_Opened">
+                    <ContextMenu x:Key="AccountContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                         <MenuItem
                             Command="{Binding LoginCommand}"
                             FontSize="13"
@@ -86,5 +85,4 @@
             </ListView>
         </Grid>
     </materialDesign:Card>
-
 </UserControl>

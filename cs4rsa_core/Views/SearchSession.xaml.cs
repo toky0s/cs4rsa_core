@@ -13,12 +13,6 @@ namespace Cs4rsa.Views
             InitializeComponent();
         }
 
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            ContextMenu menu = sender as ContextMenu;
-            menu.DataContext = DataContext;
-        }
-
         private async void SearchingTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             string text = (sender as TextBox).Text;

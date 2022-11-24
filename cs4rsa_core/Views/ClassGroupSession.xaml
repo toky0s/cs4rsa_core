@@ -50,16 +50,16 @@
             ItemsSource="{Binding ClassGroupModels}"
             SelectedItem="{Binding SelectedClassGroup}">
             <ListBox.Resources>
-                <ContextMenu x:Key="ClassGroupContextMenu" Opened="ContextMenu_Opened">
+                <ContextMenu x:Key="ClassGroupContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                     <MenuItem
                         Command="{Binding GotoCourseCommand}"
                         Header="Xem chi tiết trong Course"
-                        Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                        Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
                     <MenuItem
                         Command="{Binding ShowDetailsSchoolClassesCommand}"
                         Header="Xem danh sách lớp thành phần"
                         Icon="{materialDesign:PackIcon Kind=ListStatus}"
-                        IsEnabled="{Binding SelectedClassGroup.IsBelongSpecialSubject, Mode=OneTime}" />
+                        IsEnabled="{Binding SelectedClassGroup.IsBelongSpecialSubject}" />
                 </ContextMenu>
             </ListBox.Resources>
             <ListBox.ItemTemplate>

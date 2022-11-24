@@ -645,7 +645,7 @@
                     ItemsSource="{Binding ChoicedProSubjectModels}"
                     SelectedItem="{Binding SelectedProSubjectInChoiced}">
                     <ListView.Resources>
-                        <ContextMenu x:Key="ChoicedSubjectContextMenu" Opened="ContextMenu_Opened">
+                        <ContextMenu x:Key="ChoicedSubjectContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                             <MenuItem
                                 Command="{Binding DeleteCommand}"
                                 Header="Xoá"
@@ -653,7 +653,7 @@
                             <MenuItem
                                 Command="{Binding GotoCourseCommand}"
                                 Header="Mở trong Courses"
-                                Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                                Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
                         </ContextMenu>
                     </ListView.Resources>
                     <ListView.ItemTemplate>
@@ -770,7 +770,7 @@
                     ItemsSource="{Binding CombinationModels}"
                     SelectedItem="{Binding SelectedCombinationModel}">
                     <ListView.Resources>
-                        <ContextMenu x:Key="CombiContextMenu" Opened="ContextMenu_Opened">
+                        <ContextMenu x:Key="CombiContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                             <MenuItem
                                 Command="{Binding ShowOnSimuCommand}"
                                 Header="Hiển thị trên mô phỏng"
