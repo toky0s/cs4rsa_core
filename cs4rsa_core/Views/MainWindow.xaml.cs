@@ -133,7 +133,7 @@ namespace Cs4rsa.Views
             Goto(listView.SelectedIndex);
             if (listView.SelectedIndex == (int)ScreenIndex.TEACHER)
             {
-                LectureViewModel lecture = (LectureViewModel)(CredizTransitioner.Items[listView.SelectedIndex] as Lecture).DataContext;
+                TeacherViewModel lecture = (TeacherViewModel)(CredizTransitioner.Items[listView.SelectedIndex] as Teacher).DataContext;
                 await lecture.LoadTeachers();
             }
             // Close Drawer

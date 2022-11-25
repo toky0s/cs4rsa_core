@@ -82,7 +82,7 @@ namespace Cs4rsa.Constants
         public static readonly CredizScreen Account = new() { Screen = new Login(), Index = ScreenIndex.ACCOUNT };
         public static readonly CredizScreen Hand = new() { Screen = new MainScheduling(), Index = ScreenIndex.HAND };
         public static readonly CredizScreen Auto = new() { Screen = new AutoSchedule(), Index = ScreenIndex.AUTO };
-        public static readonly CredizScreen Teacher = new() { Screen = new Lecture(), Index = ScreenIndex.TEACHER };
+        public static readonly CredizScreen Teacher = new() { Screen = new Teacher(), Index = ScreenIndex.TEACHER };
         public static readonly CredizScreen Info = new() { Screen = new Info(), Index = ScreenIndex.INFO };
 
         public static CredizMenuItem[] CREDIZ_MENU_ITEMS =
