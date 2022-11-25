@@ -14,11 +14,9 @@
     mc:Ignorable="d">
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Thông tin" />
-        <ScrollViewer Grid.Row="2">
+        <ScrollViewer Grid.Row="1">
             <StackPanel Width="700" Margin="0,0,0,10">
                 <Grid>
                     <Grid.RowDefinitions>
