@@ -8,6 +8,8 @@ using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 
+using MaterialDesignThemes.Wpf;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,34 +18,46 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    /**
-     * Mô tả:
-     *      ViewModel thực hiện việc lưu thông tin bộ lịch
-     *      mà người dùng đã sắp xếp
-     */
+    /// <summary>
+    /// Mô tả:
+    ///     Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
+    /// </summary>
     public class SaveSessionViewModel : ViewModelBase
     {
+        private string _name;
+        public string Name 
+        { 
+            get { return _name; } 
+            set 
+            { 
+                _name = value == null ? string.Empty : value;
+                SaveCommand.NotifyCanExecuteChanged();
+            }
+        }
+
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
         public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
-        public string Name { get; set; }
         public AsyncRelayCommand SaveCommand { get; set; }
-        public Action<SaveResult> CloseDialogCallback { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareString;
 
         public SaveSessionViewModel(
             IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
+            ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
             _shareString = shareString;
+            _name = string.Empty;
 
             ScheduleSessions = new();
-            SaveCommand = new AsyncRelayCommand(Save);
+            SaveCommand = new AsyncRelayCommand(Save, () => _name.Length > 0);
         }
 
         public async Task LoadScheduleSessions()
@@ -87,7 +101,12 @@ namespace Cs4rsa.Dialogs.Implements
             await _unitOfWork.UserSchedule.AddAsync(session);
             await _unitOfWork.CompleteAsync();
             SaveResult result = new() { Name = Name };
-            CloseDialogCallback.Invoke(result);
+            CloseDialog();
+            if (result != null)
+            {
+                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
+                _snackbarMessageQueue.Enqueue(message);
+            }
         }
     }
 }
