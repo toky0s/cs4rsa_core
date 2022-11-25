@@ -37,7 +37,7 @@
                     <Button
                         Margin="0,5,0,0"
                         Command="{Binding StartUpdateCommand}"
-                        Content="Bắt đầu">
+                        Content="BẮT ĐẦU">
                         <Button.Style>
                             <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
@@ -49,21 +49,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <!--<Button
-                        Margin="0,5,0,0"
-                        Command="{Binding CloseDialogCommand}"
-                        Content="Thoát">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="False" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="0">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>-->
                 </StackPanel>
             </StackPanel>
         </Grid>

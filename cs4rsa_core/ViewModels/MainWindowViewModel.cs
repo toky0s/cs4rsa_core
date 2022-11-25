@@ -33,17 +33,6 @@ namespace Cs4rsa.ViewModels
             set { _isExpanded = value; OnPropertyChanged(); }
         }
 
-        private int _selectedIndex;
-        public int SelectedIndex
-        {
-            get => _selectedIndex;
-            set
-            {
-                _selectedIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
         private bool _isOpen;
         public bool IsOpenDialog
         {
@@ -88,8 +77,6 @@ namespace Cs4rsa.ViewModels
             });
 
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
-
-            SelectedIndex = 0;
             IsExpanded = false;
             AppName = ViewConstants.APP_NAME;
         }
