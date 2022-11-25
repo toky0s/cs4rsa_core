@@ -166,7 +166,7 @@
             ScrollViewer.CanContentScroll="False"
             SelectedItem="{Binding SelectedSubjectModel}">
             <ListBox.Resources>
-                <ContextMenu x:Key="SubjectContextMenu" Opened="ContextMenu_Opened">
+                <ContextMenu x:Key="SubjectContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
                     <MenuItem
                         Command="{Binding DetailCommand, Mode=OneTime}"
                         Header="Chi tiết"
@@ -174,7 +174,7 @@
                     <MenuItem
                         Command="{Binding GotoCourseCommand, Mode=OneTime}"
                         Header="Mở trong Course"
-                        Icon="{materialDesign:PackIcon Kind=OpenInApp}" />
+                        Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding DeleteCommand, Mode=OneTime}"

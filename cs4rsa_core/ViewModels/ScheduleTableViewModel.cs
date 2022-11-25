@@ -42,6 +42,9 @@ namespace Cs4rsa.ViewModels
         public ObservableCollection<TimeBlock> Phase2_Saturday { get; set; }
         public ObservableCollection<TimeBlock> Phase2_Sunday { get; set; }
 
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week1 { get; set; }
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week2 { get; set; }
+
         public ObservableCollection<string> Timelines { get; set; }
 
         public PhaseStore PhaseStore
@@ -51,9 +54,6 @@ namespace Cs4rsa.ViewModels
                 return _phaseStore;
             }
         }
-
-        private readonly ObservableCollection<TimeBlock>[] week1;
-        private readonly ObservableCollection<TimeBlock>[] week2;
         #endregion
 
         #region Commands
@@ -67,6 +67,9 @@ namespace Cs4rsa.ViewModels
         public ScheduleTableViewModel(PhaseStore phaseStore)
         {
             _phaseStore = phaseStore;
+            _classGroupModels = new List<ClassGroupModel>();
+            _conflictModels = new List<ConflictModel>();
+            _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
 
             #region WeakReferenceMessengers
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
@@ -103,10 +106,6 @@ namespace Cs4rsa.ViewModels
             });
             #endregion
 
-            _classGroupModels = new List<ClassGroupModel>();
-            _conflictModels = new List<ConflictModel>();
-            _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
-
             #region Commands
             ResetBetweenPointCommand = new(() => _phaseStore.ResetBetweenPoint());
             #endregion
@@ -127,26 +126,26 @@ namespace Cs4rsa.ViewModels
             Phase2_Saturday = new();
             Phase2_Sunday = new();
 
-            week1 = new ObservableCollection<TimeBlock>[7]
+            Week1 = new()
             {
-                Phase1_Sunday,
                 Phase1_Monday,
                 Phase1_Tuesday,
                 Phase1_Wednesday,
                 Phase1_Thursday,
                 Phase1_Friday,
                 Phase1_Saturday,
+                Phase1_Sunday
             };
 
-            week2 = new ObservableCollection<TimeBlock>[7]
+            Week2 = new()
             {
-                Phase2_Sunday,
                 Phase2_Monday,
                 Phase2_Tuesday,
                 Phase2_Wednesday,
                 Phase2_Thursday,
                 Phase2_Friday,
                 Phase2_Saturday,
+                Phase2_Sunday
             };
 
             Timelines = new();
@@ -192,15 +191,15 @@ namespace Cs4rsa.ViewModels
                 int dayIndex = (int)timeBlock.DayOfWeek;
                 if (phase == Phase.First || phase == Phase.Second)
                 {
-                    ObservableCollection<TimeBlock>[] week = phase == Phase.First
-                                                           ? week1
-                                                           : week2;
+                    ObservableCollection<ObservableCollection<TimeBlock>> week = phase == Phase.First
+                                                           ? Week1
+                                                           : Week2;
                     week[dayIndex].Add(timeBlock);
                 }
                 else if (phase == Phase.All)
                 {
-                    week1[dayIndex].Add(timeBlock);
-                    week2[dayIndex].Add(timeBlock);
+                    Week1[dayIndex].Add(timeBlock);
+                    Week2[dayIndex].Add(timeBlock);
                 }
             }
         }

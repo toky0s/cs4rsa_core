@@ -246,7 +246,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 // Trường hợp hai mã giống nhau mà khác giảng viên
-                if (schoolClass.RegisterCode.Trim() != "" && !_registerCodes.Contains(schoolClass.RegisterCode))
+                if (schoolClass.RegisterCode.Trim() != string.Empty && !_registerCodes.Contains(schoolClass.RegisterCode))
                 {
                     _registerCodes.Add(schoolClass.RegisterCode);
                 }
@@ -272,12 +272,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                if (schoolClass.Url.Trim() != "")
+                if (schoolClass.Url.Trim() != string.Empty)
                 {
                     return schoolClass.Url;
                 }
             }
-            return "";
+            return string.Empty;
         }
 
         public ImplementType GetImplementType()

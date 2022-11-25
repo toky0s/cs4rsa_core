@@ -92,7 +92,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 foreach (SchoolClass schoolClass in classGroup.SchoolClasses)
                 {
                     string registerCode = schoolClass.RegisterCode;
-                    if (registerCode != "")
+                    if (registerCode != string.Empty)
                     {
                         registerCodeCount++;
                     }
@@ -193,7 +193,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
 
             List<string> tempTeachers = new();
-            if (teacherName != "")
+            if (teacherName != string.Empty)
             {
                 tempTeachers.Add(teacherName);
             }
@@ -284,7 +284,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
             string teacherName = string.Join(VMConstants.STR_SPACE, slices);
-            if (teacherName != "")
+            if (teacherName != string.Empty)
             {
                 _tempTeachers.Add(teacherName);
                 _tempTeachers = _tempTeachers.Distinct().ToList();

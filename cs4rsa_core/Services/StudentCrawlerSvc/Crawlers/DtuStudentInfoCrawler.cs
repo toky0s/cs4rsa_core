@@ -63,7 +63,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
             string address = StringHelper.SuperCleanString(addressNode.InnerText);
 
             string imageSrcData = imageNode.Attributes["src"].Value;
-            string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", "");
+            string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", string.Empty);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
             Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);

@@ -67,7 +67,7 @@ namespace Cs4rsa.ViewModels
         public PhaseStore()
         {
             _schoolClassModels = new();
-            Weeks = new();
+            Weeks = new() { 0 };
         }
 
         public void AddClassGroup(ClassGroupModel classGroupModel)
@@ -145,6 +145,7 @@ namespace Cs4rsa.ViewModels
             {
                 StartWeek = 0;
                 EndWeek = 0;
+                Weeks.Add(0);
             }
         }
 

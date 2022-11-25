@@ -35,7 +35,7 @@ namespace Cs4rsa.ViewModelLocator
             Type viewType = d.GetType();
 
             string str = viewType.FullName;
-            str = str.Replace("UC", "");
+            str = str.Replace("UC", string.Empty);
             str = str.Replace(".DialogViews.", ".Implements.");
 
             string viewTypeName;

@@ -20,11 +20,9 @@
         CornerRadius="5"
         Cursor="Hand"
         ToolTip="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}">
-
         <TextBlock
             FontSize="10"
             Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
             TextWrapping="Wrap" />
-
     </Border>
 </UserControl>

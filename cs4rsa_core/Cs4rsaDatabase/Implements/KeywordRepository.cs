@@ -20,7 +20,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public async Task<string> GetColorAsync(int courseId)
         {
             Keyword keyword = await _context.Keywords.FirstOrDefaultAsync(keyword => keyword.CourseId == courseId);
-            return keyword != null ? keyword.Color : "";
+            return keyword != null ? keyword.Color : string.Empty;
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
