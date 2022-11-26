@@ -30,6 +30,8 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 
 namespace Cs4rsa
@@ -40,8 +42,9 @@ namespace Cs4rsa
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("vi-VN");
             Container = CreateServiceProvider();
+
             ISetting setting = Container.GetRequiredService<ISetting>();
             string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
             if (isDatabaseCreated == "false")

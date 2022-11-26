@@ -245,7 +245,7 @@ namespace Cs4rsa.ViewModels
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new RelayCommand(OnDetail);
         }
 
@@ -563,6 +563,7 @@ namespace Cs4rsa.ViewModels
         /// </summary>
         private void UpdateSubjectAmount()
         {
+            DeleteAllCommand.NotifyCanExecuteChanged();
             TotalSubject = SubjectModels.Count;
             Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }

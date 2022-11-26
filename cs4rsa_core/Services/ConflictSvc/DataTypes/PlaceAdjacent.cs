@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
@@ -11,7 +12,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
     /// 
     /// Ngang cấp với ConflictTime.
     /// </summary>
-    public struct PlaceAdjacent
+    public readonly struct PlaceAdjacent
     {
         public static readonly PlaceAdjacent Instance = new();
 
@@ -36,8 +37,8 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             End = end;
             PlaceStart = placeStart;
             PlaceEnd = placeEnd;
-            StartAsString = Start.ToString("HH:mm", CultureInfo.CurrentCulture);
-            EndAsString = End.ToString("HH:mm", CultureInfo.CurrentCulture);
+            StartAsString = Start.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            EndAsString = End.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
             SchoolClass1 = schoolClass1;
             SchoolClass2 = schoolClass2;
         }

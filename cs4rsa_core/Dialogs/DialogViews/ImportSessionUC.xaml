@@ -17,6 +17,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceHolderConverter" />
+        <converter:HumanizerDateTimeConverter x:Key="HumanizerDateTimeConverter" />
         <validation:ShareStringRule x:Key="shareStringRule" />
     </UserControl.Resources>
     <materialDesign:Card Grid.Column="0" Padding="10,10,10,15">
@@ -51,7 +52,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding Name}" />
-                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SaveDate}" />
+                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SaveDate, Converter={StaticResource HumanizerDateTimeConverter}}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

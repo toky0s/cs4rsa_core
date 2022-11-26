@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
-using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
@@ -58,8 +57,8 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Commands
-        public AsyncRelayCommand SaveCommand { get; set; }
         public AsyncRelayCommand OpenShareStringWindowCommand { get; set; }
+        public RelayCommand SaveCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand CopyCodeCommand { get; set; }
@@ -123,7 +122,7 @@ namespace Cs4rsa.ViewModels
             });
             #endregion
 
-            SaveCommand = new AsyncRelayCommand(OpenSaveDialog, CanSave);
+            SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
             DeleteCommand = new RelayCommand(OnDelete, CanDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
@@ -221,14 +220,12 @@ namespace Cs4rsa.ViewModels
         /// Mở Dialog lưu session
         /// </summary>
         /// <returns>Task</returns>
-        private async Task OpenSaveDialog()
+        private void OpenSaveDialog()
         {
             SaveSessionUC saveSessionUC = new();
             SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
             vm.ClassGroupModels = ClassGroupModels;
-            vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
             OpenDialog(saveSessionUC);
-            await vm.LoadScheduleSessions();
         }
 
         private async Task OnOpenShareStringWindow()
@@ -238,16 +235,6 @@ namespace Cs4rsa.ViewModels
             await UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
-        }
-
-        private void CloseDialogAndHandleSaveResult(SaveResult result)
-        {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
-            if (result != null)
-            {
-                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
-                _snackbarMessageQueue.Enqueue(message);
-            }
         }
 
         /// <summary>
