@@ -1,6 +1,6 @@
 ﻿namespace Cs4rsa.Constants
 {
-    internal abstract class VMConstants
+    internal static class VMConstants
     {
         #region DB
         public static readonly string DB_CONN = @"Data Source=cs4rsa.db";
@@ -57,6 +57,7 @@
         public const int INT_INVALID_COURSEID = 0;
 
         public const string STR_SPACE = " ";
+        public const string TIME_HH_MM_FORMAT = "HH:mm";
         public const char CHAR_SPACE = ' ';
         #endregion
     }

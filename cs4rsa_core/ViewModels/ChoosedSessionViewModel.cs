@@ -226,7 +226,6 @@ namespace Cs4rsa.ViewModels
             SaveSessionUC saveSessionUC = new();
             SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
             vm.ClassGroupModels = ClassGroupModels;
-            vm.CloseDialogCallback = CloseDialogAndHandleSaveResult;
             OpenDialog(saveSessionUC);
             await vm.LoadScheduleSessions();
         }
@@ -238,16 +237,6 @@ namespace Cs4rsa.ViewModels
             await UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
-        }
-
-        private void CloseDialogAndHandleSaveResult(SaveResult result)
-        {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
-            if (result != null)
-            {
-                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
-                _snackbarMessageQueue.Enqueue(message);
-            }
         }
 
         /// <summary>
