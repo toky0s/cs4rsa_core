@@ -78,7 +78,7 @@ namespace Cs4rsa.Dialogs.Implements
                                                     }).ToList();
             UserSchedule session = new()
             {
-                Name = Name,
+                Name = Name.Trim(),
                 SaveDate = DateTime.Now,
                 SemesterValue = _courseCrawler.GetCurrentSemesterValue(),
                 YearValue = _courseCrawler.GetCurrentYearValue(),
