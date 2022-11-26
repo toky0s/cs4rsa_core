@@ -12,7 +12,6 @@ using MaterialDesignThemes.Wpf;
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,18 +24,17 @@ namespace Cs4rsa.Dialogs.Implements
     public class SaveSessionViewModel : ViewModelBase
     {
         private string _name;
-        public string Name 
-        { 
-            get { return _name; } 
-            set 
-            { 
-                _name = value == null ? string.Empty : value;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value ?? string.Empty;
                 SaveCommand.NotifyCanExecuteChanged();
             }
         }
 
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
-        public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
         public AsyncRelayCommand SaveCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
@@ -56,18 +54,7 @@ namespace Cs4rsa.Dialogs.Implements
             _shareString = shareString;
             _name = string.Empty;
 
-            ScheduleSessions = new();
             SaveCommand = new AsyncRelayCommand(Save, () => _name.Length > 0);
-        }
-
-        public async Task LoadScheduleSessions()
-        {
-            ScheduleSessions.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
-            foreach (UserSchedule session in sessions)
-            {
-                ScheduleSessions.Add(session);
-            }
         }
 
         // 
