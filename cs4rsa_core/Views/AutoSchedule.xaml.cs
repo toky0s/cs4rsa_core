@@ -12,9 +12,6 @@ namespace Cs4rsa.Views
         public AutoSchedule()
         {
             InitializeComponent();
-            treeView.ItemsSource = (DataContext as AutoScheduleViewModel).ProgramFolderModels;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource);
-            view.Filter = CombinationFilter;
         }
 
         private bool CombinationFilter(object obj)
@@ -78,6 +75,9 @@ namespace Cs4rsa.Views
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            treeView.ItemsSource = (DataContext as AutoScheduleViewModel).ProgramFolderModels;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource);
+            view.Filter = CombinationFilter;
             await (DataContext as AutoScheduleViewModel).LoadStudents();
         }
     }

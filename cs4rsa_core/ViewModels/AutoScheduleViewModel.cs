@@ -12,6 +12,7 @@ using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -62,6 +63,7 @@ namespace Cs4rsa.ViewModels
                 else
                 {
                     _selectedStudent = value;
+                    LoadStudentPlan();
                 }
                 LoadProgramCommand.NotifyCanExecuteChanged();
             }
@@ -73,6 +75,7 @@ namespace Cs4rsa.ViewModels
         public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
+        public ObservableCollection<PlanTable> PlanTables { get; set; }
 
         private ProgramSubjectModel _selectedProSubject;
         public ProgramSubjectModel SelectedProSubject
@@ -145,9 +148,7 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-#pragma warning disable CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
-        private ProgramDiagram _programDiagram;
-#pragma warning restore CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
+        private readonly ProgramDiagram _programDiagram;
 
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
 
@@ -178,6 +179,7 @@ namespace Cs4rsa.ViewModels
         private readonly ICourseCrawler _courseCrawler;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly IStudentPlanCrawler _studentPlanCrawler;
         private readonly ProgramDiagramCrawler _programDiagramCrawler;
         #endregion
 
@@ -257,6 +259,7 @@ namespace Cs4rsa.ViewModels
             IUnitOfWork unitOfWork,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue,
+            IStudentPlanCrawler studentPlanCrawler,
             ProgramDiagramCrawler programDiagramCrawler,
             ColorGenerator colorGenerator
         )
@@ -266,6 +269,7 @@ namespace Cs4rsa.ViewModels
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _studentPlanCrawler = studentPlanCrawler;
             _programDiagramCrawler = programDiagramCrawler;
 
             ProgramFolderModels = new();
@@ -273,6 +277,7 @@ namespace Cs4rsa.ViewModels
             CombinationModels = new();
             SubjectModels = new();
             Students = new();
+            PlanTables = new();
 
             _filteredClassGroupModels = new();
             _classGroupModelsOfClass = new();
@@ -312,15 +317,18 @@ namespace Cs4rsa.ViewModels
         public async Task LoadStudents()
         {
             IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            Student defaultStudent = new()
-            {
-                StudentId = "0",
-                Name = "Chọn tài khoản..."
-            };
-            Students.Add(defaultStudent);
             foreach (Student student in students)
             {
                 Students.Add(student);
+            }
+        }
+
+        private async Task LoadStudentPlan()
+        {
+            IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(_selectedStudent.CurriculumId);
+            foreach (PlanTable planTable in planTables)
+            {
+                PlanTables.Add(planTable);
             }
         }
 

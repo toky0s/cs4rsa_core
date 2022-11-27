@@ -53,12 +53,14 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             {
                 PlanTable planTable = new();
 
-                HtmlNode tableNameTag = planTableNode.SelectSingleNode(TABLE_NAME_XPATH);
+                HtmlDocument planTableNodeDoc = new HtmlDocument();
+                planTableNodeDoc.LoadHtml(planTableNode.InnerHtml);
+                HtmlNode tableNameTag = planTableNodeDoc.DocumentNode.SelectSingleNode(TABLE_NAME_XPATH);
                 string tableName = StringHelper.SuperCleanString(tableNameTag.InnerText);
                 planTable.Name = tableName;
 
-                HtmlNodeCollection planRecordTags = planTableNode.SelectNodes(PLAN_RECORD_XPATH);
-                planTable.PlanRecords = planTableTags.Select(ptt => GetPlanRecord(ptt));
+                HtmlNodeCollection planRecordTags = planTableNodeDoc.DocumentNode.SelectNodes(PLAN_RECORD_XPATH);
+                planTable.PlanRecords = planRecordTags.Select(ptt => GetPlanRecord(ptt)).ToList();
                 planTables.Add(planTable);
             }
             return planTables;
@@ -66,7 +68,9 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
         private static PlanRecord GetPlanRecord(HtmlNode tr)
         {
-            HtmlNodeCollection tds = tr.SelectNodes("//td");
+            HtmlDocument trDoc = new HtmlDocument();
+            trDoc.LoadHtml(tr.InnerHtml);
+            HtmlNodeCollection tds = trDoc.DocumentNode.SelectNodes("//td");
 
             HtmlNode aTag = tds[0].SelectSingleNode("//a");
             string url = aTag.Attributes["href"].Value;

@@ -21,7 +21,7 @@ namespace Cs4rsa.Views
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
-            Goto((int)ScreenIndex.HAND);
+            Goto((int)ScreenIndex.AUTO);
         }
 
         private void RenderScreen()
@@ -34,7 +34,6 @@ namespace Cs4rsa.Views
 
         public void RenderMainMenu()
         {
-
             Thickness textBlockMargin = new(30, 0, 0, 0);
             Thickness panelMargin = new(10, 0, 0, 0);
             foreach (CredizMenuItem item in ViewConstants.CREDIZ_MENU_ITEMS)

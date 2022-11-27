@@ -54,6 +54,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -230,6 +231,32 @@
                         </StackPanel>
                     </Grid>
                 </materialDesign:Card>
+                <ItemsControl Grid.Row="4" ItemsSource="{Binding PlanTables}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card Padding="5">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <ItemsControl ItemsSource="{Binding PlanRecords}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox />
+                                                    <TextBlock>
+                                                        <Run Text="{Binding SubjectCode}" />
+                                                        <Run Text="{Binding SubjectName}" />
+                                                        <Run Text="{Binding StudyUnit}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
             <Grid Grid.Column="1">
                 <ScrollViewer>
