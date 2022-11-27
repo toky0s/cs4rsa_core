@@ -159,7 +159,6 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Commands
-        public AsyncRelayCommand ChoiceAccountCommand { get; set; }
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
@@ -260,8 +259,6 @@ namespace Cs4rsa.ViewModels
         public AutoScheduleViewModel(
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue,
             ProgramDiagramCrawler programDiagramCrawler,
@@ -275,11 +272,6 @@ namespace Cs4rsa.ViewModels
             _snackbarMessageQueue = snackbarMessageQueue;
             _programDiagramCrawler = programDiagramCrawler;
 
-            WeakReferenceMessenger.Default.Register<StudentInputVmMsgs.ExitLoginMsg>(this, async (r, m) =>
-            {
-                await LoadStudent(m.Value);
-            });
-
             ProgramFolderModels = new();
             ChoicedProSubjectModels = new();
             CombinationModels = new();
@@ -289,7 +281,6 @@ namespace Cs4rsa.ViewModels
             _filteredClassGroupModels = new();
             _classGroupModelsOfClass = new();
 
-            ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
             LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, CanLoadProgram);
@@ -567,26 +558,6 @@ namespace Cs4rsa.ViewModels
             return true;
         }
         #endregion
-
-        private async Task OnChoiceAccountCommand()
-        {
-            StudentInputUC studentInputUC = new();
-            StudentInputViewModel vm = studentInputUC.DataContext as StudentInputViewModel;
-            OpenDialog(studentInputUC);
-            await vm.LoadStudentInfos();
-        }
-
-        private async Task LoadStudent(LoginResult loginResult)
-        {
-            //if (loginResult != null)
-            //{
-            //    ChoicedProSubjectModels.Clear();
-            //    CombinationModels.Clear();
-            //    SubjectModels.Clear();
-            //    Student = loginResult.Student;
-            //    await LoadProgramSubject();
-            //}
-        }
 
         private bool CanDeleteAll()
         {

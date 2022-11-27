@@ -81,7 +81,7 @@ namespace Cs4rsa.Dialogs.Implements
                     string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, student.StudentId);
                     _folderManager.CreateFolderIfNotExists(path);
                 }
-                _studentPlanCrawler.GetPlanTables(student.CurriculumId, _sessionId);
+                await _studentPlanCrawler.GetPlanTables(student.CurriculumId, _sessionId);
                 string message = $"Xin chào {student.Name}";
                 _snackbarMessageQueue.Enqueue(message);
                 StudentResult result = new() { Student = student };

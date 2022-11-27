@@ -113,7 +113,6 @@ namespace Cs4rsa
             services.AddSingleton<ScheduleTableViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();
-            services.AddSingleton<StudentInputViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
             services.AddSingleton<SubjectDownloadingViewModel>();
 
