@@ -1,22 +1,16 @@
-﻿using cs4rsa_core.ViewModels;
+﻿using Cs4rsa.ViewModels;
 
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Views
+namespace Cs4rsa.Views
 {
     public partial class Login : UserControl
     {
         public Login()
         {
             InitializeComponent();
-        }
-
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            ContextMenu menu = sender as ContextMenu;
-            menu.DataContext = DataContext;
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)

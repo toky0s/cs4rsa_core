@@ -1,12 +1,13 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Models.Bases;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Models.Bases;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Utils;
 
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Models
+namespace Cs4rsa.Models
 {
     /// <summary>
     /// ProgramSubjectModel khác ProgramSubject ở chỗ chúng có các phương thức check trong cây diagram
@@ -56,7 +57,7 @@ namespace cs4rsa_core.Models
         /// <returns></returns>
         private async Task IsAvaiableInThisSemester()
         {
-            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { ' ' });
+            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VMConstants.CHAR_SPACE });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
             int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);

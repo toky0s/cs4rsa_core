@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Cs4rsa.Constants;
+
+using System;
 using System.Globalization;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     internal class Utils
     {
@@ -27,7 +29,7 @@ namespace cs4rsa_core.Controls
 
         public static int GetTimeIndex(DateTime dateTime)
         {
-            string time = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
+            string time = dateTime.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
             return Array.IndexOf(TIME_LINES, time);
         }
     }

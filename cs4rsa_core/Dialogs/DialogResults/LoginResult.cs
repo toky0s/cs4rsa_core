@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Cs4rsaDatabase.Models;
 
-namespace cs4rsa_core.Dialogs.DialogResults
+namespace Cs4rsa.Dialogs.DialogResults
 {
     public class LoginResult
     {

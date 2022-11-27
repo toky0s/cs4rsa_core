@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Models
+namespace Cs4rsa.Cs4rsaDatabase.Models
 {
     public class Discipline
     {

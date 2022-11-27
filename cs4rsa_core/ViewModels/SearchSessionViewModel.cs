@@ -1,24 +1,24 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Dialogs.Implements;
-using cs4rsa_core.Messages.Publishers;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.ModelExtensions;
-using cs4rsa_core.Models;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
-using cs4rsa_core.ViewModelFunctions;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.ModelExtensions;
+using Cs4rsa.Models;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.ViewModelFunctions;
 
 using MaterialDesignThemes.Wpf;
 
@@ -32,7 +32,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public sealed class SearchSessionViewModel : ViewModelBase
     {
@@ -44,16 +44,6 @@ namespace cs4rsa_core.ViewModels
         #region Commands
         public AsyncRelayCommand AddCommand { get; set; }
         public AsyncRelayCommand ImportDialogCommand { get; set; }
-        private bool canRunAddCommand = true;
-        public bool CanRunAddCommand
-        {
-            get => canRunAddCommand;
-            set
-            {
-                canRunAddCommand = value;
-                OnPropertyChanged();
-            }
-        }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
@@ -69,6 +59,10 @@ namespace cs4rsa_core.ViewModels
             set
             {
                 selectedDiscipline = value;
+                if (value != null)
+                {
+                    LoadDisciplineKeyword(value);
+                }
                 OnPropertyChanged();
             }
         }
@@ -80,7 +74,7 @@ namespace cs4rsa_core.ViewModels
             set
             {
                 selectedKeyword = value;
-                CanAddSubjectChange();
+                AddCommand.NotifyCanExecuteChanged();
                 OnPropertyChanged();
             }
         }
@@ -107,7 +101,7 @@ namespace cs4rsa_core.ViewModels
                     SelectedDiscipline = value.Discipline;
                     SelectedKeyword = value.Keyword;
                     SearchText = string.Empty;
-                    CanAddSubjectChange();
+                    AddCommand.NotifyCanExecuteChanged();
                     if (!IsAlreadyDownloaded(value.Keyword.CourseId))
                     {
                         DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
@@ -232,20 +226,26 @@ namespace cs4rsa_core.ViewModels
                 ExitImportSubjectMsgHandler(m.Value.Item1, m.Value.Item2);
             });
 
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await LoadDiscipline();
+                await LoadSavedSchedules();
+            });
+
             DisciplineKeywordModels = new();
             SubjectModels = new();
             Disciplines = new();
             FullMatchSearchingKeywords = new();
             SavedSchedules = new();
-            SearchText = "";
+            SearchText = string.Empty;
             CurrentView = 0;
             IsUseCache = true;
 
-            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync);
+            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync, () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new RelayCommand(OnDetail);
         }
 
@@ -281,7 +281,7 @@ namespace cs4rsa_core.ViewModels
         public async Task LoadSearchItemSource(string text)
         {
             text = text.Trim().ToLower();
-            if (text.Equals("")) return;
+            if (text.Equals(string.Empty)) return;
 
             FullMatchSearchingKeywords.Clear();
 
@@ -301,9 +301,9 @@ namespace cs4rsa_core.ViewModels
                 }
             }
 
-            if (text.Contains(' '))
+            if (text.Contains(VMConstants.CHAR_SPACE))
             {
-                string[] textSplit = text.Split(new char[] { ' ' }, StringSplitOptions.None);
+                string[] textSplit = text.Split(new char[] { VMConstants.CHAR_SPACE }, StringSplitOptions.None);
                 string discipline = textSplit[0];
                 string keyword1 = textSplit[1];
                 List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
@@ -352,7 +352,7 @@ namespace cs4rsa_core.ViewModels
 
             #region ClassGroupModels
             List<ClassGroupModel> classGroupModels = new();
-            ChoicedSessionViewModel choicedSessionViewModel = GetViewModel<ChoicedSessionViewModel>();
+            ChoosedSessionViewModel choicedSessionViewModel = GetViewModel<ChoosedSessionViewModel>();
             ObservableCollection<ClassGroupModel> classGroupColl = choicedSessionViewModel.ClassGroupModels;
             foreach (ClassGroupModel classGroupModel in classGroupColl)
             {
@@ -364,7 +364,6 @@ namespace cs4rsa_core.ViewModels
 
             SubjectModels.Clear();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
-            CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
@@ -429,11 +428,11 @@ namespace cs4rsa_core.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            if (GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+            if (GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .Any())
             {
-                ClassGroupModel classGroupModel = GetViewModel<ChoicedSessionViewModel>().ClassGroupModels
+                ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .First();
                 ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
@@ -453,7 +452,6 @@ namespace cs4rsa_core.ViewModels
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
             SubjectModels.Remove(_selectedSubjectModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, AddSubjectAndReload, actionData);
-            CanAddSubjectChange();
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
@@ -474,7 +472,7 @@ namespace cs4rsa_core.ViewModels
 
         private async Task OnAddSubjectAsync()
         {
-            CanAddSubjectChange(false);
+
             await OpenDownloadSubjectDialog(
                 selectedDiscipline.Name,
                 selectedKeyword.Keyword1,
@@ -500,7 +498,7 @@ namespace cs4rsa_core.ViewModels
             else
             {
                 string subjectName = selectedKeyword.SubjectName;
-                string subjectCode = selectedDiscipline.Name + " " + selectedKeyword.Keyword1;
+                string subjectCode = selectedDiscipline.Name + VMConstants.STR_SPACE + selectedKeyword.Keyword1;
                 vm.SubjectName = subjectName;
                 vm.SubjectCode = subjectCode;
                 subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
@@ -521,7 +519,7 @@ namespace cs4rsa_core.ViewModels
             {
                 CloseDialog();
                 _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
-                CanAddSubjectChange();
+                AddCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -565,6 +563,7 @@ namespace cs4rsa_core.ViewModels
         /// </summary>
         private void UpdateSubjectAmount()
         {
+            DeleteAllCommand.NotifyCanExecuteChanged();
             TotalSubject = SubjectModels.Count;
             Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }
@@ -582,23 +581,6 @@ namespace cs4rsa_core.ViewModels
             Messenger.Send(new SearchVmMsgs.SubjectItemChangedMsg(new Tuple<int, int>(TotalCredits, TotalSubject)));
         }
 
-        private void CanAddSubjectChange(bool? value = null)
-        {
-            if (value == null)
-            {
-                if (selectedKeyword == null)
-                {
-                    CanRunAddCommand = true;
-                    return;
-                }
-                CanRunAddCommand = !IsAlreadyDownloaded(SelectedKeyword.CourseId);
-            }
-            else
-            {
-                CanRunAddCommand = value.Value;
-            }
-        }
-
         /// <summary>
         /// Kiếm tra xem rằng một Subject đã có 
         /// sẵn trong danh sách đã tải xuống hay chưa.
@@ -609,6 +591,16 @@ namespace cs4rsa_core.ViewModels
         {
             IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
             return courseIds.Contains(courseId);
+        }
+
+        private bool IsAlreadyDownloaded(Keyword keyword)
+        {
+            if (keyword != null)
+            {
+                IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
+                return courseIds.Contains(keyword.CourseId);
+            }
+            return true;
         }
 
         private void ImportSubjects(IEnumerable<SubjectModel> importSubjects)
@@ -624,7 +616,7 @@ namespace cs4rsa_core.ViewModels
                 SubjectModels.Add(subject);
             }
             TotalSubject = SubjectModels.Count;
-            CanAddSubjectChange();
+            AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }
@@ -646,7 +638,7 @@ namespace cs4rsa_core.ViewModels
             }
             SelectedSubjectModel = SubjectModels[0];
             TotalSubject = SubjectModels.Count;
-            CanAddSubjectChange();
+            AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
         }

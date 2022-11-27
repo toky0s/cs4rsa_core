@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
-    public class ConflictPlace
+    public readonly struct ConflictPlace
     {
-        public Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> PlaceAdjacents { get; private set; }
+        public static readonly ConflictPlace NullInstance = new();
+        public readonly Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> PlaceAdjacents;
 
         public ConflictPlace(Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> placeAdjacents)
         {

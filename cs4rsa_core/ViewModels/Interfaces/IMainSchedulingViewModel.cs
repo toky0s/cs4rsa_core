@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.ViewModels.Interfaces
+﻿namespace Cs4rsa.ViewModels.Interfaces
 {
     public interface IMainSchedulingViewModel
     {

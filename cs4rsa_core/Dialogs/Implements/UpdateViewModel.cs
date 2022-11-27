@@ -1,21 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Cs4rsaDatabase.DataProviders;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.DisciplineCrawlerSvc.Crawlers;
-using cs4rsa_core.Settings.Interfaces;
-using cs4rsa_core.ViewModels;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.DataProviders;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
+using Cs4rsa.Settings.Interfaces;
+using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
 
 using System.ComponentModel;
 using System.Windows;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class UpdateViewModel : ViewModelBase
     {

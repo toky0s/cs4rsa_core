@@ -1,16 +1,16 @@
-﻿using cs4rsa_core.Commons.Interfaces;
-using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ConflictSvc.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
+﻿using Cs4rsa.Commons.Interfaces;
+using Cs4rsa.Commons.Models;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
+using Cs4rsa.Services.ConflictSvc.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.Models
+namespace Cs4rsa.Services.ConflictSvc.Models
 {
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
@@ -54,7 +54,7 @@ namespace cs4rsa_core.Services.ConflictSvc.Models
                 {
                     string from = $"Từ {placeAdjacent.StartAsString} ở {placeAdjacent.PlaceStart.ToActualPlace()}";
                     string to = $"đến {placeAdjacent.EndAsString} ở {placeAdjacent.PlaceEnd.ToActualPlace()}";
-                    info.Add(from + " " + to);
+                    info.Add($"{from} {to}");
                 }
                 string placeString = string.Join("\n", info);
                 resultTimes.Add(day + "\n" + placeString);

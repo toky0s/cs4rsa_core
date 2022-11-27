@@ -1,13 +1,13 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class ClassGroup
     {
@@ -16,7 +16,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
 
         public readonly string Name;
         public readonly string SubjectCode;
-        public readonly string SubjectName;
+        public string SubjectName { get; }
 
         public List<string> RegisterCodes
         {
@@ -246,7 +246,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
                 // Trường hợp hai mã giống nhau mà khác giảng viên
-                if (schoolClass.RegisterCode.Trim() != "" && !_registerCodes.Contains(schoolClass.RegisterCode))
+                if (schoolClass.RegisterCode.Trim() != string.Empty && !_registerCodes.Contains(schoolClass.RegisterCode))
                 {
                     _registerCodes.Add(schoolClass.RegisterCode);
                 }
@@ -272,12 +272,12 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         {
             foreach (SchoolClass schoolClass in _schoolClasses)
             {
-                if (schoolClass.Url.Trim() != "")
+                if (schoolClass.Url.Trim() != string.Empty)
                 {
                     return schoolClass.Url;
                 }
             }
-            return "";
+            return string.Empty;
         }
 
         public ImplementType GetImplementType()

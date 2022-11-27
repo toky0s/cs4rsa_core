@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Dialogs.DialogResults
+﻿namespace Cs4rsa.Dialogs.DialogResults
 {
     public class SolveConflictResult
     {

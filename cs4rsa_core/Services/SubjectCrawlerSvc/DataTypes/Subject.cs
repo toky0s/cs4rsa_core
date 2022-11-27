@@ -1,10 +1,11 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Utils;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -15,7 +16,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class Subject
     {
@@ -91,7 +92,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                 foreach (SchoolClass schoolClass in classGroup.SchoolClasses)
                 {
                     string registerCode = schoolClass.RegisterCode;
-                    if (registerCode != "")
+                    if (registerCode != string.Empty)
                     {
                         registerCodeCount++;
                     }
@@ -192,7 +193,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
 
             List<string> tempTeachers = new();
-            if (teacherName != "")
+            if (teacherName != string.Empty)
             {
                 tempTeachers.Add(teacherName);
             }
@@ -265,7 +266,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
                                         registrationTermEnd, registrationTermStart, studyWeek, schedule,
                                         rooms, places, teachers, tempTeachers,
                                         registrationStatus, implementationStatus,
-                                        urlToSubjectDetailPage, metaData);
+                                        urlToSubjectDetailPage, metaData, SubjectCode);
             return schoolClass;
         }
 
@@ -282,8 +283,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             doc.LoadHtml(trTagClassLop.InnerHtml);
             HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
-            string teacherName = string.Join(" ", slices);
-            if (teacherName != "")
+            string teacherName = string.Join(VMConstants.STR_SPACE, slices);
+            if (teacherName != string.Empty)
             {
                 _tempTeachers.Add(teacherName);
                 _tempTeachers = _tempTeachers.Distinct().ToList();

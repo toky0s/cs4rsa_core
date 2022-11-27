@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Settings.Interfaces;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Settings.Interfaces;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     public class InfoViewModel : ViewModelBase
     {

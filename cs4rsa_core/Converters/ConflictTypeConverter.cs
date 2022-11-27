@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Converters
+namespace Cs4rsa.Converters
 {
     /// <summary>
     /// Converter này chuyển một ConflictType thành số nguyên, phục vụ hiển thị giao diện với trigger.

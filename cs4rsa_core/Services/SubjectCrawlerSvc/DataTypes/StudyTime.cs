@@ -1,8 +1,9 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class StudyTime
     {
@@ -20,8 +21,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         {
             _startAsString = start;
             _endAsString = end;
-            _start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            _end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            _start = DateTime.ParseExact(start, VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+            _end = DateTime.ParseExact(end, VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public Session GetSession()
@@ -45,8 +46,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private bool IsInMorning()
         {
             DateTime[] MorningTime =  {
-                DateTime.ParseExact("07:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
-                DateTime.ParseExact("11:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+                DateTime.ParseExact("07:00", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("11:15", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture)
             };
             if (_start <= MorningTime[1])
             {
@@ -62,8 +63,8 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
         private bool IsInAfternoon()
         {
             DateTime[] AfternoonTime =  {
-                DateTime.ParseExact("13:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
-                DateTime.ParseExact("17:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+                DateTime.ParseExact("13:00", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("17:15", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture)
             };
             if (_start >= AfternoonTime[0] && _start <= AfternoonTime[1])
             {

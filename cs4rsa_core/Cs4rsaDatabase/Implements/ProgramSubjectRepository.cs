@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.DataProviders;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Cs4rsaDatabase.DataProviders;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
 
 using Microsoft.EntityFrameworkCore;
 
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Cs4rsaDatabase.Implements
+namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class ProgramSubjectRepository : GenericRepository<ProgramSubject>, IProgramSubjectRepository
     {

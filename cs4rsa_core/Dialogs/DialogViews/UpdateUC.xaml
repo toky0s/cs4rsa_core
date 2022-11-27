@@ -1,13 +1,13 @@
 ﻿<UserControl
-    x:Class="cs4rsa_core.Dialogs.DialogViews.UpdateUC"
+    x:Class="Cs4rsa.Dialogs.DialogViews.UpdateUC"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:cs4rsa_core.Dialogs.DialogViews"
+    xmlns:local="clr-namespace:Cs4rsa.Dialogs.DialogViews"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:cs4rsa_core.Dialogs.Implements"
-    xmlns:vml="clr-namespace:cs4rsa_core.ViewModelLocator"
+    xmlns:vm="clr-namespace:Cs4rsa.Dialogs.Implements"
+    xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
     d:DataContext="{d:DesignInstance Type=vm:UpdateViewModel}"
     d:DesignHeight="250"
     d:DesignWidth="400"
@@ -37,7 +37,7 @@
                     <Button
                         Margin="0,5,0,0"
                         Command="{Binding StartUpdateCommand}"
-                        Content="Bắt đầu">
+                        Content="BẮT ĐẦU">
                         <Button.Style>
                             <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
                                 <Setter Property="IsEnabled" Value="False" />
@@ -49,21 +49,6 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <!--<Button
-                        Margin="0,5,0,0"
-                        Command="{Binding CloseDialogCommand}"
-                        Content="Thoát">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
-                                <Setter Property="IsEnabled" Value="False" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=ProgressBar, Path=Value}" Value="0">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>-->
                 </StackPanel>
             </StackPanel>
         </Grid>

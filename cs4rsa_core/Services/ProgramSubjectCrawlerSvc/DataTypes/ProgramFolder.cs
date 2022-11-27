@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
     public class ProgramFolder : IProgramNode
     {

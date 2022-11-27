@@ -1,17 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Models;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Utils;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Models;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class ProSubjectDetailViewModel : ViewModelBase
     {

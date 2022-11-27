@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Utils.Interfaces;
 
 using System.IO;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     public class FolderManager : IFolderManager
     {

@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     /// <summary>
     /// Ứng dụng quay lui thực hiện sinh các cấu hình

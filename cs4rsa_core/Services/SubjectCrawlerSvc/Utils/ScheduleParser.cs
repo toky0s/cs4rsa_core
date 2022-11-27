@@ -1,4 +1,5 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 using HtmlAgilityPack;
 
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
 {
     /// <summary>
     /// Bộ phân tích này dùng để chuyển một <td> tag thành Schedule [{'T2:': ['07:00-09:00', '07:00-10:15']}]
@@ -77,7 +78,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
         /// <param name="trTag"></param>
         private static string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
-            string[] separatingStrings = { " ", "\n", "\r", "-", "," };
+            string[] separatingStrings = { VMConstants.STR_SPACE, "\n", "\r", "-", "," };
             string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return trTagSplitDatas;
         }

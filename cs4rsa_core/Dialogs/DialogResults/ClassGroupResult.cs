@@ -1,6 +1,6 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
-namespace cs4rsa_core.Dialogs.DialogResults
+namespace Cs4rsa.Dialogs.DialogResults
 {
     public class ClassGroupResult
     {

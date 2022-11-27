@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Cs4rsa.Constants;
+
+using System;
 using System.Globalization;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     /// <summary>
     /// Đại điện cho một khoảng giao về thời gian giữa hai StudyTime. Phục vụ cho việc phát hiện xung đột.
     /// </summary>
-    public struct StudyTimeIntersect
+    public readonly struct StudyTimeIntersect
     {
         public static readonly StudyTimeIntersect Instance = new();
 
@@ -20,8 +22,8 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         {
             Start = start;
             End = end;
-            StartString = start.ToString("HH:mm", CultureInfo.CurrentCulture);
-            EndString = end.ToString("HH:mm", CultureInfo.CurrentCulture);
+            StartString = start.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            EndString = end.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
         }
     }
 }

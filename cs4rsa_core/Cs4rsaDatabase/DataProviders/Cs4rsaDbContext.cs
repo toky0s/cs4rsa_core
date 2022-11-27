@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Models;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace cs4rsa_core.Cs4rsaDatabase.DataProviders
+namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 {
     public class Cs4rsaDbContext : DbContext
     {

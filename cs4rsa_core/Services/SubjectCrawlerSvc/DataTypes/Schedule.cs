@@ -1,11 +1,11 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class Schedule
     {
@@ -43,7 +43,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
             foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in _scheduleTime)
             {
                 string thu = item.Key.ToCs4rsaThu();
-                string timesRange = "";
+                string timesRange = string.Empty;
                 foreach (StudyTime studyTime in item.Value)
                 {
                     timesRange += $"\nTừ {studyTime.StartAsString} đến {studyTime.EndAsString}";

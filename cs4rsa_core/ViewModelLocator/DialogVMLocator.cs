@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 
-namespace cs4rsa_core.ViewModelLocator
+namespace Cs4rsa.ViewModelLocator
 {
     public static class DialogVMLocator
     {
@@ -35,7 +35,7 @@ namespace cs4rsa_core.ViewModelLocator
             Type viewType = d.GetType();
 
             string str = viewType.FullName;
-            str = str.Replace("UC", "");
+            str = str.Replace("UC", string.Empty);
             str = str.Replace(".DialogViews.", ".Implements.");
 
             string viewTypeName;

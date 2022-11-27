@@ -1,9 +1,9 @@
-﻿using cs4rsa_core.Commons.Models;
+﻿using Cs4rsa.Commons.Models;
 
 using System.Windows;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     public class DayPanel : Panel
     {

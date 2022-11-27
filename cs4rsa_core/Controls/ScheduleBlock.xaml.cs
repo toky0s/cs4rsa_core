@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace cs4rsa_core.Controls
+namespace Cs4rsa.Controls
 {
     public partial class ScheduleBlock : UserControl
     {
@@ -67,7 +67,7 @@ namespace cs4rsa_core.Controls
         }
 
         public static readonly DependencyProperty DescriptionProperty =
-            DependencyProperty.Register("" +
+            DependencyProperty.Register(string.Empty +
                 "Description",
                 typeof(string),
                 typeof(ScheduleBlock),
@@ -118,7 +118,7 @@ namespace cs4rsa_core.Controls
                 "ClassGroupName",
                 typeof(string),
                 typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
                 );
         #endregion
 
@@ -134,7 +134,7 @@ namespace cs4rsa_core.Controls
                 "Class1",
                 typeof(string),
                 typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
                 );
         #endregion
 
@@ -150,7 +150,7 @@ namespace cs4rsa_core.Controls
                 "Class2",
                 typeof(string),
                 typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
                 );
         #endregion
     }

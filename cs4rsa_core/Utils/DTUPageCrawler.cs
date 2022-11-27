@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     public class DtuPageCrawler
     {

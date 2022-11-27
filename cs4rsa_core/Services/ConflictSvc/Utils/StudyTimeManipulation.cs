@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Services.ConflictSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ConflictSvc.Utils
+namespace Cs4rsa.Services.ConflictSvc.Utils
 {
     /// <summary>
     /// Bao gồm các phương thức thao tác với StudyTime.
@@ -16,7 +16,10 @@ namespace cs4rsa_core.Services.ConflictSvc.Utils
         /// </summary>
         /// <param name="studyTime1">StudyTime.</param>
         /// <param name="studyTime2">StudyTime.</param>
-        /// <returns>StudyTimeIntersect đại diện cho một khoảng giao về thời gian giữa hai StudyTime. Phục vụ cho việc phát hiện xung đột.</returns>
+        /// <returns>
+        /// StudyTimeIntersect đại diện cho một khoảng giao về thời gian giữa hai StudyTime.
+        /// Phục vụ cho việc phát hiện xung đột.
+        /// </returns>
         public static StudyTimeIntersect GetStudyTimeIntersect(StudyTime studyTime1, StudyTime studyTime2)
         {
             List<DateTime> studyTimes = new()

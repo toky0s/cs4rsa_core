@@ -1,13 +1,13 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     public class SubjectModel
     {

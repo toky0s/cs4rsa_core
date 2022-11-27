@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     /// <summary>
     /// Đối tượng chứa thông tin các môn tiên quyết và xong hành

@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Messages.Publishers.Dialogs;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.ObjectModel;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
     public class ShowDetailsSchoolClassesViewModel : ViewModelBase
     {

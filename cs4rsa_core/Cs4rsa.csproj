@@ -32,6 +32,7 @@
     <None Remove="Images\cockieeditor3.png" />
     <None Remove="Images\cockieeditor5.png" />
     <None Remove="Images\cookie_v1.png" />
+    <None Remove="Images\default-avatar.jpg" />
     <None Remove="Images\donate.png" />
     <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
@@ -43,6 +44,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="Humanizer.Core.vi" Version="2.14.1" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -86,7 +88,7 @@
     <Page Update="Views\AutoSchedule.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ChoicedSession.xaml">
+    <Page Update="Views\ChoosedSession.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\ClassGroupSession.xaml">
@@ -121,6 +123,7 @@
     <Resource Include="Images\cockieeditor3.png" />
     <Resource Include="Images\cockieeditor5.png" />
     <Resource Include="Images\cookie_v1.png" />
+    <Resource Include="Images\default-avatar.jpg" />
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />

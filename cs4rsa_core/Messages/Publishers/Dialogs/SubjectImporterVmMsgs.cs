@@ -1,12 +1,12 @@
 using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Messages.Publishers.Dialogs
+namespace Cs4rsa.Messages.Publishers.Dialogs
 {
     internal sealed class SubjectImporterVmMsgs
     {

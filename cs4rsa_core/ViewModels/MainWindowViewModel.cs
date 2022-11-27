@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Constants;
-using cs4rsa_core.Dialogs.DialogViews;
-using cs4rsa_core.Messages.Publishers;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Messages.Publishers;
 
 using MaterialDesignThemes.Wpf;
 
-namespace cs4rsa_core.ViewModels
+namespace Cs4rsa.ViewModels
 {
     /// <summary>
     /// MainWindowViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
@@ -31,17 +31,6 @@ namespace cs4rsa_core.ViewModels
         {
             get { return _isExpanded; }
             set { _isExpanded = value; OnPropertyChanged(); }
-        }
-
-        private int _selectedIndex;
-        public int SelectedIndex
-        {
-            get => _selectedIndex;
-            set
-            {
-                _selectedIndex = value;
-                OnPropertyChanged();
-            }
         }
 
         private bool _isOpen;
@@ -88,8 +77,6 @@ namespace cs4rsa_core.ViewModels
             });
 
             OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
-
-            SelectedIndex = 0;
             IsExpanded = false;
             AppName = ViewConstants.APP_NAME;
         }

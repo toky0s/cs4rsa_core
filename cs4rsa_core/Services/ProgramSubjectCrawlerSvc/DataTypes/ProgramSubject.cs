@@ -1,11 +1,11 @@
-﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
     /// <summary>
     /// Đại diện cho một Row của trong bảng chương trình học.

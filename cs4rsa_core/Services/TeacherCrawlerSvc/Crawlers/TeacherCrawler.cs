@@ -1,10 +1,10 @@
-﻿using cs4rsa_core.Constants;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -16,7 +16,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.TeacherCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
 {
     public class TeacherCrawler : ITeacherCrawler
     {

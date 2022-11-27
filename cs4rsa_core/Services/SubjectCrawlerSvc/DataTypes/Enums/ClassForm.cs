@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
+namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums
 {
     /**
     * Danh sách hình thức lớp
@@ -39,7 +39,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums
             SES,SLF,STD,SUP,TUT,VOL,WOR
         };
 
-        public string Code { get; set; }
+        public string Code { get; }
         public readonly string FullEn;
         public readonly string FullVn;
         public readonly string Description;

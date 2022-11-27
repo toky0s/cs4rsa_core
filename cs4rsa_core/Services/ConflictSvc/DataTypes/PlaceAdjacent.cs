@@ -1,17 +1,18 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Globalization;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     /// <summary>
     /// Đại diện cho xung đột vị trí của hai giờ học đầu và hai giờ sau.
     /// 
     /// Ngang cấp với ConflictTime.
     /// </summary>
-    public struct PlaceAdjacent
+    public readonly struct PlaceAdjacent
     {
         public static readonly PlaceAdjacent Instance = new();
 
@@ -36,8 +37,8 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
             End = end;
             PlaceStart = placeStart;
             PlaceEnd = placeEnd;
-            StartAsString = Start.ToString("HH:mm", CultureInfo.CurrentCulture);
-            EndAsString = End.ToString("HH:mm", CultureInfo.CurrentCulture);
+            StartAsString = Start.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            EndAsString = End.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
             SchoolClass1 = schoolClass1;
             SchoolClass2 = schoolClass2;
         }

@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Commons.Interfaces;
-using cs4rsa_core.Commons.Models;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using cs4rsa_core.Services.TeacherCrawlerSvc.Models;
+﻿using Cs4rsa.Commons.Interfaces;
+using Cs4rsa.Commons.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 
 using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     public class SchoolClassModel : IScheduleTableItem
     {
@@ -136,6 +136,11 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             set { _dayPlaceMetaData = value; }
         }
 
+        public Phase Phase
+        {
+            get => _schoolClass.GetPhase();
+        }
+
         public string Color { get; set; }
 
         public SchoolClassModel(SchoolClass schoolClass)
@@ -149,6 +154,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Models
             _registrationTermStart = schoolClass.RegistrationTermStart;
             _studyWeek = schoolClass.StudyWeek;
             _schedule = schoolClass.Schedule;
+            _subjectCode = schoolClass.SubjectCode;
             _rooms = schoolClass.Rooms;
             _places = schoolClass.Places;
             _teachers = schoolClass.Teachers;

@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Settings
+﻿namespace Cs4rsa.Settings
 {
     public class Cs4rsaSetting
     {

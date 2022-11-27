@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
@@ -10,7 +10,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 {
     public class DtuStudentInfoCrawler : IDtuStudentInfoCrawler
     {
@@ -63,7 +63,7 @@ namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
             string address = StringHelper.SuperCleanString(addressNode.InnerText);
 
             string imageSrcData = imageNode.Attributes["src"].Value;
-            string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", "");
+            string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", string.Empty);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
             Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);

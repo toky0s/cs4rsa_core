@@ -1,24 +1,31 @@
-﻿using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Utils;
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace cs4rsa_core.Validations.Rules
+namespace Cs4rsa.Validations.Rules
 {
     public class ShareStringRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            IEnumerable<UserSubject> result = ShareString.GetSubjectFromShareString((string)value);
-            if (result == null)
+            try
             {
-                return new ValidationResult(false, $"Share string không hợp lệ");
+                IEnumerable<UserSubject> result = ShareString.GetSubjectFromShareString((string)value);
+                if (result == null)
+                {
+                    return new ValidationResult(false, $"Share string không hợp lệ");
+                }
+                else
+                {
+                    return ValidationResult.ValidResult;
+                }
             }
-            else
+            catch (Exception e)
             {
-                return ValidationResult.ValidResult;
+                return new ValidationResult(false, $"Phân tích share string bị lỗi {e.Message}");
             }
         }
     }

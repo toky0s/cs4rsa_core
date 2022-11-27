@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Services.CourseSearchSvc.DataTypes
+﻿namespace Cs4rsa.Services.CourseSearchSvc.DataTypes
 {
     /// <summary>
     /// Class này đại diện cho thông tin của một học kỳ, đóng vai trò

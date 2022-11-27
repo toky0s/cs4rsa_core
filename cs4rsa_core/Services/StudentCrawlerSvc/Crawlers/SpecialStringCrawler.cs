@@ -1,12 +1,12 @@
-﻿using cs4rsa_core.Services.StudentCrawlerSvc.Crawlers.Interfaces;
-using cs4rsa_core.Utils;
+﻿using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
 using System;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.StudentCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 {
     /// <summary>
     /// Trình cào này thực hiện lấy chuỗi đặc biệt từ session id được truyền vào.

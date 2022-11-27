@@ -1,4 +1,4 @@
-﻿namespace cs4rsa_core.Dialogs.DialogResults
+﻿namespace Cs4rsa.Dialogs.DialogResults
 {
     /// <summary>
     /// Là một item trong kết quả trả về của Trình Quản lý Phiên.

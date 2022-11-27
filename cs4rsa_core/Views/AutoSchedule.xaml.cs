@@ -1,11 +1,11 @@
-﻿using cs4rsa_core.Models;
-using cs4rsa_core.ViewModels;
+﻿using Cs4rsa.Models;
+using Cs4rsa.ViewModels;
 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace cs4rsa_core.Views
+namespace Cs4rsa.Views
 {
     public partial class AutoSchedule : UserControl
     {
@@ -48,12 +48,6 @@ namespace cs4rsa_core.Views
                 return !combinationModel.IsHavePlaceConflicts();
             }
             return true;
-        }
-
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            ContextMenu menu = sender as ContextMenu;
-            menu.DataContext = DataContext;
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

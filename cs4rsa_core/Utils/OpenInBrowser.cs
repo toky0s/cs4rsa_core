@@ -1,8 +1,8 @@
-﻿using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Utils.Interfaces;
 
 using System.Diagnostics;
 
-namespace cs4rsa_core.Utils
+namespace Cs4rsa.Utils
 {
     public class OpenInBrowser : IOpenInBrowser
     {

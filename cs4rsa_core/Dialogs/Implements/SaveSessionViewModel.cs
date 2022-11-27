@@ -1,59 +1,60 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
-using cs4rsa_core.BaseClasses;
-using cs4rsa_core.Cs4rsaDatabase.Interfaces;
-using cs4rsa_core.Cs4rsaDatabase.Models;
-using cs4rsa_core.Dialogs.DialogResults;
-using cs4rsa_core.Services.CourseSearchSvc.Crawlers.Interfaces;
-using cs4rsa_core.Services.SubjectCrawlerSvc.Models;
-using cs4rsa_core.Utils;
+using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils;
+
+using MaterialDesignThemes.Wpf;
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Dialogs.Implements
+namespace Cs4rsa.Dialogs.Implements
 {
-    /**
-     * Mô tả:
-     *      ViewModel thực hiện việc lưu thông tin bộ lịch
-     *      mà người dùng đã sắp xếp
-     */
+    /// <summary>
+    /// Mô tả:
+    ///     Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
+    /// </summary>
     public class SaveSessionViewModel : ViewModelBase
     {
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value ?? string.Empty;
+                SaveCommand.NotifyCanExecuteChanged();
+            }
+        }
+
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
-        public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
-        public string Name { get; set; }
         public AsyncRelayCommand SaveCommand { get; set; }
-        public Action<SaveResult> CloseDialogCallback { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareString;
 
         public SaveSessionViewModel(
             IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
+            ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString)
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
+            _snackbarMessageQueue = snackbarMessageQueue;
             _shareString = shareString;
+            _name = string.Empty;
 
-            ScheduleSessions = new();
-            SaveCommand = new AsyncRelayCommand(Save);
-        }
-
-        public async Task LoadScheduleSessions()
-        {
-            ScheduleSessions.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
-            foreach (UserSchedule session in sessions)
-            {
-                ScheduleSessions.Add(session);
-            }
+            SaveCommand = new AsyncRelayCommand(Save, () => _name.Length > 0);
         }
 
         // 
@@ -77,7 +78,7 @@ namespace cs4rsa_core.Dialogs.Implements
                                                     }).ToList();
             UserSchedule session = new()
             {
-                Name = Name,
+                Name = Name.Trim(),
                 SaveDate = DateTime.Now,
                 SemesterValue = _courseCrawler.GetCurrentSemesterValue(),
                 YearValue = _courseCrawler.GetCurrentYearValue(),
@@ -87,7 +88,12 @@ namespace cs4rsa_core.Dialogs.Implements
             await _unitOfWork.UserSchedule.AddAsync(session);
             await _unitOfWork.CompleteAsync();
             SaveResult result = new() { Name = Name };
-            CloseDialogCallback.Invoke(result);
+            CloseDialog();
+            if (result != null)
+            {
+                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
+                _snackbarMessageQueue.Enqueue(message);
+            }
         }
     }
 }

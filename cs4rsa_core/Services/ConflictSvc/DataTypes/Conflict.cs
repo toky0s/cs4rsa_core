@@ -1,11 +1,11 @@
-﻿using cs4rsa_core.Services.ConflictSvc.Utils;
-using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Services.ConflictSvc.Utils;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cs4rsa_core.Services.ConflictSvc.DataTypes
+namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     public class Conflict : BaseConflict
     {
@@ -16,33 +16,36 @@ namespace cs4rsa_core.Services.ConflictSvc.DataTypes
         public ConflictTime GetConflictTime()
         {
             // Check phase
-            if (!CanConflictPhase(_schoolClass1.GetPhase(), _schoolClass2.GetPhase()))
+            PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(_schoolClass1.StudyWeek, _schoolClass2.StudyWeek);
+            if (phaseIntersect.Equals(PhaseIntersect.NullInstance))
             {
                 return ConflictTime.NullInstance;
             }
 
             Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
             Schedule scheduleClassGroup2 = _schoolClass2.Schedule;
-            IEnumerable<DayOfWeek> DayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
+            IEnumerable<DayOfWeek> dayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
 
             // Check date
-            if (!DayOfWeeks.Any())
+            if (!dayOfWeeks.Any())
             {
                 return ConflictTime.NullInstance;
             }
 
             Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes = new();
-            //check time
-            foreach (DayOfWeek DayOfWeek in DayOfWeeks)
+
+
+            // Check time
+            foreach (DayOfWeek dayOfWeek in dayOfWeeks)
             {
-                IEnumerable<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(DayOfWeek);
-                IEnumerable<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(DayOfWeek);
+                IEnumerable<StudyTime> studyTimesClassGroup1 = scheduleClassGroup1.GetStudyTimesAtDay(dayOfWeek);
+                IEnumerable<StudyTime> studyTimesClassGroup2 = scheduleClassGroup2.GetStudyTimesAtDay(dayOfWeek);
                 IEnumerable<StudyTime> studyTimeJoin = studyTimesClassGroup1.Concat(studyTimesClassGroup2);
                 IEnumerable<Tuple<StudyTime, StudyTime>> studyTimePairs = StudyTimeManipulation.PairStudyTimes(studyTimeJoin.ToList());
                 IEnumerable<StudyTimeIntersect> studyTimeIntersects = StudyTimeManipulation.GetStudyTimeIntersects(studyTimePairs);
                 if (studyTimeIntersects.Any())
                 {
-                    conflictTimes.Add(DayOfWeek, studyTimeIntersects);
+                    conflictTimes.Add(dayOfWeek, studyTimeIntersects);
                 }
             }
             return conflictTimes.Count != 0

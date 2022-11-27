@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Windows;
 
 
-namespace cs4rsa_core.ViewModelLocator
+namespace Cs4rsa.ViewModelLocator
 {
     public static class ViewModelLocator
     {
@@ -39,7 +39,7 @@ namespace cs4rsa_core.ViewModelLocator
             if (str.Contains("UC"))
             {
                 str = str
-                .Replace("UC", "")
+                .Replace("UC", string.Empty)
                 .Replace(".DialogViews.", ".Implements.");
             }
             else

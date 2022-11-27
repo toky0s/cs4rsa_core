@@ -1,9 +1,10 @@
-﻿using cs4rsa_core.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Linq;
 
-namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
+namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
 {
     /// <summary>
     /// Chịu trách nhiệm chuyển đổi các kiểu dữ liệu thông thường sang các BasicData hoặc Model
@@ -18,7 +19,7 @@ namespace cs4rsa_core.Services.SubjectCrawlerSvc.Utils
         /// <returns></returns>
         public static Place ToPlace(string place)
         {
-            char[] splitChars = { ' ' };
+            char[] splitChars = { VMConstants.CHAR_SPACE };
             string[] slideds = place.Split(splitChars);
             if (slideds.Contains("Quang"))
                 return Place.QUANGTRUNG;

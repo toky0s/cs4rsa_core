@@ -1,6 +1,6 @@
-﻿namespace cs4rsa_core.Constants
+﻿namespace Cs4rsa.Constants
 {
-    internal abstract class VMConstants
+    internal static class VMConstants
     {
         #region DB
         public static readonly string DB_CONN = @"Data Source=cs4rsa.db";
@@ -40,6 +40,9 @@
         public static readonly string SNB_AT_LAST_SCHEDULE = "Đã đến bộ lịch cuối";
         public static readonly string SNB_ALREADY_DOWNLOADED = "Đã được tải xuống";
         public static readonly string SNB_COPY_SUCCESS = "Đã sao chép";
+
+        // NF: Not Found
+        public static readonly string SNB_NF_REGISTER_CODE = "Lớp này không có mã đăng ký";
         #endregion
 
         #region Snackbar Actions
@@ -52,6 +55,10 @@
 
         #region Consts
         public const int INT_INVALID_COURSEID = 0;
+
+        public const string STR_SPACE = " ";
+        public const string TIME_HH_MM_FORMAT = "HH:mm";
+        public const char CHAR_SPACE = ' ';
         #endregion
 
         #region Node names
