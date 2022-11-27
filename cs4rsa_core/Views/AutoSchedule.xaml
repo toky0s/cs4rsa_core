@@ -83,7 +83,8 @@
                     <Button
                         Grid.Column="1"
                         Command="{Binding LoadProgramCommand}"
-                        Content="TẢI CHƯƠNG TRÌNH HỌC" />
+                        Content="{materialDesign:PackIcon Kind=DownloadBoxOutline,
+                                                          Size=24}" />
                 </Grid>
                 <TreeView
                     x:Name="treeView"

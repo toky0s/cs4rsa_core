@@ -2,14 +2,14 @@
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
-using Cs4rsa.Commons.Interfaces;
-using Cs4rsa.Commons.Models;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.States;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.Utils.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

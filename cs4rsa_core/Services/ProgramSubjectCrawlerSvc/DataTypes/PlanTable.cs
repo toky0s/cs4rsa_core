@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
     public class PlanTable
     {

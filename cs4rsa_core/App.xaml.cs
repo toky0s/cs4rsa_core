@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Constants;
+﻿
+using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Implements;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
@@ -11,6 +12,7 @@ using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers;
@@ -31,8 +33,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Globalization;
-using System.Threading;
 using System.IO;
+using System.Threading;
 using System.Windows;
 
 namespace Cs4rsa

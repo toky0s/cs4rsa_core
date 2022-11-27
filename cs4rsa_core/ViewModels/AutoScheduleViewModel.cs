@@ -482,7 +482,7 @@ namespace Cs4rsa.ViewModels
         }
         private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)
         {
-            return !IsRemoveClassGroupInvalid || classGroupModel.IsHaveSchedule() 
+            return !IsRemoveClassGroupInvalid || classGroupModel.IsHaveSchedule()
                 && classGroupModel.EmptySeat > 0;
         }
 
@@ -614,14 +614,12 @@ namespace Cs4rsa.ViewModels
         {
             IsFinding = true;
             ProgramFolderModels.Clear();
-            ProgramDiagramCrawler programDiagramCrawler = new(
-                string.Empty
-                , _student.SpecialString
-                , _curriculumCrawler
-                , _unitOfWork
-                , _preParSubjectCrawler
+
+            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
+                string.Empty,
+                _selectedStudent.SpecialString,
+                _selectedStudent.StudentId
             );
-            ProgramFolder[] folders = await programDiagramCrawler.ToProgramDiagram();
 
             foreach (ProgramFolder folder in folders)
             {

@@ -1,8 +1,8 @@
-﻿using Cs4rsa.Commons.Interfaces;
-using Cs4rsa.Commons.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.Utils.Models;
 
 using System.Collections.Generic;
 

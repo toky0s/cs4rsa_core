@@ -1,8 +1,7 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Utils;
 
 using System.Threading.Tasks;

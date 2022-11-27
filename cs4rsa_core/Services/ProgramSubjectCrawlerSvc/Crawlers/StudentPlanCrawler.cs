@@ -1,7 +1,7 @@
-﻿using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Interfaces;
-using cs4rsa_core.Utils;
-using cs4rsa_core.Utils.Interfaces;
+﻿using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
+using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
+namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 {
     /// <summary>
     /// Tham khảo chương trình học dự kiến:
@@ -24,7 +24,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
         private static readonly string PLAN_RECORD_XPATH = "//tbody/tr";
 
         public async Task<IEnumerable<PlanTable>> GetPlanTables(
-            int curriculumId, 
+            int curriculumId,
             string sessionId)
         {
             string planFilePath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, curriculumId + ".html");
@@ -38,7 +38,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
                 string url = @$"https://mydtu.duytan.edu.vn/sites/index.aspx?p=home_listcurriculumforsemester&academicleveltypeid=3&curriculumid={curriculumId}";
                 html = await DtuPageCrawler.GetHtml(sessionId, url);
                 await File.WriteAllTextAsync(planFilePath, html);
-                
+
             }
             else
             {
@@ -52,7 +52,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
             foreach (HtmlNode planTableNode in planTableTags)
             {
                 PlanTable planTable = new();
-                
+
                 HtmlNode tableNameTag = planTableNode.SelectSingleNode(TABLE_NAME_XPATH);
                 string tableName = StringHelper.SuperCleanString(tableNameTag.InnerText);
                 planTable.Name = tableName;
@@ -67,7 +67,7 @@ namespace cs4rsa_core.Services.ProgramSubjectCrawlerSvc.Crawlers
         private static PlanRecord GetPlanRecord(HtmlNode tr)
         {
             HtmlNodeCollection tds = tr.SelectNodes("//td");
-            
+
             HtmlNode aTag = tds[0].SelectSingleNode("//a");
             string url = aTag.Attributes["href"].Value;
             string subjectName = aTag.Attributes["title"].Value;

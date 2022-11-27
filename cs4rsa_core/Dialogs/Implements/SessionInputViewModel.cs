@@ -5,8 +5,10 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -68,7 +70,7 @@ namespace Cs4rsa.Dialogs.Implements
                 MessageBoxResult _ = MessageBox.ShowMessage(message,
                                         "Thông báo",
                                         MessageBoxButton.OK,
-                                        MessageBoxImage.Exclamation);   
+                                        MessageBoxImage.Exclamation);
             }
             else
             {

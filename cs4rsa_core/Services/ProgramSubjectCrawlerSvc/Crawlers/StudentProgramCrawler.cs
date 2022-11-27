@@ -7,6 +7,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -57,7 +58,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             _sessionId = sessionId;
             _studentId = studentId;
         }
-                                    
+
         public async Task<ProgramFolder> GetNode(
             string specialString,
             string t,
@@ -184,7 +185,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             if (File.Exists(path) && isUseCache)
             {
                 doc.Load(path);
-            } 
+            }
             else
             {
                 doc = await web.LoadFromWebAsync(url);
