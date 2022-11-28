@@ -22,6 +22,13 @@ namespace Cs4rsa.Messages.Publishers
             }
         }
 
+        internal sealed class ClassGroupSeletedMsg : ValueChangedMessage<ClassGroupModel>
+        {
+            public ClassGroupSeletedMsg(ClassGroupModel value) : base(value)
+            {
+            }
+        }
+
         /// <summary>
         /// Conflict Collection Changed Message
         /// 
@@ -51,9 +58,9 @@ namespace Cs4rsa.Messages.Publishers
         /// 
         /// Xoá Class Group đã chọn.
         /// </summary>
-        internal sealed class DelClassGroupChoiceMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>
+        internal sealed class DelClassGroupChoiceMsg : ValueChangedMessage<ClassGroupModel>
         {
-            public DelClassGroupChoiceMsg(IEnumerable<ClassGroupModel> value) : base(value)
+            public DelClassGroupChoiceMsg(ClassGroupModel value) : base(value)
             {
             }
         }

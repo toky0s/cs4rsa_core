@@ -207,6 +207,8 @@ namespace Cs4rsa.ViewModels
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             _phaseStore.RemoveSchoolClassBySubjectCode(_selectedClassGroupModel.SubjectCode);
+            Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
+
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
 
@@ -214,7 +216,6 @@ namespace Cs4rsa.ViewModels
             DeleteAllCommand.NotifyCanExecuteChanged();
             DeleteCommand.NotifyCanExecuteChanged();
             UpdateConflicts();
-            Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
         }
 
         /// <summary>
@@ -323,7 +324,8 @@ namespace Cs4rsa.ViewModels
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            //Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoicedSessionVmMsgs.ClassGroupSeletedMsg(classGroupModel));
         }
 
         private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
@@ -400,6 +402,7 @@ namespace Cs4rsa.ViewModels
                 {
                     actionData = ClassGroupModels[i].DeepClone();
                     _phaseStore.RemoveSchoolClassBySubjectCode(ClassGroupModels[i].SubjectCode);
+                    Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
@@ -408,7 +411,7 @@ namespace Cs4rsa.ViewModels
                     DeleteAllCommand.NotifyCanExecuteChanged();
                     DeleteCommand.NotifyCanExecuteChanged();
                     UpdateConflicts();
-                    Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
+                    break;
                 }
             }
         }

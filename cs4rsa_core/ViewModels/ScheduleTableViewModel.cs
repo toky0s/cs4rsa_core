@@ -21,6 +21,8 @@ namespace Cs4rsa.ViewModels
 {
     class ScheduleTableViewModel : ViewModelBase
     {
+        private readonly ObservableCollection<ObservableCollection<TimeBlock>>[] _schedules;
+
         private IEnumerable<ClassGroupModel> _classGroupModels;
         private IEnumerable<ConflictModel> _conflictModels;
         private IEnumerable<PlaceConflictFinderModel> _placeConflictFinderModels;
@@ -82,6 +84,12 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
+            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ClassGroupSeletedMsg>(this, (r, m) =>
+            {
+                ClassGroupModel classGroupModel = m.Value;
+                AddClassGroup(classGroupModel);
+            });
+            
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
             {
                 _conflictModels = m.Value;
@@ -96,8 +104,8 @@ namespace Cs4rsa.ViewModels
 
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
-                _classGroupModels = m.Value;
-                ReloadSchedule();
+                ClassGroupModel classGroupModel = m.Value;
+                RemoveClassGroup(classGroupModel.SubjectCode);
             });
 
             WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
@@ -148,12 +156,83 @@ namespace Cs4rsa.ViewModels
                 Phase2_Sunday
             };
 
+            _schedules = new[]
+            {
+                Week1,
+                Week2,
+            };
+
             Timelines = new();
             foreach (string timeline in Controls.Utils.TIME_LINES)
             {
                 Timelines.Add(timeline);
             }
         }
+
+        #region Performance super speed code
+        private static void RemoveTimeBlock(string subjectCode, ObservableCollection<TimeBlock> timeBlocks)
+        {
+            if (timeBlocks.Count == 0) return;
+            int currentIndex = 0;
+            bool isEndOfList = currentIndex == timeBlocks.Count - 1;
+            while (!isEndOfList)
+            {
+                if (timeBlocks[currentIndex].SubjectCode.Equals(subjectCode))
+                {
+                    timeBlocks.RemoveAt(currentIndex);
+                }
+                isEndOfList = currentIndex >= timeBlocks.Count - 1;
+                currentIndex++;
+            }
+        }
+
+        /// <summary>
+        /// * Hight performance codes
+        /// 
+        /// RemoveClassGroup
+        /// </summary>
+        /// <param name="classGroupModel"></param>
+        private void RemoveClassGroup(string subjectCode)
+        {
+            foreach (var week in _schedules)
+            {
+                foreach (var day in week)
+                {
+                    RemoveTimeBlock(subjectCode, day);
+                }
+            }
+        }
+
+        /// <summary>
+        /// * Hight performance codes
+        /// 
+        /// AddClassGroup
+        /// </summary>
+        /// <param name="classGroupModel"></param>
+        private void AddClassGroup(ClassGroupModel classGroupModel)
+        {
+            RemoveClassGroup(classGroupModel.SubjectCode);
+            IEnumerable<SchoolClassModel> schoolClassModels;
+            if (classGroupModel.IsSpecialClassGroup)
+            {
+                schoolClassModels = classGroupModel
+                .CurrentSchoolClassModels
+                .Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
+            }
+            else
+            {
+                schoolClassModels = classGroupModel
+                .ClassGroup
+                .SchoolClasses
+                .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
+            }
+
+            foreach (SchoolClassModel schoolClassModel in schoolClassModels)
+            {
+                AddScheduleItem(schoolClassModel);
+            }
+        }
+        #endregion
 
         private void DivideSchoolClassesByPhases()
         {
