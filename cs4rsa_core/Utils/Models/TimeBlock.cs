@@ -1,6 +1,7 @@
 ﻿using Cs4rsa.Utils.Interfaces;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cs4rsa.Utils.Models
 {
@@ -9,8 +10,7 @@ namespace Cs4rsa.Utils.Models
     /// </summary>
     public class TimeBlock
     {
-        public string SubjectCode { get; set; }
-
+        public string Id { get; set; }
         /// <summary>
         /// Màu nền
         /// </summary>

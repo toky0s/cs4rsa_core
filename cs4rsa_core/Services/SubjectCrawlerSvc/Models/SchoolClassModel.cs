@@ -172,6 +172,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
                 TimeBlock timeBlock = new()
                 {
+                    Id = GetId(),
                     Background = Color,
                     Content = _schoolClassName,
                     DayOfWeek = item.DayOfWeek,
@@ -179,7 +180,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                     End = item.End,
                     Description = description,
                     ClassGroupName = _schoolClass.ClassGroupName,
-                    SubjectCode = SubjectCode,
                     ScheduleTableItemType = ScheduleTableItemType.SchoolClass
                 };
                 yield return timeBlock;
@@ -194,6 +194,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public ScheduleTableItemType GetScheduleTableItemType()
         {
             return ScheduleTableItemType.SchoolClass;
+        }
+
+        public string GetId()
+        {
+            return SubjectCode;
         }
     }
 }

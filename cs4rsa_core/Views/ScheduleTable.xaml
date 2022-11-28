@@ -16,9 +16,6 @@
     FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="Style_Line_Timeline" TargetType="Line">
-            <Setter Property="Stroke" Value="#dfe6e9" />
-        </Style>
         <Style x:Key="Style_cnvDaySchedule" TargetType="control:DayPanel">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -166,14 +163,13 @@
                                         <materialDesign:TransitioningContent.OpeningEffects>
                                             <materialDesign:TransitionEffect Kind="ExpandIn" />
                                             <materialDesign:TransitionEffect Kind="FadeIn" />
-
                                         </materialDesign:TransitioningContent.OpeningEffects>
                                         <control:ScheduleBlock
-                                            BlockColor="{Binding Background, Mode=OneTime}"
-                                            BlockName="{Binding Content, Mode=OneTime}"
-                                            Description="{Binding Description, Mode=OneTime}"
+                                            BlockColor="{Binding Background}"
+                                            BlockName="{Binding Content}"
+                                            Description="{Binding Description}"
                                             ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                                     </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -300,11 +296,11 @@
                                             <materialDesign:TransitionEffect Kind="FadeIn" />
                                         </materialDesign:TransitioningContent.OpeningEffects>
                                         <control:ScheduleBlock
-                                            BlockColor="{Binding Background, Mode=OneTime}"
-                                            BlockName="{Binding Content, Mode=OneTime}"
-                                            Description="{Binding Description, Mode=OneTime}"
+                                            BlockColor="{Binding Background}"
+                                            BlockName="{Binding Content}"
+                                            Description="{Binding Description}"
                                             ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                                     </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

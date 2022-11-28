@@ -43,5 +43,13 @@ namespace Cs4rsa.Utils.Interfaces
         Phase GetPhase();
 
         ScheduleTableItemType GetScheduleTableItemType();
+
+
+        /// <summary>
+        /// ClassGroupModel: SubjectCode will be ID.
+        /// TimeConflict: Time + SubjectCode1 + SubjectCode2
+        /// PlaceConflict: Place + SubjectCode1 + SubjectCode2
+        /// </summary>
+        string GetId();
     }
 }

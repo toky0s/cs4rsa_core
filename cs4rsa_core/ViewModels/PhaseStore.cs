@@ -14,6 +14,7 @@ namespace Cs4rsa.ViewModels
 {
     public class PhaseStore : ViewModelBase
     {
+        private readonly bool _isEvaluateBetweenPoint;
         private List<SchoolClassModel> _schoolClassModels;
 
         public ObservableCollection<int> Weeks { get; set; }
@@ -70,6 +71,11 @@ namespace Cs4rsa.ViewModels
             Weeks = new() { 0 };
         }
 
+        private bool CanEvaluateBetweenPoint()
+        {
+
+        }
+
         public void AddClassGroup(ClassGroupModel classGroupModel)
         {
             IEnumerable<string> replacedSchoolClassModels = _schoolClassModels
@@ -90,14 +96,14 @@ namespace Cs4rsa.ViewModels
         {
             _schoolClassModels.AddRange(schoolClassModels);
             ReEvaluateWeeks();
-            ReEvaluateBetweenPointIndex();
+            ReEvaluateBetweenPointValue();
         }
 
         public void RemoveAllSchoolClass()
         {
             _schoolClassModels.Clear();
             ReEvaluateWeeks();
-            ReEvaluateBetweenPointIndex();
+            ReEvaluateBetweenPointValue();
         }
 
         public void RemoveSchoolClassBySubjectCode(string subjectCode)
@@ -107,13 +113,13 @@ namespace Cs4rsa.ViewModels
             {
                 _schoolClassModels.RemoveAt(index);
                 ReEvaluateWeeks();
-                ReEvaluateBetweenPointIndex();
+                ReEvaluateBetweenPointValue();
             }
         }
 
         public void ResetBetweenPoint()
         {
-            ReEvaluateBetweenPointIndex();
+            ReEvaluateBetweenPointValue();
         }
 
         private void ReEvaluateWeeks()
@@ -149,15 +155,6 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-        /// <summary>
-        /// Đánh giá lại BetweenPointIndex ở giữa thang các Tuần.
-        /// Đồng thời đánh giá lại giá trị của BetweenPoint.
-        /// </summary>
-        private void ReEvaluateBetweenPointIndex()
-        {
-            BetweenPointIndex = Weeks.Count / 2;
-            ReEvaluateBetweenPointValue();
-        }
 
         /// <summary>
         /// Đánh giá lại giá trị của BetweenPoint.
@@ -168,6 +165,7 @@ namespace Cs4rsa.ViewModels
         /// </summary>
         private void ReEvaluateBetweenPointValue()
         {
+            BetweenPointIndex = Weeks.Count / 2;
             if (Weeks.Count > 0)
             {
                 CurrentBetweenPointValue = Weeks[BetweenPointIndex];

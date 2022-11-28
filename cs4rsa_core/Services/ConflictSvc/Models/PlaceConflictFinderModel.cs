@@ -91,6 +91,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new()
                     {
+                        Id = GetId(),
                         Background = BACKGROUND,
                         Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         DayOfWeek = item.Key,
@@ -116,6 +117,11 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public ScheduleTableItemType GetScheduleTableItemType()
         {
             return ScheduleTableItemType.PlaceConflict;
+        }
+
+        public string GetId()
+        {
+            return $"Place{_schoolClass1.SubjectCode + _schoolClass2.SubjectCode}";
         }
     }
 }

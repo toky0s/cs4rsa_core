@@ -151,13 +151,13 @@
             Margin="0,0,0,5"
             Orientation="Horizontal">
             <Button
-                Margin="0,0,5,0"
+                Margin="5,0,5,5"
                 Command="{Binding DeleteAllCommand}"
                 Content="{materialDesign:PackIcon Kind=TrashCanOutline,
                                                   Size=20}"
                 ToolTip="Xoá hết" />
             <Button
-                Margin="0,0,5,0"
+                Margin="0,0,5,5"
                 Command="{Binding OpenShareStringWindowCommand}"
                 Content="{materialDesign:PackIcon Kind=ShareOutline,
                                                   Size=20}"
@@ -165,7 +165,7 @@
                 ToolTip="Chia sẻ" />
 
             <Button
-                Margin="0,0,5,0"
+                Margin="0,0,5,5"
                 Command="{Binding SaveCommand}"
                 Content="{materialDesign:PackIcon Kind=BookmarkOutline,
                                                   Size=20}"

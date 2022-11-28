@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cs4rsa.Utils.Models;
+
+using System;
 
 namespace Cs4rsa.Utils
 {
@@ -16,6 +18,11 @@ namespace Cs4rsa.Utils
                 DayOfWeek.Friday => "Thứ Sáu",
                 _ => "Thứ Bảy",
             };
+        }
+
+        public static int ToIndex(this DayOfWeek dayOfWeek)
+        {
+            return dayOfWeek == DayOfWeek.Sunday ? 6 : (int)dayOfWeek - 1;
         }
     }
 }

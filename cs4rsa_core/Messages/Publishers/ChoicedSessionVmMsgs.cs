@@ -3,6 +3,7 @@
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
+using System;
 using System.Collections.Generic;
 
 namespace Cs4rsa.Messages.Publishers
@@ -22,6 +23,11 @@ namespace Cs4rsa.Messages.Publishers
             }
         }
 
+        /// <summary>
+        /// ClassGroupSeletedMsg
+        /// 
+        /// Thêm MỘT ClassGroupModel vào bộ mô phỏng.
+        /// </summary>
         internal sealed class ClassGroupSeletedMsg : ValueChangedMessage<ClassGroupModel>
         {
             public ClassGroupSeletedMsg(ClassGroupModel value) : base(value)
@@ -61,6 +67,18 @@ namespace Cs4rsa.Messages.Publishers
         internal sealed class DelClassGroupChoiceMsg : ValueChangedMessage<ClassGroupModel>
         {
             public DelClassGroupChoiceMsg(ClassGroupModel value) : base(value)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Delete All Class Group Choice Message
+        /// 
+        /// Xoá tất cả Class Group đã chọn.
+        /// </summary>
+        internal sealed class DelAllClassGroupChoiceMsg : ValueChangedMessage<DBNull>
+        {
+            public DelAllClassGroupChoiceMsg(DBNull value) : base(value)
             {
             }
         }

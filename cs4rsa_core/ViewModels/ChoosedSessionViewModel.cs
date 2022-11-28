@@ -97,10 +97,11 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
+            // Xử lý sự kiện thêm một ClassGroup vào danh sách đã chọn
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                AddClassGroupModelAndReload(m.Value);
                 _phaseStore.AddClassGroup(m.Value);
+                AddClassGroupModelAndReload(m.Value);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectClassGroupModelsMsg>(this, (r, m) =>
@@ -181,7 +182,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg(System.DBNull.Value));
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
@@ -324,7 +325,6 @@ namespace Cs4rsa.ViewModels
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            //Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
             Messenger.Send(new ChoicedSessionVmMsgs.ClassGroupSeletedMsg(classGroupModel));
         }
 

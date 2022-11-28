@@ -35,7 +35,6 @@ namespace Cs4rsa.ViewModels
                 OnPropertyChanged();
                 if (value != null)
                 {
-                    // Nếu thuộc Special Subject.
                     if (value.IsBelongSpecialSubject)
                     {
                         OnShowDetailsSchoolClasses();
