@@ -178,7 +178,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                     Start = item.Start,
                     End = item.End,
                     Description = description,
-                    ClassGroupName = _schoolClass.ClassGroupName
+                    ClassGroupName = _schoolClass.ClassGroupName,
+                    SubjectCode = SubjectCode,
+                    ScheduleTableItemType = ScheduleTableItemType.SchoolClass
                 };
                 yield return timeBlock;
             }
@@ -187,6 +189,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public Phase GetPhase()
         {
             return _schoolClass.GetPhase();
+        }
+
+        public ScheduleTableItemType GetScheduleTableItemType()
+        {
+            return ScheduleTableItemType.SchoolClass;
         }
     }
 }

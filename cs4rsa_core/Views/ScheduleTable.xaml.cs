@@ -1,4 +1,10 @@
-﻿using System.Windows.Controls;
+﻿using CommunityToolkit.Mvvm.Messaging;
+
+using Cs4rsa.Controls;
+using Cs4rsa.Messages.Publishers.UIs;
+using Cs4rsa.Utils.Models;
+
+using System.Windows.Controls;
 
 namespace Cs4rsa.Views
 {
@@ -7,6 +13,13 @@ namespace Cs4rsa.Views
         public ScheduleTable()
         {
             InitializeComponent();
+        }
+
+        private void ScheduleBlock_ScheduleBlockClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
+            TimeBlock timeBlock = (TimeBlock)scheduleBlock.DataContext;
+            WeakReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
         }
     }
 }

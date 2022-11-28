@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cs4rsa.Utils.Interfaces;
+
+using System;
 
 namespace Cs4rsa.Utils.Models
 {
@@ -53,5 +55,7 @@ namespace Cs4rsa.Utils.Models
         /// Tên class 2 nếu có xung đột - mặc đinh Empty
         /// </summary>
         public string Class2 { get; set; }
+
+        public ScheduleTableItemType ScheduleTableItemType { get; set; }
     }
 }

@@ -127,11 +127,17 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                         End = studyTimeIntersect.End,
                         Description = GetFullConflictInfo(),
                         Class1 = _schoolClass1.ClassGroupName,
-                        Class2 = _schoolClass2.ClassGroupName
+                        Class2 = _schoolClass2.ClassGroupName,
+                        ScheduleTableItemType = ScheduleTableItemType.TimeConflict
                     };
                     yield return timeBlock;
                 }
             }
+        }
+
+        public ScheduleTableItemType GetScheduleTableItemType()
+        {
+            return ScheduleTableItemType.TimeConflict;
         }
     }
 }

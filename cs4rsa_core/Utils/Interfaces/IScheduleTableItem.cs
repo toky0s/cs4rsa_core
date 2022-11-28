@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Utils.Interfaces
 {
+    public enum ScheduleTableItemType
+    {
+        SchoolClass,
+        TimeConflict,
+        PlaceConflict,
+    }
+
     /**
      * Mô tả:
      *      Buộc phải triển khai Interface này nếu muốn hiển thị một 
@@ -34,5 +41,7 @@ namespace Cs4rsa.Utils.Interfaces
          *          Khối thời gian sẽ được vẽ trên cả hai bảng.
          */
         Phase GetPhase();
+
+        ScheduleTableItemType GetScheduleTableItemType();
     }
 }
