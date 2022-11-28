@@ -29,7 +29,6 @@
                 </TextBlock>
                 <ProgressBar
                     x:Name="ProgressBar"
-                    Height="30"
                     Margin="0,5,0,0"
                     Maximum="1000"
                     Value="{Binding ProgressValue}" />

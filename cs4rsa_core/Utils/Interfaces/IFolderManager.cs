@@ -6,6 +6,9 @@
     /// </summary>
     public interface IFolderManager
     {
-        string CreateFolderIfNotExists(string folderName);
+        public static readonly string FD_STUDENT_PROGRAMS = "StudentPrograms";
+        public static readonly string FD_STUDENT_PLANS = "StudentPlans";
+        public static readonly string FD_TEACHER_IMAGES = "TeacherImages";
+        string CreateFolderIfNotExists(string path);
     }
 }

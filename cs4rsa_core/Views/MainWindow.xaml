@@ -51,7 +51,7 @@
                         </Grid.RowDefinitions>
                         <ToggleButton
                             Grid.Row="0"
-                            Margin="0,16,10,16"
+                            Margin="0,5,10,2"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
@@ -91,7 +91,7 @@
                     </Grid.RowDefinitions>
                     <materialDesign:ColorZone
                         Grid.Row="0"
-                        Padding="16"
+                        Padding="5"
                         Mode="PrimaryMid">
                         <DockPanel>
                             <StackPanel Orientation="Horizontal">
@@ -113,12 +113,12 @@
                                     HorizontalAlignment="Right"
                                     Orientation="Horizontal" />
                                 <Rectangle
-                                    Width="2"
-                                    Margin="16,0,0,0"
+                                    Width="1"
+                                    Margin="10,0,0,0"
                                     VerticalAlignment="Stretch"
                                     Fill="White" />
                                 <Button
-                                    Margin="16,0,0,0"
+                                    Margin="5,0,0,0"
                                     materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={StaticResource BrushRoundConverter}}"
                                     Command="{Binding OpenUpdateWindowCommand}"
                                     Content="{materialDesign:PackIcon Kind=Database,

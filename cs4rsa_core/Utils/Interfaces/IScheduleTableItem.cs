@@ -1,10 +1,17 @@
-﻿using Cs4rsa.Commons.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Utils.Models;
 
 using System.Collections.Generic;
 
-namespace Cs4rsa.Commons.Interfaces
+namespace Cs4rsa.Utils.Interfaces
 {
+    public enum ScheduleTableItemType
+    {
+        SchoolClass,
+        TimeConflict,
+        PlaceConflict,
+    }
+
     /**
      * Mô tả:
      *      Buộc phải triển khai Interface này nếu muốn hiển thị một 
@@ -34,5 +41,7 @@ namespace Cs4rsa.Commons.Interfaces
          *          Khối thời gian sẽ được vẽ trên cả hai bảng.
          */
         Phase GetPhase();
+
+        ScheduleTableItemType GetScheduleTableItemType();
     }
 }

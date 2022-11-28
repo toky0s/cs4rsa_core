@@ -1,11 +1,11 @@
-﻿using Cs4rsa.Commons.Interfaces;
-using Cs4rsa.Commons.Models;
-using Cs4rsa.Services.ConflictSvc.DataTypes;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.Utils.Models;
 
 using System;
 using System.Collections.Generic;
@@ -98,7 +98,8 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                         End = placeAdjacent.End,
                         Description = GetTimeBlockDescription(placeAdjacent),
                         Class1 = _schoolClass1.ClassGroupName,
-                        Class2 = _schoolClass2.ClassGroupName
+                        Class2 = _schoolClass2.ClassGroupName,
+                        ScheduleTableItemType = ScheduleTableItemType.PlaceConflict
                     };
 
                     yield return timeBlock;
@@ -110,6 +111,11 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         {
             return $"{placeAdjacent.SchoolClass1.SchoolClassName} kết thúc lúc {placeAdjacent.StartAsString} - {placeAdjacent.PlaceStart.ToActualPlace()}\n" +
                    $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
+        }
+
+        public ScheduleTableItemType GetScheduleTableItemType()
+        {
+            return ScheduleTableItemType.PlaceConflict;
         }
     }
 }

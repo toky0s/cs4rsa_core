@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Constants;
+﻿
+using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Implements;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
@@ -11,6 +12,7 @@ using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers;
@@ -31,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Windows;
 
@@ -54,6 +57,11 @@ namespace Cs4rsa
                 setting.CurrentSetting.IsDatabaseCreated = "true";
                 setting.Save();
             }
+
+            // Create folders
+            IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
+            string studentPlansPath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS);
+            folderManager.CreateFolderIfNotExists(studentPlansPath);
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -76,9 +84,11 @@ namespace Cs4rsa
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
             services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
-            services.AddSingleton<ProgramDiagramCrawler>();
-            services.AddSingleton<StudentProgramCrawler>();
+            services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();
             services.AddSingleton<DisciplineCrawler>();
+            services.AddSingleton<ProgramDiagramCrawler>();
+
+            services.AddTransient<StudentProgramCrawler>();
 
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
@@ -103,7 +113,6 @@ namespace Cs4rsa
             services.AddSingleton<ScheduleTableViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();
-            services.AddSingleton<StudentInputViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
             services.AddSingleton<SubjectDownloadingViewModel>();
 

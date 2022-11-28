@@ -146,30 +146,30 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <StackPanel Grid.Row="2" Margin="0,0,0,10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Button
-                    Grid.Column="0"
-                    Height="30"
-                    Margin="0,0,5,5"
-                    Command="{Binding OpenShareStringWindowCommand}"
-                    Content="CHIA SẺ"
-                    IsEnabled="{Binding ClassGroupModels.Count}" />
-                <Button
-                    Grid.Column="1"
-                    Height="30"
-                    Margin="0,0,0,5"
-                    Command="{Binding SaveCommand}"
-                    Content="LƯU" />
-            </Grid>
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,0,0,5"
+            Orientation="Horizontal">
             <Button
-                Height="30"
+                Margin="0,0,5,0"
                 Command="{Binding DeleteAllCommand}"
-                Content="BỎ CHỌN HẾT" />
+                Content="{materialDesign:PackIcon Kind=TrashCanOutline,
+                                                  Size=20}"
+                ToolTip="Xoá hết" />
+            <Button
+                Margin="0,0,5,0"
+                Command="{Binding OpenShareStringWindowCommand}"
+                Content="{materialDesign:PackIcon Kind=ShareOutline,
+                                                  Size=20}"
+                IsEnabled="{Binding ClassGroupModels.Count}"
+                ToolTip="Chia sẻ" />
+
+            <Button
+                Margin="0,0,5,0"
+                Command="{Binding SaveCommand}"
+                Content="{materialDesign:PackIcon Kind=BookmarkOutline,
+                                                  Size=20}"
+                ToolTip="Lưu" />
         </StackPanel>
         <TextBlock
             Grid.Row="3"

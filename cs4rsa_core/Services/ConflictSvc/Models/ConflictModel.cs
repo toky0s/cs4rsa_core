@@ -1,11 +1,11 @@
-﻿using Cs4rsa.Commons.Interfaces;
-using Cs4rsa.Commons.Models;
-using Cs4rsa.Services.ConflictSvc.DataTypes;
+﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.Utils.Models;
 
 using System;
 using System.Collections.Generic;
@@ -127,11 +127,17 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                         End = studyTimeIntersect.End,
                         Description = GetFullConflictInfo(),
                         Class1 = _schoolClass1.ClassGroupName,
-                        Class2 = _schoolClass2.ClassGroupName
+                        Class2 = _schoolClass2.ClassGroupName,
+                        ScheduleTableItemType = ScheduleTableItemType.TimeConflict
                     };
                     yield return timeBlock;
                 }
             }
+        }
+
+        public ScheduleTableItemType GetScheduleTableItemType()
+        {
+            return ScheduleTableItemType.TimeConflict;
         }
     }
 }
