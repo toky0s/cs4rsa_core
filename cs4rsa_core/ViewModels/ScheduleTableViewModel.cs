@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,13 +27,19 @@ namespace Cs4rsa.ViewModels
     /// </summary>
     internal readonly struct Location
     {
-        public readonly IEnumerable<DayOfWeek> Phase1;
-        public readonly IEnumerable<DayOfWeek> Phase2;
+        public readonly Phase Phase;
+        public readonly IEnumerable<DayOfWeek> PhaseFirst;
+        public readonly IEnumerable<DayOfWeek> PhaseSecond;
 
-        public Location(IEnumerable<DayOfWeek> phase1, IEnumerable<DayOfWeek> phase2)
+        public Location(
+            Phase phase,
+            IEnumerable<DayOfWeek> phaseFirst, 
+            IEnumerable<DayOfWeek> phaseSecond
+        )
         {
-            Phase1 = phase1;
-            Phase2 = phase2;
+            Phase = phase;
+            PhaseFirst = phaseFirst;
+            PhaseSecond = phaseSecond;
         }
     }
 
@@ -42,59 +49,118 @@ namespace Cs4rsa.ViewModels
     /// Giúp thực hiện xác định chính xác vị trí của từ ScheduleTableItem
     /// có mặt trên mô phỏng. Hỗ trợ thao tác XOÁ.
     /// </summary>
-    internal sealed class TimeBlockMap
+    internal sealed class ScheduleItemMap
     {
-        public Dictionary<string, Location> Map { get; }
-        public TimeBlockMap()
+        private readonly List<SchoolClassModel> _schoolClassModels;
+        private readonly Dictionary<ScheduleItemId, Location> _map;
+
+        public ScheduleItemMap()
         {
-            Map = new();
+            _schoolClassModels = new();
+            _map = new();
+        }
+
+        private void AddScmFromCgm(ClassGroupModel classGroupModel)
+        {
+            _schoolClassModels.AddRange(classGroupModel.CurrentSchoolClassModels);
         }
 
         public void AddScheduleItem(ClassGroupModel classGroupModel)
         {
-            string id = classGroupModel.SubjectCode;
-            List<DayOfWeek> phase1 = new();
-            List<DayOfWeek> phase2 = new();
+            AddScmFromCgm(classGroupModel);
             foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
             {
-                if(scm.GetPhase() == Phase.All)
+                List<DayOfWeek> phase1 = new();
+                List<DayOfWeek> phase2 = new();
+
+                Phase phase = scm.GetPhase();
+                if (phase == Phase.All)
                 {
                     phase1.AddRange(scm.Schedule.GetSchoolDays());
                     phase2.AddRange(scm.Schedule.GetSchoolDays());
                 }
-                else if (scm.GetPhase() == Phase.First)
+                else if (phase == Phase.First)
                 {
                     phase1.AddRange(scm.Schedule.GetSchoolDays());
                 }
-                else if (scm.GetPhase() == Phase.Second)
+                else if (phase == Phase.Second)
                 {
                     phase2.AddRange(scm.Schedule.GetSchoolDays());
                 }
+
+                Location location = new
+                (
+                    phase,
+                    phase1.Distinct(),
+                    phase2.Distinct()
+                );
+
+                _map.Add(ScheduleItemId.FromSchoolClassModel(scm), location);
             }
-            Location location = new
-            (
-                phase1.Distinct(),
-                phase2.Distinct()
-            );
-            Map.Add(id, location);
         }
 
-        public bool IsExist(ClassGroupModel classGroupModel)
+        public bool Exists(ClassGroupModel classGroupModel)
         {
-            if (classGroupModel.CurrentSchoolClassModels.Any())
+            foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
             {
-                return Map.ContainsKey(classGroupModel.CurrentSchoolClassModels[0].GetId());
+                var id = ScheduleItemId.FromSchoolClassModel(scm);
+                foreach (ScheduleItemId key in _map.Keys)
+                {
+                    if (key.IsSameSpace(id)) return true;
+                }
             }
-            return Map.ContainsKey(classGroupModel.SubjectCode);
+            return false;
+        }
+
+        public IEnumerable<ScheduleItemId> GetScheduleItemIDsBySpace(string space)
+        {
+            foreach (ScheduleItemId key in _map.Keys)
+            {
+                if (key.Space.Equals(space))
+                {
+                    yield return key;
+                }
+            }
+        }
+
+        public Location GetLocation(ScheduleItemId id)
+        {
+            return _map[id];
+        }
+
+        public IEnumerable<Location> GetLocationsBySpace(ScheduleItemId id)
+        {
+            foreach (ScheduleItemId key in _map.Keys)
+            {
+                if (key.IsSameSpace(id))
+                {
+                    yield return _map[id];
+                }
+            }
+        }
+
+        public void Remove(ScheduleItemId id)
+        {
+            _map.Remove(id);
+        }
+
+        public void Clear()
+        {
+            _map.Clear();
+        }
+
+        internal IEnumerable<KeyValuePair<ScheduleItemId, Location>> GetMap()
+        {
+            return _map;
         }
     }
 
     internal sealed class ScheduleTableViewModel : ViewModelBase
     {
-        private readonly TimeBlockMap _timeBlockMap;
+        private readonly ScheduleItemMap _timeBlockMap;
         private readonly ObservableCollection<ObservableCollection<TimeBlock>>[] _schedules;
 
-        private List<ClassGroupModel> _classGroupModels;
+        private readonly List<ClassGroupModel> _classGroupModels;
         private List<ConflictModel> _conflictModels;
         private List<PlaceConflictFinderModel> _placeConflictFinderModels;
 
@@ -150,7 +216,7 @@ namespace Cs4rsa.ViewModels
             {
                 foreach (ClassGroupModel classGroupModel in m.Value)
                 {
-                    if (_timeBlockMap.IsExist(classGroupModel))
+                    if (_timeBlockMap.Exists(classGroupModel))
                     {
                         RemoveClassGroup(classGroupModel);
                     }
@@ -162,7 +228,7 @@ namespace Cs4rsa.ViewModels
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ClassGroupSeletedMsg>(this, (r, m) =>
             {
                 ClassGroupModel classGroupModel = m.Value;
-                /// Check Map
+                /// Check _map
                 /// Tồn tại -> Lấy vị trí map -> Xoá
                 /// Loại bỏ vị trí khỏi map
                 /// Loại bỏ khỏi danh sách quản lý
@@ -170,10 +236,7 @@ namespace Cs4rsa.ViewModels
                 /// Add vị trí mới vào map
                 /// Add vào danh sách quản lý
                 /// Add vào mô phỏng
-                if (_timeBlockMap.IsExist(classGroupModel))
-                {
-                    RemoveClassGroup(classGroupModel);
-                }
+                RemoveClassGroup(classGroupModel);
                 _timeBlockMap.AddScheduleItem(classGroupModel);
                 AddClassGroup(classGroupModel);
             });
@@ -191,7 +254,7 @@ namespace Cs4rsa.ViewModels
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 ClassGroupModel classGroupModel = m.Value;
-                if (_timeBlockMap.IsExist(classGroupModel))
+                if (_timeBlockMap.Exists(classGroupModel))
                 {
                     RemoveClassGroup(classGroupModel);
                 }
@@ -200,7 +263,7 @@ namespace Cs4rsa.ViewModels
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
             {
                 _classGroupModels.Clear();
-                _timeBlockMap.Map.Clear();
+                _timeBlockMap.Clear();
                 _conflictModels.Clear();
                 _placeConflictFinderModels.Clear();
                 CleanDays();
@@ -216,6 +279,7 @@ namespace Cs4rsa.ViewModels
             ResetBetweenPointCommand = new(() => _phaseStore.ResetBetweenPoint());
             #endregion
 
+            #region Weeks and Timelines
             Phase1_Monday = new();
             Phase1_Tuesday = new();
             Phase1_Wednesday = new();
@@ -265,24 +329,36 @@ namespace Cs4rsa.ViewModels
             {
                 Timelines.Add(timeline);
             }
+            #endregion
         }
 
-        #region Performance super speed code
+        /// <summary>
+        /// Remove hoàn toàn một class group model ra khỏi mô phỏng.
+        /// </summary>
+        /// <param name="classGroupModel">ClassGroupModel</param>
         private void RemoveClassGroup(ClassGroupModel classGroupModel)
         {
-            /// Check Map
+            /// Check _map
             /// Tồn tại -> Lấy vị trí map -> Xoá
             /// Loại bỏ vị trí khỏi map
             /// Loại bỏ khỏi danh sách quản lý
-            if (_timeBlockMap.IsExist(classGroupModel))
+            if (_timeBlockMap.Exists(classGroupModel))
             {
-                string id = classGroupModel.SubjectCode;
-                Location location = _timeBlockMap.Map[id];
-                RemoveScheduleItem(id, location);
-                _timeBlockMap.Map.Remove(id);
+                string space = classGroupModel.SubjectCode;
+                IEnumerable<ScheduleItemId> scheduleItemIds = _timeBlockMap.GetScheduleItemIDsBySpace(space);
+                foreach (ScheduleItemId id in scheduleItemIds)
+                {
+                    Location location = _timeBlockMap.GetLocation(id);
+                    // Remove khỏi mô phỏng
+                    RemoveScheduleItem(id, location);
+                    // Remove khỏi map
+                    _timeBlockMap.Remove(id);
+                }
+
+                // Remove khỏi danh sách quản lý
                 for (int i = 0; i < _classGroupModels.Count; i++)
                 {
-                    if (_classGroupModels[i].SubjectCode.Equals(id))
+                    if (_classGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
                     {
                         _classGroupModels.RemoveAt(i);
                         break;
@@ -297,35 +373,31 @@ namespace Cs4rsa.ViewModels
         /// RemoveScheduleItem
         /// </summary>
         /// <param name="location"></param>
-        private void RemoveScheduleItem(string id, Location location)
+        private void RemoveScheduleItem(ScheduleItemId id, Location location)
         {
-            if (location.Phase1.Any())
+            if (location.PhaseFirst.Any())
             {
-                foreach (DayOfWeek dayOfWeek in location.Phase1)
+                foreach (DayOfWeek dayOfWeek in location.PhaseFirst)
                 {
-                    RemoveScheduleItemFromDay(id, Week1[dayOfWeek.ToIndex()]);
+                    RemoveScheduleItemBySpace(id, Week1[dayOfWeek.ToIndex()]);
                 }
             }
 
-            if (location.Phase2.Any())
+            if (location.PhaseSecond.Any())
             {
-                foreach (DayOfWeek dayOfWeek in location.Phase2)
+                foreach (DayOfWeek dayOfWeek in location.PhaseSecond)
                 {
-                    RemoveScheduleItemFromDay(id, Week2[dayOfWeek.ToIndex()]);
+                    RemoveScheduleItemBySpace(id, Week2[dayOfWeek.ToIndex()]);
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Remove schedule item with same space
         /// </summary>
-        /// <param name="id">
-        /// ScheduleItem ID
-        /// </param>
-        /// <param name="day">
-        /// Day of week
-        /// </param>
-        private static void RemoveScheduleItemFromDay(string id, ObservableCollection<TimeBlock> day)
+        /// <param name="scheduleItemID"></param>
+        /// <param name="day"></param>
+        private static void RemoveScheduleItemBySpace(ScheduleItemId scheduleItemID, ObservableCollection<TimeBlock> day)
         {
             if (day.Count == 0) return;
             int currentIndex = 0;
@@ -333,7 +405,7 @@ namespace Cs4rsa.ViewModels
             while (!isEndOfList)
             {
                 if (day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.SchoolClass
-                    && day[currentIndex].Id.Equals(id))
+                    && day[currentIndex].Id.IsSameSpace(scheduleItemID))
                 {
                     day.RemoveAt(currentIndex);
                 }
@@ -371,14 +443,26 @@ namespace Cs4rsa.ViewModels
                 AddScheduleItem(schoolClassModel);
             }
         }
-        #endregion
 
+        /// <summary>
+        /// Thực hiện vẽ lại _map và mô phỏng.
+        /// 
+        /// Mô tả:
+        ///     Quét lại _map, đánh giá lại Phase, 
+        ///     remove và vẽ lại các SchoolClass có Phase thay đổi.
+        /// </summary>
         private void DivideSchoolClassesByPhases()
         {
-            foreach (ClassGroupModel classGroupModel in _classGroupModels)
+            foreach (KeyValuePair<ScheduleItemId, Location> locationItem in _timeBlockMap.GetMap())
             {
-                _timeBlockMap.AddScheduleItem(classGroupModel);
-                AddClassGroup(classGroupModel);
+                ClassGroupModel classGroupModel = _classGroupModels.Find(cgm => cgm.SubjectCode == locationItem.Key.Space);
+                if (classGroupModel != null)
+                {
+                    IEnumerable<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
+                    // Kiểm tra thay đổi Phase
+                    
+                    // Thực hiện remove khỏi _map và mô phỏng nếu có thay đổi và vẽ lại.
+                }
             }
         }
 
@@ -431,8 +515,6 @@ namespace Cs4rsa.ViewModels
 
         private void ReloadSchedule()
         {
-            _timeBlockMap.Map.Clear();
-            CleanDays();
             DivideSchoolClassesByPhases();
             DividePlaceConflictByPhase();
             DivideConflictByPhase();

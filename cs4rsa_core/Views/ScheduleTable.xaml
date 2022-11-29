@@ -41,7 +41,7 @@
                 Margin="0,0,5,0"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding PhaseStore.Weeks}"
-                SelectedIndex="{Binding PhaseStore.BetweenPointIndex}"
+                SelectedValue="{Binding PhaseStore.CurrentBetweenPointValue}"
                 Style="{StaticResource MaterialDesignDataGridComboBox}" />
             <TextBlock>
                 <Hyperlink Command="{Binding ResetBetweenPointCommand}">Đặt lại tuần ngăn cách</Hyperlink>

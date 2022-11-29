@@ -10,7 +10,7 @@ namespace Cs4rsa.Utils.Models
     /// </summary>
     public class TimeBlock
     {
-        public string Id { get; set; }
+        public ScheduleItemId Id { get; set; }
         /// <summary>
         /// Màu nền
         /// </summary>

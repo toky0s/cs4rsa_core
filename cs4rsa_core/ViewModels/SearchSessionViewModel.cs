@@ -233,7 +233,7 @@ namespace Cs4rsa.ViewModels
                 TimeBlock timeBlock = m.Value;
                 if (timeBlock.ScheduleTableItemType == ScheduleTableItemType.SchoolClass)
                 {
-                    SelectedSubjectModel = SubjectModels.Where(sm => sm.SubjectCode.Equals(m.Value.Id)).FirstOrDefault();
+                    SelectedSubjectModel = SubjectModels.Where(sm => sm.SubjectCode.Equals(m.Value.Id.Space)).FirstOrDefault();
                 }
             });
 
