@@ -1,6 +1,4 @@
-﻿using Cs4rsa.Utils.Models;
-
-using System;
+﻿using System;
 
 namespace Cs4rsa.Utils
 {

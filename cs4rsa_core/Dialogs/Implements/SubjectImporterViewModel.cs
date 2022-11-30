@@ -56,9 +56,7 @@ namespace Cs4rsa.Dialogs.Implements
             SubjectModel[] subjectModels = await Task.WhenAll(subjectTasks);
 
             Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>> tup = new(subjectModels, SubjectInfoDatas);
-            SubjectImporterVmMsgs.ExitImportSubjectMsg message = new(tup);
-            Messenger.Send(message);
-
+            Messenger.Send(new SubjectImporterVmMsgs.ExitImportSubjectMsg(tup));
         }
 
         private async Task<SubjectModel> ToSubjectModel(int courseId)

@@ -16,9 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Cs4rsa.ViewModels
 {
@@ -33,7 +30,7 @@ namespace Cs4rsa.ViewModels
 
         public Location(
             Phase phase,
-            IEnumerable<DayOfWeek> phaseFirst, 
+            IEnumerable<DayOfWeek> phaseFirst,
             IEnumerable<DayOfWeek> phaseSecond
         )
         {
@@ -65,6 +62,10 @@ namespace Cs4rsa.ViewModels
             _schoolClassModels.AddRange(classGroupModel.CurrentSchoolClassModels);
         }
 
+        /// <summary>
+        /// Phân rã ClassGroupModel thành các SchoolClassModel và thêm vào Map.
+        /// </summary>
+        /// <param name="classGroupModel"></param>
         public void AddScheduleItem(ClassGroupModel classGroupModel)
         {
             AddScmFromCgm(classGroupModel);
@@ -240,7 +241,7 @@ namespace Cs4rsa.ViewModels
                 _timeBlockMap.AddScheduleItem(classGroupModel);
                 AddClassGroup(classGroupModel);
             });
-            
+
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
             {
                 _conflictModels = m.Value.ToList();
@@ -259,14 +260,15 @@ namespace Cs4rsa.ViewModels
                     RemoveClassGroup(classGroupModel);
                 }
             });
-            
+
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            {
+                CleanAll();
+            });
+
             WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
             {
-                _classGroupModels.Clear();
-                _timeBlockMap.Clear();
-                _conflictModels.Clear();
-                _placeConflictFinderModels.Clear();
-                CleanDays();
+                CleanAll();
             });
 
             WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
@@ -460,7 +462,7 @@ namespace Cs4rsa.ViewModels
                 {
                     IEnumerable<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
                     // Kiểm tra thay đổi Phase
-                    
+
                     // Thực hiện remove khỏi _map và mô phỏng nếu có thay đổi và vẽ lại.
                 }
             }
@@ -518,6 +520,15 @@ namespace Cs4rsa.ViewModels
             DivideSchoolClassesByPhases();
             DividePlaceConflictByPhase();
             DivideConflictByPhase();
+        }
+
+        private void CleanAll()
+        {
+            _classGroupModels.Clear();
+            _timeBlockMap.Clear();
+            _conflictModels.Clear();
+            _placeConflictFinderModels.Clear();
+            CleanDays();
         }
 
         private void CleanDays()

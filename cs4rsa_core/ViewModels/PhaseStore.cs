@@ -186,7 +186,7 @@ namespace Cs4rsa.ViewModels
         /// <summary>
         /// Đánh giá lại giá trị của BetweenPoint.
         /// </summary>
-        private void ReEvaluateBetweenPointValue(bool isFromExternal=false)
+        private void ReEvaluateBetweenPointValue(bool isFromExternal = false)
         {
             if (!isFromExternal)
             {

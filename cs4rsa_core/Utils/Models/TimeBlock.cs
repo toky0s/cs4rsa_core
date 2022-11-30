@@ -1,7 +1,6 @@
 ﻿using Cs4rsa.Utils.Interfaces;
 
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Cs4rsa.Utils.Models
 {

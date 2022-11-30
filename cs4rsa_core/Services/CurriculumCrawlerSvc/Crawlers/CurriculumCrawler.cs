@@ -1,6 +1,6 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Models;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
-using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
 
@@ -12,7 +12,7 @@ namespace Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers
     /// <summary>
     /// Lấy mã ngành của một sinh viên.
     /// </summary>
-    public class CurriculumCrawler : ICurriculumCrawler
+    public class CurriculumCrawler : BaseCrawler, ICurriculumCrawler
     {
         private readonly HtmlWeb _htmlWeb;
 
@@ -23,8 +23,7 @@ namespace Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers
 
         public async Task<Curriculum> GetCurriculum(string specialString)
         {
-            string t = Helpers.GetTimeFromEpoch();
-            string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHoc.aspx?t={t}&studentidnumber={specialString}";
+            string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHoc.aspx?t={GetTimeFromEpoch()}&studentidnumber={specialString}";
             HtmlDocument doc = await _htmlWeb.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
             HtmlNode scriptNode = docNode.SelectSingleNode("//td/script");

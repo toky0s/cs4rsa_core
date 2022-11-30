@@ -1,17 +1,12 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
-using Cs4rsa.ViewModels.Interfaces;
-
-using MaterialDesignThemes.Wpf;
 
 namespace Cs4rsa.ViewModels
 {
-    public class MainSchedulingViewModel : ViewModelBase,
-        IMainSchedulingViewModel
+    public class MainSchedulingViewModel : ViewModelBase
     {
         #region Fields
         private string _currentYearInfo;
@@ -61,12 +56,7 @@ namespace Cs4rsa.ViewModels
         }
         #endregion
 
-        #region Commands
-        public RelayCommand OpenSettingCommand { get; set; }
-        public RelayCommand OpenAutoScheduling { get; set; }
-        #endregion
-
-        public MainSchedulingViewModel(ICourseCrawler courseCrawler, ISnackbarMessageQueue snackbarMessageQueue)
+        public MainSchedulingViewModel(ICourseCrawler courseCrawler)
         {
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>

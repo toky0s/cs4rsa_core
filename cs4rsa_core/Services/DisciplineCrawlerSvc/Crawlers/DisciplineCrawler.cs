@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Utils;
@@ -12,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
 {
-    public class DisciplineCrawler
+    public class DisciplineCrawler : BaseCrawler
     {
         private readonly ICourseCrawler _homeCourseSearch;
         private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +22,6 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
         public DisciplineCrawler(
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
-            ColorGenerator colorGenerator,
             HtmlWeb htmlWeb)
         {
             _homeCourseSearch = courseCrawler;
@@ -44,7 +44,7 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
                 reportValue = jump;
             }
 
-            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={GetTimeFromEpoch()}";
 
             HtmlDocument document = _htmlWeb.Load(URL);
             IEnumerable<HtmlNode> trTags = document.DocumentNode
@@ -111,7 +111,7 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
         /// <returns>Số lượng môn học hiện có.</returns>
         public short GetNumberOfSubjects()
         {
-            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={Helpers.GetTimeFromEpoch()}";
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={GetTimeFromEpoch()}";
             HtmlDocument document = _htmlWeb.Load(URL);
 
             HtmlNode node = document.DocumentNode;

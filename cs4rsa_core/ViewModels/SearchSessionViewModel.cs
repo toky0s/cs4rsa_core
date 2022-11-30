@@ -210,7 +210,7 @@ namespace Cs4rsa.ViewModels
 
             WeakReferenceMessenger.Default.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, async (r, m) =>
             {
-                await CloseDialogAndHandleSessionManagerResult(m.Value);
+                await HandleSessionManagerResult(m.Value);
             });
 
             WeakReferenceMessenger.Default.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
@@ -225,7 +225,12 @@ namespace Cs4rsa.ViewModels
 
             WeakReferenceMessenger.Default.Register<SubjectImporterVmMsgs.ExitImportSubjectMsg>(this, (r, m) =>
             {
-                ExitImportSubjectMsgHandler(m.Value.Item1, m.Value.Item2);
+                IEnumerable<SubjectModel> subjectModels = m.Value.Item1;
+                IEnumerable<UserSubject> userSubjects = m.Value.Item2;
+                ImportSubjects(subjectModels);
+                ClassGroupChoicer choicer = new();
+                choicer.Start(subjectModels, userSubjects);
+                SelectedSubjectModel = SubjectModels[0];
             });
 
             WeakReferenceMessenger.Default.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
@@ -409,25 +414,16 @@ namespace Cs4rsa.ViewModels
             await vm.LoadScheduleSession();
         }
 
-        private async Task CloseDialogAndHandleSessionManagerResult(IEnumerable<UserSubject> result)
+        private async Task HandleSessionManagerResult(IEnumerable<UserSubject> result)
         {
-            CloseDialog();
             if (result != null)
             {
-                SubjectImporterUC subjectImporterUC = new();
-                SubjectImporterViewModel vm = subjectImporterUC.DataContext as SubjectImporterViewModel;
-                OpenDialog(subjectImporterUC);
-                await vm.Run(result);
-                CloseDialog();
+                await OpenDialogAndDoSomethingThenClose(new SubjectImporterUC(), async (thisDialog) =>
+                {
+                    SubjectImporterViewModel vm = thisDialog.DataContext as SubjectImporterViewModel;
+                    await vm.Run(result);
+                });
             }
-        }
-
-        private void ExitImportSubjectMsgHandler(IEnumerable<SubjectModel> subjectModels, IEnumerable<UserSubject> userSubjects)
-        {
-            ImportSubjects(subjectModels);
-            var choicer = new ClassGroupChoicer();
-            choicer.Start(subjectModels, userSubjects);
-            SelectedSubjectModel = SubjectModels[0];
         }
 
         private bool CanDeleteSubject()
@@ -497,41 +493,40 @@ namespace Cs4rsa.ViewModels
             int courseId,
             bool isUseCache)
         {
-            SubjectDownloadingViewModel vm = _subjectDownloadingUC.DataContext as SubjectDownloadingViewModel;
-            OpenDialog(_subjectDownloadingUC);
+            await OpenDialogAndDoSomethingThenClose(_subjectDownloadingUC, async (thisDialog) =>
+            {
+                SubjectDownloadingViewModel vm = thisDialog.DataContext as SubjectDownloadingViewModel;
+                Subject subject;
+                if (courseId != VMConstants.INT_INVALID_COURSEID)
+                {
+                    await vm.ReEvaluated(courseId);
+                    subject = await _subjectCrawler.Crawl(courseId, isUseCache);
+                }
+                else
+                {
+                    string subjectName = selectedKeyword.SubjectName;
+                    string subjectCode = selectedDiscipline.Name + VMConstants.STR_SPACE + selectedKeyword.Keyword1;
+                    vm.SubjectName = subjectName;
+                    vm.SubjectCode = subjectCode;
+                    subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
+                }
 
-            Subject subject;
-            if (courseId != VMConstants.INT_INVALID_COURSEID)
-            {
-                await vm.ReEvaluated(courseId);
-                subject = await _subjectCrawler.Crawl(courseId, isUseCache);
-            }
-            else
-            {
-                string subjectName = selectedKeyword.SubjectName;
-                string subjectCode = selectedDiscipline.Name + VMConstants.STR_SPACE + selectedKeyword.Keyword1;
-                vm.SubjectName = subjectName;
-                vm.SubjectCode = subjectCode;
-                subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
-            }
+                if (subject != null)
+                {
+                    List<SubjectModel> subjectModels = new();
+                    SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                    subjectModels.Add(subjectModel);
 
-            if (subject != null)
-            {
-                List<SubjectModel> subjectModels = new();
-                SubjectModel subjectModel = await SubjectModel.CreateAsync(subject, _colorGenerator);
-                subjectModels.Add(subjectModel);
-
-                Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> data = new(subjectModels, null);
-                AddSubjectAndReload(data);
-                CloseDialog();
-                SelectedSubjectModel = SubjectModels.Last();
-            }
-            else
-            {
-                CloseDialog();
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
-                AddCommand.NotifyCanExecuteChanged();
-            }
+                    Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> data = new(subjectModels, null);
+                    AddSubjectAndReload(data);
+                    SelectedSubjectModel = SubjectModels.Last();
+                }
+                else
+                {
+                    _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
+                    AddCommand.NotifyCanExecuteChanged();
+                }
+            });
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)
