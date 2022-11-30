@@ -38,6 +38,14 @@ namespace Cs4rsa.Utils.Interfaces
             return new ScheduleItemId(schoolClassModel.SubjectCode, schoolClassModel.SchoolClassName);
         }
 
+        public static IEnumerable<ScheduleItemId> FromClassGroupModel(ClassGroupModel classGroupModel)
+        {
+            foreach (SchoolClassModel schoolClassModel in classGroupModel.CurrentSchoolClassModels)
+            {
+                yield return new ScheduleItemId(schoolClassModel.SubjectCode, schoolClassModel.SchoolClassName);
+            }
+        }
+
         public static ScheduleItemId FromTimeConflict(ConflictModel conflictModel, StudyTimeIntersect studyTimeIntersect)
         {
             string space = conflictModel.FirstSchoolClass.SchoolClassName + conflictModel.SecondSchoolClass.SchoolClassName;

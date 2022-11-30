@@ -98,7 +98,6 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            // Xử lý sự kiện thêm một ClassGroup vào danh sách đã chọn
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 _phaseStore.AddClassGroup(m.Value);
@@ -183,7 +182,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg(System.DBNull.Value));
+            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(System.DBNull.Value));
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
@@ -209,7 +208,7 @@ namespace Cs4rsa.ViewModels
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             _phaseStore.RemoveSchoolClassBySubjectCode(_selectedClassGroupModel.SubjectCode);
-            Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
+            Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
@@ -284,7 +283,7 @@ namespace Cs4rsa.ViewModels
                     }
                 }
             }
-            Messenger.Send(new ChoicedSessionVmMsgs.ConflictCollChangedMsg(ConflictModels));
+            Messenger.Send(new ChoosedVmMsgs.ConflictCollChangedMsg(ConflictModels));
         }
 
         /// <summary>
@@ -307,7 +306,7 @@ namespace Cs4rsa.ViewModels
                     }
                 }
             }
-            Messenger.Send(new ChoicedSessionVmMsgs.PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
+            Messenger.Send(new ChoosedVmMsgs.PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
         }
 
         private void AddClassGroupModelAndReload(ClassGroupModel classGroupModel)
@@ -326,7 +325,7 @@ namespace Cs4rsa.ViewModels
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ClassGroupSeletedMsg(classGroupModel));
+            Messenger.Send(new ChoosedVmMsgs.ClassGroupSeletedMsg(classGroupModel));
         }
 
         private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
@@ -341,7 +340,7 @@ namespace Cs4rsa.ViewModels
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoosedVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
         private async Task UpdateShareString()
@@ -403,7 +402,7 @@ namespace Cs4rsa.ViewModels
                 {
                     actionData = ClassGroupModels[i].DeepClone();
                     _phaseStore.RemoveSchoolClassBySubjectCode(ClassGroupModels[i].SubjectCode);
-                    Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
+                    Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
@@ -434,7 +433,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoosedVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
         /// <summary>
@@ -447,7 +446,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
+            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
         }
         #endregion
     }

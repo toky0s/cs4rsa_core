@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Messages.Publishers
 {
-    internal sealed class ChoicedSessionVmMsgs
+    internal sealed class ChoosedVmMsgs
     {
         /// <summary>
         /// Choice Changed Message
@@ -26,7 +26,14 @@ namespace Cs4rsa.Messages.Publishers
         /// <summary>
         /// ClassGroupSeletedMsg
         /// 
-        /// Thêm MỘT ClassGroupModel vào bộ mô phỏng.
+        /// Thêm một <see cref="ClassGroupModel"/> vào bộ mô phỏng.
+        /// <br></br>
+        /// <inheritdoc cref="ClassGroupModel"/>
+        /// <list type="number">
+        /// <item>
+        /// SchedulerViewModel phân giải và render các ScheduleItem.
+        /// </item>
+        /// </list>
         /// </summary>
         internal sealed class ClassGroupSeletedMsg : ValueChangedMessage<ClassGroupModel>
         {

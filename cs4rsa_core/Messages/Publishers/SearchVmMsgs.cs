@@ -69,6 +69,19 @@ namespace Cs4rsa.Messages.Publishers
             {
             }
         }
-    }
 
+        internal sealed class UndoDeleteMsg: ValueChangedMessage<ClassGroupModel>
+        {
+            public UndoDeleteMsg(ClassGroupModel value) : base(value)
+            {
+            }
+        }
+
+        internal sealed class UndoDeleteAllMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>
+        {
+            public UndoDeleteAllMsg(ClassGroupModel value) : base(value)
+            {
+            }
+        }
+    }
 }

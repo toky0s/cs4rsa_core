@@ -361,7 +361,7 @@ namespace Cs4rsa.ViewModels
                 SelectedSubjectChangedHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 SelectedClassGroup = null;
             });
