@@ -8,9 +8,9 @@ using System.Windows.Controls;
 
 namespace Cs4rsa.Views
 {
-    public partial class ScheduleTable : UserControl
+    public partial class Scheduler : UserControl
     {
-        public ScheduleTable()
+        public Scheduler()
         {
             InitializeComponent();
         }

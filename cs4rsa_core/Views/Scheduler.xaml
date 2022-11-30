@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Cs4rsa.Views.ScheduleTable"
+    x:Class="Cs4rsa.Views.Scheduler"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="clr-namespace:Cs4rsa.Controls"
@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
     xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-    d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleTableViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:SchedulerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="700"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"

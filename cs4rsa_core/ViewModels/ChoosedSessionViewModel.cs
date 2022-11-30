@@ -17,6 +17,7 @@ using Cs4rsa.Utils;
 
 using MaterialDesignThemes.Wpf;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -446,7 +447,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoicedSessionVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
         }
         #endregion
     }

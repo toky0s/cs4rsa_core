@@ -156,7 +156,7 @@ namespace Cs4rsa.ViewModels
         }
     }
 
-    internal sealed class ScheduleTableViewModel : ViewModelBase
+    internal sealed class SchedulerViewModel : ViewModelBase
     {
         private readonly ScheduleItemMap _timeBlockMap;
         private readonly ObservableCollection<ObservableCollection<TimeBlock>>[] _schedules;
@@ -204,7 +204,7 @@ namespace Cs4rsa.ViewModels
         private readonly PhaseStore _phaseStore;
         #endregion
 
-        public ScheduleTableViewModel(PhaseStore phaseStore)
+        public SchedulerViewModel(PhaseStore phaseStore)
         {
             _phaseStore = phaseStore;
             _timeBlockMap = new();
