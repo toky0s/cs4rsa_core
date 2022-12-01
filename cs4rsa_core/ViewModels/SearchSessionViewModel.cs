@@ -21,6 +21,7 @@ using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 using Cs4rsa.ViewModelFunctions;
+using Cs4rsa.ViewModels.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -36,7 +37,7 @@ using System.Windows.Threading;
 
 namespace Cs4rsa.ViewModels
 {
-    public sealed class SearchSessionViewModel : ViewModelBase
+    internal sealed class SearchSessionViewModel : ViewModelBase
     {
         #region Fields
         private readonly SubjectDownloadingUC _subjectDownloadingUC;
@@ -181,19 +182,21 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Services
+        private readonly ColorGenerator _colorGenerator;
+        private readonly IPhaseStore _phaseStore;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ColorGenerator _colorGenerator;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public SearchSessionViewModel(
+            ColorGenerator colorGenerator,
+            IPhaseStore phaseStore,
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
-            ColorGenerator colorGenerator,
             IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue
         )
@@ -201,12 +204,29 @@ namespace Cs4rsa.ViewModels
             _subjectDownloadingUC = new();
             _showDetailsSubjectUC = new();
 
+            _phaseStore = phaseStore;
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
             _openInBrowser = openInBrowser;
             _snackbarMessageQueue = snackbarMessageQueue;
+
+            DisciplineKeywordModels = new();
+            SubjectModels = new();
+            Disciplines = new();
+            FullMatchSearchingKeywords = new();
+            SavedSchedules = new();
+            SearchText = string.Empty;
+            CurrentView = 0;
+            IsUseCache = true;
+
+            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync, () => !IsAlreadyDownloaded(SelectedKeyword));
+            DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
+            ImportDialogCommand = new(OnOpenImportDialog);
+            GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
+            DetailCommand = new RelayCommand(OnDetail);
 
             WeakReferenceMessenger.Default.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, async (r, m) =>
             {
@@ -247,22 +267,6 @@ namespace Cs4rsa.ViewModels
                 await LoadDiscipline();
                 await LoadSavedSchedules();
             });
-
-            DisciplineKeywordModels = new();
-            SubjectModels = new();
-            Disciplines = new();
-            FullMatchSearchingKeywords = new();
-            SavedSchedules = new();
-            SearchText = string.Empty;
-            CurrentView = 0;
-            IsUseCache = true;
-
-            AddCommand = new AsyncRelayCommand(OnAddSubjectAsync, () => !IsAlreadyDownloaded(SelectedKeyword));
-            DeleteCommand = new RelayCommand(OnDeleteSubject, CanDeleteSubject);
-            ImportDialogCommand = new(OnOpenImportDialog);
-            GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
-            DetailCommand = new RelayCommand(OnDetail);
         }
 
         /// <summary>
@@ -376,13 +380,14 @@ namespace Cs4rsa.ViewModels
             }
             #endregion
 
-            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjects, classGroupModels);
-
             SubjectModels.Clear();
+            _phaseStore.RemoveAll();
+
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
+            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjects, classGroupModels);
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_DELETE_ALL, VMConstants.SNBAC_RESTORE, AddSubjectAndReload, actionData);
         }
 
@@ -634,15 +639,28 @@ namespace Cs4rsa.ViewModels
         /// </summary>
         private void AddSubjectAndReload(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
         {
-            foreach (SubjectModel subjectModel in actionData.Item1)
+            IEnumerable<SubjectModel> subjectModels = actionData.Item1;
+            IEnumerable<ClassGroupModel> classes = actionData.Item2;
+
+            foreach (SubjectModel subjectModel in subjectModels)
             {
                 SubjectModels.Add(subjectModel);
             }
-            if (actionData.Item2 != null)
+            
+            if (classes != null)
             {
-                Messenger.Send(new SearchVmMsgs.SelectClassGroupModelsMsg(actionData.Item2));
+                foreach (ClassGroupModel cgm in classes)
+                {
+                    _phaseStore.AddClassGroupModel(cgm);
+                }
+                Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(classes));
+                SelectedSubjectModel = SubjectModels[^1];
             }
-            SelectedSubjectModel = SubjectModels[0];
+            else if (SubjectModels.Count > 1)
+            {
+                SelectedSubjectModel = SubjectModels[0];
+            }
+            
             TotalSubject = SubjectModels.Count;
             AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();

@@ -11,10 +11,12 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
+using Cs4rsa.ViewModels.Interfaces;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Cs4rsa.ViewModels
@@ -229,7 +231,7 @@ namespace Cs4rsa.ViewModels
 
         public ObservableCollection<string> Timelines { get; set; }
 
-        public PhaseStore PhaseStore
+        public IPhaseStore PhaseStore
         {
             get
             {
@@ -243,18 +245,36 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region DI
-        private readonly PhaseStore _phaseStore;
+        private readonly IPhaseStore _phaseStore;
         #endregion
 
-        public SchedulerViewModel(PhaseStore phaseStore)
+        public SchedulerViewModel(IPhaseStore phaseStore)
         {
+            #region Fields
             _phaseStore = phaseStore;
             _map = new();
             _classGroupModels = new List<ClassGroupModel>();
             _conflictModels = new List<ConflictModel>();
             _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
+            #endregion
 
             #region WeakReferenceMessengers
+            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
+            {
+                Trace.WriteLine("WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectCgmsMsg>");
+                IEnumerable<ClassGroupModel> classes = m.Value;
+                foreach (ClassGroupModel c in classes)
+                {
+                    IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.FromClassGroupModel(c);
+                    IEnumerable<ScheduleItemId> sameSpaceScheduleItemIds = _map.GetScheduleItemID(c);
+                    if (!scheduleItemIds.Intersect(sameSpaceScheduleItemIds).Any())
+                    {
+                        RemoveClassGroup(c);
+                        AddClassGroup(c);
+                    }
+                }
+            });
+
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 CleanAll();
@@ -268,20 +288,9 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                //foreach (ClassGroupModel classGroupModel in m.Value)
-                //{
-                //    if (_map.ExistsBySameSpace(classGroupModel))
-                //    {
-                //        RemoveClassGroup(classGroupModel);
-                //    }
-                //    AddClassGroup(classGroupModel);
-                //}
-            });
-
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.ClassGroupSeletedMsg>(this, (r, m) =>
-            {
+                Trace.WriteLine("WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>");
                 ClassGroupModel classGroupModel = m.Value;
                 IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.FromClassGroupModel(classGroupModel);
                 IEnumerable<ScheduleItemId> sameSpaceScheduleItemIds = _map.GetScheduleItemID(classGroupModel);
@@ -289,6 +298,16 @@ namespace Cs4rsa.ViewModels
                 {
                     RemoveClassGroup(classGroupModel);
                     AddClassGroup(classGroupModel);
+                }
+            });
+
+            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.UndoDelAllMsg>(this, (r, m) =>
+            {
+                Trace.WriteLine("StrongReferenceMessenger.Default.Register<ChoosedVmMsgs.UndoDelAllMsg>");
+                IEnumerable<ClassGroupModel> classGroupModels = m.Value;
+                foreach (ClassGroupModel cgm in classGroupModels)
+                {
+                    AddClassGroup(cgm);
                 }
             });
 
@@ -323,7 +342,7 @@ namespace Cs4rsa.ViewModels
             #endregion
 
             #region Commands
-            ResetBetweenPointCommand = new(() => _phaseStore.ResetBetweenPoint());
+            ResetBetweenPointCommand = new(() => _phaseStore.EvaluateBetweenPoint());
             #endregion
 
             #region Weeks and Timelines
@@ -474,8 +493,6 @@ namespace Cs4rsa.ViewModels
         }
 
         /// <summary>
-        /// * Hight performance codes
-        /// 
         /// Thay thế ClassGroupModel cũ trong bộ mô phỏng (nếu có)
         /// bằng ClassGroupModel mới được thêm.
         /// </summary>

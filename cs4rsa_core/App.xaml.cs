@@ -104,7 +104,7 @@ namespace Cs4rsa
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
-            services.AddSingleton<PhaseStore>();
+            services.AddSingleton<PhaseStore, PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchSessionViewModel>();
