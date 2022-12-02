@@ -43,9 +43,9 @@ namespace Cs4rsa.Messages.Publishers
         /// <summary>
         /// Xoá hết tất cả các môn đã tải
         /// </summary>
-        internal sealed class DelAllSubjectMsg : ValueChangedMessage<object>
+        internal sealed class DelAllSubjectMsg : ValueChangedMessage<DBNull>
         {
-            public DelAllSubjectMsg(object value) : base(value)
+            public DelAllSubjectMsg(DBNull value) : base(value)
             {
             }
         }

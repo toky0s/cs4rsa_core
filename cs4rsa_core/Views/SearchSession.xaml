@@ -222,6 +222,7 @@
                                 Margin="5,0,0,10"
                                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                 Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                            <ProgressBar IsIndeterminate="True" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
@@ -229,6 +230,7 @@
             <ListBox.ItemContainerStyle>
                 <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
                     <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}" />
+                    <Setter Property="IsEnabled" Value="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}" />
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>

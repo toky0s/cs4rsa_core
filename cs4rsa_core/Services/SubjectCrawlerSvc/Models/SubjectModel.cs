@@ -4,22 +4,32 @@ using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     public class SubjectModel
     {
+        private bool _isDownloading;
+
+        public bool IsDownloading
+        {
+            get { return _isDownloading; }
+            set { _isDownloading = value; }
+        }
+
         private readonly Subject _subject;
 
         public List<TeacherModel> Teachers => _subject.Teachers;
         public List<string> TempTeachers => _subject.TempTeachers;
         public List<ClassGroupModel> ClassGroupModels { get; set; }
-        public string SubjectName => _subject.Name;
-        public string SubjectCode => _subject.SubjectCode;
+        public string SubjectName { get; private set; }
+        public string SubjectCode { get; private set; }
         public int StudyUnit { get; set; }
-        public int CourseId => _subject.CourseId;
+        public int CourseId { get; private set; }
         public string StudyUnitType => _subject.StudyUnitType;
         public string StudyType => _subject.StudyType;
         public string Semester => _subject.Semester;
@@ -40,13 +50,35 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         {
             _colorGenerator = colorGenerator;
             _subject = subject;
+            SubjectName = subject.Name;
+            SubjectCode = subject.SubjectCode;
+            CourseId = subject.CourseId;
             StudyUnit = subject.StudyUnit;
+        }
+
+        private SubjectModel(
+            string subjectName,
+            string subjectCode,
+            int courseId,
+            string color)
+        {
+            SubjectName = subjectName;
+            SubjectCode = subjectCode;
+            CourseId = courseId;
+            Color = color;
+            IsDownloading = true;
         }
 
         public static Task<SubjectModel> CreateAsync(Subject subject, ColorGenerator colorGenerator)
         {
             SubjectModel subjectModel = new(subject, colorGenerator);
             return subjectModel.InitializeAsync();
+        }
+
+        public static SubjectModel CreatePseudo(string subjectName, string subjectCode, string color, int courseId)
+        {
+            Trace.WriteLine("public static SubjectModel CreatePseudo");
+            return new SubjectModel(subjectName, subjectCode, courseId, color);
         }
 
         private async Task<SubjectModel> InitializeAsync()

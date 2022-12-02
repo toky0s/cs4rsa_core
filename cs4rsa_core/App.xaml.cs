@@ -105,7 +105,6 @@ namespace Cs4rsa
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<StudentInputViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
-            services.AddSingleton<SubjectDownloadingViewModel>();
 
             return services.BuildServiceProvider();
         }
