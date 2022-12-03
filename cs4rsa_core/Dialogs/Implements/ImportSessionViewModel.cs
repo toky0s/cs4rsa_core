@@ -80,21 +80,18 @@ namespace Cs4rsa.Dialogs.Implements
         private readonly ICourseCrawler _courseCrawler;
         private readonly IMessageBox _messageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        private readonly ShareString _shareStringHelper;
         #endregion
 
         public ImportSessionViewModel(
             IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
             IMessageBox messageBox,
-            ISnackbarMessageQueue snackbarMessageQueue,
-            ShareString shareString)
+            ISnackbarMessageQueue snackbarMessageQueue)
         {
             _messageBox = messageBox;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
-            _shareStringHelper = shareString;
 
             ScheduleSessions = new();
             UserSubjects = new();
@@ -133,7 +130,7 @@ namespace Cs4rsa.Dialogs.Implements
             }
         }
 
-        internal void LoadShareString(string shareString)
+        public void LoadShareString(string shareString)
         {
             UserSubjects.Clear();
             if (!string.IsNullOrEmpty(shareString))

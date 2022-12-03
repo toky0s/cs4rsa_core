@@ -11,6 +11,7 @@ using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Messages.Publishers.UIs;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
@@ -19,6 +20,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.Utils.Models;
 using Cs4rsa.ViewModelFunctions;
 
 using MaterialDesignThemes.Wpf;
@@ -189,6 +191,15 @@ namespace Cs4rsa.ViewModels
                 DisciplineKeywordModels.Clear();
                 Disciplines.Clear();
                 await ReloadDisciplineAndKeyWord();
+            });
+
+            WeakReferenceMessenger.Default.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
+            {
+                TimeBlock timeBlock = m.Value;
+                if (timeBlock.ScheduleTableItemType == ScheduleTableItemType.SchoolClass)
+                {
+                    SelectedSubjectModel = SubjectModels.Where(sm => sm.SubjectCode.Equals(m.Value.SubjectCode)).FirstOrDefault();
+                }
             });
 
             Application.Current.Dispatcher.InvokeAsync(async () =>

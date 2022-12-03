@@ -1,17 +1,19 @@
 ﻿using Cs4rsa.Utils.Interfaces;
 
-using System;
 using System.IO;
 
 namespace Cs4rsa.Utils
 {
     public class FolderManager : IFolderManager
     {
-        public string CreateFolderIfNotExists(string folderName)
+        public string CreateFolderIfNotExists(string path)
         {
-            string pathToNewFolder = Path.Combine(AppContext.BaseDirectory, folderName);
-            DirectoryInfo directory = Directory.CreateDirectory(pathToNewFolder);
-            return directory.FullName;
+            if (!Directory.Exists(path))
+            {
+                DirectoryInfo directory = Directory.CreateDirectory(path);
+                return directory.FullName;
+            }
+            return path;
         }
     }
 }

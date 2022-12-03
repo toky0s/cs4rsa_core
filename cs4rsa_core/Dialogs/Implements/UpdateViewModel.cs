@@ -20,7 +20,6 @@ namespace Cs4rsa.Dialogs.Implements
     public class UpdateViewModel : ViewModelBase
     {
         public RelayCommand StartUpdateCommand { get; set; }
-        public RelayCommand CloseDialogCommand { get; set; }
 
         private short _progressValue;
         public short ProgressValue
@@ -58,17 +57,10 @@ namespace Cs4rsa.Dialogs.Implements
             _snackbarMessageQueue = snackbarMessageQueue;
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
-            CloseDialogCommand = new RelayCommand(CloseDialog, CanClose);
-        }
-
-        private bool CanClose()
-        {
-            return _progressValue == 0;
         }
 
         private void OnStartUpdate()
         {
-            CloseDialogCommand.NotifyCanExecuteChanged();
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = false;
             _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
 

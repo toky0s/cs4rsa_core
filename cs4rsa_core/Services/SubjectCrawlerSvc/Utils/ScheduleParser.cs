@@ -121,22 +121,16 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <returns>Enum Week.</returns>
         private static DayOfWeek DateToDateWeek(string date)
         {
-            switch (date)
+            return date switch
             {
-                case "T2:":
-                    return DayOfWeek.Monday;
-                case "T3:":
-                    return DayOfWeek.Tuesday;
-                case "T4:":
-                    return DayOfWeek.Wednesday;
-                case "T5:":
-                    return DayOfWeek.Thursday;
-                case "T6:":
-                    return DayOfWeek.Friday;
-                case "T7:":
-                    return DayOfWeek.Saturday;
-            }
-            return DayOfWeek.Sunday;
+                "T2:" => DayOfWeek.Monday,
+                "T3:" => DayOfWeek.Tuesday,
+                "T4:" => DayOfWeek.Wednesday,
+                "T5:" => DayOfWeek.Thursday,
+                "T6:" => DayOfWeek.Friday,
+                "T7:" => DayOfWeek.Saturday,
+                _ => DayOfWeek.Sunday,
+            };
         }
     }
 }

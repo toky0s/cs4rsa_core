@@ -157,6 +157,7 @@ namespace Cs4rsa.ViewModels
             {
                 string registerCode = SelectedClassGroupModel.RegisterCodes[0];
                 Clipboard.SetData(DataFormats.Text, registerCode);
+                _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + VMConstants.STR_SPACE + registerCode);
             }
             else
             {

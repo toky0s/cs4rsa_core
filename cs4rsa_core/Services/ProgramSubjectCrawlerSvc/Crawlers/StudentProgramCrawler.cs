@@ -7,10 +7,13 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,28 +24,50 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 {
     public class StudentProgramCrawler
     {
-        #region DI
-        private readonly string _sessionId;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IPreParSubjectCrawler _preParSubjectCrawler;
+        private static string _sessionId;
+        private static string _studentId;
 
-        public StudentProgramCrawler(string sessionId, IUnitOfWork unitOfWork, IPreParSubjectCrawler preParSubjectCrawler)
-        {
-            _sessionId = sessionId;
-            _unitOfWork = unitOfWork;
-            _preParSubjectCrawler = preParSubjectCrawler;
-        }
-        #endregion
-
+        // Transient
         private List<HtmlNode> _fileNodes;
         private List<HtmlNode> _folderNodes;
         private List<ProgramFolder> ProgramFolders;
         private List<DataTypes.ProgramSubject> ProgramSubjects;
         private ProgramFolder Root;
 
-        public async Task<ProgramFolder> GetNode(string url)
+        #region DI
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPreParSubjectCrawler _preParSubjectCrawler;
+        #endregion
+
+        public StudentProgramCrawler(
+            IUnitOfWork unitOfWork,
+            IPreParSubjectCrawler preParSubjectCrawler
+        )
         {
-            HtmlNodeCollection allNodes = await GetAllTrTag(url);
+            _unitOfWork = unitOfWork;
+            _preParSubjectCrawler = preParSubjectCrawler;
+        }
+
+        /// <summary>
+        /// Set thông tin trước khi thực hiện lấy chương trình học.
+        /// </summary>
+        /// <param name="sessionId">Session ID</param>
+        /// <param name="studentId">Student ID</param>
+        public static void SetInfor(string sessionId, string studentId)
+        {
+            _sessionId = sessionId;
+            _studentId = studentId;
+        }
+
+        public async Task<ProgramFolder> GetNode(
+            string specialString,
+            string t,
+            string nodeName,
+            int curid
+        )
+        {
+            string url = LoadChuongTrinhHocEachPart(specialString, t, nodeName, curid);
+            HtmlNodeCollection allNodes = await GetAllTrTag(url, nodeName, true);
             GetFileAnhFolderNodes(allNodes);
             ProgramFolders = GetProgramFolders(_folderNodes);
             ProgramSubjects = await GetProgramSubjects(_fileNodes);
@@ -52,10 +77,28 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         }
 
         /// <summary>
+        /// Lấy ra đường dẫn tới phần học
+        /// </summary>
+        /// <param name="specialString">Mã đặc biệt</param>
+        /// <param name="t">Epoch</param>
+        /// <param name="curid">Mã ngành</param>
+        /// <param name="cursectionid">PhanHoc</param>
+        /// <returns></returns>
+        private static string LoadChuongTrinhHocEachPart(
+            string specialString,
+            string t,
+            string nodeName,
+            int curid
+        )
+        {
+            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
+        }
+
+        /// <summary>
         /// Gộp tất cả các folder thành một cây thư mục
         /// </summary>
-        /// <param name="divedProgramFolders"></param>
-        /// <returns></returns>
+        /// <param name="divedProgramFolders">List of ProgramFolder</param>
+        /// <returns>ProgramFolder</returns>
         private static ProgramFolder MergeNode(List<ProgramFolder> divedProgramFolders)
         {
             List<ProgramFolder> sortedList = divedProgramFolders.OrderBy(o => o.ChildOfNode).ToList();
@@ -130,10 +173,24 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return childSubjects;
         }
 
-        public static async Task<HtmlNodeCollection> GetAllTrTag(string url)
+        private static async Task<HtmlNodeCollection> GetAllTrTag(
+            string url,
+            string nodeName,
+            bool isUseCache
+        )
         {
             HtmlWeb web = new();
-            HtmlDocument doc = await web.LoadFromWebAsync(url);
+            HtmlDocument doc = new();
+            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, _studentId, nodeName + ".html");
+            if (File.Exists(path) && isUseCache)
+            {
+                doc.Load(path);
+            }
+            else
+            {
+                doc = await web.LoadFromWebAsync(url);
+                await File.WriteAllTextAsync(path, doc.DocumentNode.InnerHtml);
+            }
             HtmlNodeCollection trTags = doc.DocumentNode.SelectNodes("//tr");
             trTags.RemoveAt(0);
             return trTags;
@@ -143,7 +200,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// Chia list node thành các fileNode và FolderNode.
         /// </summary>
         /// <param name="trNodes">Danh sách tất cả các tr node trong chương trình học.</param>
-        public void GetFileAnhFolderNodes(HtmlNodeCollection trNodes)
+        private void GetFileAnhFolderNodes(HtmlNodeCollection trNodes)
         {
             List<HtmlNode> folderNodes = new();
             List<HtmlNode> fileNodes = new();
@@ -164,7 +221,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             _fileNodes = fileNodes;
         }
 
-        public static List<ProgramFolder> GetProgramFolders(List<HtmlNode> folderNodes)
+        private static List<ProgramFolder> GetProgramFolders(List<HtmlNode> folderNodes)
         {
             List<ProgramFolder> programFolders = new();
             foreach (HtmlNode htmlNode in folderNodes)
@@ -212,7 +269,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return programFolders;
         }
 
-        public async Task<List<DataTypes.ProgramSubject>> GetProgramSubjects(List<HtmlNode> fileNodes)
+        private async Task<List<DataTypes.ProgramSubject>> GetProgramSubjects(List<HtmlNode> fileNodes)
         {
             List<DataTypes.ProgramSubject> programSubjects = new();
             foreach (HtmlNode node in fileNodes)
@@ -227,7 +284,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 string classValue = classSlices[0];
                 string childOfNode;
                 string id = idValue.Split(new char[] { '-' })[1];
-                if (classValue.Equals("toptitle", System.StringComparison.Ordinal))
+                if (classValue.Equals("toptitle", StringComparison.Ordinal))
                 {
                     childOfNode = "0";
                 }
@@ -338,7 +395,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         {
             foreach (ProgramFolder programFolder in ProgramFolders)
             {
-                if (programFolder.Id.Equals(id, System.StringComparison.Ordinal))
+                if (programFolder.Id.Equals(id, StringComparison.Ordinal))
                 {
                     return programFolder.Name;
                 }

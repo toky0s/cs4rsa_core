@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Cs4rsa.Utils.Interfaces;
 
-namespace Cs4rsa.Commons.Models
+using System;
+
+namespace Cs4rsa.Utils.Models
 {
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.
@@ -53,5 +55,7 @@ namespace Cs4rsa.Commons.Models
         /// Tên class 2 nếu có xung đột - mặc đinh Empty
         /// </summary>
         public string Class2 { get; set; }
+
+        public ScheduleTableItemType ScheduleTableItemType { get; set; }
     }
 }

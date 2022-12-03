@@ -5,17 +5,14 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
-using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
-using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -52,22 +49,33 @@ namespace Cs4rsa.ViewModels
             set { _isCalculated = value; OnPropertyChanged(); }
         }
 
-        private Student _student;
-        public Student Student
+        private Student _selectedStudent;
+
+        public Student SelectedStudent
         {
-            get => _student;
+            get { return _selectedStudent; }
             set
             {
-                _student = value;
-                OnPropertyChanged();
+                if (value.StudentId == "0")
+                {
+                    _selectedStudent = null;
+                }
+                else
+                {
+                    _selectedStudent = value;
+                    LoadStudentPlan();
+                }
+                LoadProgramCommand.NotifyCanExecuteChanged();
             }
         }
+
+
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
-
+        public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
-
+        public ObservableCollection<PlanTable> PlanTables { get; set; }
 
         private ProgramSubjectModel _selectedProSubject;
         public ProgramSubjectModel SelectedProSubject
@@ -140,20 +148,18 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-#pragma warning disable CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
-        private ProgramDiagram _programDiagram;
-#pragma warning restore CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
+        private readonly ProgramDiagram _programDiagram;
 
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
 
         private List<List<ClassGroupModel>> _classGroupModelsOfClass;
         #endregion
 
-        #region Command
-        public AsyncRelayCommand ChoiceAccountCommand { get; set; }
+        #region Commands
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
+        public AsyncRelayCommand LoadProgramCommand { get; set; }
 
         public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
@@ -171,10 +177,10 @@ namespace Cs4rsa.ViewModels
         private readonly ColorGenerator _colorGenerator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        private readonly ICurriculumCrawler _curriculumCrawler;
-        private readonly IPreParSubjectCrawler _preParSubjectCrawler;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly IStudentPlanCrawler _studentPlanCrawler;
+        private readonly ProgramDiagramCrawler _programDiagramCrawler;
         #endregion
 
         #region Filter Properties
@@ -250,37 +256,35 @@ namespace Cs4rsa.ViewModels
 
         public AutoScheduleViewModel(
             ICourseCrawler courseCrawler,
-            ColorGenerator colorGenerator,
             IUnitOfWork unitOfWork,
-            ICurriculumCrawler curriculumCrawler,
-            IPreParSubjectCrawler preParSubjectCrawler,
             IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue
+            ISnackbarMessageQueue snackbarMessageQueue,
+            IStudentPlanCrawler studentPlanCrawler,
+            ProgramDiagramCrawler programDiagramCrawler,
+            ColorGenerator colorGenerator
         )
         {
             _openInBrowser = openInBrowser;
-            _curriculumCrawler = curriculumCrawler;
-            _preParSubjectCrawler = preParSubjectCrawler;
             _colorGenerator = colorGenerator;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _studentPlanCrawler = studentPlanCrawler;
+            _programDiagramCrawler = programDiagramCrawler;
 
-            WeakReferenceMessenger.Default.Register<StudentInputVmMsgs.ExitLoginMsg>(this, async (r, m) =>
-            {
-                await LoadStudent(m.Value);
-            });
+            ProgramFolderModels = new();
+            ChoicedProSubjectModels = new();
+            CombinationModels = new();
+            SubjectModels = new();
+            Students = new();
+            PlanTables = new();
 
-            ProgramFolderModels = new ObservableCollection<ProgramFolderModel>();
-            ChoicedProSubjectModels = new ObservableCollection<ProgramSubjectModel>();
-            CombinationModels = new ObservableCollection<CombinationModel>();
-            SubjectModels = new ObservableCollection<SubjectModel>();
-            _filteredClassGroupModels = new List<List<ClassGroupModel>>();
-            _classGroupModelsOfClass = new List<List<ClassGroupModel>>();
+            _filteredClassGroupModels = new();
+            _classGroupModelsOfClass = new();
 
-            ChoiceAccountCommand = new AsyncRelayCommand(OnChoiceAccountCommand);
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
+            LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, CanLoadProgram);
 
             AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
@@ -303,6 +307,29 @@ namespace Cs4rsa.ViewModels
             IsCalculated = false;
             _tempResult = new();
             _genIndex = 0;
+        }
+
+        private bool CanLoadProgram()
+        {
+            return _selectedStudent != null;
+        }
+
+        public async Task LoadStudents()
+        {
+            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
+            foreach (Student student in students)
+            {
+                Students.Add(student);
+            }
+        }
+
+        private async Task LoadStudentPlan()
+        {
+            IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(_selectedStudent.CurriculumId);
+            foreach (PlanTable planTable in planTables)
+            {
+                PlanTables.Add(planTable);
+            }
         }
 
         private void OnValidGen()
@@ -414,8 +441,6 @@ namespace Cs4rsa.ViewModels
         /// <summary>
         /// Nơi triển khai bộ lọc trước khi sắp xếp
         /// </summary>
-        /// <param name="classGroupModel"></param>
-        /// <returns></returns>
         private bool Filter(ClassGroupModel classGroupModel)
         {
             bool flagIsRemoveClassGroupInValid = IsRemoveClassGroupInValid(classGroupModel);
@@ -452,7 +477,8 @@ namespace Cs4rsa.ViewModels
         }
         private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)
         {
-            return IsRemoveClassGroupInvalid ? classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0 : true;
+            return !IsRemoveClassGroupInvalid || classGroupModel.IsHaveSchedule()
+                && classGroupModel.EmptySeat > 0;
         }
 
         /// <summary>
@@ -537,26 +563,6 @@ namespace Cs4rsa.ViewModels
         }
         #endregion
 
-        private async Task OnChoiceAccountCommand()
-        {
-            StudentInputUC studentInputUC = new();
-            StudentInputViewModel vm = studentInputUC.DataContext as StudentInputViewModel;
-            OpenDialog(studentInputUC);
-            await vm.LoadStudentInfos();
-        }
-
-        private async Task LoadStudent(LoginResult loginResult)
-        {
-            if (loginResult != null)
-            {
-                ChoicedProSubjectModels.Clear();
-                CombinationModels.Clear();
-                SubjectModels.Clear();
-                Student = loginResult.Student;
-                await LoadProgramSubject();
-            }
-        }
-
         private bool CanDeleteAll()
         {
             return ChoicedProSubjectModels.Count > 0;
@@ -583,14 +589,12 @@ namespace Cs4rsa.ViewModels
         {
             IsFinding = true;
             ProgramFolderModels.Clear();
-            ProgramDiagramCrawler programDiagramCrawler = new(
-                string.Empty
-                , _student.SpecialString
-                , _curriculumCrawler
-                , _unitOfWork
-                , _preParSubjectCrawler
+
+            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
+                string.Empty,
+                _selectedStudent.SpecialString,
+                _selectedStudent.StudentId
             );
-            ProgramFolder[] folders = await programDiagramCrawler.ToProgramDiagram();
 
             foreach (ProgramFolder folder in folders)
             {

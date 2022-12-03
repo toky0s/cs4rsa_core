@@ -58,9 +58,6 @@
     <Page Update="Dialogs\DialogViews\ImportSessionUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Dialogs\DialogViews\StudentInputUC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Dialogs\DialogViews\ProSubjectDetailUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

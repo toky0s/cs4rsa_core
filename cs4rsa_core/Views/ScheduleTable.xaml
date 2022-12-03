@@ -162,10 +162,19 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <control:ScheduleBlock
-                                        BlockColor="{Binding Background, Mode=OneTime}"
-                                        BlockName="{Binding Content, Mode=OneTime}"
-                                        Description="{Binding Description}" />
+                                    <materialDesign:TransitioningContent>
+                                        <materialDesign:TransitioningContent.OpeningEffects>
+                                            <materialDesign:TransitionEffect Kind="ExpandIn" />
+                                            <materialDesign:TransitionEffect Kind="FadeIn" />
+
+                                        </materialDesign:TransitioningContent.OpeningEffects>
+                                        <control:ScheduleBlock
+                                            BlockColor="{Binding Background, Mode=OneTime}"
+                                            BlockName="{Binding Content, Mode=OneTime}"
+                                            Description="{Binding Description, Mode=OneTime}"
+                                            ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                    </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -285,10 +294,18 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <control:ScheduleBlock
-                                        BlockColor="{Binding Background, Mode=OneTime}"
-                                        BlockName="{Binding Content, Mode=OneTime}"
-                                        Description="{Binding Description}" />
+                                    <materialDesign:TransitioningContent>
+                                        <materialDesign:TransitioningContent.OpeningEffects>
+                                            <materialDesign:TransitionEffect Kind="ExpandIn" />
+                                            <materialDesign:TransitionEffect Kind="FadeIn" />
+                                        </materialDesign:TransitioningContent.OpeningEffects>
+                                        <control:ScheduleBlock
+                                            BlockColor="{Binding Background, Mode=OneTime}"
+                                            BlockName="{Binding Content, Mode=OneTime}"
+                                            Description="{Binding Description, Mode=OneTime}"
+                                            ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                    </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

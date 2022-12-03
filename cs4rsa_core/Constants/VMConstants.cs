@@ -60,5 +60,12 @@
         public const string TIME_HH_MM_FORMAT = "HH:mm";
         public const char CHAR_SPACE = ' ';
         #endregion
+
+        #region Node names
+        public readonly static string NODE_NAME_DAI_CUONG = "2001";
+        public readonly static string NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG = "2002";
+        public readonly static string NODE_NAME_DAI_CUONG_NGANH = "2003";
+        public readonly static string NODE_NAME_CHUYEN_NGANH = "2004";
+        #endregion
     }
 }
