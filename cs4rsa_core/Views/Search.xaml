@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Cs4rsa.Views.SearchSession"
+    x:Class="Cs4rsa.Views.Search"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,7 +8,7 @@
     xmlns:vm="clr-namespace:Cs4rsa.ViewModels"
     xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
     x:Name="SearchSessionUC"
-    d:DataContext="{d:DesignInstance Type=vm:SearchSessionViewModel}"
+    d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="400"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
@@ -184,47 +184,53 @@
             </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Border
-                            Grid.Column="0"
-                            Width="20"
-                            HorizontalAlignment="Left"
-                            Background="{Binding Color}"
-                            CornerRadius="4" />
-                        <StackPanel Grid.Column="1" Orientation="Vertical">
-                            <TextBlock
-                                Margin="5,10,0,0"
-                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                TextWrapping="WrapWithOverflow">
-                                <Run Text="{Binding SubjectName, Mode=OneWay}" />
-                                <Run>
-                                    <Run.Style>
-                                        <Style TargetType="Run">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
-                                                    <Setter Property="Text" Value="*" />
-                                                    <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Run.Style>
-                                </Run>
-                            </TextBlock>
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                Text="{Binding SubjectCode}" />
-                            <TextBlock
-                                Margin="5,0,0,10"
-                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                            <ProgressBar IsIndeterminate="True" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        </StackPanel>
-                    </Grid>
+                    <materialDesign:TransitioningContent>
+                        <materialDesign:TransitioningContent.OpeningEffects>
+                            <materialDesign:TransitionEffect Kind="FadeIn" />
+                            <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+                        </materialDesign:TransitioningContent.OpeningEffects>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Column="0"
+                                Width="20"
+                                HorizontalAlignment="Left"
+                                Background="{Binding Color}"
+                                CornerRadius="4" />
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock
+                                    Margin="5,10,0,0"
+                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                    TextWrapping="WrapWithOverflow">
+                                    <Run Text="{Binding SubjectName, Mode=OneWay}" />
+                                    <Run>
+                                        <Run.Style>
+                                            <Style TargetType="Run">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
+                                                        <Setter Property="Text" Value="*" />
+                                                        <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Run.Style>
+                                    </Run>
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                    Text="{Binding SubjectCode}" />
+                                <TextBlock
+                                    Margin="5,0,0,10"
+                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                    Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                                <ProgressBar IsIndeterminate="True" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:TransitioningContent>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>

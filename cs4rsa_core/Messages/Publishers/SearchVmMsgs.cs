@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Cs4rsa.Messages.Publishers
 {
     /// <summary>
-    /// Danh sách các Message được sử dụng trong SearchSessionViewModel
+    /// Danh sách các Message được sử dụng trong SearchViewModel
     /// </summary>
     internal sealed class SearchVmMsgs
     {

@@ -6,9 +6,9 @@ using System.Windows.Controls;
 
 namespace Cs4rsa.Views
 {
-    public partial class SearchSession : UserControl
+    public partial class Search : UserControl
     {
-        public SearchSession()
+        public Search()
         {
             InitializeComponent();
         }
@@ -24,7 +24,7 @@ namespace Cs4rsa.Views
             {
                 Popup_Recommend.IsOpen = false;
             }
-            await (DataContext as SearchSessionViewModel).LoadSearchItemSource(text);
+            await (DataContext as SearchViewModel).LoadSearchItemSource(text);
         }
 
         private void SearchingTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -38,7 +38,7 @@ namespace Cs4rsa.Views
             {
                 string url = (string)e.Data.GetData(DataFormats.UnicodeText);
                 Uri uri = new UriBuilder(url).Uri;
-                (DataContext as SearchSessionViewModel).OnAddSubjectFromUriAsync(uri);
+                (DataContext as SearchViewModel).OnAddSubjectFromUriAsync(uri);
             }
         }
     }

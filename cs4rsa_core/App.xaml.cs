@@ -97,7 +97,7 @@ namespace Cs4rsa
             services.AddSingleton<PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<SearchSessionViewModel>();
+            services.AddSingleton<SearchViewModel>();
             services.AddSingleton<ClassGroupSessionViewModel>();
             services.AddSingleton<ChoosedSessionViewModel>();
             services.AddSingleton<ScheduleTableViewModel>();

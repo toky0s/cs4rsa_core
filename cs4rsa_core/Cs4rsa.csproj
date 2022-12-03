@@ -76,9 +76,6 @@
     <Page Update="Dialogs\DialogViews\SolveConflictUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Dialogs\DialogViews\SubjectImporterUC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Dialogs\DialogViews\UpdateUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
@@ -109,7 +106,7 @@
     <Page Update="Views\ScheduleTable.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\SearchSession.xaml">
+    <Page Update="Views\Search.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
