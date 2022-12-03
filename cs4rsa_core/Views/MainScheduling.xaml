@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="2.7*" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <local:SearchSession />
+                    <local:Search />
                 </Grid>
                 <Grid Grid.Column="1" Margin="5,5,0,0">
                     <local:ClassGroupSession />

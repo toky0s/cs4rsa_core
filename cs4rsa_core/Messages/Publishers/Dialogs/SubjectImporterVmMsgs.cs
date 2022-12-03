@@ -13,7 +13,7 @@ namespace Cs4rsa.Messages.Publishers.Dialogs
         internal sealed class ExitImportSubjectMsg : ValueChangedMessage<Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>>>
         {
             /// <summary>
-            /// Thoát import subject vào SearchSessionViewModel
+            /// Thoát import subject vào SearchViewModel
             /// </summary>
             public ExitImportSubjectMsg(Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>> value) : base(value)
             {
