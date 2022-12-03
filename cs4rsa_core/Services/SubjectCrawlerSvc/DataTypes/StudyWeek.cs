@@ -1,5 +1,5 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.ViewModels;
+using Cs4rsa.ViewModels.Interfaces;
 
 using System.Windows;
 
@@ -43,8 +43,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         /// </summary>
         public Phase GetPhase()
         {
-            PhaseStore phaseStore = (PhaseStore)((App)Application.Current).Container.GetService(typeof(PhaseStore));
-            int betweenPointValue = phaseStore.CurrentBetweenPointValue;
+            IPhaseStore phaseStore = (IPhaseStore)((App)Application.Current).Container.GetService(typeof(IPhaseStore));
+            int betweenPointValue = phaseStore.BetweenPoint;
             if (EndWeek <= betweenPointValue)
             {
                 return Phase.First;

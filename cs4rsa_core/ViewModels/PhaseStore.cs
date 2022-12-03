@@ -5,7 +5,6 @@ using Cs4rsa.Messages.States;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.ViewModels.Interfaces;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,6 +26,7 @@ namespace Cs4rsa.ViewModels
     /// </summary>
     internal class PhaseStore : ViewModelBase, IPhaseStore
     {
+        private bool _isEvaluatedBwp = false;
         private List<ClassGroupModel> _classGroupModels;
 
         public ObservableCollection<int> Weeks { get; set; }
@@ -52,6 +52,7 @@ namespace Cs4rsa.ViewModels
             _classGroupModels.Add(classGroupModel);
 
             EvaluateWeek(classGroupModel);
+            EvaluateBetweenPoint();
         }
 
         private void EvaluateWeek(ClassGroupModel classGroupModel)
@@ -101,7 +102,11 @@ namespace Cs4rsa.ViewModels
                 return;
             }
 
-            if (Weeks.Count == 0)
+            if (_isEvaluatedBwp)
+            {
+                return;
+            }
+            else if (Weeks.Count == 0)
             {
                 _bwpValue = 0;
             }
@@ -120,6 +125,7 @@ namespace Cs4rsa.ViewModels
             }
 
             Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(_bwpValue));
+            _isEvaluatedBwp = true;
         }
 
         public void AddWeek(int week)

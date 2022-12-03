@@ -14,6 +14,7 @@ using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
+using Cs4rsa.ViewModels.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -71,13 +72,13 @@ namespace Cs4rsa.ViewModels
         #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
-        private readonly PhaseStore _phaseStore;
+        private readonly IPhaseStore _phaseStore;
         #endregion
 
         public ChoosedSessionViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
-            PhaseStore phaseStore
+            IPhaseStore phaseStore
         )
         {
             _snackbarMessageQueue = snackbarMessageQueue;

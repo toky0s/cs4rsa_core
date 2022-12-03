@@ -646,7 +646,7 @@ namespace Cs4rsa.ViewModels
             {
                 SubjectModels.Add(subjectModel);
             }
-            
+
             if (classes != null)
             {
                 foreach (ClassGroupModel cgm in classes)
@@ -660,7 +660,7 @@ namespace Cs4rsa.ViewModels
             {
                 SelectedSubjectModel = SubjectModels[0];
             }
-            
+
             TotalSubject = SubjectModels.Count;
             AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();

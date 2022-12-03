@@ -24,6 +24,7 @@ using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.ViewModels;
+using Cs4rsa.ViewModels.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -104,7 +105,7 @@ namespace Cs4rsa
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
-            services.AddSingleton<PhaseStore, PhaseStore>();
+            services.AddSingleton<IPhaseStore, PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchSessionViewModel>();

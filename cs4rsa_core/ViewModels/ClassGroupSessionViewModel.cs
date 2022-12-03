@@ -11,6 +11,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using Cs4rsa.Utils.Interfaces;
+using Cs4rsa.ViewModels.Interfaces;
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ using System.Windows.Data;
 
 namespace Cs4rsa.ViewModels
 {
-    public sealed class ClassGroupSessionViewModel : ViewModelBase
+    internal sealed class ClassGroupSessionViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -42,6 +43,7 @@ namespace Cs4rsa.ViewModels
                     else
                     {
                         Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
+                        _phaseStore.AddClassGroupModel(value);
                     }
                 }
             }
@@ -335,13 +337,16 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Services
+        private readonly IPhaseStore _phaseStore;
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
         public ClassGroupSessionViewModel(
+            IPhaseStore phaseStore,
             IOpenInBrowser openInBrowser
         )
         {
+            _phaseStore = phaseStore;
             _openInBrowser = openInBrowser;
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
@@ -375,6 +380,7 @@ namespace Cs4rsa.ViewModels
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
                 string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
                 classGroupModel.ReRenderScheduleRequest(schoolClassName);
+                _phaseStore.AddClassGroupModel(classGroupModel);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 

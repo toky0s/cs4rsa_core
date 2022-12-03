@@ -75,7 +75,7 @@ namespace Cs4rsa.Messages.Publishers
         /// <summary>
         /// Hoàn tác một Subject đã xoá.
         /// </summary>
-        internal sealed class UndoDelMsg: ValueChangedMessage<UndoDelValue>
+        internal sealed class UndoDelMsg : ValueChangedMessage<UndoDelValue>
         {
             public UndoDelMsg(UndoDelValue value) : base(value)
             {

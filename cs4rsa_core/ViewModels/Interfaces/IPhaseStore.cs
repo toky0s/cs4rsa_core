@@ -1,17 +1,13 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels.Interfaces
 {
     internal interface IPhaseStore
     {
-        public ObservableCollection<int> Weeks { get;}
+        public ObservableCollection<int> Weeks { get; }
         public int BetweenPoint { get; }
 
         public void AddClassGroupModel(ClassGroupModel classGroupModel);

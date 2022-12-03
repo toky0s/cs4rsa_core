@@ -1,11 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Messages.Values
 {
@@ -18,7 +13,7 @@ namespace Cs4rsa.Messages.Values
             public readonly int Index;
 
             public UndoDelValue(
-                SubjectModel subjectModel, 
+                SubjectModel subjectModel,
                 ClassGroupModel seletedClassGroupModel,
                 int index
             )
