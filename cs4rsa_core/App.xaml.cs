@@ -108,14 +108,13 @@ namespace Cs4rsa
             services.AddSingleton<IPhaseStore, PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<SearchSessionViewModel>();
+            services.AddSingleton<SearchViewModel>();
             services.AddSingleton<ClassGroupSessionViewModel>();
             services.AddSingleton<ChoosedSessionViewModel>();
             services.AddSingleton<SchedulerViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
-            services.AddSingleton<SubjectDownloadingViewModel>();
 
             return services.BuildServiceProvider();
         }

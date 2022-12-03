@@ -13,9 +13,7 @@ namespace Cs4rsa.Messages.Publishers.Dialogs
         internal sealed class ExitImportSubjectMsg : ValueChangedMessage<Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>>>
         {
             /// <summary>
-            /// Thoát import subject vào SearchSessionViewModel
-            /// 
-            /// Chuyển xử lý sang SearchSessionViewModel, thực hiện gọi ClassGroupChoicer.
+            /// Thoát import subject vào SearchViewModel
             /// </summary>
             public ExitImportSubjectMsg(Tuple<IEnumerable<SubjectModel>, IEnumerable<UserSubject>> value) : base(value)
             {

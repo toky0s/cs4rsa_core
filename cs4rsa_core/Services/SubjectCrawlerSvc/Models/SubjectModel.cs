@@ -1,29 +1,38 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
-    public class SubjectModel
+    public partial class SubjectModel : ObservableObject
     {
-        private readonly Subject _subject;
+        [ObservableProperty]
+        private bool _isDownloading;
 
-        public List<TeacherModel> Teachers => _subject.Teachers;
-        public List<string> TempTeachers => _subject.TempTeachers;
+        public Subject Subject { get; private set; }
+
+        public List<TeacherModel> Teachers => Subject.Teachers;
+        public List<string> TempTeachers => Subject.TempTeachers;
         public List<ClassGroupModel> ClassGroupModels { get; set; }
-        public string SubjectName => _subject.Name;
-        public string SubjectCode => _subject.SubjectCode;
-        public int StudyUnit { get; set; }
-        public int CourseId => _subject.CourseId;
-        public string StudyUnitType => _subject.StudyUnitType;
-        public string StudyType => _subject.StudyType;
-        public string Semester => _subject.Semester;
-        public string Desciption => _subject.Desciption;
+        public string SubjectName { get; private set; }
+        public string SubjectCode { get; private set; }
+
+        [ObservableProperty]
+        private int _studyUnit;
+
+        public int CourseId { get; private set; }
+        public string StudyUnitType => Subject.StudyUnitType;
+        public string StudyType => Subject.StudyType;
+        public string Semester => Subject.Semester;
+        public string Desciption => Subject.Desciption;
         public string PrerequisiteSubjectAsString => GetMustStudySubjectsAsString();
         public string ParallelSubjectAsString => GetParallelSubjectsAsString();
 
@@ -39,8 +48,24 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         private SubjectModel(Subject subject, ColorGenerator colorGenerator)
         {
             _colorGenerator = colorGenerator;
-            _subject = subject;
+            Subject = subject;
+            SubjectName = subject.Name;
+            SubjectCode = subject.SubjectCode;
+            CourseId = subject.CourseId;
             StudyUnit = subject.StudyUnit;
+        }
+
+        private SubjectModel(
+            string subjectName,
+            string subjectCode,
+            int courseId,
+            string color)
+        {
+            SubjectName = subjectName;
+            SubjectCode = subjectCode;
+            CourseId = courseId;
+            Color = color;
+            IsDownloading = true;
         }
 
         public static Task<SubjectModel> CreateAsync(Subject subject, ColorGenerator colorGenerator)
@@ -49,12 +74,34 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return subjectModel.InitializeAsync();
         }
 
+        public void AssignData(SubjectModel subjectModel)
+        {
+            if (!_isDownloading)
+            {
+                throw new Exception("Can not assign SubjectModel because this instance is not a pseudo subject model.");
+            }
+            Subject = subjectModel.Subject;
+            StudyUnit = subjectModel.Subject.StudyUnit;
+            IsSpecialSubject = subjectModel.Subject.IsSpecialSubject();
+            ClassGroupModels = subjectModel.Subject.ClassGroups
+                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
+                .ToList();
+
+            IsDownloading = false;
+        }
+
+        public static SubjectModel CreatePseudo(string subjectName, string subjectCode, string color, int courseId)
+        {
+            Trace.WriteLine("public static SubjectModel CreatePseudo");
+            return new SubjectModel(subjectName, subjectCode, courseId, color);
+        }
+
         private async Task<SubjectModel> InitializeAsync()
         {
-            Color = await _colorGenerator.GetColorAsync(_subject.CourseId);
-            IsSpecialSubject = _subject.IsSpecialSubject();
-            ClassGroupModels = _subject.ClassGroups
-                .Select(item => new ClassGroupModel(item, IsSpecialSubject, _colorGenerator))
+            Color = await _colorGenerator.GetColorAsync(Subject.CourseId);
+            IsSpecialSubject = Subject.IsSpecialSubject();
+            ClassGroupModels = Subject.ClassGroups
+                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
                 .ToList();
             return this;
         }
@@ -73,18 +120,18 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public string GetMustStudySubjectsAsString()
         {
-            if (_subject.MustStudySubject.Any())
+            if (Subject.MustStudySubject.Any())
             {
-                return string.Join(", ", _subject.MustStudySubject);
+                return string.Join(", ", Subject.MustStudySubject);
             }
             return "Không có môn tiên quyết";
         }
 
         public string GetParallelSubjectsAsString()
         {
-            if (_subject.ParallelSubject.Any())
+            if (Subject.ParallelSubject.Any())
             {
-                return string.Join(", ", _subject.ParallelSubject);
+                return string.Join(", ", Subject.ParallelSubject);
             }
             return "Không có môn song hành";
         }

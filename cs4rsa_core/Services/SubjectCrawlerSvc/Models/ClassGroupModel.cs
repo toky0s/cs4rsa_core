@@ -2,7 +2,6 @@
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
-using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -82,14 +81,14 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public ClassGroupModel(
             ClassGroup classGroup,
             bool isBelongSpecialSubject,
-            ColorGenerator colorGenerator
+            string color
         )
         {
             ClassGroup = classGroup;
             Name = classGroup.Name;
             SubjectCode = classGroup.SubjectCode;
             HaveSchedule = IsHaveSchedule();
-            Color = colorGenerator.GetColorWithSubjectCode(classGroup.SubjectCode);
+            Color = color;
             IsBelongSpecialSubject = isBelongSpecialSubject;
 
             if (classGroup.SchoolClasses.Count > 0)
