@@ -54,81 +54,23 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Properties
-        private Discipline selectedDiscipline;
-        public Discipline SelectedDiscipline
-        {
-            get => selectedDiscipline;
-
-            set
-            {
-                selectedDiscipline = value;
-                if (value != null)
-                {
-                    LoadDisciplineKeyword(value);
-                }
-                OnPropertyChanged();
-            }
-        }
-
-        private Keyword selectedKeyword;
-        public Keyword SelectedKeyword
-        {
-            get => selectedKeyword;
-            set
-            {
-                selectedKeyword = value;
-                AddCommand.NotifyCanExecuteChanged();
-                OnPropertyChanged();
-            }
-        }
-
-        private FullMatchSearchingKeyword _selectedFullMatchSearchingKeyword;
-        public FullMatchSearchingKeyword SelectedFullMatchSearchingKeyword
-        {
-            get { return _selectedFullMatchSearchingKeyword; }
-            set
-            {
-                _selectedFullMatchSearchingKeyword = value;
-                OnPropertyChanged();
-                if (value != null
-                    && value.Discipline.DisciplineId != 0
-                    && value.Keyword != null)
-                {
-                    SelectedDiscipline = value.Discipline;
-                    SelectedKeyword = value.Keyword;
-                    SearchText = string.Empty;
-                    AddCommand.NotifyCanExecuteChanged();
-                    if (!IsAlreadyDownloaded(value.Keyword.CourseId))
-                    {
-                        DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
-                            async () =>
-                            {
-                                InsertPseudoSubject(value.Keyword);
-                                await OnAddSubjectAsync(selectedKeyword);
-                            }
-                        );
-                    }
-                }
-            }
-        }
-
         public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
         public ObservableCollection<Discipline> Disciplines { get; set; }
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
 
+        [ObservableProperty]
+        private Discipline _selectedDiscipline;
+
+        [ObservableProperty]
+        private Keyword _selectedKeyword;
+
+        [ObservableProperty]
+        private FullMatchSearchingKeyword _searchingKeyword;
+
+        [ObservableProperty]
         private SubjectModel _selectedSubjectModel;
-        public SubjectModel SelectedSubjectModel
-        {
-            get => _selectedSubjectModel;
-            set
-            {
-                _selectedSubjectModel = value;
-                DeleteCommand.NotifyCanExecuteChanged();
-                Messenger.Send(new SearchVmMsgs.SelectedSubjectChangedMsg(value));
-            }
-        }
 
         [ObservableProperty]
         private string _searchText;
@@ -171,7 +113,7 @@ namespace Cs4rsa.ViewModels
             _openInBrowser = openInBrowser;
             _snackbarMessageQueue = snackbarMessageQueue;
 
-            WeakReferenceMessenger.Default.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, (r, m) =>
+            Messenger.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
@@ -179,21 +121,21 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
+            Messenger.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             {
                 ImportSubjects(m.Value.SubjecModels);
                 ClassGroupChoicer choicer = new();
                 choicer.Start(m.Value.ClassGroupModels);
             });
 
-            WeakReferenceMessenger.Default.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, async (r, m) =>
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, async (r, m) =>
             {
                 DisciplineKeywordModels.Clear();
                 Disciplines.Clear();
                 await ReloadDisciplineAndKeyWord();
             });
 
-            WeakReferenceMessenger.Default.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
+            Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
             {
                 TimeBlock timeBlock = m.Value;
                 if (timeBlock.ScheduleTableItemType == ScheduleTableItemType.SchoolClass)
@@ -220,7 +162,7 @@ namespace Cs4rsa.ViewModels
                 async () =>
                 {
                     InsertPseudoSubject(SelectedKeyword);
-                    await OnAddSubjectAsync(selectedKeyword);
+                    await OnAddSubjectAsync(_selectedKeyword);
                 },
                 () => !IsAlreadyDownloaded(SelectedKeyword)
             );
@@ -229,7 +171,59 @@ namespace Cs4rsa.ViewModels
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
-            DetailCommand = new RelayCommand(OnDetail);
+            DetailCommand = new RelayCommand(() =>
+            {
+                (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
+                OpenDialog(_showDetailsSubjectUC);
+            });
+        }
+
+
+        partial void OnSelectedSubjectModelChanged(SubjectModel value)
+        {
+            DeleteCommand.NotifyCanExecuteChanged();
+            Messenger.Send(new SearchVmMsgs.SelectedSubjectChangedMsg(value));
+        }
+
+        partial void OnSelectedDisciplineChanged(Discipline value)
+        {
+            if (value != null)
+            {
+                LoadKeywordByDiscipline(value);
+            }
+        }
+
+        partial void OnSelectedKeywordChanged(Keyword value)
+        {
+            AddCommand.NotifyCanExecuteChanged();
+        }
+
+        partial void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
+        {
+            if (value != null
+                    && value.Discipline.DisciplineId != 0
+                    && value.Keyword != null)
+            {
+                SelectedDiscipline = value.Discipline;
+                SelectedKeyword = value.Keyword;
+                SearchText = string.Empty;
+                AddCommand.NotifyCanExecuteChanged();
+                if (!IsAlreadyDownloaded(value.Keyword.CourseId))
+                {
+                    DispatcherOperation dispatcherOperation = Application.Current.Dispatcher.InvokeAsync(
+                        async () =>
+                        {
+                            InsertPseudoSubject(value.Keyword);
+                            await OnAddSubjectAsync(_selectedKeyword);
+                        }
+                    );
+                }
+            }
+        }
+
+        partial void OnSearchTextChanged(string value)
+        {
+            Application.Current.Dispatcher.InvokeAsync(async () => await LoadSearchItemSource(value));
         }
 
         /// <summary>
@@ -245,12 +239,6 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-        private void OnDetail()
-        {
-            (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
-            OpenDialog(_showDetailsSubjectUC);
-        }
-
         public async Task LoadDiscipline()
         {
             List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
@@ -261,36 +249,42 @@ namespace Cs4rsa.ViewModels
             SelectedDiscipline = Disciplines[0];
         }
 
-        public async Task LoadSearchItemSource(string text)
+        private async Task LoadSearchItemSource(string text)
         {
             text = text.Trim().ToLower();
-            if (text.Equals(string.Empty)) return;
-
             FullMatchSearchingKeywords.Clear();
 
-            Task<List<Keyword>> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
-            Task<List<Keyword>> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
-            List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
-            foreach (List<Keyword> keywords in whenAllResult)
+            IAsyncEnumerable<Keyword> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
+            IAsyncEnumerable<Keyword> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
+            //List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
+            await foreach (Keyword keyword in result1)
             {
-                foreach (Keyword keyword in keywords)
+                FullMatchSearchingKeyword fullMatch = new()
                 {
-                    FullMatchSearchingKeyword fullMacth = new()
-                    {
-                        Keyword = keyword,
-                        Discipline = keyword.Discipline
-                    };
-                    FullMatchSearchingKeywords.Add(fullMacth);
-                }
+                    Keyword = keyword,
+                    Discipline = keyword.Discipline
+                };
+                FullMatchSearchingKeywords.Add(fullMatch);
             }
+
+            await foreach (Keyword keyword in result2)
+            {
+                FullMatchSearchingKeyword fullMatch = new()
+                {
+                    Keyword = keyword,
+                    Discipline = keyword.Discipline
+                };
+                FullMatchSearchingKeywords.Add(fullMatch);
+            }
+
 
             if (text.Contains(VMConstants.CHAR_SPACE))
             {
                 string[] textSplit = text.Split(new char[] { VMConstants.CHAR_SPACE }, StringSplitOptions.None);
                 string discipline = textSplit[0];
                 string keyword1 = textSplit[1];
-                List<Keyword> keywordsBySubjectCode = await _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
-                foreach (Keyword kw in keywordsBySubjectCode)
+                IAsyncEnumerable<Keyword> keywordsBySubjectCode = _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
+                await foreach (Keyword kw in keywordsBySubjectCode)
                 {
                     FullMatchSearchingKeyword fullMatch = new()
                     {
@@ -345,7 +339,7 @@ namespace Cs4rsa.ViewModels
             Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjects, classGroupModels);
 
             SubjectModels.Clear();
-            Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
+            Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
             UpdateCreditTotal();
             UpdateSubjectAmount();
             AddCommand.NotifyCanExecuteChanged();
@@ -369,7 +363,7 @@ namespace Cs4rsa.ViewModels
             List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
             disciplines.ForEach(discipline => Disciplines.Add(discipline));
             SelectedDiscipline = Disciplines[0];
-            LoadDisciplineKeyword(SelectedDiscipline);
+            LoadKeywordByDiscipline(SelectedDiscipline);
         }
 
         private async Task OnOpenImportDialog()
@@ -384,7 +378,7 @@ namespace Cs4rsa.ViewModels
             if (userSubjects != null)
             {
                 SubjectModels.Clear();
-                Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(DBNull.Value));
+                Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
 
                 List<Task<Keyword>> kwTasks = new();
                 foreach (UserSubject userSubject in userSubjects)
@@ -416,6 +410,7 @@ namespace Cs4rsa.ViewModels
                 keyword.CourseId
             );
             SubjectModels.Insert(0, pseudoSubjectModel);
+            AddCommand.NotifyCanExecuteChanged();
         }
 
         private void InsertPseudoSubjects(IEnumerable<Keyword> keywords)
@@ -469,7 +464,7 @@ namespace Cs4rsa.ViewModels
         /// Load Keyword sau khi chọn discipline.
         /// </summary>
         /// <param name="discipline">Discipline.</param>
-        public void LoadDisciplineKeyword(Discipline discipline)
+        public void LoadKeywordByDiscipline(Discipline discipline)
         {
             DisciplineKeywordModels.Clear();
             Discipline currentDiscipline = Disciplines.Where(d => d.DisciplineId == discipline.DisciplineId).FirstOrDefault();

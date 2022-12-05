@@ -82,29 +82,29 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await query.CountAsync();
         }
 
-        public Task<List<Keyword>> GetBySubjectNameContains(string subjectName)
+        public IAsyncEnumerable<Keyword> GetBySubjectNameContains(string subjectName)
         {
             subjectName = subjectName.Trim();
             return _context.Keywords
                 .Where(kw => kw.SubjectName.ToLower().Contains(subjectName))
-                .Take(20)
-                .ToListAsync();
+                .Take(2)
+                .AsAsyncEnumerable();
         }
 
-        public Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword)
+        public IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword)
         {
             return _context.Keywords.Where(kw =>
                 kw.Discipline.Name.Contains(discipline.ToUpper())
                 && kw.Keyword1.Contains(keyword)
-            ).Take(20).ToListAsync();
+            ).Take(2).AsAsyncEnumerable();
         }
 
-        public Task<List<Keyword>> GetByDisciplineStartWith(string text)
+        public IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text)
         {
             return _context.Keywords
                 .Where(kw => kw.Discipline.Name.ToUpper().StartsWith(text.ToUpper()))
-                .Take(20)
-                .ToListAsync();
+                .Take(2)
+                .AsAsyncEnumerable();
         }
 
         public async Task<string> GetSubjectCode(int courseId)

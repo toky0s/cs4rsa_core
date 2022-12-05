@@ -345,24 +345,24 @@ namespace Cs4rsa.ViewModels
         {
             _openInBrowser = openInBrowser;
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
             {
                 SelectedSubjectChangedHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            Messenger.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 SelectedClassGroup = null;
             });
@@ -370,7 +370,7 @@ namespace Cs4rsa.ViewModels
             /**
              * Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
              **/
-            WeakReferenceMessenger.Default.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
+            Messenger.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
             {
                 ClassGroupResult classGroupResult = m.Value;
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;

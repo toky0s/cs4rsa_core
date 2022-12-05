@@ -71,8 +71,7 @@ namespace Cs4rsa.ViewModels
             _conflictModels = new List<ConflictModel>();
             _placeConflictFinderModels = new List<PlaceConflictFinderModel>();
 
-            #region WeakReferenceMessengers
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
+            Messenger.Register<ChoicedSessionVmMsgs.ChoiceChangedMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
@@ -82,29 +81,28 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
+            Messenger.Register<ChoicedSessionVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
             {
                 _conflictModels = m.Value;
                 ReloadSchedule();
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
+            Messenger.Register<ChoicedSessionVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
             {
                 _placeConflictFinderModels = m.Value;
                 ReloadSchedule();
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            Messenger.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 _classGroupModels = m.Value;
                 ReloadSchedule();
             });
 
-            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
                 ReloadSchedule();
             });
-            #endregion
 
             #region Commands
             ResetBetweenPointCommand = new(() => _phaseStore.ResetBetweenPoint());

@@ -20,9 +20,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         Task<string> GetColorAsync(int courseId);
         bool IsHasColor(string color);
         Task<int> CountAsync(string discipline, string keyword);
-        Task<List<Keyword>> GetBySubjectNameContains(string subjectName);
-        Task<List<Keyword>> GetByDisciplineAndKeyword1(string discipline, string keyword);
-        Task<List<Keyword>> GetByDisciplineStartWith(string text);
+        IAsyncEnumerable<Keyword> GetBySubjectNameContains(string subjectName);
+        IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword);
+        IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text);
         Task<string> GetSubjectCode(int courseId);
     }
 }

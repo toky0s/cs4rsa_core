@@ -75,7 +75,7 @@ namespace Cs4rsa.ViewModels
             _setting = setting;
             _openInBrowser = openInBrowser;
 
-            WeakReferenceMessenger.Default.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
             {
                 LoadIsNewSemester();
             });

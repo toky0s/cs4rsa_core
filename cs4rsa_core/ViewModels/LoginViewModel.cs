@@ -64,7 +64,7 @@ namespace Cs4rsa.ViewModels
             _unitOfWork = unitOfWork;
             _snackbarMessageQueue = snackbarMessageQueue;
 
-            WeakReferenceMessenger.Default.Register<SessionInputVmMsgs.ExitSearchAccountMsg>(this, async (r, m) =>
+            Messenger.Register<SessionInputVmMsgs.ExitSearchAccountMsg>(this, async (r, m) =>
             {
                 await LoadStudentInfos();
             });
