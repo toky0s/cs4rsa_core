@@ -85,12 +85,12 @@ namespace Cs4rsa.ViewModels
             _phaseStore = phaseStore;
 
             #region WeakReferenceMessengers
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
@@ -98,12 +98,12 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
+            Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 AddClassGroupModel(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
@@ -111,12 +111,12 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
+            Messenger.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
             {
                 RemoveChoosedClassMsgHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
                 UpdateConflicts();
             });

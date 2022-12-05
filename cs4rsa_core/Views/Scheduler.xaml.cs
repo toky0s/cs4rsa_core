@@ -19,7 +19,7 @@ namespace Cs4rsa.Views
         {
             ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
             TimeBlock timeBlock = (TimeBlock)scheduleBlock.DataContext;
-            WeakReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
+            StrongReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
         }
     }
 }

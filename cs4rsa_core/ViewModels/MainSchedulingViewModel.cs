@@ -59,7 +59,7 @@ namespace Cs4rsa.ViewModels
         public MainSchedulingViewModel(ICourseCrawler courseCrawler)
         {
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>
             {
                 TotalCredit = m.Value.Item1;
                 TotalSubject = m.Value.Item2;

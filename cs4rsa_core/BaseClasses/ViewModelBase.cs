@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.Constants;
 using Cs4rsa.ViewModels;
@@ -12,6 +13,11 @@ namespace Cs4rsa.BaseClasses
 {
     public abstract class ViewModelBase : ObservableRecipient
     {
+        public ViewModelBase() : base(StrongReferenceMessenger.Default)
+        {
+
+        }
+
         /// <summary>
         /// Mở Dialog
         /// </summary>

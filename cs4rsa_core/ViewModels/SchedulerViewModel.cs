@@ -314,9 +314,9 @@ namespace Cs4rsa.ViewModels
             #endregion
 
             #region WeakReferenceMessengers
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
             {
-                Trace.WriteLine("WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectCgmsMsg>");
+                Trace.WriteLine("Messenger.Register<SearchVmMsgs.SelectCgmsMsg>");
                 IEnumerable<ClassGroupModel> classes = m.Value;
                 foreach (ClassGroupModel c in classes)
                 {
@@ -330,12 +330,12 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 CleanAll();
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 if (_map.ExistsBySameSpace(m.Value))
                 {
@@ -343,9 +343,9 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
+            Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                Trace.WriteLine("WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>");
+                Trace.WriteLine("Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>");
                 ClassGroupModel classGroupModel = m.Value;
                 IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.Of(classGroupModel);
                 IEnumerable<ScheduleItemId> sameSpaceScheduleItemIds = _map.GetScheduleItemID(classGroupModel);
@@ -356,7 +356,7 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.UndoDelAllMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.UndoDelAllMsg>(this, (r, m) =>
             {
                 Trace.WriteLine("StrongReferenceMessenger.Default.Register<ChoosedVmMsgs.UndoDelAllMsg>");
                 IEnumerable<ClassGroupModel> classGroupModels = m.Value;
@@ -366,17 +366,17 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
             {
                 _conflictModels = m.Value.ToList();
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
             {
                 _placeConflictFinderModels = m.Value.ToList();
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 ClassGroupModel classGroupModel = m.Value;
                 if (_map.ExistsBySameSpace(classGroupModel))
@@ -385,12 +385,12 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
             {
                 CleanAll();
             });
 
-            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
                 DivideSchoolClassesByPhases();
                 DividePlaceConflictByPhase();
