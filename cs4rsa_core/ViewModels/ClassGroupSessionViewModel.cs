@@ -11,7 +11,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using Cs4rsa.Utils.Interfaces;
-using Cs4rsa.ViewModels.Interfaces;
 
 using System;
 using System.Collections.Generic;
@@ -42,8 +41,8 @@ namespace Cs4rsa.ViewModels
                     }
                     else
                     {
-                        Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
                         _phaseStore.AddClassGroupModel(value);
+                        Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
                     }
                 }
             }
@@ -337,12 +336,12 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Services
-        private readonly IPhaseStore _phaseStore;
+        private readonly PhaseStore _phaseStore;
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
         public ClassGroupSessionViewModel(
-            IPhaseStore phaseStore,
+            PhaseStore phaseStore,
             IOpenInBrowser openInBrowser
         )
         {

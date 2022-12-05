@@ -14,7 +14,6 @@ using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
-using Cs4rsa.ViewModels.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -72,13 +71,13 @@ namespace Cs4rsa.ViewModels
         #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
-        private readonly IPhaseStore _phaseStore;
+        private readonly PhaseStore _phaseStore;
         #endregion
 
         public ChoosedSessionViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
-            IPhaseStore phaseStore
+            PhaseStore phaseStore
         )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
@@ -89,7 +88,6 @@ namespace Cs4rsa.ViewModels
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
-                _phaseStore.RemoveClassGroup(m.Value);
             });
 
             WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
@@ -97,13 +95,11 @@ namespace Cs4rsa.ViewModels
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     DelAllSubjectMsgHandler();
-                    _phaseStore.RemoveAll();
                 });
             });
 
             WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                _phaseStore.AddClassGroupModel(m.Value);
                 AddClassGroupModel(m.Value);
             });
 
@@ -126,9 +122,9 @@ namespace Cs4rsa.ViewModels
             });
             #endregion
 
-            SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
-            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
+            SaveCommand = new RelayCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);
+            DeleteCommand = new RelayCommand(OnDelete, () => _selectedClassGroupModel != null);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
             OpenShareStringWindowCommand = new AsyncRelayCommand(OnOpenShareStringWindow);
@@ -202,11 +198,6 @@ namespace Cs4rsa.ViewModels
             Messenger.Send(new UndoDelAllMsg(classGroupModels));
         }
 
-        private void OnRestore(ClassGroupModel obj)
-        {
-            AddClassGroupModel(obj);
-        }
-
         private void OnDelete()
         {
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
@@ -215,7 +206,7 @@ namespace Cs4rsa.ViewModels
             Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
-            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -323,10 +314,8 @@ namespace Cs4rsa.ViewModels
                 else
                     ClassGroupModels.Add(classGroupModel);
             }
-
             _phaseStore.AddClassGroupModel(classGroupModel);
             UpdateConflicts();
-
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
         }
@@ -336,11 +325,8 @@ namespace Cs4rsa.ViewModels
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
-                _phaseStore.AddClassGroupModel(classGroupModel);
             }
-
             UpdateConflicts();
-
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
         }
@@ -368,23 +354,6 @@ namespace Cs4rsa.ViewModels
             UpdatePlaceConflictCollection(schoolClasses);
         }
 
-        #region Điều kiện thực thi command
-        private bool CanSave()
-        {
-            return ClassGroupModels.Count > 0;
-        }
-
-        private bool CanDeleteAll()
-        {
-            return ClassGroupModels.Count > 0;
-        }
-
-        private bool CanDelete()
-        {
-            return _selectedClassGroupModel != null;
-        }
-        #endregion
-
         #region Handlers | Xử lý các message được gửi đến
 
         /// <summary>
@@ -407,7 +376,7 @@ namespace Cs4rsa.ViewModels
                     Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
-                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
+                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
 
                     SaveCommand.NotifyCanExecuteChanged();
                     DeleteAllCommand.NotifyCanExecuteChanged();

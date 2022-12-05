@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.States;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
-using Cs4rsa.ViewModels.Interfaces;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,61 +23,61 @@ namespace Cs4rsa.ViewModels
     /// Between Point sẽ được đánh giá ngay lần thêm ClassGroupModel(s) đầu tiên.
     /// Between Point sẽ được đánh giá lại nếu nó nằm ngoài Range Week do các thao
     /// tác Remove(s) tạo nên.
+    /// 
+    /// Thao tác Add ClassGroup Model(s) không đánh giá lại BetweenPoint từ lần thứ hai trở đi.
     /// </summary>
-    internal class PhaseStore : ViewModelBase, IPhaseStore
+    internal sealed partial class PhaseStore : ViewModelBase
     {
-        private bool _isEvaluatedBwp = false;
         private List<ClassGroupModel> _classGroupModels;
+        public ObservableCollection<int> BwpWeeks { get; set; }
 
-        public ObservableCollection<int> Weeks { get; set; }
-
+        [ObservableProperty]
         private int _bwpValue;
-        public int CurrentBetweenPointValue
-        {
-            get { return _bwpValue; }
-            set { _bwpValue = value; OnPropertyChanged(); }
-        }
 
-        public int BetweenPoint => _bwpValue;
+        [ObservableProperty]
+        private int _start;
+
+        [ObservableProperty]
+        private int _end;
 
         public PhaseStore()
         {
             _classGroupModels = new();
-            Weeks = new() { 0 };
+            BwpWeeks = new();
+            BwpValue = 0;
+        }
+
+        partial void OnBwpValueChanged(int value)
+        {
+            Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(value));
         }
 
         public void AddClassGroupModel(ClassGroupModel classGroupModel)
         {
             _classGroupModels = _classGroupModels.Where(cgm => !cgm.SubjectCode.Equals(classGroupModel.SubjectCode)).ToList();
             _classGroupModels.Add(classGroupModel);
-
-            EvaluateWeek(classGroupModel);
+            EvaluateWeek();
             EvaluateBetweenPoint();
-        }
-
-        private void EvaluateWeek(ClassGroupModel classGroupModel)
-        {
-            List<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
-            foreach (SchoolClassModel scm in schoolClassModels)
-            {
-                int start = scm.StudyWeek.StartWeek;
-                int end = scm.StudyWeek.EndWeek;
-                AddWeek(start);
-                AddWeek(end);
-            }
         }
 
         public void AddClassGroupModels(IEnumerable<ClassGroupModel> classGroupModels)
         {
             foreach (ClassGroupModel item in classGroupModels)
             {
-                AddClassGroupModel(item);
+                _classGroupModels = _classGroupModels.Where(cgm => !cgm.SubjectCode.Equals(item.SubjectCode)).ToList();
+                _classGroupModels.Add(item);
             }
+
+            EvaluateWeek();
+            EvaluateBetweenPoint();
         }
 
         public void RemoveClassGroup(ClassGroupModel classGroupModel)
         {
             RemoveClassGroupBySubjectCode(classGroupModel.SubjectCode);
+            EvaluateWeek();
+            EvaluateBetweenPoint();
+
         }
 
         public void RemoveClassGroups(IEnumerable<ClassGroupModel> classGroupModels)
@@ -86,89 +86,92 @@ namespace Cs4rsa.ViewModels
             {
                 RemoveClassGroup(classGroupModel);
             }
+            EvaluateWeek();
+            EvaluateBetweenPoint();
         }
 
         public void RemoveAll()
         {
-            Weeks.Clear();
             _classGroupModels.Clear();
-            _bwpValue = 0;
+            BwpWeeks.Clear();
+            Start = 0;
+            End = 0;
+            BwpValue = 0;
+        }
+
+        /// <summary>
+        /// Đánh giá lại Week range dựa theo những class group model còn lại.
+        /// </summary>
+        private void EvaluateWeek()
+        {
+            int start = 0;
+            int end = 0;
+            foreach (ClassGroupModel cgm in _classGroupModels)
+            {
+                foreach (SchoolClassModel scm in cgm.CurrentSchoolClassModels)
+                {
+                    int scmStart = scm.StudyWeek.StartWeek;
+                    int scmEnd = scm.StudyWeek.EndWeek;
+                    if (scmEnd > end)
+                    {
+                        end = scmEnd;
+                    }
+                    if (start == 0 || scmStart < start)
+                    {
+                        start = scmStart;
+                    }
+                }
+            }
+
+            if (Start == start && End == end) return;
+
+            BwpWeeks.Clear();
+            Start = start;
+            End = end;
+
+            // Không thực hiện Render nếu một trong hai điểm bằng 0
+            if (Start == 0 || End == 0) return;
+            for (int i = start; i <= end; i++)
+            {
+                BwpWeeks.Add(i);
+            }
         }
 
         public void EvaluateBetweenPoint()
         {
-            if (Weeks.Contains(_bwpValue))
+            if (BwpWeeks.Count == 0)
             {
-                return;
-            }
-
-            if (_isEvaluatedBwp)
-            {
-                return;
-            }
-            else if (Weeks.Count == 0)
-            {
-                _bwpValue = 0;
-            }
-            else if (Weeks.Count == 1)
-            {
-                _bwpValue = Weeks[0];
-            }
-            else if (Weeks.Count == 2)
-            {
-                _bwpValue = Weeks[1];
+                BwpValue = 0;
             }
             else
             {
-                int index = Weeks.Count / 2;
-                _bwpValue = Weeks[index];
+                BwpValue = BwpWeeks[(BwpWeeks.Count - 1) / 2];
             }
-
-            Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(_bwpValue));
-            _isEvaluatedBwp = true;
+            Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(BwpValue));
         }
 
-        public void AddWeek(int week)
-        {
-            if (Weeks.Contains(week))
-            {
-                return;
-            }
-
-            if (Weeks.Count == 0)
-            {
-                Weeks.Add(week);
-                return;
-            }
-
-            if (week > Weeks[^1])
-            {
-                Weeks.Add(week);
-                return;
-            }
-            else if (week < Weeks[0])
-            {
-                Weeks.Insert(0, week);
-            }
-            else // In range Start to End but is not contained in Weeks.
-            {
-                for (int i = 1; i < Weeks.Count; i++)
-                {
-                    if (Weeks[i] > week)
-                    {
-                        Weeks.Insert(i - 1, week);
-                        break;
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// Loại bỏ class group model.
+        /// <br></br>
+        /// Loại bỏ class group model thực hiện đánh giá lại week.
+        /// Đánh giá lại between point nếu nó out of range.
+        /// </summary>
+        /// <param name="subjectModel">Subject model.</param>
         public void RemoveClassGroup(SubjectModel subjectModel)
         {
             RemoveClassGroupBySubjectCode(subjectModel.SubjectCode);
+            EvaluateWeek();
+            if (IsBwpOutOfWeekRange(BwpValue, BwpWeeks))
+            {
+                EvaluateBetweenPoint();
+            }
         }
 
-        public void RemoveClassGroupBySubjectCode(string subjectCode)
+        /// <summary>
+        /// Loại bỏ Class Group Model bằng subject code.
+        /// </summary>
+        /// <param name="subjectCode">Subject code.</param>
+        private void RemoveClassGroupBySubjectCode(string subjectCode)
         {
             for (int i = 0; i < _classGroupModels.Count; i++)
             {
@@ -178,6 +181,19 @@ namespace Cs4rsa.ViewModels
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Kiểm tra xem between point có nằm ngoài week range hay không?
+        /// </summary>
+        /// <param name="bwpIndex">Between Point Index</param>
+        /// <param name="weekRange">Week range chạy start tới end với step +1</param>
+        /// <returns>Trả về true nếu nằm ngoài, ngược lại trả về false.</returns>
+        private static bool IsBwpOutOfWeekRange(int bwtValue, IList<int> weekRange)
+        {
+            if (bwtValue == 0) return true;
+            if (weekRange.Count == 0) return false;
+            return !weekRange.Contains(bwtValue);
         }
     }
 }

@@ -22,7 +22,6 @@ using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 using Cs4rsa.ViewModelFunctions;
-using Cs4rsa.ViewModels.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -146,7 +145,7 @@ namespace Cs4rsa.ViewModels
 
         #region Services
         private readonly ColorGenerator _colorGenerator;
-        private readonly IPhaseStore _phaseStore;
+        private readonly PhaseStore _phaseStore;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
@@ -156,7 +155,7 @@ namespace Cs4rsa.ViewModels
 
         public SearchViewModel(
             ColorGenerator colorGenerator,
-            IPhaseStore phaseStore,
+            PhaseStore phaseStore,
             ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
@@ -229,7 +228,7 @@ namespace Cs4rsa.ViewModels
                 () => !IsAlreadyDownloaded(SelectedKeyword)
             );
 
-            DeleteCommand = new RelayCommand(OnDeleteSubject, () => _selectedSubjectModel != null);
+            DeleteCommand = new RelayCommand(OnDelete, () => _selectedSubjectModel != null);
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
@@ -347,6 +346,7 @@ namespace Cs4rsa.ViewModels
             #endregion
 
             SubjectModels.Clear();
+            _phaseStore.RemoveAll();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg(null));
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -435,17 +435,17 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-        private void OnDeleteSubject()
+        private void OnDelete()
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            if (GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
+            ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>()
+                .ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
-                    .Any())
+                    .FirstOrDefault();
+
+            if (classGroupModel != null)
             {
-                ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>().ClassGroupModels
-                    .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
-                    .First();
                 ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
                 classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
             }
@@ -461,6 +461,7 @@ namespace Cs4rsa.ViewModels
             Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjectModels, classGroupModels);
 
             string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
+            _phaseStore.RemoveClassGroup(_selectedSubjectModel);
             SubjectModels.Remove(_selectedSubjectModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, AddSubjectWithCgm, actionData);
             UpdateCreditTotal();
@@ -678,7 +679,8 @@ namespace Cs4rsa.ViewModels
 
             if (actionData.Item2 != null)
             {
-                Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(actionData.Item2));
+                _phaseStore.AddClassGroupModels(classes);
+                Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(classes));
             }
         }
 

@@ -8,6 +8,15 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class SchoolClass
     {
+        private Phase _currentPhase;
+        public Phase CurrentPhase
+        {
+            get => _currentPhase == Phase.Unknown ? GetPhase() : _currentPhase;
+            private set
+            {
+                _currentPhase = value;
+            }
+        }
         public string SubjectName { get; set; }
         public string SubjectCode { get; set; }
         public string ClassGroupName { get; set; }
@@ -61,6 +70,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             DayPlaceMetaData dayPlaceMetaData,
             string subjectCode)
         {
+            CurrentPhase = Phase.Unknown;
             SchoolClassName = schoolClassName;
             RegisterCode = registerCode;
             Type = ClassForm.Find(type);
@@ -80,9 +90,21 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             SubjectCode = subjectCode;
         }
 
+        /// <summary>
+        /// Tính toán lại Phase của một SchoolClass. 
+        /// </summary>
+        /// <remarks>
+        /// Phase sẽ có thể thay đổi dựa theo BetweenPoint của PhaseStore do người dùng quyết định.
+        /// Để lấy Phase hiện tại của SchoolClass hãy sử dụng <see cref="CurrentPhase"/>. Việc tính
+        /// toán lại này cũng sẽ gán lại <see cref="CurrentPhase"/>. Chỉ sử dụng phương thức này
+        /// khi biết rõ rằng BetweenPoint đã thay đổi. Sử dụng <see cref="CurrentPhase"/> sẽ đạt hiệu
+        /// quả cao hơn về hiệu suất.
+        /// </remarks>
+        /// <returns>Phase</returns>
         public Phase GetPhase()
         {
-            return StudyWeek.GetPhase();
+            CurrentPhase = StudyWeek.GetPhase();
+            return CurrentPhase;
         }
 
         public Cs4rsaMetaData GetMetaDataMap()

@@ -11,7 +11,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
-using Cs4rsa.ViewModels.Interfaces;
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace Cs4rsa.ViewModels
     /// <summary>
     /// Đại diện cho vị trí của các ScheduleTableItem.
     /// </summary>
-    internal readonly struct Location
+    internal record Location
     {
         public readonly Phase Phase;
         public readonly IEnumerable<DayOfWeek> PhaseFirst;
@@ -59,9 +58,57 @@ namespace Cs4rsa.ViewModels
             _map = new();
         }
 
-        private void AddScmFromCgm(ClassGroupModel classGroupModel)
+        private void RemoveScmBySubejctCode(string subjectCode)
         {
-            _schoolClassModels.AddRange(classGroupModel.CurrentSchoolClassModels);
+            for (int i = 0; i < _schoolClassModels.Count;)
+            {
+                if (_schoolClassModels[i].SubjectCode.Equals(subjectCode))
+                {
+                    _schoolClassModels.RemoveAt(i);
+                    continue;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
+
+        private void AddScmFromCgm(ClassGroupModel cgm)
+        {
+            RemoveScmBySubejctCode(cgm.SubjectCode);
+            _schoolClassModels.AddRange(cgm.CurrentSchoolClassModels);
+        }
+
+        public void AddScheduleItem(SchoolClassModel scm)
+        {
+            List<DayOfWeek> phase1 = new();
+            List<DayOfWeek> phase2 = new();
+
+            Phase phase = scm.GetPhase();
+            if (phase == Phase.All)
+            {
+                phase1.AddRange(scm.Schedule.GetSchoolDays());
+                phase2.AddRange(scm.Schedule.GetSchoolDays());
+            }
+            else if (phase == Phase.First)
+            {
+                phase1.AddRange(scm.Schedule.GetSchoolDays());
+            }
+            else if (phase == Phase.Second)
+            {
+                phase2.AddRange(scm.Schedule.GetSchoolDays());
+            }
+
+            Location location = new
+            (
+                phase,
+                phase1.Distinct(),
+                phase2.Distinct()
+            );
+
+            _schoolClassModels.Add(scm);
+            _map.Add(ScheduleItemId.Of(scm), location);
         }
 
         /// <summary>
@@ -98,7 +145,7 @@ namespace Cs4rsa.ViewModels
                     phase2.Distinct()
                 );
 
-                _map.Add(ScheduleItemId.FromSchoolClassModel(scm), location);
+                _map.Add(ScheduleItemId.Of(scm), location);
             }
         }
 
@@ -106,7 +153,7 @@ namespace Cs4rsa.ViewModels
         {
             foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
             {
-                var id = ScheduleItemId.FromSchoolClassModel(scm);
+                var id = ScheduleItemId.Of(scm);
                 foreach (ScheduleItemId key in _map.Keys)
                 {
                     if (key.IsSameSpace(id)) return true;
@@ -128,7 +175,7 @@ namespace Cs4rsa.ViewModels
         {
             foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
             {
-                var id = ScheduleItemId.FromSchoolClassModel(scm);
+                var id = ScheduleItemId.Of(scm);
                 foreach (ScheduleItemId key in _map.Keys)
                 {
                     if (key.Equals(id)) return true;
@@ -148,7 +195,7 @@ namespace Cs4rsa.ViewModels
             }
         }
 
-        public IEnumerable<ScheduleItemId> GetScheduleItemID(SubjectModel subjectModel)
+        public IEnumerable<ScheduleItemId> GetScheduleItemId(SubjectModel subjectModel)
         {
             foreach (ScheduleItemId key in _map.Keys)
             {
@@ -177,6 +224,14 @@ namespace Cs4rsa.ViewModels
 
         public void Remove(ScheduleItemId id)
         {
+            for (int i = 0; i < _schoolClassModels.Count; i++)
+            {
+                if (ScheduleItemId.Of(_schoolClassModels[i]).Equals(id))
+                {
+                    _schoolClassModels.RemoveAt(i);
+                    break;
+                }
+            }
             _map.Remove(id);
         }
 
@@ -231,7 +286,7 @@ namespace Cs4rsa.ViewModels
 
         public ObservableCollection<string> Timelines { get; set; }
 
-        public IPhaseStore PhaseStore
+        public PhaseStore PhaseStore
         {
             get
             {
@@ -245,10 +300,10 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region DI
-        private readonly IPhaseStore _phaseStore;
+        private readonly PhaseStore _phaseStore;
         #endregion
 
-        public SchedulerViewModel(IPhaseStore phaseStore)
+        public SchedulerViewModel(PhaseStore phaseStore)
         {
             #region Fields
             _phaseStore = phaseStore;
@@ -265,7 +320,7 @@ namespace Cs4rsa.ViewModels
                 IEnumerable<ClassGroupModel> classes = m.Value;
                 foreach (ClassGroupModel c in classes)
                 {
-                    IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.FromClassGroupModel(c);
+                    IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.Of(c);
                     IEnumerable<ScheduleItemId> sameSpaceScheduleItemIds = _map.GetScheduleItemID(c);
                     if (!scheduleItemIds.Intersect(sameSpaceScheduleItemIds).Any())
                     {
@@ -292,7 +347,7 @@ namespace Cs4rsa.ViewModels
             {
                 Trace.WriteLine("WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>");
                 ClassGroupModel classGroupModel = m.Value;
-                IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.FromClassGroupModel(classGroupModel);
+                IEnumerable<ScheduleItemId> scheduleItemIds = ScheduleItemId.Of(classGroupModel);
                 IEnumerable<ScheduleItemId> sameSpaceScheduleItemIds = _map.GetScheduleItemID(classGroupModel);
                 if (!scheduleItemIds.Intersect(sameSpaceScheduleItemIds).Any())
                 {
@@ -337,7 +392,9 @@ namespace Cs4rsa.ViewModels
 
             WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
-                ReloadSchedule();
+                DivideSchoolClassesByPhases();
+                DividePlaceConflictByPhase();
+                DivideConflictByPhase();
             });
             #endregion
 
@@ -539,15 +596,25 @@ namespace Cs4rsa.ViewModels
         /// </summary>
         private void DivideSchoolClassesByPhases()
         {
-            foreach (KeyValuePair<ScheduleItemId, Location> locationItem in _map.GetMap())
+            IEnumerable<KeyValuePair<ScheduleItemId, Location>> map = _map.GetMap().ToList();
+            foreach (KeyValuePair<ScheduleItemId, Location> locationItem in map)
             {
-                ClassGroupModel classGroupModel = _classGroupModels.Find(cgm => cgm.SubjectCode == locationItem.Key.Space);
-                if (classGroupModel != null)
-                {
-                    IEnumerable<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
-                    // Kiểm tra thay đổi Phase
+                ClassGroupModel classGroupModel = _classGroupModels.Find(cgm => cgm.SubjectCode.Equals(locationItem.Key.Space));
 
-                    // Thực hiện remove khỏi _map và mô phỏng nếu có thay đổi và vẽ lại.
+                if (classGroupModel == null) continue;
+
+                IEnumerable<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
+                foreach (SchoolClassModel scm in schoolClassModels)
+                {
+                    Phase oldPhase = scm.Phase;
+                    Phase newPhase = scm.GetPhase();
+
+                    if (oldPhase == newPhase) continue;
+
+                    ScheduleItemId id = ScheduleItemId.Of(scm);
+                    _map.Remove(id);
+                    _map.AddScheduleItem(scm);
+                    AddScheduleItem(scm);
                 }
             }
         }
@@ -597,13 +664,6 @@ namespace Cs4rsa.ViewModels
                 Color = color
             };
             return schoolClassModel;
-        }
-
-        private void ReloadSchedule()
-        {
-            DivideSchoolClassesByPhases();
-            DividePlaceConflictByPhase();
-            DivideConflictByPhase();
         }
 
         private void CleanAll()

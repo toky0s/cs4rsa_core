@@ -33,12 +33,12 @@ namespace Cs4rsa.Utils.Interfaces
         /// </summary>
         public string Space { get => _space; }
 
-        public static ScheduleItemId FromSchoolClassModel(SchoolClassModel schoolClassModel)
+        public static ScheduleItemId Of(SchoolClassModel schoolClassModel)
         {
             return new ScheduleItemId(schoolClassModel.SubjectCode, schoolClassModel.SchoolClassName);
         }
 
-        public static IEnumerable<ScheduleItemId> FromClassGroupModel(ClassGroupModel classGroupModel)
+        public static IEnumerable<ScheduleItemId> Of(ClassGroupModel classGroupModel)
         {
             foreach (SchoolClassModel schoolClassModel in classGroupModel.CurrentSchoolClassModels)
             {
@@ -46,14 +46,14 @@ namespace Cs4rsa.Utils.Interfaces
             }
         }
 
-        public static ScheduleItemId FromTimeConflict(ConflictModel conflictModel, StudyTimeIntersect studyTimeIntersect)
+        public static ScheduleItemId Of(ConflictModel conflictModel, StudyTimeIntersect studyTimeIntersect)
         {
             string space = conflictModel.FirstSchoolClass.SchoolClassName + conflictModel.SecondSchoolClass.SchoolClassName;
             string value = studyTimeIntersect.ToString();
             return new ScheduleItemId(space, value);
         }
 
-        public static ScheduleItemId FromPlaceConflict(PlaceConflictFinderModel placeConflictFinderModel, PlaceAdjacent placeAdjacent)
+        public static ScheduleItemId Of(PlaceConflictFinderModel placeConflictFinderModel, PlaceAdjacent placeAdjacent)
         {
             string space = placeConflictFinderModel.FirstSchoolClass.SchoolClassName + placeConflictFinderModel.SecondSchoolClass.SchoolClassName;
             string value = placeAdjacent.ToString();

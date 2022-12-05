@@ -136,9 +136,13 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             set { _dayPlaceMetaData = value; }
         }
 
+        /// <summary>
+        /// Trả về <see cref="SchoolClass.CurrentPhase"/> của lần
+        /// tính toán Phase gần nhất.
+        /// </summary>
         public Phase Phase
         {
-            get => _schoolClass.GetPhase();
+            get => _schoolClass.CurrentPhase;
         }
 
         public string Color { get; set; }
@@ -172,7 +176,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
                 TimeBlock timeBlock = new()
                 {
-                    Id = ScheduleItemId.FromSchoolClassModel(this),
+                    Id = ScheduleItemId.Of(this),
                     Background = Color,
                     Content = _schoolClassName,
                     DayOfWeek = item.DayOfWeek,
@@ -186,6 +190,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="SchoolClass.GetPhase"></inheritdoc>
+        /// </summary>
+        /// <returns>Phase</returns>
         public Phase GetPhase()
         {
             return _schoolClass.GetPhase();

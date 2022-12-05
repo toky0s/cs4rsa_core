@@ -120,7 +120,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new()
                     {
-                        Id = ScheduleItemId.FromTimeConflict(this, studyTimeIntersect),
+                        Id = ScheduleItemId.Of(this, studyTimeIntersect),
                         Background = BACKGROUND,
                         Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         DayOfWeek = item.Key,
