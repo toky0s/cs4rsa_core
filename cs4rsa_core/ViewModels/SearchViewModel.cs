@@ -9,6 +9,7 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
+using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Messages.Publishers.UIs;

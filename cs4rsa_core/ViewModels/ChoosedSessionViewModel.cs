@@ -271,7 +271,7 @@ namespace Cs4rsa.ViewModels
                     }
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (!conflictTime.Equals(ConflictTime.NullInstance))
+                    if (conflictTime != null)
                     {
                         ConflictModel conflictModel = new(conflict);
                         ConflictModels.Add(conflictModel);
@@ -294,7 +294,7 @@ namespace Cs4rsa.ViewModels
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
+                    if (conflictPlace != null)
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);

@@ -27,7 +27,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(_schoolClass1.StudyWeek, _schoolClass2.StudyWeek);
             if (phaseIntersect.Equals(PhaseIntersect.NullInstance))
             {
-                return ConflictPlace.NullInstance;
+                return null;
             }
 
             // Kiểm tra hai school class có ngày học chung hay không, nếu không
@@ -37,7 +37,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             IEnumerable<DayOfWeek> intersectDayOfWeeks = ScheduleManipulation.GetIntersectDate(scheduleClassGroup1, scheduleClassGroup2);
             if (!intersectDayOfWeeks.Any())
             {
-                return ConflictPlace.NullInstance;
+                return null;
             }
 
             // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
@@ -47,7 +47,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             IEnumerable<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct();
             if (dinstictPlaces.Count() < 2)
             {
-                return ConflictPlace.NullInstance;
+                return null;
             }
 
             Dictionary<DayOfWeek, IEnumerable<PlaceAdjacent>> conflictPlaces = new();
@@ -72,7 +72,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             }
             else
             {
-                return ConflictPlace.NullInstance;
+                return null;
             }
         }
     }

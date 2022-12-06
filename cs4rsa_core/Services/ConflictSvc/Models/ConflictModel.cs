@@ -1,10 +1,10 @@
-﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+﻿using Cs4rsa.Interfaces;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
-using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 
 using System;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Services.ConflictSvc.Models
 {
-    public class ConflictModel : IConflictModel, IScheduleTableItem
+    public class ConflictModel : IConflictModel, IScheduleTableItem, IEquatable<ConflictModel>
     {
         private SchoolClass _schoolClass1;
         private SchoolClass _schoolClass2;
@@ -33,7 +33,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public SchoolClass FirstSchoolClass { get => _schoolClass1; set => _schoolClass1 = value; }
         public SchoolClass SecondSchoolClass { get => _schoolClass2; set => _schoolClass2 = value; }
 
-        public ConflictType ConflictType { get => GetConflictType(); }
+        public ConflictType ConflictType { get => ConflictType.Time; }
 
         public ConflictModel(Conflict conflict)
         {
@@ -120,7 +120,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new()
                     {
-                        Id = ScheduleItemId.Of(this, studyTimeIntersect),
+                        Id = ScheduleItemId.Of(this),
                         Background = BACKGROUND,
                         Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         DayOfWeek = item.Key,
@@ -141,9 +141,25 @@ namespace Cs4rsa.Services.ConflictSvc.Models
             return ScheduleTableItemType.TimeConflict;
         }
 
-        public string GetId()
+        public bool Equals(ConflictModel other)
         {
-            return $"Time{_schoolClass1.SubjectCode + _schoolClass2.SubjectCode}";
+            if (other is null) return false;
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ConflictModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictTime, FirstSchoolClass, SecondSchoolClass, ConflictTime, ConflictType);
+        }
+
+        public ScheduleItemId GetScheduleItemId()
+        {
+            return ScheduleItemId.Of(this);
         }
     }
 }
