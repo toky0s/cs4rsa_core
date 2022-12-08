@@ -1,14 +1,15 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Interfaces;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
-using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 
+using System;
 using System.Collections.Generic;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
-    public class SchoolClassModel : IScheduleTableItem
+    public class SchoolClassModel : IScheduleTableItem, IEquatable<SchoolClassModel>
     {
         private readonly SchoolClass _schoolClass;
 
@@ -204,9 +205,25 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return ScheduleTableItemType.SchoolClass;
         }
 
-        public string GetId()
+        public bool Equals(SchoolClassModel other)
         {
-            return SubjectCode;
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is not SchoolClassModel) return false;
+            return Equals(obj as SchoolClassModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return SchoolClass.GetHashCode();
+        }
+
+        public ScheduleItemId GetScheduleItemId()
+        {
+            return ScheduleItemId.Of(this);
         }
     }
 }

@@ -5,7 +5,6 @@ using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
-using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 
 using System;
@@ -16,7 +15,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
     /// </summary>
-    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem
+    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem, IEquatable<PlaceConflictFinderModel>
     {
         private SchoolClass _schoolClass1;
         private SchoolClass _schoolClass2;
@@ -123,6 +122,27 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public string GetId()
         {
             return "pc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
+        }
+
+        public bool Equals(PlaceConflictFinderModel other)
+        {
+            if (other is null) return false;
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as PlaceConflictFinderModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictPlace, ConflictPlace, FirstSchoolClass, SecondSchoolClass);
+        }
+
+        public ScheduleItemId GetScheduleItemId()
+        {
+            return ScheduleItemId.Of(this);
         }
     }
 }

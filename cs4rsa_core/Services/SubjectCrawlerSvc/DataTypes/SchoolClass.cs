@@ -148,5 +148,16 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 }
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is not SchoolClass) return false;
+            return GetHashCode() == ((SchoolClass)obj).GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(SubjectCode, ClassGroupName, SchoolClassName);
+        }
     }
 }

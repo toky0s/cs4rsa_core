@@ -49,7 +49,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
                     placeMapTuple.Item2,
                     timeDelta
                 );
-                if (!placeAdjacent.Equals(PlaceAdjacent.Instance))
+                if (placeAdjacent != null)
                 {
                     yield return placeAdjacent;
                 }
@@ -66,13 +66,13 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
             // Loại trừ xung đột thời gian
             if (placeMaps[0].StudyTime.End >= placeMaps[1].StudyTime.Start)
             {
-                return PlaceAdjacent.Instance;
+                return null;
             }
 
             // Loại trừ các Place trong list exclude
             if (IsInExcludedList(placeMap1.Place, placeMap2.Place))
             {
-                return PlaceAdjacent.Instance;
+                return null;
             }
 
             if (placeMaps[1].StudyTime.Start - placeMaps[0].StudyTime.End <= timeDelta)
@@ -90,7 +90,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
                     placeMaps[1].SchoolClass
                 );
             }
-            return PlaceAdjacent.Instance;
+            return null;
         }
 
         /// <summary>

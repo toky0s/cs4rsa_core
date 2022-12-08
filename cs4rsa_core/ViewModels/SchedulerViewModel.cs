@@ -12,7 +12,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
-using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 
 using System;
@@ -211,12 +210,6 @@ namespace Cs4rsa.ViewModels
                 Phase2_Sunday
             };
 
-            _schedules = new[]
-            {
-                Week1,
-                Week2,
-            };
-
             Timelines = new();
             foreach (string timeline in Controls.Utils.TIME_LINES)
             {
@@ -308,6 +301,10 @@ namespace Cs4rsa.ViewModels
             }
         }
 
+        /// <summary>
+        /// Vẽ một <see cref="IScheduleTableItem"/> lên mô phỏng.
+        /// </summary>
+        /// <param name="scheduleItem">IScheduleTableItem</param>
         private void AddScheduleItem(IScheduleTableItem scheduleItem)
         {
             IEnumerable<TimeBlock> timeBlocks = scheduleItem.GetBlocks();

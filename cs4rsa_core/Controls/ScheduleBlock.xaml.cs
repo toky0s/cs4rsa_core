@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Utils.Interfaces;
+﻿using Cs4rsa.Interfaces;
 
 using System.ComponentModel;
 using System.Windows;

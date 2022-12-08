@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
-using Cs4rsa.Services.ConflictSvc.Models;
+﻿using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils.Models;
@@ -7,7 +6,7 @@ using Cs4rsa.Utils.Models;
 using System.Collections.Generic;
 using System.Windows.Markup;
 
-namespace Cs4rsa.Utils.Interfaces
+namespace Cs4rsa.Interfaces
 {
     public enum ScheduleTableItemType
     {
@@ -30,20 +29,15 @@ namespace Cs4rsa.Utils.Interfaces
         IEnumerable<TimeBlock> GetBlocks();
 
         /// <summary>
-        /// Mô tả:
-        ///      Implement phương thức này để xác định khối thời gian sẽ thuộc giai đoạn nào.
-        /// 
-        /// 
-        /// Trả về:
-        ///      Phase.First:
-        ///          Khối thời gian sẽ được vẽ trên bảng đầu tiên.
-        ///          
-        ///      Phase.Second:
-        ///          Khối thời gian sẽ được vẽ trên bảng thứ hai.
-        ///          
-        ///      Phase.All:
-        ///          Khối thời gian sẽ được vẽ trên cả hai bảng.
+        /// Implement phương thức này để xác định khối thời gian sẽ thuộc giai đoạn nào.
         /// </summary>
+        /// <returns>
+        /// <list type="bullet">
+        ///     <item>Phase.First: Khối thời gian sẽ được vẽ trên bảng đầu tiên.</item>
+        ///     <item>Phase.Second: Khối thời gian sẽ được vẽ trên bảng thứ hai.</item>
+        ///     <item>Phase.All: Khối thời gian sẽ được vẽ trên cả hai bảng.</item>
+        /// </list>
+        /// </returns>
         Phase GetPhase();
 
         ScheduleTableItemType GetScheduleTableItemType();
