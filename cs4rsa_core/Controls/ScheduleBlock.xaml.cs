@@ -1,6 +1,4 @@
-﻿using Cs4rsa.Interfaces;
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

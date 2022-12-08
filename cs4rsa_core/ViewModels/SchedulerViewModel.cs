@@ -2,11 +2,8 @@
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
-using Cs4rsa.Constants;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.States;
-using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
-using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
@@ -38,7 +35,7 @@ namespace Cs4rsa.ViewModels
         public ObservableCollection<TimeBlock> Phase1_Friday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Saturday { get; set; }
         public ObservableCollection<TimeBlock> Phase1_Sunday { get; set; }
-        
+
         public ObservableCollection<TimeBlock> Phase2_Monday { get; set; }
         public ObservableCollection<TimeBlock> Phase2_Tuesday { get; set; }
         public ObservableCollection<TimeBlock> Phase2_Wednesday { get; set; }
@@ -260,7 +257,7 @@ namespace Cs4rsa.ViewModels
                 foreach (ObservableCollection<TimeBlock> day in week)
                 {
                     int currentIndex = 0;
-                    while(day.Any())
+                    while (day.Any())
                     {
                         if (id == day[currentIndex].Id)
                         {
