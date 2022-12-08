@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
@@ -91,7 +92,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new()
                     {
-                        Id = ScheduleItemId.Of(this, placeAdjacent),
+                        Id = GetId(),
                         Background = BACKGROUND,
                         Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         DayOfWeek = item.Key,
@@ -121,7 +122,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public string GetId()
         {
-            return $"Place{_schoolClass1.SubjectCode + _schoolClass2.SubjectCode}";
+            return "pc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
         }
     }
 }

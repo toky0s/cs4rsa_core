@@ -176,7 +176,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
                 TimeBlock timeBlock = new()
                 {
-                    Id = ScheduleItemId.Of(this),
+                    Id = GetId(),
                     Background = Color,
                     Content = _schoolClassName,
                     DayOfWeek = item.DayOfWeek,
