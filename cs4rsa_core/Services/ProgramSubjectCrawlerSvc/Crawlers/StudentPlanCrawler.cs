@@ -53,7 +53,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             {
                 PlanTable planTable = new();
 
-                HtmlDocument planTableNodeDoc = new HtmlDocument();
+                HtmlDocument planTableNodeDoc = new();
                 planTableNodeDoc.LoadHtml(planTableNode.InnerHtml);
                 HtmlNode tableNameTag = planTableNodeDoc.DocumentNode.SelectSingleNode(TABLE_NAME_XPATH);
                 string tableName = StringHelper.SuperCleanString(tableNameTag.InnerText);
@@ -68,7 +68,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
         private static PlanRecord GetPlanRecord(HtmlNode tr)
         {
-            HtmlDocument trDoc = new HtmlDocument();
+            HtmlDocument trDoc = new();
             trDoc.LoadHtml(tr.InnerHtml);
             HtmlNodeCollection tds = trDoc.DocumentNode.SelectNodes("//td");
 
