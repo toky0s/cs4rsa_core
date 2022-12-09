@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 {
-    public class DtuStudentInfoCrawler : IDtuStudentInfoCrawler
+    public class DtuStudentInfoCrawler : BaseCrawler, IDtuStudentInfoCrawler
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurriculumCrawler _curriculumCrawler;
@@ -30,7 +31,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 
         public async Task<Student> Crawl(string specialString)
         {
-            string url = $"https://mydtu.duytan.edu.vn/Modules/mentor/WarningDetail.aspx?t={Helpers.GetTimeFromEpoch()}&stid={specialString}";
+            string url = $"https://mydtu.duytan.edu.vn/Modules/mentor/WarningDetail.aspx?t={GetTimeFromEpoch()}&stid={specialString}";
             HtmlDocument doc = await _htmlWeb.LoadFromWebAsync(url);
             HtmlNode docNode = doc.DocumentNode;
 

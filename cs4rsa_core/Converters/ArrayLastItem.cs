@@ -1,17 +1,20 @@
-﻿using Humanizer;
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Cs4rsa.Converters
 {
-    internal class HumanizerDateTimeConverter : IValueConverter
+    public class ArrayLastItem : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DateTime dateTime = (DateTime)value;
-            return dateTime.Humanize();
+            if (value is IEnumerable<object> items)
+            {
+                return items.LastOrDefault();
+            }
+            else return Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

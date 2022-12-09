@@ -2,15 +2,15 @@
 
 using Cs4rsa.Controls;
 using Cs4rsa.Messages.Publishers.UIs;
-using Cs4rsa.Utils.Models;
+using Cs4rsa.Models;
 
 using System.Windows.Controls;
 
 namespace Cs4rsa.Views
 {
-    public partial class ScheduleTable : UserControl
+    public partial class Scheduler : UserControl
     {
-        public ScheduleTable()
+        public Scheduler()
         {
             InitializeComponent();
         }
@@ -19,7 +19,7 @@ namespace Cs4rsa.Views
         {
             ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
             TimeBlock timeBlock = (TimeBlock)scheduleBlock.DataContext;
-            WeakReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
+            StrongReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
         }
     }
 }

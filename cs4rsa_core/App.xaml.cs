@@ -110,7 +110,7 @@ namespace Cs4rsa
             services.AddSingleton<SearchViewModel>();
             services.AddSingleton<ClassGroupSessionViewModel>();
             services.AddSingleton<ChoosedSessionViewModel>();
-            services.AddSingleton<ScheduleTableViewModel>();
+            services.AddSingleton<SchedulerViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();

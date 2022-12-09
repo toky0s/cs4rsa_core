@@ -71,7 +71,7 @@ namespace Cs4rsa.ViewModels
             _snackBarMessageQueue = snackbarMessageQueue;
             _snackBarMessageQueue.Enqueue(ViewConstants.WELCOME_TEXT);
 
-            WeakReferenceMessenger.Default.Register<HomeVmMsgs.UpdateSubjectDbMsg>(this, (r, m) =>
+            Messenger.Register<HomeVmMsgs.UpdateSubjectDbMsg>(this, (r, m) =>
             {
                 OnOpenUpdateWindow();
             });

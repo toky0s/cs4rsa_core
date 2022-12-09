@@ -2,6 +2,6 @@
 {
     public enum Phase
     {
-        Non, First, Second, All
+        Non, First, Second, All, Unknown
     }
 }

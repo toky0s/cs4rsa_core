@@ -1,16 +1,15 @@
-﻿using Cs4rsa.Utils.Interfaces;
+﻿using Cs4rsa.Interfaces;
 
 using System;
 
-namespace Cs4rsa.Utils.Models
+namespace Cs4rsa.Models
 {
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.
     /// </summary>
     public class TimeBlock
     {
-        public string SubjectCode { get; set; }
-
+        public string Id { get; set; }
         /// <summary>
         /// Màu nền
         /// </summary>

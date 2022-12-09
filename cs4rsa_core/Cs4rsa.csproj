@@ -100,7 +100,7 @@
     <Page Update="Views\MainWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ScheduleTable.xaml">
+    <Page Update="Views\Scheduler.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Search.xaml">

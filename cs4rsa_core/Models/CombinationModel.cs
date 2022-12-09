@@ -118,7 +118,7 @@ namespace Cs4rsa.Models
                 {
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (!conflictTime.Equals(ConflictTime.NullInstance))
+                    if (conflictTime != null)
                     {
                         return true;
                     }
@@ -140,7 +140,7 @@ namespace Cs4rsa.Models
                 {
                     PlaceConflictFinder conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = conflict.GetPlaceConflict();
-                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
+                    if (conflictPlace != null)
                     {
                         return true;
                     }

@@ -1,11 +1,12 @@
-﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.Interfaces;
+using Cs4rsa.Models;
+using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
-using Cs4rsa.Utils.Interfaces;
-using Cs4rsa.Utils.Models;
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
     /// </summary>
-    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem
+    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem, IEquatable<PlaceConflictFinderModel>
     {
         private SchoolClass _schoolClass1;
         private SchoolClass _schoolClass2;
@@ -91,6 +92,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 {
                     TimeBlock timeBlock = new()
                     {
+                        Id = GetId(),
                         Background = BACKGROUND,
                         Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         DayOfWeek = item.Key,
@@ -116,6 +118,27 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public ScheduleTableItemType GetScheduleTableItemType()
         {
             return ScheduleTableItemType.PlaceConflict;
+        }
+
+        public string GetId()
+        {
+            return "pc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
+        }
+
+        public bool Equals(PlaceConflictFinderModel other)
+        {
+            if (other is null) return false;
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as PlaceConflictFinderModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictPlace, ConflictPlace, FirstSchoolClass, SecondSchoolClass);
         }
     }
 }

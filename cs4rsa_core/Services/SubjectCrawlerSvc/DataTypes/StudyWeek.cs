@@ -44,7 +44,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         public Phase GetPhase()
         {
             PhaseStore phaseStore = (PhaseStore)((App)Application.Current).Container.GetService(typeof(PhaseStore));
-            int betweenPointValue = phaseStore.CurrentBetweenPointValue;
+            int betweenPointValue = phaseStore.BwpValue;
             if (EndWeek <= betweenPointValue)
             {
                 return Phase.First;

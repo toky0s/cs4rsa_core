@@ -1,14 +1,15 @@
 ﻿<UserControl
-    x:Class="Cs4rsa.Views.ScheduleTable"
+    x:Class="Cs4rsa.Views.Scheduler"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="clr-namespace:Cs4rsa.Controls"
+    xmlns:converter="clr-namespace:Cs4rsa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
     xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-    d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleTableViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:SchedulerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="700"
     vml:ViewModelLocator.AutoHookedUpViewModel="True"
@@ -16,9 +17,7 @@
     FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="Style_Line_Timeline" TargetType="Line">
-            <Setter Property="Stroke" Value="#dfe6e9" />
-        </Style>
+        <converter:ArrayLastItem x:Key="ArrayLastItem" />
         <Style x:Key="Style_cnvDaySchedule" TargetType="control:DayPanel">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -43,16 +42,16 @@
             <ComboBox
                 Margin="0,0,5,0"
                 VerticalAlignment="Center"
-                ItemsSource="{Binding PhaseStore.Weeks}"
-                SelectedIndex="{Binding PhaseStore.BetweenPointIndex}"
+                ItemsSource="{Binding PhaseStore.BwpWeeks}"
+                SelectedItem="{Binding PhaseStore.BwpValue}"
                 Style="{StaticResource MaterialDesignDataGridComboBox}" />
             <TextBlock>
                 <Hyperlink Command="{Binding ResetBetweenPointCommand}">Đặt lại tuần ngăn cách</Hyperlink>
             </TextBlock>
         </StackPanel>
         <TextBlock Grid.Row="1">
-            <Run Text="{Binding PhaseStore.StartWeek, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
-            <Run Text="{Binding PhaseStore.CurrentBetweenPointValue, StringFormat={}{0})}" />
+            <Run Text="{Binding PhaseStore.Start, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
+            <Run Text="{Binding PhaseStore.BwpValue, StringFormat={}{0})}" />
         </TextBlock>
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>
@@ -166,14 +165,13 @@
                                         <materialDesign:TransitioningContent.OpeningEffects>
                                             <materialDesign:TransitionEffect Kind="ExpandIn" />
                                             <materialDesign:TransitionEffect Kind="FadeIn" />
-
                                         </materialDesign:TransitioningContent.OpeningEffects>
                                         <control:ScheduleBlock
-                                            BlockColor="{Binding Background, Mode=OneTime}"
-                                            BlockName="{Binding Content, Mode=OneTime}"
-                                            Description="{Binding Description, Mode=OneTime}"
+                                            BlockColor="{Binding Background}"
+                                            BlockName="{Binding Content}"
+                                            Description="{Binding Description}"
                                             ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                                     </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -183,8 +181,8 @@
             </ItemsControl>
         </Grid>
         <TextBlock Grid.Row="3">
-            <Run Text="{Binding PhaseStore.CurrentBetweenPointValue, Converter={StaticResource MathAddConverter}, ConverterParameter=1, StringFormat=Giai đoạn 2 (bắt đầu từ tuần {0} đến tuần}" />
-            <Run Text="{Binding PhaseStore.EndWeek, StringFormat={}{0})}" />
+            <Run Text="{Binding PhaseStore.BwpValue, Converter={StaticResource MathAddConverter}, ConverterParameter=1, StringFormat=Giai đoạn 2 (bắt đầu từ tuần {0} đến tuần}" />
+            <Run Text="{Binding PhaseStore.End, StringFormat={}{0})}" />
         </TextBlock>
         <Grid Grid.Row="4">
             <Grid.RowDefinitions>
@@ -300,11 +298,11 @@
                                             <materialDesign:TransitionEffect Kind="FadeIn" />
                                         </materialDesign:TransitioningContent.OpeningEffects>
                                         <control:ScheduleBlock
-                                            BlockColor="{Binding Background, Mode=OneTime}"
-                                            BlockName="{Binding Content, Mode=OneTime}"
-                                            Description="{Binding Description, Mode=OneTime}"
+                                            BlockColor="{Binding Background}"
+                                            BlockName="{Binding Content}"
+                                            Description="{Binding Description}"
                                             ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                                            ScheduleTableItemType="{Binding ScheduleTableItemType, Mode=OneTime}" />
+                                            ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                                     </materialDesign:TransitioningContent>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

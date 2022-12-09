@@ -1,14 +1,15 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Interfaces;
+using Cs4rsa.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
-using Cs4rsa.Utils.Interfaces;
-using Cs4rsa.Utils.Models;
 
+using System;
 using System.Collections.Generic;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
-    public class SchoolClassModel : IScheduleTableItem
+    public class SchoolClassModel : IScheduleTableItem, IEquatable<SchoolClassModel>
     {
         private readonly SchoolClass _schoolClass;
 
@@ -136,9 +137,13 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             set { _dayPlaceMetaData = value; }
         }
 
+        /// <summary>
+        /// Trả về <see cref="SchoolClass.CurrentPhase"/> của lần
+        /// tính toán Phase gần nhất.
+        /// </summary>
         public Phase Phase
         {
-            get => _schoolClass.GetPhase();
+            get => _schoolClass.CurrentPhase;
         }
 
         public string Color { get; set; }
@@ -172,6 +177,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
                 TimeBlock timeBlock = new()
                 {
+                    Id = GetId(),
                     Background = Color,
                     Content = _schoolClassName,
                     DayOfWeek = item.DayOfWeek,
@@ -179,13 +185,16 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                     End = item.End,
                     Description = description,
                     ClassGroupName = _schoolClass.ClassGroupName,
-                    SubjectCode = SubjectCode,
                     ScheduleTableItemType = ScheduleTableItemType.SchoolClass
                 };
                 yield return timeBlock;
             }
         }
 
+        /// <summary>
+        /// <inheritdoc cref="SchoolClass.GetPhase"></inheritdoc>
+        /// </summary>
+        /// <returns>Phase</returns>
         public Phase GetPhase()
         {
             return _schoolClass.GetPhase();
@@ -194,6 +203,27 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public ScheduleTableItemType GetScheduleTableItemType()
         {
             return ScheduleTableItemType.SchoolClass;
+        }
+
+        public bool Equals(SchoolClassModel other)
+        {
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is not SchoolClassModel) return false;
+            return Equals(obj as SchoolClassModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return SchoolClass.GetHashCode();
+        }
+
+        public string GetId()
+        {
+            return SubjectCode;
         }
     }
 }

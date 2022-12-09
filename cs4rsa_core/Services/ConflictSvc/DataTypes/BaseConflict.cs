@@ -1,5 +1,4 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
@@ -18,12 +17,6 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
         {
             _schoolClass1 = schoolClass1;
             _schoolClass2 = schoolClass2;
-        }
-
-        protected static bool CanConflictPhase(Phase phase1, Phase phase2)
-        {
-            if (phase1 == Phase.All || phase2 == Phase.All) return true;
-            return phase1 == phase2;
         }
     }
 }

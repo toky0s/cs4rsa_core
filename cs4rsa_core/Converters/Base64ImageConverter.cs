@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace Cs4rsa.Converters
 {
-    class Base64ImageConverter : IValueConverter
+    internal class Base64ImageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

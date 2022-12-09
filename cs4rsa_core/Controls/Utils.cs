@@ -7,9 +7,10 @@ namespace Cs4rsa.Controls
 {
     internal class Utils
     {
-        public static readonly string[] TIME_LINES = new string[16]
+        public static readonly string[] TIME_LINES = new string[17]
         {
             "07:00",
+            "08:00",
             "09:00",
             "09:15",
             "10:15",

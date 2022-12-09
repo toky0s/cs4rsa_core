@@ -4,6 +4,9 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+
+using static Cs4rsa.Messages.Values.SearchValues;
 
 namespace Cs4rsa.Messages.Publishers
 {
@@ -43,9 +46,9 @@ namespace Cs4rsa.Messages.Publishers
         /// <summary>
         /// Xoá hết tất cả các môn đã tải
         /// </summary>
-        internal sealed class DelAllSubjectMsg : ValueChangedMessage<DBNull>
+        internal sealed class DelAllSubjectMsg : RequestMessage<SearchVmMsgs>
         {
-            public DelAllSubjectMsg(DBNull value) : base(value)
+            public DelAllSubjectMsg() : base()
             {
             }
         }
@@ -63,12 +66,29 @@ namespace Cs4rsa.Messages.Publishers
         /// <summary>
         /// Select danh sách các ClassGroupModel
         /// </summary>
-        internal sealed class SelectClassGroupModelsMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>
+        internal sealed class SelectCgmsMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>
         {
-            public SelectClassGroupModelsMsg(IEnumerable<ClassGroupModel> value) : base(value)
+            public SelectCgmsMsg(IEnumerable<ClassGroupModel> value) : base(value)
+            {
+                Trace.WriteLine("internal sealed class SelectCgmsMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>");
+            }
+        }
+
+        /// <summary>
+        /// Hoàn tác một Subject đã xoá.
+        /// </summary>
+        internal sealed class UndoDelMsg : ValueChangedMessage<UndoDelValue>
+        {
+            public UndoDelMsg(UndoDelValue value) : base(value)
+            {
+            }
+        }
+
+        internal sealed class UndoDeleteAllMsg : ValueChangedMessage<UndoDelAllValue>
+        {
+            public UndoDeleteAllMsg(UndoDelAllValue value) : base(value)
             {
             }
         }
     }
-
 }

@@ -77,53 +77,51 @@
                 x:Name="SearchingTextBox"
                 Margin="0,0,0,5"
                 materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
-                KeyUp="SearchingTextBox_KeyUp"
+                KeyDown="SearchingTextBox_KeyDown"
                 LostFocus="SearchingTextBox_LostFocus"
+                GotFocus="SearchingTextBox_GotFocus"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                Text="{Binding SearchText}" />
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
-                <StackPanel>
-                    <Border
-                        Background="White"
-                        BorderBrush="{StaticResource PrimaryHueMidBrush}"
-                        BorderThickness="2.5"
-                        CornerRadius="5">
-                        <ListView
-                            x:Name="ListView_Search"
-                            MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
-                            MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
-                            Background="White"
-                            ItemsSource="{Binding FullMatchSearchingKeywords}"
-                            SelectedItem="{Binding SelectedFullMatchSearchingKeyword}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="25" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Rectangle
-                                            Grid.Column="0"
-                                            Width="20"
-                                            HorizontalAlignment="Left"
-                                            Fill="{Binding Keyword.Color}" />
-                                        <StackPanel Grid.Column="1" Orientation="Vertical">
-                                            <TextBlock
-                                                Margin="5,10,0,0"
-                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                Text="{Binding Keyword.SubjectName, Mode=OneWay}"
-                                                TextWrapping="WrapWithOverflow" />
-                                            <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                                                <Run Text="{Binding Discipline.Name}" />
-                                                <Run Text="{Binding Keyword.Keyword1}" />
-                                            </TextBlock>
-                                        </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Border>
-                </StackPanel>
+                <Border
+                    Background="{DynamicResource MaterialDesignPaper}"
+                    BorderBrush="{StaticResource PrimaryHueMidBrush}"
+                    BorderThickness="2.5"
+                    CornerRadius="5">
+                    <ListBox
+                        x:Name="ListView_Search"
+                        MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
+                        MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
+                        ItemsSource="{Binding FullMatchSearchingKeywords}"
+                        SelectedItem="{Binding SearchingKeyword}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Width="20"
+                                        HorizontalAlignment="Left"
+                                        Fill="{Binding Keyword.Color}" />
+                                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                                        <TextBlock
+                                            Margin="5,10,0,0"
+                                            Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                            Text="{Binding Keyword.SubjectName, Mode=OneWay}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                                            <Run Text="{Binding Discipline.Name}" />
+                                            <Run Text="{Binding Keyword.Keyword1}" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
             </Popup>
         </StackPanel>
         <Grid

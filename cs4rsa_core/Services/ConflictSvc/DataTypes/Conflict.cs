@@ -19,7 +19,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(_schoolClass1.StudyWeek, _schoolClass2.StudyWeek);
             if (phaseIntersect.Equals(PhaseIntersect.NullInstance))
             {
-                return ConflictTime.NullInstance;
+                return null;
             }
 
             Schedule scheduleClassGroup1 = _schoolClass1.Schedule;
@@ -29,7 +29,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             // Check date
             if (!dayOfWeeks.Any())
             {
-                return ConflictTime.NullInstance;
+                return null;
             }
 
             Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes = new();
@@ -50,7 +50,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             }
             return conflictTimes.Count != 0
                 ? new ConflictTime(conflictTimes)
-                : ConflictTime.NullInstance;
+                : null;
         }
     }
 }

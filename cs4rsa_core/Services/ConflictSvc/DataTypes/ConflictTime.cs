@@ -8,12 +8,10 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
     /// ConflictTime sẽ bao gồm các một Dict với các key là các DayOfWeek có xung đột
     /// và các value là StudyTimeIntersect đại diện cho khoảng thời gian gây xung đột trong thứ đó.
     /// 
-    /// Ngang cấp với PlaceAdjacent.
+    /// Ngang cấp với <see cref="PlaceAdjacent"/>.
     /// </summary>
-    public readonly struct ConflictTime
+    public class ConflictTime
     {
-        public static readonly ConflictTime NullInstance = new();
-
         public readonly Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> ConflictTimes;
 
         public ConflictTime(Dictionary<DayOfWeek, IEnumerable<StudyTimeIntersect>> conflictTimes)

@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Cs4rsa.Converters
 {
-    class EmptySeatCheckerConverter : IValueConverter
+    internal class EmptySeatCheckerConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

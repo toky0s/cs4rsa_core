@@ -1,8 +1,8 @@
-﻿using Cs4rsa.Constants;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Utils;
 
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,7 +12,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
     /// <summary>
     /// Bộ cào này sẽ cào toàn bộ chương trình học của một sinh viên.
     /// </summary>
-    public class ProgramDiagramCrawler
+    public class ProgramDiagramCrawler : BaseCrawler
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -35,7 +35,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
             Student student = await _unitOfWork.Students.GetBySpecialStringAsync(specialString);
             int curid = student.CurriculumId;
-            string t = Helpers.GetTimeFromEpoch();
+            string t = GetTimeFromEpoch();
 
             StudentProgramCrawler.SetInfor(sessionId, studentId);
             Task<ProgramFolder> task1 = GetNewInstanceStudentProgramCrawler().GetNode(specialString, t, VMConstants.NODE_NAME_DAI_CUONG, curid);

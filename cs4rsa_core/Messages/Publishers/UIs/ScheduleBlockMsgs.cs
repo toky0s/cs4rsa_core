@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using Cs4rsa.Utils.Models;
+using Cs4rsa.Models;
 
 namespace Cs4rsa.Messages.Publishers.UIs
 {

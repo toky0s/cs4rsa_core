@@ -17,15 +17,18 @@ using Cs4rsa.Utils;
 
 using MaterialDesignThemes.Wpf;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
+using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
+
 namespace Cs4rsa.ViewModels
 {
-    public class ChoosedSessionViewModel : ViewModelBase
+    internal class ChoosedSessionViewModel : ViewModelBase
     {
         #region Properties
         private string _shareString;
@@ -82,28 +85,26 @@ namespace Cs4rsa.ViewModels
             _phaseStore = phaseStore;
 
             #region WeakReferenceMessengers
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
-                _phaseStore.RemoveSchoolClassBySubjectCode(m.Value.SubjectCode);
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     DelAllSubjectMsgHandler();
-                    _phaseStore.RemoveAllSchoolClass();
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
+            Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                AddClassGroupModelAndReload(m.Value);
-                _phaseStore.AddClassGroup(m.Value);
+                Messenger.Send(new ChoosedVmMsgs.ClassGroupAddedMsg(m.Value));
+                AddClassGroupModel(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectClassGroupModelsMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
@@ -111,20 +112,20 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            WeakReferenceMessenger.Default.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
+            Messenger.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
             {
                 RemoveChoosedClassMsgHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
+            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
                 UpdateConflicts();
             });
             #endregion
 
-            SaveCommand = new RelayCommand(OpenSaveDialog, CanSave);
-            DeleteCommand = new RelayCommand(OnDelete, CanDelete);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
+            SaveCommand = new RelayCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);
+            DeleteCommand = new RelayCommand(OnDelete, () => _selectedClassGroupModel != null);
+            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
             OpenShareStringWindowCommand = new AsyncRelayCommand(OnOpenShareStringWindow);
@@ -177,44 +178,41 @@ namespace Cs4rsa.ViewModels
             }
 
             ClassGroupModels.Clear();
-            _phaseStore.RemoveAllSchoolClass();
+            _phaseStore.RemoveAll();
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
         /// <summary>
         /// Hoàn tác
         /// </summary>
-        /// <param name="obj">Danh sách lớp hoàn tác</param>
-        private void OnRestore(List<ClassGroupModel> obj)
+        /// <param name="classGroupModels">Danh sách lớp hoàn tác</param>
+        private void OnRestore(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            foreach (ClassGroupModel classGroupModel in obj)
+            foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
-                AddClassGroupModelAndReload(classGroupModel);
+                AddClassGroupModel(classGroupModel);
             }
-        }
-
-        private void OnRestore(ClassGroupModel obj)
-        {
-            AddClassGroupModelAndReload(obj);
+            Messenger.Send(new UndoDelAllMsg(classGroupModels));
         }
 
         private void OnDelete()
         {
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
-            _phaseStore.RemoveSchoolClassBySubjectCode(_selectedClassGroupModel.SubjectCode);
+            _phaseStore.RemoveClassGroup(_selectedClassGroupModel);
+            Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
+
             ClassGroupModels.Remove(_selectedClassGroupModel);
-            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             DeleteCommand.NotifyCanExecuteChanged();
             UpdateConflicts();
-            Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
         }
 
         /// <summary>
@@ -274,14 +272,14 @@ namespace Cs4rsa.ViewModels
                     }
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (!conflictTime.Equals(ConflictTime.NullInstance))
+                    if (conflictTime != null)
                     {
                         ConflictModel conflictModel = new(conflict);
                         ConflictModels.Add(conflictModel);
                     }
                 }
             }
-            Messenger.Send(new ChoicedSessionVmMsgs.ConflictCollChangedMsg(ConflictModels));
+            Messenger.Send(new ChoosedVmMsgs.ConflictCollChangedMsg(ConflictModels));
         }
 
         /// <summary>
@@ -297,17 +295,17 @@ namespace Cs4rsa.ViewModels
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
+                    if (conflictPlace != null)
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);
                     }
                 }
             }
-            Messenger.Send(new ChoicedSessionVmMsgs.PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
+            Messenger.Send(new ChoosedVmMsgs.PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
         }
 
-        private void AddClassGroupModelAndReload(ClassGroupModel classGroupModel)
+        private void AddClassGroupModel(ClassGroupModel classGroupModel)
         {
             if (classGroupModel != null)
             {
@@ -317,13 +315,11 @@ namespace Cs4rsa.ViewModels
                 else
                     ClassGroupModels.Add(classGroupModel);
             }
-
-            _phaseStore.AddClassGroup(classGroupModel);
+            _phaseStore.AddClassGroupModel(classGroupModel);
+            Messenger.Send(new ChoosedVmMsgs.UndoDelMsg(classGroupModel));
             UpdateConflicts();
-
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
         private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
@@ -331,14 +327,10 @@ namespace Cs4rsa.ViewModels
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
-                _phaseStore.AddClassGroup(classGroupModel);
             }
-
             UpdateConflicts();
-
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
         private async Task UpdateShareString()
@@ -364,23 +356,6 @@ namespace Cs4rsa.ViewModels
             UpdatePlaceConflictCollection(schoolClasses);
         }
 
-        #region Điều kiện thực thi command
-        private bool CanSave()
-        {
-            return ClassGroupModels.Count > 0;
-        }
-
-        private bool CanDeleteAll()
-        {
-            return ClassGroupModels.Count > 0;
-        }
-
-        private bool CanDelete()
-        {
-            return _selectedClassGroupModel != null;
-        }
-        #endregion
-
         #region Handlers | Xử lý các message được gửi đến
 
         /// <summary>
@@ -399,16 +374,17 @@ namespace Cs4rsa.ViewModels
                 if (ClassGroupModels[i].Name == className)
                 {
                     actionData = ClassGroupModels[i].DeepClone();
-                    _phaseStore.RemoveSchoolClassBySubjectCode(ClassGroupModels[i].SubjectCode);
+                    _phaseStore.RemoveClassGroup(ClassGroupModels[i]);
+                    Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
-                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
+                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
 
                     SaveCommand.NotifyCanExecuteChanged();
                     DeleteAllCommand.NotifyCanExecuteChanged();
                     DeleteCommand.NotifyCanExecuteChanged();
                     UpdateConflicts();
-                    Messenger.Send(new ChoicedSessionVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels));
+                    break;
                 }
             }
         }
@@ -430,7 +406,6 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
         }
 
         /// <summary>
@@ -443,7 +418,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoicedSessionVmMsgs.ChoiceChangedMsg(ClassGroupModels));
+            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
         }
         #endregion
     }

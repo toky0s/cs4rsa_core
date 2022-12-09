@@ -21,7 +21,7 @@ using System.Windows.Data;
 
 namespace Cs4rsa.ViewModels
 {
-    public sealed class ClassGroupSessionViewModel : ViewModelBase
+    internal sealed class ClassGroupSessionViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -35,13 +35,13 @@ namespace Cs4rsa.ViewModels
                 OnPropertyChanged();
                 if (value != null)
                 {
-                    // Nếu thuộc Special Subject.
                     if (value.IsBelongSpecialSubject)
                     {
                         OnShowDetailsSchoolClasses();
                     }
                     else
                     {
+                        _phaseStore.AddClassGroupModel(value);
                         Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
                     }
                 }
@@ -336,33 +336,36 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Services
+        private readonly PhaseStore _phaseStore;
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
         public ClassGroupSessionViewModel(
+            PhaseStore phaseStore,
             IOpenInBrowser openInBrowser
         )
         {
+            _phaseStore = phaseStore;
             _openInBrowser = openInBrowser;
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
                 SubjectModel = null;
             });
 
-            WeakReferenceMessenger.Default.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
+            Messenger.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
             {
                 SelectedSubjectChangedHandler(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<ChoicedSessionVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 SelectedClassGroup = null;
             });
@@ -370,12 +373,13 @@ namespace Cs4rsa.ViewModels
             /**
              * Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
              **/
-            WeakReferenceMessenger.Default.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
+            Messenger.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
             {
                 ClassGroupResult classGroupResult = m.Value;
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
                 string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
                 classGroupModel.ReRenderScheduleRequest(schoolClassName);
+                _phaseStore.AddClassGroupModel(classGroupModel);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 

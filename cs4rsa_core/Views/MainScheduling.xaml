@@ -36,7 +36,7 @@
                     <local:ChoosedSession />
                 </Grid>
                 <Grid Grid.Column="3" Margin="5,5,0,0">
-                    <local:ScheduleTable />
+                    <local:Scheduler />
                 </Grid>
             </Grid>
             <StatusBar Grid.Row="2">

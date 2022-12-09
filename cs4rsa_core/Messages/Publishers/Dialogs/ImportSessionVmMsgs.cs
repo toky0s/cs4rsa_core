@@ -10,6 +10,8 @@ namespace Cs4rsa.Messages.Publishers.Dialogs
     {
         /// <summary>
         /// Hoàn thành và thoát việc import subject.
+        /// 
+        /// Chuyển xử lý đến SearchSessionViewModel
         /// </summary>
         internal sealed class ExitImportSubjectMsg : ValueChangedMessage<IEnumerable<UserSubject>>
         {

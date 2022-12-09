@@ -35,7 +35,7 @@ namespace Cs4rsa.ViewModelFunctions
                         continue;
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (!conflictTime.Equals(ConflictTime.NullInstance))
+                    if (conflictTime != null)
                     {
                         ConflictModel conflictModel = new(conflict);
                         conflictModels.Add(conflictModel);
@@ -59,7 +59,7 @@ namespace Cs4rsa.ViewModelFunctions
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (!conflictPlace.Equals(ConflictPlace.NullInstance))
+                    if (conflictPlace != null)
                     {
                         PlaceConflictFinderModel placeConflictModel = new(placeConflict);
                         placeConflictFinderModels.Add(placeConflictModel);

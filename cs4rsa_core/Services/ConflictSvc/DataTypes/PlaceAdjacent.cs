@@ -12,10 +12,8 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
     /// 
     /// Ngang cấp với ConflictTime.
     /// </summary>
-    public readonly struct PlaceAdjacent
+    public class PlaceAdjacent
     {
-        public static readonly PlaceAdjacent Instance = new();
-
         public readonly DateTime Start;
         public readonly DateTime End;
 
