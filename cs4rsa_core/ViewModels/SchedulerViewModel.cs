@@ -106,6 +106,17 @@ namespace Cs4rsa.ViewModels
                 {
                     AddClassGroup(cgm);
                 }
+                ChoosedViewModel choosedSessionViewModel = GetViewModel<ChoosedViewModel>();
+                ObservableCollection<ConflictModel> conflictModels = choosedSessionViewModel.ConflictModels;
+                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;
+                foreach (ConflictModel conflictModel in conflictModels)
+                {
+                    AddScheduleItem(conflictModel);
+                }
+                foreach (PlaceConflictFinderModel placeConflict in placeConflicts)
+                {
+                    AddScheduleItem(placeConflict);
+                }
             });
 
             Messenger.Register<ChoosedVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
