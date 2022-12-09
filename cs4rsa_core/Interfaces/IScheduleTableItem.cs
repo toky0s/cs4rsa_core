@@ -1,10 +1,7 @@
-﻿using Cs4rsa.Services.ConflictSvc.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Utils.Models;
 
 using System.Collections.Generic;
-using System.Windows.Markup;
 
 namespace Cs4rsa.Interfaces
 {
@@ -15,11 +12,9 @@ namespace Cs4rsa.Interfaces
         PlaceConflict,
     }
 
-    /**
-     * Mô tả:
-     *      Buộc phải triển khai Interface này nếu muốn hiển thị một 
-     *      khối thời gian trên ScheduleTable.
-     */
+    /// <summary>
+    /// Buộc phải triển khai Interface này nếu muốn hiển thị một khối thời gian trên ScheduleTable.
+    /// </summary>
     public interface IScheduleTableItem
     {
         /// <summary>

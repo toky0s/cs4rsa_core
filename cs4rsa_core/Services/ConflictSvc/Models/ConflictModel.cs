@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.Constants;
+using Cs4rsa.Interfaces;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
@@ -157,7 +158,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
             return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictTime, FirstSchoolClass, SecondSchoolClass, ConflictTime, ConflictType);
         }
 
-        public ScheduleItemId GetScheduleItemId()
+        public string GetId()
         {
             return "tc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
         }

@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.Constants;
+using Cs4rsa.Interfaces;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
@@ -138,11 +139,6 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictPlace, ConflictPlace, FirstSchoolClass, SecondSchoolClass);
-        }
-
-        public ScheduleItemId GetScheduleItemId()
-        {
-            return ScheduleItemId.Of(this);
         }
     }
 }

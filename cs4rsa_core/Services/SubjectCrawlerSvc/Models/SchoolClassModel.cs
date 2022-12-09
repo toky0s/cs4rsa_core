@@ -221,9 +221,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return SchoolClass.GetHashCode();
         }
 
-        public ScheduleItemId GetScheduleItemId()
+        public string GetId()
         {
-            return ScheduleItemId.Of(this);
+            return SubjectCode;
         }
     }
 }
