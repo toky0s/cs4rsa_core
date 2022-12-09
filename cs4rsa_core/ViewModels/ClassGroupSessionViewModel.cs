@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -21,62 +22,25 @@ using System.Windows.Data;
 
 namespace Cs4rsa.ViewModels
 {
-    internal sealed class ClassGroupSessionViewModel : ViewModelBase
+    internal sealed partial class ClassGroupSessionViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
-        private ClassGroupModel _selectedClassGroup;
-        public ClassGroupModel SelectedClassGroup
-        {
-            get => _selectedClassGroup;
-            set
-            {
-                _selectedClassGroup = value;
-                OnPropertyChanged();
-                if (value != null)
-                {
-                    if (value.IsBelongSpecialSubject)
-                    {
-                        OnShowDetailsSchoolClasses();
-                    }
-                    else
-                    {
-                        _phaseStore.AddClassGroupModel(value);
-                        Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
-                    }
-                }
-            }
-        }
-
-        public ICollectionView _classGroupModelsView;
-
         public ObservableCollection<TeacherModel> Teachers { get; set; }
+
+        private readonly ICollectionView _classGroupModelsView;
+
+        [ObservableProperty]
+        private ClassGroupModel _selectedClassGroup;
+
+        [ObservableProperty]
         private int _teacherCount;
 
-        public int TeacherCount
-        {
-            get { return _teacherCount; }
-            set { _teacherCount = value; OnPropertyChanged(); }
-        }
+        [ObservableProperty]
+        private TeacherModel _selectedTeacher;
 
-        private TeacherModel selectedTeacher;
-        public TeacherModel SelectedTeacher
-        {
-            get => selectedTeacher;
-            set
-            {
-                selectedTeacher = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
+        [ObservableProperty]
         private SubjectModel _subjectModel;
-        public SubjectModel SubjectModel
-        {
-            get { return _subjectModel; }
-            set { _subjectModel = value; OnPropertyChanged(); }
-        }
         #endregion
 
         #region Day Filters
@@ -357,6 +321,7 @@ namespace Cs4rsa.ViewModels
             Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
+                TeacherCount = 0;
                 SubjectModel = null;
             });
 
@@ -370,9 +335,7 @@ namespace Cs4rsa.ViewModels
                 SelectedClassGroup = null;
             });
 
-            /**
-             * Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
-             **/
+            // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
             Messenger.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
             {
                 ClassGroupResult classGroupResult = m.Value;
@@ -387,6 +350,7 @@ namespace Cs4rsa.ViewModels
             _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
             _classGroupModelsView.Filter = ClassGroupFilter;
 
+            TeacherCount = 0;
             Teachers = new();
             GotoCourseCommand = new RelayCommand(OnGotoCourse);
             ShowDetailsSchoolClassesCommand = new RelayCommand(OnShowDetailsSchoolClasses);
@@ -394,7 +358,27 @@ namespace Cs4rsa.ViewModels
             ResetFilterCommand = new RelayCommand(OnResetFilter, CanResetFilter);
 
             InitFilter();
-            TeacherCount = 0;
+        }
+
+        partial void OnSelectedTeacherChanged(TeacherModel value)
+        {
+            OnFilter();
+        }
+
+        partial void OnSelectedClassGroupChanged(ClassGroupModel value)
+        {
+            if (value != null)
+            {
+                if (value.IsBelongSpecialSubject)
+                {
+                    OnShowDetailsSchoolClasses();
+                }
+                else
+                {
+                    _phaseStore.AddClassGroupModel(value);
+                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
+                }
+            }
         }
 
         private bool CanResetFilter()
