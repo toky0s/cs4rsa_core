@@ -21,8 +21,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
-using Cs4rsa.Utils.Models;
-using Cs4rsa.ViewModelFunctions;
 
 using MaterialDesignThemes.Wpf;
 
@@ -127,9 +125,7 @@ namespace Cs4rsa.ViewModels
 
             Messenger.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             {
-                ImportSubjects(m.Value.SubjecModels);
-                ClassGroupChoicer choicer = new();
-                choicer.Start(m.Value.ClassGroupModels);
+                ImportSubjects(m.Value);
             });
 
             Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, async (r, m) =>
@@ -144,7 +140,9 @@ namespace Cs4rsa.ViewModels
                 TimeBlock timeBlock = m.Value;
                 if (timeBlock.ScheduleTableItemType == ScheduleTableItemType.SchoolClass)
                 {
-                    SelectedSubjectModel = SubjectModels.Where(sm => sm.SubjectCode.Equals(timeBlock.Id)).FirstOrDefault();
+                    SelectedSubjectModel = SubjectModels
+                        .Where(sm => sm.SubjectCode.Equals(timeBlock.Id))
+                        .FirstOrDefault();
                 }
             });
 
@@ -526,6 +524,7 @@ namespace Cs4rsa.ViewModels
                 {
                     classGroupModel
                 };
+                _phaseStore.AddClassGroupModel(classGroupModel);
                 Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(cgms));
             }
         }
@@ -634,15 +633,15 @@ namespace Cs4rsa.ViewModels
             return true;
         }
 
-        private void ImportSubjects(IEnumerable<SubjectModel> importSubjects)
+        private void ImportSubjects(CombinationModel combinationModel)
         {
             foreach (SubjectModel subject in SubjectModels)
             {
                 Messenger.Send(new SearchVmMsgs.DelSubjectMsg(subject));
             }
-
             SubjectModels.Clear();
-            foreach (SubjectModel subject in importSubjects)
+
+            foreach (SubjectModel subject in combinationModel.SubjecModels)
             {
                 SubjectModels.Add(subject);
             }
@@ -650,6 +649,10 @@ namespace Cs4rsa.ViewModels
             AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
+            foreach (ClassGroupModel classGroupModel in combinationModel.ClassGroupModels)
+            {
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
+            }
         }
 
         /// <summary>

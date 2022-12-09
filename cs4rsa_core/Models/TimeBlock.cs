@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Cs4rsa.Utils.Models
+namespace Cs4rsa.Models
 {
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.

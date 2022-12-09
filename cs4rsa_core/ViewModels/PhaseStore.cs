@@ -49,7 +49,10 @@ namespace Cs4rsa.ViewModels
 
         partial void OnBwpValueChanged(int value)
         {
-            Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(value));
+            if (value != -1)
+            {
+                Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(value));
+            }
         }
 
         public void AddClassGroupModel(ClassGroupModel classGroupModel)
@@ -93,48 +96,9 @@ namespace Cs4rsa.ViewModels
         public void RemoveAll()
         {
             _classGroupModels.Clear();
-            BwpWeeks.Clear();
+            CleanBwpWeeks();
             Start = 0;
             End = 0;
-            BwpValue = 0;
-        }
-
-        /// <summary>
-        /// Đánh giá lại Week range dựa theo những class group model còn lại.
-        /// </summary>
-        private void EvaluateWeek()
-        {
-            int start = 0;
-            int end = 0;
-            foreach (ClassGroupModel cgm in _classGroupModels)
-            {
-                foreach (SchoolClassModel scm in cgm.CurrentSchoolClassModels)
-                {
-                    int scmStart = scm.StudyWeek.StartWeek;
-                    int scmEnd = scm.StudyWeek.EndWeek;
-                    if (scmEnd > end)
-                    {
-                        end = scmEnd;
-                    }
-                    if (start == 0 || scmStart < start)
-                    {
-                        start = scmStart;
-                    }
-                }
-            }
-
-            if (Start == start && End == end) return;
-
-            BwpWeeks.Clear();
-            Start = start;
-            End = end;
-
-            // Không thực hiện Render nếu một trong hai điểm bằng 0
-            if (Start == 0 || End == 0) return;
-            for (int i = start; i <= end; i++)
-            {
-                BwpWeeks.Add(i);
-            }
         }
 
         public void EvaluateBetweenPoint()
@@ -197,6 +161,58 @@ namespace Cs4rsa.ViewModels
             if (bwtValue == 0) return true;
             if (weekRange.Count == 0) return false;
             return !weekRange.Contains(bwtValue);
+        }
+
+        /// <summary>
+        /// Đánh giá lại Week range dựa theo những class group model còn lại.
+        /// </summary>
+        private void EvaluateWeek()
+        {
+            int start = 0;
+            int end = 0;
+            foreach (ClassGroupModel cgm in _classGroupModels)
+            {
+                foreach (SchoolClassModel scm in cgm.CurrentSchoolClassModels)
+                {
+                    int scmStart = scm.StudyWeek.StartWeek;
+                    int scmEnd = scm.StudyWeek.EndWeek;
+                    if (scmEnd > end)
+                    {
+                        end = scmEnd;
+                    }
+                    if (start == 0 || scmStart < start)
+                    {
+                        start = scmStart;
+                    }
+                }
+            }
+
+            if (Start == start && End == end) return;
+
+            CleanBwpWeeks();
+            Start = start;
+            End = end;
+
+            // Không thực hiện Render nếu một trong hai điểm bằng 0
+            if (Start == 0 || End == 0) return;
+            for (int i = start; i <= end; i++)
+            {
+                BwpWeeks.Add(i);
+            }
+        }
+
+        /// <summary>
+        /// Combobox luôn giữ các tham chiếu tới các item mà nó đang chứa
+        /// với selected item. Nếu danh sách item bị clean rồi sau đó được
+        /// set lại với tập item khác, dù cho selected item có thuộc tập
+        /// item mới thì combobox cũng không thể binding để hiển thị được
+        /// , nên sau thao tác clean item của combobox phải ngay lập tức
+        /// set selected item của combobox thành giá trị khác.
+        /// </summary>
+        private void CleanBwpWeeks()
+        {
+            BwpWeeks.Clear();
+            BwpValue = -1;
         }
     }
 }

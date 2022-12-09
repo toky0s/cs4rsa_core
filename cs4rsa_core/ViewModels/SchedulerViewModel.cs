@@ -5,13 +5,13 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.States;
+using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
-using Cs4rsa.Utils.Models;
 
 using System;
 using System.Collections.Generic;
@@ -136,6 +136,11 @@ namespace Cs4rsa.ViewModels
                 CleanDays();
             });
 
+            Messenger.Register<ChoosedVmMsgs.UndoDelMsg>(this, (r, m) =>
+            {
+                AddClassGroup(m.Value);
+            });
+
             Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
                 ChoosedSessionViewModel choosedSessionViewModel = GetViewModel<ChoosedSessionViewModel>();
@@ -144,6 +149,9 @@ namespace Cs4rsa.ViewModels
                 ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;
 
                 CleanDays();
+                // TODO: Chỉ remove những TimeBlock có sự thay đổi về Phase.
+                // Các TimeBlock có Phase trước và sau khi change BetweenPoint
+                // như nhau thì không cần thay đổi.
                 foreach (ClassGroupModel classGroupModel in classGroupModels)
                 {
                     AddClassGroup(classGroupModel);

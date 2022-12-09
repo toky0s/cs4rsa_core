@@ -1,5 +1,5 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.Utils.Models;
+﻿using Cs4rsa.Models;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System.Collections.Generic;
 

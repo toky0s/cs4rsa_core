@@ -71,6 +71,14 @@ namespace Cs4rsa.Messages.Publishers
             }
         }
 
+        internal sealed class UndoDelMsg : ValueChangedMessage<ClassGroupModel>
+        {
+            public UndoDelMsg(ClassGroupModel value) : base(value)
+            {
+                Trace.WriteLine("internal sealed class UndoDelMsg : ValueChangedMessage<ClassGroupModel>");
+            }
+        }
+
         internal sealed class ClassGroupAddedMsg : ValueChangedMessage<ClassGroupModel>
         {
             public ClassGroupAddedMsg(ClassGroupModel value) : base(value)

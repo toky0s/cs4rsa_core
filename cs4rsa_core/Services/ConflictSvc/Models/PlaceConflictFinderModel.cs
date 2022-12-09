@@ -1,12 +1,12 @@
 ﻿using Cs4rsa.Constants;
 using Cs4rsa.Interfaces;
+using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
-using Cs4rsa.Utils.Models;
 
 using System;
 using System.Collections.Generic;

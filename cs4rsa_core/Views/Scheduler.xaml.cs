@@ -2,7 +2,7 @@
 
 using Cs4rsa.Controls;
 using Cs4rsa.Messages.Publishers.UIs;
-using Cs4rsa.Utils.Models;
+using Cs4rsa.Models;
 
 using System.Windows.Controls;
 

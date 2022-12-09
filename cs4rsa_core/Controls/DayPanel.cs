@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Utils.Models;
+﻿using Cs4rsa.Models;
 
 using System.Windows;
 using System.Windows.Controls;

@@ -316,6 +316,7 @@ namespace Cs4rsa.ViewModels
                     ClassGroupModels.Add(classGroupModel);
             }
             _phaseStore.AddClassGroupModel(classGroupModel);
+            Messenger.Send(new ChoosedVmMsgs.UndoDelMsg(classGroupModel));
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
