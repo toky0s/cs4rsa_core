@@ -10,6 +10,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.Utils.Models;
 
 using System;
