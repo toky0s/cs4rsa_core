@@ -91,7 +91,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
             }
             string schoolClassesInfo = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName;
             string timesInfo = string.Join("\n", resultTimes);
-            return "Xung đột: " + schoolClassesInfo + "\n" + timesInfo;
+            return "Trùng lịch\n" + schoolClassesInfo + "\n" + timesInfo;
         }
 
         public ConflictType GetConflictType()

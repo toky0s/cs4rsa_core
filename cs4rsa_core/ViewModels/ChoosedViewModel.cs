@@ -28,7 +28,7 @@ using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
 
 namespace Cs4rsa.ViewModels
 {
-    internal class ChoosedSessionViewModel : ViewModelBase
+    internal class ChoosedViewModel : ViewModelBase
     {
         #region Properties
         private string _shareString;
@@ -74,7 +74,7 @@ namespace Cs4rsa.ViewModels
         private readonly PhaseStore _phaseStore;
         #endregion
 
-        public ChoosedSessionViewModel(
+        public ChoosedViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
             PhaseStore phaseStore

@@ -22,7 +22,10 @@ using System.Windows.Data;
 
 namespace Cs4rsa.ViewModels
 {
-    internal sealed partial class ClassGroupSessionViewModel : ViewModelBase
+    /// <summary>
+    /// Class group View Model
+    /// </summary>
+    internal sealed partial class ClgViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -40,7 +43,7 @@ namespace Cs4rsa.ViewModels
         private TeacherModel _selectedTeacher;
 
         [ObservableProperty]
-        private SubjectModel _subjectModel;
+        private SubjectModel _selectedSubject;
         #endregion
 
         #region Day Filters
@@ -304,7 +307,7 @@ namespace Cs4rsa.ViewModels
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
-        public ClassGroupSessionViewModel(
+        public ClgViewModel(
             PhaseStore phaseStore,
             IOpenInBrowser openInBrowser
         )
@@ -315,14 +318,14 @@ namespace Cs4rsa.ViewModels
             Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
-                SubjectModel = null;
+                SelectedSubject = null;
             });
 
             Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
                 TeacherCount = 0;
-                SubjectModel = null;
+                SelectedSubject = null;
             });
 
             Messenger.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
@@ -658,13 +661,13 @@ namespace Cs4rsa.ViewModels
 
         private void SelectedSubjectChangedHandler(SubjectModel subjectModel)
         {
-            SubjectModel = subjectModel;
+            SelectedSubject = subjectModel;
             ClassGroupModels.Clear();
             Teachers.Clear();
-            if (SubjectModel != null)
+            if (SelectedSubject != null)
             {
                 #region Add ClassGroupModel
-                foreach (ClassGroupModel classGroupModel in SubjectModel.ClassGroupModels)
+                foreach (ClassGroupModel classGroupModel in SelectedSubject.ClassGroupModels)
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
@@ -674,9 +677,9 @@ namespace Cs4rsa.ViewModels
                 TeacherModel allTeacher = new(0, "TẤT CẢ");
                 Teachers.Add(allTeacher);
 
-                List<string> tempTeachers = SubjectModel.TempTeachers;
+                List<string> tempTeachers = SelectedSubject.TempTeachers;
                 // Chống trùng lặp giảng viên
-                foreach (TeacherModel teacher in SubjectModel.Teachers)
+                foreach (TeacherModel teacher in SelectedSubject.Teachers)
                 {
                     if (teacher != null && !Teachers.Where(t => t.TeacherId == teacher.TeacherId).Any())
                     {

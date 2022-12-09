@@ -2,9 +2,9 @@
 
 namespace Cs4rsa.Views
 {
-    public partial class ClassGroupSession : UserControl
+    public partial class Choosed : UserControl
     {
-        public ClassGroupSession()
+        public Choosed()
         {
             InitializeComponent();
         }

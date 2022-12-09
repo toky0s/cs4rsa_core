@@ -2,9 +2,9 @@
 
 namespace Cs4rsa.Views
 {
-    public partial class ChoosedSession : UserControl
+    public partial class Clg : UserControl
     {
-        public ChoosedSession()
+        public Clg()
         {
             InitializeComponent();
         }

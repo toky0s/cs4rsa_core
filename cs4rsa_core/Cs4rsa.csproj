@@ -79,10 +79,10 @@
     <Page Update="Views\AutoSchedule.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ChoosedSession.xaml">
+    <Page Update="Views\Choosed.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ClassGroupSession.xaml">
+    <Page Update="Views\Clg.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Home.xaml">

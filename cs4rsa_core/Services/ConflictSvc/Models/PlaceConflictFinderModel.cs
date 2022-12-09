@@ -111,8 +111,9 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         private static string GetTimeBlockDescription(PlaceAdjacent placeAdjacent)
         {
-            return $"{placeAdjacent.SchoolClass1.SchoolClassName} kết thúc lúc {placeAdjacent.StartAsString} - {placeAdjacent.PlaceStart.ToActualPlace()}\n" +
-                   $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
+            return "Nơi học quá xa\n"
+                + $"{placeAdjacent.SchoolClass1.SchoolClassName} kết thúc lúc {placeAdjacent.StartAsString} - {placeAdjacent.PlaceStart.ToActualPlace()}\n"
+                + $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
         }
 
         public ScheduleTableItemType GetScheduleTableItemType()

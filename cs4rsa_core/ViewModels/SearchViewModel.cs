@@ -330,7 +330,7 @@ namespace Cs4rsa.ViewModels
 
             #region Clone ClassGroup Models
             List<ClassGroupModel> classGroupModels = new();
-            ChoosedSessionViewModel choosedVm = GetViewModel<ChoosedSessionViewModel>();
+            ChoosedViewModel choosedVm = GetViewModel<ChoosedViewModel>();
             foreach (ClassGroupModel classGroupModel in choosedVm.ClassGroupModels)
             {
                 classGroupModels.Add(classGroupModel.DeepClone());
@@ -432,7 +432,7 @@ namespace Cs4rsa.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            ClassGroupModel classGroupModel = GetViewModel<ChoosedSessionViewModel>()
+            ClassGroupModel classGroupModel = GetViewModel<ChoosedViewModel>()
                 .ClassGroupModels
                     .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
                     .FirstOrDefault();

@@ -77,9 +77,9 @@
                 x:Name="SearchingTextBox"
                 Margin="0,0,0,5"
                 materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
+                GotFocus="SearchingTextBox_GotFocus"
                 KeyDown="SearchingTextBox_KeyDown"
                 LostFocus="SearchingTextBox_LostFocus"
-                GotFocus="SearchingTextBox_GotFocus"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
@@ -191,6 +191,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="25" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
                             <Border
                                 Grid.Column="0"
@@ -225,8 +226,12 @@
                                     Margin="5,0,0,10"
                                     Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                     Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                                <ProgressBar IsIndeterminate="True" Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </StackPanel>
+                            <ProgressBar
+                                Grid.Column="2"
+                                IsIndeterminate="True"
+                                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </materialDesign:TransitioningContent>
                 </DataTemplate>

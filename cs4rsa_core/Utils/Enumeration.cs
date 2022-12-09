@@ -5,7 +5,9 @@ using System.Reflection;
 
 namespace Cs4rsa.Utils
 {
+#pragma warning disable CS0659 // 'Enumeration' overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public abstract class Enumeration : IComparable
+#pragma warning restore CS0659 // 'Enumeration' overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         public readonly string Name;
 

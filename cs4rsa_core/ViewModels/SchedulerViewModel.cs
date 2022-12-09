@@ -143,7 +143,7 @@ namespace Cs4rsa.ViewModels
 
             Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
-                ChoosedSessionViewModel choosedSessionViewModel = GetViewModel<ChoosedSessionViewModel>();
+                ChoosedViewModel choosedSessionViewModel = GetViewModel<ChoosedViewModel>();
                 ObservableCollection<ClassGroupModel> classGroupModels = choosedSessionViewModel.ClassGroupModels;
                 ObservableCollection<ConflictModel> conflictModels = choosedSessionViewModel.ConflictModels;
                 ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;

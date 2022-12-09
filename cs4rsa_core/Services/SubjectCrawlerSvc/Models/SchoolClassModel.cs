@@ -174,7 +174,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         {
             foreach (SchoolClassUnit item in _schoolClass.GetSchoolClassUnits())
             {
-                string description = $"{SchoolClassName} | {SubjectName} | {item.Room.Place.ToActualPlace()} | Phòng {item.Room.Name}";
+                string description = $"Mã lớp: {SchoolClassName}"
+                    + $"\nTên môn: {SubjectName}"
+                    + $"\nNơi học: {item.Room.Place.ToActualPlace()}"
+                    + $"\nPhòng: {item.Room.Name}";
                 TimeBlock timeBlock = new()
                 {
                     Id = GetId(),

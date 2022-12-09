@@ -63,7 +63,9 @@ namespace Cs4rsa.ViewModels
                 else
                 {
                     _selectedStudent = value;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
                     LoadStudentPlan();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
                 }
                 LoadProgramCommand.NotifyCanExecuteChanged();
             }
@@ -148,7 +150,9 @@ namespace Cs4rsa.ViewModels
             }
         }
 
+#pragma warning disable CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
         private readonly ProgramDiagram _programDiagram;
+#pragma warning restore CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
 
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
 
