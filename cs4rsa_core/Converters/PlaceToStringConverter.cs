@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace Cs4rsa.Converters
 {
-    class PlaceToStringConverter : IValueConverter
+    internal class PlaceToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

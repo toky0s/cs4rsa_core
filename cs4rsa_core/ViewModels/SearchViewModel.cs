@@ -182,7 +182,6 @@ namespace Cs4rsa.ViewModels
             });
         }
 
-
         partial void OnSelectedSubjectModelChanged(SubjectModel value)
         {
             DeleteCommand.NotifyCanExecuteChanged();

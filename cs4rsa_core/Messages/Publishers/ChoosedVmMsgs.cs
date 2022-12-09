@@ -5,6 +5,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Cs4rsa.Messages.Publishers
 {
@@ -19,6 +20,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public ConflictCollChangedMsg(IEnumerable<ConflictModel> value) : base(value)
             {
+                Trace.WriteLine("internal sealed class ConflictCollChangedMsg : ValueChangedMessage<IEnumerable<ConflictModel>>");
             }
         }
 
@@ -31,6 +33,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public PlaceConflictCollChangedMsg(IEnumerable<PlaceConflictFinderModel> value) : base(value)
             {
+                Trace.WriteLine("internal sealed class PlaceConflictCollChangedMsg : ValueChangedMessage<IEnumerable<PlaceConflictFinderModel>>");
             }
         }
 
@@ -43,6 +46,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public DelClassGroupChoiceMsg(ClassGroupModel value) : base(value)
             {
+                Trace.WriteLine("internal sealed class DelClassGroupChoiceMsg : ValueChangedMessage<ClassGroupModel>");
             }
         }
 
@@ -55,6 +59,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public DelAllClassGroupChoiceMsg(DBNull value) : base(value)
             {
+                Trace.WriteLine("internal sealed class DelAllClassGroupChoiceMsg : ValueChangedMessage<DBNull>");
             }
         }
 
@@ -62,7 +67,15 @@ namespace Cs4rsa.Messages.Publishers
         {
             public UndoDelAllMsg(IEnumerable<ClassGroupModel> value) : base(value)
             {
+                Trace.WriteLine("internal sealed class UndoDelAllMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>");
+            }
+        }
 
+        internal sealed class ClassGroupAddedMsg : ValueChangedMessage<ClassGroupModel>
+        {
+            public ClassGroupAddedMsg(ClassGroupModel value) : base(value)
+            {
+                Trace.WriteLine("internal sealed class ClassGroupAddedMsg: ValueChangedMessage<ClassGroupModel>");
             }
         }
     }

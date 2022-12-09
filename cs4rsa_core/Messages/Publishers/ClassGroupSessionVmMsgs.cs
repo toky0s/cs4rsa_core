@@ -2,6 +2,8 @@
 
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
+using System.Diagnostics;
+
 namespace Cs4rsa.Messages.Publishers
 {
     internal sealed class ClassGroupSessionVmMsgs
@@ -24,6 +26,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public ClassGroupAddedMsg(ClassGroupModel value) : base(value)
             {
+                Trace.WriteLine("internal sealed class ClassGroupAddedMsg : ValueChangedMessage<ClassGroupModel>");
             }
         }
     }

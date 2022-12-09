@@ -100,6 +100,7 @@ namespace Cs4rsa.ViewModels
 
             Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
+                Messenger.Send(new ChoosedVmMsgs.ClassGroupAddedMsg(m.Value));
                 AddClassGroupModel(m.Value);
             });
 

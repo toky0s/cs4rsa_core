@@ -5,6 +5,7 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.States;
+using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
@@ -26,29 +27,28 @@ namespace Cs4rsa.ViewModels
     /// </summary>
     internal sealed class SchedulerViewModel : ViewModelBase
     {
-        private readonly ObservableCollection<ObservableCollection<TimeBlock>>[] _schedules;
+        private readonly List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
 
         #region Properties
-        public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Wednesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Thursday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Friday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Saturday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Sunday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Monday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Tuesday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Wednesday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Thursday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Friday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Saturday { get; }
+        public ObservableCollection<TimeBlock> Phase1_Sunday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Monday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Tuesday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Wednesday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Thursday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Friday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Saturday { get; }
+        public ObservableCollection<TimeBlock> Phase2_Sunday { get; }
 
-        public ObservableCollection<TimeBlock> Phase2_Monday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Tuesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Wednesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Thursday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Friday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Saturday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Sunday { get; set; }
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week1 { get; }
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week2 { get; }
 
-        public ObservableCollection<ObservableCollection<TimeBlock>> Week1 { get; set; }
-        public ObservableCollection<ObservableCollection<TimeBlock>> Week2 { get; set; }
-
-        public ObservableCollection<string> Timelines { get; set; }
+        public ObservableCollection<string> Timelines { get; }
 
         public PhaseStore PhaseStore
         {
@@ -92,10 +92,10 @@ namespace Cs4rsa.ViewModels
                 RemoveScheduleItem(m.Value.SubjectCode);
             });
 
-            Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
+            Messenger.Register<ChoosedVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
                 ClassGroupModel classGroupModel = m.Value;
-                RemoveScheduleItem(classGroupModel.SubjectCode);
+                RemoveScheduleItem(m.Value.SubjectCode);
                 AddClassGroup(classGroupModel);
             });
 
@@ -108,33 +108,27 @@ namespace Cs4rsa.ViewModels
                 }
             });
 
-
-            // Không remove những thằng đã tồn tại.
-            // Remove những thằng không tồn tại
-            // Thêm mới những thằng mới
             Messenger.Register<ChoosedVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
             {
-                List<ConflictModel> conflictModels = m.Value.ToList();
-                IEnumerable<string> conflictIds = conflictModels
-                    .Select(cm => cm.GetId())
-                    .ToList();
-                RemoveConflictNotInContains(conflictIds);
-                AddNewConflicts(conflictModels);
+                IEnumerable<string> conflictIds = m.Value.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Time);
+                AddNewConflicts(m.Value);
             });
 
             Messenger.Register<ChoosedVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
             {
-                List<PlaceConflictFinderModel> placeConflicts = m.Value.ToList();
-                IEnumerable<string> conflictIds = placeConflicts
-                    .Select(cm => cm.GetId())
-                    .ToList();
-                RemoveConflictNotInContains(conflictIds);
-                AddNewConflicts(placeConflicts);
+                IEnumerable<string> conflictIds = m.Value.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Place);
+                AddNewConflicts(m.Value);
             });
 
             Messenger.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
             {
                 ClassGroupModel classGroupModel = m.Value;
+                foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
+                {
+                    RemoveScheduleItem(scm.SubjectCode);
+                }
             });
 
             Messenger.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
@@ -177,7 +171,6 @@ namespace Cs4rsa.ViewModels
             Phase1_Friday = new();
             Phase1_Saturday = new();
             Phase1_Sunday = new();
-
             Phase2_Monday = new();
             Phase2_Tuesday = new();
             Phase2_Wednesday = new();
@@ -208,6 +201,8 @@ namespace Cs4rsa.ViewModels
                 Phase2_Sunday
             };
 
+            _schedules = new() { Week1, Week2 };
+
             Timelines = new();
             foreach (string timeline in Controls.Utils.TIME_LINES)
             {
@@ -216,16 +211,13 @@ namespace Cs4rsa.ViewModels
             #endregion
         }
 
-        private void AddNewConflicts(List<ConflictModel> scheduleTableItems)
+        private void AddNewConflicts(IEnumerable<IScheduleTableItem> scheduleTableItems)
         {
-            scheduleTableItems = scheduleTableItems.Where(sti => !Exists(sti)).ToList();
-            scheduleTableItems.ForEach(sti => AddScheduleItem(sti));
-        }
-
-        private void AddNewConflicts(List<PlaceConflictFinderModel> scheduleTableItems)
-        {
-            scheduleTableItems = scheduleTableItems.Where(sti => !Exists(sti)).ToList();
-            scheduleTableItems.ForEach(sti => AddScheduleItem(sti));
+            scheduleTableItems = scheduleTableItems.Where(sti => !Exists(sti));
+            foreach (var sti in scheduleTableItems)
+            {
+                AddScheduleItem(sti);
+            }
         }
 
         private bool Exists(IScheduleTableItem item)
@@ -258,7 +250,7 @@ namespace Cs4rsa.ViewModels
                 foreach (ObservableCollection<TimeBlock> day in week)
                 {
                     int currentIndex = 0;
-                    while (day.Any())
+                    while (currentIndex < day.Count)
                     {
                         if (id == day[currentIndex].Id)
                         {
@@ -353,16 +345,19 @@ namespace Cs4rsa.ViewModels
             Phase2_Sunday.Clear();
         }
 
-        private void RemoveConflictNotInContains(IEnumerable<string> conflictIds)
+        private void RemoveConflictNotInContains(IEnumerable<string> conflictIds, ConflictType conflictType)
         {
             foreach (ObservableCollection<ObservableCollection<TimeBlock>> week in _schedules)
             {
                 foreach (ObservableCollection<TimeBlock> day in week)
                 {
                     int currentIndex = 0;
-                    while (day.Any())
+                    while (currentIndex < day.Count)
                     {
-                        if (!conflictIds.Contains(day[currentIndex].Id))
+                        if (!conflictIds.Contains(day[currentIndex].Id)
+                            && (day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.TimeConflict
+                            || day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.PlaceConflict)
+                            && day[currentIndex].Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc"))
                         {
                             day.RemoveAt(currentIndex);
                             continue;

@@ -145,9 +145,12 @@ namespace Cs4rsa.ViewModels
             }
             else
             {
-                BwpValue = BwpWeeks[(BwpWeeks.Count - 1) / 2];
+                int tempBwpValue = BwpWeeks[(BwpWeeks.Count - 1) / 2];
+                if (tempBwpValue != BwpValue)
+                {
+                    BwpValue = tempBwpValue;
+                }
             }
-            Messenger.Send(new PhaseStoreMsgs.BetweenPointChangedMsg(BwpValue));
         }
 
         /// <summary>
