@@ -24,6 +24,7 @@ using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.ViewModels;
+using Cs4rsa.ViewModels.AutoScheduling;
 
 using HtmlAgilityPack;
 
@@ -114,6 +115,7 @@ namespace Cs4rsa
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
+            services.AddSingleton<ProgramTreeViewModel>();
 
             return services.BuildServiceProvider();
         }

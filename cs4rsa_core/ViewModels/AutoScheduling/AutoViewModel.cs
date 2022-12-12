@@ -1,18 +1,15 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
-using Cs4rsa.Cs4rsaDatabase.Interfaces;
-using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
-using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -28,143 +25,52 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.AutoScheduling
 {
-    public class AutoScheduleViewModel : ViewModelBase
+    internal sealed partial class AutoViewModel : ViewModelBase
     {
-        #region Properties
-
-        private bool _isFinding;
-        public bool IsFinding
-        {
-            get { return _isFinding; }
-            set { _isFinding = value; OnPropertyChanged(); }
-        }
-
-        private bool _isCalculated;
-
-        public bool IsCalculated
-        {
-            get { return _isCalculated; }
-            set { _isCalculated = value; OnPropertyChanged(); }
-        }
-
-        private Student _selectedStudent;
-
-        public Student SelectedStudent
-        {
-            get { return _selectedStudent; }
-            set
-            {
-                if (value.StudentId == "0")
-                {
-                    _selectedStudent = null;
-                }
-                else
-                {
-                    _selectedStudent = value;
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
-                    LoadStudentPlan();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
-                }
-                LoadProgramCommand.NotifyCanExecuteChanged();
-            }
-        }
-
-
-        public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
-        public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
-        public ObservableCollection<Student> Students { get; set; }
-        public ObservableCollection<CombinationModel> CombinationModels { get; set; }
-        public ObservableCollection<SubjectModel> SubjectModels { get; set; }
-        public ObservableCollection<PlanTable> PlanTables { get; set; }
-
-        private ProgramSubjectModel _selectedProSubject;
-        public ProgramSubjectModel SelectedProSubject
-        {
-            get
-            {
-                return _selectedProSubject;
-            }
-            set
-            {
-                _selectedProSubject = value;
-                OnPropertyChanged();
-                AddCommand.NotifyCanExecuteChanged();
-            }
-        }
-
-        private ProgramSubjectModel _selectedProSubjectInChoiced;
-        public ProgramSubjectModel SelectedProSubjectInChoiced
-        {
-            get => _selectedProSubjectInChoiced;
-            set
-            {
-                _selectedProSubjectInChoiced = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private CombinationModel _selectedCombinationModel;
-        public CombinationModel SelectedCombinationModel
-        {
-            get => _selectedCombinationModel;
-            set
-            {
-                _selectedCombinationModel = value;
-                ShowOnSimuCommand.NotifyCanExecuteChanged();
-                OnPropertyChanged();
-            }
-        }
-
-        private int _combinationCount;
-        public int CombinationCount
-        {
-            get => _combinationCount;
-            set
-            {
-                _combinationCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _choicedCount;
-        public int ChoicedCount
-        {
-            get => _choicedCount;
-            set
-            {
-                _choicedCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _creditCount;
-        public int CreditCount
-        {
-            get => _creditCount;
-            set
-            {
-                _creditCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-#pragma warning disable CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
+        #region Fields
+#pragma warning disable CS0649
         private readonly ProgramDiagram _programDiagram;
-#pragma warning restore CS0649 // Field 'AutoScheduleViewModel._programDiagram' is never assigned to, and will always have its default value null
+#pragma warning restore CS0649
 
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
-
         private List<List<ClassGroupModel>> _classGroupModelsOfClass;
+        #endregion
+
+        #region Properties
+        public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
+        public ObservableCollection<ProgramSubjectModel> ChoicedProSubjectModels { get; set; }
+        public ObservableCollection<CombinationModel> CombinationModels { get; set; }
+        public ObservableCollection<SubjectModel> SubjectModels { get; set; }
+
+        [ObservableProperty]
+        private bool _isFinding;
+
+        [ObservableProperty]
+        private bool _isCalculated;
+
+        [ObservableProperty]
+        private ProgramSubjectModel _selectedProSubjectInChoiced;
+
+        [ObservableProperty]
+        private CombinationModel _selectedCombinationModel;
+
+        [ObservableProperty]
+        private int _combinationCount;
+
+        [ObservableProperty]
+        private int _choicedCount;
+
+        [ObservableProperty]
+        private int _creditCount;
         #endregion
 
         #region Commands
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
-        public AsyncRelayCommand LoadProgramCommand { get; set; }
-
+        
         public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
@@ -178,13 +84,9 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region Dependencies
-        private readonly ColorGenerator _colorGenerator;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        private readonly IStudentPlanCrawler _studentPlanCrawler;
-        private readonly ProgramDiagramCrawler _programDiagramCrawler;
         #endregion
 
         #region Filter Properties
@@ -258,39 +160,28 @@ namespace Cs4rsa.ViewModels
 
         #endregion
 
-        public AutoScheduleViewModel(
+        public AutoViewModel(
             ICourseCrawler courseCrawler,
-            IUnitOfWork unitOfWork,
             IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue,
-            IStudentPlanCrawler studentPlanCrawler,
-            ProgramDiagramCrawler programDiagramCrawler,
-            ColorGenerator colorGenerator
+            ISnackbarMessageQueue snackbarMessageQueue
         )
         {
             _openInBrowser = openInBrowser;
-            _colorGenerator = colorGenerator;
-            _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
-            _studentPlanCrawler = studentPlanCrawler;
-            _programDiagramCrawler = programDiagramCrawler;
 
             ProgramFolderModels = new();
             ChoicedProSubjectModels = new();
             CombinationModels = new();
             SubjectModels = new();
-            Students = new();
-            PlanTables = new();
 
             _filteredClassGroupModels = new();
             _classGroupModelsOfClass = new();
 
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
-            LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, CanLoadProgram);
-
-            AddCommand = new RelayCommand(OnAddSubject, CanAdd);
+            
+            //AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
@@ -311,29 +202,12 @@ namespace Cs4rsa.ViewModels
             IsCalculated = false;
             _tempResult = new();
             _genIndex = 0;
+
         }
 
-        private bool CanLoadProgram()
+        partial void OnSelectedCombinationModelChanged(CombinationModel value)
         {
-            return _selectedStudent != null;
-        }
-
-        public async Task LoadStudents()
-        {
-            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            foreach (Student student in students)
-            {
-                Students.Add(student);
-            }
-        }
-
-        private async Task LoadStudentPlan()
-        {
-            IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(_selectedStudent.CurriculumId);
-            foreach (PlanTable planTable in planTables)
-            {
-                PlanTables.Add(planTable);
-            }
+            ShowOnSimuCommand.NotifyCanExecuteChanged();
         }
 
         private void OnValidGen()
@@ -427,6 +301,7 @@ namespace Cs4rsa.ViewModels
             Sun_Nig = false;
             OnFiltering();
         }
+
         private void OnFiltering()
         {
             _filteredClassGroupModels.Clear();
@@ -589,37 +464,12 @@ namespace Cs4rsa.ViewModels
             ValidGenCommand.NotifyCanExecuteChanged();
         }
 
-        public async Task LoadProgramSubject()
-        {
-            IsFinding = true;
-            ProgramFolderModels.Clear();
-
-            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
-                string.Empty,
-                _selectedStudent.SpecialString,
-                _selectedStudent.StudentId
-            );
-
-            foreach (ProgramFolder folder in folders)
-            {
-                await AddProgramFolder(folder);
-            }
-
-            IsFinding = false;
-        }
-
-        private async Task AddProgramFolder(ProgramFolder programFolder)
-        {
-            ProgramFolderModel programFolderModel = await ProgramFolderModel.CreateAsync(programFolder, _colorGenerator, _unitOfWork);
-            ProgramFolderModels.Add(programFolderModel);
-        }
-
-        private bool CanAdd()
-        {
-            return _selectedProSubject != null
-                && _selectedProSubject.IsAvaiable
-                && !ChoicedProSubjectModels.Contains(_selectedProSubject);
-        }
+        //private bool CanAdd()
+        //{
+        //    return _selectedProSubject != null
+        //        && _selectedProSubject.IsAvaiable
+        //        && !ChoicedProSubjectModels.Contains(_selectedProSubject);
+        //}
 
         private bool CanShowOnSimu()
         {
@@ -643,8 +493,8 @@ namespace Cs4rsa.ViewModels
             ProSubjectDetailUC proSubjectDetailUC = new();
             ProSubjectDetailViewModel vm = proSubjectDetailUC.DataContext as ProSubjectDetailViewModel;
             vm.ProgramDiagram = _programDiagram;
-            vm.ProgramSubjectModel = _selectedProSubject;
-            vm.AddCallback = OnAddSubject;
+            //vm.ProgramSubjectModel = _selectedProSubject;
+            //vm.AddCallback = OnAddSubject;
             await vm.LoadPreProSubjectModels();
             await vm.LoadParProSubjectModels();
             OpenDialog(proSubjectDetailUC);
@@ -718,18 +568,18 @@ namespace Cs4rsa.ViewModels
             IsCalculated = false;
         }
 
-        private void OnAddSubject()
-        {
-            if (_selectedProSubject != null)
-            {
-                ChoicedProSubjectModels.Add(SelectedProSubject);
-                SubjectDownloadCommand.NotifyCanExecuteChanged();
-                AddCommand.NotifyCanExecuteChanged();
-                DeleteAllCommand.NotifyCanExecuteChanged();
-                UpdateCreditCount();
-                UpdateChoicedCount();
-            }
-        }
+        //private void OnAddSubject()
+        //{
+        //    if (_selectedProSubject != null)
+        //    {
+        //        ChoicedProSubjectModels.Add(SelectedProSubject);
+        //        SubjectDownloadCommand.NotifyCanExecuteChanged();
+        //        AddCommand.NotifyCanExecuteChanged();
+        //        DeleteAllCommand.NotifyCanExecuteChanged();
+        //        UpdateCreditCount();
+        //        UpdateChoicedCount();
+        //    }
+        //}
 
         private void UpdateChoicedCount()
         {

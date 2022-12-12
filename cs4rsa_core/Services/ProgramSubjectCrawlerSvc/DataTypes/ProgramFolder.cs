@@ -233,7 +233,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
                 _childProgramFolders.Add(node as ProgramFolder);
         }
 
-        public void AddNodes(List<ProgramSubject> nodes)
+        public void AddNodes(IEnumerable<ProgramSubject> nodes)
         {
             _childProgramSubjects.AddRange(nodes);
         }

@@ -1,15 +1,14 @@
 ﻿using Cs4rsa.Models;
-using Cs4rsa.ViewModels;
 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Cs4rsa.Views
+namespace Cs4rsa.Views.AutoScheduling
 {
-    public partial class AutoSchedule : UserControl
+    public partial class Auto : UserControl
     {
-        public AutoSchedule()
+        public Auto()
         {
             InitializeComponent();
         }
@@ -47,17 +46,6 @@ namespace Cs4rsa.Views
             return true;
         }
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            (DataContext as AutoScheduleViewModel).SelectedProSubject = e.NewValue is ProgramSubjectModel ? e.NewValue as ProgramSubjectModel : null;
-        }
-
-        // Chống scroll auto đưa item vào trung tâm khi focus
-        private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
-        {
-            e.Handled = true;
-        }
-
         private void CheckBoxHideConflict_Click(object sender, RoutedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
@@ -75,10 +63,8 @@ namespace Cs4rsa.Views
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            treeView.ItemsSource = (DataContext as AutoScheduleViewModel).ProgramFolderModels;
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource);
             view.Filter = CombinationFilter;
-            await (DataContext as AutoScheduleViewModel).LoadStudents();
         }
     }
 }

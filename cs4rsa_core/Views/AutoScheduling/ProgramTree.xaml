@@ -1,0 +1,225 @@
+﻿<UserControl
+  x:Class="Cs4rsa.Views.AutoScheduling.ProgramTree"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:autoscheduling="clr-namespace:Cs4rsa.ViewModels.AutoScheduling"
+  xmlns:converter="clr-namespace:Cs4rsa.Converters"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:Cs4rsa.Views.AutoScheduling"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:model="clr-namespace:Cs4rsa.Models"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  d:DataContext="{d:DesignInstance Type=autoscheduling:ProgramTreeViewModel}"
+  vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <!--<ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+      </ResourceDictionary.MergedDictionaries>-->
+      <Style x:Key="HorizontalDividerBorder" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="1" />
+      </Style>
+      <converter:StudyStateConverter x:Key="StudyStateConverter" />
+      <converter:NodeTypeConverter x:Key="NodeTypeConverter" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Grid Grid.Column="0" Margin="5">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+      <ComboBox
+        Grid.Row="0"
+        Grid.Column="0"
+        Grid.ColumnSpan="2"
+        Margin="0,0,0,5"
+        ItemsSource="{Binding Students}"
+        SelectedItem="{Binding SelectedStudent}"
+        Style="{StaticResource MaterialDesignOutlinedComboBox}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Name}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <Button
+        Grid.Row="1"
+        Grid.Column="0"
+        Margin="0,0,5,0"
+        Command="{Binding LoadProgramCommand}"
+        Content="TẢI CHƯƠNG TRÌNH HỌC" />
+      <Button
+        Grid.Row="1"
+        Grid.Column="1"
+        Command="{Binding MyProgramCommand}"
+        Content="{md:PackIcon Kind=Table}"
+        ToolTip="Chương trình dự kiến" />
+    </Grid>
+    <TreeView
+      x:Name="treeView"
+      Grid.Row="1"
+      HorizontalContentAlignment="Stretch"
+      ItemsSource="{Binding ProgramFolderModels}"
+      SelectedItemChanged="TreeView_SelectedItemChanged">
+      <TreeView.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
+          <HierarchicalDataTemplate.ItemContainerStyle>
+            <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+              <Setter Property="IsExpanded" Value="True" />
+            </Style>
+          </HierarchicalDataTemplate.ItemContainerStyle>
+          <md:TransitioningContent>
+            <md:TransitioningContent.OpeningEffects>
+              <md:TransitionEffect Kind="FadeIn" />
+              <md:TransitionEffect Kind="ExpandIn" />
+              <md:TransitionEffect Kind="SlideInFromTop" />
+              <md:TransitionEffect Kind="SlideInFromLeft" />
+            </md:TransitioningContent.OpeningEffects>
+            <StackPanel Orientation="Vertical">
+              <StackPanel Orientation="Horizontal">
+                <md:PackIcon Margin="0,0,5,0">
+                  <md:PackIcon.Style>
+                    <Style TargetType="md:PackIcon">
+                      <Setter Property="Kind" Value="FlagVariant" />
+                      <Setter Property="Foreground" Value="#eb4d4b" />
+                      <Setter Property="ToolTip" Value="Chưa hoàn tất" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                          <Setter Property="Foreground" Value="#6ab04c" />
+                          <Setter Property="Kind" Value="CheckBold" />
+                          <Setter Property="ToolTip" Value="Đã hoàn tất" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </md:PackIcon.Style>
+                </md:PackIcon>
+                <TextBlock Text="{Binding FolderName}" />
+              </StackPanel>
+              <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding Description}" />
+            </StackPanel>
+          </md:TransitioningContent>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
+          <md:TransitioningContent>
+            <md:TransitioningContent.OpeningEffects>
+              <md:TransitionEffect Kind="FadeIn" />
+              <md:TransitionEffect Kind="SlideInFromTop" />
+            </md:TransitioningContent.OpeningEffects>
+            <StackPanel Orientation="Horizontal">
+              <md:PackIcon Margin="0,0,5,0">
+                <md:PackIcon.Style>
+                  <Style TargetType="md:PackIcon">
+                    <Setter Property="Kind" Value="FlagVariant" />
+                    <Setter Property="Foreground" Value="#eb4d4b" />
+                    <Setter Property="ToolTip" Value="Chưa học" />
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
+                        <Setter Property="Kind" Value="CheckBold" />
+                        <Setter Property="Foreground" Value="#6ab04c" />
+                        <Setter Property="ToolTip" Value="Đã học" />
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
+                        <Setter Property="Kind" Value="School" />
+                        <Setter Property="Foreground" Value="#30336b" />
+                        <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </md:PackIcon.Style>
+              </md:PackIcon>
+              <Rectangle
+                Width="8"
+                Height="8"
+                Margin="0,0,5,0">
+                <Rectangle.Style>
+                  <Style TargetType="Rectangle">
+                    <Setter Property="Fill" Value="{Binding Color}" />
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Color}" Value="{}">
+                        <Setter Property="Stroke" Value="Red" />
+                        <Setter Property="Fill" Value="White" />
+                        <Setter Property="ToolTip" Value="Không có sẵn trong kỳ này" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </Rectangle.Style>
+              </Rectangle>
+              <TextBlock Text="{Binding SubjectCode}" />
+              <TextBlock Text=" - " />
+              <TextBlock Text="{Binding SubjectName}" />
+              <TextBlock Text=" - " />
+              <TextBlock Text="{Binding StudyUnit}" />
+            </StackPanel>
+          </md:TransitioningContent>
+        </DataTemplate>
+      </TreeView.Resources>
+      <TreeView.ItemContainerStyle>
+        <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+          <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView" />
+          <Setter Property="IsExpanded" Value="True" />
+        </Style>
+      </TreeView.ItemContainerStyle>
+    </TreeView>
+    <md:Card
+      Grid.Row="2"
+      Margin="0,5,0,0"
+      Padding="5">
+      <md:Card.Style>
+        <Style TargetType="md:Card">
+          <Setter Property="Background" Value="{Binding SelectedProSubject.Color}" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectedProSubject.IsAvaiable}" Value="False">
+              <Setter Property="Background" Value="White" />
+              <Setter Property="Foreground" Value="Red" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </md:Card.Style>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="1*" />
+          <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+          <TextBlock
+            Grid.Column="0"
+            Margin="5,0,5,0"
+            TextWrapping="WrapWithOverflow">
+            <TextBlock.Style>
+              <Style TargetType="TextBlock">
+                <Setter Property="Text" Value="{Binding SelectedProSubject.ProgramSubject.SubjectName, UpdateSourceTrigger=PropertyChanged}" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding SelectedProSubject}" Value="{x:Null}">
+                    <Setter Property="Text" Value="Hãy chọn một môn..." />
+                    <Setter Property="FontStyle" Value="Italic" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </TextBlock.Style>
+          </TextBlock>
+        </StackPanel>
+        <StackPanel
+          Grid.Column="1"
+          HorizontalAlignment="Right"
+          Orientation="Horizontal">
+          <Button Margin="0,0,5,0" Content="THÊM" />
+        </StackPanel>
+      </Grid>
+    </md:Card>
+  </Grid>
+</UserControl>

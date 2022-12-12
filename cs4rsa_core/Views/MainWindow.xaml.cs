@@ -21,7 +21,7 @@ namespace Cs4rsa.Views
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
-            Goto((int)ScreenIndex.HAND);
+            Goto((int)ScreenIndex.AUTO);
         }
 
         private void RenderScreen()

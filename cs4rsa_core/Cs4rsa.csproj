@@ -76,7 +76,7 @@
     <Page Update="Dialogs\DialogViews\UpdateUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\AutoSchedule.xaml">
+    <Page Update="Views\AutoScheduling\Auto.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Choosed.xaml">
