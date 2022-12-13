@@ -70,7 +70,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
         public AsyncRelayCommand WatchDetailCommand { get; set; }
-        
+
         public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
@@ -180,7 +180,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
             WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
-            
+
             //AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);

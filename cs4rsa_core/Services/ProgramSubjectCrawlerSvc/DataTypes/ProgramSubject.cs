@@ -19,14 +19,14 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         public string SubjectName { get; set; }
         public int StudyUnit { get; }
         public StudyUnitType StudyUnitType { get; }
-        public List<string> PrerequisiteSubjects { get; }
-        public List<string> ParallelSubjects { get; }
+        public IEnumerable<string> PrerequisiteSubjects { get; }
+        public IEnumerable<string> ParallelSubjects { get; }
         public StudyState StudyState { get; }
         public string CourseId { get; }
         public string ParentNodeName { get; }
 
         public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
-            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
+            IEnumerable<string> prerequisiteSubjects, IEnumerable<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
         {
             Id = id;
             ChildOfNode = childOfNode;

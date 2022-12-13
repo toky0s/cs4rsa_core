@@ -17,9 +17,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using PreParSubject = Cs4rsa.Cs4rsaDatabase.Models.PreParSubject;
-using ProgramSubject = Cs4rsa.Cs4rsaDatabase.Models.ProgramSubject;
-
 namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 {
     public class StudentProgramCrawler
@@ -27,14 +24,9 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         private static string _sessionId;
         private static string _studentId;
 
-        // Transient
         private HtmlNodeCollection _trNodes;
-        private ProgramFolder Root;
-
-        #region DI
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPreParSubjectCrawler _preParSubjectCrawler;
-        #endregion
 
         public StudentProgramCrawler(
             IUnitOfWork unitOfWork,
@@ -56,7 +48,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             _studentId = studentId;
         }
 
-        public async Task<ProgramFolder> GetNodeA(
+        public async Task<ProgramFolder> GetRoot(
             string specialString,
             string t,
             string nodeName,
@@ -66,8 +58,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             string url = GetUrl(specialString, t, nodeName, curid);
             _trNodes = await GetAllTrTag(url, nodeName, true);
             ProgramFolder programFolder = GetProgramFolder(_trNodes[0]);
-            Root = await GetFolderNode(1, programFolder);
-            return Root;
+            return await GetFolderNode(1, programFolder);
         }
 
         /// <summary>
@@ -78,21 +69,12 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// <param name="curid">Mã ngành</param>
         /// <param name="cursectionid">PhanHoc</param>
         /// <returns></returns>
-        private static string GetUrl(
-            string specialString,
-            string t,
-            string nodeName,
-            int curid
-        )
+        private static string GetUrl(string specialString, string t, string nodeName, int curid)
         {
             return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/GetUrl.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
         }
 
-        private static async Task<HtmlNodeCollection> GetAllTrTag(
-            string url,
-            string nodeName,
-            bool isUseCache
-        )
+        private static async Task<HtmlNodeCollection> GetAllTrTag(string url, string nodeName, bool isUseCache)
         {
             HtmlWeb web = new();
             HtmlDocument doc = new();
@@ -115,8 +97,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         {
             for (int i = index; i < _trNodes.Count; i++)
             {
-                string classValueA = $"child-of-node-{parentFolderNode.Id}";
-                if (_trNodes[i].Attributes["class"].Value.Contains(classValueA))
+                if (_trNodes[i].Attributes["class"].Value.Split(' ').First().Equals($"child-of-node-{parentFolderNode.Id}"))
                 {
                     HtmlNode node = _trNodes[i];
                     HtmlDocument htmlDocument = new();
@@ -127,19 +108,18 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                     if (spanFolderNode != null && spanFolderNode.Attributes["class"].Value == "folder")
                     {
                         ProgramFolder programFolder = GetProgramFolder(node);
-                        parentFolderNode.ChildProgramFolders.Add(await GetFolderNode(i + 1, programFolder));
-                        continue;
+                        await GetFolderNode(i + 1, programFolder);
+                        parentFolderNode.ChildProgramFolders.Add(programFolder);
                     }
-                    else if (rootNode.SelectSingleNode("//span[@class='file']") != null)
+                    else
                     {
-                        parentFolderNode.ChildProgramSubjects.Add(await GetProgramSubject(node));
+                        parentFolderNode.ChildProgramSubjects.Add(await GetProgramSubject(node, parentFolderNode));
                     }
                 }
             }
 
             return parentFolderNode;
         }
-
 
         private static ProgramFolder GetProgramFolder(HtmlNode trNode)
         {
@@ -182,7 +162,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return new(name, studyMode, id, childOfNode, description, trNode.InnerHtml);
         }
 
-        private async Task<DataTypes.ProgramSubject> GetProgramSubject(HtmlNode node)
+        private async Task<DataTypes.ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode)
         {
             HtmlDocument doc = new();
             doc.LoadHtml(node.InnerHtml);
@@ -203,7 +183,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 childOfNode = classValue.Split(new char[] { '-' })[3];
             }
 
-            //string parrentNodeName = GetParrentNodeWithId(childOfNode);
+            string parrentNodeName = parentNode.Name;
 
             // other infomations
             HtmlNode aTag = docNode.SelectSingleNode("//span/a");
@@ -234,19 +214,8 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             {
                 preParContainer = await _preParSubjectCrawler.Run(_sessionId);
             }
-            List<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
-            List<string> parallelSubjects = preParContainer.ParallelSubjects;
-            IEnumerable<string> sPreParSubjects = prerequisiteSubjects.Concat(parallelSubjects);
-            List<PreParSubject> preParSubjects = new();
-
-            foreach (string strPreParSubject in sPreParSubjects)
-            {
-                PreParSubject preParSubject = new()
-                {
-                    SubjectCode = strPreParSubject
-                };
-                preParSubjects.Add(preParSubject);
-            }
+            IEnumerable<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
+            IEnumerable<string> parallelSubjects = preParContainer.ParallelSubjects;
 
             // study state
             StudyState studyState;
@@ -268,20 +237,22 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             }
 
             DataTypes.ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
-                studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, "");
+                studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
 
-            ProgramSubject programSubject = new()
+            DbProgramSubject programSubject = new()
             {
                 SubjectCode = subjectCode,
                 CourseId = courseId,
                 Name = name,
                 Credit = studyUnit,
             };
-
             await _unitOfWork.ProgramSubjects.AddAsync(programSubject);
-            foreach (PreParSubject preParSubject in preParSubjects)
+
+            IEnumerable<DbPreParSubject> preParSubjects = GetPreParSubjects(prerequisiteSubjects.Concat(parallelSubjects));
+            foreach (DbPreParSubject preParSubject in preParSubjects)
             {
                 await _unitOfWork.PreParSubjects.AddAsync(preParSubject);
+
                 PreProDetail preProDetail = new()
                 {
                     ProgramSubject = programSubject,
@@ -315,6 +286,14 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             nodesToRemove?.Remove();
             HtmlNode span = docNode.SelectSingleNode("//span");
             return StringHelper.SuperCleanString(span.InnerText);
+        }
+
+        private static IEnumerable<DbPreParSubject> GetPreParSubjects(IEnumerable<string> preParSubjectNames)
+        {
+            foreach (string strPreParSubject in preParSubjectNames)
+            {
+                yield return new() { SubjectCode = strPreParSubject };
+            }
         }
     }
 }

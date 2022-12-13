@@ -2,9 +2,9 @@
 
 namespace Cs4rsa.Cs4rsaDatabase.Models
 {
-    public class ProgramSubject
+    public class DbProgramSubject
     {
-        public int ProgramSubjectId { get; set; }
+        public int DbProgramSubjectId { get; set; }
         public string SubjectCode { get; set; }
         public string CourseId { get; set; }
         public string Name { get; set; }

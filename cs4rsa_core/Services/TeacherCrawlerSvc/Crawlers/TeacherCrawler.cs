@@ -189,9 +189,9 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             HttpResponseMessage response = await httpClient.GetAsync(imageUrl);
             if (response.IsSuccessStatusCode)
             {
-                #pragma warning disable SYSLIB0014 // Type or member is obsolete
+#pragma warning disable SYSLIB0014 // Type or member is obsolete
                 using WebClient webClient = new();
-                #pragma warning restore SYSLIB0014 // Type or member is obsolete
+#pragma warning restore SYSLIB0014 // Type or member is obsolete
                 webClient.DownloadFileAsync(new Uri(imageUrl), strImageFullPath);
                 return strImageFullPath;
             }

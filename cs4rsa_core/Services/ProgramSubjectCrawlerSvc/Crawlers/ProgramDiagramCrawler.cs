@@ -37,13 +37,12 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             string t = GetTimeFromEpoch();
 
             StudentProgramCrawler.SetInfor(sessionId, studentId);
-            Task<ProgramFolder> task1 = GetNewInstanceStudentProgramCrawler().GetNodeA(specialString, t, VMConstants.NODE_NAME_DAI_CUONG, curid);
-            //Task<ProgramFolder> task2 = GetNewInstanceStudentProgramCrawler().GetNode(specialString, t, VMConstants.NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG, curid);
-            //Task<ProgramFolder> task3 = GetNewInstanceStudentProgramCrawler().GetNode(specialString, t, VMConstants.NODE_NAME_DAI_CUONG_NGANH, curid);
-            //Task<ProgramFolder> task4 = GetNewInstanceStudentProgramCrawler().GetNode(specialString, t, VMConstants.NODE_NAME_CHUYEN_NGANH, curid);
+            Task<ProgramFolder> task1 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_DAI_CUONG, curid);
+            Task<ProgramFolder> task2 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG, curid);
+            Task<ProgramFolder> task3 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_DAI_CUONG_NGANH, curid);
+            Task<ProgramFolder> task4 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_CHUYEN_NGANH, curid);
             await _unitOfWork.CompleteAsync();
-            //return await Task.WhenAll(task1, task2, task3, task4);
-            return await Task.WhenAll(task1);
+            return await Task.WhenAll(task1, task2, task3, task4);
         }
 
         private static StudentProgramCrawler GetNewInstanceStudentProgramCrawler()

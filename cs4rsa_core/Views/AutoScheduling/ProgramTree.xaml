@@ -15,9 +15,6 @@
   mc:Ignorable="d">
   <UserControl.Resources>
     <ResourceDictionary>
-      <!--<ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
-      </ResourceDictionary.MergedDictionaries>-->
       <Style x:Key="HorizontalDividerBorder" TargetType="{x:Type Border}">
         <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
         <Setter Property="UseLayoutRounding" Value="True" />
@@ -26,6 +23,7 @@
       </Style>
       <converter:StudyStateConverter x:Key="StudyStateConverter" />
       <converter:NodeTypeConverter x:Key="NodeTypeConverter" />
+      <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
     </ResourceDictionary>
   </UserControl.Resources>
   <Grid Grid.Column="0" Margin="5">
@@ -178,10 +176,10 @@
     <md:Card
       Grid.Row="2"
       Margin="0,5,0,0"
-      Padding="5">
+      Padding="5"
+      Background="{Binding SelectedProSubject.Color, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=White}">
       <md:Card.Style>
         <Style TargetType="md:Card">
-          <Setter Property="Background" Value="{Binding SelectedProSubject.Color}" />
           <Style.Triggers>
             <DataTrigger Binding="{Binding SelectedProSubject.IsAvaiable}" Value="False">
               <Setter Property="Background" Value="White" />

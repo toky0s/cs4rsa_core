@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
-    public class ProgramSubjectRepository : GenericRepository<ProgramSubject>, IProgramSubjectRepository
+    public class ProgramSubjectRepository : GenericRepository<DbProgramSubject>, IProgramSubjectRepository
     {
         public ProgramSubjectRepository(Cs4rsaDbContext context) : base(context)
         {
         }
 
-        public async Task<ProgramSubject> GetByCourseIdAsync(string CourseId)
+        public async Task<DbProgramSubject> GetByCourseIdAsync(string CourseId)
         {
             return await _context.ProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == CourseId);
         }
 
-        public Task<ProgramSubject> GetBySubjectCode(string subjectCode)
+        public Task<DbProgramSubject> GetBySubjectCode(string subjectCode)
         {
             return _context.ProgramSubjects.FirstOrDefaultAsync(p => p.SubjectCode.Equals(subjectCode));
         }

@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
-    public interface IProgramSubjectRepository : IGenericRepository<ProgramSubject>
+    public interface IProgramSubjectRepository : IGenericRepository<DbProgramSubject>
     {
-        Task<ProgramSubject> GetByCourseIdAsync(string CourseId);
+        Task<DbProgramSubject> GetByCourseIdAsync(string CourseId);
 
-        Task<ProgramSubject> GetBySubjectCode(string subjectCode);
+        Task<DbProgramSubject> GetBySubjectCode(string subjectCode);
     }
 }
