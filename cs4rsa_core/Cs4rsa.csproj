@@ -29,7 +29,6 @@
   <ItemGroup>
     <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
-    <None Remove="Images\cockieeditor3.png" />
     <None Remove="Images\cockieeditor5.png" />
     <None Remove="Images\cookie_v1.png" />
     <None Remove="Images\default-avatar.jpg" />
@@ -91,9 +90,6 @@
     <Page Update="Views\Info.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\Login.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Views\MainScheduling.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
@@ -111,7 +107,6 @@
   <ItemGroup>
     <Resource Include="Images\background.png" />
     <Resource Include="Images\choice.jpg" />
-    <Resource Include="Images\cockieeditor3.png" />
     <Resource Include="Images\cockieeditor5.png" />
     <Resource Include="Images\cookie_v1.png" />
     <Resource Include="Images\default-avatar.jpg" />

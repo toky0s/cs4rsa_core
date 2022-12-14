@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -6,7 +7,6 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
-using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.ModelExtensions;
@@ -17,36 +17,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.Dialogs.Implements
 {
-    public class LoginViewModel : ViewModelBase
+    internal sealed partial class AccountViewModel : ViewModelBase
     {
         #region Properties
-        private bool _isExpanded;
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set { _isExpanded = value; OnPropertyChanged(); }
-        }
         public ObservableCollection<Student> Students { get; set; }
         public Student SelectedStudent { get; set; }
 
+        [ObservableProperty]
         private string _sessionId;
-        public string SessionId
-        {
-            get { return _sessionId; }
-            set
-            {
-                _sessionId = value;
-                OnPropertyChanged();
-            }
-        }
         #endregion
 
         #region Commands
         public AsyncRelayCommand FindCommand { get; set; }
         public AsyncRelayCommand DeleteCommand { get; set; }
-        public RelayCommand ExpandedCommand { get; set; }
         #endregion
 
         #region Services
@@ -54,7 +39,7 @@ namespace Cs4rsa.ViewModels
         private readonly IMessageBox _cs4RsaMessageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
-        public LoginViewModel(
+        public AccountViewModel(
             IMessageBox cs4rsaMessageBox,
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue
@@ -66,19 +51,13 @@ namespace Cs4rsa.ViewModels
 
             Messenger.Register<SessionInputVmMsgs.ExitSearchAccountMsg>(this, async (r, m) =>
             {
-                await LoadStudentInfos();
+                await LoadStudent();
             });
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
-            ExpandedCommand = new RelayCommand(OnExpanded);
 
             Students = new();
-        }
-
-        private void OnExpanded()
-        {
-            IsExpanded = !IsExpanded;
         }
 
         private async Task OnDelete()
@@ -89,7 +68,7 @@ namespace Cs4rsa.ViewModels
 
             _unitOfWork.Students.Remove(SelectedStudent);
             await _unitOfWork.CompleteAsync();
-            await LoadStudentInfos();
+            await LoadStudent();
 
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, async (obj) => await OnRestore(obj), actionData);
         }
@@ -118,7 +97,7 @@ namespace Cs4rsa.ViewModels
             await vm.Find();
         }
 
-        public async Task LoadStudentInfos()
+        public async Task LoadStudent()
         {
             Students.Clear();
             IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();

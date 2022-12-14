@@ -22,6 +22,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
     internal sealed partial class ProgramTreeViewModel : ViewModelBase
     {
         private readonly MyProgramUC _myProgramUC;
+        private readonly AccountUC _accountUC;
 
         public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<PlanTable> PlanTables { get; set; }
@@ -37,6 +38,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private ProgramSubjectModel _selectedProSubject;
 
         public AsyncRelayCommand LoadProgramCommand { get; set; }
+        public RelayCommand AccountCommand { get; set; }
 
         /// <summary>
         /// Hiển thị Dialog chứa chương trình học dự kiến
@@ -64,10 +66,13 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             ProgramFolderModels = new();
             PlanTables = new();
             Students = new();
-            LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, () => _selectedStudent != null);
 
+            LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, () => _selectedStudent != null);
+            AccountCommand = new RelayCommand(() => OpenDialog(_accountUC));
             MyProgramCommand = new RelayCommand(() => OpenDialog(_myProgramUC), () => _selectedStudent != null && !_selectedStudent.StudentId.Equals("0"));
+
             _myProgramUC = new() { DataContext = this };
+            _accountUC = new();
 
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
