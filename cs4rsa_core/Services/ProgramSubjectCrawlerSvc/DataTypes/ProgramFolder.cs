@@ -122,7 +122,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 
         /// <summary>
         /// Kiểm tra xem danh sách các IProgramNode truyền vào có phải
-        /// toàn là DbProgramSubject hay không.
+        /// toàn là DbProgramSubjects hay không.
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Cs4rsa.Models
 {
     /// <summary>
-    /// ProgramSubjectModel khác DbProgramSubject ở chỗ chúng có các phương thức check trong cây diagram
-    /// nhằm xác định việc người dùng có thể chọn subject đó hay không, điều mà DbProgramSubject không thể
+    /// ProgramSubjectModel khác DbProgramSubjects ở chỗ chúng có các phương thức check trong cây diagram
+    /// nhằm xác định việc người dùng có thể chọn subject đó hay không, điều mà DbProgramSubjects không thể
     /// làm được vì nó chỉ chứa thông tin của chính nó mà không có tương tác nào với các Folder hay Subject
     /// khác trong cây.
     /// </summary>

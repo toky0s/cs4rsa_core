@@ -9,7 +9,6 @@ using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
-using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -30,10 +29,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
     internal sealed partial class AutoViewModel : ViewModelBase
     {
         #region Fields
-#pragma warning disable CS0649
-        private readonly ProgramDiagram _programDiagram;
-#pragma warning restore CS0649
-
         private readonly List<List<ClassGroupModel>> _filteredClassGroupModels;
         private List<List<ClassGroupModel>> _classGroupModelsOfClass;
         #endregion
@@ -69,7 +64,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         #region Commands
         public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand SubjectDownloadCommand { get; set; }
-        public AsyncRelayCommand WatchDetailCommand { get; set; }
 
         public RelayCommand AddCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
@@ -179,9 +173,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _classGroupModelsOfClass = new();
 
             SubjectDownloadCommand = new AsyncRelayCommand(OnDownload, CanDownload);
-            WatchDetailCommand = new AsyncRelayCommand(OnWatchDetail);
 
-            //AddCommand = new RelayCommand(OnAddSubject, CanAdd);
             DeleteCommand = new RelayCommand(OnDelete);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, CanDeleteAll);
             GotoCourseCommand = new RelayCommand(OnGoToCourse);
@@ -464,13 +456,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             ValidGenCommand.NotifyCanExecuteChanged();
         }
 
-        //private bool CanAdd()
-        //{
-        //    return _selectedProSubject != null
-        //        && _selectedProSubject.IsAvaiable
-        //        && !ChoicedProSubjectModels.Contains(_selectedProSubject);
-        //}
-
         private bool CanShowOnSimu()
         {
             return _selectedCombinationModel != null
@@ -486,18 +471,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private bool CanDownload()
         {
             return true;
-        }
-
-        private async Task OnWatchDetail()
-        {
-            ProSubjectDetailUC proSubjectDetailUC = new();
-            ProSubjectDetailViewModel vm = proSubjectDetailUC.DataContext as ProSubjectDetailViewModel;
-            vm.ProgramDiagram = _programDiagram;
-            //vm.ProgramSubjectModel = _selectedProSubject;
-            //vm.AddCallback = OnAddSubject;
-            await vm.LoadPreProSubjectModels();
-            await vm.LoadParProSubjectModels();
-            OpenDialog(proSubjectDetailUC);
         }
 
         private void OnGoToCourse()
@@ -567,19 +540,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
             IsCalculated = false;
         }
-
-        //private void OnAddSubject()
-        //{
-        //    if (_selectedProSubject != null)
-        //    {
-        //        ChoicedProSubjectModels.Add(SelectedProSubject);
-        //        SubjectDownloadCommand.NotifyCanExecuteChanged();
-        //        AddCommand.NotifyCanExecuteChanged();
-        //        DeleteAllCommand.NotifyCanExecuteChanged();
-        //        UpdateCreditCount();
-        //        UpdateChoicedCount();
-        //    }
-        //}
 
         private void UpdateChoicedCount()
         {

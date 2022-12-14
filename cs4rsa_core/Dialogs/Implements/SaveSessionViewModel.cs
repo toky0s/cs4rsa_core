@@ -85,7 +85,7 @@ namespace Cs4rsa.Dialogs.Implements
                 SessionDetails = sessionDetails
             };
 
-            await _unitOfWork.UserSchedule.AddAsync(session);
+            await _unitOfWork.UserSchedules.AddAsync(session);
             await _unitOfWork.CompleteAsync();
             SaveResult result = new() { Name = Name };
             CloseDialog();

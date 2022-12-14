@@ -75,13 +75,11 @@ namespace Cs4rsa.Dialogs.Implements
 
         private async Task OnRestore(Student obj)
         {
-            await _unitOfWork.BeginTransAsync();
             await _unitOfWork.Students.AddAsync(obj);
             await _unitOfWork.CompleteAsync();
-            await _unitOfWork.CommitAsync();
             Students.Clear();
-            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            foreach (Student student in students)
+            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            await foreach (Student student in students)
             {
                 Students.Add(student);
             }
@@ -100,8 +98,8 @@ namespace Cs4rsa.Dialogs.Implements
         public async Task LoadStudent()
         {
             Students.Clear();
-            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            foreach (Student student in students)
+            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            await foreach (Student student in students)
             {
                 Students.Add(student);
             }

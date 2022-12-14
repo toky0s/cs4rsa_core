@@ -24,6 +24,8 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private readonly MyProgramUC _myProgramUC;
         private readonly AccountUC _accountUC;
 
+        private ProgramDiagram _programDiagram;
+
         public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<PlanTable> PlanTables { get; set; }
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
@@ -95,8 +97,8 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private async Task LoadStudents()
         {
-            IEnumerable<Student> students = await _unitOfWork.Students.GetAllAsync();
-            foreach (Student student in students)
+            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            await foreach (Student student in students)
             {
                 Students.Add(student);
             }
@@ -115,21 +117,23 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private async Task LoadProgramSubject()
         {
-            IsFinding = true;
             ProgramFolderModels.Clear();
 
+            IsFinding = !IsFinding;
             ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
                 string.Empty,
                 _selectedStudent.SpecialString,
                 _selectedStudent.StudentId
             );
+            IsFinding = !IsFinding;
 
-            foreach (ProgramFolder folder in folders)
-            {
-                await AddProgramFolder(folder);
-            }
-
-            IsFinding = false;
+            _programDiagram = new(folders[0], folders[1], folders[2], folders[3], _unitOfWork);
+            await Task.WhenAll(
+                AddProgramFolder(folders[0]),
+                AddProgramFolder(folders[1]),
+                AddProgramFolder(folders[2]),
+                AddProgramFolder(folders[3])
+            );
         }
 
         private async Task AddProgramFolder(ProgramFolder programFolder)

@@ -23,7 +23,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         /// <returns>Danh sách thông tin môn tiên quyết</returns>
         public async Task<List<PreProDetail>> GetPreProSubjectsByProgramSubjectId(string courseId)
         {
-            DbProgramSubject programSubject = await _context.ProgramSubjects.Where(pp => pp.CourseId == courseId).FirstOrDefaultAsync();
+            DbProgramSubject programSubject = await _context.DbProgramSubjects.Where(pp => pp.CourseId == courseId).FirstOrDefaultAsync();
             return await _context.PreProDetails
                 .Where(pp => pp.ProgramSubjectId == programSubject.DbProgramSubjectId)
                 .ToListAsync();

@@ -16,12 +16,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public async Task<DbProgramSubject> GetByCourseIdAsync(string CourseId)
         {
-            return await _context.ProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == CourseId);
+            return await _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == CourseId);
         }
 
         public Task<DbProgramSubject> GetBySubjectCode(string subjectCode)
         {
-            return _context.ProgramSubjects.FirstOrDefaultAsync(p => p.SubjectCode.Equals(subjectCode));
+            return _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.SubjectCode.Equals(subjectCode));
         }
     }
 }

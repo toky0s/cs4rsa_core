@@ -4,7 +4,7 @@
     /// Thông tin chi tiết về bộ lịch đã lưu.
     ///     
     ///     ScheduleDetailId:       ID
-    ///     UserScheduleId:         UserSchedule ID
+    ///     UserScheduleId:         UserSchedules ID
     /// 
     ///     SubjectCode:            Mã môn (không cần thiết - có thể tính toán)
     ///     SubjectName:            Tên môn (không cần thiết - có thể tính toán)

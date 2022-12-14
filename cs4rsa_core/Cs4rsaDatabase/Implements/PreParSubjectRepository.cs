@@ -12,7 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public DbPreParSubject GetById(int id)
         {
-            return _context.PreParSubjects.Find(id);
+            return _context.DbPreParSubjects.Find(id);
         }
     }
 }

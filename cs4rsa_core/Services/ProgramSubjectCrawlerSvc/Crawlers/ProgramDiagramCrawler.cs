@@ -25,12 +25,12 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
         public async Task<ProgramFolder[]> ToProgramDiagram(string sessionId, string specialString, string studentId)
         {
-            #region Clean các môn chương trình học trong DB
-            _unitOfWork.PreProDetails.RemoveRange(await _unitOfWork.PreProDetails.GetAllAsync());
-            _unitOfWork.ParProDetails.RemoveRange(await _unitOfWork.ParProDetails.GetAllAsync());
-            _unitOfWork.ProgramSubjects.RemoveRange(await _unitOfWork.ProgramSubjects.GetAllAsync());
-            _unitOfWork.PreParSubjects.RemoveRange(await _unitOfWork.PreParSubjects.GetAllAsync());
-            #endregion
+            await Task.WhenAll(
+                _unitOfWork.PreProDetails.RemoveAll(),
+                _unitOfWork.ParProDetails.RemoveAll(),
+                _unitOfWork.ProgramSubjects.RemoveAll(),
+                _unitOfWork.PreParSubjects.RemoveAll()
+            );
 
             Student student = await _unitOfWork.Students.GetBySpecialStringAsync(specialString);
             int curid = student.CurriculumId;
@@ -41,7 +41,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             Task<ProgramFolder> task2 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG, curid);
             Task<ProgramFolder> task3 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_DAI_CUONG_NGANH, curid);
             Task<ProgramFolder> task4 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_CHUYEN_NGANH, curid);
-            await _unitOfWork.CompleteAsync();
             return await Task.WhenAll(task1, task2, task3, task4);
         }
 

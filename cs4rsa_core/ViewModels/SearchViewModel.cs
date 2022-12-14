@@ -192,6 +192,7 @@ namespace Cs4rsa.ViewModels
             {
                 LoadKeywordByDiscipline(value);
             }
+            AddCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedKeywordChanged(Keyword value)
@@ -233,8 +234,8 @@ namespace Cs4rsa.ViewModels
         public async Task LoadSavedSchedules()
         {
             SavedSchedules.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
-            foreach (UserSchedule session in sessions)
+            IAsyncEnumerable<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
+            await foreach (UserSchedule session in sessions)
             {
                 SavedSchedules.Add(session);
             }
@@ -256,8 +257,6 @@ namespace Cs4rsa.ViewModels
             FullMatchSearchingKeywords.Clear();
 
             IAsyncEnumerable<Keyword> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
-            IAsyncEnumerable<Keyword> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
-            //List<Keyword>[] whenAllResult = await Task.WhenAll(result1, result2);
             await foreach (Keyword keyword in result1)
             {
                 FullMatchSearchingKeyword fullMatch = new()
@@ -268,6 +267,7 @@ namespace Cs4rsa.ViewModels
                 FullMatchSearchingKeywords.Add(fullMatch);
             }
 
+            IAsyncEnumerable<Keyword> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
             await foreach (Keyword keyword in result2)
             {
                 FullMatchSearchingKeyword fullMatch = new()
@@ -277,7 +277,6 @@ namespace Cs4rsa.ViewModels
                 };
                 FullMatchSearchingKeywords.Add(fullMatch);
             }
-
 
             if (text.Contains(VMConstants.CHAR_SPACE))
             {

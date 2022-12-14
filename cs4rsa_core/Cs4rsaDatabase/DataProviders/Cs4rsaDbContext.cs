@@ -15,12 +15,12 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
-        public DbSet<UserSchedule> Sessions { get; set; }
-        public DbSet<ScheduleDetail> SessionDetails { get; set; }
+        public DbSet<UserSchedule> UserSchedules { get; set; }
+        public DbSet<ScheduleDetail> ScheduleDetails { get; set; }
         public DbSet<Curriculum> Curriculums { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<DbProgramSubject> ProgramSubjects { get; set; }
-        public DbSet<DbPreParSubject> PreParSubjects { get; set; }
+        public DbSet<DbProgramSubject> DbProgramSubjects { get; set; }
+        public DbSet<DbPreParSubject> DbPreParSubjects { get; set; }
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
         public DbSet<KeywordTeacher> KeywordTeachers { get; set; }

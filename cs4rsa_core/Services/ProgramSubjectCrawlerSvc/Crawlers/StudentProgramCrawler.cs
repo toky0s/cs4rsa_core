@@ -71,7 +71,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// <returns></returns>
         private static string GetUrl(string specialString, string t, string nodeName, int curid)
         {
-            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/GetUrl.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
+            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
         }
 
         private static async Task<HtmlNodeCollection> GetAllTrTag(string url, string nodeName, bool isUseCache)
@@ -236,7 +236,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 }
             }
 
-            DataTypes.ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
+            ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
                 studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
 
             DbProgramSubject programSubject = new()

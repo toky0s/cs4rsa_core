@@ -61,7 +61,7 @@ namespace Cs4rsa.Views.AutoScheduling
             CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource).Refresh();
         }
 
-        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ListViewCombinationModels.ItemsSource);
             view.Filter = CombinationFilter;

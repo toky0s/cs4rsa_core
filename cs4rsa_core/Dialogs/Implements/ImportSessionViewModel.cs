@@ -113,7 +113,7 @@ namespace Cs4rsa.Dialogs.Implements
             if (userSchedule != null)
             {
                 UserSubjects.Clear();
-                IEnumerable<UserSubject> userSubjects = _unitOfWork.UserSchedule
+                IEnumerable<UserSubject> userSubjects = _unitOfWork.UserSchedules
                     .GetSessionDetails(userSchedule.UserScheduleId)
                     .Select(sd => new UserSubject()
                     {
@@ -175,8 +175,8 @@ namespace Cs4rsa.Dialogs.Implements
         {
             ScheduleSessions.Clear();
             UserSubjects.Clear();
-            IEnumerable<UserSchedule> sessions = await _unitOfWork.UserSchedule.GetAllAsync();
-            foreach (UserSchedule session in sessions)
+            IAsyncEnumerable<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
+            await foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
             }
@@ -198,7 +198,7 @@ namespace Cs4rsa.Dialogs.Implements
             if (result == MessageBoxResult.Yes)
             {
                 await _unitOfWork.BeginTransAsync();
-                _unitOfWork.UserSchedule.Remove(_selectedScheduleSession);
+                _unitOfWork.UserSchedules.Remove(_selectedScheduleSession);
                 await _unitOfWork.CompleteAsync();
                 await _unitOfWork.CommitAsync();
                 await Reload();

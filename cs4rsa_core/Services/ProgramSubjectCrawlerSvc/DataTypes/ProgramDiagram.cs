@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         }
 
         /// <summary>
-        /// Lấy ra danh sách các môn tiên quyết của một DbProgramSubject.
+        /// Lấy ra danh sách các môn tiên quyết của một DbProgramSubjects.
         /// </summary>
         public IEnumerable<ProgramSubject> GetPreProgramSubjects(ProgramSubject programSubject)
         {
@@ -88,12 +89,12 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         }
 
         /// <summary>
-        /// Lấy ra danh sách các môn song hành của một DbProgramSubject.
+        /// Lấy ra danh sách các môn song hành của một DbProgramSubjects.
         /// </summary>
         public async Task<IEnumerable<ProgramSubject>> GetParProgramSubject(ProgramSubject programSubject)
         {
-            Cs4rsaDatabase.Models.DbProgramSubject programSubjectModel = await _unitOfWork.ProgramSubjects.GetByCourseIdAsync(programSubject.CourseId);
-            IEnumerable<Cs4rsaDatabase.Models.DbPreParSubject> preParSubjects = programSubjectModel.ParProDetails
+            DbProgramSubject programSubjectModel = await _unitOfWork.ProgramSubjects.GetByCourseIdAsync(programSubject.CourseId);
+            IEnumerable<DbPreParSubject> preParSubjects = programSubjectModel.ParProDetails
                 .Select(parProDetail => parProDetail.PreParSubject);
 
             IEnumerable<string> subjectCodes = preParSubjects.Select(preParSubject => preParSubject.SubjectCode);
