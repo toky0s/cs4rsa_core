@@ -2,8 +2,6 @@
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Dialogs.DialogResults;
-using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
@@ -37,7 +35,6 @@ namespace Cs4rsa.Dialogs.Implements
             }
         }
 
-        public IMessageBox MessageBox { get; set; }
         private readonly IDtuStudentInfoCrawler _dtuStudentInfoCrawler;
         private readonly IStudentPlanCrawler _studentPlanCrawler;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
@@ -56,7 +53,7 @@ namespace Cs4rsa.Dialogs.Implements
             _folderManager = folderManager;
         }
 
-        public async Task Find()
+        public async Task<Student> Find()
         {
             SpecialStringCrawler specialStringCrawlerV1 = new();
             SpecialStringCrawlerV2 specialStringCrawlerV2 = new();
@@ -67,10 +64,8 @@ namespace Cs4rsa.Dialogs.Implements
             {
                 string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy UserSchedules ID, " +
                     "và đảm bảo lúc này server DTU không bảo trì. Hãy thử lại sau.";
-                MessageBoxResult _ = MessageBox.ShowMessage(message,
-                                        "Thông báo",
-                                        MessageBoxButton.OK,
-                                        MessageBoxImage.Exclamation);
+                MessageBox.Show(message, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return null;
             }
             else
             {
@@ -84,10 +79,9 @@ namespace Cs4rsa.Dialogs.Implements
                 await _studentPlanCrawler.GetPlanTables(student.CurriculumId, _sessionId);
                 string message = $"Xin chào {student.Name}";
                 _snackbarMessageQueue.Enqueue(message);
-                StudentResult result = new() { Student = student };
-                Messenger.Send(new SessionInputVmMsgs.ExitSearchAccountMsg(result));
+                Messenger.Send(new SessionInputVmMsgs.ExitFindStudentMsg(student));
+                return student;
             }
-            CloseDialog();
         }
     }
 }

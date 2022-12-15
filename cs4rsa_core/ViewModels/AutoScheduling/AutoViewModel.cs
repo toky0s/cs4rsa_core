@@ -194,7 +194,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             IsCalculated = false;
             _tempResult = new();
             _genIndex = 0;
-
         }
 
         partial void OnSelectedCombinationModelChanged(CombinationModel value)

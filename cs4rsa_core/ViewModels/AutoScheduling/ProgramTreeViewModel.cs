@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
+using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
@@ -76,6 +78,30 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _myProgramUC = new() { DataContext = this };
             _accountUC = new();
 
+            Messenger.Register<SessionInputVmMsgs.ExitFindStudentMsg>(this, (r, m) =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(async () =>
+                {
+                    await LoadStudents();
+                });
+            });
+
+            Messenger.Register<AccountVmMsgs.DelStudentMsg>(this, (r, m) =>
+            {
+                Student student = Students.Where(student => student.StudentId.Equals(m.Value)).First();
+                Students.Remove(student);
+                ProgramFolderModels.Clear();
+            });
+
+            Messenger.Register<AccountVmMsgs.UndoDelStudentMsg>(this, (r, m) =>
+            {
+                Students.Add(m.Value);
+                if (Students.Count == 1)
+                {
+                    SelectedStudent = Students[0];
+                }
+            });
+
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 await LoadStudents();
@@ -101,6 +127,10 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             await foreach (Student student in students)
             {
                 Students.Add(student);
+            }
+            if (Students.Any())
+            {
+                SelectedStudent = Students.First();
             }
         }
 

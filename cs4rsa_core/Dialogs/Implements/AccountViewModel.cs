@@ -7,7 +7,6 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
-using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.ModelExtensions;
 
@@ -19,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    internal sealed partial class AccountViewModel : ViewModelBase
+    internal sealed partial class AccountViewModel : DialogVmBase
     {
         #region Properties
         public ObservableCollection<Student> Students { get; set; }
@@ -34,25 +33,17 @@ namespace Cs4rsa.Dialogs.Implements
         public AsyncRelayCommand DeleteCommand { get; set; }
         #endregion
 
-        #region Services
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMessageBox _cs4RsaMessageBox;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        #endregion
+
+        [ObservableProperty]
+        private ISnackbarMessageQueue _snackbarMessageQueue;
         public AccountViewModel(
-            IMessageBox cs4rsaMessageBox,
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue
-        )
+        ) : base()
         {
-            _cs4RsaMessageBox = cs4rsaMessageBox;
             _unitOfWork = unitOfWork;
-            _snackbarMessageQueue = snackbarMessageQueue;
-
-            Messenger.Register<SessionInputVmMsgs.ExitSearchAccountMsg>(this, async (r, m) =>
-            {
-                await LoadStudent();
-            });
+            SnackbarMessageQueue = snackbarMessageQueue;
 
             FindCommand = new AsyncRelayCommand(OnFind);
             DeleteCommand = new AsyncRelayCommand(OnDelete);
@@ -63,36 +54,43 @@ namespace Cs4rsa.Dialogs.Implements
         private async Task OnDelete()
         {
             string name = SelectedStudent.Name;
-            string message = $"Bạn vừa xoá {name}";
+            string id = SelectedStudent.StudentId;
+            int index = Students.IndexOf(SelectedStudent);
             Student actionData = SelectedStudent.DeepClone();
 
             _unitOfWork.Students.Remove(SelectedStudent);
             await _unitOfWork.CompleteAsync();
-            await LoadStudent();
+            Students.RemoveAt(index);
 
-            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, async (obj) => await OnRestore(obj), actionData);
+            Messenger.Send(new AccountVmMsgs.DelStudentMsg(id));
+            _snackbarMessageQueue.Enqueue(
+                $"Bạn vừa xoá {name}",
+                VMConstants.SNBAC_RESTORE,
+                async (obj) => await OnRestore(obj),
+                actionData
+            );
         }
 
         private async Task OnRestore(Student obj)
         {
             await _unitOfWork.Students.AddAsync(obj);
             await _unitOfWork.CompleteAsync();
-            Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
-            await foreach (Student student in students)
-            {
-                Students.Add(student);
-            }
+            Students.Add(obj);
+            Messenger.Send(new AccountVmMsgs.UndoDelStudentMsg(obj));
         }
 
         private async Task OnFind()
         {
             SessionInputUC sessionInputUC = new();
             SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
-            vm.MessageBox = _cs4RsaMessageBox;
             vm.SessionId = _sessionId;
+
             OpenDialog(sessionInputUC);
-            await vm.Find();
+            Student student = await vm.Find();
+            Students.Add(student);
+            CloseDialog();
+
+            SessionId = string.Empty;
         }
 
         public async Task LoadStudent()

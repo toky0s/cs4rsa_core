@@ -50,7 +50,7 @@ namespace Cs4rsa.Dialogs.Implements
         }
 
         /// <summary>
-        /// Loại bỏ Class1
+        /// Loại bỏ SessionInputVmMsgs
         /// </summary>
         private void OnRemoveClassGroup1()
         {
