@@ -2,7 +2,7 @@
 
 namespace Cs4rsa.Models.Bases
 {
-    public class TreeItem
+    internal abstract class TreeItem
     {
         public string Name { get; set; }
         public string Id { get; set; }

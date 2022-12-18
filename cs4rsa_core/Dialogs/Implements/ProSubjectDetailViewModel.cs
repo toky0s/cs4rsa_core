@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    public class ProSubjectDetailViewModel : ViewModelBase
+    internal class ProSubjectDetailViewModel : ViewModelBase
     {
         private string _subjectName;
         public string SubjectName

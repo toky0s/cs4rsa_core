@@ -17,8 +17,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
     /// </summary>
     public class PreParSubjectCrawler : IPreParSubjectCrawler
     {
-        public bool IsAvailableSubject { get; set; }
-
         private readonly ICourseCrawler _courseCrawler;
         private readonly HtmlWeb _htmlWeb;
         public PreParSubjectCrawler(ICourseCrawler courseCrawler, HtmlWeb htmlWeb)
@@ -38,7 +36,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             return span == null;
         }
 
-        public async Task<PreParContainer> Run(string courseId)
+        /// <summary>
+        /// Lấy thông tin môn tiên quyết và song hành thông qua
+        /// việc cào dữ liệu từ trang course.
+        /// </summary>
+        /// <param name="courseId">Course ID của môn học.</param>
+        public async Task<PreParContainer> Run(string courseId, bool isUseCache)
         {
             string semesterId = _courseCrawler.GetCurrentSemesterValue();
 
@@ -47,11 +50,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
             if (IsExistSubject(htmlDocument))
             {
-                IsAvailableSubject = true;
                 HtmlNode prerequisite = htmlDocument.DocumentNode.SelectSingleNode("(//font[@color='#548DDB' or @color='green'])[1]");
                 HtmlNode parallel = htmlDocument.DocumentNode.SelectSingleNode("(//font[@color='#548DDB' or @color='green'])[2]");
-                List<string> pre = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText, GetFrom.Course);
-                List<string> par = SubjectCodeParser.GetSubjectCodes(parallel.InnerText, GetFrom.Course);
+                IEnumerable<string> pre = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText, GetFrom.Course);
+                IEnumerable<string> par = SubjectCodeParser.GetSubjectCodes(parallel.InnerText, GetFrom.Course);
                 return new PreParContainer()
                 {
                     ParallelSubjects = par,
@@ -60,15 +62,27 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                IsAvailableSubject = false;
-                return new PreParContainer()
-                {
-                    ParallelSubjects = new List<string>(),
-                    PrerequisiteSubjects = new List<string>()
-                };
+                return null;
             }
         }
 
+        /// <summary>
+        /// <b>Deprecated</b>
+        /// 
+        /// <para>
+        /// Tìm môn học song hành và môn học tiên quyết thông qua
+        /// việc cào dữ liệu từ MyDTU sử dụng Session ID. Phải biết
+        /// chính xác Session ID tại runtime, người dùng phải giữ
+        /// được session này sống trong lúc lấy dữ liệu.
+        /// </para>
+        /// <para>
+        /// Phương thức này có độ chính xác cao hơn vì được lấy từ MyDTU, nhưng
+        /// bù lại tính sẵn sàng của chúng không cao đồng thời tốc
+        /// độ không nhanh do phải thực hiện đăng nhập.
+        /// </para>
+        /// </summary>
+        /// <param name="courseId">Course ID môn học.</param>
+        /// <param name="sessionId">Session ID đăng nhập hiện tại của người dùng trong runtime.</param>
         public async Task<PreParContainer> Run(string courseId, string sessionId)
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/CourseClassResultForStudent.aspx?courseid={courseId}";
@@ -77,8 +91,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             document.LoadHtml(html);
             HtmlNode prerequisite = document.DocumentNode.SelectSingleNode("//tr[4]/td[2]/font");
             HtmlNode parallel = document.DocumentNode.SelectSingleNode("//tr[5]/td[2]/font");
-            List<string> pre = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText, GetFrom.MyDTU);
-            List<string> par = SubjectCodeParser.GetSubjectCodes(parallel.InnerText, GetFrom.MyDTU);
+            IEnumerable<string> pre = SubjectCodeParser.GetSubjectCodes(prerequisite.InnerText, GetFrom.MyDTU);
+            IEnumerable<string> par = SubjectCodeParser.GetSubjectCodes(parallel.InnerText, GetFrom.MyDTU);
             return new PreParContainer() { ParallelSubjects = par, PrerequisiteSubjects = pre };
         }
     }

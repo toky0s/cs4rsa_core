@@ -15,7 +15,7 @@ namespace Cs4rsa.Models
     /// làm được vì nó chỉ chứa thông tin của chính nó mà không có tương tác nào với các Folder hay Subject
     /// khác trong cây.
     /// </summary>
-    public class ProgramSubjectModel : TreeItem
+    internal class ProgramSubjectModel : TreeItem
     {
         public ProgramSubject ProgramSubject { get; set; }
         public string SubjectCode { get; set; }

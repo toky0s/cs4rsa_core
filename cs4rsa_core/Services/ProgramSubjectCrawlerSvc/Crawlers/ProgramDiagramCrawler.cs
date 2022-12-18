@@ -23,7 +23,10 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ProgramFolder[]> ToProgramDiagram(string sessionId, string specialString, string studentId)
+        public async Task<ProgramFolder[]> ToProgramDiagram(
+            string specialString,
+            string studentId,
+            bool isUseCache)
         {
             await Task.WhenAll(
                 _unitOfWork.PreProDetails.RemoveAll(),
@@ -36,9 +39,9 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             int curid = student.CurriculumId;
             string t = GetTimeFromEpoch();
 
-            StudentProgramCrawler.SetInfor(sessionId, studentId);
+            StudentProgramCrawler.SetInfor(studentId, isUseCache);
             Task<ProgramFolder> task1 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_DAI_CUONG, curid);
-            Task<ProgramFolder> task2 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG, curid);
+            Task<ProgramFolder> task2 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_GDTC_VA_QP, curid);
             Task<ProgramFolder> task3 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_DAI_CUONG_NGANH, curid);
             Task<ProgramFolder> task4 = GetNewInstanceStudentProgramCrawler().GetRoot(specialString, t, VMConstants.NODE_NAME_CHUYEN_NGANH, curid);
             return await Task.WhenAll(task1, task2, task3, task4);

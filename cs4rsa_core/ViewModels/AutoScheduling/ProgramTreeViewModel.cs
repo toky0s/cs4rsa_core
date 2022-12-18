@@ -8,6 +8,7 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
+using Cs4rsa.Models.AutoScheduling;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
@@ -29,11 +30,14 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private ProgramDiagram _programDiagram;
 
         public ObservableCollection<Student> Students { get; set; }
-        public ObservableCollection<PlanTable> PlanTables { get; set; }
+        public ObservableCollection<PlanTableModel> PlanTableModels { get; set; }
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
 
         [ObservableProperty]
         private bool _isFinding;
+
+        [ObservableProperty]
+        private bool _isUseCache;
 
         [ObservableProperty]
         private Student _selectedStudent;
@@ -68,8 +72,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _colorGenerator = colorGenerator;
 
             ProgramFolderModels = new();
-            PlanTables = new();
+            PlanTableModels = new();
             Students = new();
+            IsUseCache = true;
 
             LoadProgramCommand = new AsyncRelayCommand(LoadProgramSubject, () => _selectedStudent != null);
             AccountCommand = new RelayCommand(() => OpenDialog(_accountUC));
@@ -110,13 +115,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         partial void OnSelectedStudentChanged(Student value)
         {
-            if (!PlanTables.Any())
-            {
-                Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    await LoadStudentPlan();
-                });
-            }
+            Application.Current.Dispatcher.InvokeAsync(async () => await LoadStudentPlan());
             LoadProgramCommand.NotifyCanExecuteChanged();
             MyProgramCommand.NotifyCanExecuteChanged();
         }
@@ -134,14 +133,27 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             }
         }
 
+        /// <summary>
+        /// Load chương trình học dự kiến của sinh viên.
+        /// Đánh giá các môn học có sẵn trong học kỳ hiện tại
+        /// cùng với tình trạng học của môn học đó so với
+        /// chương trình học (Đã qua, Đang học/chưa có điểm, Chưa học)
+        /// </summary>
         private async Task LoadStudentPlan()
         {
             if (_selectedStudent.StudentId.Equals("0")) return;
-            PlanTables.Clear();
+            PlanTableModels.Clear();
+
+            List<Task<PlanTableModel>> tasks = new();
             IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(_selectedStudent.CurriculumId);
             foreach (PlanTable planTable in planTables)
             {
-                PlanTables.Add(planTable);
+                tasks.Add(PlanTableModel.Build(planTable, _unitOfWork));
+            }
+            PlanTableModel[] planTableModels = await Task.WhenAll(tasks);
+            foreach (PlanTableModel planTableModel in planTableModels)
+            {
+                PlanTableModels.Add(planTableModel);
             }
         }
 
@@ -151,9 +163,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             IsFinding = !IsFinding;
             ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
-                string.Empty,
                 _selectedStudent.SpecialString,
-                _selectedStudent.StudentId
+                _selectedStudent.StudentId,
+                IsUseCache
             );
             IsFinding = !IsFinding;
 

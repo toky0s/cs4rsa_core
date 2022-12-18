@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    public class AutoSortSubjectLoadViewModel : ViewModelBase
+    internal class AutoSortSubjectLoadViewModel : ViewModelBase
     {
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly ColorGenerator _colorGenerator;

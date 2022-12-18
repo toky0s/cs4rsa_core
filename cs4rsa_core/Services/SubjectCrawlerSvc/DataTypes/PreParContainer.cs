@@ -7,7 +7,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
     /// </summary>
     public class PreParContainer
     {
-        public List<string> PrerequisiteSubjects { get; set; }
-        public List<string> ParallelSubjects { get; set; }
+        public IEnumerable<string> PrerequisiteSubjects { get; set; }
+        public IEnumerable<string> ParallelSubjects { get; set; }
     }
 }

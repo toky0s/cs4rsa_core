@@ -21,8 +21,8 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 {
     public class StudentProgramCrawler
     {
-        private static string _sessionId;
         private static string _studentId;
+        private static bool _isUseCache;
 
         private HtmlNodeCollection _trNodes;
         private readonly IUnitOfWork _unitOfWork;
@@ -40,12 +40,15 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// <summary>
         /// Set thông tin trước khi thực hiện lấy chương trình học.
         /// </summary>
-        /// <param name="sessionId">Session ID</param>
+        /// <param name="isUseCache">
+        /// True nếu sử dụng thông tin được lưu từ DB. 
+        /// Ngược lại sẽ thực hiện cào lại thông tin mới.
+        /// </param>
         /// <param name="studentId">Student ID</param>
-        public static void SetInfor(string sessionId, string studentId)
+        public static void SetInfor(string studentId, bool isUseCache)
         {
-            _sessionId = sessionId;
             _studentId = studentId;
+            _isUseCache = isUseCache;
         }
 
         public async Task<ProgramFolder> GetRoot(
@@ -56,7 +59,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         )
         {
             string url = GetUrl(specialString, t, nodeName, curid);
-            _trNodes = await GetAllTrTag(url, nodeName, true);
+            _trNodes = await GetAllTrTag(url, nodeName);
             ProgramFolder programFolder = GetProgramFolder(_trNodes[0]);
             return await GetFolderNode(1, programFolder);
         }
@@ -74,12 +77,12 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
         }
 
-        private static async Task<HtmlNodeCollection> GetAllTrTag(string url, string nodeName, bool isUseCache)
+        private static async Task<HtmlNodeCollection> GetAllTrTag(string url, string nodeName)
         {
             HtmlWeb web = new();
             HtmlDocument doc = new();
             string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, _studentId, nodeName + ".html");
-            if (File.Exists(path) && isUseCache)
+            if (File.Exists(path) && _isUseCache)
             {
                 doc.Load(path);
             }
@@ -162,7 +165,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return new(name, studyMode, id, childOfNode, description, trNode.InnerHtml);
         }
 
-        private async Task<DataTypes.ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode)
+        private async Task<ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode)
         {
             HtmlDocument doc = new();
             doc.LoadHtml(node.InnerHtml);
@@ -204,19 +207,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             string studyUnitTypeString = StringHelper.SuperCleanString(tdStudyUnitTypeTag.InnerText);
             StudyUnitType studyUnitType = BasicDataConverter.ToStudyUnitType(studyUnitTypeString);
 
-            //prerequisiteSubjects and parallelSubjects
-            PreParContainer preParContainer;
-            if (_sessionId != null && _sessionId != string.Empty)
-            {
-                preParContainer = await _preParSubjectCrawler.Run(courseId, _sessionId);
-            }
-            else
-            {
-                preParContainer = await _preParSubjectCrawler.Run(_sessionId);
-            }
-            IEnumerable<string> prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
-            IEnumerable<string> parallelSubjects = preParContainer.ParallelSubjects;
-
             // study state
             StudyState studyState;
             string nodeContent = StringHelper.SuperCleanString(node.InnerText);
@@ -236,8 +226,35 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 }
             }
 
-            ProgramSubject subject = new(id, childOfNode, subjectCode, name, studyUnit,
-                studyUnitType, prerequisiteSubjects, parallelSubjects, studyState, courseId, parrentNodeName);
+            //prerequisiteSubjects and parallelSubjects
+            IEnumerable<string> prerequisiteSubjects;
+            IEnumerable<string> parallelSubjects;
+            // TODO: Slow here
+            PreParContainer preParContainer = await _preParSubjectCrawler.Run(courseId, _isUseCache);
+            if (preParContainer != null)
+            {
+                prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
+                parallelSubjects = preParContainer.ParallelSubjects;
+            }
+            else
+            {
+                prerequisiteSubjects = new List<string>();
+                parallelSubjects = new List<string>();
+            }
+
+            ProgramSubject subject = new(
+                id,
+                childOfNode,
+                subjectCode,
+                name,
+                studyUnit,
+                studyUnitType,
+                prerequisiteSubjects,
+                parallelSubjects,
+                studyState,
+                courseId,
+                parrentNodeName
+            );
 
             DbProgramSubject programSubject = new()
             {

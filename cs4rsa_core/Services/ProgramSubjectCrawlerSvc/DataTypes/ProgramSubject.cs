@@ -25,8 +25,19 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         public string CourseId { get; }
         public string ParentNodeName { get; }
 
-        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
-            IEnumerable<string> prerequisiteSubjects, IEnumerable<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
+        public ProgramSubject(
+            string id,
+            string childOfNode,
+            string subjectCode,
+            string subjectName,
+            int studyUnit,
+            StudyUnitType studyUnitType,
+            IEnumerable<string> prerequisiteSubjects,
+            IEnumerable<string> parallelSubject,
+            StudyState studyState,
+            string courseId,
+            string parrentNodeName
+        )
         {
             Id = id;
             ChildOfNode = childOfNode;
@@ -57,9 +68,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         /// <returns>True nếu đã pass, ngược lại trả về false.</returns>
         public bool IsDone()
         {
-            if (StudyState == StudyState.Completed)
-                return true;
-            return false;
+            return StudyState == StudyState.Completed;
         }
 
         public int CompareTo(object obj)

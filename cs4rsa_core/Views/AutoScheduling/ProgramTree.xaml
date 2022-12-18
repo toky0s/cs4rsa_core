@@ -38,6 +38,7 @@
         <RowDefinition />
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="auto" />
         <ColumnDefinition />
         <ColumnDefinition Width="auto" />
         <ColumnDefinition Width="auto" />
@@ -45,7 +46,7 @@
       <ComboBox
         Grid.Row="0"
         Grid.Column="0"
-        Grid.ColumnSpan="3"
+        Grid.ColumnSpan="4"
         Margin="0,0,0,5"
         ItemsSource="{Binding Students}"
         SelectedItem="{Binding SelectedStudent}"
@@ -56,9 +57,27 @@
           </DataTemplate>
         </ComboBox.ItemTemplate>
       </ComboBox>
-      <Button
+      <ToggleButton
         Grid.Row="1"
         Grid.Column="0"
+        Margin="0,0,5,0"
+        Content="{md:PackIcon Kind=Cached,
+                              Size=21}"
+        IsChecked="{Binding IsUseCache}">
+        <ToggleButton.Style>
+          <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
+            <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsUseCache}" Value="true">
+                <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </ToggleButton.Style>
+      </ToggleButton>
+      <Button
+        Grid.Row="1"
+        Grid.Column="1"
         Margin="0,0,5,0"
         md:ButtonProgressAssist.IsIndeterminate="{Binding IsFinding}"
         md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsFinding}"
@@ -67,23 +86,23 @@
         Content="TẢI CHƯƠNG TRÌNH HỌC" />
       <Button
         Grid.Row="1"
-        Grid.Column="1"
+        Grid.Column="2"
         Margin="0,0,5,0"
         Command="{Binding AccountCommand}"
         Content="{md:PackIcon Kind=Account}" />
       <Button
         Grid.Row="1"
-        Grid.Column="2"
+        Grid.Column="3"
         Command="{Binding MyProgramCommand}"
         Content="{md:PackIcon Kind=Table}"
         ToolTip="Chương trình dự kiến" />
     </Grid>
     <TreeView
-      x:Name="treeView"
       Grid.Row="1"
       HorizontalContentAlignment="Stretch"
       ItemsSource="{Binding ProgramFolderModels}"
-      SelectedItemChanged="TreeView_SelectedItemChanged">
+      SelectedItemChanged="TreeView_SelectedItemChanged"
+      VirtualizingStackPanel.VirtualizationMode="Recycling">
       <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
           <HierarchicalDataTemplate.ItemContainerStyle>
@@ -91,7 +110,7 @@
               <Setter Property="IsExpanded" Value="True" />
             </Style>
           </HierarchicalDataTemplate.ItemContainerStyle>
-          <md:TransitioningContent>
+          <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.05}">
             <md:TransitioningContent.OpeningEffects>
               <md:TransitionEffect Kind="FadeIn" />
               <md:TransitionEffect Kind="ExpandIn" />
@@ -123,10 +142,12 @@
           </md:TransitioningContent>
         </HierarchicalDataTemplate>
         <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
-          <md:TransitioningContent>
+          <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.05}">
             <md:TransitioningContent.OpeningEffects>
               <md:TransitionEffect Kind="FadeIn" />
+              <md:TransitionEffect Kind="ExpandIn" />
               <md:TransitionEffect Kind="SlideInFromTop" />
+              <md:TransitionEffect Kind="SlideInFromLeft" />
             </md:TransitioningContent.OpeningEffects>
             <StackPanel Orientation="Horizontal">
               <md:PackIcon Margin="0,0,5,0">
