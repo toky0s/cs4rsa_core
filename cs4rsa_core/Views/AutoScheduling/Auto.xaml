@@ -359,12 +359,12 @@
           Margin="5,0,0,5"
           Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
           Text="Các môn bạn đã chọn" />
-        <ListView
+        <ListBox
           Grid.Row="1"
           Margin="0,0,0,5"
           ItemsSource="{Binding ChoicedProSubjectModels}"
           SelectedItem="{Binding SelectedProSubjectInChoiced}">
-          <ListView.Resources>
+          <ListBox.Resources>
             <ContextMenu x:Key="ChoicedSubjectContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
               <MenuItem
                 Command="{Binding DeleteCommand}"
@@ -375,8 +375,8 @@
                 Header="Mở trong Courses"
                 Icon="{md:PackIcon Kind=OpenInNew}" />
             </ContextMenu>
-          </ListView.Resources>
-          <ListView.ItemTemplate>
+          </ListBox.Resources>
+          <ListBox.ItemTemplate>
             <DataTemplate>
               <Grid>
                 <Grid.ColumnDefinitions>
@@ -393,13 +393,13 @@
                 </StackPanel>
               </Grid>
             </DataTemplate>
-          </ListView.ItemTemplate>
-          <ListView.ItemContainerStyle>
-            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+          </ListBox.ItemTemplate>
+          <ListBox.ItemContainerStyle>
+            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
               <Setter Property="ContextMenu" Value="{StaticResource ChoicedSubjectContextMenu}" />
             </Style>
-          </ListView.ItemContainerStyle>
-        </ListView>
+          </ListBox.ItemContainerStyle>
+        </ListBox>
         <Grid Grid.Row="2">
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -442,11 +442,11 @@
             </TextBlock.Style>
           </TextBlock>
         </StackPanel>
-        <ListView
+        <ListBox
           Grid.Row="4"
           Margin="0,0,0,5"
           ItemsSource="{Binding SubjectModels}">
-          <ListView.ItemTemplate>
+          <ListBox.ItemTemplate>
             <DataTemplate>
               <Grid>
                 <Grid.ColumnDefinitions>
@@ -457,8 +457,8 @@
                 <TextBlock Grid.Column="1" Text="{Binding SubjectName}" />
               </Grid>
             </DataTemplate>
-          </ListView.ItemTemplate>
-        </ListView>
+          </ListBox.ItemTemplate>
+        </ListBox>
         <Grid Grid.Row="5">
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -482,14 +482,14 @@
           <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TextBlock Style="{StaticResource MaterialDesignSubtitle2TextBlock}" Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
-        <ListView
+        <ListBox
           x:Name="ListViewCombinationModels"
           Grid.Row="1"
           Margin="0,0,0,5"
           HorizontalContentAlignment="Stretch"
           ItemsSource="{Binding CombinationModels}"
           SelectedItem="{Binding SelectedCombinationModel}">
-          <ListView.Resources>
+          <ListBox.Resources>
             <ContextMenu x:Key="CombiContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
               <MenuItem
                 Command="{Binding ShowOnSimuCommand}"
@@ -502,8 +502,8 @@
                 lịch bổ sung và/hoặc có một hoặc nhiều lớp hết chỗ ngồi
               </TextBlock>
             </ToolTip>
-          </ListView.Resources>
-          <ListView.ItemTemplate>
+          </ListBox.Resources>
+          <ListBox.ItemTemplate>
             <DataTemplate>
               <StackPanel>
                 <ItemsControl ItemsSource="{Binding ClassGroupModels}">
@@ -563,13 +563,13 @@
                 </TextBlock>
               </StackPanel>
             </DataTemplate>
-          </ListView.ItemTemplate>
-          <ListView.ItemContainerStyle>
-            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+          </ListBox.ItemTemplate>
+          <ListBox.ItemContainerStyle>
+            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
               <Setter Property="ContextMenu" Value="{StaticResource CombiContextMenu}" />
             </Style>
-          </ListView.ItemContainerStyle>
-        </ListView>
+          </ListBox.ItemContainerStyle>
+        </ListBox>
         <Button
           Grid.Row="2"
           Command="{Binding ValidGenCommand}"

@@ -498,7 +498,6 @@ namespace Cs4rsa.ViewModels
             }
 
             TotalSubject = SubjectModels.Count;
-            AddCommand.NotifyCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
 
