@@ -1,108 +1,83 @@
-﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Utils;
-using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 {
-    public class StudentProgramCrawler
+    public class StudentProgramCrawler : BaseCrawler, IStudentProgramCrawler
     {
-        private static string _studentId;
-        private static bool _isUseCache;
+        private static string _specialString;
+        private static int _curid;
 
-        private HtmlNodeCollection _trNodes;
+        private HtmlNodeCollection _trNodes2001;
+        private HtmlNodeCollection _trNodes2002;
+        private HtmlNodeCollection _trNodes2003;
+        private HtmlNodeCollection _trNodes2004;
+
+        private readonly HtmlWeb _htmlWeb;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPreParSubjectCrawler _preParSubjectCrawler;
 
         public StudentProgramCrawler(
-            IUnitOfWork unitOfWork,
-            IPreParSubjectCrawler preParSubjectCrawler
+            HtmlWeb htmlWeb,
+            IUnitOfWork unitOfWork
         )
         {
+            _htmlWeb = htmlWeb;
             _unitOfWork = unitOfWork;
-            _preParSubjectCrawler = preParSubjectCrawler;
-        }
-
-        /// <summary>
-        /// Set thông tin trước khi thực hiện lấy chương trình học.
-        /// </summary>
-        /// <param name="isUseCache">
-        /// True nếu sử dụng thông tin được lưu từ DB. 
-        /// Ngược lại sẽ thực hiện cào lại thông tin mới.
-        /// </param>
-        /// <param name="studentId">Student ID</param>
-        public static void SetInfor(string studentId, bool isUseCache)
-        {
-            _studentId = studentId;
-            _isUseCache = isUseCache;
-        }
-
-        public async Task<ProgramFolder> GetRoot(
-            string specialString,
-            string t,
-            string nodeName,
-            int curid
-        )
-        {
-            string url = GetUrl(specialString, t, nodeName, curid);
-            _trNodes = await GetAllTrTag(url, nodeName);
-            ProgramFolder programFolder = GetProgramFolder(_trNodes[0]);
-            return await GetFolderNode(1, programFolder);
         }
 
         /// <summary>
         /// Lấy ra đường dẫn tới phần học
         /// </summary>
         /// <param name="specialString">Mã đặc biệt</param>
-        /// <param name="t">Epoch</param>
+        /// <param name="nodeName">PhanHoc</param>
         /// <param name="curid">Mã ngành</param>
-        /// <param name="cursectionid">PhanHoc</param>
         /// <returns></returns>
-        private static string GetUrl(string specialString, string t, string nodeName, int curid)
+        private static string GetUrl(string nodeName)
         {
-            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={t}&studentidnumber={specialString}&acaLevid=3&curid={curid}&cursectionid={nodeName}";
+            return $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/ajax/LoadChuongTrinhHocEachPart.aspx?t={GetTimeFromEpoch()}&studentidnumber={_specialString}&acaLevid=3&curid={_curid}&cursectionid={nodeName}";
         }
 
-        private static async Task<HtmlNodeCollection> GetAllTrTag(string url, string nodeName)
+        private async Task<HtmlNodeCollection> GetAllTrTag(string url)
         {
-            HtmlWeb web = new();
-            HtmlDocument doc = new();
-            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, _studentId, nodeName + ".html");
-            if (File.Exists(path) && _isUseCache)
-            {
-                doc.Load(path);
-            }
-            else
-            {
-                doc = await web.LoadFromWebAsync(url);
-                await File.WriteAllTextAsync(path, doc.DocumentNode.InnerHtml);
-            }
+            HtmlDocument doc = await _htmlWeb.LoadFromWebAsync(url);
             HtmlNodeCollection trTags = doc.DocumentNode.SelectNodes("//tr");
             trTags.RemoveAt(0);
             return trTags;
         }
 
-        private async Task<ProgramFolder> GetFolderNode(int index, ProgramFolder parentFolderNode)
+        /// <summary>
+        /// Get Folder Node
+        /// 
+        /// Đệ quy sâu lấy thông tin của folder node.
+        /// </summary>
+        /// <param name="index">Index</param>
+        /// <param name="parentFolderNode">Folder Node tham chiếu</param>
+        /// <returns>Folder Node và các child của nó.</returns>
+        private async Task<ProgramFolder> GetFolderNode(
+            int index,
+            ProgramFolder parentFolderNode,
+            HtmlNodeCollection trNodeCollection,
+            List<Task> preparTasks)
         {
-            for (int i = index; i < _trNodes.Count; i++)
+            for (int i = index; i < trNodeCollection.Count; i++)
             {
-                if (_trNodes[i].Attributes["class"].Value.Split(' ').First().Equals($"child-of-node-{parentFolderNode.Id}"))
+                if (trNodeCollection[i].Attributes["class"].Value.Split(' ').First().Equals($"child-of-node-{parentFolderNode.Id}"))
                 {
-                    HtmlNode node = _trNodes[i];
+                    HtmlNode node = trNodeCollection[i];
                     HtmlDocument htmlDocument = new();
                     htmlDocument.LoadHtml(node.InnerHtml);
                     HtmlNode rootNode = htmlDocument.DocumentNode;
@@ -111,19 +86,26 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                     if (spanFolderNode != null && spanFolderNode.Attributes["class"].Value == "folder")
                     {
                         ProgramFolder programFolder = GetProgramFolder(node);
-                        await GetFolderNode(i + 1, programFolder);
+                        await GetFolderNode(i + 1, programFolder, trNodeCollection, preparTasks);
                         parentFolderNode.ChildProgramFolders.Add(programFolder);
                     }
                     else
                     {
-                        parentFolderNode.ChildProgramSubjects.Add(await GetProgramSubject(node, parentFolderNode));
+                        parentFolderNode.ChildProgramSubjects.Add(await GetProgramSubject(node, parentFolderNode, preparTasks));
                     }
                 }
             }
-
+            parentFolderNode.Completed = parentFolderNode.IsCompleted();
             return parentFolderNode;
         }
 
+        /// <summary>
+        /// Get Program Folder
+        /// 
+        /// Tạo mới một instance Program Folder từ một Html trNode.
+        /// </summary>
+        /// <param name="trNode">tr Html Node.</param>
+        /// <returns>ProgramFolder</returns>
         private static ProgramFolder GetProgramFolder(HtmlNode trNode)
         {
             HtmlDocument doc = new();
@@ -165,7 +147,15 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return new(name, studyMode, id, childOfNode, description, trNode.InnerHtml);
         }
 
-        private async Task<ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode)
+        /// <summary>
+        /// Get Program Subject
+        /// 
+        /// Lấy ra một Program Subject từ một tr node.
+        /// </summary>
+        /// <param name="node">tr Html Node.</param>
+        /// <param name="parentNode">Program Folder cha chứa Program Subject này.</param>
+        /// <returns>ProgramSubject</returns>
+        private async Task<ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode, List<Task> preparTasks)
         {
             HtmlDocument doc = new();
             doc.LoadHtml(node.InnerHtml);
@@ -226,22 +216,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 }
             }
 
-            //prerequisiteSubjects and parallelSubjects
-            IEnumerable<string> prerequisiteSubjects;
-            IEnumerable<string> parallelSubjects;
-            // TODO: Slow here
-            PreParContainer preParContainer = await _preParSubjectCrawler.Run(courseId, _isUseCache);
-            if (preParContainer != null)
-            {
-                prerequisiteSubjects = preParContainer.PrerequisiteSubjects;
-                parallelSubjects = preParContainer.ParallelSubjects;
-            }
-            else
-            {
-                prerequisiteSubjects = new List<string>();
-                parallelSubjects = new List<string>();
-            }
-
             ProgramSubject subject = new(
                 id,
                 childOfNode,
@@ -249,42 +223,22 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 name,
                 studyUnit,
                 studyUnitType,
-                prerequisiteSubjects,
-                parallelSubjects,
                 studyState,
                 courseId,
                 parrentNodeName
             );
 
-            DbProgramSubject programSubject = new()
+            DbProgramSubject dbProgramSubject = new()
             {
                 SubjectCode = subjectCode,
                 CourseId = courseId,
                 Name = name,
                 Credit = studyUnit,
             };
-            await _unitOfWork.ProgramSubjects.AddAsync(programSubject);
 
-            IEnumerable<DbPreParSubject> preParSubjects = GetPreParSubjects(prerequisiteSubjects.Concat(parallelSubjects));
-            foreach (DbPreParSubject preParSubject in preParSubjects)
-            {
-                await _unitOfWork.PreParSubjects.AddAsync(preParSubject);
-
-                PreProDetail preProDetail = new()
-                {
-                    ProgramSubject = programSubject,
-                    PreParSubject = preParSubject
-                };
-                await _unitOfWork.PreProDetails.AddAsync(preProDetail);
-
-                ParProDetail parProDetail = new()
-                {
-                    ProgramSubject = programSubject,
-                    PreParSubject = preParSubject
-                };
-                await _unitOfWork.ParProDetails.AddAsync(parProDetail);
-            }
+            await _unitOfWork.ProgramSubjects.AddAsync(dbProgramSubject);
             await _unitOfWork.CompleteAsync();
+
             return subject;
         }
 
@@ -292,7 +246,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         /// Trả về tên của một folderNode.
         /// </summary>
         /// <param name="folderNode">Một html folder node.</param>
-        /// <returns></returns>
+        /// <returns>Tên của Folder node.</returns>
         private static string GetNameFolderNode(HtmlNode folderNode)
         {
             string html = folderNode.InnerHtml;
@@ -305,12 +259,64 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             return StringHelper.SuperCleanString(span.InnerText);
         }
 
-        private static IEnumerable<DbPreParSubject> GetPreParSubjects(IEnumerable<string> preParSubjectNames)
+        /// <summary>
+        /// Set thông tin trước khi thực hiện lấy chương trình học.
+        /// </summary>
+        /// <param name="specialString">Special String của mỗi sinh viên</param>
+        /// <param name="curid">Mã ngành</param>
+        public async Task<ProgramFolder[]> GetProgramFolders(string specialString, int curid)
         {
-            foreach (string strPreParSubject in preParSubjectNames)
-            {
-                yield return new() { SubjectCode = strPreParSubject };
-            }
+            const string NODE_DAI_CUONG = "2001";
+            const string NODE_GDTC_VA_QP = "2002";
+            const string NODE_DAI_CUONG_NGANH = "2003";
+            const string NODE_CHUYEN_NGANH = "2004";
+
+            _specialString = specialString;
+            _curid = curid;
+
+            string url2001 = GetUrl(NODE_DAI_CUONG);
+            string url2002 = GetUrl(NODE_GDTC_VA_QP);
+            string url2003 = GetUrl(NODE_DAI_CUONG_NGANH);
+            string url2004 = GetUrl(NODE_CHUYEN_NGANH);
+
+            HtmlNodeCollection[] cols = await Task.WhenAll(
+                GetAllTrTag(url2001),
+                GetAllTrTag(url2002),
+                GetAllTrTag(url2003),
+                GetAllTrTag(url2004)
+            );
+
+            _trNodes2001 = cols[0];
+            _trNodes2002 = cols[1];
+            _trNodes2003 = cols[2];
+            _trNodes2004 = cols[3];
+
+            ProgramFolder pf2001 = GetProgramFolder(_trNodes2001[0]);
+            ProgramFolder pf2002 = GetProgramFolder(_trNodes2002[0]);
+            ProgramFolder pf2003 = GetProgramFolder(_trNodes2003[0]);
+            ProgramFolder pf2004 = GetProgramFolder(_trNodes2004[0]);
+
+            List<Task> preparTasks2001 = new();
+            List<Task> preparTasks2002 = new();
+            List<Task> preparTasks2003 = new();
+            List<Task> preparTasks2004 = new();
+
+            ProgramFolder[] programFolders = await Task.WhenAll(
+                GetFolderNode(1, pf2001, _trNodes2001, preparTasks2001),
+                GetFolderNode(1, pf2002, _trNodes2002, preparTasks2002),
+                GetFolderNode(1, pf2003, _trNodes2003, preparTasks2003),
+                GetFolderNode(1, pf2004, _trNodes2004, preparTasks2004)
+            );
+
+            await Task.WhenAll(
+                preparTasks2001
+                .Concat(preparTasks2002)
+                .Concat(preparTasks2003)
+                .Concat(preparTasks2004)
+                .ToList()
+            );
+
+            return programFolders;
         }
     }
 }

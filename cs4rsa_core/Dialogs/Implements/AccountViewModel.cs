@@ -49,6 +49,11 @@ namespace Cs4rsa.Dialogs.Implements
             DeleteCommand = new AsyncRelayCommand(OnDelete);
 
             Students = new();
+
+            Messenger.Register<SessionInputVmMsgs.ExitFindStudentMsg>(this, (r, m) =>
+            {
+                Students.Add(m.Value);
+            });
         }
 
         private async Task OnDelete()
@@ -86,10 +91,8 @@ namespace Cs4rsa.Dialogs.Implements
             vm.SessionId = _sessionId;
 
             OpenDialog(sessionInputUC);
-            Student student = await vm.Find();
-            Students.Add(student);
+            await vm.Find();
             CloseDialog();
-
             SessionId = string.Empty;
         }
 

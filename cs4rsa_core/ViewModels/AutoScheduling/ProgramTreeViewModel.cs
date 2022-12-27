@@ -3,19 +3,24 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
 using Cs4rsa.Models.AutoScheduling;
-using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Utils;
+using Cs4rsa.Utils.Interfaces;
 
+using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,8 +31,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
     {
         private readonly MyProgramUC _myProgramUC;
         private readonly AccountUC _accountUC;
-
-        private ProgramDiagram _programDiagram;
 
         public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<PlanTableModel> PlanTableModels { get; set; }
@@ -56,19 +59,16 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStudentPlanCrawler _studentPlanCrawler;
-        private readonly ProgramDiagramCrawler _programDiagramCrawler;
         private readonly ColorGenerator _colorGenerator;
 
         public ProgramTreeViewModel(
             IUnitOfWork unitOfWork,
             IStudentPlanCrawler studentPlanCrawler,
-            ProgramDiagramCrawler programDiagramCrawler,
             ColorGenerator colorGenerator
             )
         {
             _unitOfWork = unitOfWork;
             _studentPlanCrawler = studentPlanCrawler;
-            _programDiagramCrawler = programDiagramCrawler;
             _colorGenerator = colorGenerator;
 
             ProgramFolderModels = new();
@@ -141,11 +141,12 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// </summary>
         private async Task LoadStudentPlan()
         {
-            if (_selectedStudent.StudentId.Equals("0")) return;
+            if (_selectedStudent == null) return;
             PlanTableModels.Clear();
 
             List<Task<PlanTableModel>> tasks = new();
             IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(_selectedStudent.CurriculumId);
+            if (planTables == null) return;
             foreach (PlanTable planTable in planTables)
             {
                 tasks.Add(PlanTableModel.Build(planTable, _unitOfWork));
@@ -160,28 +161,30 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private async Task LoadProgramSubject()
         {
             ProgramFolderModels.Clear();
-
-            IsFinding = !IsFinding;
-            ProgramFolder[] folders = await _programDiagramCrawler.ToProgramDiagram(
-                _selectedStudent.SpecialString,
+            string programPath = Path.Combine(
+                AppContext.BaseDirectory,
+                IFolderManager.FD_STUDENT_PROGRAMS,
                 _selectedStudent.StudentId,
-                IsUseCache
-            );
-            IsFinding = !IsFinding;
+                VMConstants.FN_STUDENT_PROGRAM);
+            if (File.Exists(programPath))
+            {
+                string json = await File.ReadAllTextAsync(programPath);
+                ProgramFolder[] programFolders = JsonConvert.DeserializeObject<ProgramFolder[]>(json);
 
-            _programDiagram = new(folders[0], folders[1], folders[2], folders[3], _unitOfWork);
-            await Task.WhenAll(
-                AddProgramFolder(folders[0]),
-                AddProgramFolder(folders[1]),
-                AddProgramFolder(folders[2]),
-                AddProgramFolder(folders[3])
-            );
-        }
-
-        private async Task AddProgramFolder(ProgramFolder programFolder)
-        {
-            ProgramFolderModel programFolderModel = await ProgramFolderModel.CreateAsync(programFolder, _colorGenerator, _unitOfWork);
-            ProgramFolderModels.Add(programFolderModel);
+                foreach (ProgramFolder programFolder in programFolders)
+                {
+                    ProgramFolderModel programFolderModel = await ProgramFolderModel.CreateAsync(
+                        programFolder,
+                        _colorGenerator,
+                        _unitOfWork
+                    );
+                    ProgramFolderModels.Add(programFolderModel);
+                }
+            }
+            else
+            {
+                MessageBox.Show(CredizText.AutoMsg001(VMConstants.FN_STUDENT_PROGRAM, _selectedStudent.Name), "Thông báo", MessageBoxButton.OK);
+            }
         }
     }
 }

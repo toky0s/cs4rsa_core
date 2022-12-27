@@ -3,7 +3,6 @@ using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
-using System.Collections.Generic;
 
 namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
@@ -19,8 +18,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         public string SubjectName { get; set; }
         public int StudyUnit { get; }
         public StudyUnitType StudyUnitType { get; }
-        public IEnumerable<string> PrerequisiteSubjects { get; }
-        public IEnumerable<string> ParallelSubjects { get; }
         public StudyState StudyState { get; }
         public string CourseId { get; }
         public string ParentNodeName { get; }
@@ -32,8 +29,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
             string subjectName,
             int studyUnit,
             StudyUnitType studyUnitType,
-            IEnumerable<string> prerequisiteSubjects,
-            IEnumerable<string> parallelSubject,
             StudyState studyState,
             string courseId,
             string parrentNodeName
@@ -45,8 +40,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
             SubjectName = subjectName;
             StudyUnit = studyUnit;
             StudyUnitType = studyUnitType;
-            PrerequisiteSubjects = prerequisiteSubjects;
-            ParallelSubjects = parallelSubject;
             StudyState = studyState;
             CourseId = courseId;
             ParentNodeName = parrentNodeName;

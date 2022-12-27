@@ -1,5 +1,15 @@
 ﻿namespace Cs4rsa.Constants
 {
+    internal static class CredizText
+    {
+        /// <summary>
+        /// Thông báo không tồn tại file JSON chứa thông tin chương trình học của sinh viên.
+        /// </summary>
+        /// <param name="fName">File name</param>
+        /// <param name="stdName">Student name</param>
+        public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
+    }
+
     internal static class VMConstants
     {
         #region DB
@@ -61,11 +71,8 @@
         public const char CHAR_SPACE = ' ';
         #endregion
 
-        #region Node names
-        public readonly static string NODE_NAME_DAI_CUONG = "2001";
-        public readonly static string NODE_GDTC_VA_QP = "2002";
-        public readonly static string NODE_NAME_DAI_CUONG_NGANH = "2003";
-        public readonly static string NODE_NAME_CHUYEN_NGANH = "2004";
+        #region FILE_NAMES
+        public static readonly string FN_STUDENT_PROGRAM = @"StudentProgram.json";
         #endregion
     }
 }

@@ -4,6 +4,8 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 
 using Microsoft.EntityFrameworkCore;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
@@ -14,14 +16,30 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
         }
 
-        public async Task<DbProgramSubject> GetByCourseIdAsync(string CourseId)
+        public async Task<bool> ExistsByCourseId(string courseId)
         {
-            return await _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == CourseId);
+            return await _context.DbProgramSubjects.AnyAsync(ps => ps.CourseId.Equals(courseId));
         }
 
-        public Task<DbProgramSubject> GetBySubjectCode(string subjectCode)
+        public async Task<DbProgramSubject> GetByCourseIdAsync(string courseId)
         {
-            return _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.SubjectCode.Equals(subjectCode));
+            return await _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == courseId);
+        }
+
+        public IEnumerable<string> GetParByCourseId(string courseId)
+        {
+            return from p in _context.DbProgramSubjects
+                   join d in _context.ParProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
+                   join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
+                   select a.SubjectCode;
+        }
+
+        public IEnumerable<string> GetPreByCourseId(string courseId)
+        {
+            return from p in _context.DbProgramSubjects
+                    join d in _context.PreProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
+                    join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
+                    select a.SubjectCode;
         }
     }
 }

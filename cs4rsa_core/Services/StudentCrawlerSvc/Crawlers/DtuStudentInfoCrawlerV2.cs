@@ -100,13 +100,26 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                     AvatarImage = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
-                await _unitOfWork.BeginTransAsync();
                 await _unitOfWork.Students.AddAsync(student);
                 await _unitOfWork.CompleteAsync();
-                await _unitOfWork.CommitAsync();
                 return student;
             }
-            return studentExist;
+            else
+            {
+                studentExist.Name = name;
+                studentExist.StudentId = studentId;
+                studentExist.SpecialString = specialString;
+                studentExist.BirthDay = birthday;
+                studentExist.Cmnd = cmnd;
+                studentExist.Email = email;
+                studentExist.PhoneNumber = phoneNumber;
+                studentExist.Address = address;
+                studentExist.AvatarImage = imageBase64Data;
+                studentExist.CurriculumId = curriculum.CurriculumId;
+                _unitOfWork.Students.Update(studentExist);
+                await _unitOfWork.CompleteAsync();
+                return studentExist;
+            }
         }
 
         public async static Task<string> LoadImage(Uri uri)

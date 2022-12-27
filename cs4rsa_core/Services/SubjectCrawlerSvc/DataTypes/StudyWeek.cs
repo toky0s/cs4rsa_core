@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
-    public readonly struct StudyWeek
+    public class StudyWeek
     {
-        public readonly int StartWeek { get; }
-        public readonly int EndWeek { get; }
+        public int StartWeek { get; private set; }
+        public int EndWeek { get; private set; }
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.

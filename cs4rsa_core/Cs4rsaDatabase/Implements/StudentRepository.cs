@@ -15,6 +15,11 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
         }
 
+        public async Task<bool> ExistsBySpecialString(string specialString)
+        {
+            return await _context.Students.AnyAsync(st => st.SpecialString.Equals(specialString));
+        }
+
         public async Task<Student> GetBySpecialStringAsync(string specialString)
         {
             return await _context.Set<Student>()
