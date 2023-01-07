@@ -102,6 +102,7 @@ namespace Cs4rsa
 
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
+            services.AddSingleton<AutoFilterViewModel>();
             services.AddSingleton<ShareStringViewModel>();
             services.AddSingleton<PhaseStore>();
 
@@ -114,6 +115,7 @@ namespace Cs4rsa
             services.AddSingleton<AccountViewModel>();
             services.AddSingleton<AutoSortSubjectLoadViewModel>();
             services.AddSingleton<ProgramTreeViewModel>();
+            services.AddSingleton<ResultViewModel>();
 
             return services.BuildServiceProvider();
         }

@@ -1,19 +1,27 @@
-﻿namespace Cs4rsa.Constants
+﻿using Cs4rsa.Utils.Interfaces;
+
+using System;
+using System.IO;
+
+namespace Cs4rsa.Constants
 {
     internal static class CredizText
     {
         /// <summary>
-        /// Thông báo không tồn tại file JSON chứa thông tin chương trình học của sinh viên.
+        /// Thông báo không tồn tại file của sinh viên không tồn tại.
         /// </summary>
         /// <param name="fName">File name</param>
         /// <param name="stdName">Student name</param>
         public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
+
+        public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, $"StudentProgram_{stdId}.json");
+        public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, $"{curid}.json");
     }
 
     internal static class VMConstants
     {
         #region DB
-        public static readonly string DB_CONN = @"Data Source=cs4rsa.db";
+        public static readonly string DB_CONN = @"Data Source=C:\Users\truon\source\repos\cs4rsa_core\cs4rsa_core\bin\Debug\net6.0-windows7.0\cs4rsa.db";
         #endregion
 
         #region Exceptions
@@ -69,10 +77,6 @@
         public const string STR_SPACE = " ";
         public const string TIME_HH_MM_FORMAT = "HH:mm";
         public const char CHAR_SPACE = ' ';
-        #endregion
-
-        #region FILE_NAMES
-        public static readonly string FN_STUDENT_PROGRAM = @"StudentProgram.json";
         #endregion
     }
 }

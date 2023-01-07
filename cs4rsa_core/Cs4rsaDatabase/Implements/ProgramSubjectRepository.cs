@@ -37,9 +37,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public IEnumerable<string> GetPreByCourseId(string courseId)
         {
             return from p in _context.DbProgramSubjects
-                    join d in _context.PreProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
-                    join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
-                    select a.SubjectCode;
+                   join d in _context.PreProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
+                   join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
+                   select a.SubjectCode;
         }
     }
 }

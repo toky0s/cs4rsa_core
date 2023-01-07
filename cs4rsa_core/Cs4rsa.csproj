@@ -27,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="cs4rsa.db" />
+    <None Remove="cs4rsa_settings.json" />
     <None Remove="Images\background.png" />
     <None Remove="Images\choice.jpg" />
     <None Remove="Images\cockieeditor5.png" />

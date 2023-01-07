@@ -1,18 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
-using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
-using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
@@ -252,10 +249,10 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Cs4rsaGen cs4rsaGen = new(_filteredClassGroupModels);
-            cs4rsaGen.TempResult.Clear();
-            cs4rsaGen.Backtracking(0);
-            e.Result = cs4rsaGen.TempResult;
+            //Cs4rsaGen cs4rsaGen = new(_filteredClassGroupModels);
+            //cs4rsaGen.TempResult.Clear();
+            //cs4rsaGen.Backtracking(0);
+            //e.Result = cs4rsaGen.TempResult;
         }
 
         private void OnResetFilter()
@@ -464,7 +461,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private void OnShowOnSimu()
         {
-            Messenger.Send(new AutoScheduleVmMsgs.ShowOnSimuMsg(_selectedCombinationModel));
+            //Messenger.Send(new AutoScheduleVmMsgs.ShowOnSimuMsg(_sltCombiModel));
         }
 
         private bool CanDownload()

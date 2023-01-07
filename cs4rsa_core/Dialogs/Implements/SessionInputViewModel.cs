@@ -16,7 +16,6 @@ using MaterialDesignThemes.Wpf;
 
 using Newtonsoft.Json;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -101,11 +100,8 @@ namespace Cs4rsa.Dialogs.Implements
                 if (student != null)
                 {
                     // 4. Lấy chương trình học
-                    string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, student.StudentId);
-                    _folderManager.CreateFolderIfNotExists(path);
-
                     ProgramFolder[] programs = await _studentProgramCrawler.GetProgramFolders(specialStringV2, student.CurriculumId);
-                    string programFilePath = Path.Combine(path, VMConstants.FN_STUDENT_PROGRAM);
+                    string programFilePath = CredizText.PathProgramJsonFile(student.StudentId);
 
                     // 4.1 Lưu chương trình học vào file JSON
                     JsonSerializer serializer = new();
@@ -119,8 +115,7 @@ namespace Cs4rsa.Dialogs.Implements
                     IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(student.CurriculumId, _sessionId);
 
                     // 5.1 Lưu chương trình học dự kiến vào file JSON
-                    string planTablesPath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, @$"{student.CurriculumId}.json");
-                    using (StreamWriter sw = new(planTablesPath))
+                    using (StreamWriter sw = new(CredizText.PathPlanJsonFile(student.CurriculumId)))
                     using (JsonWriter writer = new JsonTextWriter(sw))
                     {
                         serializer.Serialize(writer, planTables);

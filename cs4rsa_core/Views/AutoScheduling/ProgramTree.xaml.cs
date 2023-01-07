@@ -15,7 +15,9 @@ namespace Cs4rsa.Views.AutoScheduling
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            (DataContext as ProgramTreeViewModel).SelectedProSubject = e.NewValue is ProgramSubjectModel ? e.NewValue as ProgramSubjectModel : null;
+            (DataContext as ProgramTreeViewModel).SltSubjectTreeItem = e.NewValue is ProgramSubjectModel
+                                                                        ? e.NewValue as ProgramSubjectModel
+                                                                        : null;
         }
 
         // Chống scroll auto đưa item vào trung tâm khi focus

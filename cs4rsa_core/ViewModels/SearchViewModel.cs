@@ -123,7 +123,7 @@ namespace Cs4rsa.ViewModels
                 });
             });
 
-            Messenger.Register<AutoScheduleVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
+            Messenger.Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             {
                 ImportSubjects(m.Value);
             });

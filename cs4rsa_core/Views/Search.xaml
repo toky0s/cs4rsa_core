@@ -1,271 +1,274 @@
 ﻿<UserControl
-    x:Class="Cs4rsa.Views.Search"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:Cs4rsa.ViewModels"
-    xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-    x:Name="SearchSessionUC"
-    d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="400"
-    vml:ViewModelLocator.AutoHookedUpViewModel="True"
-    mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid Margin="5,0,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="2.5*" />
-        </Grid.ColumnDefinitions>
-        <ComboBox
-            x:Name="DisciplineComboBox"
-            Grid.Row="0"
-            Grid.Column="0"
-            Margin="0,0,5,0"
-            DisplayMemberPath="Name"
-            FontWeight="Normal"
-            IsEditable="True"
-            ItemsSource="{Binding Disciplines, Mode=OneWay}"
-            SelectedItem="{Binding SelectedDiscipline}" />
-        <ComboBox
-            x:Name="Keyword1ComboxBox"
-            Grid.Row="0"
-            Grid.Column="1"
-            ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
-            SelectedItem="{Binding SelectedKeyword}"
-            SelectedValuePath="Keyword1"
-            ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Border
-                            Width="10"
-                            Height="10"
-                            Margin="0,0,5,0"
-                            Background="{Binding Color}"
-                            CornerRadius="5" />
-                        <TextBlock>
-                            <Run Text="{Binding Keyword1}" />
-                            <Run Text=" - " />
-                            <Run Text="{Binding SubjectName}" />
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <StackPanel
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="0,7,0,0"
-            Orientation="Vertical">
-            <TextBox
-                x:Name="SearchingTextBox"
-                Margin="0,0,0,5"
-                materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
-                GotFocus="SearchingTextBox_GotFocus"
-                KeyDown="SearchingTextBox_KeyDown"
-                LostFocus="SearchingTextBox_LostFocus"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
-            <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
-                <Border
-                    Background="{DynamicResource MaterialDesignPaper}"
-                    BorderBrush="{StaticResource PrimaryHueMidBrush}"
-                    BorderThickness="2.5"
-                    CornerRadius="5">
-                    <ListBox
-                        x:Name="ListView_Search"
-                        MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
-                        MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
-                        ItemsSource="{Binding FullMatchSearchingKeywords}"
-                        SelectedItem="{Binding SearchingKeyword}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="25" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Rectangle
-                                        Grid.Column="0"
-                                        Width="20"
-                                        HorizontalAlignment="Left"
-                                        Fill="{Binding Keyword.Color}" />
-                                    <StackPanel Grid.Column="1" Orientation="Vertical">
-                                        <TextBlock
-                                            Margin="5,10,0,0"
-                                            Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                            Text="{Binding Keyword.SubjectName, Mode=OneWay}"
-                                            TextWrapping="WrapWithOverflow" />
-                                        <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                                            <Run Text="{Binding Discipline.Name}" />
-                                            <Run Text="{Binding Keyword.Keyword1}" />
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Border>
-            </Popup>
-        </StackPanel>
-        <Grid
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <ToggleButton Content="{materialDesign:PackIcon Kind=Cached, Size=21}" IsChecked="{Binding IsUseCache}">
-                <ToggleButton.Style>
-                    <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
-                        <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsUseCache}" Value="true">
-                                <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
-            </ToggleButton>
-            <Button
-                x:Name="DisciplineKeywordButton"
-                Grid.Column="1"
-                Margin="5,0,0,0"
-                Command="{Binding AddCommand}"
-                Content="THÊM" />
-        </Grid>
-        <ListBox
-            x:Name="DownloadSubjects"
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,0,0,5"
-            HorizontalContentAlignment="Stretch"
-            AllowDrop="True"
-            Drop="DownloadSubjects_Drop"
-            ItemsSource="{Binding SubjectModels}"
-            ScrollViewer.CanContentScroll="False"
-            SelectedItem="{Binding SelectedSubjectModel}">
-            <ListBox.Resources>
-                <ContextMenu x:Key="SubjectContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
-                    <MenuItem
-                        Command="{Binding DetailCommand, Mode=OneTime}"
-                        Header="Chi tiết"
-                        Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
-                    <MenuItem
-                        Command="{Binding GotoCourseCommand, Mode=OneTime}"
-                        Header="Mở trong Course"
-                        Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
-                    <Separator />
-                    <MenuItem
-                        Command="{Binding DeleteCommand, Mode=OneTime}"
-                        Header="Xoá"
-                        Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
-                </ContextMenu>
-            </ListBox.Resources>
+  x:Class="Cs4rsa.Views.Search"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="clr-namespace:Cs4rsa.ViewModels"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  x:Name="SearchSessionUC"
+  d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
+  d:DesignHeight="450"
+  d:DesignWidth="400"
+  vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Grid Margin="5,0,0,0">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="2.5*" />
+    </Grid.ColumnDefinitions>
+    <ComboBox
+      x:Name="DisciplineComboBox"
+      Grid.Row="0"
+      Grid.Column="0"
+      Margin="0,0,5,0"
+      DisplayMemberPath="Name"
+      FontWeight="Normal"
+      IsEditable="True"
+      ItemsSource="{Binding Disciplines, Mode=OneWay}"
+      SelectedItem="{Binding SelectedDiscipline}" />
+    <ComboBox
+      x:Name="Keyword1ComboxBox"
+      Grid.Row="0"
+      Grid.Column="1"
+      ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
+      SelectedItem="{Binding SelectedKeyword}"
+      SelectedValuePath="Keyword1"
+      ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+            <Border
+              Width="10"
+              Height="10"
+              Margin="0,0,5,0"
+              Background="{Binding Color}"
+              CornerRadius="5" />
+            <TextBlock>
+              <Run Text="{Binding Keyword1}" />
+              <Run Text=" - " />
+              <Run Text="{Binding SubjectName}" />
+            </TextBlock>
+          </StackPanel>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    <StackPanel
+      Grid.Row="1"
+      Grid.ColumnSpan="2"
+      Margin="0,7,0,0"
+      Orientation="Vertical">
+      <TextBox
+        x:Name="SearchingTextBox"
+        Margin="0,0,0,5"
+        materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
+        GotFocus="SearchingTextBox_GotFocus"
+        KeyDown="SearchingTextBox_KeyDown"
+        LostFocus="SearchingTextBox_LostFocus"
+        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+      <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
+        <Border
+          Background="{DynamicResource MaterialDesignPaper}"
+          BorderBrush="{StaticResource PrimaryHueMidBrush}"
+          BorderThickness="2.5"
+          CornerRadius="5">
+          <ListBox
+            x:Name="ListView_Search"
+            MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
+            MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
+            ItemsSource="{Binding FullMatchSearchingKeywords}"
+            SelectedItem="{Binding SearchingKeyword}">
             <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <materialDesign:TransitioningContent>
-                        <materialDesign:TransitioningContent.OpeningEffects>
-                            <materialDesign:TransitionEffect Kind="FadeIn" />
-                            <materialDesign:TransitionEffect Kind="SlideInFromTop" />
-                        </materialDesign:TransitioningContent.OpeningEffects>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="25" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <Border
-                                Grid.Column="0"
-                                Width="20"
-                                HorizontalAlignment="Left"
-                                Background="{Binding Color}"
-                                CornerRadius="4" />
-                            <StackPanel Grid.Column="1" Orientation="Vertical">
-                                <TextBlock
-                                    Margin="5,10,0,0"
-                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                    TextWrapping="WrapWithOverflow">
-                                    <Run Text="{Binding SubjectName, Mode=OneWay}" />
-                                    <Run>
-                                        <Run.Style>
-                                            <Style TargetType="Run">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
-                                                        <Setter Property="Text" Value="*" />
-                                                        <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Run.Style>
-                                    </Run>
-                                </TextBlock>
-                                <TextBlock
-                                    Margin="5,0,0,0"
-                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                    Text="{Binding SubjectCode}" />
-                                <TextBlock
-                                    Margin="5,0,0,10"
-                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                                    Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                            </StackPanel>
-                            <ProgressBar
-                                Grid.Column="2"
-                                IsIndeterminate="True"
-                                Style="{StaticResource MaterialDesignCircularProgressBar}"
-                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        </Grid>
-                    </materialDesign:TransitioningContent>
-                </DataTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Rectangle
+                    Grid.Column="0"
+                    Width="20"
+                    HorizontalAlignment="Left"
+                    Fill="{Binding Keyword.Color}" />
+                  <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <TextBlock
+                      Margin="5,10,0,0"
+                      Style="{StaticResource MaterialDesignBody2TextBlock}"
+                      Text="{Binding Keyword.SubjectName, Mode=OneWay}"
+                      TextWrapping="WrapWithOverflow" />
+                    <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                      <Run Text="{Binding Discipline.Name}" />
+                      <Run Text="{Binding Keyword.Keyword1}" />
+                    </TextBlock>
+                  </StackPanel>
+                </Grid>
+              </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
-                    <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}" />
-                    <Setter Property="IsEnabled" Value="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-        <Grid
-            Grid.Row="5"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,0,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <Button
-                Grid.Column="0"
-                Margin="0,0,3,0"
-                Command="{Binding DeleteAllCommand}">
-                <Button.Content>
-                    <TextBlock Text="{Binding SubjectModels.Count, StringFormat=XOÁ HẾT ({0})}" />
-                </Button.Content>
-            </Button>
-            <Button
-                Grid.Column="1"
-                Command="{Binding ImportDialogCommand}"
-                Content="{materialDesign:PackIcon Kind=DatabaseImportOutline,
-                                                  Size=20}"
-                ToolTip="Đã lưu" />
-        </Grid>
+          </ListBox>
+        </Border>
+      </Popup>
+    </StackPanel>
+    <Grid
+      Grid.Row="2"
+      Grid.Column="0"
+      Grid.ColumnSpan="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <ToggleButton Content="{materialDesign:PackIcon Kind=Cached, Size=21}" IsChecked="{Binding IsUseCache}">
+        <ToggleButton.Style>
+          <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
+            <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsUseCache}" Value="true">
+                <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </ToggleButton.Style>
+      </ToggleButton>
+      <Button
+        x:Name="DisciplineKeywordButton"
+        Grid.Column="1"
+        Margin="5,0,0,0"
+        Command="{Binding AddCommand}"
+        Content="THÊM" />
     </Grid>
+    <ListBox
+      x:Name="DownloadSubjects"
+      Grid.Row="3"
+      Grid.Column="0"
+      Grid.ColumnSpan="2"
+      Margin="0,0,0,5"
+      HorizontalContentAlignment="Stretch"
+      AllowDrop="True"
+      Drop="DownloadSubjects_Drop"
+      ItemsSource="{Binding SubjectModels}"
+      ScrollViewer.CanContentScroll="False"
+      SelectedItem="{Binding SelectedSubjectModel}">
+      <ListBox.Resources>
+        <ContextMenu
+          x:Key="SubjectContextMenu"
+          d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
+          DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
+          <MenuItem
+            Command="{Binding DetailCommand, Mode=OneTime}"
+            Header="Chi tiết"
+            Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
+          <MenuItem
+            Command="{Binding GotoCourseCommand, Mode=OneTime}"
+            Header="Mở trong Course"
+            Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
+          <Separator />
+          <MenuItem
+            Command="{Binding DeleteCommand, Mode=OneTime}"
+            Header="Xoá"
+            Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
+        </ContextMenu>
+      </ListBox.Resources>
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <materialDesign:TransitioningContent>
+            <materialDesign:TransitioningContent.OpeningEffects>
+              <materialDesign:TransitionEffect Kind="FadeIn" />
+              <materialDesign:TransitionEffect Kind="SlideInFromTop" />
+            </materialDesign:TransitioningContent.OpeningEffects>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+              </Grid.ColumnDefinitions>
+              <Border
+                Grid.Column="0"
+                Width="20"
+                HorizontalAlignment="Left"
+                Background="{Binding Color}"
+                CornerRadius="4" />
+              <StackPanel Grid.Column="1" Orientation="Vertical">
+                <TextBlock
+                  Margin="5,10,0,0"
+                  Style="{StaticResource MaterialDesignBody2TextBlock}"
+                  TextWrapping="WrapWithOverflow">
+                  <Run Text="{Binding SubjectName, Mode=OneWay}" />
+                  <Run>
+                    <Run.Style>
+                      <Style TargetType="Run">
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
+                            <Setter Property="Text" Value="*" />
+                            <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </Run.Style>
+                  </Run>
+                </TextBlock>
+                <TextBlock
+                  Margin="5,0,0,0"
+                  Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                  Text="{Binding SubjectCode}" />
+                <TextBlock
+                  Margin="5,0,0,10"
+                  Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                  Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+              </StackPanel>
+              <ProgressBar
+                Grid.Column="2"
+                IsIndeterminate="True"
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Grid>
+          </materialDesign:TransitioningContent>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+      <ListBox.ItemContainerStyle>
+        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+          <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}" />
+          <Setter Property="IsEnabled" Value="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}" />
+        </Style>
+      </ListBox.ItemContainerStyle>
+    </ListBox>
+    <Grid
+      Grid.Row="5"
+      Grid.Column="0"
+      Grid.ColumnSpan="2"
+      Margin="0,0,0,5">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+      <Button
+        Grid.Column="0"
+        Margin="0,0,3,0"
+        Command="{Binding DeleteAllCommand}">
+        <Button.Content>
+          <TextBlock Text="{Binding SubjectModels.Count, StringFormat=XOÁ HẾT ({0})}" />
+        </Button.Content>
+      </Button>
+      <Button
+        Grid.Column="1"
+        Command="{Binding ImportDialogCommand}"
+        Content="{materialDesign:PackIcon Kind=DatabaseImportOutline,
+                                          Size=20}"
+        ToolTip="Đã lưu" />
+    </Grid>
+  </Grid>
 </UserControl>
