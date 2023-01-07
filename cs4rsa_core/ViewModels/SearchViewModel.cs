@@ -192,7 +192,6 @@ namespace Cs4rsa.ViewModels
             {
                 LoadKeywordByDiscipline(value);
             }
-            AddCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedKeywordChanged(Keyword value)
@@ -491,8 +490,7 @@ namespace Cs4rsa.ViewModels
 
             ReplacePseudoSubject(subjectModel);
 
-            int downloadingSubjectCount = SubjectModels.Where(sm => sm.IsDownloading).Count();
-            if (downloadingSubjectCount == 0)
+            if (!SubjectModels.Where(sm => sm.IsDownloading).Any())
             {
                 SelectedSubjectModel = subjectModel;
             }
