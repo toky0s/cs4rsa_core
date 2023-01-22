@@ -1,0 +1,763 @@
+﻿<UserControl
+  x:Class="Cs4rsa.Views.AutoScheduling.ProgramTree"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:autoVm="clr-namespace:Cs4rsa.ViewModels.AutoScheduling"
+  xmlns:converter="clr-namespace:Cs4rsa.Converters"
+  xmlns:crediz="clr-namespace:Cs4rsa.Controls"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:Cs4rsa.Views.AutoScheduling"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:model="clr-namespace:Cs4rsa.Models"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  d:DataContext="{d:DesignInstance Type=autoVm:ProgramTreeViewModel}"
+  vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <Style x:Key="HorizontalDividerBorder" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="1" />
+      </Style>
+      <converter:StudyStateConverter x:Key="StudyStateConverter" />
+      <converter:NodeTypeConverter x:Key="NodeTypeConverter" />
+      <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1.5*" />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Grid Grid.Column="0" Margin="0,0,5,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid Grid.Row="0" Margin="0,0,0,5">
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <ComboBox
+          x:Name="StudentCbx"
+          Grid.Row="0"
+          Grid.Column="0"
+          Margin="0,0,5,0"
+          ItemsSource="{Binding Students}"
+          SelectedItem="{Binding SelectedStudent}"
+          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Name}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button
+          x:Name="GotoFilterBtn"
+          Grid.Row="0"
+          Grid.Column="1"
+          Height="{Binding ElementName=StudentCbx, Path=Width}"
+          Click="GotoFilterBtn_Click">
+          <Button.Style>
+            <Style BasedOn="{StaticResource MaterialDesignOutlinedButton}" TargetType="Button">
+              <Setter Property="Content" Value="{md:PackIcon Kind=FileTreeOutline, Size=24}" />
+              <Setter Property="ToolTip" Value="Cây chương trình" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=Trans1, Path=SelectedIndex}" Value="0">
+                  <Setter Property="Content" Value="{md:PackIcon Kind=Filter, Size=24}" />
+                  <Setter Property="ToolTip" Value="Bộ lọc" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Button.Style>
+        </Button>
+
+      </Grid>
+
+      <md:Transitioner
+        x:Name="Trans1"
+        Grid.Row="1"
+        SelectedIndex="0">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+
+          <!--  Nút chức năng  -->
+          <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button
+              Margin="0,0,5,0"
+              md:ButtonProgressAssist.IsIndeterminate="{Binding IsFinding}"
+              md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsFinding}"
+              md:ButtonProgressAssist.Value="-1"
+              Command="{Binding LoadProgramCommand}"
+              Content="TẢI CHƯƠNG TRÌNH HỌC" />
+            <Button
+              Margin="0,0,5,0"
+              Command="{Binding AccountCommand}"
+              Content="{md:PackIcon Kind=Account}"
+              ToolTip="Thông tin tài khoản" />
+            <Button
+              Margin="0,0,5,0"
+              Command="{Binding MyProgramCommand}"
+              Content="{md:PackIcon Kind=Table}"
+              ToolTip="Chương trình dự kiến" />
+
+          </StackPanel>
+
+          <!--  Cây chương trình học  -->
+          <TreeView
+            x:Name="Tv_Program"
+            Grid.Row="1"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding ProgramFolderModels}"
+            RequestBringIntoView="TreeViewItem_RequestBringIntoView">
+            <TreeView.Resources>
+
+              <!--  Program Folder  -->
+              <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
+                <HierarchicalDataTemplate.ItemContainerStyle>
+                  <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True" />
+                    <Style.Triggers>
+                      <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                          <Condition Binding="{Binding NodeType}" Value="Folder" />
+                          <Condition Binding="{Binding IsCompleted}" Value="True" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="IsExpanded" Value="False" />
+                      </MultiDataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </HierarchicalDataTemplate.ItemContainerStyle>
+                <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
+                  <md:TransitioningContent.OpeningEffects>
+                    <md:TransitionEffect Kind="FadeIn" />
+                    <md:TransitionEffect Kind="ExpandIn" />
+                    <md:TransitionEffect Kind="SlideInFromTop" />
+                    <md:TransitionEffect Kind="SlideInFromLeft" />
+                  </md:TransitioningContent.OpeningEffects>
+                  <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                      <md:PackIcon Margin="0,0,5,0">
+                        <md:PackIcon.Style>
+                          <Style TargetType="md:PackIcon">
+                            <Setter Property="Kind" Value="Folder" />
+                            <Setter Property="Foreground" Value="#eb4d4b" />
+                            <Setter Property="ToolTip" Value="Chưa hoàn tất" />
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                <Setter Property="Foreground" Value="#6ab04c" />
+                                <Setter Property="Kind" Value="FolderCheck" />
+                                <Setter Property="ToolTip" Value="Đã hoàn tất" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </md:PackIcon.Style>
+                      </md:PackIcon>
+                      <TextBlock Text="{Binding FolderName}" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding Description}" />
+                  </StackPanel>
+                </md:TransitioningContent>
+              </HierarchicalDataTemplate>
+
+              <!--  Program Subject  -->
+              <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
+                <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
+                  <md:TransitioningContent.OpeningEffects>
+                    <md:TransitionEffect Kind="FadeIn" />
+                    <md:TransitionEffect Kind="ExpandIn" />
+                    <md:TransitionEffect Kind="SlideInFromTop" />
+                    <md:TransitionEffect Kind="SlideInFromLeft" />
+                  </md:TransitioningContent.OpeningEffects>
+                  <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Margin="0,0,5,0" VerticalAlignment="Center">
+                      <md:PackIcon.Style>
+                        <Style TargetType="md:PackIcon">
+                          <Setter Property="Kind" Value="FlagVariant" />
+                          <Setter Property="Foreground" Value="#eb4d4b" />
+                          <Setter Property="ToolTip" Value="Chưa học" />
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
+                              <Setter Property="Kind" Value="CheckBold" />
+                              <Setter Property="Foreground" Value="#6ab04c" />
+                              <Setter Property="ToolTip" Value="Đã học" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
+                              <Setter Property="Kind" Value="School" />
+                              <Setter Property="Foreground" Value="#30336b" />
+                              <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </md:PackIcon.Style>
+                    </md:PackIcon>
+                    <Rectangle
+                      Width="8"
+                      Height="8"
+                      Margin="0,0,5,0">
+                      <Rectangle.Style>
+                        <Style TargetType="Rectangle">
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding Color}" Value="">
+                              <Setter Property="Fill" Value="Transparent" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                          <Setter Property="Fill" Value="{Binding Color}" />
+                        </Style>
+                      </Rectangle.Style>
+                    </Rectangle>
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                      <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding Color}" Value="">
+                              <Setter Property="FontStyle" Value="Italic" />
+                              <Setter Property="Foreground" Value="Gray" />
+                              <Setter Property="ToolTip" Value="Không có sẵn trong kỳ này" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </TextBlock.Style>
+                      <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} - {1}">
+                          <Binding Path="SubjectCode" />
+                          <Binding Path="SubjectName" />
+                        </MultiBinding>
+                      </TextBlock.Text>
+                    </TextBlock>
+
+                    <!--  Add subject button  -->
+                    <Button
+                      Click="Add_Button_Click"
+                      Content="{md:PackIcon Kind=ArrowRight}"
+                      IsEnabled="{Binding IsChoosed, Converter={StaticResource InvertBooleanConverter}}">
+                      <Button.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignToolForegroundButton}" TargetType="Button">
+                          <Setter Property="Visibility" Value="Visible" />
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding Color}" Value="">
+                              <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsDone}" Value="True">
+                              <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsAvaiable}" Value="False">
+                              <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </Button.Style>
+                    </Button>
+                  </StackPanel>
+                </md:TransitioningContent>
+              </DataTemplate>
+            </TreeView.Resources>
+
+            <TreeView.ItemContainerStyle>
+              <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+                <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView" />
+                <Setter Property="IsExpanded" Value="True" />
+                <Style.Triggers>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding NodeType}" Value="Folder" />
+                      <Condition Binding="{Binding IsCompleted}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="IsExpanded" Value="False" />
+                  </MultiDataTrigger>
+                </Style.Triggers>
+              </Style>
+            </TreeView.ItemContainerStyle>
+          </TreeView>
+        </Grid>
+
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+          <!--  Nút chức năng  -->
+          <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            Orientation="Horizontal">
+            <Button
+              Command="{Binding ResetFilterCommand}"
+              Content="ĐẶT LẠI BỘ LỌC"
+              Style="{StaticResource MaterialDesignRaisedButton}" />
+          </StackPanel>
+
+          <!--  Bộ lọc  -->
+          <ScrollViewer Grid.Row="1">
+            <StackPanel>
+              <GroupBox Margin="0,0,0,5" IsEnabled="{Binding IsUseFilter}">
+                <GroupBox.Header>
+                  <StackPanel Orientation="Horizontal">
+                    <md:PackIcon
+                      Margin="0,0,5,0"
+                      Foreground="White"
+                      Kind="Clock" />
+                    <TextBlock Foreground="White" Text="Chọn thời gian rảnh" />
+                  </StackPanel>
+                </GroupBox.Header>
+                <StackPanel>
+                  <WrapPanel Orientation="Horizontal">
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Hai" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Mon_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Mon_Mor}" />
+                        <CheckBox
+                          x:Name="Mon_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Mon_Aft}" />
+                        <CheckBox
+                          x:Name="Mon_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Mon_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Ba" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Tus_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Tue_Mor}" />
+                        <CheckBox
+                          x:Name="Tus_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Tue_Aft}" />
+                        <CheckBox
+                          x:Name="Tus_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Tue_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Tư" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Wed_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Wed_Mor}" />
+                        <CheckBox
+                          x:Name="Wed_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Wed_Aft}" />
+                        <CheckBox
+                          x:Name="Wed_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Wed_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Năm" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Thur_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Thur_Mor}" />
+                        <CheckBox
+                          x:Name="Thur_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Thur_Aft}" />
+                        <CheckBox
+                          x:Name="Thur_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Thur_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Sáu" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Fri_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Fri_Mor}" />
+                        <CheckBox
+                          x:Name="Fri_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Fri_Aft}" />
+                        <CheckBox
+                          x:Name="Fri_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Fri_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Thứ Bảy" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Sat_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Sat_Mor}" />
+                        <CheckBox
+                          x:Name="Sat_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Sat_Aft}" />
+                        <CheckBox
+                          x:Name="Sat_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Sat_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                    <GroupBox Margin="2,2,0,0" BorderThickness="0">
+                      <GroupBox.Header>
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          Foreground="White"
+                          Text="Chủ Nhật" />
+                      </GroupBox.Header>
+                      <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <CheckBox
+                          x:Name="Sun_Mor"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Sáng"
+                          IsChecked="{Binding Sun_Mor}" />
+                        <CheckBox
+                          x:Name="Sun_Aft"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Chiều"
+                          IsChecked="{Binding Sun_Aft}" />
+                        <CheckBox
+                          x:Name="Sun_Nig"
+                          Command="{Binding FilterChangedCommand}"
+                          Content="Tối"
+                          IsChecked="{Binding Sun_Nig}" />
+                      </StackPanel>
+                    </GroupBox>
+                  </WrapPanel>
+                </StackPanel>
+
+              </GroupBox>
+              <GroupBox
+                x:Name="PlaceFilterGroupBox"
+                Margin="0,0,0,5"
+                IsEnabled="{Binding IsUseFilter}">
+                <GroupBox.Header>
+                  <StackPanel Orientation="Horizontal">
+                    <md:PackIcon
+                      Margin="0,0,5,0"
+                      Foreground="White"
+                      Kind="Place" />
+                    <TextBlock Foreground="White" Text="Chọn nơi muốn học" />
+                  </StackPanel>
+                </GroupBox.Header>
+                <UniformGrid Columns="3">
+                  <CheckBox
+                    Name="QuangTrung"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="03 Quang Trung"
+                    IsChecked="{Binding QuangTrung}" />
+                  <CheckBox
+                    Name="NguyenVanLinh254"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="254 Nguyễn Văn Linh"
+                    IsChecked="{Binding NguyenVanLinh254}" />
+                  <CheckBox
+                    Name="NguyenVanLinh137"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="137 Nguyễn Văn Linh"
+                    IsChecked="{Binding NguyenVanLinh137}" />
+                  <CheckBox
+                    Name="PhanThanh"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="209 Phan Thanh"
+                    IsChecked="{Binding PhanThanh}" />
+                  <CheckBox
+                    Name="HoaKhanhNam"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="Hoà Khánh Nam"
+                    IsChecked="{Binding HoaKhanhNam}" />
+                  <CheckBox
+                    Name="VietTin"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="VietTin"
+                    IsChecked="{Binding VietTin}" />
+                  <CheckBox
+                    Name="Online"
+                    Command="{Binding FilterChangedCommand}"
+                    Content="Online"
+                    IsChecked="{Binding Online}" />
+                </UniformGrid>
+              </GroupBox>
+              <GroupBox Margin="0,0,0,5" IsEnabled="{Binding IsUseFilter}">
+                <GroupBox.Header>
+                  <StackPanel Orientation="Horizontal">
+                    <md:PackIcon
+                      Margin="0,0,5,0"
+                      Foreground="White"
+                      Kind="Speedometer" />
+                    <TextBlock Foreground="White" Text="Hiệu suất Sắp xếp" />
+                  </StackPanel>
+                </GroupBox.Header>
+                <StackPanel>
+                  <CheckBox
+                    Grid.Row="2"
+                    Margin="0,0,0,5"
+                    Command="{Binding FilterChangedCommand}"
+                    IsChecked="{Binding IsRemoveClassGroupInvalid}">
+                    <CheckBox.Content>
+                      <TextBlock TextWrapping="Wrap">Loại bỏ các lớp không có lịch và hết chỗ ngay từ đầu</TextBlock>
+                    </CheckBox.Content>
+                    <CheckBox.ToolTip>
+                      <TextBlock TextWrapping="WrapWithOverflow">
+                        Việc loại bỏ các môn không có lịch và không còn chỗ ngồi
+                        giúp việc sắp xếp sẽ diễn ra nhanh hơn rất nhiều.
+                      </TextBlock>
+                    </CheckBox.ToolTip>
+                  </CheckBox>
+                </StackPanel>
+              </GroupBox>
+              <GroupBox IsEnabled="False">
+                <GroupBox.Header>
+                  <StackPanel Orientation="Horizontal">
+                    <md:PackIcon
+                      Margin="0,0,5,0"
+                      Foreground="White"
+                      Kind="Filter" />
+                    <TextBlock Foreground="White" Text="Lọc sau sắp xếp (chức năng này hiện không khả dụng)" />
+                  </StackPanel>
+                </GroupBox.Header>
+                <StackPanel>
+                  <CheckBox x:Name="CheckBoxHideConflict" Content="Ẩn bộ lịch xung đột thời gian" />
+                  <CheckBox x:Name="CheckBoxHideConflictPlace" Content="Ẩn bộ lịch xung đột vị trí" />
+                  <CheckBox x:Name="CheckBoxHideCannotSimulate" Content="Ẩn bộ lịch không thể mô phỏng" />
+                </StackPanel>
+              </GroupBox>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </md:Transitioner>
+
+    </Grid>
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="auto" />
+      </Grid.RowDefinitions>
+      <TextBlock
+        Grid.Row="0"
+        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+        Text="Các môn bạn đã chọn" />
+      <CheckBox
+        Grid.Row="1"
+        Content="Lưu những lớp đã tải"
+        IsChecked="{Binding IsSave}" />
+
+      <!--  Danh sách môn học đã chọn  -->
+      <ScrollViewer Grid.Row="2">
+        <ItemsControl
+          Margin="0,0,5,0"
+          ItemsSource="{Binding ChoosedProSubjectModels, IsAsync=True}"
+          VirtualizingPanel.IsVirtualizing="True"
+          VirtualizingPanel.VirtualizationMode="Recycling">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Expander
+                Padding="30,0,0,0"
+                IsExpanded="{Binding ReviewFtCgms.Count, Converter={StaticResource NotZeroConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.VirtualizationMode="Recycling">
+                <Expander.Header>
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                      Grid.Column="0"
+                      Width="10"
+                      Margin="0,0,5,0"
+                      Background="{Binding Color}"
+                      CornerRadius="4" />
+                    <StackPanel
+                      Grid.Column="1"
+                      VerticalAlignment="Center"
+                      Orientation="Vertical">
+                      <TextBlock VerticalAlignment="Center">
+                        <TextBlock.Text>
+                          <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="SubjectCode" />
+                            <Binding Path="SubjectName" />
+                          </MultiBinding>
+                        </TextBlock.Text>
+                        <TextBlock.Style>
+                          <Style BasedOn="{StaticResource MaterialDesignTextBlock}" TargetType="TextBlock">
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsDownloaded}" Value="False">
+                                <Setter Property="FontStyle" Value="Italic" />
+                                <Setter Property="Foreground" Value="Gray" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </TextBlock.Style>
+                      </TextBlock>
+                      <TextBlock
+                        Style="{StaticResource MaterialDesignHelperTextBlock}"
+                        Text="{Binding Status}"
+                        Visibility="{Binding Status, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
+                    </StackPanel>
+                    <Button
+                      Grid.Column="2"
+                      Click="DeleteButton_Clicked"
+                      Content="{md:PackIcon Kind=Undo}"
+                      Style="{StaticResource MaterialDesignToolButton}"
+                      Visibility="{Binding IsDownloading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+                    <ProgressBar
+                      Grid.Column="2"
+                      IsIndeterminate="True"
+                      Style="{StaticResource MaterialDesignCircularProgressBar}"
+                      Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                  </Grid>
+                </Expander.Header>
+                <Expander.Content>
+                  <Border
+                    Padding="4"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <ItemsControl ItemsSource="{Binding ReviewFtCgms}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <WrapPanel HorizontalAlignment="Stretch" Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <TextBlock Margin="0,0,5,0">
+                            <Hyperlink>
+                              <Hyperlink.Inlines>
+                                <TextBlock Text="{Binding ClassSuffix}" />
+                              </Hyperlink.Inlines>
+                            </Hyperlink>
+                          </TextBlock>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </Border>
+
+                </Expander.Content>
+              </Expander>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <!--  Các nút chức năng 1 2 3  -->
+      <Grid Grid.Row="4">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition />
+          <ColumnDefinition />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ToggleButton
+          Grid.Column="0"
+          Margin="0,5,5,5"
+          md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=FilterOff}"
+          Command="{Binding FilterChangedCommand}"
+          Content="{md:PackIcon Kind=Filter}"
+          IsChecked="{Binding IsUseFilter}">
+          <ToggleButton.Style>
+            <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
+              <Setter Property="ToolTip" Value="Tắt bộ lọc" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsUseFilter}" Value="False">
+                  <Setter Property="ToolTip" Value="Bật bộ lọc" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ToggleButton.Style>
+        </ToggleButton>
+        <Button
+          Grid.Column="1"
+          Margin="0,5,5,5"
+          Command="{Binding DownloadCommand}"
+          Content="1 - TẢI"
+          IsEnabled="{Binding ProgramFolderModels.Count}" />
+        <Button
+          Grid.Column="2"
+          Margin="0,0,5,0"
+          Command="{Binding CalculateCommand}"
+          Content="2 - TÍNH" />
+        <Button
+          Grid.Column="3"
+          Command="{Binding ValidGenCommand}"
+          Content="3 - TẠO" />
+      </Grid>
+
+      <Button
+        Grid.Row="5"
+        Command="{Binding DeleteAllCommand}"
+        Content="XOÁ HẾT" />
+    </Grid>
+  </Grid>
+</UserControl>

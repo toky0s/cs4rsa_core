@@ -3,7 +3,6 @@ using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
-using System.Collections.Generic;
 
 namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
 {
@@ -19,14 +18,21 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         public string SubjectName { get; set; }
         public int StudyUnit { get; }
         public StudyUnitType StudyUnitType { get; }
-        public List<string> PrerequisiteSubjects { get; }
-        public List<string> ParallelSubjects { get; }
         public StudyState StudyState { get; }
         public string CourseId { get; }
         public string ParentNodeName { get; }
 
-        public ProgramSubject(string id, string childOfNode, string subjectCode, string subjectName, int studyUnit, StudyUnitType studyUnitType,
-            List<string> prerequisiteSubjects, List<string> parallelSubject, StudyState studyState, string courseId, string parrentNodeName)
+        public ProgramSubject(
+            string id,
+            string childOfNode,
+            string subjectCode,
+            string subjectName,
+            int studyUnit,
+            StudyUnitType studyUnitType,
+            StudyState studyState,
+            string courseId,
+            string parrentNodeName
+        )
         {
             Id = id;
             ChildOfNode = childOfNode;
@@ -34,8 +40,6 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
             SubjectName = subjectName;
             StudyUnit = studyUnit;
             StudyUnitType = studyUnitType;
-            PrerequisiteSubjects = prerequisiteSubjects;
-            ParallelSubjects = parallelSubject;
             StudyState = studyState;
             CourseId = courseId;
             ParentNodeName = parrentNodeName;
@@ -57,9 +61,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes
         /// <returns>True nếu đã pass, ngược lại trả về false.</returns>
         public bool IsDone()
         {
-            if (StudyState == StudyState.Completed)
-                return true;
-            return false;
+            return StudyState == StudyState.Completed;
         }
 
         public int CompareTo(object obj)

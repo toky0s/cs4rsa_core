@@ -15,6 +15,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// </summary>
         /// <param name="courseId">Course ID</param>
         Task<Keyword> GetKeyword(int courseId);
+
+        /// <summary>
+        /// Get Keyword bằng Subject Code
+        /// </summary>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <returns></returns>
         Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
@@ -24,5 +30,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword);
         IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text);
         Task<string> GetSubjectCode(int courseId);
+
+        /// <summary>
+        /// Kiểm tra tồn tại bằng Subject Code
+        /// </summary>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <returns>Tồn tại trả về true, ngược lại trả về false.</returns>
+        Task<bool> ExistBySubjectCodeAsync(string subjectCode);
     }
 }

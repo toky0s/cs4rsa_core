@@ -1,4 +1,6 @@
 ﻿using Cs4rsa.Views;
+using Cs4rsa.Views.AutoScheduling;
+using Cs4rsa.Views.ManualScheduling;
 
 using MaterialDesignThemes.Wpf;
 
@@ -20,11 +22,6 @@ namespace Cs4rsa.Constants
         /// Trang chủ
         /// </summary>
         HOME,
-
-        /// <summary>
-        /// Màn hình tài khoản
-        /// </summary>
-        ACCOUNT,
 
         /// <summary>
         /// Màn hình xếp lịch thủ công
@@ -79,16 +76,14 @@ namespace Cs4rsa.Constants
         public static readonly string WELCOME_TEXT = "Chào mừng đến với CS4RSA";
 
         public static readonly CredizScreen Home = new() { Screen = new Home(), Index = ScreenIndex.HOME };
-        public static readonly CredizScreen Account = new() { Screen = new Login(), Index = ScreenIndex.ACCOUNT };
         public static readonly CredizScreen Hand = new() { Screen = new MainScheduling(), Index = ScreenIndex.HAND };
-        public static readonly CredizScreen Auto = new() { Screen = new AutoSchedule(), Index = ScreenIndex.AUTO };
+        public static readonly CredizScreen Auto = new() { Screen = new Auto(), Index = ScreenIndex.AUTO };
         public static readonly CredizScreen Teacher = new() { Screen = new Teacher(), Index = ScreenIndex.TEACHER };
         public static readonly CredizScreen Info = new() { Screen = new Info(), Index = ScreenIndex.INFO };
 
         public static CredizMenuItem[] CREDIZ_MENU_ITEMS =
         {
             new CredizMenuItem("Trang chủ",             PackIconKind.HomeOutline,               PackIconKind.Home,              Home),
-            new CredizMenuItem("Danh sách tài khoản",   PackIconKind.AccountOutline,            PackIconKind.Account,           Account),
             new CredizMenuItem("Xếp lịch thủ công",     PackIconKind.CursorDefaultOutline,      PackIconKind.CursorDefault,     Hand),
             new CredizMenuItem("Xếp lịch tự động",      PackIconKind.LightbulbOutline,          PackIconKind.Lightbulb,         Auto),
             new CredizMenuItem("Danh sách giảng viên",  PackIconKind.ClipboardAccountOutline,   PackIconKind.ClipboardAccount,  Teacher),

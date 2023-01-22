@@ -8,5 +8,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
     {
         Task<Student> GetByStudentIdAsync(string id);
         Task<Student> GetBySpecialStringAsync(string specialString);
+        Task<bool> ExistsBySpecialString(string specialString);
     }
 }

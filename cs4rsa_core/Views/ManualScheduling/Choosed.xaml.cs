@@ -1,0 +1,12 @@
+﻿using System.Windows.Controls;
+
+namespace Cs4rsa.Views.ManualScheduling
+{
+    public partial class Choosed : UserControl
+    {
+        public Choosed()
+        {
+            InitializeComponent();
+        }
+    }
+}

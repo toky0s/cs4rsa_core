@@ -24,6 +24,8 @@ using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.ViewModels;
+using Cs4rsa.ViewModels.AutoScheduling;
+using Cs4rsa.ViewModels.ManualScheduling;
 
 using HtmlAgilityPack;
 
@@ -32,9 +34,8 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Globalization;
 using System.IO;
-using System.Threading;
+using System.Net;
 using System.Windows;
 
 namespace Cs4rsa
@@ -42,10 +43,33 @@ namespace Cs4rsa
     public sealed partial class App : Application
     {
         public IServiceProvider Container { get; set; }
+        public App()
+        {
+            //this.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
+            //Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+        }
+
+        //private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        //{
+        //    string errorMessage = string.Format("Second 02 Current_DispatcherUnhandledException An unhandled exception occurred: {0}", e.Exception.Message);
+        //    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    // OR whatever you want like logging etc. MessageBox it's just example
+        //    // for quick debugging etc.
+        //    e.Handled = true;
+        //}
+
+        //private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        //{
+        //    string errorMessage = string.Format("First 04 Dispatcher_UnhandledException An unhandled exception occurred: {0}", e.Exception.Message);
+        //    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    // OR whatever you want like logging etc. MessageBox it's just example
+        //    // for quick debugging etc.
+        //    e.Handled = true;
+        //}
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("vi-VN");
             Container = CreateServiceProvider();
 
             ISetting setting = Container.GetRequiredService<ISetting>();
@@ -84,16 +108,25 @@ namespace Cs4rsa
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
             services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
             services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
+            services.AddSingleton<IStudentProgramCrawler, StudentProgramCrawler>();
             services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();
             services.AddSingleton<DisciplineCrawler>();
-            services.AddSingleton<ProgramDiagramCrawler>();
-
-            services.AddTransient<StudentProgramCrawler>();
 
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
             services.AddSingleton<ShareString>();
-            services.AddSingleton(new HtmlWeb());
+
+            HtmlWeb htmlWeb = new()
+            {
+                PreRequest = delegate (HttpWebRequest wr)
+                {
+                    // Set timeout for HtmlWeb
+                    wr.Timeout = 2000;
+                    return true;
+                }
+            };
+            services.AddSingleton(htmlWeb);
+
             services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
@@ -112,8 +145,9 @@ namespace Cs4rsa
             services.AddSingleton<ChoosedViewModel>();
             services.AddSingleton<SchedulerViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
-            services.AddSingleton<LoginViewModel>();
-            services.AddSingleton<AutoSortSubjectLoadViewModel>();
+            services.AddSingleton<AccountViewModel>();
+            services.AddSingleton<ProgramTreeViewModel>();
+            services.AddSingleton<ResultViewModel>();
 
             return services.BuildServiceProvider();
         }

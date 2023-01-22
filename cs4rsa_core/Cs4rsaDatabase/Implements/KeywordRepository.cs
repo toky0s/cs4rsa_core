@@ -116,5 +116,18 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                                 select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
             return result.Name + VMConstants.STR_SPACE + result.Keyword1;
         }
+
+        public async Task<bool> ExistBySubjectCodeAsync(string subjectCode)
+        {
+            char[] splitChars = { VMConstants.CHAR_SPACE };
+            string[] slices = subjectCode.Split(splitChars);
+            return await (
+                from ds in _context.Disciplines
+                from kw in _context.Keywords
+                where ds.Name == slices[0] && kw.Keyword1 == slices[1]
+                && ds.DisciplineId == kw.DisciplineId
+                select kw
+            ).AnyAsync();
+        }
     }
 }

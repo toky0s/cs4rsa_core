@@ -20,7 +20,7 @@ namespace Cs4rsa.BaseClasses
         /// Mở Dialog
         /// </summary>
         /// <param name="uc">Dialog UC</param>
-        protected void OpenDialog(IDialog uc)
+        protected virtual void OpenDialog(IDialog uc)
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenModal(uc);
         }
@@ -28,7 +28,7 @@ namespace Cs4rsa.BaseClasses
         /// <summary>
         /// Đóng Dialog hiện tại đang hiển thị
         /// </summary>
-        protected void CloseDialog()
+        protected virtual void CloseDialog()
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
         }

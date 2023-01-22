@@ -2,8 +2,8 @@
 
 namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
-    public interface IPreParSubjectRepository : IGenericRepository<PreParSubject>
+    public interface IPreParSubjectRepository : IGenericRepository<DbPreParSubject>
     {
-        public PreParSubject GetById(int id);
+        public DbPreParSubject GetById(int id);
     }
 }

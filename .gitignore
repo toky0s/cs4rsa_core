@@ -201,3 +201,11 @@ obj
 /cs4rsa_core/cs4rsa.db
 /cs4rsa_core/cs4rsa_settings.json
 /NDependOut
+/.vscode/launch.json
+/.vscode/tasks.json
+cs4rsa.ndproj
+cs4rsa_settings.json
+Cs4rsa.csproj.user
+/cs4rsa_core/.vscode/launch.json
+/cs4rsa_core/.vscode/settings.json
+/cs4rsa_core/.vscode/tasks.json

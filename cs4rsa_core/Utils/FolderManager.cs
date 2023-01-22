@@ -15,5 +15,10 @@ namespace Cs4rsa.Utils
             }
             return path;
         }
+
+        public static void CreateDirWhenFirstTimeStartApp()
+        {
+
+        }
     }
 }

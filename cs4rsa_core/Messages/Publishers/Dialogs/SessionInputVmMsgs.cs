@@ -1,18 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-using Cs4rsa.Dialogs.DialogResults;
+using Cs4rsa.Cs4rsaDatabase.Models;
 
 namespace Cs4rsa.Messages.Publishers.Dialogs
 {
-    internal class SessionInputVmMsgs
+    internal sealed class SessionInputVmMsgs
     {
-        /// <summary>
-        /// Thoát tìm kiếm account
-        /// </summary>
-        internal sealed class ExitSearchAccountMsg : ValueChangedMessage<StudentResult>
+        internal sealed class ExitFindStudentMsg : ValueChangedMessage<Student>
         {
-            public ExitSearchAccountMsg(StudentResult value) : base(value)
+            public ExitFindStudentMsg(Student value) : base(value)
             {
+
             }
         }
     }

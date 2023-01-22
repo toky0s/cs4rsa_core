@@ -1,0 +1,39 @@
+﻿<UserControl
+  x:Class="Cs4rsa.Views.AutoScheduling.Auto"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:dev_vmConverter="clr-namespace:Cs4rsa.Converters"
+  xmlns:dev_vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  xmlns:local="clr-namespace:Cs4rsa.Views.AutoScheduling"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:vm="clr-namespace:Cs4rsa.ViewModels.AutoScheduling"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <Style x:Key="HorizontalDividerBorder" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="1" />
+      </Style>
+      <dev_vmConverter:ConflictModelConverter x:Key="ConflictInfoConverter" />
+      <dev_vmConverter:ConflictTypeConverter x:Key="ConflictTypeConverter" />
+      <dev_vmConverter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
+      <dev_vmConverter:StudyStateConverter x:Key="StudyStateConverter" />
+      <dev_vmConverter:NodeTypeConverter x:Key="NodeTypeConverter" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="3*" />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <local:ProgramTree Grid.Column="0" Margin="5,5,5,5" />
+    <local:Result Grid.Column="2" Margin="0,5,5,5" />
+  </Grid>
+</UserControl>

@@ -12,7 +12,7 @@ namespace Cs4rsa.Models
     /// <summary>
     /// Là một node trong cây thư mục môn học.
     /// </summary>
-    public class ProgramFolderModel : TreeItem
+    internal class ProgramFolderModel : TreeItem
     {
         public ObservableCollection<ProgramFolderModel> ChildFolders { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChildSubjects { get; set; }
@@ -32,7 +32,7 @@ namespace Cs4rsa.Models
 
             FolderName = programFolder.Name;
             Description = programFolder.Description;
-            IsCompleted = programFolder.IsCompleted();
+            IsCompleted = programFolder.Completed;
             NodeType = programFolder.GetNodeType();
         }
 
@@ -41,7 +41,7 @@ namespace Cs4rsa.Models
             List<ProgramFolderModel> folders = new();
             foreach (ProgramFolder item in programFolder.ChildProgramFolders)
             {
-                ProgramFolderModel programFolderModel = await ProgramFolderModel.CreateAsync(item, _colorGenerator, _unitOfWork);
+                ProgramFolderModel programFolderModel = await CreateAsync(item, _colorGenerator, _unitOfWork);
                 folders.Add(programFolderModel);
             }
             ChildFolders = new ObservableCollection<ProgramFolderModel>(folders);

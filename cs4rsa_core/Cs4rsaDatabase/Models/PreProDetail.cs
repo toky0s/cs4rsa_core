@@ -6,8 +6,8 @@
     public class PreProDetail
     {
         public int ProgramSubjectId { get; set; }
-        public ProgramSubject ProgramSubject { get; set; }
+        public DbProgramSubject ProgramSubject { get; set; }
         public int PreParSubjectId { get; set; }
-        public PreParSubject PreParSubject { get; set; }
+        public DbPreParSubject PreParSubject { get; set; }
     }
 }

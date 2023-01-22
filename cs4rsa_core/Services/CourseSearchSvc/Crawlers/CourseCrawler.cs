@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.CourseSearchSvc.DataTypes;
+using Cs4rsa.Settings.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -14,6 +15,7 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
     public class CourseCrawler : ICourseCrawler
     {
         private readonly HtmlWeb _htmlWeb;
+        private readonly ISetting _setting;
 
         public string CurrentYearValue { get; }
         public string CurrentYearInfo { get; }
@@ -21,21 +23,38 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
         public string CurrentSemesterInfo { get; }
         public IEnumerable<CourseYear> CourseYears { get; }
 
-        public CourseCrawler(HtmlWeb htmlWeb)
+        public CourseCrawler(HtmlWeb htmlWeb, ISetting setting)
         {
             _htmlWeb = htmlWeb;
+            _setting = setting;
 
-            string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
-            HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
-            CourseYears = GetCourseYears(document);
+            try
+            {
+                string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
+                HtmlDocument document = htmlWeb.Load(URL_YEAR_COMBOBOX);
+                CourseYears = GetCourseYears(document);
 
-            CurrentYearValue = GetCurrentValue(document);
-            CurrentYearInfo = GetCurrentInfo(document);
+                CurrentYearValue = GetCurrentValue(document);
+                CurrentYearInfo = GetCurrentInfo(document);
 
-            string URL_SEMESTER_COMBOBOX = $"http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={CurrentYearValue}";
-            document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
-            CurrentSemesterValue = GetCurrentValue(document);
-            CurrentSemesterInfo = GetCurrentInfo(document);
+                string URL_SEMESTER_COMBOBOX = $"http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={CurrentYearValue}";
+                document = htmlWeb.Load(URL_SEMESTER_COMBOBOX);
+                CurrentSemesterValue = GetCurrentValue(document);
+                CurrentSemesterInfo = GetCurrentInfo(document);
+
+                setting.CurrentSetting.CurrentYearValue = CurrentYearValue;
+                setting.CurrentSetting.CurrentSemesterValue = CurrentSemesterValue;
+                setting.CurrentSetting.CurrentYear = CurrentYearInfo;
+                setting.CurrentSetting.CurrentSemester = CurrentSemesterInfo;
+                setting.Save();
+            }
+            catch
+            {
+                CurrentYearInfo = setting.CurrentSetting.CurrentYear;
+                CurrentSemesterInfo = setting.CurrentSetting.CurrentSemester;
+                CurrentYearValue = setting.CurrentSetting.CurrentYearValue;
+                CurrentSemesterValue = setting.CurrentSetting.CurrentSemesterValue;
+            }
         }
 
         private static string GetCurrentValue(HtmlDocument document)

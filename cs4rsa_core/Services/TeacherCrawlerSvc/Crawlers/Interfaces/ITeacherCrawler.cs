@@ -17,7 +17,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces
         /// Cờ cập nhật, nếu cờ này true sau khi cào thông tin của giảng viên sẽ được cập nhật (nếu có), 
         /// ngược lại thông tin của giảng viên sẽ được thêm vào DB.
         /// </param>
-        /// <returns></returns>
+        /// <returns>TeacherModel</returns>
         Task<TeacherModel> Crawl(string url, int courseId, bool isUpdate);
     }
 }

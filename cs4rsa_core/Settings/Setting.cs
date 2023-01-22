@@ -1,5 +1,4 @@
 ﻿using Cs4rsa.Constants;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Settings.Interfaces;
 
 using Newtonsoft.Json;
@@ -15,10 +14,8 @@ namespace Cs4rsa.Settings
         public Cs4rsaSetting CurrentSetting { get; set; }
         public string SettingsFileName { get; set; } = "cs4rsa_settings.json";
 
-        private readonly ICourseCrawler _courseCrawler;
-        public Setting(ICourseCrawler courseCrawler)
+        public Setting()
         {
-            _courseCrawler = courseCrawler;
             Init();
         }
 
@@ -26,10 +23,12 @@ namespace Cs4rsa.Settings
         {
             Cs4rsaSetting defaultSettings = new()
             {
-                CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue(),
-                CurrentYearValue = _courseCrawler.GetCurrentYearValue(),
+                CurrentSemesterValue = "",
+                CurrentYearValue = "",
+                CurrentSemester = "",
+                CurrentYear = "",
                 IsDatabaseCreated = "false",
-                Version = "1.1.2"
+                Version = "3.0.0"
             };
             if (!File.Exists(SettingsFileName))
             {

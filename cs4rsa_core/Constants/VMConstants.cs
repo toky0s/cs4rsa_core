@@ -1,5 +1,22 @@
-﻿namespace Cs4rsa.Constants
+﻿using Cs4rsa.Utils.Interfaces;
+
+using System;
+using System.IO;
+
+namespace Cs4rsa.Constants
 {
+    internal static class CredizText
+    {
+        /// <summary>
+        /// Thông báo file của sinh viên không tồn tại.
+        /// </summary>
+        /// <param name="fName">File name</param>
+        /// <param name="stdName">Student name</param>
+        public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
+        public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, $"StudentProgram_{stdId}.json");
+        public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, $"{curid}.json");
+    }
+
     internal static class VMConstants
     {
         #region DB
@@ -37,7 +54,7 @@
         public static readonly string SNB_UNSELECT_ALL = "Đã bỏ chọn tất cả";
         public static readonly string SNB_DELETE_ALL = "Đã xoá tất cả";
         public static readonly string SNB_INVALID_SHARESTRING = "ShareString có vấn đề 🤔";
-        public static readonly string SNB_AT_LAST_SCHEDULE = "Đã đến bộ lịch cuối";
+        public static readonly string SNB_CAL_DONE = "Đã tính toán xong";
         public static readonly string SNB_ALREADY_DOWNLOADED = "Đã được tải xuống";
         public static readonly string SNB_COPY_SUCCESS = "Đã sao chép";
 
@@ -59,13 +76,6 @@
         public const string STR_SPACE = " ";
         public const string TIME_HH_MM_FORMAT = "HH:mm";
         public const char CHAR_SPACE = ' ';
-        #endregion
-
-        #region Node names
-        public readonly static string NODE_NAME_DAI_CUONG = "2001";
-        public readonly static string NODE_NAME_GIAO_DUC_THE_CHAT_VA_QUOC_PHONG = "2002";
-        public readonly static string NODE_NAME_DAI_CUONG_NGANH = "2003";
-        public readonly static string NODE_NAME_CHUYEN_NGANH = "2004";
         #endregion
     }
 }

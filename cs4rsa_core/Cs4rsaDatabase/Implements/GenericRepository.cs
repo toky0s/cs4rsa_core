@@ -43,9 +43,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return _context.Set<T>().Where(expression);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public IAsyncEnumerable<T> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return _context.Set<T>().AsAsyncEnumerable();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -56,6 +56,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public void Remove(T entity)
         {
             _context.Set<T>().Remove(entity);
+        }
+
+        public Task<int> RemoveAll()
+        {
+            string tableName = typeof(T).Name;
+            return _context.Database.ExecuteSqlRawAsync($@"DELETE FROM {tableName}s");
         }
 
         public void RemoveRange(IEnumerable<T> entities)

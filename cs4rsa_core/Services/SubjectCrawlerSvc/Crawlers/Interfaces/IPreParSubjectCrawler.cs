@@ -1,13 +1,12 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
-
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces
 {
     public interface IPreParSubjectCrawler
     {
-        public bool IsAvailableSubject { get; set; }
-        Task<PreParContainer> Run(string courseId);
-        Task<PreParContainer> Run(string courseId, string sessionId);
+        Task<Tuple<IEnumerable<string>, IEnumerable<string>>> Run(string courseId, bool isUseCache);
+        Task<Tuple<IEnumerable<string>, IEnumerable<string>>> Run(string courseId, string sessionId);
     }
 }

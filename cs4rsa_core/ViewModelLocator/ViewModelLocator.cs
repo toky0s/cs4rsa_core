@@ -18,8 +18,6 @@ namespace Cs4rsa.ViewModelLocator
             obj.SetValue(AutoHookedUpViewModelProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for AutoHookedUpViewModel. 
-        //This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AutoHookedUpViewModelProperty =
            DependencyProperty.RegisterAttached("AutoHookedUpViewModel",
            typeof(bool), typeof(ViewModelLocator), new
@@ -47,11 +45,7 @@ namespace Cs4rsa.ViewModelLocator
                 str = str.Replace(".Views.", ".ViewModels.");
             }
 
-            string viewTypeName;
-            string viewModelTypeName;
-            viewTypeName = str;
-            viewModelTypeName = viewTypeName + "ViewModel";
-            Type viewModelType = Type.GetType(viewModelTypeName);
+            Type viewModelType = Type.GetType(str + "ViewModel");
             object viewModel = ActivatorUtilities.GetServiceOrCreateInstance(((App)Application.Current).Container, viewModelType);
             ((FrameworkElement)d).DataContext = viewModel;
         }

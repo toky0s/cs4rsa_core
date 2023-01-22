@@ -7,7 +7,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces
 {
     public interface IStudentPlanCrawler
     {
-        Task<IEnumerable<PlanTable>> GetPlanTables(int curriculumId, string sessionId);
-        Task<IEnumerable<PlanTable>> GetPlanTables(int curriculumId);
+        Task<List<PlanTable>> GetPlanTables(int curriculumId, string sessionId);
+        Task<List<PlanTable>> GetPlanTables(int curriculumId);
     }
 }

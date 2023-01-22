@@ -45,7 +45,10 @@ namespace Cs4rsa.Models
         public bool IsCanShow { get; set; }
         public bool IsConflict { get; set; }
 
-        public CombinationModel(IEnumerable<SubjectModel> subjectModels, IEnumerable<ClassGroupModel> classGroupModels)
+        public CombinationModel(
+            IEnumerable<SubjectModel> subjectModels,
+            IEnumerable<ClassGroupModel> classGroupModels
+        )
         {
             SubjecModels = subjectModels;
             _classGroupModels = classGroupModels;

@@ -8,7 +8,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task<T> GetByIdAsync(int id);
-        Task<IEnumerable<T>> GetAllAsync();
+        IAsyncEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         void Add(T entity);
         Task AddAsync(T entity);
@@ -17,5 +17,11 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         void RemoveRange(IEnumerable<T> entities);
         void Update(T entity);
         Task<int> CountPageAsync(int limit, Expression<Func<T, bool>> expression);
+
+        /// <summary>
+        /// Xoá mọi dữ liệu của bảng <see cref="T"/>
+        /// </summary>
+        /// <returns>Số lượng bảng ghi đã xoá</returns>
+        Task<int> RemoveAll();
     }
 }

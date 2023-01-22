@@ -80,6 +80,8 @@ namespace Cs4rsa.Dialogs.Implements
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = true;
             _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _setting.CurrentSetting.CurrentYearValue = _courseCrawler.GetCurrentYearValue();
+            _setting.CurrentSetting.CurrentYear = _courseCrawler.GetCurrentYearInfo();
+            _setting.CurrentSetting.CurrentSemester = _courseCrawler.GetCurrentSemesterInfo();
             _setting.Save();
             CloseDialog();
             Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg(null));
