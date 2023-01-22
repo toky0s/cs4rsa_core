@@ -7,12 +7,12 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogViews;
-using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
 using Cs4rsa.Models.AutoScheduling;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -25,7 +25,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,8 +37,17 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private readonly MyProgramUC _myProgramUC;
         private readonly AccountUC _accountUC;
 
-        [ObservableProperty]
-        public bool _isRemoveClassGroupInvalid;
+        /// <summary>
+        /// Danh sách bộ Cgm sau khi được filter
+        /// 
+        /// Danh sách này sẽ được load lại mỗi khi người dùng
+        /// 1. Thêm một PSM (đã tải) mới.
+        /// 2. Xoá một (hoặc tất cả) PSM.
+        /// 3. Thực hiện một filter trong danh sách các filter.
+        /// 4. Bật tắt sử dụng filter.
+        /// Thông qua phương thức ReGen().
+        /// </summary>
+        private readonly List<List<ClassGroupModel>> _rltAftFilterCgms;
 
         public ObservableCollection<Student> Students { get; set; }
         public ObservableCollection<PlanTableModel> PlanTableModels { get; set; }
@@ -53,22 +61,42 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         [ObservableProperty]
         private bool _isFinding;
+
+        /// <summary>
+        /// Sau khi xoá một hoặc nhiều PSM. Các CGM đã được tải
+        /// sẽ được giữ lại hoặc không và cờ IsDownloaded của PSM 
+        /// dựa vào giá trị của trường này. Nếu True, việc xoá không
+        /// làm mất những CGM đã tải, ngược lại mọi CGM sẽ bị xoá
+        /// hết và đưa cờ IsDownloaded về False.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isSave;
+
+        /// <summary>
+        /// Cờ xác định có sử dụng bộ lọc hay không
+        /// Nếu có, tất cả các CGM đều phải đi qua bộ
+        /// lọc trước khi tính toán.
+        /// Nếu không, mọi CGM đều có thể đi qua bộ lọc.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isUseFilter;
         [ObservableProperty]
         private Student _selectedStudent;
+
         [ObservableProperty]
-        private ProgramSubjectModel _selectedProSubject;
+        private bool _phanThanh;
         [ObservableProperty]
-        public bool _phanThanh;
+        private bool _quangTrung;
         [ObservableProperty]
-        public bool _quangTrung;
+        private bool _nguyenVanLinh254;
         [ObservableProperty]
-        public bool _nguyenVanLinh254;
+        private bool _nguyenVanLinh137;
         [ObservableProperty]
-        public bool _nguyenVanLinh137;
+        private bool _hoaKhanhNam;
         [ObservableProperty]
-        public bool _hoaKhanhNam;
+        private bool _vietTin;
         [ObservableProperty]
-        public bool _vietTin;
+        private bool _online;
 
         [ObservableProperty]
         private bool _mon_Aft;
@@ -114,23 +142,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private bool _sun_Nig;
 
         /// <summary>
-        /// Môn học được chọn trên cây chương trình
-        /// </summary>
-        [ObservableProperty]
-        private ProgramSubjectModel _sltSubjectTreeItem;
-
-        public AsyncRelayCommand LoadProgramCommand { get; set; }
-        public RelayCommand AddCommand { get; set; }
-        public RelayCommand CalculateCommand { get; set; }
-        public RelayCommand AccountCommand { get; set; }
-
-        /// <summary>
-        /// Hiển thị Dialog chứa chương trình học dự kiến
-        /// của người dùng hiện tại
-        /// </summary>
-        public RelayCommand MyProgramCommand { get; set; }
-
-        /// <summary>
         /// Nơi chưa danh sách tất cả các index của kết quả Gen.
         /// </summary>
         private List<List<int>> _tempResult;
@@ -141,13 +152,16 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         [ObservableProperty]
         private bool _isCalculated;
 
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ColorGenerator _colorGenerator;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        [ObservableProperty]
+        private bool _isValidGen;
 
-        private readonly List<IEnumerable<ClassGroupModel>> _filteredClassGroupModels;
-        private List<List<ClassGroupModel>> _classGroupModelsOfClass;
-
+        /// <summary>
+        /// Cờ xác định có PASS các CGM không có lịch hoặc hết chỗ hay không.
+        /// Nếu có, các CGM không có lịch hoặc hết chỗ sẽ bị remove.
+        /// Nếu không, CGM không có lịch hoặc hết chỗ có thể chấp nhận.
+        /// </summary>
+        [ObservableProperty]
+        private bool _isRemoveClassGroupInvalid;
 
         [ObservableProperty]
         private CombinationModel _selectedCombinationModel;
@@ -155,66 +169,112 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         [ObservableProperty]
         private int _combinationCount;
 
-        public AsyncRelayCommand CannotAddReasonCommand { get; set; }
-        public AsyncRelayCommand DownloadCommand { get; set; }
+        [ObservableProperty]
+        private bool _isDownloading;
 
-        public RelayCommand DeleteCommand { get; set; }
+        public AsyncRelayCommand CannotAddReasonCommand { get; set; }
+        public AsyncRelayCommand LoadProgramCommand { get; set; }
+        public AsyncRelayCommand DownloadCommand { get; set; }
+        public AsyncRelayCommand FilterChangedCommand { get; set; }
+        public AsyncRelayCommand ValidGenCommand { get; set; }
+        public AsyncRelayCommand<ProgramSubjectModel> AddCommand { get; set; }
+        public AsyncRelayCommand CalculateCommand { get; set; }
+        public AsyncRelayCommand ResetFilterCommand { get; set; }
+
+        public RelayCommand CollapseCommand { get; set; }
+
+        /// <summary>
+        /// Hiển thị Dialog chứa chương trình học dự kiến
+        /// của người dùng hiện tại
+        /// </summary>
+        public RelayCommand MyProgramCommand { get; set; }
+        public RelayCommand<ProgramSubjectModel> DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
         public RelayCommand OpenInNewWindowCommand { get; set; }
-        public RelayCommand FilterChangedCommand { get; set; }
-        public RelayCommand ResetFilterCommand { get; set; }
-        public RelayCommand ValidGenCommand { get; set; }
+        public RelayCommand AccountCommand { get; set; }
 
-
-
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ColorGenerator _colorGenerator;
+        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly ISubjectCrawler _subjectCrawler;
         public ProgramTreeViewModel(
             IUnitOfWork unitOfWork,
             ColorGenerator colorGenerator,
-            ISnackbarMessageQueue snackbarMessageQueue
-            )
+            ISnackbarMessageQueue snackbarMessageQueue,
+            ISubjectCrawler subjectCrawler
+        )
         {
             _unitOfWork = unitOfWork;
             _colorGenerator = colorGenerator;
             _snackbarMessageQueue = snackbarMessageQueue;
-            _filteredClassGroupModels = new();
+            _subjectCrawler = subjectCrawler;
             _tempResult = new();
             _myProgramUC = new() { DataContext = this };
             _accountUC = new();
+            _rltAftFilterCgms = new();
 
+            IsDownloading = false;
+            IsSave = true;
+            IsUseFilter = true;
             ChoosedProSubjectModels = new();
             PlanTableModels = new();
             ProgramFolderModels = new();
             Students = new();
             SubjectModels = new();
 
+            PhanThanh = true;
+            QuangTrung = true;
+            NguyenVanLinh254 = true;
+            NguyenVanLinh137 = true;
+            VietTin = true;
+            HoaKhanhNam = true;
+            Online = true;
+            IsRemoveClassGroupInvalid = true;
+
             LoadProgramCommand = new(LoadProgramSubject, () => _selectedStudent != null);
             AccountCommand = new(() => OpenDialog(_accountUC));
 
-            AddCommand = new(OnAddCommand,
-                () => _sltSubjectTreeItem != null
-                    && !_sltSubjectTreeItem.IsDone
-                    && _sltSubjectTreeItem.IsAvaiable
-                    && !ChoosedProSubjectModels.Contains(_sltSubjectTreeItem)
-            );
+            AddCommand = new((ProgramSubjectModel psm) => OnAddCommand(psm));
 
             CalculateCommand = new(
                 OnCalculate,
-                () => SubjectModels.Any()
+                () => ChoosedProSubjectModels.Where(psm => psm.IsDownloaded)
+                                             .Count() == ChoosedProSubjectModels.Count
+                    && ChoosedProSubjectModels.Any()
+                    && !_tempResult.Any()
+                    && !_isCalculated
             );
+
+            DeleteCommand = new((psm) => OnDelete(psm));
+
+            DeleteAllCommand = new(
+                OnDeleteAll,
+                () => ChoosedProSubjectModels.Any()
+            );
+
+            DownloadCommand = new(
+                OnDownload,
+                () => ChoosedProSubjectModels
+                        .Where(psm => psm.IsDownloaded == false)
+                        .Any()
+            );
+
+            FilterChangedCommand = new(OnFiltering);
 
             MyProgramCommand = new(
                 () => OpenDialog(_myProgramUC),
                 () => _selectedStudent != null && !_selectedStudent.StudentId.Equals("0")
             );
 
-
-            DownloadCommand = new(OnDownload, () => ChoosedProSubjectModels.Any());
+            ResetFilterCommand = new(OnResetFilter);
 
             ValidGenCommand = new(
                 OnValidGen,
                 () => _tempResult.Any()
+                    && ChoosedProSubjectModels.Any()
+                    && !IsValidGen
             );
 
             Messenger.Register<SessionInputVmMsgs.ExitFindStudentMsg>(this, (r, m) =>
@@ -245,6 +305,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             {
                 await LoadStudents();
             });
+
+            CalculateCommand.NotifyCanExecuteChanged();
+            DownloadCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedStudentChanged(Student value)
@@ -254,16 +317,133 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             MyProgramCommand.NotifyCanExecuteChanged();
         }
 
-        partial void OnSltSubjectTreeItemChanged(ProgramSubjectModel value)
+        private async Task OnResetFilter()
         {
-            AddCommand.NotifyCanExecuteChanged();
+            Mon_Aft = false;
+            Mon_Mor = false;
+            Mon_Nig = false;
+            Tue_Aft = false;
+            Tue_Mor = false;
+            Tue_Nig = false;
+            Wed_Aft = false;
+            Wed_Mor = false;
+            Wed_Nig = false;
+            Thur_Aft = false;
+            Thur_Mor = false;
+            Thur_Nig = false;
+            Fri_Aft = false;
+            Fri_Mor = false;
+            Fri_Nig = false;
+            Sat_Aft = false;
+            Sat_Mor = false;
+            Sat_Nig = false;
+            Sun_Aft = false;
+            Sun_Mor = false;
+            Sun_Nig = false;
+
+            PhanThanh = true;
+            QuangTrung = true;
+            NguyenVanLinh254 = true;
+            NguyenVanLinh137 = true;
+            VietTin = true;
+            HoaKhanhNam = true;
+            Online = true;
+
+            IsRemoveClassGroupInvalid = true;
+
+            await OnFiltering();
         }
 
-        private void OnAddCommand()
+        private void OnDelete(ProgramSubjectModel psm)
         {
-            ChoosedProSubjectModels.Add(_sltSubjectTreeItem);
-            AddCommand.NotifyCanExecuteChanged();
+            psm.IsChoosed = false;
+            psm.IsDownloaded = IsSave;
+            psm.Status = string.Empty;
+            if (!IsSave)
+            {
+                psm.Cgms.Clear();
+                psm.ReviewFtCgms.Clear();
+            }
+
+            _genIndex = 0;
+            _tempResult.Clear();
+            IsCalculated = false;
+
+            ChoosedProSubjectModels.Remove(psm);
+            CalculateCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
             DownloadCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
+            AddCommand.NotifyCanExecuteChanged();
+
+            ReGen();
+        }
+
+        /// <summary>
+        /// OnDeleteAll
+        /// 
+        /// 1. Chuyển cờ IsChoosed và IsDownloaded của từng PSM
+        ///    và clear Cgms tương ứng với PSM.
+        /// 2. Clear ChoosedProSubjectModels. 
+        /// </summary>
+        private void OnDeleteAll()
+        {
+            foreach (ProgramSubjectModel psm in ChoosedProSubjectModels)
+            {
+                psm.IsChoosed = false;
+                psm.IsDownloaded = IsSave;
+                psm.Status = string.Empty;
+
+                if (!IsSave)
+                {
+                    psm.Cgms.Clear();
+                    psm.ReviewFtCgms.Clear();
+                }
+            }
+            IsCalculated = false;
+            _genIndex = 0;
+            _tempResult.Clear();
+
+            ChoosedProSubjectModels.Clear();
+            CalculateCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
+            ValidGenCommand.NotifyCanExecuteChanged();
+            DownloadCommand.NotifyCanExecuteChanged();
+
+            ReGen();
+        }
+
+        private async Task OnAddCommand(ProgramSubjectModel psm)
+        {
+            psm.FilterFuncs = new List<Func<ClassGroupModel, bool>>()
+            {
+                IsFreeDayFilter,
+                IsPlaceFilter,
+                IsRemoveClassGroupInValid
+            };
+            psm.IsChoosed = true;
+
+            if (psm.IsDownloaded)
+            {
+                if (_isUseFilter)
+                {
+                    await psm.ApplyFilter();
+                }
+                else
+                {
+                    psm.ResetFilter();
+                }
+
+                ReGen();
+            }
+
+            IsCalculated = false;
+
+            ChoosedProSubjectModels.Add(psm);
+            AddCommand.NotifyCanExecuteChanged();
+            CalculateCommand.NotifyCanExecuteChanged();
+            DownloadCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
         }
 
         private async Task LoadStudents()
@@ -310,7 +490,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             }
         }
 
-
         private async Task LoadProgramSubject()
         {
             ProgramFolderModels.Clear();
@@ -350,34 +529,81 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// </summary>
         private async Task OnDownload()
         {
-            IEnumerable<string> choiceSubjectCodes = ChoosedProSubjectModels.Select(item => item.ProgramSubject.SubjectCode);
-            IEnumerable<string> wereDownloadedSubjectCodes = SubjectModels.Select(item => item.SubjectCode);
-
-            if (!choiceSubjectCodes.Any())
+            IEnumerable<ProgramSubjectModel> needToDownloadPsms = ChoosedProSubjectModels.Where(psm => psm.IsDownloaded == false);
+            foreach (ProgramSubjectModel psm in needToDownloadPsms)
             {
-                wereDownloadedSubjectCodes = new List<string>();
+                psm.IsDownloading = true;
             }
 
-            IEnumerable<string> needDownloadNames = choiceSubjectCodes.Except(wereDownloadedSubjectCodes);
-            IEnumerable<ProgramSubjectModel> needDownload = ChoosedProSubjectModels
-                .Where(item => needDownloadNames.Contains(item.ProgramSubject.SubjectCode));
-
-            if (needDownload.Any())
+            if (needToDownloadPsms.Any())
             {
-                AutoSortSubjectLoadUC autoSortSubjectLoadUC = new();
-                AutoSortSubjectLoadViewModel vm = autoSortSubjectLoadUC.DataContext as AutoSortSubjectLoadViewModel;
-                OpenDialog(autoSortSubjectLoadUC);
-                IAsyncEnumerable<SubjectModel> subjectModels = vm.Download(needDownload);
-                await foreach (SubjectModel subjectModel in subjectModels)
+                IsDownloading = true;
+                List<Task> tasks = new();
+                foreach (ProgramSubjectModel psm in needToDownloadPsms)
                 {
-                    SubjectModels.Add(subjectModel);
+                    tasks.Add(Download(psm));
                 }
-                CloseDialog();
+                await Task.WhenAll(tasks);
+                IsDownloading = false;
+                IsCalculated = false;
             }
 
-            _classGroupModelsOfClass = SubjectModels.Select(item => item.ClassGroupModels).ToList();
-            IsCalculated = false;
             CalculateCommand.NotifyCanExecuteChanged();
+        }
+
+        public async Task Download(ProgramSubjectModel psm)
+        {
+            Subject subject;
+            try
+            {
+                subject = await _subjectCrawler.Crawl(int.Parse(psm.CourseId), true, false);
+
+                if (subject == null)
+                {
+                    psm.Status = "Môn học không tồn tại";
+                    psm.Exists = false;
+                    psm.IsDownloading = false;
+                    psm.IsDownloaded = false;
+                }
+                else
+                {
+                    if (subject.IsStarted)
+                    {
+                        SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                        psm.AddCgms(sm.ClassGroupModels);
+                        if (_isUseFilter)
+                        {
+                            await psm.ApplyFilter();
+                        }
+                        else
+                        {
+                            psm.ResetFilter();
+                        }
+
+                        psm.IsStarted = true;
+                        psm.IsDownloaded = true;
+
+                        ReGen();
+                    }
+                    else
+                    {
+                        psm.IsStarted = false;
+                        psm.IsDownloaded = false;
+                        psm.Status = "Môn học chưa bắt đầu";
+                    }
+
+                    psm.IsDownloading = false;
+                    psm.Exists = true;
+                }
+            }
+            catch (Exception e)
+            {
+                psm.Status = e.Message;
+                psm.Exists = false;
+                psm.IsDownloading = false;
+                psm.IsDownloaded = false;
+                psm.IsStarted = false;
+            }
         }
 
         partial void OnSelectedCombinationModelChanged(CombinationModel value)
@@ -385,76 +611,103 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             ShowOnSimuCommand.NotifyCanExecuteChanged();
         }
 
-        private void OnValidGen()
+        /// <summary>
+        /// Bắt đầu việc các tạo bộ lịch dựa trên kết quả tạm đã tính được.
+        /// Đưa danh sách bộ lịch sang bộ tạo kết quả hiển thị.
+        /// </summary>
+        private async Task OnValidGen()
         {
+            List<CombinationModel> cbms = await Task.Run(ValidGenDoWork);
+            if (cbms.Count > 0)
+            {
+                Messenger.Send(new AutoVmMsgs.AddCombinationsMsg(cbms));
+                IsValidGen = true;
+                ValidGenCommand.NotifyCanExecuteChanged();
+            }
+            else if (cbms.Count == 0)
+            {
+
+            }
+        }
+
+        private List<CombinationModel> ValidGenDoWork()
+        {
+            List<CombinationModel> cbms = new();
             for (int i = _genIndex; i < _tempResult.Count; i++)
             {
                 List<ClassGroupModel> classGroupModels = new();
                 for (int j = 0; j < _tempResult[i].Count; j++)
                 {
                     int where = _tempResult[_genIndex][j];
-                    classGroupModels.Add(_classGroupModelsOfClass[j][where]);
+                    classGroupModels.Add(_rltAftFilterCgms[j][where]);
                 }
                 CombinationModel combinationModel = new(SubjectModels, classGroupModels);
-
-                if (!combinationModel.IsHaveTimeConflicts()
-                    && !combinationModel.IsHavePlaceConflicts()
-                    && combinationModel.IsCanShow)
-                {
-                    // Gửi kết quả sang danh sách kết quả.
-                    Messenger.Send(new AutoVmMsgs.AddCombinationMsg(combinationModel));
-                }
+                cbms.Add(combinationModel);
                 _genIndex++;
             }
-            if (_genIndex == _tempResult.Count)
-            {
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_AT_LAST_SCHEDULE);
-                IsCalculated = false;
-            }
+            _snackbarMessageQueue.Enqueue(VMConstants.SNB_CAL_DONE);
+            return cbms;
         }
-
 
         /// <summary>
         /// Chạy đa luồng thực hiện list danh sách tất cả các index.
         /// </summary>
-        private void OnCalculate()
+        private async Task OnCalculate()
         {
-            OnFiltering();
-            BackgroundWorker backgroundWorker = new();
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            if (_filteredClassGroupModels.Count > 0)
+            _tempResult = await Task.Run(OnCalculateDoWork);
+            IsCalculated = true;
+            string message;
+            if (_tempResult.Any())
             {
-                backgroundWorker.RunWorkerAsync();
+                message = $"Đã tính toán xong với {_tempResult.Count} kết quả";
+                IsValidGen = false;
+                ValidGenCommand.NotifyCanExecuteChanged();
             }
+            else
+            {
+                message = "Không có kết quả nào hết";
+            }
+            _snackbarMessageQueue.Enqueue(message);
+        }
+
+        private List<List<int>> OnCalculateDoWork()
+        {
+            List<IEnumerable<ClassGroupModel>> fltCgms = ChoosedProSubjectModels
+                .Select(psm => psm.GetRltAftFilter())
+                .ToList();
+            Cs4rsaGen cs4rsaGen = new(fltCgms);
+            cs4rsaGen.TempResult.Clear();
+            cs4rsaGen.Backtracking(0);
+            return cs4rsaGen.TempResult;
         }
 
         /// <summary>
-        /// Thực hiện lọc từ danh sách môn học đã tải.
+        /// Thực hiện lọc danh sách các CGM từ PSM
         /// </summary>
-        private void OnFiltering()
+        private async Task OnFiltering()
         {
-            _filteredClassGroupModels.Clear();
-            foreach (List<ClassGroupModel> classGroupModels in _classGroupModelsOfClass)
+            if (_isUseFilter)
             {
-                // IEnumerable<ClassGroupModel> r = classGroupModels.Where(item => Filter(item));
-                IEnumerable<ClassGroupModel> r = classGroupModels.Where(item => true);
-                _filteredClassGroupModels.Add(r);
+                foreach (ProgramSubjectModel psm in ChoosedProSubjectModels)
+                {
+                    await psm.ApplyFilter();
+                }
             }
-            //CombinationModels.Clear();
+            else
+            {
+                foreach (ProgramSubjectModel psm in ChoosedProSubjectModels)
+                {
+                    psm.ResetFilter();
+                }
+            }
+
             IsCalculated = false;
+            IsValidGen = false;
             _genIndex = 0;
             _tempResult.Clear();
-        }
 
-        /// <summary>
-        /// Lọc các ClassGroupModel thoả mãn.
-        /// </summary>
-        private bool Filter(ClassGroupModel classGroupModel)
-        {
-            return IsRemoveClassGroupInValid(classGroupModel)
-                && IsPlaceFilter(classGroupModel)
-                && IsFreeDayFilter(classGroupModel);
+            CalculateCommand.NotifyCanExecuteChanged();
+            ReGen();
         }
 
         /// <summary>
@@ -520,35 +773,43 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             {
                 foreach (KeyValuePair<Session, bool> sessionKeyValuePair in dayOfWeekFilter.Value)
                 {
-                    if (sessionKeyValuePair.Value)
+                    if (!sessionKeyValuePair.Value) continue;
+
+                    bool isHasDayOfWeek = classGroupModel.Schedule.ScheduleTime.ContainsKey(dayOfWeekFilter.Key);
+                    if (!isHasDayOfWeek) continue;
+
+                    List<StudyTime> studyTimes = classGroupModel.Schedule.ScheduleTime[dayOfWeekFilter.Key];
+                    IEnumerable<Session> sessions = studyTimes.Select(item => item.GetSession());
+                    if (sessions.Contains(sessionKeyValuePair.Key))
                     {
-                        bool isHasDayOfWeek = classGroupModel.Schedule.ScheduleTime.ContainsKey(dayOfWeekFilter.Key);
-                        if (isHasDayOfWeek)
-                        {
-                            List<StudyTime> studyTimes = classGroupModel.Schedule.ScheduleTime[dayOfWeekFilter.Key];
-                            IEnumerable<Session> sessions = studyTimes.Select(item => item.GetSession());
-                            if (sessions.Contains(sessionKeyValuePair.Key))
-                            {
-                                return false;
-                            }
-                        }
+                        return false;
                     }
                 }
             }
             return true;
         }
 
+        /// <summary>
+        /// Bộ lọc nơi học.
+        /// PASS: Khi CGM có nơi học thoả mãn hoặc không chứa nơi học.
+        /// FAIL: Khi CGM chứa nơi học, nhưng không có nơi nào thoả mãn.
+        /// </summary>
+        /// <param name="classGroupModel">ClassGroupModel</param>
+        /// <returns>Boolean</returns>
         private bool IsPlaceFilter(ClassGroupModel classGroupModel)
         {
             Dictionary<Place, bool> placeFilters = new()
             {
-                { Place.QUANGTRUNG, QuangTrung          },
-                { Place.NVL_254,    NguyenVanLinh254    },
-                { Place.NVL_137,    NguyenVanLinh137    },
-                { Place.PHANTHANH,  PhanThanh           },
-                { Place.VIETTIN,    VietTin             },
-                { Place.HOAKHANH,   HoaKhanhNam         },
+                { Place.QUANGTRUNG ,QuangTrung          },
+                { Place.NVL_254    ,NguyenVanLinh254    },
+                { Place.NVL_137    ,NguyenVanLinh137    },
+                { Place.PHANTHANH  ,PhanThanh           },
+                { Place.VIETTIN    ,VietTin             },
+                { Place.HOAKHANH   ,HoaKhanhNam         },
+                { Place.ONLINE     ,Online              },
             };
+
+            if (!classGroupModel.Places.Any()) return true;
 
             foreach (KeyValuePair<Place, bool> placeKeyValue in placeFilters)
             {
@@ -565,34 +826,17 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)
         {
-            return !IsRemoveClassGroupInvalid || classGroupModel.IsHaveSchedule()
-                && classGroupModel.EmptySeat > 0;
+            return !IsRemoveClassGroupInvalid
+                || (classGroupModel.IsHaveSchedule() && classGroupModel.EmptySeat > 0);
         }
 
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ReGen()
         {
-            _tempResult = e.Result as List<List<int>>;
-            IsCalculated = true;
-            string message;
-            if (_tempResult.Any())
+            _rltAftFilterCgms.Clear();
+            foreach (ProgramSubjectModel psm in ChoosedProSubjectModels)
             {
-                message = $"Đã tính toán xong với {_tempResult.Count} kết quả";
-                ValidGenCommand.NotifyCanExecuteChanged();
+                _rltAftFilterCgms.Add(psm.GetRltAftFilter().ToList());
             }
-            else
-            {
-                message = "Không có kết quả nào hết";
-            }
-
-            _snackbarMessageQueue.Enqueue(message);
-        }
-
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Cs4rsaGen cs4rsaGen = new(_filteredClassGroupModels);
-            cs4rsaGen.TempResult.Clear();
-            cs4rsaGen.Backtracking(0);
-            e.Result = cs4rsaGen.TempResult;
         }
     }
 }

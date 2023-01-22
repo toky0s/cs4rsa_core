@@ -16,11 +16,13 @@
       <RowDefinition Height="auto" />
       <RowDefinition Height="*" />
       <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
     </Grid.RowDefinitions>
     <TextBlock
       Grid.Row="0"
       Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
       Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
+
     <ScrollViewer Grid.Row="1">
       <ItemsControl
         x:Name="ListViewCombinationModels"
@@ -28,12 +30,6 @@
         HorizontalContentAlignment="Stretch"
         ItemsSource="{Binding CombinationModels}">
         <ItemsControl.Resources>
-          <ContextMenu x:Key="CombiContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
-            <MenuItem
-              Command="{Binding ShowOnSimuCommand}"
-              Header="Hiển thị trên mô phỏng"
-              Icon="{dev_md:PackIcon Kind=Calendar}" />
-          </ContextMenu>
           <ToolTip x:Key="CannotShowOnSimuContentTooltip" Width="300">
             <TextBlock TextWrapping="WrapWithOverflow">
               Bộ sắp xếp này không thể mô phỏng vì chứa một hoặc nhiều lớp không có lịch hoặc chỉ có
@@ -43,7 +39,7 @@
         </ItemsControl.Resources>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <dev_md:Card Margin="5,0,5,5" Padding="5">
+            <dev_md:Card Margin="5,5,5,0" Padding="5">
               <Grid>
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition />
@@ -53,35 +49,30 @@
                   <ItemsControl ItemsSource="{Binding ClassGroupModels}">
                     <ItemsControl.ItemsPanel>
                       <ItemsPanelTemplate>
-                        <WrapPanel Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ListViewItem}}" />
+                        <WrapPanel />
                       </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
-                        <Grid>
+                        <Grid Margin="0,0,5,5">
                           <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition />
                           </Grid.ColumnDefinitions>
                           <Border
                             Grid.Column="0"
+                            Margin="0,0,3,0"
                             Background="{Binding Color}"
                             CornerRadius="4"
                             IsEnabled="False" />
-                          <TextBlock
-                            Grid.Column="1"
-                            Padding="5"
-                            Text="{Binding Name}" />
+                          <TextBlock Grid.Column="1" Text="{Binding Name}" />
                         </Grid>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
-                  <TextBlock
-                    Margin="5,0,0,0"
-                    Foreground="#c0392b"
-                    Text="Không thể mô phỏng">
+                  <TextBlock Text="Không thể mô phỏng">
                     <TextBlock.Style>
-                      <Style TargetType="TextBlock">
+                      <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
                         <Setter Property="Visibility" Value="Hidden" />
                         <Style.Triggers>
                           <DataTrigger Binding="{Binding IsCanShow}" Value="False">
@@ -91,12 +82,9 @@
                       </Style>
                     </TextBlock.Style>
                   </TextBlock>
-                  <TextBlock
-                    Margin="5,0,0,0"
-                    Foreground="#c0392b"
-                    Text="Phát hiện xung đột">
+                  <TextBlock Text="Phát hiện xung đột">
                     <TextBlock.Style>
-                      <Style TargetType="TextBlock">
+                      <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
                         <Setter Property="Visibility" Value="Hidden" />
                         <Style.Triggers>
                           <DataTrigger Binding="{Binding IsConflict}" Value="True">
@@ -120,15 +108,23 @@
         </ItemsControl.ItemTemplate>
       </ItemsControl>
     </ScrollViewer>
-    <Button
+
+    <!--  Sử dụng Batch  -->
+    <TextBox
       Grid.Row="2"
-      Margin="0,-50,0,0"
-      HorizontalAlignment="Left"
-      VerticalAlignment="Bottom"
-      Command="{Binding OpenFilterCommand}"
-      Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-      ToolTip="Bộ lọc">
-      <dev_md:PackIcon Kind="Filter" />
-    </Button>
+      Margin="0,0,0,5"
+      dev_md:HintAssist.Hint="Batch"
+      MouseWheel="TextBox_MouseWheel"
+      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+      Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}" />
+
+    <!--  Nút chức năng  -->
+    <StackPanel Grid.Row="3" Orientation="Horizontal">
+      <Button
+        Margin="0,0,5,0"
+        Command="{Binding GenCommand}"
+        Content="4 - XUẤT BATCH" />
+      <Button Command="{Binding DelCommand}" Content="LÀM MỚI" />
+    </StackPanel>
   </Grid>
 </UserControl>

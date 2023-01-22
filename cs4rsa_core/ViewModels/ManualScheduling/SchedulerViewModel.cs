@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.ManualScheduling
 {
     /// <summary>
     /// Phải THẬT biết những gì mình biết. Thế mới là HỌC.

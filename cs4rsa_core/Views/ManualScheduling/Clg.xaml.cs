@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Cs4rsa.Views
+namespace Cs4rsa.Views.ManualScheduling
 {
     public partial class Clg : UserControl
     {

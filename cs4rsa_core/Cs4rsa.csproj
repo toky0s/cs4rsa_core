@@ -52,9 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Dialogs\DialogViews\AutoSortSubjectLoadUC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Dialogs\DialogViews\ImportSessionUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
@@ -76,10 +73,10 @@
     <Page Update="Views\AutoScheduling\Auto.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\Choosed.xaml">
+    <Page Update="Views\ManualScheduling\Choosed.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\Clg.xaml">
+    <Page Update="Views\ManualScheduling\Clg.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Home.xaml">
@@ -88,16 +85,16 @@
     <Page Update="Views\Info.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\MainScheduling.xaml">
+    <Page Update="Views\ManualScheduling\MainScheduling.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\MainWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\Scheduler.xaml">
+    <Page Update="Views\ManualScheduling\Scheduler.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\Search.xaml">
+    <Page Update="Views\ManualScheduling\Search.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

@@ -41,27 +41,27 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             _htmlWeb = htmlWeb;
         }
 
-        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache)
+        public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache, bool withTeacher)
         {
             Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
             {
                 HtmlDocument htmlDocument = new();
                 htmlDocument.LoadHtml(keyword.Cache);
-                return await Crawl(htmlDocument, keyword.CourseId);
+                return await Crawl(htmlDocument, keyword.CourseId, withTeacher);
             }
             else
             {
                 string semesterId = _courseCrawler.GetCurrentSemesterValue();
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={keyword.CourseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
-                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
                 await SaveCache(keyword.KeywordId, subject.RawSoup);
                 return subject;
             }
         }
 
-        public async Task<Subject> Crawl(int courseId, bool isUseCache)
+        public async Task<Subject> Crawl(int courseId, bool isUseCache, bool withTeacher)
         {
             Keyword keyword = await _unitOfWork.Keywords.GetKeyword(courseId);
             if (keyword == null)
@@ -73,20 +73,23 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             {
                 HtmlDocument htmlDocument = new();
                 htmlDocument.LoadHtml(keyword.Cache);
-                return await Crawl(htmlDocument, keyword.CourseId);
+                return await Crawl(htmlDocument, keyword.CourseId, withTeacher);
             }
             else
             {
                 string semesterId = _courseCrawler.GetCurrentSemesterValue();
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
-                Subject subject = await Crawl(htmlDocument, keyword.CourseId);
-                await SaveCache(keyword.KeywordId, subject.RawSoup);
+                Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
+                if (subject != null)
+                {
+                    await SaveCache(keyword.KeywordId, subject.RawSoup);
+                }
                 return subject;
             }
         }
 
-        public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId)
+        public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId, bool withTeacher)
         {
             if (IsSubjectExists(htmlDocument))
             {
@@ -107,6 +110,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
+                bool isStarted = !rawSoup.Contains("Lớp Học Chưa Bắt Đầu");
                 return await Subject.CreateAsync(
                     name,
                     subjectCode,
@@ -120,7 +124,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                     rawSoup,
                     courseId,
                     _teacherCrawler,
-                    _htmlWeb);
+                    _htmlWeb,
+                    isStarted,
+                    withTeacher
+                );
             }
             return null;
         }

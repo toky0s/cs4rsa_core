@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Views;
 using Cs4rsa.Views.AutoScheduling;
+using Cs4rsa.Views.ManualScheduling;
 
 using MaterialDesignThemes.Wpf;
 

@@ -26,7 +26,7 @@ using System.Windows;
 
 using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.ManualScheduling
 {
     internal class ChoosedViewModel : ViewModelBase
     {
@@ -100,7 +100,7 @@ namespace Cs4rsa.ViewModels
 
             Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
             {
-                Messenger.Send(new ChoosedVmMsgs.ClassGroupAddedMsg(m.Value));
+                Messenger.Send(new ClassGroupAddedMsg(m.Value));
                 AddClassGroupModel(m.Value);
             });
 
@@ -182,7 +182,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
+            Messenger.Send(new DelAllClassGroupChoiceMsg(DBNull.Value));
             _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
         }
 
@@ -204,7 +204,7 @@ namespace Cs4rsa.ViewModels
             string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             _phaseStore.RemoveClassGroup(_selectedClassGroupModel);
-            Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(_selectedClassGroupModel));
+            Messenger.Send(new DelClassGroupChoiceMsg(_selectedClassGroupModel));
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
@@ -279,7 +279,7 @@ namespace Cs4rsa.ViewModels
                     }
                 }
             }
-            Messenger.Send(new ChoosedVmMsgs.ConflictCollChangedMsg(ConflictModels));
+            Messenger.Send(new ConflictCollChangedMsg(ConflictModels));
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace Cs4rsa.ViewModels
                     }
                 }
             }
-            Messenger.Send(new ChoosedVmMsgs.PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
+            Messenger.Send(new PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
         }
 
         private void AddClassGroupModel(ClassGroupModel classGroupModel)
@@ -316,7 +316,7 @@ namespace Cs4rsa.ViewModels
                     ClassGroupModels.Add(classGroupModel);
             }
             _phaseStore.AddClassGroupModel(classGroupModel);
-            Messenger.Send(new ChoosedVmMsgs.UndoDelMsg(classGroupModel));
+            Messenger.Send(new UndoDelMsg(classGroupModel));
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -375,7 +375,7 @@ namespace Cs4rsa.ViewModels
                 {
                     actionData = ClassGroupModels[i].DeepClone();
                     _phaseStore.RemoveClassGroup(ClassGroupModels[i]);
-                    Messenger.Send(new ChoosedVmMsgs.DelClassGroupChoiceMsg(ClassGroupModels[i]));
+                    Messenger.Send(new DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     string messageContent = $"Đã bỏ chọn lớp {className}";
                     _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
@@ -418,7 +418,7 @@ namespace Cs4rsa.ViewModels
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new ChoosedVmMsgs.DelAllClassGroupChoiceMsg(DBNull.Value));
+            Messenger.Send(new DelAllClassGroupChoiceMsg(DBNull.Value));
         }
         #endregion
     }

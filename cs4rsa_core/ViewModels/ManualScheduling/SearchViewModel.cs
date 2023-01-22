@@ -34,7 +34,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.ManualScheduling
 {
     internal sealed partial class SearchViewModel : ViewModelBase
     {
@@ -534,11 +534,11 @@ namespace Cs4rsa.ViewModels
             Subject subject;
             if (courseId != VMConstants.INT_INVALID_COURSEID)
             {
-                subject = await _subjectCrawler.Crawl(courseId, isUseCache);
+                subject = await _subjectCrawler.Crawl(courseId, isUseCache, true);
             }
             else
             {
-                subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache);
+                subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache, true);
             }
 
             if (subject != null)

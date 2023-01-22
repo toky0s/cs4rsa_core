@@ -6,6 +6,7 @@ using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -51,6 +52,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         /// </summary>
         private SchoolClassModel _userSelectedSchoolClass;
         public SchoolClassModel UserSelectedSchoolClass { get => _userSelectedSchoolClass; }
+
+        /// <summary>
+        /// Hậu tố tên lớp, nếu môn Class Name là: ACC 001 B thì hậu tố là B.
+        /// </summary>
+        public string ClassSuffix { get; set; }
 
         /// <summary>
         /// Quyết định xem ClassGroupModel có thuộc một Multi Register ClassGroupName Subject (SpecialSubject)
@@ -102,6 +108,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 ImplementType = classGroup.GetImplementType();
                 RegistrationType = classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
+                ClassSuffix = GetClassSuffix();
                 CompulsoryClass = GetCompulsoryClass();
                 IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
 
@@ -125,6 +132,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                     }
                 }
             }
+        }
+
+        public string GetClassSuffix()
+        {
+            Trace.WriteLine(Name[(ClassGroup.SubjectCode.Length + 1)..]);
+            return Name[(ClassGroup.SubjectCode.Length + 1)..];
         }
 
         public bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)

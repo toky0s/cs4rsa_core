@@ -1,4 +1,4 @@
-﻿using Cs4rsa.ViewModels;
+﻿using Cs4rsa.ViewModels.ManualScheduling;
 
 using System;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Cs4rsa.Views
+namespace Cs4rsa.Views.ManualScheduling
 {
     public partial class Search : UserControl
     {

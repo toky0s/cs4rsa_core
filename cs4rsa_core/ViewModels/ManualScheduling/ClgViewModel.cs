@@ -20,7 +20,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.ManualScheduling
 {
     /// <summary>
     /// Class group View Model

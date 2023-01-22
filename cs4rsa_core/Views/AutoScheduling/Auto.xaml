@@ -9,10 +9,6 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:vm="clr-namespace:Cs4rsa.ViewModels.AutoScheduling"
-  d:DataContext="{d:DesignInstance Type=vm:AutoViewModel}"
-  d:DesignHeight="700"
-  d:DesignWidth="1000"
-  dev_vml:ViewModelLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
   <UserControl.Resources>
     <ResourceDictionary>
@@ -34,13 +30,10 @@
   </UserControl.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="1.7*" />
+      <ColumnDefinition Width="3*" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
     <local:ProgramTree Grid.Column="0" Margin="5,5,5,5" />
-    <local:Result
-      Grid.Row="1"
-      Grid.Column="2"
-      Margin="0,5,5,5" />
+    <local:Result Grid.Column="2" Margin="0,5,5,5" />
   </Grid>
 </UserControl>

@@ -1,11 +1,9 @@
 ﻿using Cs4rsa.Constants;
-using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using Cs4rsa.Utils;
-using Cs4rsa.Utils.Interfaces;
 
 using HtmlAgilityPack;
 
@@ -28,6 +26,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         private readonly string _studyType;
         private readonly string _semester;
         private readonly string _rawSoup;
+        private readonly bool _withTeacher;
         public string RawSoup { get => _rawSoup; }
 
         private List<string> _tempTeachers;
@@ -47,14 +46,14 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         public IEnumerable<string> ParallelSubject { get; }
         public string Desciption { get; }
         public readonly int CourseId;
-
+        public readonly bool IsStarted;
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
                         ITeacherCrawler teacherCrawler,
-                        HtmlWeb htmlWeb)
+                        HtmlWeb htmlWeb, bool isStarted, bool withTeacher)
         {
             _teacherCrawler = teacherCrawler;
             _htmlWeb = htmlWeb;
@@ -64,6 +63,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             _studyType = studyType;
             _semester = semester;
             _rawSoup = rawSoup;
+            _withTeacher = withTeacher;
 
             _teachers = new();
             _tempTeachers = new();
@@ -75,6 +75,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             ParallelSubject = SubjectSpliter(parallelSubject);
             Desciption = description;
             CourseId = courseId;
+            IsStarted = isStarted;
         }
 
         /// <summary>
@@ -188,20 +189,28 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
              * tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
              * tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
              * Ngày Mùng 5 Tết 2022 
+             * 
+             * Trong tình trạng mạng yếu, việc cào thêm dữ liệu của giảng viên là
+             * không ưu tiên, hãy set cờ withTeacher về false. Hai list teacher
+             * và tmpTeacher sẽ về rỗng.
+             * XinTA - Ngày 19/1/2023
              */
-            string teacherName = GetTeacherName(trTagClassLop);
-            TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
-
             List<string> tempTeachers = new();
-            if (teacherName != string.Empty)
-            {
-                tempTeachers.Add(teacherName);
-            }
-
             List<TeacherModel> teachers = new();
-            if (teacherModel != null)
+            if (_withTeacher)
             {
-                teachers.Add(teacherModel);
+                string teacherName = GetTeacherName(trTagClassLop);
+                TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
+
+                if (teacherName != string.Empty)
+                {
+                    tempTeachers.Add(teacherName);
+                }
+
+                if (teacherModel != null)
+                {
+                    teachers.Add(teacherModel);
+                }
             }
             #endregion
 
@@ -377,19 +386,20 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         /// <param name="description">Mô tả môn học</param>
         /// <param name="rawSoup">Chuỗi phân tích HTML gốc</param>
         /// <param name="courseId">Course ID</param>
-        /// <param name="unitOfWork"><see cref="IUnitOfWork"/> - Lớp thao tác với cơ sở dữ liệu</param>
-        /// <param name="folderManager"><see cref="IFolderManager"/> - Trình quản lý thư mục</param>
-        /// <returns></returns>
-        public static Task<Subject> CreateAsync(string name, string subjectCode, string studyUnit,
-                        string studyUnitType, string studyType, string semester,
-                        string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, int courseId,
-                        ITeacherCrawler teacherCrawler,
-                        HtmlWeb htmlWeb)
+        /// <param name="isStarted">Lớp học đã bắt đầu hay chưa</param>
+        /// <param name="withTeacher">Có cào thêm thông tin giảng viên hay không</param>
+        /// <returns>Task Subject</returns>
+        public static Task<Subject> CreateAsync(
+            string name, string subjectCode, string studyUnit,
+            string studyUnitType, string studyType, string semester,
+            string mustStudySubject, string parallelSubject,
+            string description, string rawSoup, int courseId,
+            ITeacherCrawler teacherCrawler,
+            HtmlWeb htmlWeb, bool isStarted, bool withTeacher)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, teacherCrawler, htmlWeb);
+                rawSoup, courseId, teacherCrawler, htmlWeb, isStarted, withTeacher);
             return ret.InitializeAsync();
         }
     }

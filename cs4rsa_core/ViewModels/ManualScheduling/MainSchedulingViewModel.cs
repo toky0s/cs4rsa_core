@@ -4,7 +4,7 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.ManualScheduling
 {
     public class MainSchedulingViewModel : ViewModelBase
     {

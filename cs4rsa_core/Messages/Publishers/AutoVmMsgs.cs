@@ -2,6 +2,8 @@
 
 using Cs4rsa.Models;
 
+using System.Collections.Generic;
+
 namespace Cs4rsa.Messages.Publishers
 {
     internal sealed class AutoVmMsgs
@@ -25,11 +27,11 @@ namespace Cs4rsa.Messages.Publishers
 
 
         /// <summary>
-        /// Thêm vào tập kết quả một kết hợp
+        /// Thêm vào tập kết quả các kết hợp
         /// </summary>
-        internal sealed class AddCombinationMsg : ValueChangedMessage<CombinationModel>
+        internal sealed class AddCombinationsMsg : ValueChangedMessage<List<CombinationModel>>
         {
-            public AddCombinationMsg(CombinationModel value) : base(value)
+            public AddCombinationsMsg(List<CombinationModel> value) : base(value)
             {
 
             }
