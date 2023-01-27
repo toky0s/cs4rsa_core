@@ -11,7 +11,6 @@
   x:Name="AccountElement"
   Width="800"
   Height="450"
-  Padding="5"
   d:DataContext="{d:DesignInstance Type=implements:AccountViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
   Loaded="UserControl_Loaded"
@@ -24,7 +23,7 @@
     DialogContent="{Binding DialogUC}"
     IsOpen="{Binding IsDialogOpen}"
     SnackbarMessageQueue="{Binding ElementName=MySnackbar, Path=MessageQueue}">
-    <Grid>
+    <Grid Margin="5">
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />

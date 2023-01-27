@@ -12,9 +12,11 @@ using Cs4rsa.ModelExtensions;
 
 using MaterialDesignThemes.Wpf;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Cs4rsa.Dialogs.Implements
 {
@@ -86,14 +88,34 @@ namespace Cs4rsa.Dialogs.Implements
 
         private async Task OnFind()
         {
-            SessionInputUC sessionInputUC = new();
-            SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
-            vm.SessionId = _sessionId;
+            try
+            {
+                PreventCloseDialog(true);
+                await _unitOfWork.BeginTransAsync();
+                SessionInputUC sessionInputUC = new();
+                SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
+                vm.SessionId = _sessionId;
 
-            OpenDialog(sessionInputUC);
-            await vm.Find();
-            CloseDialog();
-            SessionId = string.Empty;
+                OpenDialog(sessionInputUC);
+                await vm.Find();
+                SessionId = string.Empty;
+                await _unitOfWork.CommitAsync();
+            }
+            catch(Exception e)
+            {
+                await _unitOfWork.RollbackAsync();
+                MessageBox.Show(
+                    $"Gặp lỗi không mong muốn: {e.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+            finally
+            {
+                PreventCloseDialog(false);
+                CloseDialog();
+            }
         }
 
         public async Task LoadStudent()

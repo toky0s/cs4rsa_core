@@ -49,5 +49,10 @@ namespace Cs4rsa.BaseClasses
                 throw new Exception(VMConstants.EX_NOT_FOUND_VIEWMODEL);
             }
         }
+
+        protected static void PreventCloseDialog(bool isPrevent)
+        {
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = !isPrevent;
+        }
     }
 }
