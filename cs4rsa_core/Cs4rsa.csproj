@@ -67,9 +67,6 @@
     <Page Update="Dialogs\DialogViews\SolveConflictUC.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Dialogs\DialogViews\UpdateUC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Views\AutoScheduling\Auto.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

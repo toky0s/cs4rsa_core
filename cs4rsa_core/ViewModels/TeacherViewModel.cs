@@ -207,7 +207,7 @@ namespace Cs4rsa.ViewModels
         public async Task LoadTeachers()
         {
             Lectures.Clear();
-            TotalPage = await _unitOfWork.Teachers.CountPageAsync(SIZE, t => true);
+            TotalPage = await _unitOfWork.Teachers.CountPageAsync(SIZE);
             IAsyncEnumerable<Teacher> teachers = _unitOfWork.Teachers.GetTeachersAsync(_currentPage, SIZE);
             await foreach (Teacher teacher in teachers)
             {

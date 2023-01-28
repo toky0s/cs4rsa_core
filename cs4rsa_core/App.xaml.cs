@@ -25,6 +25,7 @@ using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.ViewModels;
 using Cs4rsa.ViewModels.AutoScheduling;
+using Cs4rsa.ViewModels.Database;
 using Cs4rsa.ViewModels.ManualScheduling;
 
 using HtmlAgilityPack;
@@ -34,7 +35,6 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.IO;
 using System.Net;
 using System.Windows;
 
@@ -49,6 +49,7 @@ namespace Cs4rsa
             //Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
         }
 
+        #region Error Handlers
         //private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         //{
         //    string errorMessage = string.Format("Second 02 Current_DispatcherUnhandledException An unhandled exception occurred: {0}", e.Exception.Message);
@@ -66,6 +67,7 @@ namespace Cs4rsa
         //    // for quick debugging etc.
         //    e.Handled = true;
         //}
+        #endregion
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -82,10 +84,9 @@ namespace Cs4rsa
                 setting.Save();
             }
 
-            // Create folders
+            // Create the init folders
             IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
-            string studentPlansPath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS);
-            folderManager.CreateFolderIfNotExists(studentPlansPath);
+            folderManager.CreateFoldersAtStartUp();
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -148,6 +149,7 @@ namespace Cs4rsa
             services.AddSingleton<AccountViewModel>();
             services.AddSingleton<ProgramTreeViewModel>();
             services.AddSingleton<ResultViewModel>();
+            services.AddSingleton<DbViewModel>();
 
             return services.BuildServiceProvider();
         }

@@ -8,13 +8,21 @@ namespace Cs4rsa.Constants
     internal static class CredizText
     {
         /// <summary>
+        /// Có lỗi trong quá trình xử lý <paramref name="handleName"/>
+        /// </summary>
+        /// <param name="handleName">Tên xử lý</param>
+        /// <returns></returns>
+        public static string Common001(string handleName) => $"Có lỗi trong quá trình xử lý {handleName}";
+        /// <summary>
         /// Thông báo file của sinh viên không tồn tại.
         /// </summary>
         /// <param name="fName">File name</param>
         /// <param name="stdName">Student name</param>
         public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
+        public static string DbMsg001(int result) => $"Hoàn tất cập nhật {result} môn";
         public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, $"StudentProgram_{stdId}.json");
         public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, $"{curid}.json");
+        public static string PathHtmlCacheFile(int courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES, $"{courseId}.html");
     }
 
     internal static class VMConstants

@@ -11,9 +11,8 @@ namespace Cs4rsa.BaseClasses
 {
     public abstract class ViewModelBase : ObservableRecipient
     {
-        public ViewModelBase() : base(StrongReferenceMessenger.Default)
+        public ViewModelBase() : base(WeakReferenceMessenger.Default)
         {
-
         }
 
         /// <summary>
@@ -34,9 +33,22 @@ namespace Cs4rsa.BaseClasses
         }
 
         /// <summary>
-        /// Truy cập hoặc tạo mới các ViewModel có chứa trong container
+        /// Set value for MainWindow's IsEnabled.
+        /// 
+        /// isEnabled: true  -> MainWindow was enabled
+        /// isEnabled: false -> MainWindow was disabled
+        /// </summary>
+        /// <param name="isEnabled"></param>
+        protected virtual void PreventOperation(bool prevent)
+        {
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsWindowEnable = !prevent;
+        }
+
+        /// <summary>
+        /// Truy cập các ViewModel có chứa trong container
         /// </summary>
         /// <typeparam name="T">ViewModel Type</typeparam>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
         protected T GetViewModel<T>()
         {
             object o = ((App)Application.Current).Container.GetService(typeof(T));
@@ -48,6 +60,11 @@ namespace Cs4rsa.BaseClasses
             {
                 throw new Exception(VMConstants.EX_NOT_FOUND_VIEWMODEL);
             }
+        }
+
+        protected static void PreventCloseDialog(bool isPrevent)
+        {
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = !isPrevent;
         }
     }
 }
