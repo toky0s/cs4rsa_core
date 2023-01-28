@@ -13,6 +13,10 @@ namespace Cs4rsa.Constants
         /// <param name="handleName">Tên xử lý</param>
         /// <returns></returns>
         public static string Common001(string handleName) => $"Có lỗi trong quá trình xử lý {handleName}";
+        public static string ManualMsg001(string name) => $"Đã bỏ chọn lớp {name}";
+        public static string ManualMsg002(string subjectName) => $"Đã xoá môn {subjectName}";
+        public static string ManualMsg003(string courseId) => $"Không tồn tại {courseId}";
+        public static string ManualMsg004() => $"Sai đường dẫn";
         public static string TeacherMsg001(int tcId) => $"Đã sao chép mã {tcId} vào Clipboard";
         /// <summary>
         /// Thông báo file của sinh viên không tồn tại.

@@ -31,8 +31,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 
         private List<string> _tempTeachers;
         public List<string> TempTeachers => _tempTeachers;
-        private readonly List<TeacherModel> _teachers;
-        public List<TeacherModel> Teachers => _teachers;
+        public List<TeacherModel> Teachers { get; set; }
         private readonly List<ClassGroup> _classGroups;
         public List<ClassGroup> ClassGroups => _classGroups;
 
@@ -65,7 +64,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             _rawSoup = rawSoup;
             _withTeacher = withTeacher;
 
-            _teachers = new();
+            Teachers = new();
             _tempTeachers = new();
             _classGroups = new();
 
@@ -154,23 +153,19 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             return schoolClasses;
         }
 
-        /**
-         * Mô tả:
-         *  Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
-         *  
-         * Tham số:
-         *  trTagClassLop:
-         *      Thẻ tr có class="lop"
-         * 
-         * Trả về:
-         *  SchoolClass - Lớp thành phần là con của một ClassGroup, 
-         *  sẽ trả về null nếu ClassGroup đấy không chứa bất cứ SchoolClass nào.
-         *  
-         *  Phát hiện lúc đêm  04/11/2022, TOU 151 Tổng quan du lịch, 
-         *  ClassGroup TOU 151 Q không chứa bất cứ SchoolClass nào.
-         *  
-         *  Tham khảo: https://github.com/toky0s/cs4rsa_core/issues/79
-         */
+        /// <summary>
+        /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
+        /// </summary>
+        /// <param name="trTagClassLop">Thẻ tr có class="lop"</param>
+        /// <returns>
+        /// SchoolClass - Lớp thành phần là con của một ClassGroup, 
+        /// sẽ trả về null nếu ClassGroup đấy không chứa bất cứ SchoolClass nào.
+        /// 
+        /// Phát hiện lúc đêm  04/11/2022, TOU 151 Tổng quan du lịch, 
+        /// ClassGroup TOU 151 Q không chứa bất cứ SchoolClass nào.
+        /// 
+        /// <see href="https://github.com/toky0s/cs4rsa_core/issues/79"/> 
+        /// </returns>
         private async Task<SchoolClass> GetSchoolClass(HtmlNode trTagClassLop)
         {
             if (!trTagClassLop.HasChildNodes)
@@ -193,7 +188,15 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
              * Trong tình trạng mạng yếu, việc cào thêm dữ liệu của giảng viên là
              * không ưu tiên, hãy set cờ withTeacher về false. Hai list teacher
              * và tmpTeacher sẽ về rỗng.
-             * XinTA - Ngày 19/1/2023
+             * 
+             * Thông tin của Teacher sẽ ưu tiên lấy từ DB ra. Các môn đã có cache
+             * hầu hết sẽ có thông tin giảng viên đi kèm.
+             * 
+             * Created Date:
+             *  XinTA - Ngày 19/1/2023
+             *  
+             * Updated Date:
+             *  XinTA - Ngày 29/1/2023 - Cập nhật tài liệu
              */
             List<string> tempTeachers = new();
             List<TeacherModel> teachers = new();
@@ -202,11 +205,19 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 string teacherName = GetTeacherName(trTagClassLop);
                 TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
 
+                // 1. Add tmp teachers
                 if (teacherName != string.Empty)
                 {
                     tempTeachers.Add(teacherName);
                 }
 
+                // 2. Add teachers for global subject
+                if (!Teachers.Contains(teacherModel))
+                {
+                    Teachers.Add(teacherModel);
+                }
+
+                // 3. Add teachers for class group model
                 if (teacherModel != null)
                 {
                     teachers.Add(teacherModel);
@@ -339,10 +350,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
             TeacherModel teacherModel = await _teacherCrawler.Crawl(teacherDetailPageURL, CourseId, false);
-            if (teacherModel != null && !_teachers.Contains(teacherModel))
-            {
-                _teachers.Add(teacherModel);
-            }
+            //if (teacherModel != null && !_teachers.Contains(teacherModel))
+            //{
+            //    _teachers.Add(teacherModel);
+            //}
             return teacherModel;
         }
 

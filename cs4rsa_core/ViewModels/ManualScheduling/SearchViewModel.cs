@@ -451,7 +451,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjectModels, classGroupModels);
 
-            string message = $"Vừa xoá môn {_selectedSubjectModel.SubjectName}";
+            string message = CredizText.ManualMsg002(_selectedSubjectModel.SubjectName);
             _phaseStore.RemoveClassGroup(_selectedSubjectModel);
             SubjectModels.Remove(_selectedSubjectModel);
             _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, AddSubjectWithCgm, actionData);
@@ -572,7 +572,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 IEnumerable<Keyword> keywords = _unitOfWork.Keywords.Find(kw => kw.CourseId == intCourseId);
                 if (!keywords.Any())
                 {
-                    _snackbarMessageQueue.Enqueue("Không tồn tại " + courseId);
+                    _snackbarMessageQueue.Enqueue(CredizText.ManualMsg003(courseId));
                     return;
                 }
 
@@ -581,7 +581,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             }
             else
             {
-                _snackbarMessageQueue.Enqueue("Sai đường dẫn");
+                _snackbarMessageQueue.Enqueue(CredizText.ManualMsg004());
             }
         }
 
