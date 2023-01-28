@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels
 {
-    public class TeacherViewModel : ViewModelBase
+    internal partial class TeacherViewModel : ViewModelBase
     {
         private static readonly int SIZE = 20;
 
@@ -37,76 +38,29 @@ namespace Cs4rsa.ViewModels
         #region Properties
         public ObservableCollection<TeacherModel> Lectures { get; set; }
 
+        [ObservableProperty]
         private TeacherModel _selectedTeacher;
-        public TeacherModel SelectedTeacher
-        {
-            get
-            {
-                return _selectedTeacher;
-            }
-            set
-            {
-                _selectedTeacher = value;
-                OnPropertyChanged();
-                CurrentIndex = 0;
-            }
-        }
 
+        [ObservableProperty]
         private string _searchText;
-        public string SearchText
-        {
-            get { return _searchText; }
-            set
-            {
-                _searchText = value;
-                OnPropertyChanged();
-                Filter(value);
-            }
-        }
 
+        [ObservableProperty]
         private int _currentPage;
-        public int CurrentPage
-        {
-            get { return _currentPage; }
-            set { _currentPage = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private int _totalPage;
-        public int TotalPage
-        {
-            get { return _totalPage; }
-            set { _totalPage = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _canPreviousPage;
-        public bool CanPreviousPage
-        {
-            get { return _canPreviousPage; }
-            set { _canPreviousPage = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _canNextPage;
-        public bool CanNextPage
-        {
-            get { return _canNextPage; }
-            set { _canNextPage = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private int _currentIndex;
-        public int CurrentIndex
-        {
-            get { return _currentIndex; }
-            set { _currentIndex = value; OnPropertyChanged(); }
-        }
 
-        private bool isUpdating;
-
-        public bool IsUpdating
-        {
-            get { return isUpdating; }
-            set { isUpdating = value; }
-        }
-
+        [ObservableProperty]
+        private bool _isUpdating;
         #endregion
 
         public TeacherViewModel(
@@ -138,6 +92,16 @@ namespace Cs4rsa.ViewModels
             CurrentPage = 1;
             CurrentIndex = 0;
             IsUpdating = false;
+        }
+
+        partial void OnSearchTextChanged(string value)
+        {
+            Filter(value);
+        }
+
+        partial void OnSelectedTeacherChanged(TeacherModel value)
+        {
+            CurrentIndex = 0;
         }
 
         private async Task OnUpdate()
