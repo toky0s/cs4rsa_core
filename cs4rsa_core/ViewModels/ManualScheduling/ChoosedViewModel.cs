@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -28,7 +29,7 @@ using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    internal class ChoosedViewModel : ViewModelBase
+    internal partial class ChoosedViewModel : ViewModelBase
     {
         #region Properties
         private string _shareString;
@@ -49,12 +50,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         public ObservableCollection<ConflictModel> ConflictModels { get; set; }
 
+        [ObservableProperty]
         private ConflictModel _selectedConflictModel;
-        public ConflictModel SelectedConflictModel
-        {
-            get { return _selectedConflictModel; }
-            set { _selectedConflictModel = value; OnPropertyChanged(); }
-        }
 
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
         #endregion
@@ -201,13 +198,18 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private void OnDelete()
         {
-            string message = $"Đã bỏ chọn lớp {_selectedClassGroupModel.Name}";
+            string message = CredizText.ManualMsg001(_selectedClassGroupModel.Name);
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
             _phaseStore.RemoveClassGroup(_selectedClassGroupModel);
             Messenger.Send(new DelClassGroupChoiceMsg(_selectedClassGroupModel));
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
-            _snackbarMessageQueue.Enqueue(message, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
+            _snackbarMessageQueue.Enqueue(
+                message,
+                VMConstants.SNBAC_RESTORE,
+                (obj) => AddClassGroupModel(actionData),
+                actionData
+            );
 
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -377,8 +379,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                     _phaseStore.RemoveClassGroup(ClassGroupModels[i]);
                     Messenger.Send(new DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
-                    string messageContent = $"Đã bỏ chọn lớp {className}";
-                    _snackbarMessageQueue.Enqueue(messageContent, VMConstants.SNBAC_RESTORE, (obj) => AddClassGroupModel(actionData), actionData);
+                    _snackbarMessageQueue.Enqueue(
+                        CredizText.ManualMsg001(className),
+                        VMConstants.SNBAC_RESTORE,
+                        (obj) => AddClassGroupModel(actionData),
+                        actionData
+                    );
 
                     SaveCommand.NotifyCanExecuteChanged();
                     DeleteAllCommand.NotifyCanExecuteChanged();

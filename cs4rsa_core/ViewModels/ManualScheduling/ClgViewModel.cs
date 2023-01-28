@@ -387,32 +387,31 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private bool CanResetFilter()
         {
             return
-            Monday != false ||
-            Tuesday != false ||
-            Wednesday != false ||
-            Thursday != false ||
-            Friday != false ||
-            Saturday != false ||
-            Sunday != false ||
+            Monday != false
+            || Tuesday != false
+            || Wednesday != false
+            || Thursday != false
+            || Friday != false
+            || Saturday != false
+            || Sunday != false
 
-            Place137NVL != false ||
-            Place254NVL != false ||
-            PlaceHoaKhanh != false ||
-            PlacePhanThanh != false ||
-            PlaceQuangTrung != false ||
-            PlaceVietTin != false ||
-            PlaceOnline != false ||
+            || Place137NVL != false
+            || Place254NVL != false
+            || PlaceHoaKhanh != false
+            || PlacePhanThanh != false
+            || PlaceQuangTrung != false
+            || PlaceVietTin != false
+            || PlaceOnline != false
 
-            PhaseFirst != false ||
-            PhaseSecond != false ||
-            PhaseBoth != false ||
+            || PhaseFirst != false
+            || PhaseSecond != false
+            || PhaseBoth != false
 
-            HasSeat != false ||
-            HasSchedule != false ||
-
-            Morning != false ||
-            Afternoon != false ||
-            Night != false;
+            || HasSeat != false
+            || HasSchedule != false
+            || Morning != false
+            || Afternoon != false
+            || Night != false;
         }
 
         private bool ClassGroupFilter(object obj)

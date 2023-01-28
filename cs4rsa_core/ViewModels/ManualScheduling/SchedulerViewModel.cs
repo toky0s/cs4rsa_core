@@ -324,8 +324,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 if (phase == Phase.First || phase == Phase.Second)
                 {
                     ObservableCollection<ObservableCollection<TimeBlock>> week = phase == Phase.First
-                                                           ? Week1
-                                                           : Week2;
+                                                                               ? Week1
+                                                                               : Week2;
                     week[dayIndex].Add(timeBlock);
                 }
                 else if (phase == Phase.All)

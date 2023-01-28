@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.Publishers;
@@ -6,55 +7,16 @@ using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    public class MainSchedulingViewModel : ViewModelBase
+    internal partial class MainSchedulingViewModel : ViewModelBase
     {
-        #region Fields
+        [ObservableProperty]
         private string _currentYearInfo;
+        [ObservableProperty]
         private string _currentSemesterInfo;
-        #endregion
-
-        #region Bindings
-        public string CurrentYearInfo
-        {
-            get => _currentYearInfo;
-            set
-            {
-                _currentYearInfo = value;
-                OnPropertyChanged();
-            }
-        }
-        public string CurrentSemesterInfo
-        {
-            get => _currentSemesterInfo;
-            set
-            {
-                _currentSemesterInfo = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _totalCredit;
-        public int TotalCredit
-        {
-            get => _totalCredit;
-            set
-            {
-                _totalCredit = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _totalSubject;
-        public int TotalSubject
-        {
-            get => _totalSubject;
-            set
-            {
-                _totalSubject = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
 
         public MainSchedulingViewModel(ICourseCrawler courseCrawler)
         {
