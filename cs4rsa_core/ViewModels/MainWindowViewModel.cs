@@ -1,10 +1,7 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
-using Cs4rsa.Dialogs.DialogViews;
-using Cs4rsa.Messages.Publishers;
 
 using MaterialDesignThemes.Wpf;
 
@@ -16,75 +13,37 @@ namespace Cs4rsa.ViewModels
     /// Thực hiện khai báo các dịch vụ triển khai DI. 
     /// Thực hiện các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    public class MainWindowViewModel : ViewModelBase
+    internal partial class MainWindowViewModel : ViewModelBase
     {
         #region Bindings
+        [ObservableProperty]
         private string _appName;
-        public string AppName
-        {
-            get { return _appName; }
-            set { _appName = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _isExpanded;
-        public bool IsExpanded
-        {
-            get { return _isExpanded; }
-            set { _isExpanded = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _isOpen;
-        public bool IsOpenDialog
-        {
-            get { return _isOpen; }
-            set { _isOpen = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
+        private bool _isWindowEnable;
+
+        [ObservableProperty]
         private object _dialogUC;
-        public object DialogUC
-        {
-            get { return _dialogUC; }
-            set { _dialogUC = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _isCloseOnClickAway;
-        public bool IsCloseOnClickAway
-        {
-            get { return _isCloseOnClickAway; }
-            set { _isCloseOnClickAway = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private ISnackbarMessageQueue _snackBarMessageQueue;
-        public ISnackbarMessageQueue SnackbarMessageQueue
-        {
-            get { return _snackBarMessageQueue; }
-            set { _snackBarMessageQueue = value; OnPropertyChanged(); }
-        }
-        #endregion
-
-        #region Commands
-        public RelayCommand OpenUpdateWindowCommand { get; set; }
         #endregion
 
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
             _snackBarMessageQueue = snackbarMessageQueue;
-            _snackBarMessageQueue.Enqueue(ViewConstants.WELCOME_TEXT);
-
-            Messenger.Register<HomeVmMsgs.UpdateSubjectDbMsg>(this, (r, m) =>
-            {
-                OnOpenUpdateWindow();
-            });
-
-            OpenUpdateWindowCommand = new RelayCommand(OnOpenUpdateWindow);
             IsExpanded = false;
+            IsWindowEnable = true;
             AppName = ViewConstants.APP_NAME;
-        }
-
-        private void OnOpenUpdateWindow()
-        {
-            UpdateUC updateUC = new();
-            OpenModal(updateUC);
         }
 
         public void OpenModal(IDialog uc)
@@ -93,10 +52,10 @@ namespace Cs4rsa.ViewModels
             {
                 DialogUC = uc;
             }
-            IsOpenDialog = true;
+            IsOpen = true;
             IsCloseOnClickAway = uc.IsCloseOnClickAway();
         }
 
-        public void CloseModal() => IsOpenDialog = false;
+        public void CloseModal() => IsOpen = false;
     }
 }

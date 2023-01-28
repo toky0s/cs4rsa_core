@@ -21,14 +21,14 @@ namespace Cs4rsa.Views
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
-            Goto((int)ScreenIndex.HOME);
+            Goto(0);
         }
 
         private void RenderScreen()
         {
             foreach (var item in ViewConstants.CREDIZ_MENU_ITEMS)
             {
-                CredizTransitioner.Items.Add(item.CredizScreen.Screen);
+                CredizTransitioner.Items.Add(item.Screen);
             }
         }
 
@@ -70,15 +70,16 @@ namespace Cs4rsa.Views
 
         public void RenderCompactMenu()
         {
-            foreach (CredizMenuItem item in ViewConstants.CREDIZ_MENU_ITEMS)
+            for (int i = 0; i < ViewConstants.CREDIZ_MENU_ITEMS.Length; i++)
             {
+                CredizMenuItem item = ViewConstants.CREDIZ_MENU_ITEMS[i];
                 PackIcon icon = new()
                 {
                     Kind = item.IconKind,
                     Width = _heightAndWidth,
                     Height = _heightAndWidth
                 };
-
+                int idx = i;
                 Button button = new()
                 {
                     Margin = new Thickness(16, 0, 0, 0),
@@ -86,7 +87,7 @@ namespace Cs4rsa.Views
                     ToolTip = item.MenuName,
                     Foreground = Brushes.White,
                     Style = (Style)FindResource("MaterialDesignToolButton"),
-                    Command = new RelayCommand(() => Goto((int)item.CredizScreen.Index))
+                    Command = new RelayCommand(() => Goto(idx))
                 };
 
                 CompactMenu.Children.Add(button);
@@ -130,7 +131,8 @@ namespace Cs4rsa.Views
         {
             ListBox listView = sender as ListBox;
             Goto(listView.SelectedIndex);
-            if (listView.SelectedIndex == (int)ScreenIndex.TEACHER)
+            int teacherScreenIndex = 3;
+            if (listView.SelectedIndex == teacherScreenIndex)
             {
                 TeacherViewModel lecture = (TeacherViewModel)(CredizTransitioner.Items[listView.SelectedIndex] as Teacher).DataContext;
                 await lecture.LoadTeachers();

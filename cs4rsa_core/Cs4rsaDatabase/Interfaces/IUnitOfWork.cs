@@ -21,6 +21,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         Task<int> CompleteAsync();
         Task<IDbContextTransaction> BeginTransAsync();
         Task CommitAsync();
+        void Commit();
         Task RollbackAsync();
+        void Rollback();
+        IDbContextTransaction BeginTrans();
     }
 }

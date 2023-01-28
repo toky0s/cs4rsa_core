@@ -101,11 +101,12 @@
                     <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
-                  <Rectangle
+                  <Border
                     Grid.Column="0"
                     Width="20"
                     HorizontalAlignment="Left"
-                    Fill="{Binding Keyword.Color}" />
+                    Background="{Binding Keyword.Color}"
+                    CornerRadius="4" />
                   <StackPanel Grid.Column="1" Orientation="Vertical">
                     <TextBlock
                       Margin="5,10,0,0"

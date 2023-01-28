@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
+using Cs4rsa.ViewModels.Database;
+
 namespace Cs4rsa.Messages.Publishers.Dialogs
 {
     internal sealed class UpdateVmMsgs
@@ -7,9 +9,9 @@ namespace Cs4rsa.Messages.Publishers.Dialogs
         /// <summary>
         /// Cập nhật cơ sở dữ liệu môn học thành công
         /// </summary>
-        internal sealed class UpdateSuccessMsg : ValueChangedMessage<object>
+        internal sealed class UpdateSuccessMsg : RequestMessage<DbViewModel>
         {
-            public UpdateSuccessMsg(object value) : base(value)
+            public UpdateSuccessMsg()
             {
             }
         }

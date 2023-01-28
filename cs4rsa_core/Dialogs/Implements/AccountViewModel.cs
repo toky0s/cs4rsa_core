@@ -101,7 +101,7 @@ namespace Cs4rsa.Dialogs.Implements
                 SessionId = string.Empty;
                 await _unitOfWork.CommitAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await _unitOfWork.RollbackAsync();
                 MessageBox.Show(
