@@ -1,4 +1,5 @@
-﻿using Cs4rsa.ViewModels;
+﻿using Cs4rsa.Constants;
+using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
 
@@ -20,7 +21,7 @@ namespace Cs4rsa.Views
             int teacherId = (DataContext as TeacherViewModel).SelectedTeacher.TeacherId;
             Clipboard.SetData(DataFormats.Text, teacherId);
             ISnackbarMessageQueue snackbar = (ISnackbarMessageQueue)((App)Application.Current).Container.GetService(typeof(ISnackbarMessageQueue));
-            snackbar.Enqueue($"Đã sao chép mã {teacherId} vào Clipboard");
+            snackbar.Enqueue(CredizText.TeacherMsg001(teacherId));
         }
     }
 }
