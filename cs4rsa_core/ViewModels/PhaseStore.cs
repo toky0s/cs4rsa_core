@@ -44,7 +44,7 @@ namespace Cs4rsa.ViewModels
         {
             _classGroupModels = new();
             BwpWeeks = new();
-            BwpValue = 0;
+            BwpValue = -1;
         }
 
         partial void OnBwpValueChanged(int value)
@@ -78,17 +78,6 @@ namespace Cs4rsa.ViewModels
         public void RemoveClassGroup(ClassGroupModel classGroupModel)
         {
             RemoveClassGroupBySubjectCode(classGroupModel.SubjectCode);
-            EvaluateWeek();
-            EvaluateBetweenPoint();
-
-        }
-
-        public void RemoveClassGroups(IEnumerable<ClassGroupModel> classGroupModels)
-        {
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
-            {
-                RemoveClassGroup(classGroupModel);
-            }
             EvaluateWeek();
             EvaluateBetweenPoint();
         }
@@ -128,10 +117,7 @@ namespace Cs4rsa.ViewModels
         {
             RemoveClassGroupBySubjectCode(subjectModel.SubjectCode);
             EvaluateWeek();
-            if (IsBwpOutOfWeekRange(BwpValue, BwpWeeks))
-            {
-                EvaluateBetweenPoint();
-            }
+            EvaluateBetweenPoint();
         }
 
         /// <summary>
@@ -148,19 +134,6 @@ namespace Cs4rsa.ViewModels
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Kiểm tra xem between point có nằm ngoài week range hay không?
-        /// </summary>
-        /// <param name="bwpIndex">Between Point Index</param>
-        /// <param name="weekRange">Week range chạy start tới end với step +1</param>
-        /// <returns>Trả về true nếu nằm ngoài, ngược lại trả về false.</returns>
-        private static bool IsBwpOutOfWeekRange(int bwtValue, IList<int> weekRange)
-        {
-            if (bwtValue == 0) return true;
-            if (weekRange.Count == 0) return false;
-            return !weekRange.Contains(bwtValue);
         }
 
         /// <summary>
@@ -187,14 +160,9 @@ namespace Cs4rsa.ViewModels
                 }
             }
 
-            if (Start == start && End == end) return;
-
             CleanBwpWeeks();
             Start = start;
             End = end;
-
-            // Không thực hiện Render nếu một trong hai điểm bằng 0
-            if (Start == 0 || End == 0) return;
             for (int i = start; i <= end; i++)
             {
                 BwpWeeks.Add(i);
