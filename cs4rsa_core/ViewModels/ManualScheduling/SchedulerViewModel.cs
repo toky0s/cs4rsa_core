@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Messages.States;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
@@ -145,6 +146,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Messenger.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
             {
                 CleanDays();
+                _phaseStore.RemoveAll();
             });
 
             Messenger.Register<ChoosedVmMsgs.UndoDelMsg>(this, (r, m) =>
@@ -175,6 +177,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 {
                     AddScheduleItem(placeConflict);
                 }
+            });
+
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            {
+                CleanDays();
+                _phaseStore.RemoveAll();
             });
             #endregion
 

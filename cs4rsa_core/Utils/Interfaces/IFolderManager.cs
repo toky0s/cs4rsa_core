@@ -20,5 +20,11 @@
 
         string CreateFolderIfNotExists(string path);
         void CreateFoldersAtStartUp();
+
+        /// <summary>
+        /// Xoá bỏ mọi file có trong folder.
+        /// </summary>
+        /// <param name="folderPath">Folder Path</param>
+        void DelAllInThisFolder(string folderPath);
     }
 }

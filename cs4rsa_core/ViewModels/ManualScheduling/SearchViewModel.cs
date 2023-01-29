@@ -132,6 +132,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             {
                 DisciplineKeywordModels.Clear();
                 Disciplines.Clear();
+                SubjectModels.Clear();
                 await ReloadDisciplineAndKeyWord();
             });
 

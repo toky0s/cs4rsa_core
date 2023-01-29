@@ -338,6 +338,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 SelectedClassGroup = null;
             });
 
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            {
+                ClassGroupModels.Clear();
+                Teachers.Clear();
+            });
+
             // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
             Messenger.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
             {

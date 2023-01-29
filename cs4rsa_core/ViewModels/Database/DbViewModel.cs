@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
-using Cs4rsa.Cs4rsaDatabase.Models;
+using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
@@ -15,13 +15,11 @@ using Cs4rsa.Utils.Interfaces;
 using MaterialDesignThemes.Wpf;
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+
 
 namespace Cs4rsa.ViewModels.Database
 {
@@ -39,85 +37,53 @@ namespace Cs4rsa.ViewModels.Database
         [ObservableProperty]
         private int _progressValue;
 
-        [ObservableProperty]
-        private Discipline _sltDiscipline;
-
-        public ObservableCollection<Discipline> Disciplines { get; set; }
-        public ObservableCollection<Keyword> Keywords { get; set; }
-
+        public RelayCommand RefreshCommand { get; set; }
         public RelayCommand StartUpdateCommand { get; set; }
-        public AsyncRelayCommand<int> ViewCacheCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
-        private readonly IOpenInBrowser _openInBrowser;
         private readonly DisciplineCrawler _disciplineCrawler;
+        private readonly IFolderManager _folderManager;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
 
         public DbViewModel(
             IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
             ISetting setting,
-            IOpenInBrowser openInBrowser,
             ISnackbarMessageQueue snackbarMessageQueue,
+            IFolderManager folderManager,
             DisciplineCrawler disciplineCrawler
         )
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _setting = setting;
-            _openInBrowser = openInBrowser;
             _disciplineCrawler = disciplineCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
-
-            Disciplines = new();
-            Keywords = new();
+            _folderManager = folderManager;
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
-            ViewCacheCommand = new(OnViewCache);
+            RefreshCommand = new RelayCommand(OnRefresh);
 
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                await Task.WhenAll(LoadInf(), LoadDisciplines());
+                await LoadInf();
             });
         }
 
-        partial void OnSltDisciplineChanged(Discipline value)
-        {
-            if (value != null)
-            {
-                Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    Keywords.Clear();
-                    foreach (Keyword kw in value.Keywords)
-                    {
-                        Keywords.Add(kw);
-                    }
-                });
-            }
-        }
 
         /// <summary>
         /// Khởi tạo infor màn hình.
         /// </summary>
         private async Task LoadInf()
         {
-            Keywords.Clear();
             ProgressValue = 0;
             CurrentSemesterInf = _courseCrawler.GetCurrentSemesterInfo();
             CurrentYearInf = _courseCrawler.GetCurrentYearInfo();
             SubjectQuantity = await _unitOfWork.Keywords.Count();
         }
 
-        private async Task LoadDisciplines()
-        {
-            IAsyncEnumerable<Discipline> disciplines = _unitOfWork.Disciplines.GetAll();
-            await foreach (Discipline dcl in disciplines)
-            {
-                Disciplines.Add(dcl);
-            }
-        }
 
         /// <summary>
         /// Cập nhật cơ sở dữ liệu môn học.
@@ -141,18 +107,11 @@ namespace Cs4rsa.ViewModels.Database
         }
 
         /// <summary>
-        /// Tạo và mở file Cache trong Browser.
+        /// Gửi Message Refesh tới những thằng fetch dữ liệu từ DB.
         /// </summary>
-        /// <param name="courseId">Course ID</param>
-        private async Task OnViewCache(int courseId)
+        private void OnRefresh()
         {
-            string filePath = CredizText.PathHtmlCacheFile(courseId);
-            if (!File.Exists(filePath))
-            {
-                Keyword kw = Keywords.Where(kw => kw.CourseId == courseId).First();
-                await File.WriteAllTextAsync(filePath, kw.Cache);
-            }
-            _openInBrowser.Open(filePath);
+            Messenger.Send(new DbVmMsgs.RefreshMsg());
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -180,8 +139,10 @@ namespace Cs4rsa.ViewModels.Database
                     _setting.CurrentSetting.CurrentYear = _courseCrawler.GetCurrentYearInfo();
                     _setting.CurrentSetting.CurrentSemester = _courseCrawler.GetCurrentSemesterInfo();
                     _setting.Save();
+                    _folderManager.DelAllInThisFolder(Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES));
 
                     Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg());
+                    Messenger.Send(new DbVmMsgs.RefreshMsg());
                     string msg = CredizText.DbMsg001((int)e.Result);
                     _snackbarMessageQueue.Enqueue(msg);
                 }
@@ -189,7 +150,7 @@ namespace Cs4rsa.ViewModels.Database
 
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
-                await Task.WhenAll(LoadInf(), LoadDisciplines());
+                await LoadInf();
             });
         }
 

@@ -150,6 +150,7 @@ namespace Cs4rsa
             services.AddSingleton<ProgramTreeViewModel>();
             services.AddSingleton<ResultViewModel>();
             services.AddSingleton<DbViewModel>();
+            services.AddSingleton<DclTabViewModel>();
 
             return services.BuildServiceProvider();
         }

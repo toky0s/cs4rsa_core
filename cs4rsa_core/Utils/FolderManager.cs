@@ -25,5 +25,14 @@ namespace Cs4rsa.Utils
             }
             return path;
         }
+
+        public void DelAllInThisFolder(string folderPath)
+        {
+            string[] filePaths = Directory.GetFiles(folderPath);
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                File.Delete(filePaths[i]);
+            }
+        }
     }
 }
