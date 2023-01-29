@@ -567,31 +567,21 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 }
                 else
                 {
-                    if (subject.IsStarted)
+                    SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                    psm.AddCgms(sm.ClassGroupModels);
+                    if (_isUseFilter)
                     {
-                        SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
-                        psm.AddCgms(sm.ClassGroupModels);
-                        if (_isUseFilter)
-                        {
-                            await psm.ApplyFilter();
-                        }
-                        else
-                        {
-                            psm.ResetFilter();
-                        }
-
-                        psm.IsStarted = true;
-                        psm.IsDownloaded = true;
-
-                        ReGen();
+                        await psm.ApplyFilter();
                     }
                     else
                     {
-                        psm.IsStarted = false;
-                        psm.IsDownloaded = false;
-                        psm.Status = "Môn học chưa bắt đầu";
+                        psm.ResetFilter();
                     }
 
+                    psm.IsStarted = true;
+                    psm.IsDownloaded = true;
+
+                    ReGen();
                     psm.IsDownloading = false;
                     psm.Exists = true;
                 }

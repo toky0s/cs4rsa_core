@@ -45,14 +45,13 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         public IEnumerable<string> ParallelSubject { get; }
         public string Desciption { get; }
         public readonly int CourseId;
-        public readonly bool IsStarted;
 
         private Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
                         ITeacherCrawler teacherCrawler,
-                        HtmlWeb htmlWeb, bool isStarted, bool withTeacher)
+                        HtmlWeb htmlWeb, bool withTeacher)
         {
             _teacherCrawler = teacherCrawler;
             _htmlWeb = htmlWeb;
@@ -74,7 +73,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             ParallelSubject = SubjectSpliter(parallelSubject);
             Desciption = description;
             CourseId = courseId;
-            IsStarted = isStarted;
         }
 
         /// <summary>
@@ -397,7 +395,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         /// <param name="description">Mô tả môn học</param>
         /// <param name="rawSoup">Chuỗi phân tích HTML gốc</param>
         /// <param name="courseId">Course ID</param>
-        /// <param name="isStarted">Lớp học đã bắt đầu hay chưa</param>
         /// <param name="withTeacher">Có cào thêm thông tin giảng viên hay không</param>
         /// <returns>Task Subject</returns>
         public static Task<Subject> CreateAsync(
@@ -410,7 +407,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, teacherCrawler, htmlWeb, isStarted, withTeacher);
+                rawSoup, courseId, teacherCrawler, htmlWeb, withTeacher);
             return ret.InitializeAsync();
         }
     }
