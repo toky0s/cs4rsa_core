@@ -17,6 +17,15 @@
   mc:Ignorable="d">
   <UserControl.Resources>
     <converter:Base64ImageConverter x:Key="Base64ImageConverter" />
+    <Style BasedOn="{StaticResource {x:Type md:SnackbarMessage}}" TargetType="{x:Type md:SnackbarMessage}">
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    <Style
+      x:Key="Style_Cs4rsa_SnackbarActionButton"
+      BasedOn="{StaticResource MaterialDesignSnackbarActionButton}"
+      TargetType="Button">
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}" />
+    </Style>
   </UserControl.Resources>
   <md:DialogHost
     CloseOnClickAway="{Binding IsCloseOnClickAway}"
@@ -128,6 +137,7 @@
       <md:Snackbar
         x:Name="MySnackbar"
         HorizontalAlignment="Center"
+        ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
         MessageQueue="{Binding SnackbarMessageQueue}">
         <md:SnackbarMessage HorizontalContentAlignment="Center" />
       </md:Snackbar>

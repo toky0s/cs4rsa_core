@@ -556,7 +556,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             Subject subject;
             try
             {
-                subject = await _subjectCrawler.Crawl(int.Parse(psm.CourseId), true, false);
+                subject = await _subjectCrawler.Crawl(int.Parse(psm.CourseId), true, true);
 
                 if (subject == null)
                 {

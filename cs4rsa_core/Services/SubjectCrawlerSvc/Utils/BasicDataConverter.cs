@@ -36,25 +36,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
             return Place.ONLINE;
         }
 
-        public static Phase ToPhase(string phase)
-        {
-            if (phase == "both") return Phase.All;
-            if (phase == "first") return Phase.First;
-            if (phase == "second") return Phase.Second;
-            return Phase.Non;
-        }
-
-        public static DayOfWeek ToDayOfWeek(string day)
-        {
-            if (day.Contains('2') || day.Contains("Hai") || day.Contains("hai")) return DayOfWeek.Monday;
-            if (day.Contains('3') || day.Contains("Ba") || day.Contains("ba")) return DayOfWeek.Tuesday;
-            if (day.Contains('4') || day.Contains("Tư") || day.Contains("tư")) return DayOfWeek.Wednesday;
-            if (day.Contains('5') || day.Contains("Năm") || day.Contains("năm")) return DayOfWeek.Thursday;
-            if (day.Contains('6') || day.Contains("Sáu") || day.Contains("sáu")) return DayOfWeek.Friday;
-            if (day.Contains('7') || day.Contains("Bảy") || day.Contains("bảy")) return DayOfWeek.Saturday;
-            return DayOfWeek.Sunday;
-        }
-
         public static StudyUnitType ToStudyUnitType(string text)
         {
             return text switch

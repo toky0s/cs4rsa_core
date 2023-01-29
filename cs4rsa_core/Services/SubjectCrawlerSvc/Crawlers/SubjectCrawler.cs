@@ -110,7 +110,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
 
                 string rawSoup = htmlDocument.DocumentNode.OuterHtml;
-                bool isStarted = !rawSoup.Contains("Lớp Học Chưa Bắt Đầu");
                 return await Subject.CreateAsync(
                     name,
                     subjectCode,
@@ -124,8 +123,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                     rawSoup,
                     courseId,
                     _teacherCrawler,
+                    _unitOfWork,
                     _htmlWeb,
-                    isStarted,
                     withTeacher
                 );
             }
