@@ -1,4 +1,6 @@
 ﻿using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
+using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
@@ -18,6 +20,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
     public class Subject
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ITeacherCrawler _teacherCrawler;
         private readonly HtmlWeb _htmlWeb;
 
@@ -51,9 +54,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, int courseId,
                         ITeacherCrawler teacherCrawler,
+                        IUnitOfWork unitOfWork,
                         HtmlWeb htmlWeb, bool withTeacher)
         {
             _teacherCrawler = teacherCrawler;
+            _unitOfWork = unitOfWork;
             _htmlWeb = htmlWeb;
 
             _studyUnit = studyUnit;
@@ -201,10 +206,19 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             if (_withTeacher)
             {
                 string teacherName = GetTeacherName(trTagClassLop);
-                TeacherModel teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
+                IEnumerable<Teacher> dbTeachers = _unitOfWork.Teachers.GetTeacherByNameOrId(teacherName);
+                TeacherModel teacherModel = null;
+                if (dbTeachers.Any())
+                {
+                    teacherModel = new(dbTeachers.First());
+                }
+                else if(!string.IsNullOrEmpty(teacherName))
+                {
+                    teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
+                }
 
                 // 1. Add tmp teachers
-                if (teacherName != string.Empty)
+                if (!string.IsNullOrEmpty(teacherName))
                 {
                     tempTeachers.Add(teacherName);
                 }
@@ -348,10 +362,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             string teacherDetailPageURL = await GetTeacherInfoPageURL(url);
             TeacherModel teacherModel = await _teacherCrawler.Crawl(teacherDetailPageURL, CourseId, false);
-            //if (teacherModel != null && !_teachers.Contains(teacherModel))
-            //{
-            //    _teachers.Add(teacherModel);
-            //}
             return teacherModel;
         }
 
@@ -402,12 +412,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             string studyUnitType, string studyType, string semester,
             string mustStudySubject, string parallelSubject,
             string description, string rawSoup, int courseId,
-            ITeacherCrawler teacherCrawler,
-            HtmlWeb htmlWeb, bool isStarted, bool withTeacher)
+            ITeacherCrawler teacherCrawler, IUnitOfWork unitOfWork,
+            HtmlWeb htmlWeb, bool withTeacher)
         {
             Subject ret = new(name, subjectCode, studyUnit, studyUnitType, studyType,
                 semester, mustStudySubject, parallelSubject, description,
-                rawSoup, courseId, teacherCrawler, htmlWeb, withTeacher);
+                rawSoup, courseId, teacherCrawler, unitOfWork, htmlWeb, withTeacher);
             return ret.InitializeAsync();
         }
     }

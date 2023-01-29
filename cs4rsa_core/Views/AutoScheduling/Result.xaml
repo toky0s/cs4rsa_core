@@ -3,11 +3,11 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:dev_md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:dev_vml="clr-namespace:Cs4rsa.ViewModelLocator"
   xmlns:local_view="clr-namespace:Cs4rsa.Views.AutoScheduling"
   xmlns:local_vm="clr-namespace:Cs4rsa.ViewModels.AutoScheduling"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   d:DataContext="{d:DesignInstance Type=local_vm:ResultViewModel}"
   dev_vml:ViewModelLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
@@ -20,7 +20,7 @@
     </Grid.RowDefinitions>
     <TextBlock
       Grid.Row="0"
-      Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+      Style="{StaticResource MaterialDesignHeadline6TextBlock}"
       Text="{Binding CombinationModels.Count, Mode=OneWay, StringFormat=Cách sắp xếp ({0})}" />
 
     <ScrollViewer Grid.Row="1">
@@ -39,71 +39,58 @@
         </ItemsControl.Resources>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <dev_md:Card Margin="5,5,5,0" Padding="5">
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition />
-                  <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                  <ItemsControl ItemsSource="{Binding ClassGroupModels}">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <WrapPanel />
-                      </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <Grid Margin="0,0,5,5">
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition />
-                          </Grid.ColumnDefinitions>
-                          <Border
-                            Grid.Column="0"
-                            Margin="0,0,3,0"
-                            Background="{Binding Color}"
-                            CornerRadius="4"
-                            IsEnabled="False" />
-                          <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                  <TextBlock Text="Không thể mô phỏng">
-                    <TextBlock.Style>
-                      <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
-                        <Setter Property="Visibility" Value="Hidden" />
-                        <Style.Triggers>
-                          <DataTrigger Binding="{Binding IsCanShow}" Value="False">
-                            <Setter Property="Visibility" Value="Visible" />
-                          </DataTrigger>
-                        </Style.Triggers>
-                      </Style>
-                    </TextBlock.Style>
-                  </TextBlock>
-                  <TextBlock Text="Phát hiện xung đột">
-                    <TextBlock.Style>
-                      <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
-                        <Setter Property="Visibility" Value="Hidden" />
-                        <Style.Triggers>
-                          <DataTrigger Binding="{Binding IsConflict}" Value="True">
-                            <Setter Property="Visibility" Value="Visible" />
-                          </DataTrigger>
-                        </Style.Triggers>
-                      </Style>
-                    </TextBlock.Style>
-                  </TextBlock>
-                </StackPanel>
-                <StackPanel Grid.Column="1">
-                  <Button
-                    Content="{dev_md:PackIcon Kind=EyeOutline,
-                                              Size=24}"
-                    Style="{StaticResource MaterialDesignIconButton}"
-                    ToolTip="Xem" />
-                </StackPanel>
-              </Grid>
-            </dev_md:Card>
+            <md:Card Margin="5,5,5,0" Padding="5">
+              <StackPanel Grid.Column="0">
+                <ItemsControl ItemsSource="{Binding ClassGroupModels}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid Margin="0,0,5,5">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="10" />
+                          <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                          Grid.Column="0"
+                          Margin="0,0,3,0"
+                          Background="{Binding Color}"
+                          CornerRadius="4"
+                          IsEnabled="False" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="Không thể mô phỏng">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
+                      <Setter Property="Visibility" Value="Collapsed" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsCanShow}" Value="False">
+                          <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="Phát hiện xung đột">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
+                      <Setter Property="Visibility" Value="Collapsed" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsConflict}" Value="True">
+                          <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </StackPanel>
+            </md:Card>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
@@ -111,20 +98,27 @@
 
     <!--  Sử dụng Batch  -->
     <TextBox
+      x:Name="tbBatch"
       Grid.Row="2"
       Margin="0,0,0,5"
-      dev_md:HintAssist.Hint="Batch"
+      md:HintAssist.Hint="Batch"
       MouseWheel="TextBox_MouseWheel"
       Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-      Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}" />
+      Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}"
+      TextChanged="TextBox_TextChanged" />
 
     <!--  Nút chức năng  -->
     <StackPanel Grid.Row="3" Orientation="Horizontal">
       <Button
         Margin="0,0,5,0"
         Command="{Binding GenCommand}"
-        Content="4 - XUẤT BATCH" />
-      <Button Command="{Binding DelCommand}" Content="LÀM MỚI" />
+        Content="4 - XUẤT BATCH"
+        IsEnabled="{Binding ElementName=tbBatch, Path=Text.Length, Converter={StaticResource NotZeroConverter}, UpdateSourceTrigger=PropertyChanged}" />
+      <Button
+        Margin="0,0,5,0"
+        Command="{Binding DelCommand}"
+        Content="TẠO LẠI" />
+      <Button Command="{Binding DelCommand}" Content="LƯU KHO" />
     </StackPanel>
   </Grid>
 </UserControl>

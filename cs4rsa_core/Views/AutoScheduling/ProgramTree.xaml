@@ -79,7 +79,6 @@
             </Style>
           </Button.Style>
         </Button>
-
       </Grid>
 
       <md:Transitioner

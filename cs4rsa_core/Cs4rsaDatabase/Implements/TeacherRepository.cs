@@ -19,8 +19,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
             return _context.Teachers
                     .AsEnumerable()
-                    .Where(teacher => teacher.Name.ToLower().Contains(nameOrId)
-                        || teacher.TeacherId.ToString().Contains(nameOrId));
+                    .Where(teacher => 
+                        (
+                             teacher.Name.ToLower().Contains(nameOrId)
+                          || teacher.TeacherId.ToString().Contains(nameOrId)
+                        )
+                        && !string.IsNullOrEmpty(nameOrId));
         }
 
         public IAsyncEnumerable<Teacher> GetTeachersAsync(int page, int limit)
