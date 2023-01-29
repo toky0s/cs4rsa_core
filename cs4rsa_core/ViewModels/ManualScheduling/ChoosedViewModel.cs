@@ -118,6 +118,13 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             {
                 UpdateConflicts();
             });
+
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            {
+                ClassGroupModels.Clear();
+                ConflictModels.Clear();
+                PlaceConflictFinderModels.Clear();
+            });
             #endregion
 
             SaveCommand = new RelayCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);

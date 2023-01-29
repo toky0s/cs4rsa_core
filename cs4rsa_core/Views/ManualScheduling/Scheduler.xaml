@@ -51,7 +51,18 @@
     </StackPanel>
     <TextBlock Grid.Row="1">
       <Run Text="{Binding PhaseStore.Start, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
-      <Run Text="{Binding PhaseStore.BwpValue, StringFormat={}{0})}" />
+      <Run>
+        <Run.Style>
+          <Style TargetType="Run">
+            <Setter Property="Text" Value="{Binding PhaseStore.BwpValue, StringFormat={}{0})}" />
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding PhaseStore.BwpValue}" Value="-1">
+                <Setter Property="Text" Value="0)" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Run.Style>
+      </Run>
     </TextBlock>
     <Grid Grid.Row="2">
       <Grid.RowDefinitions>

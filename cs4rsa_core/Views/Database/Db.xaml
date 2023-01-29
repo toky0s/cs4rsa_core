@@ -8,28 +8,19 @@
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:vm="clr-namespace:Cs4rsa.ViewModels.Database"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-  Padding="5"
   d:DataContext="{d:DesignInstance Type=vm:DbViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="0.3*" />
-      <ColumnDefinition Width="Auto" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
-    <Grid.RowDefinitions>
-      <RowDefinition />
-      <RowDefinition />
-    </Grid.RowDefinitions>
-    <ScrollViewer
-      Grid.Row="0"
-      Grid.RowSpan="2"
-      Grid.Column="0"
-      VerticalScrollBarVisibility="Auto">
-      <StackPanel>
+    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="5">
+        <!--  Thông tin học kỳ  -->
         <Border
-          Margin="0,0,5,5"
+          Margin="0,0,0,5"
           Padding="5"
           BorderBrush="LightGray"
           BorderThickness="1"
@@ -43,8 +34,9 @@
           </StackPanel>
         </Border>
 
+        <!--  Số lượng môn học  -->
         <Border
-          Margin="0,0,5,5"
+          Margin="0,0,0,5"
           Padding="5"
           BorderBrush="LightGray"
           BorderThickness="1"
@@ -58,8 +50,9 @@
           </StackPanel>
         </Border>
 
+        <!--  Cảnh báo cập nhật  -->
         <Border
-          Margin="0,0,5,5"
+          Margin="0,0,0,5"
           Padding="5"
           BorderBrush="LightGray"
           BorderThickness="1"
@@ -72,7 +65,8 @@
               Text="Cảnh báo cập nhật" />
             <TextBlock TextAlignment="Justify" TextWrapping="Wrap">
               <TextBlock.Text>
-                Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian.
+                Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian. 
+                Đồng thời dữ liệu xếp lịch hiện tại ở màn hình Xếp lịch thủ công sẽ bị xoá.
                 Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật.
               </TextBlock.Text>
             </TextBlock>
@@ -88,72 +82,15 @@
               Style="{StaticResource MaterialDesignFlatButton}" />
           </StackPanel>
         </Border>
+
+        <Button Command="{Binding RefreshCommand}" Content="LÀM MỚI" />
       </StackPanel>
     </ScrollViewer>
 
-    <!--  Disciplines  -->
-    <DataGrid
-      Grid.Row="0"
-      Grid.Column="1"
-      AutoGenerateColumns="False"
-      CanUserAddRows="False"
-      CanUserDeleteRows="False"
-      CanUserReorderColumns="False"
-      ItemsSource="{Binding Disciplines}"
-      SelectedItem="{Binding SltDiscipline}">
-      <DataGrid.Columns>
-        <DataGridTextColumn
-          Binding="{Binding DisciplineId}"
-          Header="ID"
-          IsReadOnly="True" />
-        <DataGridTextColumn
-          Binding="{Binding Name}"
-          Header="Mã"
-          IsReadOnly="True" />
-      </DataGrid.Columns>
-    </DataGrid>
-
-    <!--  Keywords  -->
-    <DataGrid
-      Grid.Row="0"
-      Grid.Column="2"
-      AutoGenerateColumns="False"
-      CanUserAddRows="False"
-      CanUserDeleteRows="False"
-      CanUserReorderColumns="False"
-      ItemsSource="{Binding Keywords}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Mã môn" IsReadOnly="True">
-          <DataGridTextColumn.Binding>
-            <MultiBinding StringFormat="{}{0} {1}">
-              <Binding Path="Discipline.Name" />
-              <Binding Path="Keyword1" />
-            </MultiBinding>
-          </DataGridTextColumn.Binding>
-        </DataGridTextColumn>
-        <DataGridTextColumn
-          Binding="{Binding SubjectName}"
-          Header="Tên môn"
-          IsReadOnly="True" />
-        <DataGridTemplateColumn Header="Màu sắc" IsReadOnly="True">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate>
-              <Border Background="{Binding Color}" CornerRadius="4" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTemplateColumn Header="Cache" IsReadOnly="True">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate>
-              <Button
-                Click="BtnViewCache_Clicked"
-                Content="XEM"
-                Style="{StaticResource MaterialDesignFlatButton}"
-                Visibility="{Binding Cache, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-      </DataGrid.Columns>
-    </DataGrid>
+    <TabControl Grid.Column="1">
+      <TabItem Header="MÔN HỌC">
+        <local:DclTab />
+      </TabItem>
+    </TabControl>
   </Grid>
 </UserControl>
