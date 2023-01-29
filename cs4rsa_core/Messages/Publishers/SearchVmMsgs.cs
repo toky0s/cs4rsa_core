@@ -4,7 +4,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using static Cs4rsa.Messages.Values.SearchValues;
 
@@ -70,7 +69,7 @@ namespace Cs4rsa.Messages.Publishers
         {
             public SelectCgmsMsg(IEnumerable<ClassGroupModel> value) : base(value)
             {
-                Trace.WriteLine("internal sealed class SelectCgmsMsg : ValueChangedMessage<IEnumerable<ClassGroupModel>>");
+
             }
         }
 

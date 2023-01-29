@@ -325,7 +325,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                     ClassGroupModels.Add(classGroupModel);
             }
             _phaseStore.AddClassGroupModel(classGroupModel);
-            Messenger.Send(new UndoDelMsg(classGroupModel));
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();

@@ -50,19 +50,23 @@
       </TextBlock>
     </StackPanel>
     <TextBlock Grid.Row="1">
-      <Run Text="{Binding PhaseStore.Start, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần}" />
-      <Run>
-        <Run.Style>
-          <Style TargetType="Run">
-            <Setter Property="Text" Value="{Binding PhaseStore.BwpValue, StringFormat={}{0})}" />
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding PhaseStore.BwpValue}" Value="-1">
-                <Setter Property="Text" Value="0)" />
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </Run.Style>
-      </Run>
+      <TextBlock.Style>
+        <Style BasedOn="{StaticResource MaterialDesignTextBlock}" TargetType="TextBlock">
+          <Setter Property="Text">
+            <Setter.Value>
+              <MultiBinding StringFormat="Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần {1})">
+                <Binding Path="PhaseStore.Start" />
+                <Binding Path="PhaseStore.BwpValue" />
+              </MultiBinding>
+            </Setter.Value>
+          </Setter>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding PhaseStore.BwpValue}" Value="-1">
+              <Setter Property="Text" Value="{Binding PhaseStore.Start, StringFormat=Giai đoạn 1 (bắt đầu từ tuần {0} đến tuần 0)}" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </TextBlock.Style>
     </TextBlock>
     <Grid Grid.Row="2">
       <Grid.RowDefinitions>
@@ -172,18 +176,12 @@
               </ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                  <materialDesign:TransitioningContent>
-                    <materialDesign:TransitioningContent.OpeningEffects>
-                      <materialDesign:TransitionEffect Kind="ExpandIn" />
-                      <materialDesign:TransitionEffect Kind="FadeIn" />
-                    </materialDesign:TransitioningContent.OpeningEffects>
-                    <control:ScheduleBlock
-                      BlockColor="{Binding Background}"
-                      BlockName="{Binding Content}"
-                      Description="{Binding Description}"
-                      ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                      ScheduleTableItemType="{Binding ScheduleTableItemType}" />
-                  </materialDesign:TransitioningContent>
+                  <control:ScheduleBlock
+                    BlockColor="{Binding Background}"
+                    BlockName="{Binding Content}"
+                    Description="{Binding Description}"
+                    ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
+                    ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -192,8 +190,21 @@
       </ItemsControl>
     </Grid>
     <TextBlock Grid.Row="3">
-      <Run Text="{Binding PhaseStore.BwpValue, Converter={StaticResource MathAddConverter}, ConverterParameter=1, StringFormat=Giai đoạn 2 (bắt đầu từ tuần {0} đến tuần}" />
-      <Run Text="{Binding PhaseStore.End, StringFormat={}{0})}" />
+      <TextBlock.Style>
+        <Style BasedOn="{StaticResource MaterialDesignTextBlock}" TargetType="TextBlock">
+          <Setter Property="Text">
+            <Setter.Value>
+              <MultiBinding StringFormat="Giai đoạn 2 (bắt đầu từ tuần {0} đến tuần {1})">
+                <Binding
+                  Converter="{StaticResource MathAddConverter}"
+                  ConverterParameter="1"
+                  Path="PhaseStore.BwpValue" />
+                <Binding Path="PhaseStore.End" />
+              </MultiBinding>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </TextBlock.Style>
     </TextBlock>
     <Grid Grid.Row="4">
       <Grid.RowDefinitions>
@@ -303,18 +314,12 @@
               </ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                  <materialDesign:TransitioningContent>
-                    <materialDesign:TransitioningContent.OpeningEffects>
-                      <materialDesign:TransitionEffect Kind="ExpandIn" />
-                      <materialDesign:TransitionEffect Kind="FadeIn" />
-                    </materialDesign:TransitioningContent.OpeningEffects>
-                    <control:ScheduleBlock
-                      BlockColor="{Binding Background}"
-                      BlockName="{Binding Content}"
-                      Description="{Binding Description}"
-                      ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
-                      ScheduleTableItemType="{Binding ScheduleTableItemType}" />
-                  </materialDesign:TransitioningContent>
+                  <control:ScheduleBlock
+                    BlockColor="{Binding Background}"
+                    BlockName="{Binding Content}"
+                    Description="{Binding Description}"
+                    ScheduleBlockClicked="ScheduleBlock_ScheduleBlockClicked"
+                    ScheduleTableItemType="{Binding ScheduleTableItemType}" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
