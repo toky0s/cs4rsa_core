@@ -212,7 +212,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 {
                     teacherModel = new(dbTeachers.First());
                 }
-                else if(!string.IsNullOrEmpty(teacherName))
+                else if (!string.IsNullOrEmpty(teacherName))
                 {
                     teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
                 }

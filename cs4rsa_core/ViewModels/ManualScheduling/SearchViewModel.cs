@@ -50,6 +50,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand DetailCommand { get; set; }
+        public RelayCommand<int> GotoViewCommand { get; set; }
         #endregion
 
         #region Properties
@@ -58,6 +59,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         public ObservableCollection<Discipline> Disciplines { get; set; }
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
+
+        /// <summary>
+        /// Combination Models which was saved in the Store.
+        /// </summary>
+        public ObservableCollection<CombinationModel> ComModels { get; set; }
+
+        [ObservableProperty]
+        private CombinationModel _sltCombi;
 
         [ObservableProperty]
         private Discipline _selectedDiscipline;
@@ -82,6 +91,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         [ObservableProperty]
         private bool _isUseCache;
+
+        /// <summary>
+        /// Index hiện tại của View Search
+        /// 0: Search
+        /// 1: Store
+        /// </summary>
+        [ObservableProperty]
+        private int _crrScrIdx;
         #endregion
 
         #region Services
@@ -147,6 +164,26 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 }
             });
 
+            Messenger.Register<AutoVmMsgs.SaveStoreMsg>(this, (r, m) =>
+            {
+                _phaseStore.RemoveAll();
+                SubjectModels.Clear();
+                ComModels.Clear();
+
+                Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
+
+                AddCommand.NotifyCanExecuteChanged();
+                DeleteAllCommand.NotifyCanExecuteChanged();
+
+                UpdateCreditTotal();
+                UpdateSubjectAmount();
+
+                foreach (CombinationModel item in m.Value)
+                {
+                    ComModels.Add(item);
+                }
+            });
+
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 await LoadDiscipline();
@@ -158,6 +195,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Disciplines = new();
             FullMatchSearchingKeywords = new();
             SavedSchedules = new();
+            ComModels = new();
             SearchText = string.Empty;
             IsUseCache = true;
 
@@ -173,12 +211,41 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteCommand = new RelayCommand(OnDelete, () => _selectedSubjectModel != null);
             ImportDialogCommand = new(OnOpenImportDialog);
             GotoCourseCommand = new RelayCommand(OnGotoCourse, () => true);
+            GotoViewCommand = new((idx) => CrrScrIdx = idx);
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new RelayCommand(() =>
             {
                 (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
                 OpenDialog(_showDetailsSubjectUC);
             });
+        }
+
+        partial void OnSltCombiChanged(CombinationModel value)
+        {
+            // TODO: Handle Special Subject sau khi đi nghĩa vụ về
+            if (value != null)
+            {
+                IEnumerable<SubjectModel> subjectModels = value.SubjecModels;
+                SubjectModels.Clear();
+                foreach (SubjectModel sjm in subjectModels)
+                {
+                    SubjectModels.Add(sjm);
+                }
+
+                // Đánh giá Phase Store xác định tuần ngăn cách
+                _phaseStore.AddClassGroupModels(value.ClassGroupModels);
+
+                foreach (ClassGroupModel cgm in value.ClassGroupModels)
+                {
+                    _phaseStore.AddClassGroupModel(cgm);
+                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(cgm));
+                }
+
+                SelectedSubjectModel = SubjectModels.FirstOrDefault();
+
+                AddCommand.NotifyCanExecuteChanged();
+                DeleteAllCommand.NotifyCanExecuteChanged();
+            }
         }
 
         partial void OnSelectedSubjectModelChanged(SubjectModel value)

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.Constants;
 using Cs4rsa.ViewModels;
+using Cs4rsa.Views;
 
 using System;
 using System.Windows;
@@ -30,6 +31,15 @@ namespace Cs4rsa.BaseClasses
         protected virtual void CloseDialog()
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
+        }
+
+        /// <summary>
+        /// Chuyển tới màn hình chức năng.
+        /// </summary>
+        /// <param name="scrIdx">Screen Index</param>
+        protected virtual void GotoScreen(int scrIdx)
+        {
+            (Application.Current.MainWindow as MainWindow).Goto(scrIdx);
         }
 
         /// <summary>

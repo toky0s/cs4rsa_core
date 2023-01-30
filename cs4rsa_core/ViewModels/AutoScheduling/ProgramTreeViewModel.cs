@@ -567,7 +567,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 }
                 else
                 {
+                    /// TODO: xem xét trường hợp môn học chưa bắt đầu
                     SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                    SubjectModels.Add(sm);
                     psm.AddCgms(sm.ClassGroupModels);
                     if (_isUseFilter)
                     {
@@ -580,10 +582,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
                     psm.IsStarted = true;
                     psm.IsDownloaded = true;
-
-                    ReGen();
                     psm.IsDownloading = false;
                     psm.Exists = true;
+                    ReGen();
                 }
             }
             catch (Exception e)
@@ -635,7 +636,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 cbms.Add(combinationModel);
                 _genIndex++;
             }
-            _snackbarMessageQueue.Enqueue(VMConstants.SNB_CAL_DONE);
             return cbms;
         }
 

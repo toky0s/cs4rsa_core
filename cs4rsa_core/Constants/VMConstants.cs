@@ -67,9 +67,10 @@ namespace Cs4rsa.Constants
         public static readonly string SNB_UNSELECT_ALL = "Đã bỏ chọn tất cả";
         public static readonly string SNB_DELETE_ALL = "Đã xoá tất cả";
         public static readonly string SNB_INVALID_SHARESTRING = "ShareString có vấn đề 🤔";
-        public static readonly string SNB_CAL_DONE = "Đã tính toán xong";
         public static readonly string SNB_ALREADY_DOWNLOADED = "Đã được tải xuống";
         public static readonly string SNB_COPY_SUCCESS = "Đã sao chép";
+        public static readonly string SNB_SAVE_TO_STORE = "Đã lưu vào kho";
+        public static readonly string SNB_ALL_GEN = "Đã gen hết";
 
         // NF: Not Found
         public static readonly string SNB_NF_REGISTER_CODE = "Lớp này không có mã đăng ký";
@@ -77,6 +78,7 @@ namespace Cs4rsa.Constants
 
         #region Snackbar Actions
         public static readonly string SNBAC_RESTORE = "HOÀN TÁC";
+        public static readonly string SNBAC_GOTO_STORE = "TỚI KHO";
         #endregion
 
         #region SePaRaTors
