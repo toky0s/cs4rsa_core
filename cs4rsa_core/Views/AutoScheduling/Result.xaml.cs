@@ -1,8 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
-using static System.Net.Mime.MediaTypeNames;
-
 namespace Cs4rsa.Views.AutoScheduling
 {
     public partial class Result : UserControl

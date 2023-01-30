@@ -95,7 +95,7 @@ namespace Cs4rsa.Views
         }
 
         #region Util functions
-        private void Goto(int index)
+        public void Goto(int index)
         {
             PackIcon icon;
             Button button;

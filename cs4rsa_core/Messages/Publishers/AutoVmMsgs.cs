@@ -36,5 +36,16 @@ namespace Cs4rsa.Messages.Publishers
 
             }
         }
+
+        /// <summary>
+        /// Lưu bộ sắp xếp vào kho
+        /// </summary>
+        internal sealed class SaveStoreMsg : ValueChangedMessage<IEnumerable<CombinationModel>>
+        {
+            public SaveStoreMsg(IEnumerable<CombinationModel> value) : base(value)
+            {
+
+            }
+        }
     }
 }

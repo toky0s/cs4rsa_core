@@ -4,8 +4,10 @@ using CommunityToolkit.Mvvm.Messaging;
 
 
 using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Models;
+using Cs4rsa.ViewModels.ManualScheduling;
 
 using MaterialDesignThemes.Wpf;
 
@@ -29,6 +31,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         public RelayCommand GenCommand { get; set; }
         public RelayCommand DelCommand { get; set; }
+        public RelayCommand SaveStoreCommand { get; set; }
 
         private readonly ISnackbarMessageQueue _snbMsgQueue;
         public ResultViewModel(ISnackbarMessageQueue snbMsgQueue)
@@ -47,6 +50,11 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                     && _combiModels.Any()
                     && !_isEnd
             );
+            SaveStoreCommand = new(
+                OnSaveStore,
+                () => _combiModels != null
+                   && _combiModels.Any()
+            );
 
             Messenger.Register<AutoVmMsgs.AddCombinationsMsg>(this, (r, m) =>
             {
@@ -55,6 +63,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 CombinationModels.Clear();
                 GenCommand.NotifyCanExecuteChanged();
                 DelCommand.NotifyCanExecuteChanged();
+                SaveStoreCommand.NotifyCanExecuteChanged();
             });
         }
 
@@ -87,7 +96,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             if (_isEnd)
             {
-                _snbMsgQueue.Enqueue("Đã gen hết");
+                _snbMsgQueue.Enqueue(VMConstants.SNB_ALL_GEN);
                 GenCommand.NotifyCanExecuteChanged();
             }
         }
@@ -100,6 +109,19 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             GenCommand.NotifyCanExecuteChanged();
             DelCommand.NotifyCanExecuteChanged();
+        }
+
+        private void OnSaveStore()
+        {
+            Messenger.Send(new AutoVmMsgs.SaveStoreMsg(CombinationModels));
+            _snbMsgQueue.Enqueue(
+                VMConstants.SNB_SAVE_TO_STORE,
+                VMConstants.SNBAC_GOTO_STORE,
+                () =>
+                {
+                    GotoScreen(1);
+                    GetViewModel<SearchViewModel>().GotoViewCommand.Execute(1);
+                });
         }
     }
 }
