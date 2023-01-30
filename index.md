@@ -61,6 +61,25 @@ Sau khi xếp xong lịch ưng ý, nhấn nút Lưu, nhập tên rồi Lưu.
 ## Đặc biệt lưu ý các Special Subject
 🍣 Mỗi lớp của các môn kiểu này sẽ có 2 mã đăng ký trở lên.
 
+# Xếp lịch tự động
+Giống như xếp lịch thủ công, nhưng nó tự động.
+
+1. Thêm tài khoản DTU của bạn bằng cách nhấn vào cái nút mặt người.
+1.1. Đăng nhập DTU và dùng extension [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg)
+để lấy phần ASP.NET Session ID sau khi đăng nhập.
+1.2. Nhấn tìm kiếm và chờ nó tìm kiếm xong (hơi lâu - nhưng mà đáng)
+2. Nhấn nút tải chương trình học.
+3. Chọn các môn chưa học bằng cách nhấn các nút mũi tên trên môn tương ứng.
+4. Làm theo thứ tự các nút 
+```
+1. Tải 
+2. Tính 
+3. Tạo 
+4. Xuất Batch 
+-> Lưu Kho
+```
+5. Đi tới màn hình xếp lịch thủ công, chọn nút KHO. Chọn bộ lịch mong muốn.
+
 ### Hỏi đáp, đề xuất và sửa lỗi
 1. 🍕 Mọi thắc mắc liên hệ mình qua [Facebook](https://www.facebook.com/truongaxin/).
 2. 📁 Hoặc thông qua [Gừ-gư-rừ-shit](https://forms.gle/247DQZ4eGnEiyt7M7).
