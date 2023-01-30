@@ -2,6 +2,9 @@
 <img src="https://raw.githubusercontent.com/toky0s/cs4rsa_core/main/cs4rsa_core/Images/background.png"></img>
 </p>
 
+## Tải xuống
+[For Windows 10 x86](https://drive.google.com/drive/u/0/folders/1mtnhC8AmVsPO0KnyOueQRbvcyHVnMzxO)
+
 ## Các chức năng chính
 Phiên bản 3.0.1
 - 🆕 (New) Màn hình Database.
