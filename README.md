@@ -3,6 +3,13 @@
 </p>
 
 ## Các chức năng chính
+Phiên bản 3.0.1
+- 🆕 (New) Màn hình Database.
+- 🔎 Cải thiện tốc độ tìm kiếm.
+- 🏪 Fix bug tự động sắp xếp, thêm chức năng Kho lưu trữ.
+- 🐛 Fix bug tuần ngăn cách hai giai đoạn.
+- ⚡ Nhanh và nhanh hơn nữa.
+
 Phiên bản 2.2.x
 - 🐱‍🐉 Cải thiện một chút về giao diện bo tròn ở Color Area, nhìn sẽ trông mềm mại hơn
 - 👓 Tăng tốc xử lý.
