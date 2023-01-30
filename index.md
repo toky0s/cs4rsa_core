@@ -71,6 +71,7 @@ Giống như xếp lịch thủ công, nhưng nó tự động.
 2. Nhấn nút tải chương trình học.
 3. Chọn các môn chưa học bằng cách nhấn các nút mũi tên trên môn tương ứng.
 4. Làm theo thứ tự các nút 
+
 ```
 1. Tải 
 2. Tính 
@@ -78,6 +79,7 @@ Giống như xếp lịch thủ công, nhưng nó tự động.
 4. Xuất Batch 
 -> Lưu Kho
 ```
+
 5. Đi tới màn hình xếp lịch thủ công, chọn nút KHO. Chọn bộ lịch mong muốn.
 
 ### Hỏi đáp, đề xuất và sửa lỗi
