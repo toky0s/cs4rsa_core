@@ -34,105 +34,100 @@
     </Style>
   </Window.Resources>
   <materialDesign:DialogHost
-    CloseOnClickAway="{Binding IsCloseMsgBoxOnClickAway}"
-    DialogContent="{Binding MsgBoxUC}"
-    IsOpen="{Binding IsMsgOpen}">
-    <materialDesign:DialogHost
-      CloseOnClickAway="{Binding IsCloseOnClickAway}"
-      DialogContent="{Binding DialogUC}"
-      IsOpen="{Binding IsOpen}">
-      <Grid>
-        <materialDesign:DrawerHost
-          x:Name="DrawerHost"
-          Grid.Row="0"
-          Grid.ColumnSpan="2">
-          <materialDesign:DrawerHost.LeftDrawerContent>
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-              </Grid.RowDefinitions>
-              <ToggleButton
-                Grid.Row="0"
-                Margin="0,5,10,2"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
-                CommandParameter="{x:Static Dock.Left}"
-                IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
-                Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
-              <Separator Grid.Row="1" />
-              <Grid Grid.Row="2" Height="64">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                  Grid.Column="0"
-                  Margin="26,0,0,0"
-                  VerticalAlignment="Center"
-                  Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                  Text="Chức năng" />
-              </Grid>
-              <ListBox
-                x:Name="ListViewMenu"
-                Grid.Row="3"
-                Width="256"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                SelectionChanged="ListViewMenu_SelectionChanged">
-                <ListBox.ItemContainerStyle>
-                  <Style BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBoxItem}" TargetType="ListBoxItem">
-                    <Setter Property="Height" Value="43" />
-                  </Style>
-                </ListBox.ItemContainerStyle>
-              </ListBox>
-            </Grid>
-          </materialDesign:DrawerHost.LeftDrawerContent>
+    CloseOnClickAway="{Binding IsCloseOnClickAway}"
+    DialogContent="{Binding DialogUC}"
+    IsOpen="{Binding IsOpen}">
+    <Grid>
+      <materialDesign:DrawerHost
+        x:Name="DrawerHost"
+        Grid.Row="0"
+        Grid.ColumnSpan="2">
+        <materialDesign:DrawerHost.LeftDrawerContent>
           <Grid>
             <Grid.RowDefinitions>
               <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
               <RowDefinition />
             </Grid.RowDefinitions>
-            <materialDesign:ColorZone
+            <ToggleButton
               Grid.Row="0"
-              Padding="5"
-              Mode="PrimaryMid">
-              <DockPanel>
-                <StackPanel Orientation="Horizontal">
-                  <ToggleButton
-                    Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                    CommandParameter="{x:Static Dock.Left}"
-                    IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
-                    Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
-                  <TextBlock
-                    Margin="16,0,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                    Text="{Binding ElementName=MainWd, Path=Title}" />
-                </StackPanel>
-
-                <!--  Compact Menu  -->
-                <StackPanel
-                  x:Name="CompactMenu"
-                  HorizontalAlignment="Right"
-                  Orientation="Horizontal" />
-
-              </DockPanel>
-            </materialDesign:ColorZone>
-            <Grid Grid.Row="1">
-              <materialDesign:Transitioner x:Name="CredizTransitioner" />
-              <materialDesign:Snackbar
-                HorizontalAlignment="Center"
-                ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
-                MessageQueue="{Binding SnackBarMessageQueue}">
-                <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
-              </materialDesign:Snackbar>
+              Margin="0,5,10,2"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+              CommandParameter="{x:Static Dock.Left}"
+              IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
+              Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+            <Separator Grid.Row="1" />
+            <Grid Grid.Row="2" Height="64">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock
+                Grid.Column="0"
+                Margin="26,0,0,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                Text="Chức năng" />
             </Grid>
+            <ListBox
+              x:Name="ListViewMenu"
+              Grid.Row="3"
+              Width="256"
+              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+              SelectionChanged="ListViewMenu_SelectionChanged">
+              <ListBox.ItemContainerStyle>
+                <Style BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBoxItem}" TargetType="ListBoxItem">
+                  <Setter Property="Height" Value="43" />
+                </Style>
+              </ListBox.ItemContainerStyle>
+            </ListBox>
           </Grid>
-        </materialDesign:DrawerHost>
-      </Grid>
-    </materialDesign:DialogHost>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+          <materialDesign:ColorZone
+            Grid.Row="0"
+            Padding="5"
+            Mode="PrimaryMid">
+            <DockPanel>
+              <StackPanel Orientation="Horizontal">
+                <ToggleButton
+                  Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                  CommandParameter="{x:Static Dock.Left}"
+                  IsChecked="{Binding ElementName=DrawerHost, Path=IsLeftDrawerOpen}"
+                  Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+                <TextBlock
+                  Margin="16,0,0,0"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                  Text="{Binding ElementName=MainWd, Path=Title}" />
+              </StackPanel>
+
+              <!--  Compact Menu  -->
+              <StackPanel
+                x:Name="CompactMenu"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal" />
+
+            </DockPanel>
+          </materialDesign:ColorZone>
+          <Grid Grid.Row="1">
+            <materialDesign:Transitioner x:Name="CredizTransitioner" />
+            <materialDesign:Snackbar
+              HorizontalAlignment="Center"
+              ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
+              MessageQueue="{Binding SnackBarMessageQueue}">
+              <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
+            </materialDesign:Snackbar>
+          </Grid>
+        </Grid>
+      </materialDesign:DrawerHost>
+    </Grid>
   </materialDesign:DialogHost>
 </Window>
