@@ -24,16 +24,16 @@ namespace Cs4rsa.ViewModels
 
         [ObservableProperty]
         private bool _isOpen;
-        
+
         [ObservableProperty]
         private bool _isWindowEnable;
 
         [ObservableProperty]
         private object _dialogUC;
-        
+
         [ObservableProperty]
         private bool _isCloseOnClickAway;
-        
+
         [ObservableProperty]
         private ISnackbarMessageQueue _snackBarMessageQueue;
         #endregion

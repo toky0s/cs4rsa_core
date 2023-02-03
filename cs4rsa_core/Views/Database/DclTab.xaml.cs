@@ -3,6 +3,7 @@ using Cs4rsa.ViewModels.Database;
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace Cs4rsa.Views.Database
 {
@@ -15,7 +16,7 @@ namespace Cs4rsa.Views.Database
 
         private async void BtnViewCache_Clicked(object sender, RoutedEventArgs e)
         {
-            Keyword kw = (Keyword)((Button)sender).DataContext;
+            Keyword kw = (Keyword)((Hyperlink)sender).DataContext;
             await ((DclTabViewModel)DataContext).ViewCacheCommand.ExecuteAsync(kw.CourseId);
         }
     }

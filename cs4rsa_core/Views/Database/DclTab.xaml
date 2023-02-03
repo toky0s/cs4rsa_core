@@ -66,11 +66,11 @@
           <DataGridTemplateColumn Header="Cache" IsReadOnly="True">
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
-                <Button
-                  Click="BtnViewCache_Clicked"
-                  Content="XEM"
-                  Style="{StaticResource MaterialDesignFlatButton}"
-                  Visibility="{Binding Cache, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
+                <TextBlock Visibility="{Binding Cache, Converter={StaticResource StringIsEmptyVisibilityConverter}}">
+                  <Hyperlink Click="BtnViewCache_Clicked">
+                    Xem
+                  </Hyperlink>
+                </TextBlock>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>

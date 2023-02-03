@@ -227,7 +227,6 @@
                 <ComboBox
                   x:Name="ComboxBox_Teachers"
                   Grid.Column="0"
-                  materialDesign:ComboBoxAssist.ClassicMode="True"
                   DisplayMemberPath="Name"
                   ItemsSource="{Binding Teachers}"
                   SelectedItem="{Binding SelectedTeacher}">
