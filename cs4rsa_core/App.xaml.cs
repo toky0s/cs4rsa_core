@@ -4,7 +4,6 @@ using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Implements;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Dialogs.Implements;
-using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
@@ -128,7 +127,6 @@ namespace Cs4rsa
             };
             services.AddSingleton(htmlWeb);
 
-            services.AddSingleton<IMessageBox, Cs4rsaMessageBox>();
             services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();

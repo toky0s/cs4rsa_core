@@ -13,7 +13,7 @@ namespace Cs4rsa.ViewModels
     /// Thực hiện khai báo các dịch vụ triển khai DI. 
     /// Thực hiện các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    internal partial class MainWindowViewModel : ViewModelBase
+    internal partial class MainWindowViewModel : ObservableRecipient
     {
         #region Bindings
         [ObservableProperty]
@@ -24,16 +24,16 @@ namespace Cs4rsa.ViewModels
 
         [ObservableProperty]
         private bool _isOpen;
-
+        
         [ObservableProperty]
         private bool _isWindowEnable;
 
         [ObservableProperty]
         private object _dialogUC;
-
+        
         [ObservableProperty]
         private bool _isCloseOnClickAway;
-
+        
         [ObservableProperty]
         private ISnackbarMessageQueue _snackBarMessageQueue;
         #endregion

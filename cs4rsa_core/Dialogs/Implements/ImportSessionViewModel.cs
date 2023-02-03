@@ -6,7 +6,6 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogResults;
-using Cs4rsa.Dialogs.MessageBoxService;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Utils;
@@ -78,17 +77,14 @@ namespace Cs4rsa.Dialogs.Implements
         #region Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseCrawler _courseCrawler;
-        private readonly IMessageBox _messageBox;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public ImportSessionViewModel(
             IUnitOfWork unitOfWork,
             ICourseCrawler courseCrawler,
-            IMessageBox messageBox,
             ISnackbarMessageQueue snackbarMessageQueue)
         {
-            _messageBox = messageBox;
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
@@ -191,10 +187,10 @@ namespace Cs4rsa.Dialogs.Implements
         private async Task OnDelete()
         {
             string sessionName = _selectedScheduleSession.Name;
-            MessageBoxResult result = _messageBox.ShowMessage($"Bạn có chắc muốn xoá phiên {sessionName}?",
-                                    "Thông báo",
-                                    MessageBoxButton.YesNo,
-                                    MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xoá phiên {sessionName}?",
+                                                        "Thông báo",
+                                                        MessageBoxButton.YesNo,
+                                                        MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 await _unitOfWork.BeginTransAsync();

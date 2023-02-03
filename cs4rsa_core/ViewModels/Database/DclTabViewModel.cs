@@ -47,15 +47,15 @@ namespace Cs4rsa.ViewModels.Database
                 Task.Run(LoadInf);
             });
 
-            Task.Run(LoadInf);
+            LoadInf();
         }
 
         /// <summary>
         /// Khởi tạo infor màn hình.
         /// </summary>
-        private async Task LoadInf()
+        private void LoadInf()
         {
-            await LoadDisciplines();
+            LoadDisciplines();
         }
 
         partial void OnSltDisciplineChanged(Discipline value)
@@ -73,7 +73,7 @@ namespace Cs4rsa.ViewModels.Database
             }
         }
 
-        private async Task LoadDisciplines()
+        private void LoadDisciplines()
         {
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
