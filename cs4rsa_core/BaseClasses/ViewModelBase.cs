@@ -72,6 +72,10 @@ namespace Cs4rsa.BaseClasses
             }
         }
 
+        /// <summary>
+        /// Chặn đóng Dialog.
+        /// </summary>
+        /// <param name="isPrevent"></param>
         protected static void PreventCloseDialog(bool isPrevent)
         {
             (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = !isPrevent;

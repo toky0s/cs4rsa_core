@@ -32,7 +32,7 @@ namespace Cs4rsa.Views
             }
         }
 
-        public void RenderMainMenu()
+        private void RenderMainMenu()
         {
             Thickness textBlockMargin = new(30, 0, 0, 0);
             Thickness panelMargin = new(10, 0, 0, 0);
@@ -68,7 +68,7 @@ namespace Cs4rsa.Views
             }
         }
 
-        public void RenderCompactMenu()
+        private void RenderCompactMenu()
         {
             for (int i = 0; i < ViewConstants.CREDIZ_MENU_ITEMS.Length; i++)
             {
@@ -94,7 +94,6 @@ namespace Cs4rsa.Views
             }
         }
 
-        #region Util functions
         public void Goto(int index)
         {
             PackIcon icon;
@@ -124,9 +123,7 @@ namespace Cs4rsa.Views
             CredizTransitioner.SelectedIndex = index;
             _currentMenuItemIndex = index;
         }
-        #endregion
 
-        #region Event handlers
         private async void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox listView = sender as ListBox;
@@ -140,6 +137,5 @@ namespace Cs4rsa.Views
             // Close Drawer
             DrawerHost.CloseDrawerCommand.Execute(null, null);
         }
-        #endregion
     }
 }

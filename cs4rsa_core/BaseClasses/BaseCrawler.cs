@@ -20,14 +20,5 @@ namespace Cs4rsa.BaseClasses
             long fromUnixEpoch = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             return fromUnixEpoch.ToString();
         }
-
-        /// <summary>
-        /// Get CDate
-        /// </summary>
-        /// <returns></returns>
-        protected static string GetCDate()
-        {
-            return DateTime.Now.ToString("ddMMYYYYHHmmss");
-        }
     }
 }
