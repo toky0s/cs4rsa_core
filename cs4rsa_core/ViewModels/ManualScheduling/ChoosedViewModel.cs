@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
@@ -69,17 +70,20 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
         private readonly PhaseStore _phaseStore;
+        private readonly IUnitOfWork _unitOfWork;
         #endregion
 
         public ChoosedViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
-            PhaseStore phaseStore
+            PhaseStore phaseStore,
+            IUnitOfWork unitOfWork
         )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
             _shareStringGenerator = shareString;
             _phaseStore = phaseStore;
+            _unitOfWork = unitOfWork;
 
             #region WeakReferenceMessengers
             Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
@@ -111,6 +115,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
             {
+                CloseDialog();
                 RemoveChoosedClassMsgHandler(m.Value);
             });
 
@@ -145,10 +150,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private void OnSolve()
         {
             SolveConflictUC solveConflictUC = new();
-            SolveConflictViewModel vm = new(_selectedConflictModel)
-            {
-                CloseDialogCallback = (r) => CloseDialog()
-            };
+            SolveConflictViewModel vm = new(_selectedConflictModel, _unitOfWork);
             solveConflictUC.DataContext = vm;
             OpenDialog(solveConflictUC);
         }

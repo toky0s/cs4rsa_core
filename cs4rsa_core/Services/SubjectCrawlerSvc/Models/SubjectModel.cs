@@ -6,7 +6,6 @@ using Cs4rsa.Utils;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,7 +35,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public string PrerequisiteSubjectAsString => GetMustStudySubjectsAsString();
         public string ParallelSubjectAsString => GetParallelSubjectsAsString();
 
-        public bool IsSpecialSubject { get; set; }
+        [ObservableProperty]
+        public bool _isSpecialSubject;
         public string Color { get; set; }
 
         #region Services
@@ -92,7 +92,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public static SubjectModel CreatePseudo(string subjectName, string subjectCode, string color, int courseId)
         {
-            Trace.WriteLine("public static SubjectModel CreatePseudo");
             return new SubjectModel(subjectName, subjectCode, courseId, color);
         }
 

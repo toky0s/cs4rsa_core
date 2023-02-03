@@ -272,7 +272,7 @@
         </Grid.ColumnDefinitions>
         <Button
           Grid.Column="0"
-          Margin="0,0,3,0"
+          Margin="0,0,5,5"
           Command="{Binding DeleteAllCommand}">
           <Button.Content>
             <TextBlock Text="{Binding SubjectModels.Count, StringFormat=XOÁ HẾT ({0})}" />
@@ -280,6 +280,7 @@
         </Button>
         <Button
           Grid.Column="1"
+          Margin="0,0,0,5"
           Command="{Binding ImportDialogCommand}"
           Content="{materialDesign:PackIcon Kind=DatabaseImportOutline,
                                             Size=20}"
