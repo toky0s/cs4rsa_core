@@ -1,4 +1,5 @@
-﻿using Cs4rsa.ViewModels.ManualScheduling;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+using Cs4rsa.ViewModels.ManualScheduling;
 
 using System;
 using System.Linq;
@@ -59,6 +60,12 @@ namespace Cs4rsa.Views.ManualScheduling
         private void SearchingTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             Popup_Recommend.IsOpen = SearchingTextBox.Text.Trim().Length > 0;
+        }
+
+        private void BtnReDonwload_Click(object sender, RoutedEventArgs e)
+        {
+            SubjectModel subjectModel = (SubjectModel)((Button)sender).DataContext;
+            (DataContext as SearchViewModel).ReloadCommand.Execute(subjectModel);
         }
     }
 }

@@ -3,8 +3,8 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
@@ -21,7 +21,7 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>
-  <materialDesign:Transitioner SelectedIndex="{Binding CrrScrIdx}">
+  <md:Transitioner SelectedIndex="{Binding CrrScrIdx}">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="auto" />
@@ -79,7 +79,7 @@
         <TextBox
           x:Name="SearchingTextBox"
           Margin="0,0,0,5"
-          materialDesign:HintAssist.Hint="Nhập mã môn hoặc tên môn"
+          md:HintAssist.Hint="Nhập mã môn hoặc tên môn"
           GotFocus="SearchingTextBox_GotFocus"
           KeyDown="SearchingTextBox_KeyDown"
           LostFocus="SearchingTextBox_LostFocus"
@@ -139,8 +139,8 @@
         </Grid.ColumnDefinitions>
         <ToggleButton
           Margin="0,0,5,0"
-          Content="{materialDesign:PackIcon Kind=Cached,
-                                            Size=21}"
+          Content="{md:PackIcon Kind=Cached,
+                                Size=21}"
           IsChecked="{Binding IsUseCache}">
           <ToggleButton.Style>
             <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
@@ -167,6 +167,8 @@
           CommandParameter="{StaticResource StoreViewIdx}"
           Content="KHO" />
       </Grid>
+
+      <!--  Danh sách chứa các môn đang và đã được tải  -->
       <ListBox
         x:Name="DownloadSubjects"
         Grid.Row="3"
@@ -187,25 +189,26 @@
             <MenuItem
               Command="{Binding DetailCommand, Mode=OneTime}"
               Header="Chi tiết"
-              Icon="{materialDesign:PackIcon Kind=FormatListBulletedSquare}" />
+              Icon="{md:PackIcon Kind=FormatListBulletedSquare}"
+              Visibility="{Binding SelectedSubjectModel.Subject, Converter={StaticResource NullVisibilityConverter}}" />
             <MenuItem
               Command="{Binding GotoCourseCommand, Mode=OneTime}"
               Header="Mở trong Course"
-              Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
+              Icon="{md:PackIcon Kind=OpenInNew}" />
             <Separator />
             <MenuItem
               Command="{Binding DeleteCommand, Mode=OneTime}"
               Header="Xoá"
-              Icon="{materialDesign:PackIcon Kind=DeleteOutline}" />
+              Icon="{md:PackIcon Kind=DeleteOutline}" />
           </ContextMenu>
         </ListBox.Resources>
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <materialDesign:TransitioningContent>
-              <materialDesign:TransitioningContent.OpeningEffects>
-                <materialDesign:TransitionEffect Kind="FadeIn" />
-                <materialDesign:TransitionEffect Kind="SlideInFromTop" />
-              </materialDesign:TransitioningContent.OpeningEffects>
+            <md:TransitioningContent>
+              <md:TransitioningContent.OpeningEffects>
+                <md:TransitionEffect Kind="FadeIn" />
+                <md:TransitionEffect Kind="SlideInFromTop" />
+              </md:TransitioningContent.OpeningEffects>
               <Grid>
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="25" />
@@ -219,10 +222,7 @@
                   Background="{Binding Color}"
                   CornerRadius="4" />
                 <StackPanel Grid.Column="1" Orientation="Vertical">
-                  <TextBlock
-                    Margin="5,10,0,0"
-                    Style="{StaticResource MaterialDesignBody2TextBlock}"
-                    TextWrapping="WrapWithOverflow">
+                  <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" TextWrapping="WrapWithOverflow">
                     <Run Text="{Binding SubjectName, Mode=OneWay}" />
                     <Run>
                       <Run.Style>
@@ -237,22 +237,29 @@
                       </Run.Style>
                     </Run>
                   </TextBlock>
+                  <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding SubjectCode}" />
+                  <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
                   <TextBlock
-                    Margin="5,0,0,0"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding SubjectCode}" />
-                  <TextBlock
-                    Margin="5,0,0,10"
-                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                    Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                    Text="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                    ToolTip="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                    Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </StackPanel>
                 <ProgressBar
                   Grid.Column="2"
                   IsIndeterminate="True"
                   Style="{StaticResource MaterialDesignCircularProgressBar}"
                   Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Button
+                  x:Name="BtnReDonwload"
+                  Click="BtnReDonwload_Click"
+                  Grid.Column="2"
+                  Content="{md:PackIcon Kind=Reload}"
+                  Style="{StaticResource MaterialDesignIconButton}"
+                  ToolTip="Tải lại môn này"
+                  Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
               </Grid>
-            </materialDesign:TransitioningContent>
+            </md:TransitioningContent>
           </DataTemplate>
         </ListBox.ItemTemplate>
         <ListBox.ItemContainerStyle>
@@ -282,8 +289,8 @@
           Grid.Column="1"
           Margin="0,0,0,5"
           Command="{Binding ImportDialogCommand}"
-          Content="{materialDesign:PackIcon Kind=DatabaseImportOutline,
-                                            Size=20}"
+          Content="{md:PackIcon Kind=DatabaseImportOutline,
+                                Size=20}"
           ToolTip="Đã lưu" />
       </Grid>
     </Grid>
@@ -303,7 +310,7 @@
         Margin="0,0,5,0"
         Command="{Binding GotoViewCommand}"
         CommandParameter="{StaticResource SearchViewIdx}"
-        Content="{materialDesign:PackIcon Kind=ArrowLeft}"
+        Content="{md:PackIcon Kind=ArrowLeft}"
         Style="{StaticResource MaterialDesignToolButton}" />
       <TextBlock
         Grid.Row="0"
@@ -352,5 +359,5 @@
         </ListBox.ItemTemplate>
       </ListBox>
     </Grid>
-  </materialDesign:Transitioner>
+  </md:Transitioner>
 </UserControl>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -45,9 +44,8 @@ namespace Cs4rsa.Utils
                 readStream.Close();
                 return data;
             }
-            catch (Exception ex)
+            catch
             {
-                Trace.WriteLine(ex.Message);
                 return string.Empty;
             }
         }

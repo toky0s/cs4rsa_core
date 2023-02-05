@@ -6,7 +6,6 @@ using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -136,7 +135,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public string GetClassSuffix()
         {
-            Trace.WriteLine(Name[(ClassGroup.SubjectCode.Length + 1)..]);
             return Name[(ClassGroup.SubjectCode.Length + 1)..];
         }
 

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using Cs4rsa.Utils;
@@ -13,30 +14,41 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     public partial class SubjectModel : ObservableObject
     {
-        [ObservableProperty]
-        private bool _isDownloading;
-
         public Subject Subject { get; private set; }
 
+        public readonly UserSubject UserSubject;
         public List<TeacherModel> Teachers => Subject.Teachers;
         public List<string> TempTeachers => Subject.TempTeachers;
-        public List<ClassGroupModel> ClassGroupModels { get; set; }
+        public List<ClassGroupModel> ClassGroupModels { get; private set; }
         public string SubjectName { get; private set; }
         public string SubjectCode { get; private set; }
-
-        [ObservableProperty]
-        private int _studyUnit;
-
         public int CourseId { get; private set; }
         public string StudyUnitType => Subject.StudyUnitType;
         public string StudyType => Subject.StudyType;
         public string Semester => Subject.Semester;
         public string Desciption => Subject.Desciption;
-        public string PrerequisiteSubjectAsString => GetMustStudySubjectsAsString();
-        public string ParallelSubjectAsString => GetParallelSubjectsAsString();
+
+        [ObservableProperty]
+        public string _prerequisiteSubjectAsString;
+
+        [ObservableProperty]
+        public string _parallelSubjectAsString;
+
+        [ObservableProperty]
+        private bool _isDownloading;
+
+        [ObservableProperty]
+        private int _studyUnit;
 
         [ObservableProperty]
         public bool _isSpecialSubject;
+
+        [ObservableProperty]
+        private bool _isError;
+
+        [ObservableProperty]
+        private string _errorMessage;
+
         public string Color { get; set; }
 
         #region Services
@@ -53,19 +65,45 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             SubjectCode = subject.SubjectCode;
             CourseId = subject.CourseId;
             StudyUnit = subject.StudyUnit;
+            PrerequisiteSubjectAsString = GetMustStudySubjects();
+            ParallelSubjectAsString = GetParallelSubjects();
         }
 
         private SubjectModel(
             string subjectName,
             string subjectCode,
-            int courseId,
-            string color)
+            string color,
+            int courseId)
         {
             SubjectName = subjectName;
             SubjectCode = subjectCode;
             CourseId = courseId;
             Color = color;
             IsDownloading = true;
+            IsError = false;
+        }
+        
+        private SubjectModel(
+            string subjectName,
+            string subjectCode,
+            string color,
+            int courseId,
+            UserSubject userSubject)
+        {
+            SubjectName = subjectName;
+            SubjectCode = subjectCode;
+            CourseId = courseId;
+            Color = color;
+            IsDownloading = true;
+            IsError = false;
+            if (!userSubject.SubjectCode.Equals(SubjectCode))
+            {
+                throw new Exception("Cannot set UserSubject which different subject code.");
+            }
+            else
+            {
+                UserSubject = userSubject;
+            }
         }
 
         public static Task<SubjectModel> CreateAsync(Subject subject, ColorGenerator colorGenerator)
@@ -88,11 +126,55 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 .ToList();
 
             IsDownloading = false;
+            IsError = false;
+            ErrorMessage = null;
         }
 
-        public static SubjectModel CreatePseudo(string subjectName, string subjectCode, string color, int courseId)
+        /// <summary>
+        /// Tạo Pseudo Subject.
+        /// </summary>
+        /// <param name="subjectName">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="color">Màu sắc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <returns></returns>
+        public static SubjectModel CreatePseudo(
+             string subjectName
+            , string subjectCode
+            , string color
+            , int courseId)
         {
-            return new SubjectModel(subjectName, subjectCode, courseId, color);
+            return new SubjectModel(
+                  subjectName
+                , subjectCode
+                , color
+                , courseId
+            );
+        }
+
+        /// <summary>
+        /// Tạo Pseudo Subject với UserSubject được import bởi người dùng.
+        /// </summary>
+        /// <param name="subjectName">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="color">Màu sắc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <param name="userSubject">UserSubject</param>
+        /// <returns></returns>
+        public static SubjectModel CreatePseudo(
+             string subjectName
+            , string subjectCode
+            , string color
+            , int courseId
+            , UserSubject userSubject)
+        {
+            return new SubjectModel(
+                  subjectName
+                , subjectCode
+                , color
+                , courseId
+                , userSubject
+            );
         }
 
         private async Task<SubjectModel> InitializeAsync()
@@ -105,19 +187,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return this;
         }
 
-        public ClassGroupModel GetClassGroupModelWithName(string name)
-        {
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
-            {
-                if (classGroupModel.Name.Equals(name, StringComparison.Ordinal))
-                {
-                    return classGroupModel;
-                }
-            }
-            return null;
-        }
-
-        public string GetMustStudySubjectsAsString()
+        public string GetMustStudySubjects()
         {
             if (Subject.MustStudySubject.Any())
             {
@@ -126,7 +196,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return "Không có môn tiên quyết";
         }
 
-        public string GetParallelSubjectsAsString()
+        public string GetParallelSubjects()
         {
             if (Subject.ParallelSubject.Any())
             {

@@ -46,6 +46,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #region Commands
         public AsyncRelayCommand AddCommand { get; set; }
         public AsyncRelayCommand ImportDialogCommand { get; set; }
+        public AsyncRelayCommand<SubjectModel> ReloadCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
@@ -218,6 +219,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
                 OpenDialog(_showDetailsSubjectUC);
             });
+            ReloadCommand = new(OnReload);
         }
 
         partial void OnSltCombiChanged(CombinationModel value)
@@ -316,6 +318,27 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 Disciplines.Add(discipline);
             }
             SelectedDiscipline = Disciplines[0];
+        }
+
+        /// <summary>
+        /// Tải lại môn học bị lỗi.
+        /// </summary>
+        /// <param name="subjectModel">SubjectModel</param>
+        private async Task OnReload(SubjectModel subjectModel)
+        {
+            subjectModel.IsDownloading = true;
+            subjectModel.IsError = false;
+            subjectModel.ErrorMessage = null;
+
+            Keyword kw = await _unitOfWork.Keywords.GetKeyword(subjectModel.CourseId);
+            if (subjectModel.UserSubject == null)
+            {
+                await OnAddSubjectAsync(kw);
+            }
+            else
+            {
+                await OnAddSubjectAsync(kw, subjectModel.UserSubject);
+            }
         }
 
         private async Task LoadSearchItemSource(string text)
@@ -455,7 +478,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 }
 
                 Keyword[] keywords = await Task.WhenAll(kwTasks);
-                InsertPseudoSubjects(keywords);
+                InsertPseudoSubjects(keywords, userSubjects);
 
                 List<Task> downloadTasks = new();
                 List<UserSubject> listOfUserSubjects = userSubjects.ToList();
@@ -480,15 +503,18 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             AddCommand.NotifyCanExecuteChanged();
         }
 
-        private void InsertPseudoSubjects(IEnumerable<Keyword> keywords)
+        private void InsertPseudoSubjects(Keyword[] keywords, IEnumerable<UserSubject> userSubjects)
         {
-            foreach (Keyword keyword in keywords)
+            UserSubject[] userSubjectArr = userSubjects.ToArray();
+            for (int i = 0; i < keywords.Length; i++)
             {
+                Keyword kw = keywords[i];
                 SubjectModel pseudoSubjectModel = SubjectModel.CreatePseudo(
-                    keyword.SubjectName,
-                    keyword.Discipline.Name + VMConstants.STR_SPACE + keyword.Keyword1,
-                    keyword.Color,
-                    keyword.CourseId
+                    kw.SubjectName,
+                    kw.Discipline.Name + VMConstants.STR_SPACE + kw.Keyword1,
+                    kw.Color,
+                    kw.CourseId,
+                    userSubjectArr[i]
                 );
                 SubjectModels.Insert(0, pseudoSubjectModel);
             }
@@ -541,55 +567,78 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SelectedKeyword = DisciplineKeywordModels[0];
         }
 
+        /// <summary>
+        /// Thêm một Subject.
+        /// 
+        /// Thực hiện tải Subject.
+        /// </summary>
+        /// <param name="keyword">Keyword</param>
+        /// <returns>Task of SubjectModel</returns>
         private async Task<SubjectModel> OnAddSubjectAsync(Keyword keyword)
         {
-            SubjectModel subjectModel = await DownloadSubject(
-                keyword.Discipline.Name,
-                keyword.Keyword1,
-                VMConstants.INT_INVALID_COURSEID,
-                IsUseCache
-            );
-
-            if (subjectModel == null)
+            try
             {
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
+                SubjectModel subjectModel = await DownloadSubject(
+                    keyword.Discipline.Name,
+                    keyword.Keyword1,
+                    VMConstants.INT_INVALID_COURSEID,
+                    IsUseCache
+                );
+
+                if (subjectModel == null)
+                {
+                    _snackbarMessageQueue.Enqueue(VMConstants.SNB_NOT_FOUND_SUBJECT_IN_THIS_SEMESTER);
+                    return null;
+                }
+
+                ReplacePseudoSubject(subjectModel);
+
+                if (!SubjectModels.Where(sm => sm.IsDownloading).Any())
+                {
+                    SelectedSubjectModel = subjectModel;
+                }
+
+                TotalSubject = SubjectModels.Count;
+                UpdateCreditTotal();
+                UpdateSubjectAmount();
+
+                return subjectModel;
+            }
+            catch (Exception e)
+            {
+                AddErrorToPseudoSubject(e.Message, keyword.CourseId);
                 return null;
             }
-
-            ReplacePseudoSubject(subjectModel);
-
-            if (!SubjectModels.Where(sm => sm.IsDownloading).Any())
-            {
-                SelectedSubjectModel = subjectModel;
-            }
-
-            TotalSubject = SubjectModels.Count;
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
-
-            return subjectModel;
         }
 
+        /// <summary>
+        /// Xử lý Add Subject từ bộ lịch đã lưu.
+        /// </summary>
+        /// <param name="keyword">Keyword</param>
+        /// <param name="userSubject">UserSubject</param>
         private async Task OnAddSubjectAsync(Keyword keyword, UserSubject userSubject)
         {
             SubjectModel subjectModel = await OnAddSubjectAsync(keyword);
-            ClassGroupModel classGroupModel;
-            classGroupModel = subjectModel.ClassGroupModels
-                   .Where(cgm => cgm.Name.Equals(userSubject.ClassGroup))
-                   .First();
-            if (subjectModel.IsSpecialSubject)
+            if (subjectModel != null)
             {
-                classGroupModel.PickSchoolClass(userSubject.SchoolClass);
-            }
-
-            if (classGroupModel != null)
-            {
-                List<ClassGroupModel> cgms = new()
+                ClassGroupModel classGroupModel;
+                classGroupModel = subjectModel.ClassGroupModels
+                       .Where(cgm => cgm.Name.Equals(userSubject.ClassGroup))
+                       .First();
+                if (subjectModel.IsSpecialSubject)
                 {
-                    classGroupModel
-                };
-                _phaseStore.AddClassGroupModel(classGroupModel);
-                Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(cgms));
+                    classGroupModel.PickSchoolClass(userSubject.SchoolClass);
+                }
+
+                if (classGroupModel != null)
+                {
+                    List<ClassGroupModel> cgms = new()
+                    {
+                        classGroupModel
+                    };
+                    _phaseStore.AddClassGroupModel(classGroupModel);
+                    Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(cgms));
+                }
             }
         }
 
@@ -757,6 +806,26 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 if (SubjectModels[i].CourseId.Equals(subjectModel.CourseId))
                 {
                     SubjectModels[i].AssignData(subjectModel);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thêm Msg lỗi khi quá trình tải Subject bị lỗi.
+        /// </summary>
+        /// <param name="errMsg">Error Message</param>
+        /// <param name="courseId">Course ID</param>
+        private void AddErrorToPseudoSubject(string errMsg, int courseId)
+        {
+            for (int i = 0; i < SubjectModels.Count; i++)
+            {
+                if (SubjectModels[i].CourseId.Equals(courseId))
+                {
+                    var subjectMd = SubjectModels[i];
+                    subjectMd.IsError = true;
+                    subjectMd.IsDownloading = false;
+                    subjectMd.ErrorMessage = errMsg;
                     return;
                 }
             }
