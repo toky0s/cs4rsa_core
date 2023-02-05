@@ -25,19 +25,17 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
     <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <TextBlock
-        Margin="0,0,5,0"
-        Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-        Text="{Binding SelectedSubject.SubjectName}" />
-      <TextBlock>
+      <TextBlock Margin="0,0,5,0">
         <TextBlock.Style>
           <Style BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" TargetType="TextBlock">
-            <Setter Property="Text" Value="{Binding ClassGroupModels.Count, StringFormat=({0})}" />
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding ClassGroupModels.Count}" Value="0">
-                <Setter Property="Text" Value="Chưa có môn nào được chọn" />
-              </DataTrigger>
-            </Style.Triggers>
+            <Setter Property="Text">
+              <Setter.Value>
+                <MultiBinding StringFormat="{}{0} ({1})">
+                  <Binding Path="SelectedSubject.SubjectName" />
+                  <Binding Path="ClassGroupModels.Count" />
+                </MultiBinding>
+              </Setter.Value>
+            </Setter>
           </Style>
         </TextBlock.Style>
       </TextBlock>

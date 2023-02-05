@@ -10,8 +10,6 @@ using HtmlAgilityPack;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
@@ -142,9 +140,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 }
                 return new Tuple<IEnumerable<string>, IEnumerable<string>>(par, pre);
             }
-            catch (HttpRequestException ex)
+            catch
             {
-                Trace.TraceWarning(ex.Message);
                 return new Tuple<IEnumerable<string>, IEnumerable<string>>(new List<string>(), new List<string>());
             }
         }

@@ -3,7 +3,6 @@
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
@@ -87,13 +86,9 @@ namespace Cs4rsa.Dialogs.Implements
 
             await _unitOfWork.UserSchedules.AddAsync(session);
             await _unitOfWork.CompleteAsync();
-            SaveResult result = new() { Name = Name };
             CloseDialog();
-            if (result != null)
-            {
-                string message = $"Đã lưu phiên hiện tại với tên {result.Name}";
-                _snackbarMessageQueue.Enqueue(message);
-            }
+            string message = $"Đã lưu phiên hiện tại với tên {Name}";
+            _snackbarMessageQueue.Enqueue(message);
         }
     }
 }

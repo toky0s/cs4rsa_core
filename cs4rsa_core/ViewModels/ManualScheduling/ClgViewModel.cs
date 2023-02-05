@@ -669,7 +669,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SelectedSubject = subjectModel;
             ClassGroupModels.Clear();
             Teachers.Clear();
-            if (SelectedSubject != null)
+            if (SelectedSubject != null && SelectedSubject.ClassGroupModels != null)
             {
                 #region Add ClassGroupModel
                 foreach (ClassGroupModel classGroupModel in SelectedSubject.ClassGroupModels)
