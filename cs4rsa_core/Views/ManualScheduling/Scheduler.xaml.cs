@@ -1,16 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 
+using Cs4rsa.BaseClasses;
 using Cs4rsa.Controls;
 using Cs4rsa.Messages.Publishers.UIs;
 using Cs4rsa.Models;
 
-using System.Windows.Controls;
-
 namespace Cs4rsa.Views.ManualScheduling
 {
-    public partial class Scheduler : UserControl
+    public partial class Scheduler : BaseUserControl
     {
-        public Scheduler()
+        public Scheduler(): base()
         {
             InitializeComponent();
         }
@@ -19,7 +18,7 @@ namespace Cs4rsa.Views.ManualScheduling
         {
             ScheduleBlock scheduleBlock = (ScheduleBlock)sender;
             TimeBlock timeBlock = (TimeBlock)scheduleBlock.DataContext;
-            StrongReferenceMessenger.Default.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
+            Messenger.Send(new ScheduleBlockMsgs.SelectedMsg(timeBlock));
         }
     }
 }
