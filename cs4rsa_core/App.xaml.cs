@@ -1,4 +1,6 @@
 ﻿
+using CommunityToolkit.Mvvm.Messaging;
+
 using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Implements;
@@ -42,6 +44,7 @@ namespace Cs4rsa
     public sealed partial class App : Application
     {
         public IServiceProvider Container { get; set; }
+        public IMessenger Messenger { get; set; }
         public App()
         {
             //this.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
@@ -72,6 +75,7 @@ namespace Cs4rsa
         {
             base.OnStartup(e);
             Container = CreateServiceProvider();
+            Messenger = WeakReferenceMessenger.Default;
 
             ISetting setting = Container.GetRequiredService<ISetting>();
             string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);

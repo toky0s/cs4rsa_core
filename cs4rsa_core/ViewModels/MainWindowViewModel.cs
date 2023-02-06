@@ -17,9 +17,6 @@ namespace Cs4rsa.ViewModels
     {
         #region Bindings
         [ObservableProperty]
-        private string _appName;
-
-        [ObservableProperty]
         private bool _isExpanded;
 
         [ObservableProperty]
@@ -43,7 +40,6 @@ namespace Cs4rsa.ViewModels
             _snackBarMessageQueue = snackbarMessageQueue;
             IsExpanded = false;
             IsWindowEnable = true;
-            AppName = ViewConstants.APP_NAME;
         }
 
         public void OpenModal(IDialog uc)

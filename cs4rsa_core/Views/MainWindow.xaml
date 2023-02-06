@@ -9,7 +9,7 @@
   xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   x:Name="MainWd"
-  Title="{Binding AppName, Mode=OneTime}"
+  Title="Crediz"
   d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
   Background="{DynamicResource MaterialDesignPaper}"
