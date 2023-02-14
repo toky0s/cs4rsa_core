@@ -74,22 +74,11 @@ namespace Cs4rsa
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            Container = CreateServiceProvider();
             Messenger = WeakReferenceMessenger.Default;
+            Container = CreateServiceProvider();
 
-            ISetting setting = Container.GetRequiredService<ISetting>();
-            string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
-            if (isDatabaseCreated == "false")
-            {
-                Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
-                Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword();
-                setting.CurrentSetting.IsDatabaseCreated = "true";
-                setting.Save();
-            }
-
-            // Create the init folders
-            IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
-            folderManager.CreateFoldersAtStartUp();
+            CreateDbIfNotExists();
+            InitFolders();
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -155,6 +144,25 @@ namespace Cs4rsa
             services.AddSingleton<DclTabViewModel>();
 
             return services.BuildServiceProvider();
+        }
+
+        private void InitFolders()
+        {
+            IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
+            folderManager.CreateFoldersAtStartUp();
+        }
+
+        private void CreateDbIfNotExists()
+        {
+            ISetting setting = Container.GetRequiredService<ISetting>();
+            string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
+            if (isDatabaseCreated == "false")
+            {
+                Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
+                Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword();
+                setting.CurrentSetting.IsDatabaseCreated = "true";
+                setting.Save();
+            }
         }
     }
 }

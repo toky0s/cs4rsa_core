@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -12,44 +13,19 @@ using Cs4rsa.Utils.Interfaces;
 
 namespace Cs4rsa.ViewModels
 {
-    public class HomeViewModel : ViewModelBase
+    internal partial class HomeViewModel : ViewModelBase
     {
-        #region Props
-        private string _currentYearValue;
-        public string CurrentYearValue
-        {
-            get { return _currentYearValue; }
-            set { _currentYearValue = value; OnPropertyChanged(); }
-        }
-
-        private string _currentSemesterValue;
-        public string CurrentSemesterValue
-        {
-            get { return _currentSemesterValue; }
-            set { _currentSemesterValue = value; OnPropertyChanged(); }
-        }
-
+        [ObservableProperty]
         private string _currentYearInfo;
-        public string CurrentYearInfo
-        {
-            get { return _currentYearInfo; }
-            set { _currentYearInfo = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private string _currentSemesterInfo;
-        public string CurrentSemesterInfo
-        {
-            get { return _currentSemesterInfo; }
-            set { _currentSemesterInfo = value; OnPropertyChanged(); }
-        }
 
+        [ObservableProperty]
         private bool _isNewSemester;
-        public bool IsNewSemester
-        {
-            get { return _isNewSemester; }
-            set { _isNewSemester = value; OnPropertyChanged(); }
-        }
-        #endregion
+
+        [ObservableProperty]
+        private ICourseCrawler _courseCrawler;
 
         #region Commands
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
@@ -60,7 +36,6 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         #region DI
-        private readonly ICourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
@@ -80,8 +55,6 @@ namespace Cs4rsa.ViewModels
                 LoadIsNewSemester();
             });
 
-            _currentYearValue = _courseCrawler.GetCurrentYearValue();
-            _currentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
             _currentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
             _currentYearInfo = _courseCrawler.GetCurrentYearInfo();
 
@@ -90,7 +63,6 @@ namespace Cs4rsa.ViewModels
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
             ManualCommand = new RelayCommand(OnGotoManualCommand);
             DonateCommand = new RelayCommand(OnDonate);
-
 
             LoadIsNewSemester();
         }
@@ -122,8 +94,14 @@ namespace Cs4rsa.ViewModels
 
         public void LoadIsNewSemester()
         {
-            IsNewSemester = _setting.CurrentSetting.CurrentSemesterValue != _currentSemesterValue
-                || _setting.CurrentSetting.CurrentYearValue != _currentYearValue;
+            IsNewSemester =
+                (
+                    _courseCrawler.GetCurrentSemesterValue() != null
+                    && _courseCrawler.GetCurrentYearValue() != null
+                ) && (
+                    _setting.CurrentSetting.CurrentSemesterValue != _courseCrawler.GetCurrentSemesterValue()
+                    || _setting.CurrentSetting.CurrentYearValue != _courseCrawler.GetCurrentYearValue()
+                );
         }
     }
 }

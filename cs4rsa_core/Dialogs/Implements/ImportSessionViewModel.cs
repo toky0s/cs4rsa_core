@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -21,48 +22,23 @@ using System.Windows;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    public class ImportSessionViewModel : ViewModelBase
+    public partial class ImportSessionViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
         public ObservableCollection<UserSubject> UserSubjects { get; set; }
 
+        [ObservableProperty]
         private UserSchedule _selectedScheduleSession;
-        public UserSchedule SelectedScheduleSession
-        {
-            get => _selectedScheduleSession;
-            set
-            {
-                _selectedScheduleSession = value;
-                OnPropertyChanged();
-                LoadUserSubject(value);
-                CheckIsAvailableSession(value);
-                ImportCommand.NotifyCanExecuteChanged();
-                DeleteCommand.NotifyCanExecuteChanged();
-            }
-        }
 
+        [ObservableProperty]
         private ScheduleDetail _selectedSessionDetail;
-        public ScheduleDetail SelectedSessionDetail
-        {
-            get { return _selectedSessionDetail; }
-            set
-            {
-                _selectedSessionDetail = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private int _isAvailableSession;
-        public int IsAvailableSession
-        {
-            get => _isAvailableSession;
-            set
-            {
-                _isAvailableSession = value;
-                OnPropertyChanged();
-            }
-        }
+
+        [ObservableProperty]
+        private bool _isUseCache;
 
         public string ShareStringText { get; set; }
 
@@ -93,9 +69,17 @@ namespace Cs4rsa.Dialogs.Implements
             UserSubjects = new();
             _isAvailableSession = -1;
 
-            DeleteCommand = new AsyncRelayCommand(OnDelete, CanDelete);
-            ImportCommand = new RelayCommand(OnImport, CanImport);
+            DeleteCommand = new AsyncRelayCommand(OnDelete, () => _selectedScheduleSession != null);
+            ImportCommand = new RelayCommand(OnImport, () => UserSubjects.Any());
             CloseDialogCommand = new RelayCommand(CloseDialog);
+        }
+
+        partial void OnSelectedScheduleSessionChanged(UserSchedule value)
+        {
+            LoadUserSubject(value);
+            CheckIsAvailableSession(value);
+            ImportCommand.NotifyCanExecuteChanged();
+            DeleteCommand.NotifyCanExecuteChanged();
         }
 
         public void OnCopyRegisterCode(string registerCode)
@@ -155,16 +139,6 @@ namespace Cs4rsa.Dialogs.Implements
             {
                 IsAvailableSession = -1;
             }
-        }
-
-        private bool CanImport()
-        {
-            return UserSubjects.Any();
-        }
-
-        private bool CanDelete()
-        {
-            return _selectedScheduleSession != null;
         }
 
         public async Task LoadScheduleSession()

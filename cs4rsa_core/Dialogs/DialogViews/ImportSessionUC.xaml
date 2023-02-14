@@ -1,7 +1,8 @@
-﻿<UserControl
+﻿<base:BaseUserControl
   x:Class="Cs4rsa.Dialogs.DialogViews.ImportSessionUC"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:converter="clr-namespace:Cs4rsa.Converters"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:implements="clr-namespace:Cs4rsa.Dialogs.Implements"
@@ -12,13 +13,12 @@
   Width="600"
   Height="500"
   d:DataContext="{d:DesignInstance Type=implements:ImportSessionViewModel}"
-  d:DesignHeight="450"
   vml:DialogVMLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
-  <UserControl.Resources>
+  <base:BaseUserControl.Resources>
     <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceHolderConverter" />
     <validation:ShareStringRule x:Key="shareStringRule" />
-  </UserControl.Resources>
+  </base:BaseUserControl.Resources>
   <materialDesign:Card Grid.Column="0" Padding="10,10,10,15">
     <Grid>
       <Grid.RowDefinitions>
@@ -65,19 +65,16 @@
             <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
             <TextBlock>
               <TextBlock.Style>
-                <Style TargetType="TextBlock">
+                <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
                       <Setter Property="Text" Value="Chưa tính toán" />
-                      <Setter Property="Foreground" Value="Gray" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
                       <Setter Property="Text" Value="Đã hết hạn" />
-                      <Setter Property="Foreground" Value="Red" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
                       <Setter Property="Text" Value="Có thể sử dụng" />
-                      <Setter Property="Foreground" Value="Green" />
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
@@ -164,10 +161,36 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </ScrollViewer>
-        <Button
-          Grid.Row="1"
-          Command="{Binding ImportCommand}"
-          Content="SỬ DỤNG" />
+        <Grid Grid.Row="2">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <ToggleButton
+            Grid.Column="0"
+            Width="34"
+            Height="34"
+            Margin="0,0,5,0"
+            Content="{materialDesign:PackIcon Kind=Cached,
+                                              Size=21}"
+            IsChecked="{Binding IsUseCache}"
+            Loaded="TgBtn_IsUseCache_Loaded">
+            <ToggleButton.Style>
+              <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
+                <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsUseCache}" Value="true">
+                    <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </ToggleButton.Style>
+          </ToggleButton>
+          <Button
+            Grid.Column="1"
+            Command="{Binding ImportCommand}"
+            Content="SỬ DỤNG" />
+        </Grid>
       </Grid>
       <Grid Grid.Row="1" Grid.Column="0">
         <Grid.RowDefinitions>
@@ -205,4 +228,4 @@
       </Grid>
     </Grid>
   </materialDesign:Card>
-</UserControl>
+</base:BaseUserControl>
