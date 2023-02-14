@@ -2,6 +2,7 @@
 {
     public interface ICourseCrawler
     {
+        void InitInfor();
         string GetCurrentSemesterValue();
         string GetCurrentSemesterInfo();
         string GetCurrentYearValue();

@@ -2,7 +2,7 @@
 
 namespace Cs4rsa.BaseClasses
 {
-    public abstract class BaseCrawler
+    public abstract class BaseCrawler : ViewModelBase
     {
         /// <summary>
         /// Get time from Epoch

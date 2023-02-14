@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
 using Cs4rsa.Constants;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
@@ -136,6 +137,11 @@ namespace Cs4rsa.Views
             }
             // Close Drawer
             DrawerHost.CloseDrawerCommand.Execute(null, null);
+        }
+
+        private void MainWd_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((ICourseCrawler)((App)Application.Current).Container.GetService(typeof(ICourseCrawler))).InitInfor();
         }
     }
 }
