@@ -8,7 +8,6 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
@@ -76,6 +75,7 @@ namespace Cs4rsa
             base.OnStartup(e);
             Messenger = WeakReferenceMessenger.Default;
             Container = CreateServiceProvider();
+            Container.GetService<CourseCrawler>().InitInfor();
 
             CreateDbIfNotExists();
             InitFolders();
@@ -95,7 +95,7 @@ namespace Cs4rsa
             services.AddSingleton<IParProDetailsRepository, ParProDetailRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<ICourseCrawler, CourseCrawler>();
+            services.AddSingleton<CourseCrawler>();
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();

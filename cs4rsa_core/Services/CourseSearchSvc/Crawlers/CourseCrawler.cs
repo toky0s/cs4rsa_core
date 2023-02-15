@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Cs4rsa.BaseClasses;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
-using Cs4rsa.Services.CourseSearchSvc.DataTypes;
 using Cs4rsa.Settings.Interfaces;
 
 using HtmlAgilityPack;
@@ -15,7 +13,7 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
     /// <summary>
     /// Đảm nhiệm việc cào thông tin học kỳ và năm học.
     /// </summary>
-    public partial class CourseCrawler : BaseCrawler, ICourseCrawler
+    public partial class CourseCrawler : BaseCrawler
     {
         private readonly HtmlWeb _htmlWeb;
         private readonly ISetting _setting;
@@ -82,58 +80,5 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
             IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants().Where(node => node.Name == "option");
             return optionElements.Last().InnerText.Trim();
         }
-
-        private IEnumerable<CourseYear> GetCourseYears(HtmlDocument document)
-        {
-            IEnumerable<HtmlNode> optionElements = document.DocumentNode
-                .Descendants()
-                .Where(node => node.Name == "option" && node.Attributes["value"].Value != "0");
-            foreach (HtmlNode node in optionElements)
-            {
-                string name = node.InnerText.Trim();
-                string value = node.Attributes["value"].Value;
-                IEnumerable<CourseSemester> courseSemesters = GetCourseSemesters(value);
-                CourseYear courseYear = new() { Name = name, Value = value, CourseSemesters = courseSemesters };
-                yield return courseYear;
-            }
-        }
-
-        private IEnumerable<CourseSemester> GetCourseSemesters(string yearValue)
-        {
-            string urlTemplate = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={0}";
-            string url = string.Format(urlTemplate, yearValue);
-            HtmlDocument document = _htmlWeb.Load(url);
-
-            IEnumerable<HtmlNode> optionElements = document.DocumentNode.Descendants()
-                .Where(node => node.Name == "option" && node.Attributes["value"].Value != "0");
-            foreach (HtmlNode node in optionElements)
-            {
-                string name = node.InnerText.Trim();
-                string value = node.Attributes["value"].Value;
-                CourseSemester courseSemester = new() { Name = name, Value = value };
-                yield return courseSemester;
-            }
-        }
-
-        public string GetCurrentSemesterValue()
-        {
-            return CurrentSemesterValue;
-        }
-
-        public string GetCurrentSemesterInfo()
-        {
-            return CurrentSemesterInfo;
-        }
-
-        public string GetCurrentYearValue()
-        {
-            return CurrentYearValue;
-        }
-
-        public string GetCurrentYearInfo()
-        {
-            return CurrentYearInfo;
-        }
     }
-
 }

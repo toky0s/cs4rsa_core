@@ -7,7 +7,7 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
 using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils.Interfaces;
@@ -41,7 +41,7 @@ namespace Cs4rsa.ViewModels.Database
         public RelayCommand StartUpdateCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly ISetting _setting;
         private readonly DisciplineCrawler _disciplineCrawler;
         private readonly IFolderManager _folderManager;
@@ -49,7 +49,7 @@ namespace Cs4rsa.ViewModels.Database
 
         public DbViewModel(
             IUnitOfWork unitOfWork,
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             ISetting setting,
             ISnackbarMessageQueue snackbarMessageQueue,
             IFolderManager folderManager,
@@ -79,8 +79,8 @@ namespace Cs4rsa.ViewModels.Database
         private async Task LoadInf()
         {
             ProgressValue = 0;
-            CurrentSemesterInf = _courseCrawler.GetCurrentSemesterInfo();
-            CurrentYearInf = _courseCrawler.GetCurrentYearInfo();
+            CurrentSemesterInf = _courseCrawler.CurrentSemesterInfo;
+            CurrentYearInf = _courseCrawler.CurrentYearInfo;
             SubjectQuantity = await _unitOfWork.Keywords.Count();
         }
 
@@ -134,10 +134,10 @@ namespace Cs4rsa.ViewModels.Database
                 }
                 else
                 {
-                    _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.GetCurrentSemesterValue();
-                    _setting.CurrentSetting.CurrentYearValue = _courseCrawler.GetCurrentYearValue();
-                    _setting.CurrentSetting.CurrentYear = _courseCrawler.GetCurrentYearInfo();
-                    _setting.CurrentSetting.CurrentSemester = _courseCrawler.GetCurrentSemesterInfo();
+                    _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.CurrentSemesterValue;
+                    _setting.CurrentSetting.CurrentYearValue = _courseCrawler.CurrentYearValue;
+                    _setting.CurrentSetting.CurrentYear = _courseCrawler.CurrentYearInfo;
+                    _setting.CurrentSetting.CurrentSemester = _courseCrawler.CurrentSemesterInfo;
                     _setting.Save();
                     _folderManager.DelAllInThisFolder(Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES));
 

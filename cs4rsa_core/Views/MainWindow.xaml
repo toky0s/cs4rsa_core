@@ -16,7 +16,6 @@
   FontFamily="{DynamicResource MaterialDesignFont}"
   IsEnabled="{Binding IsWindowEnable}"
   TextElement.FontSize="13"
-  Loaded="MainWd_Loaded"
   TextElement.FontWeight="Regular"
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
   TextOptions.TextFormattingMode="Ideal"
