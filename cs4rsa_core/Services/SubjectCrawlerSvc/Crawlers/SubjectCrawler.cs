@@ -1,7 +1,7 @@
 ﻿using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
@@ -18,7 +18,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
     {
         #region Services
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly ITeacherCrawler _teacherCrawler;
         private readonly HtmlWeb _htmlWeb;
         #endregion
@@ -29,7 +29,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
         /// <param name="discipline">Hai chữ cái đầu của mã môn (CS).</param>
         /// <param name="keyword1">Các chữ số đằng sau (414).</param>
         public SubjectCrawler(
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ITeacherCrawler teacherCrawler,
             HtmlWeb htmlWeb
@@ -52,7 +52,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string semesterId = _courseCrawler.CurrentSemesterValue;
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={keyword.CourseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
                 Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
@@ -77,7 +77,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string semesterId = _courseCrawler.CurrentSemesterValue;
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
                 Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);

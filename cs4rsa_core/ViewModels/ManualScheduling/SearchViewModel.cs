@@ -15,7 +15,7 @@ using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Messages.Publishers.UIs;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Models;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -105,7 +105,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #region Services
         private readonly ColorGenerator _colorGenerator;
         private readonly PhaseStore _phaseStore;
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
@@ -115,7 +115,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         public SearchViewModel(
             ColorGenerator colorGenerator,
             PhaseStore phaseStore,
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
@@ -438,8 +438,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private void OnGotoCourse()
         {
-            int courseId = _selectedSubjectModel.CourseId;
-            string semesterValue = _courseCrawler.GetCurrentSemesterValue();
+            int courseId = SelectedSubjectModel.CourseId;
+            string semesterValue = _courseCrawler.CurrentSemesterValue;
             string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             _openInBrowser.Open(url);
         }

@@ -82,7 +82,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             IsDownloading = true;
             IsError = false;
         }
-        
+
         private SubjectModel(
             string subjectName,
             string subjectCode,
@@ -114,7 +114,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public void AssignData(SubjectModel subjectModel)
         {
-            if (!_isDownloading)
+            if (!IsDownloading)
             {
                 throw new Exception("Can not assign SubjectModel because this instance is not a pseudo subject model.");
             }

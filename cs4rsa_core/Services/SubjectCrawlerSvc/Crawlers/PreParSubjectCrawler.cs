@@ -1,6 +1,6 @@
 ﻿using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
@@ -19,12 +19,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
     /// </summary>
     public class PreParSubjectCrawler : BaseCrawler, IPreParSubjectCrawler
     {
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly HtmlWeb _htmlWeb;
 
         public PreParSubjectCrawler(
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             HtmlWeb htmlWeb)
         {
@@ -71,7 +71,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             }
             else
             {
-                string semesterId = _courseCrawler.GetCurrentSemesterValue();
+                string semesterId = _courseCrawler.CurrentSemesterValue;
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
 

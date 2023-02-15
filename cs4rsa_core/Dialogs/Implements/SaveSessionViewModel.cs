@@ -3,7 +3,7 @@
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 
@@ -37,13 +37,13 @@ namespace Cs4rsa.Dialogs.Implements
         public AsyncRelayCommand SaveCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareString;
 
         public SaveSessionViewModel(
             IUnitOfWork unitOfWork,
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString)
         {
@@ -79,8 +79,8 @@ namespace Cs4rsa.Dialogs.Implements
             {
                 Name = Name.Trim(),
                 SaveDate = DateTime.Now,
-                SemesterValue = _courseCrawler.GetCurrentSemesterValue(),
-                YearValue = _courseCrawler.GetCurrentYearValue(),
+                SemesterValue = _courseCrawler.CurrentSemesterValue,
+                YearValue = _courseCrawler.CurrentYearValue,
                 SessionDetails = sessionDetails
             };
 

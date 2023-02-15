@@ -2,7 +2,7 @@
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Utils;
 
 using HtmlAgilityPack;
@@ -17,13 +17,13 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
     public class DisciplineCrawler : BaseCrawler
     {
         private readonly Cs4rsaDbContext _cs4rsaDbContext;
-        private readonly ICourseCrawler _homeCourseSearch;
+        private readonly CourseCrawler _homeCourseSearch;
         private readonly IUnitOfWork _unitOfWork;
         private readonly HtmlWeb _htmlWeb;
 
         public DisciplineCrawler(
             Cs4rsaDbContext cs4rsaDbContext,
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             HtmlWeb htmlWeb
         )
@@ -57,7 +57,7 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
                 _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
                 _unitOfWork.Keywords.RemoveRange(_cs4rsaDbContext.Keywords);
 
-                string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={GetTimeFromEpoch()}";
+                string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.CurrentSemesterValue}&t={GetTimeFromEpoch()}";
 
                 HtmlDocument document = _htmlWeb.Load(URL);
                 IEnumerable<HtmlNode> trTags = document.DocumentNode
@@ -132,7 +132,7 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
         /// <returns>Số lượng môn học hiện có.</returns>
         public int GetNumberOfSubjects()
         {
-            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.GetCurrentSemesterValue()}&t={GetTimeFromEpoch()}";
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.CurrentSemesterValue}&t={GetTimeFromEpoch()}";
             HtmlDocument document = _htmlWeb.Load(URL);
 
             HtmlNode node = document.DocumentNode;

@@ -8,7 +8,7 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Messages.Publishers.Dialogs;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Utils;
 
 using MaterialDesignThemes.Wpf;
@@ -52,13 +52,13 @@ namespace Cs4rsa.Dialogs.Implements
 
         #region Services
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
+        private readonly CourseCrawler _courseCrawler;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
         public ImportSessionViewModel(
             IUnitOfWork unitOfWork,
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             ISnackbarMessageQueue snackbarMessageQueue)
         {
             _unitOfWork = unitOfWork;
@@ -132,8 +132,8 @@ namespace Cs4rsa.Dialogs.Implements
                 string year = session.YearValue;
                 int available = 1;
                 int unavailable = 0;
-                IsAvailableSession = semester.Equals(_courseCrawler.GetCurrentSemesterValue(), StringComparison.Ordinal)
-                    && year.Equals(_courseCrawler.GetCurrentYearValue(), StringComparison.Ordinal) ? available : unavailable;
+                IsAvailableSession = semester.Equals(_courseCrawler.CurrentSemesterValue, StringComparison.Ordinal)
+                    && year.Equals(_courseCrawler.CurrentYearValue, StringComparison.Ordinal) ? available : unavailable;
             }
             else
             {

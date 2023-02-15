@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.Publishers;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
@@ -18,7 +18,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         [ObservableProperty]
         private int _totalSubject;
 
-        public MainSchedulingViewModel(ICourseCrawler courseCrawler)
+        public MainSchedulingViewModel(CourseCrawler courseCrawler)
         {
 
             Messenger.Register<SearchVmMsgs.SubjectItemChangedMsg>(this, (r, m) =>
@@ -27,8 +27,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 TotalSubject = m.Value.Item2;
             });
 
-            CurrentSemesterInfo = courseCrawler.GetCurrentSemesterInfo();
-            CurrentYearInfo = courseCrawler.GetCurrentYearInfo();
+            CurrentSemesterInfo = courseCrawler.CurrentSemesterInfo;
+            CurrentYearInfo = courseCrawler.CurrentYearInfo;
 
             TotalCredit = 0;
             TotalSubject = 0;

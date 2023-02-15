@@ -7,7 +7,7 @@ using Cs4rsa.Constants;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
-using Cs4rsa.Services.CourseSearchSvc.Crawlers.Interfaces;
+using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils.Interfaces;
 
@@ -25,7 +25,7 @@ namespace Cs4rsa.ViewModels
         private bool _isNewSemester;
 
         [ObservableProperty]
-        private ICourseCrawler _courseCrawler;
+        private CourseCrawler _courseCrawler;
 
         #region Commands
         public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
@@ -41,7 +41,7 @@ namespace Cs4rsa.ViewModels
         #endregion
 
         public HomeViewModel(
-            ICourseCrawler courseCrawler,
+            CourseCrawler courseCrawler,
             ISetting setting,
             IOpenInBrowser openInBrowser
         )
@@ -55,8 +55,8 @@ namespace Cs4rsa.ViewModels
                 LoadIsNewSemester();
             });
 
-            _currentSemesterInfo = _courseCrawler.GetCurrentSemesterInfo();
-            _currentYearInfo = _courseCrawler.GetCurrentYearInfo();
+            _currentSemesterInfo = _courseCrawler.CurrentSemesterInfo;
+            _currentYearInfo = _courseCrawler.CurrentYearInfo;
 
             UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
             GotoFormCommand = new RelayCommand(OnGotoForm);
@@ -96,11 +96,11 @@ namespace Cs4rsa.ViewModels
         {
             IsNewSemester =
                 (
-                    _courseCrawler.GetCurrentSemesterValue() != null
-                    && _courseCrawler.GetCurrentYearValue() != null
+                    CourseCrawler.CurrentSemesterValue != null
+                    && CourseCrawler.CurrentYearValue != null
                 ) && (
-                    _setting.CurrentSetting.CurrentSemesterValue != _courseCrawler.GetCurrentSemesterValue()
-                    || _setting.CurrentSetting.CurrentYearValue != _courseCrawler.GetCurrentYearValue()
+                    _setting.CurrentSetting.CurrentSemesterValue != CourseCrawler.CurrentSemesterValue
+                    || _setting.CurrentSetting.CurrentYearValue != CourseCrawler.CurrentYearValue
                 );
         }
     }

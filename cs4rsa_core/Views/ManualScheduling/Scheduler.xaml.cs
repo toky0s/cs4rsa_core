@@ -9,7 +9,7 @@ namespace Cs4rsa.Views.ManualScheduling
 {
     public partial class Scheduler : BaseUserControl
     {
-        public Scheduler(): base()
+        public Scheduler() : base()
         {
             InitializeComponent();
         }
