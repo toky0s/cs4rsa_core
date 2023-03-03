@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> : IPageable<T> where T : class
     {
+        /// <summary>
+        /// Lấy ra tổng số lượng <typeparamref name="T"/> bản ghi
+        /// </summary>
+        Task<long> Count();
         Task<T> GetByIdAsync(int id);
-        IAsyncEnumerable<T> Get(int page, int limit);
         IAsyncEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         void Add(T entity);
@@ -18,13 +21,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         void RemoveRange(IEnumerable<T> entities);
         void Update(T entity);
         /// <summary>
-        /// Lấy ra tổng số lượng <typeparamref name="T"/> record
-        /// </summary>
-        Task<long> Count();
-        Task<int> CountPageAsync(int limit);
-
-        /// <summary>
-        /// Xoá mọi dữ liệu của bảng <see cref="T"/>
+        /// Xoá mọi dữ liệu của bảng <typeparamref name="T"/>
         /// </summary>
         /// <returns>Số lượng bảng ghi đã xoá</returns>
         Task<int> RemoveAll();

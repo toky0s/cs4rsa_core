@@ -11,9 +11,9 @@ namespace Cs4rsa.BaseClasses
         private bool _isCloseOnClickAway;
 
         [ObservableProperty]
-        private IDialog _dialogUC;
+        private IDialog _dialogUc;
 
-        public DialogVmBase() : base()
+        protected DialogVmBase() : base()
         {
             IsDialogOpen = false;
             IsCloseOnClickAway = false;
@@ -21,10 +21,8 @@ namespace Cs4rsa.BaseClasses
 
         protected override void OpenDialog(IDialog uc)
         {
-            if (uc != null)
-            {
-                DialogUC = uc;
-            }
+            if (uc == null) return;
+            DialogUc = uc;
             IsDialogOpen = true;
             IsCloseOnClickAway = uc.IsCloseOnClickAway();
         }

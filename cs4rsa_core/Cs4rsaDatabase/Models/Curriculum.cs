@@ -6,7 +6,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Models
     {
         public int CurriculumId { get; set; }
         public string Name { get; set; }
-        public List<Student> Students { get; set; }
         public List<DbProgramSubject> DbProgramSubjects { get; set; }
     }
 }

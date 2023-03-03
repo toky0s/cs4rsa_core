@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Cs4rsa.Utils
 {
-    public class StringHelper
+    public abstract class StringHelper
     {
         public static string[] SplitAndRemoveAllSpace(string text)
         {
@@ -23,8 +23,7 @@ namespace Cs4rsa.Utils
         {
             char[] separatingStrings = { VMConstants.CHAR_SPACE, '\n', '\r' };
             string[] sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
-            string ouput = string.Join(VMConstants.STR_SPACE, sliceStrings);
-            return ouput;
+            return string.Join(VMConstants.STR_SPACE, sliceStrings);
         }
 
         public static string ParseDateTime(string text)

@@ -1,5 +1,4 @@
-﻿
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
@@ -27,6 +26,7 @@ using Cs4rsa.ViewModels;
 using Cs4rsa.ViewModels.AutoScheduling;
 using Cs4rsa.ViewModels.Database;
 using Cs4rsa.ViewModels.ManualScheduling;
+using Cs4rsa.ViewModels.Profile;
 
 using HtmlAgilityPack;
 
@@ -40,35 +40,10 @@ using System.Windows;
 
 namespace Cs4rsa
 {
-    public sealed partial class App : Application
+    public sealed partial class App
     {
-        public IServiceProvider Container { get; set; }
-        public IMessenger Messenger { get; set; }
-        public App()
-        {
-            //this.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
-            //Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-        }
-
-        #region Error Handlers
-        //private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        //{
-        //    string errorMessage = string.Format("Second 02 Current_DispatcherUnhandledException An unhandled exception occurred: {0}", e.Exception.Message);
-        //    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    // OR whatever you want like logging etc. MessageBox it's just example
-        //    // for quick debugging etc.
-        //    e.Handled = true;
-        //}
-
-        //private void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        //{
-        //    string errorMessage = string.Format("First 04 Dispatcher_UnhandledException An unhandled exception occurred: {0}", e.Exception.Message);
-        //    MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    // OR whatever you want like logging etc. MessageBox it's just example
-        //    // for quick debugging etc.
-        //    e.Handled = true;
-        //}
-        #endregion
+        public IServiceProvider Container { get; private set; }
+        public IMessenger Messenger { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -142,6 +117,11 @@ namespace Cs4rsa
             services.AddSingleton<ResultViewModel>();
             services.AddSingleton<DbViewModel>();
             services.AddSingleton<DclTabViewModel>();
+
+            // Profile Screen
+            services.AddSingleton<ProfileViewModel>();
+            services.AddSingleton<TeacherViewModel>();
+            services.AddSingleton<StudentPfViewModel>();
 
             return services.BuildServiceProvider();
         }

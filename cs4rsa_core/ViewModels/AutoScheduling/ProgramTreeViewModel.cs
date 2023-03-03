@@ -301,11 +301,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 }
             });
 
-            Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                await LoadStudents();
-            });
-
             CalculateCommand.NotifyCanExecuteChanged();
             DownloadCommand.NotifyCanExecuteChanged();
         }
@@ -425,7 +420,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             if (psm.IsDownloaded)
             {
-                if (_isUseFilter)
+                if (IsUseFilter)
                 {
                     await psm.ApplyFilter();
                 }
@@ -446,12 +441,23 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             DeleteAllCommand.NotifyCanExecuteChanged();
         }
 
-        private async Task LoadStudents()
+        /// <summary>
+        /// Tải thông tin sinh viên có sẵn chương trình học.
+        /// </summary>
+        /// <returns>Task</returns>
+        public async Task LoadStudents()
         {
+            Students.Clear();
             IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
             await foreach (Student student in students)
             {
-                Students.Add(student);
+                if (
+                    student.SpecialString != null
+                    && File.Exists(CredizText.PathProgramJsonFile(student.StudentId))
+                )
+                {
+                    Students.Add(student);
+                }
             }
             if (Students.Any())
             {
@@ -467,10 +473,10 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// </summary>
         private async Task LoadStudentPlan()
         {
-            if (_selectedStudent == null) return;
+            if (SelectedStudent == null || !SelectedStudent.CurriculumId.HasValue) return;
             PlanTableModels.Clear();
 
-            string planPath = CredizText.PathPlanJsonFile(_selectedStudent.CurriculumId);
+            string planPath = CredizText.PathPlanJsonFile(SelectedStudent.CurriculumId.Value);
             if (File.Exists(planPath))
             {
                 string json = await File.ReadAllTextAsync(planPath);
@@ -484,7 +490,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             else
             {
                 MessageBox.Show(
-                    CredizText.AutoMsg001(planPath, _selectedStudent.Name),
+                    CredizText.AutoMsg001(planPath, SelectedStudent.Name),
                     "Thông báo",
                     MessageBoxButton.OK);
             }
@@ -493,7 +499,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private async Task LoadProgramSubject()
         {
             ProgramFolderModels.Clear();
-            string programPath = CredizText.PathProgramJsonFile(_selectedStudent.StudentId);
+            string programPath = CredizText.PathProgramJsonFile(SelectedStudent.StudentId);
             if (File.Exists(programPath))
             {
                 string json = await File.ReadAllTextAsync(programPath);
@@ -518,7 +524,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             }
             else
             {
-                MessageBox.Show(CredizText.AutoMsg001(programPath, _selectedStudent.Name), "Thông báo", MessageBoxButton.OK);
+                MessageBox.Show(CredizText.AutoMsg001(programPath, SelectedStudent.Name), "Thông báo", MessageBoxButton.OK);
             }
         }
 
@@ -571,7 +577,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                     SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
                     SubjectModels.Add(sm);
                     psm.AddCgms(sm.ClassGroupModels);
-                    if (_isUseFilter)
+                    if (IsUseFilter)
                     {
                         await psm.ApplyFilter();
                     }
@@ -676,7 +682,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// </summary>
         private async Task OnFiltering()
         {
-            if (_isUseFilter)
+            if (IsUseFilter)
             {
                 foreach (ProgramSubjectModel psm in ChoosedProSubjectModels)
                 {

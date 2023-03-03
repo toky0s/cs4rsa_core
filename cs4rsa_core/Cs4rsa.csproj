@@ -39,7 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autoupdater.NET.Official" Version="1.7.6" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
@@ -95,7 +94,9 @@
 
   <ItemGroup>
     <Resource Include="Images\background.png" />
-    <Resource Include="Images\default-avatar.jpg" />
+    <Resource Include="Images\default-avatar.jpg">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />

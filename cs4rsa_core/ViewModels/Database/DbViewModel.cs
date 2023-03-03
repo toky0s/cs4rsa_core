@@ -23,7 +23,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.Database
 {
-    internal partial class DbViewModel : ViewModelBase
+    internal partial class DbViewModel : ViewModelBase, IScreenViewModel
     {
         [ObservableProperty]
         private string _currentSemesterInf;
@@ -65,23 +65,17 @@ namespace Cs4rsa.ViewModels.Database
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
             RefreshCommand = new RelayCommand(OnRefresh);
-
-            Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                await LoadInf();
-            });
         }
 
 
         /// <summary>
         /// Khởi tạo infor màn hình.
         /// </summary>
-        private async Task LoadInf()
+        private void LoadInf()
         {
             ProgressValue = 0;
             CurrentSemesterInf = _courseCrawler.CurrentSemesterInfo;
             CurrentYearInf = _courseCrawler.CurrentYearInfo;
-            SubjectQuantity = await _unitOfWork.Keywords.Count();
         }
 
 
@@ -143,15 +137,12 @@ namespace Cs4rsa.ViewModels.Database
 
                     Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg());
                     Messenger.Send(new DbVmMsgs.RefreshMsg());
-                    string msg = CredizText.DbMsg001((int)e.Result);
+                    string msg = CredizText.DbMsg001(result);
                     _snackbarMessageQueue.Enqueue(msg);
                 }
             }
 
-            Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                await LoadInf();
-            });
+            LoadInf();
         }
 
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -171,6 +162,16 @@ namespace Cs4rsa.ViewModels.Database
             {
                 e.Result = ex.Message;
             }
+        }
+
+        public void InitData()
+        {
+            LoadInf();
+        }
+
+        public async Task InitDataAsync()
+        {
+            SubjectQuantity = await _unitOfWork.Keywords.Count();
         }
     }
 }

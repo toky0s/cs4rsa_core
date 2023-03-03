@@ -5,9 +5,11 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 
+using System.Threading.Tasks;
+
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    internal partial class MainSchedulingViewModel : ViewModelBase
+    internal partial class MainSchedulingViewModel : ViewModelBase, IScreenViewModel
     {
         [ObservableProperty]
         private string _currentYearInfo;
@@ -32,6 +34,16 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             TotalCredit = 0;
             TotalSubject = 0;
+        }
+
+        public void InitData()
+        {
+
+        }
+
+        public Task InitDataAsync()
+        {
+            return Task.FromResult<object>(null);
         }
     }
 }

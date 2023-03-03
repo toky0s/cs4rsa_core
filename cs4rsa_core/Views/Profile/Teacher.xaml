@@ -1,22 +1,20 @@
 ﻿<UserControl
-  x:Class="Cs4rsa.Views.Teacher"
+  x:Class="Cs4rsa.Views.Profile.Teacher"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:converter="clr-namespace:Cs4rsa.Converters"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
+  xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels.Profile"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=viewmodels:TeacherViewModel}"
-  d:DesignHeight="450"
-  d:DesignWidth="800"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
   <UserControl.Resources>
     <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
   </UserControl.Resources>
-  <Grid Margin="10" IsEnabled="{Binding IsUpdating, Converter={StaticResource InvertBooleanConverter}}">
+  <Grid IsEnabled="{Binding IsUpdating, Converter={StaticResource InvertBooleanConverter}}">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="6*" />
       <ColumnDefinition Width="2*" />
@@ -128,7 +126,7 @@
                 <Image
                   Grid.Row="0"
                   Margin="0,0,0,10"
-                  Source="{Binding SelectedTeacher.Path, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=../Images/default-avatar.jpg}"
+                  Source="{Binding SelectedTeacher.Path, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=/Images/default-avatar.jpg}"
                   Stretch="UniformToFill" />
                 <TextBlock
                   Grid.Row="1"

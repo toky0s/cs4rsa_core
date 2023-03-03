@@ -1,9 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using Cs4rsa.BaseClasses;
 
 
 namespace Cs4rsa.Views.ManualScheduling
 {
-    public partial class MainScheduling : UserControl
+    public partial class MainScheduling : ScreenAbstract
     {
         public MainScheduling()
         {

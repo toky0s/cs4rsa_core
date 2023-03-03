@@ -25,7 +25,7 @@ namespace Cs4rsa.Dialogs.DialogViews
         /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as ImportSessionViewModel).OnCopyRegisterCode(((UserSubject)((Button)sender).DataContext).RegisterCode);
+            ((ImportSessionViewModel)DataContext).OnCopyRegisterCode(((UserSubject)((Button)sender).DataContext).RegisterCode);
         }
 
         /// <summary>

@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using Cs4rsa.BaseClasses;
 
 namespace Cs4rsa.Views
 {
-    public partial class Info : UserControl
+    public partial class Info : ScreenAbstract
     {
         public Info()
         {

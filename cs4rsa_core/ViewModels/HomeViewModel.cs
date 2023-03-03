@@ -11,9 +11,11 @@ using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils.Interfaces;
 
+using System.Threading.Tasks;
+
 namespace Cs4rsa.ViewModels
 {
-    internal partial class HomeViewModel : ViewModelBase
+    internal partial class HomeViewModel : ViewModelBase, IScreenViewModel
     {
         [ObservableProperty]
         private string _currentYearInfo;
@@ -102,6 +104,16 @@ namespace Cs4rsa.ViewModels
                     _setting.CurrentSetting.CurrentSemesterValue != CourseCrawler.CurrentSemesterValue
                     || _setting.CurrentSetting.CurrentYearValue != CourseCrawler.CurrentYearValue
                 );
+        }
+
+        public void InitData()
+        {
+
+        }
+
+        public Task InitDataAsync()
+        {
+            return Task.FromResult<object>(null);
         }
     }
 }
