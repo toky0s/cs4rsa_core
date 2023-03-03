@@ -1,6 +1,7 @@
 ﻿using Cs4rsa.Utils.Interfaces;
 
 using System.Diagnostics;
+using System.IO;
 
 namespace Cs4rsa.Utils
 {
@@ -13,6 +14,16 @@ namespace Cs4rsa.Utils
                 FileName = url,
                 UseShellExecute = true
             });
+        }
+
+        public void OpenFolderAndSelect(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return;
+            }
+            string arg = "/select, \"" + path + "\"";
+            Process.Start("explorer.exe", arg);
         }
     }
 }

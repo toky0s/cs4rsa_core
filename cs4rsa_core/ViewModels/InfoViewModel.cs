@@ -2,9 +2,11 @@
 using Cs4rsa.Constants;
 using Cs4rsa.Settings.Interfaces;
 
+using System.Threading.Tasks;
+
 namespace Cs4rsa.ViewModels
 {
-    public class InfoViewModel : ViewModelBase
+    public class InfoViewModel : ViewModelBase, IScreenViewModel
     {
         public string Version { get; set; }
 
@@ -23,6 +25,16 @@ namespace Cs4rsa.ViewModels
 
             Version = _setting.Read(VMConstants.STPROPS_VERSION);
             IsChecking = false;
+        }
+
+        public void InitData()
+        {
+
+        }
+
+        public Task InitDataAsync()
+        {
+            return Task.FromResult<object>(null);
         }
     }
 }

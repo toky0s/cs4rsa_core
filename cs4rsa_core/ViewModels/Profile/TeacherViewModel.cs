@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cs4rsa.ViewModels
+namespace Cs4rsa.ViewModels.Profile
 {
     internal partial class TeacherViewModel : ViewModelBase
     {
@@ -107,8 +107,8 @@ namespace Cs4rsa.ViewModels
         private async Task OnUpdate()
         {
             IsUpdating = true;
-            TeacherModel teacherModel = await _teacherCrawler.Crawl(_selectedTeacher.Url, VMConstants.INT_INVALID_COURSEID, true);
-            int selectedTeacherIndex = Lectures.IndexOf(_selectedTeacher);
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(SelectedTeacher.Url, VMConstants.INT_INVALID_COURSEID, true);
+            int selectedTeacherIndex = Lectures.IndexOf(SelectedTeacher);
             if (selectedTeacherIndex >= 0)
             {
                 Lectures.RemoveAt(selectedTeacherIndex);
@@ -147,7 +147,7 @@ namespace Cs4rsa.ViewModels
 
         private void OnOpenOnWeb()
         {
-            _openInBrowser.Open(_selectedTeacher.Url);
+            _openInBrowser.Open(SelectedTeacher.Url);
         }
 
         private void Filter(string searchText)
@@ -172,10 +172,14 @@ namespace Cs4rsa.ViewModels
         {
             Lectures.Clear();
             TotalPage = await _unitOfWork.Teachers.CountPageAsync(SIZE);
-            IAsyncEnumerable<Teacher> teachers = _unitOfWork.Teachers.GetTeachersAsync(_currentPage, SIZE);
+            IAsyncEnumerable<Teacher> teachers = _unitOfWork.Teachers.GetTeachersAsync(CurrentPage, SIZE);
             await foreach (Teacher teacher in teachers)
             {
                 Lectures.Add(new TeacherModel(teacher));
+            }
+            if (Lectures.Any())
+            {
+                SelectedTeacher = Lectures.FirstOrDefault();
             }
             ReEvaluatePreviousNextButton();
         }

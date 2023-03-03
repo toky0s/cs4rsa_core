@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
 using Cs4rsa.Messages.Publishers;
@@ -70,20 +69,20 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private void OnGen()
         {
             int combiCount = _combiModels.Count;
-            if (_batchSize > combiCount)
+            if (BatchSize > combiCount)
             {
                 foreach (CombinationModel cm in _combiModels)
                 {
                     CombinationModels.Insert(0, cm);
                 }
-                _isEnd = true;
+                IsEnd = true;
             }
             else
             {
                 int count = 0;
                 for (
                     int i = _currentIdx;
-                    (i < combiCount && count < _batchSize);
+                    (i < combiCount && count < BatchSize);
                     i++
                 )
                 {
@@ -91,10 +90,10 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                     count++;
                 }
                 _currentIdx = CombinationModels.Count;
-                _isEnd = _currentIdx == _combiModels.Count;
+                IsEnd = _currentIdx == _combiModels.Count;
             }
 
-            if (_isEnd)
+            if (IsEnd)
             {
                 _snbMsgQueue.Enqueue(VMConstants.SNB_ALL_GEN);
                 GenCommand.NotifyCanExecuteChanged();
@@ -105,7 +104,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         {
             CombinationModels.Clear();
             _currentIdx = 0;
-            _isEnd = false;
+            IsEnd = false;
 
             GenCommand.NotifyCanExecuteChanged();
             DelCommand.NotifyCanExecuteChanged();
@@ -117,9 +116,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _snbMsgQueue.Enqueue(
                 VMConstants.SNB_SAVE_TO_STORE,
                 VMConstants.SNBAC_GOTO_STORE,
-                () =>
+                async () =>
                 {
-                    GotoScreen(1);
+                    await GotoScreen(1);
                     GetViewModel<SearchViewModel>().GotoViewCommand.Execute(1);
                 });
         }

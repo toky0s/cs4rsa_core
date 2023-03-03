@@ -216,7 +216,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new RelayCommand(() =>
             {
-                (_showDetailsSubjectUC.DataContext as ShowDetailsSubjectViewModel).SubjectModel = _selectedSubjectModel;
+                ((ShowDetailsSubjectViewModel)_showDetailsSubjectUC.DataContext).SubjectModel = _selectedSubjectModel;
                 OpenDialog(_showDetailsSubjectUC);
             });
             ReloadCommand = new(OnReload);
@@ -526,8 +526,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             ClassGroupModel classGroupModel = GetViewModel<ChoosedViewModel>()
                 .ClassGroupModels
-                    .Where(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode))
-                    .FirstOrDefault();
+                .FirstOrDefault(cgm => cgm.SubjectCode.Equals(_selectedSubjectModel.SubjectCode));
 
             if (classGroupModel != null)
             {

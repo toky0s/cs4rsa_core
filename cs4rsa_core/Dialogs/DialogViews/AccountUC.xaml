@@ -29,7 +29,7 @@
   </UserControl.Resources>
   <md:DialogHost
     CloseOnClickAway="{Binding IsCloseOnClickAway}"
-    DialogContent="{Binding DialogUC}"
+    DialogContent="{Binding DialogUc}"
     IsOpen="{Binding IsDialogOpen}"
     SnackbarMessageQueue="{Binding ElementName=MySnackbar, Path=MessageQueue}">
     <Grid Margin="5">
@@ -76,7 +76,7 @@
                   </Grid.ColumnDefinitions>
                   <Rectangle Width="100" Margin="3">
                     <Rectangle.Fill>
-                      <ImageBrush ImageSource="{Binding AvatarImage, Converter={StaticResource Base64ImageConverter}}" Stretch="UniformToFill" />
+                      <ImageBrush ImageSource="{Binding AvatarImgPath}" Stretch="UniformToFill" />
                     </Rectangle.Fill>
                   </Rectangle>
                   <StackPanel

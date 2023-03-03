@@ -6,6 +6,7 @@ using Cs4rsa.ViewModels;
 using Cs4rsa.Views;
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cs4rsa.BaseClasses
@@ -34,12 +35,12 @@ namespace Cs4rsa.BaseClasses
         }
 
         /// <summary>
-        /// Chuyển tới màn hình chức năng.
+        /// <inheritdoc cref="MainWindow.Goto(int)"/>
         /// </summary>
         /// <param name="scrIdx">Screen Index</param>
-        protected virtual void GotoScreen(int scrIdx)
+        protected virtual async Task GotoScreen(int scrIdx)
         {
-            (Application.Current.MainWindow as MainWindow).Goto(scrIdx);
+            await (Application.Current.MainWindow as MainWindow).Goto(scrIdx);
         }
 
         /// <summary>

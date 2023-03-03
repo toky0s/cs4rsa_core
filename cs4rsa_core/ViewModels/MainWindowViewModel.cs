@@ -7,7 +7,7 @@ using MaterialDesignThemes.Wpf;
 namespace Cs4rsa.ViewModels
 {
     /// <summary>
-    /// MainWindowViewModel này đảm nhiệm phẩn xử lý điều hướng và hiển thị thông báo
+    /// MainWindowViewModel này đảm nhiệm phần xử lý điều hướng và hiển thị thông báo
     /// trong các View. 
     /// Thực hiện khai báo các dịch vụ triển khai DI. 
     /// Thực hiện các chức năng liên quan đến đóng mở Dialog.

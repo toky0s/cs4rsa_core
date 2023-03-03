@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CurriculumCrawlerSvc.Crawlers.Interfaces;
@@ -11,6 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -74,7 +76,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 
             string imageSrcData = imageNode.Attributes["src"].Value;
             Uri imageSrc = new(imageSrcData);
-            string imageBase64Data = await LoadImage(imageSrc);
+            string imgPath = await LoadImage(imageSrc, studentId);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
             Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
@@ -97,7 +99,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                     Email = email,
                     PhoneNumber = phoneNumber,
                     Address = address,
-                    AvatarImage = imageBase64Data,
+                    AvatarImgPath = imgPath,
                     CurriculumId = curriculum.CurriculumId
                 };
                 await _unitOfWork.Students.AddAsync(student);
@@ -114,7 +116,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                 studentExist.Email = email;
                 studentExist.PhoneNumber = phoneNumber;
                 studentExist.Address = address;
-                studentExist.AvatarImage = imageBase64Data;
+                studentExist.AvatarImgPath = imgPath;
                 studentExist.CurriculumId = curriculum.CurriculumId;
                 _unitOfWork.Students.Update(studentExist);
                 await _unitOfWork.CompleteAsync();
@@ -122,7 +124,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
             }
         }
 
-        public async static Task<string> LoadImage(Uri uri)
+        public async static Task<string> LoadImage(Uri uri, string studentId)
         {
             try
             {
@@ -130,8 +132,15 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                 using var response = await client.GetAsync(uri);
                 response.EnsureSuccessStatusCode();
                 Stream stream = await response.Content.ReadAsStreamAsync();
-                return ConvertToBase64(stream);
 
+                string imgPath = CredizText.PathStudentProfileImg(studentId);
+                using (FileStream fileStream = File.Create(imgPath))
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(fileStream);
+                }
+
+                return imgPath;
             }
             catch (Exception ex)
             {
@@ -153,6 +162,35 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
             stream.Seek(0, SeekOrigin.Begin);
             stream.Read(bytes, 0, (int)stream.Length);
             return Convert.ToBase64String(bytes);
+        }
+
+        public async Task<string> DownloadProfileImg(string studentCode)
+        {
+            try
+            {
+                string url = $"http://hfs1.duytan.edu.vn/Upload/dichvu/sv_{studentCode}_01.jpg";
+                using HttpClient httpClient = new();
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                if (response.IsSuccessStatusCode
+                 && response.Content != null)
+                {
+                    using WebClient webClient = new();
+                    await webClient.DownloadFileTaskAsync(
+                        new Uri(url)
+                        , CredizText.PathStudentProfileImg(studentCode)
+                    );
+                    FileInfo fi = new(CredizText.PathStudentProfileImg(studentCode));
+                    if (fi.Exists && fi.Length > 0)
+                    {
+                        return studentCode;
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

@@ -1,19 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
 using Cs4rsa.Constants;
-using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
 
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Cs4rsa.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private static readonly int _heightAndWidth = 24;
+        private const int HeightAndWidth = 24;
         private int _currentMenuItemIndex = -1;
         public MainWindow()
         {
@@ -21,7 +21,6 @@ namespace Cs4rsa.Views
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
-            Goto(0);
         }
 
         private void RenderScreen()
@@ -43,8 +42,8 @@ namespace Cs4rsa.Views
                 PackIcon icon = new()
                 {
                     Kind = item.IconKind,
-                    Width = _heightAndWidth,
-                    Height = _heightAndWidth
+                    Width = HeightAndWidth,
+                    Height = HeightAndWidth
                 };
 
                 TextBlock textBlock = new()
@@ -76,8 +75,8 @@ namespace Cs4rsa.Views
                 PackIcon icon = new()
                 {
                     Kind = item.IconKind,
-                    Width = _heightAndWidth,
-                    Height = _heightAndWidth
+                    Width = HeightAndWidth,
+                    Height = HeightAndWidth
                 };
                 int idx = i;
                 Button button = new()
@@ -87,38 +86,60 @@ namespace Cs4rsa.Views
                     ToolTip = item.MenuName,
                     Foreground = Brushes.White,
                     Style = (Style)FindResource("MaterialDesignToolButton"),
-                    Command = new RelayCommand(() => Goto(idx))
+                    Command = new AsyncRelayCommand(() => Goto(idx))
                 };
 
                 CompactMenu.Children.Add(button);
             }
         }
 
-        public void Goto(int index)
+        /// <summary>
+        /// Di chuyển tới một màn hình trong App.
+        /// 
+        /// **Cập nhật lại Document này mỗi khi 
+        /// thứ tự màn hình có sự thay đổi**
+        /// 
+        /// <list type="bullet">
+        /// <item> 0 - <see cref="ViewConstants.Screen01"/> Trang chủ</item>
+        /// <item> 1 - <see cref="ViewConstants.Screen02"/> Xếp lịch thủ công</item>
+        /// <item> 2 - <see cref="ViewConstants.Screen03"/> Xếp lịch tự động</item>
+        /// <item> 3 - <see cref="ViewConstants.Screen04"/> Hồ sơ</item>
+        /// <item> 4 - <see cref="ViewConstants.Screen05"/> Cơ sở dữ liệu</item>
+        /// <item> 5 - <see cref="ViewConstants.Screen06"/> Thông tin ứng dụng</item>
+        /// </list>
+        /// </summary>
+        /// <param name="index">Index màn hình.</param>
+        public async Task Goto(int index)
         {
             PackIcon icon;
             Button button;
+
+            // Trường hợp chuyển màn hình, đưa icon trước đó về dạng unselect.
             if (index != _currentMenuItemIndex && _currentMenuItemIndex != -1)
             {
                 icon = new()
                 {
                     Kind = ViewConstants.CREDIZ_MENU_ITEMS[_currentMenuItemIndex].IconKind,
-                    Width = _heightAndWidth,
-                    Height = _heightAndWidth
+                    Width = HeightAndWidth,
+                    Height = HeightAndWidth
                 };
                 button = CompactMenu.Children[_currentMenuItemIndex] as Button;
                 button.Content = icon;
             }
 
+            // Đi tới một màn hình, đưa icon về dạng select.
             icon = new()
             {
                 Kind = ViewConstants.CREDIZ_MENU_ITEMS[index].IconKindOnSelected,
-                Width = _heightAndWidth,
-                Height = _heightAndWidth
+                Width = HeightAndWidth,
+                Height = HeightAndWidth
             };
             ListViewMenu.SelectedIndex = index;
             button = CompactMenu.Children[index] as Button;
             button.Content = icon;
+
+            ViewConstants.CREDIZ_MENU_ITEMS[index].LoadSelfData();
+            await ViewConstants.CREDIZ_MENU_ITEMS[index].Screen.LoadComponentsData();
 
             CredizTransitioner.SelectedIndex = index;
             _currentMenuItemIndex = index;
@@ -127,15 +148,14 @@ namespace Cs4rsa.Views
         private async void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox listView = sender as ListBox;
-            Goto(listView.SelectedIndex);
-            int teacherScreenIndex = 3;
-            if (listView.SelectedIndex == teacherScreenIndex)
-            {
-                TeacherViewModel lecture = (TeacherViewModel)(CredizTransitioner.Items[listView.SelectedIndex] as Teacher).DataContext;
-                await lecture.LoadTeachers();
-            }
+            await Goto(listView.SelectedIndex);
             // Close Drawer
             DrawerHost.CloseDrawerCommand.Execute(null, null);
+        }
+
+        private async void MainWd_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Goto(0);
         }
     }
 }

@@ -13,11 +13,22 @@ namespace Cs4rsa.Constants
         /// <param name="handleName">Tên xử lý</param>
         /// <returns></returns>
         public static string Common001(string handleName) => $"Có lỗi trong quá trình xử lý {handleName}";
+        /// <summary>
+        /// Thao tác thành công.
+        /// </summary>
+        /// <param name="actionName">Tên thao tác</param>
+        public static string Common002(string actionName) => $"{actionName} thành công";
         public static string ManualMsg001(string name) => $"Đã bỏ chọn lớp {name}";
         public static string ManualMsg002(string subjectName) => $"Đã xoá môn {subjectName}";
         public static string ManualMsg003(string courseId) => $"Không tồn tại {courseId}";
         public static string ManualMsg004() => $"Sai đường dẫn";
         public static string TeacherMsg001(int tcId) => $"Đã sao chép mã {tcId} vào Clipboard";
+        /// <summary>
+        /// Thông báo: Đã sao chép MSSV vào Clipboard.
+        /// </summary>
+        /// <param name="stId">Mã số sinh viên</param>
+        /// <returns>Thông báo</returns>
+        public static string StudentMsg001(string stId) => $"Đã sao chép MSSV {stId} vào Clipboard";
         /// <summary>
         /// Thông báo file của sinh viên không tồn tại.
         /// </summary>
@@ -28,6 +39,12 @@ namespace Cs4rsa.Constants
         public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, $"StudentProgram_{stdId}.json");
         public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, $"{curid}.json");
         public static string PathHtmlCacheFile(int courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES, $"{courseId}.html");
+        /// <summary>
+        /// Đường dẫn tới hình ảnh hồ sơ sinh viên.
+        /// </summary>
+        /// <param name="studentId">Mã sinh viên</param>
+        /// <returns>Đường dẫn</returns>
+        public static string PathStudentProfileImg(string studentId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_IMGS, $"{studentId}.jpg");
     }
 
     internal static class VMConstants

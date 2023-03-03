@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+﻿using Cs4rsa.BaseClasses;
 
 namespace Cs4rsa.Views
 {
@@ -6,7 +6,7 @@ namespace Cs4rsa.Views
     /// Interaction logic for HomeView.xaml
     /// Không triển khai MVVM
     /// </summary>
-    public partial class Home : UserControl
+    public partial class Home : ScreenAbstract
     {
         public Home()
         {

@@ -10,7 +10,6 @@ using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.Interfaces;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers;
 using Cs4rsa.Services.StudentCrawlerSvc.Crawlers.Interfaces;
-using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
@@ -42,7 +41,8 @@ namespace Cs4rsa.Dialogs.Implements
     /// 24/12/2022: Sửa document, update các xử lý cào chương trình học và chương
     ///             trình học dự kiến.
     /// 25/12/2022: Ngừng tìm kiếm khi đã có trong DB.
-    ///             
+    /// 22/02/2023: Cập nhật quan hệ Model Curriculum và Student thành dạng quan hệ mềm
+    ///             Add check khi curriculum id null.
     /// Author:
     /// toky0s
     /// </summary>
@@ -53,7 +53,6 @@ namespace Cs4rsa.Dialogs.Implements
 
         private readonly IDtuStudentInfoCrawler _dtuStudentInfoCrawler;
         private readonly IStudentPlanCrawler _studentPlanCrawler;
-        private readonly IFolderManager _folderManager;
         private readonly IStudentProgramCrawler _studentProgramCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
@@ -61,7 +60,6 @@ namespace Cs4rsa.Dialogs.Implements
         public SessionInputViewModel(
             IDtuStudentInfoCrawler dtuStudentInfoCrawler,
             IStudentPlanCrawler studentPlanCrawler,
-            IFolderManager folderManager,
             IStudentProgramCrawler studentProgramCrawler,
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue
@@ -69,7 +67,6 @@ namespace Cs4rsa.Dialogs.Implements
         {
             _dtuStudentInfoCrawler = dtuStudentInfoCrawler;
             _studentPlanCrawler = studentPlanCrawler;
-            _folderManager = folderManager;
             _studentProgramCrawler = studentProgramCrawler;
             _unitOfWork = unitOfWork;
             _snackbarMessageQueue = snackbarMessageQueue;
@@ -79,7 +76,7 @@ namespace Cs4rsa.Dialogs.Implements
         {
             // 1. Lấy Special String
             SpecialStringCrawlerV2 specialStringCrawlerV2 = new();
-            string specialStringV2 = await specialStringCrawlerV2.GetSpecialString(_sessionId);
+            string specialStringV2 = await specialStringCrawlerV2.GetSpecialString(SessionId);
             if (specialStringV2 == null)
             {
                 string message = "Hãy chắc chắn bạn đã đăng nhập vào MyDTU trước khi lấy UserSchedules ID, " +
@@ -97,10 +94,10 @@ namespace Cs4rsa.Dialogs.Implements
                 }
                 // 3. Lấy thông tin sinh viên
                 Student student = await _dtuStudentInfoCrawler.Crawl(specialStringV2);
-                if (student != null)
+                if (student != null && student.CurriculumId.HasValue)
                 {
                     // 4. Lấy chương trình học
-                    ProgramFolder[] programs = await _studentProgramCrawler.GetProgramFolders(specialStringV2, student.CurriculumId);
+                    ProgramFolder[] programs = await _studentProgramCrawler.GetProgramFolders(specialStringV2, student.CurriculumId.Value);
                     string programFilePath = CredizText.PathProgramJsonFile(student.StudentId);
 
                     // 4.1 Lưu chương trình học vào file JSON
@@ -112,10 +109,10 @@ namespace Cs4rsa.Dialogs.Implements
                     }
 
                     // 5. Lấy chương trình học dự kiến
-                    IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(student.CurriculumId, _sessionId);
+                    IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(student.CurriculumId.Value, SessionId);
 
                     // 5.1 Lưu chương trình học dự kiến vào file JSON
-                    using (StreamWriter sw = new(CredizText.PathPlanJsonFile(student.CurriculumId)))
+                    using (StreamWriter sw = new(CredizText.PathPlanJsonFile(student.CurriculumId.Value)))
                     using (JsonWriter writer = new JsonTextWriter(sw))
                     {
                         serializer.Serialize(writer, planTables);

@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 {
+    /// <summary>
+    /// Deprecated
+    /// </summary>
     public class DtuStudentInfoCrawler : BaseCrawler, IDtuStudentInfoCrawler
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -86,7 +89,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                     Email = email,
                     PhoneNumber = phoneNumber,
                     Address = address,
-                    AvatarImage = imageBase64Data,
+                    //AvatarImgPath = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
                 await _unitOfWork.Students.AddAsync(student);
@@ -94,6 +97,11 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                 return student;
             }
             return studentExist;
+        }
+
+        public Task<string> DownloadProfileImg(string studentCode)
+        {
+            throw new NotImplementedException();
         }
     }
 }
