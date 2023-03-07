@@ -14,7 +14,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 {
     public partial class SubjectModel : ObservableObject
     {
-        public Subject Subject { get; private set; }
+        [ObservableProperty]
+        public Subject _subject;
 
         public readonly UserSubject UserSubject;
         public List<TeacherModel> Teachers => Subject.Teachers;

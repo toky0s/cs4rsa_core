@@ -11,6 +11,7 @@ using HtmlAgilityPack;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using System.Text.RegularExpressions;
@@ -199,7 +200,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
              *  XinTA - Ngày 19/1/2023
              *  
              * Updated Date:
-             *  XinTA - Ngày 29/1/2023 - Cập nhật tài liệu
+             *  XinTA - Ngày 29/01/2023 - Cập nhật tài liệu
+             *  XinTA - Ngày 07/03/2023 - Add Debug, update if clause flow.
              */
             List<string> tempTeachers = new();
             List<TeacherModel> teachers = new();
@@ -207,7 +209,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             {
                 string teacherName = GetTeacherName(trTagClassLop);
                 IEnumerable<Teacher> dbTeachers = _unitOfWork.Teachers.GetTeacherByNameOrId(teacherName);
-                TeacherModel teacherModel = null;
+                TeacherModel teacherModel;
+                Debug.Assert(dbTeachers.Any());
                 if (dbTeachers.Any())
                 {
                     teacherModel = new(dbTeachers.First());
@@ -215,6 +218,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 else if (!string.IsNullOrEmpty(teacherName))
                 {
                     teacherModel = await GetTeacherFromURL(urlToSubjectDetailPage);
+                }
+                else
+                {
+                    teacherModel = null;
                 }
 
                 // 1. Add tmp teachers
@@ -262,14 +269,18 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 
             Schedule schedule = new ScheduleParser(tdTags[6]).ToSchedule();
 
-            IEnumerable<string> rooms = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText).Distinct();
+            IEnumerable<string> rooms = StringHelper
+                .SplitAndRemoveAllSpace(tdTags[7].InnerText)
+                .Distinct();
 
             Regex regexSpace = new(@"^ *$");
-            IEnumerable<string> locations = StringHelper.SplitAndRemoveNewLine(tdTags[8].InnerText)
+            IEnumerable<string> locations = StringHelper
+                .SplitAndRemoveNewLine(tdTags[8].InnerText)
                 .Where(item => regexSpace.IsMatch(item) == false);
 
-            IEnumerable<string> locationsForPlace = locations.Select(item => item.Trim()).Distinct();
-            IEnumerable<Place> places = locationsForPlace.Select(item => BasicDataConverter.ToPlace(item));
+            IEnumerable<Place> places = locations
+                .Distinct()
+                .Select(item => BasicDataConverter.ToPlace(item));
 
             #region MetaData
             // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
@@ -315,7 +326,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             doc.LoadHtml(trTagClassLop.InnerHtml);
             HtmlNode teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             string[] slices = StringHelper.SplitAndRemoveAllSpace(teacherTdNode.InnerText);
-            string teacherName = string.Join(VMConstants.STR_SPACE, slices);
+            string teacherName = string.Join(VmConstants.StrSpace, slices);
             if (teacherName != string.Empty)
             {
                 _tempTeachers.Add(teacherName);

@@ -37,7 +37,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Models
             }
             else
             {
-                TeachedSubjects = teacher.TeachedSubjects.Split(VMConstants.SPRT_TEACHER_SUBJECTS);
+                TeachedSubjects = teacher.TeachedSubjects.Split(VmConstants.SeparatorTeacherSubject);
             }
             Path = teacher.Path;
             Url = teacher.Url;

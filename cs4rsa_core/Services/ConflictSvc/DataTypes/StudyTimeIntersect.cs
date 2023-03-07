@@ -22,8 +22,8 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
         {
             Start = start;
             End = end;
-            StartString = start.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
-            EndString = end.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            StartString = start.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
+            EndString = end.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
         }
     }
 }

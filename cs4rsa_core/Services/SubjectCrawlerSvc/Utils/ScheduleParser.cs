@@ -78,7 +78,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <param name="trTag"></param>
         private static string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
-            string[] separatingStrings = { VMConstants.STR_SPACE, "\n", "\r", "-", "," };
+            string[] separatingStrings = { VmConstants.StrSpace, "\n", "\r", "-", "," };
             string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return trTagSplitDatas;
         }

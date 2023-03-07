@@ -160,7 +160,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public string GetId()
         {
-            return "tc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
+            return "tc" + VmConstants.CharSpace + FirstSchoolClass.SubjectCode + VmConstants.CharSpace + SecondSchoolClass.SubjectCode;
         }
     }
 }

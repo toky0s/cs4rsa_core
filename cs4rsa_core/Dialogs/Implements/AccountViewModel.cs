@@ -70,9 +70,9 @@ namespace Cs4rsa.Dialogs.Implements
             Students.RemoveAt(index);
 
             Messenger.Send(new AccountVmMsgs.DelStudentMsg(id));
-            _snackbarMessageQueue.Enqueue(
+            SnackbarMessageQueue.Enqueue(
                 $"Bạn vừa xoá {name}",
-                VMConstants.SNBAC_RESTORE,
+                VmConstants.SnbRestore,
                 async (obj) => await OnRestore(obj),
                 actionData
             );
@@ -94,7 +94,7 @@ namespace Cs4rsa.Dialogs.Implements
                 await _unitOfWork.BeginTransAsync();
                 SessionInputUC sessionInputUC = new();
                 SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
-                vm.SessionId = _sessionId;
+                vm.SessionId = SessionId;
 
                 OpenDialog(sessionInputUC);
                 await vm.Find();
@@ -121,7 +121,7 @@ namespace Cs4rsa.Dialogs.Implements
         public async Task LoadStudent()
         {
             Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
             await foreach (Student student in students)
             {
                 Students.Add(student);

@@ -95,7 +95,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             if (IsEnd)
             {
-                _snbMsgQueue.Enqueue(VMConstants.SNB_ALL_GEN);
+                _snbMsgQueue.Enqueue(VmConstants.SnbAllGen);
                 GenCommand.NotifyCanExecuteChanged();
             }
         }
@@ -114,8 +114,8 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         {
             Messenger.Send(new AutoVmMsgs.SaveStoreMsg(CombinationModels));
             _snbMsgQueue.Enqueue(
-                VMConstants.SNB_SAVE_TO_STORE,
-                VMConstants.SNBAC_GOTO_STORE,
+                VmConstants.SnbSaveToStore,
+                VmConstants.SnbGotoStore,
                 async () =>
                 {
                     await GotoScreen(1);

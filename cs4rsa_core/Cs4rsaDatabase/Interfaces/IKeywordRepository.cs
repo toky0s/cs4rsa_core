@@ -7,7 +7,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IKeywordRepository : IGenericRepository<Keyword>
     {
-        int GetCourseId(string subjectCode);
         Task<Keyword> GetKeyword(string discipline, string keyword1);
 
         /// <summary>
@@ -24,12 +23,10 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
-        bool IsHasColor(string color);
         Task<int> CountAsync(string discipline, string keyword);
         IAsyncEnumerable<Keyword> GetBySubjectNameContains(string subjectName);
         IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword);
         IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text);
-        Task<string> GetSubjectCode(int courseId);
 
         /// <summary>
         /// Kiểm tra tồn tại bằng Subject Code

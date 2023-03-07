@@ -76,17 +76,17 @@ namespace Cs4rsa.ViewModels
 
         private void OnGotoManualCommand()
         {
-            _openInBrowser.Open(VMConstants.LK_PROJECT);
+            _openInBrowser.Open(VmConstants.LinkProject);
         }
 
         private void OnGotoGithubCommand()
         {
-            _openInBrowser.Open(VMConstants.LK_PROJECT_PAGE);
+            _openInBrowser.Open(VmConstants.LinkProjectPage);
         }
 
         private void OnGotoForm()
         {
-            _openInBrowser.Open(VMConstants.LK_PROJECT_GG_SHEET);
+            _openInBrowser.Open(VmConstants.LinkProjectGoogleSheet);
         }
 
         private void OnUpdate()

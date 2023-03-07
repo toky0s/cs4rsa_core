@@ -2,7 +2,6 @@
 
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
-using System;
 using System.Collections.Generic;
 
 using static Cs4rsa.Messages.Values.SearchValues;
@@ -24,20 +23,6 @@ namespace Cs4rsa.Messages.Publishers
             /// </summary>
             /// <param name="value">Môn học đã xoá</param>
             public DelSubjectMsg(SubjectModel value) : base(value)
-            {
-            }
-        }
-
-        /// <summary>
-        /// Chọn một môn học trong danh sách đã tải
-        /// </summary>
-        internal sealed class SubjectItemChangedMsg : ValueChangedMessage<Tuple<int, int>>
-        {
-            /// <summary>
-            /// Item1: Tổng tín chỉ
-            /// Item2: Tổng số môn
-            /// </summary>
-            public SubjectItemChangedMsg(Tuple<int, int> value) : base(value)
             {
             }
         }

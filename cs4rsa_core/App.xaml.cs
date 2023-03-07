@@ -135,7 +135,7 @@ namespace Cs4rsa
         private void CreateDbIfNotExists()
         {
             ISetting setting = Container.GetRequiredService<ISetting>();
-            string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
+            string isDatabaseCreated = setting.Read(VmConstants.StDatabaseCreated);
             if (isDatabaseCreated == "false")
             {
                 Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();

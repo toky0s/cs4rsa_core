@@ -1,6 +1,8 @@
 ﻿using Cs4rsa.Constants;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cs4rsa.Utils
@@ -9,21 +11,22 @@ namespace Cs4rsa.Utils
     {
         public static string[] SplitAndRemoveAllSpace(string text)
         {
-            char[] separatingStrings = { VMConstants.CHAR_SPACE, '\n', '\r' };
+            char[] separatingStrings = { VmConstants.CharSpace, '\n', '\r' };
             return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static string[] SplitAndRemoveNewLine(string text)
+        public static IEnumerable<string> SplitAndRemoveNewLine(string text)
         {
             char[] separatingStrings = { '\n', '\r' };
-            return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
+            return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(item => item.Trim());
         }
 
         public static string SuperCleanString(string text)
         {
-            char[] separatingStrings = { VMConstants.CHAR_SPACE, '\n', '\r' };
+            char[] separatingStrings = { VmConstants.CharSpace, '\n', '\r' };
             string[] sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
-            return string.Join(VMConstants.STR_SPACE, sliceStrings);
+            return string.Join(VmConstants.StrSpace, sliceStrings);
         }
 
         public static string ParseDateTime(string text)

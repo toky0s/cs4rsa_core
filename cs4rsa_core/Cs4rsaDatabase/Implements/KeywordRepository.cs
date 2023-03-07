@@ -27,19 +27,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
             Keyword keyword = (from discipline in _context.Disciplines
                                join kw in _context.Keywords on discipline.DisciplineId equals kw.DisciplineId
-                               where discipline.Name + VMConstants.STR_SPACE + kw.Keyword1 == subjectCode
+                               where discipline.Name + VmConstants.StrSpace + kw.Keyword1 == subjectCode
                                select kw).FirstOrDefault();
             return keyword.Color;
-        }
-
-        public int GetCourseId(string subjectCode)
-        {
-            char[] splitChar = { VMConstants.CHAR_SPACE };
-            string[] slices = subjectCode.Split(splitChar);
-            return _context.Keywords
-                .Where(kw => kw.Discipline.Name == slices[0] && kw.Keyword1 == slices[1])
-                .FirstOrDefault()
-                .CourseId;
         }
 
         public async Task<Keyword> GetKeyword(string discipline, string keyword1)
@@ -52,11 +42,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
         }
 
-        public bool IsHasColor(string color)
-        {
-            return _context.Keywords.Where(kw => kw.Color == color).Any();
-        }
-
         public async Task<Keyword> GetKeyword(int courseId)
         {
             IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from kw in _context.Keywords
@@ -67,7 +52,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public async Task<Keyword> GetKeyword(string subjectCode)
         {
-            char[] splitChars = { VMConstants.CHAR_SPACE };
+            char[] splitChars = { VmConstants.CharSpace };
             string[] slices = subjectCode.Split(splitChars);
             return await GetKeyword(slices[0], slices[1]);
         }
@@ -107,19 +92,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 .AsAsyncEnumerable();
         }
 
-        public async Task<string> GetSubjectCode(int courseId)
-        {
-            var result = await (from dis in _context.Disciplines
-                                join kw in _context.Keywords
-                                on new { jprop1 = dis.DisciplineId, jprop2 = courseId, }
-                                equals new { jprop1 = kw.DisciplineId, jprop2 = kw.CourseId, }
-                                select new { dis.Name, kw.Keyword1 }).FirstOrDefaultAsync();
-            return result.Name + VMConstants.STR_SPACE + result.Keyword1;
-        }
-
         public async Task<bool> ExistBySubjectCodeAsync(string subjectCode)
         {
-            char[] splitChars = { VMConstants.CHAR_SPACE };
+            char[] splitChars = { VmConstants.CharSpace };
             string[] slices = subjectCode.Split(splitChars);
             return await (
                 from ds in _context.Disciplines

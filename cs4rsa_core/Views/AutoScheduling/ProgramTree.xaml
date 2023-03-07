@@ -38,19 +38,18 @@
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
       <Grid Grid.Row="0" Margin="0,0,0,5">
-        <Grid.RowDefinitions>
-          <RowDefinition />
-          <RowDefinition />
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
           <ColumnDefinition />
+          <ColumnDefinition Width="auto" />
+          <ColumnDefinition Width="auto" />
+          <ColumnDefinition Width="auto" />
           <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <ComboBox
           x:Name="StudentCbx"
-          Grid.Row="0"
           Grid.Column="0"
           Margin="0,0,5,0"
+          Padding="7"
           ItemsSource="{Binding Students}"
           SelectedItem="{Binding SelectedStudent}"
           Style="{StaticResource MaterialDesignOutlinedComboBox}">
@@ -61,225 +60,216 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <Button
-          x:Name="GotoFilterBtn"
-          Grid.Row="0"
           Grid.Column="1"
-          Height="{Binding ElementName=StudentCbx, Path=Width}"
+          Margin="0,0,5,0"
+          Command="{Binding LoadProgramCommand}"
+          Content="{md:PackIcon Kind=ArrowDownBoldOutline}"
+          Style="{StaticResource MaterialDesignOutlinedButton}"
+          ToolTip="Tải chương trình học" />
+        <Button
+          x:Name="GotoFilterBtn"
+          Grid.Column="2"
+          Margin="0,0,5,0"
           Click="GotoFilterBtn_Click">
           <Button.Style>
             <Style BasedOn="{StaticResource MaterialDesignOutlinedButton}" TargetType="Button">
-              <Setter Property="Content" Value="{md:PackIcon Kind=FileTreeOutline, Size=24}" />
+              <Setter Property="Content" Value="{md:PackIcon Kind=FileTreeOutline}" />
               <Setter Property="ToolTip" Value="Cây chương trình" />
               <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=Trans1, Path=SelectedIndex}" Value="0">
-                  <Setter Property="Content" Value="{md:PackIcon Kind=Filter, Size=24}" />
+                  <Setter Property="Content" Value="{md:PackIcon Kind=FilterOutline}" />
                   <Setter Property="ToolTip" Value="Bộ lọc" />
                 </DataTrigger>
               </Style.Triggers>
             </Style>
           </Button.Style>
         </Button>
+        <Button
+          Grid.Column="3"
+          Margin="0,0,5,0"
+          Command="{Binding AccountCommand}"
+          Content="{md:PackIcon Kind=AccountOutline}"
+          Style="{StaticResource MaterialDesignOutlinedButton}"
+          ToolTip="Thông tin tài khoản" />
+        <Button
+          Grid.Column="4"
+          Margin="0,0,5,0"
+          Command="{Binding MyProgramCommand}"
+          Content="{md:PackIcon Kind=FileTableOutline}"
+          Style="{StaticResource MaterialDesignOutlinedButton}"
+          ToolTip="Chương trình dự kiến" />
       </Grid>
-
       <md:Transitioner
         x:Name="Trans1"
         Grid.Row="1"
+        Grid.ColumnSpan="2"
         SelectedIndex="0">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-          </Grid.RowDefinitions>
+        <!--  Cây chương trình học  -->
+        <TreeView
+          x:Name="Tv_Program"
+          Grid.Row="1"
+          HorizontalContentAlignment="Stretch"
+          ItemsSource="{Binding ProgramFolderModels}"
+          RequestBringIntoView="TreeViewItem_RequestBringIntoView">
+          <TreeView.Resources>
 
-          <!--  Nút chức năng  -->
-          <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button
-              Margin="0,0,5,0"
-              md:ButtonProgressAssist.IsIndeterminate="{Binding IsFinding}"
-              md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsFinding}"
-              md:ButtonProgressAssist.Value="-1"
-              Command="{Binding LoadProgramCommand}"
-              Content="TẢI CHƯƠNG TRÌNH HỌC" />
-            <Button
-              Margin="0,0,5,0"
-              Command="{Binding AccountCommand}"
-              Content="{md:PackIcon Kind=Account}"
-              ToolTip="Thông tin tài khoản" />
-            <Button
-              Margin="0,0,5,0"
-              Command="{Binding MyProgramCommand}"
-              Content="{md:PackIcon Kind=Table}"
-              ToolTip="Chương trình dự kiến" />
-
-          </StackPanel>
-
-          <!--  Cây chương trình học  -->
-          <TreeView
-            x:Name="Tv_Program"
-            Grid.Row="1"
-            HorizontalContentAlignment="Stretch"
-            ItemsSource="{Binding ProgramFolderModels}"
-            RequestBringIntoView="TreeViewItem_RequestBringIntoView">
-            <TreeView.Resources>
-
-              <!--  Program Folder  -->
-              <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
-                <HierarchicalDataTemplate.ItemContainerStyle>
-                  <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
-                    <Setter Property="IsExpanded" Value="True" />
-                    <Style.Triggers>
-                      <MultiDataTrigger>
-                        <MultiDataTrigger.Conditions>
-                          <Condition Binding="{Binding NodeType}" Value="Folder" />
-                          <Condition Binding="{Binding IsCompleted}" Value="True" />
-                        </MultiDataTrigger.Conditions>
-                        <Setter Property="IsExpanded" Value="False" />
-                      </MultiDataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </HierarchicalDataTemplate.ItemContainerStyle>
-                <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
-                  <md:TransitioningContent.OpeningEffects>
-                    <md:TransitionEffect Kind="FadeIn" />
-                    <md:TransitionEffect Kind="ExpandIn" />
-                    <md:TransitionEffect Kind="SlideInFromTop" />
-                    <md:TransitionEffect Kind="SlideInFromLeft" />
-                  </md:TransitioningContent.OpeningEffects>
-                  <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                      <md:PackIcon Margin="0,0,5,0">
-                        <md:PackIcon.Style>
-                          <Style TargetType="md:PackIcon">
-                            <Setter Property="Kind" Value="Folder" />
-                            <Setter Property="Foreground" Value="#eb4d4b" />
-                            <Setter Property="ToolTip" Value="Chưa hoàn tất" />
-                            <Style.Triggers>
-                              <DataTrigger Binding="{Binding IsCompleted}" Value="True">
-                                <Setter Property="Foreground" Value="#6ab04c" />
-                                <Setter Property="Kind" Value="FolderCheck" />
-                                <Setter Property="ToolTip" Value="Đã hoàn tất" />
-                              </DataTrigger>
-                            </Style.Triggers>
-                          </Style>
-                        </md:PackIcon.Style>
-                      </md:PackIcon>
-                      <TextBlock Text="{Binding FolderName}" />
-                    </StackPanel>
-                    <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding Description}" />
-                  </StackPanel>
-                </md:TransitioningContent>
-              </HierarchicalDataTemplate>
-
-              <!--  Program Subject  -->
-              <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
-                <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
-                  <md:TransitioningContent.OpeningEffects>
-                    <md:TransitionEffect Kind="FadeIn" />
-                    <md:TransitionEffect Kind="ExpandIn" />
-                    <md:TransitionEffect Kind="SlideInFromTop" />
-                    <md:TransitionEffect Kind="SlideInFromLeft" />
-                  </md:TransitioningContent.OpeningEffects>
+            <!--  Program Folder  -->
+            <HierarchicalDataTemplate DataType="{x:Type model:ProgramFolderModel}" ItemsSource="{Binding ChildItems}">
+              <HierarchicalDataTemplate.ItemContainerStyle>
+                <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+                  <Setter Property="IsExpanded" Value="True" />
+                  <Style.Triggers>
+                    <MultiDataTrigger>
+                      <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding NodeType}" Value="Folder" />
+                        <Condition Binding="{Binding IsCompleted}" Value="True" />
+                      </MultiDataTrigger.Conditions>
+                      <Setter Property="IsExpanded" Value="False" />
+                    </MultiDataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </HierarchicalDataTemplate.ItemContainerStyle>
+              <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
+                <md:TransitioningContent.OpeningEffects>
+                  <md:TransitionEffect Kind="FadeIn" />
+                  <md:TransitionEffect Kind="ExpandIn" />
+                  <md:TransitionEffect Kind="SlideInFromTop" />
+                  <md:TransitionEffect Kind="SlideInFromLeft" />
+                </md:TransitioningContent.OpeningEffects>
+                <StackPanel Orientation="Vertical">
                   <StackPanel Orientation="Horizontal">
-                    <md:PackIcon Margin="0,0,5,0" VerticalAlignment="Center">
+                    <md:PackIcon Margin="0,0,5,0">
                       <md:PackIcon.Style>
                         <Style TargetType="md:PackIcon">
-                          <Setter Property="Kind" Value="FlagVariant" />
+                          <Setter Property="Kind" Value="Folder" />
                           <Setter Property="Foreground" Value="#eb4d4b" />
-                          <Setter Property="ToolTip" Value="Chưa học" />
+                          <Setter Property="ToolTip" Value="Chưa hoàn tất" />
                           <Style.Triggers>
-                            <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
-                              <Setter Property="Kind" Value="CheckBold" />
+                            <DataTrigger Binding="{Binding IsCompleted}" Value="True">
                               <Setter Property="Foreground" Value="#6ab04c" />
-                              <Setter Property="ToolTip" Value="Đã học" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
-                              <Setter Property="Kind" Value="School" />
-                              <Setter Property="Foreground" Value="#30336b" />
-                              <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
+                              <Setter Property="Kind" Value="FolderCheck" />
+                              <Setter Property="ToolTip" Value="Đã hoàn tất" />
                             </DataTrigger>
                           </Style.Triggers>
                         </Style>
                       </md:PackIcon.Style>
                     </md:PackIcon>
-                    <Rectangle
-                      Width="8"
-                      Height="8"
-                      Margin="0,0,5,0">
-                      <Rectangle.Style>
-                        <Style TargetType="Rectangle">
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding Color}" Value="">
-                              <Setter Property="Fill" Value="Transparent" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                          <Setter Property="Fill" Value="{Binding Color}" />
-                        </Style>
-                      </Rectangle.Style>
-                    </Rectangle>
-                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
-                      <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding Color}" Value="">
-                              <Setter Property="FontStyle" Value="Italic" />
-                              <Setter Property="Foreground" Value="Gray" />
-                              <Setter Property="ToolTip" Value="Không có sẵn trong kỳ này" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </TextBlock.Style>
-                      <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0} - {1}">
-                          <Binding Path="SubjectCode" />
-                          <Binding Path="SubjectName" />
-                        </MultiBinding>
-                      </TextBlock.Text>
-                    </TextBlock>
-
-                    <!--  Add subject button  -->
-                    <Button
-                      Click="Add_Button_Click"
-                      Content="{md:PackIcon Kind=ArrowRight}"
-                      IsEnabled="{Binding IsChoosed, Converter={StaticResource InvertBooleanConverter}}">
-                      <Button.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignToolForegroundButton}" TargetType="Button">
-                          <Setter Property="Visibility" Value="Visible" />
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding Color}" Value="">
-                              <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsDone}" Value="True">
-                              <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsAvaiable}" Value="False">
-                              <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Button.Style>
-                    </Button>
+                    <TextBlock Text="{Binding FolderName}" />
                   </StackPanel>
-                </md:TransitioningContent>
-              </DataTemplate>
-            </TreeView.Resources>
+                  <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding Description}" />
+                </StackPanel>
+              </md:TransitioningContent>
+            </HierarchicalDataTemplate>
 
-            <TreeView.ItemContainerStyle>
-              <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
-                <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView" />
-                <Setter Property="IsExpanded" Value="True" />
-                <Style.Triggers>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding NodeType}" Value="Folder" />
-                      <Condition Binding="{Binding IsCompleted}" Value="True" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="IsExpanded" Value="False" />
-                  </MultiDataTrigger>
-                </Style.Triggers>
-              </Style>
-            </TreeView.ItemContainerStyle>
-          </TreeView>
-        </Grid>
+            <!--  Program Subject  -->
+            <DataTemplate DataType="{x:Type model:ProgramSubjectModel}">
+              <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.02}">
+                <md:TransitioningContent.OpeningEffects>
+                  <md:TransitionEffect Kind="FadeIn" />
+                  <md:TransitionEffect Kind="ExpandIn" />
+                  <md:TransitionEffect Kind="SlideInFromTop" />
+                  <md:TransitionEffect Kind="SlideInFromLeft" />
+                </md:TransitioningContent.OpeningEffects>
+                <StackPanel Orientation="Horizontal">
+                  <md:PackIcon Margin="0,0,5,0" VerticalAlignment="Center">
+                    <md:PackIcon.Style>
+                      <Style TargetType="md:PackIcon">
+                        <Setter Property="Kind" Value="FlagVariant" />
+                        <Setter Property="Foreground" Value="#eb4d4b" />
+                        <Setter Property="ToolTip" Value="Chưa học" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=Completed}" Value="True">
+                            <Setter Property="Kind" Value="CheckBold" />
+                            <Setter Property="Foreground" Value="#6ab04c" />
+                            <Setter Property="ToolTip" Value="Đã học" />
+                          </DataTrigger>
+                          <DataTrigger Binding="{Binding StudyState, Converter={StaticResource StudyStateConverter}, ConverterParameter=NoHavePoint}" Value="True">
+                            <Setter Property="Kind" Value="School" />
+                            <Setter Property="Foreground" Value="#30336b" />
+                            <Setter Property="ToolTip" Value="Đã/đang học hoặc chưa có điểm" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </md:PackIcon.Style>
+                  </md:PackIcon>
+                  <Rectangle
+                    Width="8"
+                    Height="8"
+                    Margin="0,0,5,0">
+                    <Rectangle.Style>
+                      <Style TargetType="Rectangle">
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding Color}" Value="">
+                            <Setter Property="Fill" Value="Transparent" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="Fill" Value="{Binding Color}" />
+                      </Style>
+                    </Rectangle.Style>
+                  </Rectangle>
+                  <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                      <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding Color}" Value="">
+                            <Setter Property="FontStyle" Value="Italic" />
+                            <Setter Property="Foreground" Value="Gray" />
+                            <Setter Property="ToolTip" Value="Không có sẵn trong kỳ này" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </TextBlock.Style>
+                    <TextBlock.Text>
+                      <MultiBinding StringFormat="{}{0} - {1}">
+                        <Binding Path="SubjectCode" />
+                        <Binding Path="SubjectName" />
+                      </MultiBinding>
+                    </TextBlock.Text>
+                  </TextBlock>
+
+                  <!--  Add subject button  -->
+                  <Button
+                    Click="Add_Button_Click"
+                    Content="{md:PackIcon Kind=ArrowRight}"
+                    IsEnabled="{Binding IsChoosed, Converter={StaticResource InvertBooleanConverter}}">
+                    <Button.Style>
+                      <Style BasedOn="{StaticResource MaterialDesignToolForegroundButton}" TargetType="Button">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding Color}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                          </DataTrigger>
+                          <DataTrigger Binding="{Binding IsDone}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                          </DataTrigger>
+                          <DataTrigger Binding="{Binding IsAvaiable}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </Button.Style>
+                  </Button>
+                </StackPanel>
+              </md:TransitioningContent>
+            </DataTemplate>
+          </TreeView.Resources>
+
+          <TreeView.ItemContainerStyle>
+            <Style BasedOn="{StaticResource MaterialDesignTreeViewItem}" TargetType="TreeViewItem">
+              <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView" />
+              <Setter Property="IsExpanded" Value="True" />
+              <Style.Triggers>
+                <MultiDataTrigger>
+                  <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding NodeType}" Value="Folder" />
+                    <Condition Binding="{Binding IsCompleted}" Value="True" />
+                  </MultiDataTrigger.Conditions>
+                  <Setter Property="IsExpanded" Value="False" />
+                </MultiDataTrigger>
+              </Style.Triggers>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView>
 
         <Grid>
           <Grid.RowDefinitions>
@@ -590,7 +580,6 @@
           </ScrollViewer>
         </Grid>
       </md:Transitioner>
-
     </Grid>
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>

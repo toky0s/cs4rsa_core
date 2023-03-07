@@ -17,7 +17,6 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <TextBlock
       Grid.Row="0"
@@ -36,91 +35,72 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.05}">
-              <md:TransitioningContent.OpeningEffects>
-                <md:TransitionEffect Kind="FadeIn" />
-                <md:TransitionEffect Kind="ExpandIn" />
-              </md:TransitioningContent.OpeningEffects>
-              <md:Card Margin="0,0,7,7" Padding="5">
-                <Grid>
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                  </Grid.RowDefinitions>
-                  <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,5"
-                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                    Text="{Binding Name}" />
-                  <ItemsControl Grid.Row="1" ItemsSource="{Binding PlanRecordModels}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <md:TransitioningContent OpeningEffectsOffset="{md:IndexedItemOffsetMultiplier 0:0:0.07}">
-                          <md:TransitioningContent.OpeningEffects>
-                            <md:TransitionEffect Kind="FadeIn" />
-                            <md:TransitionEffect Kind="ExpandIn" />
-                            <md:TransitionEffect Kind="SlideInFromLeft" />
-                          </md:TransitioningContent.OpeningEffects>
-                          <Grid>
-                            <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="*" />
-                              <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <CheckBox
-                              Grid.Column="0"
-                              VerticalAlignment="Center"
-                              IsChecked="{Binding IsSelected}"
-                              IsEnabled="{Binding IsAvailable}">
-                              <CheckBox.Content>
-                                <TextBlock
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Center"
-                                  TextWrapping="WrapWithOverflow">
-                                  <Run Text="{Binding SubjectCode}" />
-                                  <Run Text="{Binding SubjectName}" />
-                                </TextBlock>
-                              </CheckBox.Content>
-                            </CheckBox>
+            <md:Card Margin="0,0,7,7" Padding="5">
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="*" />
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                  Grid.Row="0"
+                  Margin="0,0,0,5"
+                  Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                  Text="{Binding Name}" />
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding PlanRecordModels}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox
+                          Grid.Column="0"
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding IsSelected}"
+                          IsEnabled="{Binding IsAvailable}">
+                          <CheckBox.Content>
                             <TextBlock
-                              Grid.Column="2"
+                              HorizontalAlignment="Left"
                               VerticalAlignment="Center"
-                              FontWeight="Bold"
-                              Text="{Binding StudyUnit}" />
-                          </Grid>
-                        </md:TransitioningContent>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                  <Separator Grid.Row="2" />
-                  <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                      Grid.Column="0"
-                      VerticalAlignment="Center"
-                      Text="Tổng số tín chỉ" />
-                    <TextBlock
-                      Grid.Column="2"
-                      VerticalAlignment="Center"
-                      FontWeight="Bold"
-                      Text="{Binding TotalUnit}" />
-                  </Grid>
+                              TextWrapping="WrapWithOverflow">
+                              <Run Text="{Binding SubjectCode}" />
+                              <Run Text="{Binding SubjectName}" />
+                            </TextBlock>
+                          </CheckBox.Content>
+                        </CheckBox>
+                        <TextBlock
+                          Grid.Column="2"
+                          VerticalAlignment="Center"
+                          FontWeight="Bold"
+                          Text="{Binding StudyUnit}" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Separator Grid.Row="2" />
+                <Grid Grid.Row="3">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Tổng số tín chỉ" />
+                  <TextBlock
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="{Binding TotalUnit}" />
                 </Grid>
-              </md:Card>
-            </md:TransitioningContent>
+              </Grid>
+            </md:Card>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
     </ScrollViewer>
-    <Grid Grid.Row="2" HorizontalAlignment="Right">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="auto" />
-      </Grid.ColumnDefinitions>
-      <Button Grid.Column="0" Content="CHỌN" />
-    </Grid>
   </Grid>
 </UserControl>

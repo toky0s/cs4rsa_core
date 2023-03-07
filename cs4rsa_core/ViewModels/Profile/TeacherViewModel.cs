@@ -107,7 +107,7 @@ namespace Cs4rsa.ViewModels.Profile
         private async Task OnUpdate()
         {
             IsUpdating = true;
-            TeacherModel teacherModel = await _teacherCrawler.Crawl(SelectedTeacher.Url, VMConstants.INT_INVALID_COURSEID, true);
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(SelectedTeacher.Url, VmConstants.IntInvalidCourseId, true);
             int selectedTeacherIndex = Lectures.IndexOf(SelectedTeacher);
             if (selectedTeacherIndex >= 0)
             {

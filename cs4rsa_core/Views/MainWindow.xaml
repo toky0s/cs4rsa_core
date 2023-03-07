@@ -9,12 +9,12 @@
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   x:Name="MainWd"
   Title="Crediz"
-  Loaded="MainWd_Loaded"
   d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
   Background="{DynamicResource MaterialDesignPaper}"
   FontFamily="{DynamicResource MaterialDesignFont}"
   IsEnabled="{Binding IsWindowEnable}"
+  Loaded="MainWd_Loaded"
   TextElement.FontSize="13"
   TextElement.FontWeight="Regular"
   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -34,6 +34,7 @@
     </Style>
   </Window.Resources>
   <materialDesign:DialogHost
+    x:Name="DialogHost"
     CloseOnClickAway="{Binding IsCloseOnClickAway}"
     DialogContent="{Binding DialogUC}"
     IsOpen="{Binding IsOpen}">

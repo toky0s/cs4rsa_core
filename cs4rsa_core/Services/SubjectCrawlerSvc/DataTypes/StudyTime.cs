@@ -21,8 +21,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             _startAsString = start;
             _endAsString = end;
-            _start = DateTime.ParseExact(start, VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
-            _end = DateTime.ParseExact(end, VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture);
+            _start = DateTime.ParseExact(start, VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+            _end = DateTime.ParseExact(end, VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public Session GetSession()
@@ -46,8 +46,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         private bool IsInMorning()
         {
             DateTime[] MorningTime =  {
-                DateTime.ParseExact("07:00", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
-                DateTime.ParseExact("11:15", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture)
+                DateTime.ParseExact("07:00", VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("11:15", VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture)
             };
             if (_start <= MorningTime[1])
             {
@@ -63,8 +63,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         private bool IsInAfternoon()
         {
             DateTime[] AfternoonTime =  {
-                DateTime.ParseExact("13:00", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture),
-                DateTime.ParseExact("17:15", VMConstants.TIME_HH_MM_FORMAT, System.Globalization.CultureInfo.InvariantCulture)
+                DateTime.ParseExact("13:00", VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture),
+                DateTime.ParseExact("17:15", VmConstants.TimeFormat, System.Globalization.CultureInfo.InvariantCulture)
             };
             if (_start >= AfternoonTime[0] && _start <= AfternoonTime[1])
             {

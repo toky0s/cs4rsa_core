@@ -21,7 +21,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     .AsEnumerable()
                     .Where(teacher =>
                         (
-                             teacher.Name.ToLower().Contains(nameOrId)
+                             teacher.Name.ToLower().Contains(nameOrId.ToLower())
                           || teacher.TeacherId.ToString().Contains(nameOrId)
                         )
                         && !string.IsNullOrEmpty(nameOrId));

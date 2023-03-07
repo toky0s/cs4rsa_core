@@ -102,6 +102,9 @@ namespace Cs4rsa.Constants
             , new MainScheduling()
             , VIEWMODEL_NAMESPACE + ".ManualScheduling.MainSchedulingViewModel");
 
+        /// <summary>
+        /// Màn hình Xếp lịch tự động
+        /// </summary>
         public static readonly CredizMenuItem Screen03 = new(
             "Xếp lịch tự động"
             , PackIconKind.LightbulbOutline

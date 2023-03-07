@@ -23,7 +23,7 @@ namespace Cs4rsa.ViewModels
         {
             _setting = setting;
 
-            Version = _setting.Read(VMConstants.STPROPS_VERSION);
+            Version = _setting.Read(VmConstants.StVersion);
             IsChecking = false;
         }
 

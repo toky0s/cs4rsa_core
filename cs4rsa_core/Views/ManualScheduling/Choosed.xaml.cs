@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using Cs4rsa.ViewModels.ManualScheduling;
+
+using System.Windows.Controls;
 
 namespace Cs4rsa.Views.ManualScheduling
 {
@@ -7,6 +9,11 @@ namespace Cs4rsa.Views.ManualScheduling
         public Choosed()
         {
             InitializeComponent();
+        }
+
+        private void Btn_SolveConflict_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ((ChoosedViewModel)DataContext).SolveConflictCommand.Execute(null);
         }
     }
 }

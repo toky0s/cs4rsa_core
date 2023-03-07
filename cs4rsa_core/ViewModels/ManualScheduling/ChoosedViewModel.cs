@@ -164,11 +164,11 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             {
                 string registerCode = SelectedClassGroupModel.RegisterCodes[0];
                 Clipboard.SetData(DataFormats.Text, registerCode);
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_COPY_SUCCESS + VMConstants.STR_SPACE + registerCode);
+                _snackbarMessageQueue.Enqueue(VmConstants.SnbCopySuccess + VmConstants.StrSpace + registerCode);
             }
             else
             {
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_NF_REGISTER_CODE);
+                _snackbarMessageQueue.Enqueue(VmConstants.SnbNfRegisterCode);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
             Messenger.Send(new DelAllClassGroupChoiceMsg(DBNull.Value));
-            _snackbarMessageQueue.Enqueue(VMConstants.SNB_UNSELECT_ALL, VMConstants.SNBAC_RESTORE, OnRestore, actionData);
+            _snackbarMessageQueue.Enqueue(VmConstants.SnbUnselectAll, VmConstants.SnbRestore, OnRestore, actionData);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(
                 message,
-                VMConstants.SNBAC_RESTORE,
+                VmConstants.SnbRestore,
                 (obj) => AddClassGroupModel(actionData),
                 actionData
             );
@@ -337,6 +337,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
+                _phaseStore.AddClassGroupModel(classGroupModel);
             }
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
@@ -375,7 +376,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             if (className == string.Empty || className == null)
             {
-                _snackbarMessageQueue.Enqueue(VMConstants.SNB_INVALID_UNSELECT_SUBJECT_NAME);
+                _snackbarMessageQueue.Enqueue(VmConstants.SnbInvalidUnselectSubjectName);
                 return;
             }
             ClassGroupModel actionData;
@@ -389,7 +390,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                     ClassGroupModels.RemoveAt(i);
                     _snackbarMessageQueue.Enqueue(
                         CredizText.ManualMsg001(className),
-                        VMConstants.SNBAC_RESTORE,
+                        VmConstants.SnbRestore,
                         (obj) => AddClassGroupModel(actionData),
                         actionData
                     );

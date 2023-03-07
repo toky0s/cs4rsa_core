@@ -21,11 +21,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await _context.DbProgramSubjects.AnyAsync(ps => ps.CourseId.Equals(courseId));
         }
 
-        public async Task<DbProgramSubject> GetByCourseIdAsync(string courseId)
-        {
-            return await _context.DbProgramSubjects.FirstOrDefaultAsync(p => p.CourseId == courseId);
-        }
-
         public IEnumerable<string> GetParByCourseId(string courseId)
         {
             return from p in _context.DbProgramSubjects

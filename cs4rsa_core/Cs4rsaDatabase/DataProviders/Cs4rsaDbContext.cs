@@ -27,7 +27,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(VMConstants.DB_CONN);
+            optionsBuilder.UseSqlite(VmConstants.DbConnectionString);
             base.OnConfiguring(optionsBuilder);
         }
 

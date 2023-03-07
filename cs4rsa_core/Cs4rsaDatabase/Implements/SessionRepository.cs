@@ -15,14 +15,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
         }
 
-        //public async Task<List<SessionDetail>> GetSessionDetails(int sessionId)
-        //{
-        //    return await _context.ScheduleDetails
-        //        .Where(sessionDetail => sessionDetail.UserScheduleId == sessionId)
-        //        .AsNoTracking()
-        //        .ToListAsync();
-        //}
-
         IEnumerable<ScheduleDetail> IUserScheduleRepository.GetSessionDetails(int sessionId)
         {
             return _context.ScheduleDetails
