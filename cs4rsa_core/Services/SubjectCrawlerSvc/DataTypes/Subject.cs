@@ -11,7 +11,6 @@ using HtmlAgilityPack;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using System.Text.RegularExpressions;
@@ -210,7 +209,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 string teacherName = GetTeacherName(trTagClassLop);
                 IEnumerable<Teacher> dbTeachers = _unitOfWork.Teachers.GetTeacherByNameOrId(teacherName);
                 TeacherModel teacherModel;
-                Debug.Assert(dbTeachers.Any());
                 if (dbTeachers.Any())
                 {
                     teacherModel = new(dbTeachers.First());
@@ -230,16 +228,15 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                     tempTeachers.Add(teacherName);
                 }
 
-                // 2. Add teachers for global subject
-                if (!Teachers.Contains(teacherModel))
-                {
-                    Teachers.Add(teacherModel);
-                }
-
-                // 3. Add teachers for class group model
                 if (teacherModel != null)
                 {
+                    // 2. Add teachers for class group model
                     teachers.Add(teacherModel);
+                    // 3. Add teachers for global subject
+                    if (!Teachers.Contains(teacherModel))
+                    {
+                        Teachers.Add(teacherModel);
+                    }
                 }
             }
             #endregion

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
@@ -10,7 +9,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// </summary>
         /// <param name="limit">Giới hạn số phần tử.</param>
         /// <returns>Số lượng trang.</returns>
-        Task<int> CountPageAsync(int limit);
+        long CountPage(int limit);
         /// <summary>
         /// Lấy ra danh sách <typeparamref name="T"/>.
         /// </summary>

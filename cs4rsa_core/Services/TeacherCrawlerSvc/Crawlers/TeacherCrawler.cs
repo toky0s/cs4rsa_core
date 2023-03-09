@@ -39,7 +39,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             _folderManager = folderManager;
             _htmlWeb = htmlWeb;
 
-            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_TEACHER_IMAGES);
+            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FdTeacherImgs);
             _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists(path);
         }
 

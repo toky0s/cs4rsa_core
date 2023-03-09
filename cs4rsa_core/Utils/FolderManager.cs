@@ -9,9 +9,9 @@ namespace Cs4rsa.Utils
     {
         public void CreateFoldersAtStartUp()
         {
-            for (int i = 0; i < IFolderManager.FOLDERS.Length; ++i)
+            for (int i = 0; i < IFolderManager.Folders.Length; ++i)
             {
-                string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FOLDERS[i]);
+                string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.Folders[i]);
                 CreateFolderIfNotExists(path);
             }
         }

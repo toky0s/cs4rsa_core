@@ -12,7 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class ProgramSubjectRepository : GenericRepository<DbProgramSubject>, IProgramSubjectRepository
     {
-        public ProgramSubjectRepository(Cs4rsaDbContext context) : base(context)
+        public ProgramSubjectRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
 

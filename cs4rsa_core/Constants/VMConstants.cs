@@ -36,15 +36,15 @@ namespace Cs4rsa.Constants
         /// <param name="stdName">Student name</param>
         public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
         public static string DbMsg001(int result) => $"Hoàn tất cập nhật {result} môn";
-        public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PROGRAMS, $"StudentProgram_{stdId}.json");
-        public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, $"{curid}.json");
-        public static string PathHtmlCacheFile(int courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES, $"{courseId}.html");
+        public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPrograms, $"StudentProgram_{stdId}.json");
+        public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPlans, $"{curid}.json");
+        public static string PathHtmlCacheFile(int courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches, $"{courseId}.html");
         /// <summary>
         /// Đường dẫn tới hình ảnh hồ sơ sinh viên.
         /// </summary>
         /// <param name="studentId">Mã sinh viên</param>
         /// <returns>Đường dẫn</returns>
-        public static string PathStudentProfileImg(string studentId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_IMGS, $"{studentId}.jpg");
+        public static string PathStudentProfileImg(string studentId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentImgs, $"{studentId}.jpg");
     }
 
     internal abstract class VmConstants

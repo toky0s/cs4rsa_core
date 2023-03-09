@@ -280,11 +280,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         partial void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
         {
-            if (value != null
-                    && value.Discipline.DisciplineId != 0
-                    && value.Keyword != null)
+            if (value != null && value.Keyword != null)
             {
-                SelectedDiscipline = value.Discipline;
+                Discipline dcl = Disciplines.First(dcl => dcl.DisciplineId == value.Discipline.DisciplineId);
+                SelectedDiscipline = dcl;
                 SelectedKeyword = value.Keyword;
                 SearchText = string.Empty;
                 AddCommand.NotifyCanExecuteChanged();
@@ -303,7 +302,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         partial void OnSearchTextChanged(string value)
         {
-            Application.Current.Dispatcher.InvokeAsync(async () => await LoadSearchItemSource(value));
+            if (value.Trim().Length == 0) return;
+            LoadSearchItemSource(value);
         }
 
         /// <summary>
@@ -350,69 +350,37 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             }
         }
 
-        private async Task LoadSearchItemSource(string text)
+        private void LoadSearchItemSource(string text)
         {
-            text = text.Trim().ToLower();
             FullMatchSearchingKeywords.Clear();
-
-            IAsyncEnumerable<Keyword> result1 = _unitOfWork.Keywords.GetByDisciplineStartWith(text);
-            await foreach (Keyword keyword in result1)
+            List<Keyword> keywords = _unitOfWork.Keywords.GetSearchResult(text, 10);
+            foreach (Keyword kw in keywords)
             {
                 FullMatchSearchingKeyword fullMatch = new()
                 {
-                    Keyword = keyword,
-                    Discipline = keyword.Discipline
+                    Keyword = kw,
+                    Discipline = kw.Discipline
                 };
                 FullMatchSearchingKeywords.Add(fullMatch);
             }
 
-            IAsyncEnumerable<Keyword> result2 = _unitOfWork.Keywords.GetBySubjectNameContains(text);
-            await foreach (Keyword keyword in result2)
+            if (FullMatchSearchingKeywords.Count > 0) return;
+            Keyword keyword = new()
             {
-                FullMatchSearchingKeyword fullMatch = new()
-                {
-                    Keyword = keyword,
-                    Discipline = keyword.Discipline
-                };
-                FullMatchSearchingKeywords.Add(fullMatch);
-            }
-
-            if (text.Contains(VmConstants.CharSpace))
+                CourseId = 000000,
+                SubjectName = "Không tìm thấy tên môn này",
+                Color = "#ffffff"
+            };
+            Discipline discipline = new()
             {
-                string[] textSplit = text.Split(new char[] { VmConstants.CharSpace }, StringSplitOptions.None);
-                string discipline = textSplit[0];
-                string keyword1 = textSplit[1];
-                IAsyncEnumerable<Keyword> keywordsBySubjectCode = _unitOfWork.Keywords.GetByDisciplineAndKeyword1(discipline, keyword1);
-                await foreach (Keyword kw in keywordsBySubjectCode)
-                {
-                    FullMatchSearchingKeyword fullMatch = new()
-                    {
-                        Keyword = kw,
-                        Discipline = kw.Discipline
-                    };
-                    FullMatchSearchingKeywords.Add(fullMatch);
-                }
-            }
-
-            if (FullMatchSearchingKeywords.Count == 0)
+                Name = "Không tìm thấy mã môn này"
+            };
+            FullMatchSearchingKeyword fullMatchSearchingKeyword = new()
             {
-                Keyword keyword = new()
-                {
-                    CourseId = 000000,
-                    SubjectName = "Không tìm thấy tên môn này",
-                    Color = "#ffffff"
-                };
-                Discipline discipline = new()
-                {
-                    Name = "Không tìm thấy mã môn này"
-                };
-                FullMatchSearchingKeyword fullMatchSearchingKeyword = new()
-                {
-                    Keyword = keyword,
-                    Discipline = discipline
-                };
-                FullMatchSearchingKeywords.Add(fullMatchSearchingKeyword);
-            }
+                Keyword = keyword,
+                Discipline = discipline
+            };
+            FullMatchSearchingKeywords.Add(fullMatchSearchingKeyword);
         }
 
         private void OnDeleteAll()
@@ -644,7 +612,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             SubjectModel subjectModel = await OnAddSubjectAsync(keyword);
             if (subjectModel == null) return;
-            
+
             ClassGroupModel classGroupModel;
             classGroupModel = subjectModel.ClassGroupModels
                     .Where(cgm => cgm.Name.Equals(userSubject.ClassGroup))

@@ -24,9 +24,14 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
         Task<int> CountAsync(string discipline, string keyword);
-        IAsyncEnumerable<Keyword> GetBySubjectNameContains(string subjectName);
-        IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword);
-        IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text);
+
+        /// <summary>
+        /// Tìm tất cả các Keyword phù hợp với điều kiện.
+        /// </summary>
+        /// <param name="searchText">Văn bản tìm kiếm (không phân biệt hoa thường).</param>
+        /// <param name="limit">Giới hạn số lượng.</param>
+        /// <returns>Danh sách Keyword.</returns>
+        List<Keyword> GetSearchResult(string searchText, int limit);
 
         /// <summary>
         /// Kiểm tra tồn tại bằng Subject Code

@@ -12,7 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class StudentRepository : GenericRepository<Student>, IStudentRepository
     {
-        public StudentRepository(Cs4rsaDbContext context) : base(context)
+        public StudentRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
 

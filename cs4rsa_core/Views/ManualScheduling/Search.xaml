@@ -43,6 +43,7 @@
         Padding="7"
         DisplayMemberPath="Name"
         FontWeight="Normal"
+        IsEditable="True"
         ItemsSource="{Binding Disciplines, Mode=OneWay}"
         SelectedItem="{Binding SelectedDiscipline}"
         Style="{StaticResource MaterialDesignOutlinedComboBox}" />

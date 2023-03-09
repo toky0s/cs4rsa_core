@@ -11,7 +11,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class DisciplineRepository : GenericRepository<Discipline>, IDisciplineRepository
     {
-        public DisciplineRepository(Cs4rsaDbContext context) : base(context)
+        public DisciplineRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
 
         }

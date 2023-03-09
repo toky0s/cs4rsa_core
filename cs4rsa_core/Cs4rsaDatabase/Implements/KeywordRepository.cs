@@ -6,6 +6,7 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 using Microsoft.EntityFrameworkCore;
 
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class KeywordRepository : GenericRepository<Keyword>, IKeywordRepository
     {
-        public KeywordRepository(Cs4rsaDbContext context) : base(context)
+        public KeywordRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
 
@@ -67,31 +68,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await query.CountAsync();
         }
 
-        public IAsyncEnumerable<Keyword> GetBySubjectNameContains(string subjectName)
-        {
-            subjectName = subjectName.Trim();
-            return _context.Keywords
-                .Where(kw => kw.SubjectName.ToLower().Contains(subjectName))
-                .Take(2)
-                .AsAsyncEnumerable();
-        }
-
-        public IAsyncEnumerable<Keyword> GetByDisciplineAndKeyword1(string discipline, string keyword)
-        {
-            return _context.Keywords.Where(kw =>
-                kw.Discipline.Name.Contains(discipline.ToUpper())
-                && kw.Keyword1.Contains(keyword)
-            ).Take(2).AsAsyncEnumerable();
-        }
-
-        public IAsyncEnumerable<Keyword> GetByDisciplineStartWith(string text)
-        {
-            return _context.Keywords
-                .Where(kw => kw.Discipline.Name.ToUpper().StartsWith(text.ToUpper()))
-                .Take(2)
-                .AsAsyncEnumerable();
-        }
-
         public async Task<bool> ExistBySubjectCodeAsync(string subjectCode)
         {
             char[] splitChars = { VmConstants.CharSpace };
@@ -103,6 +79,53 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 && ds.DisciplineId == kw.DisciplineId
                 select kw
             ).AnyAsync();
+        }
+
+        public List<Keyword> GetSearchResult(string searchText, int limit)
+        {
+            string sql =
+                     $" SELECT *"
+            + "\n" + $" FROM Keywords AS k"
+            + "\n" + $"     INNER JOIN Disciplines AS d"
+            + "\n" + $"     ON k.SubjectName LIKE \"%{searchText}%\""
+            + "\n" + $"     AND d.DisciplineId = k.DisciplineId"
+            + "\n" + $" UNION"
+            + "\n" + $" SELECT *"
+            + "\n" + $" FROM Keywords AS k"
+            + "\n" + $"     INNER JOIN Disciplines AS d"
+            + "\n" + $"     ON d.Name || \" \" || k.Keyword1 LIKE \"%{searchText}%\""
+            + "\n" + $"     AND d.DisciplineId = k.DisciplineId"
+            + "\n" + $" LIMIT {limit};";
+
+            return _rawSql.ExecReader(sql, (reader) =>
+            {
+                List<Keyword> result = new();
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Discipline ds = new()
+                        {
+                            DisciplineId = reader.GetInt32(7),
+                            Name = reader.GetString(8)
+                        };
+                        Keyword kw = new()
+                        {
+                            KeywordId = reader.GetInt32(0),
+                            Keyword1 = reader.GetString(1),
+                            CourseId = reader.GetInt32(2),
+                            SubjectName = reader.GetString(3),
+                            Color = reader.GetString(4),
+                            Cache = reader.IsDBNull(5) ? null : reader.GetString(5),
+                            DisciplineId = reader.GetInt32(6),
+                            Discipline = ds
+                        };
+                        result.Add(kw);
+                    }
+                    reader.NextResult();
+                }
+                return result;
+            });
         }
     }
 }

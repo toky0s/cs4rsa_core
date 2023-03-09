@@ -25,7 +25,7 @@ namespace Cs4rsa.Views
 
         private void RenderScreen()
         {
-            foreach (var item in ViewConstants.CREDIZ_MENU_ITEMS)
+            foreach (var item in ViewConstants.CredizMenu)
             {
                 CredizTransitioner.Items.Add(item.Screen);
             }
@@ -35,7 +35,7 @@ namespace Cs4rsa.Views
         {
             Thickness textBlockMargin = new(30, 0, 0, 0);
             Thickness panelMargin = new(10, 0, 0, 0);
-            foreach (CredizMenuItem item in ViewConstants.CREDIZ_MENU_ITEMS)
+            foreach (CredizMenuItem item in ViewConstants.CredizMenu)
             {
                 ListBoxItem listBoxItem = new();
 
@@ -69,9 +69,9 @@ namespace Cs4rsa.Views
 
         private void RenderCompactMenu()
         {
-            for (int i = 0; i < ViewConstants.CREDIZ_MENU_ITEMS.Length; i++)
+            for (int i = 0; i < ViewConstants.CredizMenu.Length; i++)
             {
-                CredizMenuItem item = ViewConstants.CREDIZ_MENU_ITEMS[i];
+                CredizMenuItem item = ViewConstants.CredizMenu[i];
                 PackIcon icon = new()
                 {
                     Kind = item.IconKind,
@@ -119,7 +119,7 @@ namespace Cs4rsa.Views
             {
                 icon = new()
                 {
-                    Kind = ViewConstants.CREDIZ_MENU_ITEMS[_currentMenuItemIndex].IconKind,
+                    Kind = ViewConstants.CredizMenu[_currentMenuItemIndex].IconKind,
                     Width = HeightAndWidth,
                     Height = HeightAndWidth
                 };
@@ -130,7 +130,7 @@ namespace Cs4rsa.Views
             // Đi tới một màn hình, đưa icon về dạng select.
             icon = new()
             {
-                Kind = ViewConstants.CREDIZ_MENU_ITEMS[index].IconKindOnSelected,
+                Kind = ViewConstants.CredizMenu[index].IconKindOnSelected,
                 Width = HeightAndWidth,
                 Height = HeightAndWidth
             };
@@ -138,8 +138,8 @@ namespace Cs4rsa.Views
             button = CompactMenu.Children[index] as Button;
             button.Content = icon;
 
-            ViewConstants.CREDIZ_MENU_ITEMS[index].LoadSelfData();
-            await ViewConstants.CREDIZ_MENU_ITEMS[index].Screen.LoadComponentsData();
+            ViewConstants.CredizMenu[index].LoadSelfData();
+            await ViewConstants.CredizMenu[index].Screen.LoadComponentsData();
 
             CredizTransitioner.SelectedIndex = index;
             _currentMenuItemIndex = index;

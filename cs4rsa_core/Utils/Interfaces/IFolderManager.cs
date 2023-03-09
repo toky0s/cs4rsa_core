@@ -6,18 +6,18 @@
     /// </summary>
     public interface IFolderManager
     {
-        public static readonly string FD_STUDENT_PROGRAMS = "StudentPrograms";
-        public static readonly string FD_STUDENT_PLANS = "StudentPlans";
-        public static readonly string FD_STUDENT_IMGS = "StudentImages";
-        public static readonly string FD_TEACHER_IMAGES = "TeacherImages";
-        public static readonly string FD_HTML_CACHES = "HtmlCaches";
+        public static readonly string FdStudentPrograms = "StudentPrograms";
+        public static readonly string FdStudentPlans = "StudentPlans";
+        public static readonly string FdStudentImgs = "StudentImages";
+        public static readonly string FdTeacherImgs = "TeacherImages";
+        public static readonly string FdHtmlCaches = "HtmlCaches";
 
-        public static readonly string[] FOLDERS = new string[] {
-              FD_STUDENT_PROGRAMS
-            , FD_STUDENT_PLANS
-            , FD_STUDENT_IMGS
-            , FD_TEACHER_IMAGES
-            , FD_HTML_CACHES
+        public static readonly string[] Folders = new string[] {
+              FdStudentPrograms
+            , FdStudentPlans
+            , FdStudentImgs
+            , FdTeacherImgs
+            , FdHtmlCaches
         };
 
         string CreateFolderIfNotExists(string path);
