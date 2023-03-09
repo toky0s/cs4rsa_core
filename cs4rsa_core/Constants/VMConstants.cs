@@ -14,6 +14,13 @@ namespace Cs4rsa.Constants
         /// <returns></returns>
         public static string Common001(string handleName) => $"Có lỗi trong quá trình xử lý {handleName}";
         /// <summary>
+        /// Có lỗi trong quá trình xử lý <paramref name="handleName"/>
+        /// </summary>
+        /// <param name="handleName">Tên xử lý</param>
+        /// <param name="errMsg">Mô tả lỗi</param>
+        /// <returns></returns>
+        public static string Common001(string handleName, string errMsg) => $"Có lỗi trong quá trình xử lý {handleName}.\nMô tả: {errMsg}";
+        /// <summary>
         /// Thao tác thành công.
         /// </summary>
         /// <param name="actionName">Tên thao tác</param>
