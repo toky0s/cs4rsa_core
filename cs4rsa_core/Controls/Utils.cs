@@ -30,7 +30,7 @@ namespace Cs4rsa.Controls
 
         public static int GetTimeIndex(DateTime dateTime)
         {
-            string time = dateTime.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            string time = dateTime.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
             return Array.IndexOf(TIME_LINES, time);
         }
     }

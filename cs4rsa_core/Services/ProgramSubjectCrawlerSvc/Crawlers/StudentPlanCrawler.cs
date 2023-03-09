@@ -54,7 +54,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 planTables.Add(planTable);
             }
 
-            string planFilePath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, curriculumId + ".json");
+            string planFilePath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPlans, curriculumId + ".json");
             using StreamWriter sw = new(planFilePath);
             using JsonWriter writer = new JsonTextWriter(sw);
             JsonSerializer serializer = new();
@@ -64,7 +64,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
         public async Task<List<PlanTable>> GetPlanTables(int curriculumId)
         {
-            string planFilePath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_STUDENT_PLANS, curriculumId + ".json");
+            string planFilePath = Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPlans, curriculumId + ".json");
             if (File.Exists(planFilePath))
             {
                 using StreamReader sr = new(planFilePath);

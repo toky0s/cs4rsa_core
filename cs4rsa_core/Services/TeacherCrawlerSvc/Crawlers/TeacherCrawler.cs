@@ -39,7 +39,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             _folderManager = folderManager;
             _htmlWeb = htmlWeb;
 
-            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_TEACHER_IMAGES);
+            string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FdTeacherImgs);
             _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists(path);
         }
 
@@ -111,7 +111,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                     teacher.Subject = subject;
                     teacher.Form = form;
                     teacher.Path = strPath;
-                    teacher.TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects);
+                    teacher.TeachedSubjects = string.Join(VmConstants.SeparatorTeacherSubject, teachedSubjects);
                     _unitOfWork.Teachers.Update(teacher);
                 }
                 else
@@ -128,7 +128,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                         Subject = subject,
                         Form = form,
                         Path = strPath,
-                        TeachedSubjects = string.Join(VMConstants.SPRT_TEACHER_SUBJECTS, teachedSubjects),
+                        TeachedSubjects = string.Join(VmConstants.SeparatorTeacherSubject, teachedSubjects),
                         Url = url
                     };
                     await _unitOfWork.Teachers.AddAsync(teacher);

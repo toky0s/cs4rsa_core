@@ -89,7 +89,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         {
             if (DinstictSchoolClassName(schoolClasses).Count() > 1)
             {
-                Exception ex = new(VMConstants.EX_SCHOOLCLASS_NAME_IS_DIFF);
+                Exception ex = new(VmConstants.SchoolClassNameIsDiffException);
                 throw ex;
             }
             else
@@ -113,7 +113,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         private static List<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             if (DinstictSchoolClassName(schoolClasses).Count() > 1)
-                throw new Exception(VMConstants.EX_SCHOOLCLASS_NAME_IS_DIFF);
+                throw new Exception(VmConstants.SchoolClassNameIsDiffException);
             else
             {
                 List<string> tempTeachers = new();

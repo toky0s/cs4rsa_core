@@ -11,17 +11,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class SessionRepository : GenericRepository<UserSchedule>, IUserScheduleRepository
     {
-        public SessionRepository(Cs4rsaDbContext context) : base(context)
+        public SessionRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
-
-        //public async Task<List<SessionDetail>> GetSessionDetails(int sessionId)
-        //{
-        //    return await _context.ScheduleDetails
-        //        .Where(sessionDetail => sessionDetail.UserScheduleId == sessionId)
-        //        .AsNoTracking()
-        //        .ToListAsync();
-        //}
 
         IEnumerable<ScheduleDetail> IUserScheduleRepository.GetSessionDetails(int sessionId)
         {

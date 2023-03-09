@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Cs4rsa.BaseClasses
 {
-    public class BaseUserControl : UserControl
+    public abstract class BaseUserControl : UserControl
     {
         protected IMessenger Messenger { get; private set; }
         protected IServiceProvider Container { get; }

@@ -307,7 +307,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         partial void OnSelectedStudentChanged(Student value)
         {
-            Application.Current.Dispatcher.InvokeAsync(async () => await LoadStudentPlan());
+            Application.Current.Dispatcher.InvokeAsync(LoadStudentPlan);
             LoadProgramCommand.NotifyCanExecuteChanged();
             MyProgramCommand.NotifyCanExecuteChanged();
         }
@@ -448,13 +448,10 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         public async Task LoadStudents()
         {
             Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAll();
+            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
             await foreach (Student student in students)
             {
-                if (
-                    student.SpecialString != null
-                    && File.Exists(CredizText.PathProgramJsonFile(student.StudentId))
-                )
+                if (File.Exists(CredizText.PathProgramJsonFile(student.StudentId)))
                 {
                     Students.Add(student);
                 }
@@ -474,25 +471,25 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private async Task LoadStudentPlan()
         {
             if (SelectedStudent == null || !SelectedStudent.CurriculumId.HasValue) return;
-            PlanTableModels.Clear();
-
             string planPath = CredizText.PathPlanJsonFile(SelectedStudent.CurriculumId.Value);
             if (File.Exists(planPath))
             {
                 string json = await File.ReadAllTextAsync(planPath);
                 PlanTable[] planTables = JsonConvert.DeserializeObject<PlanTable[]>(json);
-
-                foreach (PlanTable planTable in planTables)
+                PlanTableModel[] result = await Task.WhenAll(planTables.Select(pt => PlanTableModel.Build(pt, _unitOfWork)));
+                PlanTableModels.Clear();
+                foreach (PlanTableModel ptm in result)
                 {
-                    PlanTableModels.Add(await PlanTableModel.Build(planTable, _unitOfWork));
+                    PlanTableModels.Add(ptm);
                 }
             }
             else
             {
                 MessageBox.Show(
                     CredizText.AutoMsg001(planPath, SelectedStudent.Name),
-                    "Thông báo",
-                    MessageBoxButton.OK);
+                    ViewConstants.Screen03.MenuName,
+                    MessageBoxButton.OK
+                );
             }
         }
 

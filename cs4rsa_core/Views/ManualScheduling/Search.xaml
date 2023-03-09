@@ -1,18 +1,19 @@
-﻿<UserControl
+﻿<base:BaseUserControl
   x:Class="Cs4rsa.Views.ManualScheduling.Search"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-  x:Name="SearchSessionUC"
   d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  Loaded="BaseUserControl_Loaded"
   mc:Ignorable="d">
-  <UserControl.Resources>
+  <base:BaseUserControl.Resources>
     <ResourceDictionary>
       <system:Int32 x:Key="SearchViewIdx">0</system:Int32>
       <system:Int32 x:Key="StoreViewIdx">1</system:Int32>
@@ -20,9 +21,9 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
-  </UserControl.Resources>
+  </base:BaseUserControl.Resources>
   <md:Transitioner SelectedIndex="{Binding CrrScrIdx}">
-    <Grid>
+    <Grid Margin="5">
       <Grid.RowDefinitions>
         <RowDefinition Height="auto" />
         <RowDefinition Height="auto" />
@@ -38,19 +39,23 @@
         x:Name="DisciplineComboBox"
         Grid.Row="0"
         Grid.Column="0"
-        Margin="0,0,5,0"
+        Margin="0,0,3,0"
+        Padding="7"
         DisplayMemberPath="Name"
         FontWeight="Normal"
         IsEditable="True"
         ItemsSource="{Binding Disciplines, Mode=OneWay}"
-        SelectedItem="{Binding SelectedDiscipline}" />
+        SelectedItem="{Binding SelectedDiscipline}"
+        Style="{StaticResource MaterialDesignOutlinedComboBox}" />
       <ComboBox
         x:Name="Keyword1ComboxBox"
         Grid.Row="0"
         Grid.Column="1"
+        Padding="7"
         ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
         SelectedItem="{Binding SelectedKeyword}"
         SelectedValuePath="Keyword1"
+        Style="{StaticResource MaterialDesignOutlinedComboBox}"
         ToolTip="{Binding Path=SelectedItem.SubjectName, RelativeSource={RelativeSource Self}}">
         <ComboBox.ItemTemplate>
           <DataTemplate>
@@ -79,6 +84,7 @@
         <TextBox
           x:Name="SearchingTextBox"
           Margin="0,0,0,5"
+          Padding="7"
           md:HintAssist.Hint="Nhập mã môn hoặc tên môn"
           GotFocus="SearchingTextBox_GotFocus"
           KeyDown="SearchingTextBox_KeyDown"
@@ -138,9 +144,10 @@
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <ToggleButton
+          Width="{Binding ElementName=Btn_Add, Path=ActualHeight}"
+          Height="{Binding ElementName=Btn_Add, Path=ActualHeight}"
           Margin="0,0,5,0"
-          Content="{md:PackIcon Kind=Cached,
-                                Size=21}"
+          Content="{md:PackIcon Kind=Cached}"
           IsChecked="{Binding IsUseCache}">
           <ToggleButton.Style>
             <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
@@ -154,13 +161,12 @@
           </ToggleButton.Style>
         </ToggleButton>
         <Button
-          x:Name="DisciplineKeywordButton"
+          Name="Btn_Add"
           Grid.Column="1"
           Margin="0,0,5,0"
           Command="{Binding AddCommand}"
           Content="THÊM" />
         <Button
-          x:Name="BtnGotoStore"
           Grid.Column="2"
           VerticalAlignment="Center"
           Command="{Binding GotoViewCommand}"
@@ -182,22 +188,32 @@
         ScrollViewer.CanContentScroll="False"
         SelectedItem="{Binding SelectedSubjectModel}">
         <ListBox.Resources>
-          <ContextMenu
-            x:Key="SubjectContextMenu"
-            d:DataContext="{d:DesignInstance Type=vm:SearchViewModel}"
-            DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
+          <ContextMenu x:Key="SubjectContextMenu" IsEnabled="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}">
+            <ContextMenu.Style>
+              <Style BasedOn="{StaticResource MaterialDesignContextMenu}" TargetType="ContextMenu">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding IsDownloading}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" />
+                  </MultiDataTrigger>
+                </Style.Triggers>
+              </Style>
+            </ContextMenu.Style>
             <MenuItem
-              Command="{Binding DetailCommand, Mode=OneTime}"
+              Click="Btn_Details_Click"
               Header="Chi tiết"
               Icon="{md:PackIcon Kind=FormatListBulletedSquare}"
-              Visibility="{Binding SelectedSubjectModel.Subject, Converter={StaticResource NullVisibilityConverter}}" />
+              Visibility="{Binding Subject, Converter={StaticResource NullableToVisibilityConverter}}" />
             <MenuItem
-              Command="{Binding GotoCourseCommand, Mode=OneTime}"
+              Click="Btn_GotoCourse_Click"
               Header="Mở trong Course"
               Icon="{md:PackIcon Kind=OpenInNew}" />
             <Separator />
             <MenuItem
-              Command="{Binding DeleteCommand, Mode=OneTime}"
+              Click="Btn_Delete_Click"
               Header="Xoá"
               Icon="{md:PackIcon Kind=DeleteOutline}" />
           </ContextMenu>
@@ -210,54 +226,64 @@
                 <md:TransitionEffect Kind="SlideInFromTop" />
               </md:TransitioningContent.OpeningEffects>
               <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="25" />
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <Border
-                  Grid.Column="0"
-                  Width="20"
-                  HorizontalAlignment="Left"
-                  Background="{Binding Color}"
-                  CornerRadius="4" />
-                <StackPanel Grid.Column="1" Orientation="Vertical">
-                  <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" TextWrapping="WrapWithOverflow">
-                    <Run Text="{Binding SubjectName, Mode=OneWay}" />
-                    <Run>
-                      <Run.Style>
-                        <Style TargetType="Run">
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
-                              <Setter Property="Text" Value="*" />
-                              <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Run.Style>
-                    </Run>
-                  </TextBlock>
-                  <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding SubjectCode}" />
-                  <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                  <TextBlock
-                    Style="{StaticResource MaterialDesignHelperTextBlock}"
-                    Text="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
-                    ToolTip="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                <Grid.RowDefinitions>
+                  <RowDefinition />
+                  <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0,0,0,2">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                  </Grid.ColumnDefinitions>
+                  <Border
+                    Grid.Column="0"
+                    Width="20"
+                    HorizontalAlignment="Left"
+                    Background="{Binding Color}"
+                    CornerRadius="4" />
+                  <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" TextWrapping="WrapWithOverflow">
+                      <Run Text="{Binding SubjectName, Mode=OneWay}" />
+                      <Run>
+                        <Run.Style>
+                          <Style TargetType="Run">
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
+                                <Setter Property="Text" Value="*" />
+                                <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </Run.Style>
+                      </Run>
+                    </TextBlock>
+                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding SubjectCode}" />
+                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                    <TextBlock
+                      Style="{StaticResource MaterialDesignHelperTextBlock}"
+                      Text="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                      ToolTip="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                      Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                  </StackPanel>
+
+                  <!--  Nút tải lại trong trường hợp thất bại  -->
+                  <Button
+                    x:Name="BtnReDonwload"
+                    Grid.Column="2"
+                    Click="BtnReDonwload_Click"
+                    Content="{md:PackIcon Kind=Reload}"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="Tải lại môn này"
                     Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                </StackPanel>
+                </Grid>
+
+                <!--  Hiển thị Loading  -->
                 <ProgressBar
-                  Grid.Column="2"
+                  Grid.Row="1"
+                  md:TransitionAssist.DisableTransitions="True"
                   IsIndeterminate="True"
-                  Style="{StaticResource MaterialDesignCircularProgressBar}"
                   Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <Button
-                  x:Name="BtnReDonwload"
-                  Click="BtnReDonwload_Click"
-                  Grid.Column="2"
-                  Content="{md:PackIcon Kind=Reload}"
-                  Style="{StaticResource MaterialDesignIconButton}"
-                  ToolTip="Tải lại môn này"
-                  Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
               </Grid>
             </md:TransitioningContent>
           </DataTemplate>
@@ -265,7 +291,6 @@
         <ListBox.ItemContainerStyle>
           <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
             <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}" />
-            <Setter Property="IsEnabled" Value="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}" />
           </Style>
         </ListBox.ItemContainerStyle>
       </ListBox>
@@ -279,7 +304,7 @@
         </Grid.ColumnDefinitions>
         <Button
           Grid.Column="0"
-          Margin="0,0,5,5"
+          Margin="0,0,5,0"
           Command="{Binding DeleteAllCommand}">
           <Button.Content>
             <TextBlock Text="{Binding SubjectModels.Count, StringFormat=XOÁ HẾT ({0})}" />
@@ -287,10 +312,8 @@
         </Button>
         <Button
           Grid.Column="1"
-          Margin="0,0,0,5"
           Command="{Binding ImportDialogCommand}"
-          Content="{md:PackIcon Kind=DatabaseImportOutline,
-                                Size=20}"
+          Content="{md:PackIcon Kind=DatabaseImportOutline}"
           ToolTip="Đã lưu" />
       </Grid>
     </Grid>
@@ -360,4 +383,4 @@
       </ListBox>
     </Grid>
   </md:Transitioner>
-</UserControl>
+</base:BaseUserControl>

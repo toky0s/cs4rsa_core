@@ -64,7 +64,7 @@ namespace Cs4rsa.ViewModels.Database
             _folderManager = folderManager;
 
             StartUpdateCommand = new RelayCommand(OnStartUpdate);
-            RefreshCommand = new RelayCommand(OnRefresh);
+            RefreshCommand = new(OnRefresh);
         }
 
 
@@ -74,6 +74,7 @@ namespace Cs4rsa.ViewModels.Database
         private void LoadInf()
         {
             ProgressValue = 0;
+            SubjectQuantity = _unitOfWork.Keywords.Count();
             CurrentSemesterInf = _courseCrawler.CurrentSemesterInfo;
             CurrentYearInf = _courseCrawler.CurrentYearInfo;
         }
@@ -106,6 +107,7 @@ namespace Cs4rsa.ViewModels.Database
         private void OnRefresh()
         {
             Messenger.Send(new DbVmMsgs.RefreshMsg());
+            LoadInf();
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -113,7 +115,11 @@ namespace Cs4rsa.ViewModels.Database
             PreventOperation(false);
             if (e.Result is string @message)
             {
-                MessageBox.Show(@message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    @message
+                    , ViewConstants.Screen05.MenuName
+                    , MessageBoxButton.OK
+                    , MessageBoxImage.Error);
             }
             else if (e.Result is int @result)
             {
@@ -121,7 +127,7 @@ namespace Cs4rsa.ViewModels.Database
                 {
                     MessageBox.Show(
                         CredizText.Common001("Cập nhật cơ sở dữ liệu")
-                        , "Lỗi"
+                        , ViewConstants.Screen05.MenuName
                         , MessageBoxButton.OK
                         , MessageBoxImage.Error
                     );
@@ -133,7 +139,7 @@ namespace Cs4rsa.ViewModels.Database
                     _setting.CurrentSetting.CurrentYear = _courseCrawler.CurrentYearInfo;
                     _setting.CurrentSetting.CurrentSemester = _courseCrawler.CurrentSemesterInfo;
                     _setting.Save();
-                    _folderManager.DelAllInThisFolder(Path.Combine(AppContext.BaseDirectory, IFolderManager.FD_HTML_CACHES));
+                    _folderManager.DelAllInThisFolder(Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches));
 
                     Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg());
                     Messenger.Send(new DbVmMsgs.RefreshMsg());
@@ -169,9 +175,9 @@ namespace Cs4rsa.ViewModels.Database
             LoadInf();
         }
 
-        public async Task InitDataAsync()
+        public Task InitDataAsync()
         {
-            SubjectQuantity = await _unitOfWork.Keywords.Count();
+            return Task.FromResult<object>(null);
         }
     }
 }

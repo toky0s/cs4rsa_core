@@ -6,7 +6,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class KeywordTeacherRepository : GenericRepository<KeywordTeacher>, IKeywordTeacherRepository
     {
-        public KeywordTeacherRepository(Cs4rsaDbContext context) : base(context)
+        public KeywordTeacherRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
     }

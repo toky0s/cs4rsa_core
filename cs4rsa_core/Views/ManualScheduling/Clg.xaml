@@ -9,9 +9,8 @@
   xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=viewmodels:ClgViewModel}"
-  d:DesignHeight="900"
-  d:DesignWidth="300"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  Loaded="UserControl_Loaded"
   mc:Ignorable="d">
   <UserControl.Resources>
     <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
@@ -25,7 +24,7 @@
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
     <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <TextBlock Margin="0,0,5,0">
+      <TextBlock>
         <TextBlock.Style>
           <Style BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" TargetType="TextBlock">
             <Setter Property="Text">
@@ -44,6 +43,7 @@
       x:Name="ClassGroupListBox"
       Grid.Row="1"
       Grid.Column="0"
+      PreviewMouseLeftButtonDown="ListBox_PreviewMouseLeftButtonDown"
       HorizontalContentAlignment="Stretch"
       ItemsSource="{Binding ClassGroupModels}"
       SelectedItem="{Binding SelectedClassGroup}">
@@ -56,8 +56,22 @@
           <MenuItem
             Command="{Binding ShowDetailsSchoolClassesCommand}"
             Header="Xem danh sách lớp thành phần"
-            Icon="{materialDesign:PackIcon Kind=ListStatus}"
-            IsEnabled="{Binding SelectedClassGroup.IsBelongSpecialSubject}" />
+            Icon="{materialDesign:PackIcon Kind=ListStatus}">
+            <MenuItem.Style>
+              <Style TargetType="MenuItem">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding SelectedClassGroup, Converter={StaticResource IsNotNullConverter}}" Value="True" />
+                      <Condition Binding="{Binding SelectedClassGroup.IsBelongSpecialSubject}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" />
+                  </MultiDataTrigger>
+                </Style.Triggers>
+              </Style>
+            </MenuItem.Style>
+          </MenuItem>
         </ContextMenu>
       </ListBox.Resources>
       <ListBox.ItemTemplate>

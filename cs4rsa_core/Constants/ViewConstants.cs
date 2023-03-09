@@ -86,50 +86,68 @@ namespace Cs4rsa.Constants
 
     internal abstract class ViewConstants
     {
-        private static readonly string VIEWMODEL_NAMESPACE = "Cs4rsa.ViewModels";
+        private const string ViewModelNamespace = "Cs4rsa.ViewModels";
 
+        /// <summary>
+        /// Màn hình Trang chủ
+        /// </summary>
         public static readonly CredizMenuItem Screen01 = new(
             "Trang chủ"
             , PackIconKind.HomeOutline
             , PackIconKind.Home
             , new Home()
-            , VIEWMODEL_NAMESPACE + ".HomeViewModel");
+            , ViewModelNamespace + ".HomeViewModel");
 
+        /// <summary>
+        /// Màn hình Xếp lịch thủ công
+        /// </summary>
         public static readonly CredizMenuItem Screen02 = new(
             "Xếp lịch thủ công"
             , PackIconKind.CursorDefaultOutline
             , PackIconKind.CursorDefault
             , new MainScheduling()
-            , VIEWMODEL_NAMESPACE + ".ManualScheduling.MainSchedulingViewModel");
+            , ViewModelNamespace + ".ManualScheduling.MainSchedulingViewModel");
 
+        /// <summary>
+        /// Màn hình Xếp lịch tự động
+        /// </summary>
         public static readonly CredizMenuItem Screen03 = new(
             "Xếp lịch tự động"
             , PackIconKind.LightbulbOutline
             , PackIconKind.Lightbulb
             , new Auto());
 
+        /// <summary>
+        /// Màn hình Hồ sơ
+        /// </summary>
         public static readonly CredizMenuItem Screen04 = new(
             "Hồ sơ"
             , PackIconKind.ClipboardAccountOutline
             , PackIconKind.ClipboardAccount
             , new Profile()
-            , VIEWMODEL_NAMESPACE + ".Profile.ProfileViewModel");
+            , ViewModelNamespace + ".Profile.ProfileViewModel");
 
+        /// <summary>
+        /// Màn hình Cơ sở dữ liệu
+        /// </summary>
         public static readonly CredizMenuItem Screen05 = new(
             "Cơ sở dữ liệu"
             , PackIconKind.DatabaseOutline
             , PackIconKind.Database
             , new Db()
-            , VIEWMODEL_NAMESPACE + ".Database.DbViewModel");
+            , ViewModelNamespace + ".Database.DbViewModel");
 
+        /// <summary>
+        /// Màn hình Thông tin
+        /// </summary>
         public static readonly CredizMenuItem Screen06 = new(
             "Thông tin"
             , PackIconKind.InformationOutline
             , PackIconKind.Information
             , new Info()
-            , VIEWMODEL_NAMESPACE + ".InfoViewModel");
+            , ViewModelNamespace + ".InfoViewModel");
 
-        public static CredizMenuItem[] CREDIZ_MENU_ITEMS =
+        public static CredizMenuItem[] CredizMenu =
         {
             Screen01,
             Screen02,

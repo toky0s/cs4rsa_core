@@ -437,32 +437,11 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// </summary>
         private void InitFilter()
         {
-            Monday = false;
-            Tuesday = false;
-            Wednesday = false;
-            Thursday = false;
-            Friday = false;
-            Saturday = false;
-            Sunday = false;
-
-            Place137NVL = false;
-            Place254NVL = false;
-            PlaceHoaKhanh = false;
-            PlacePhanThanh = false;
-            PlaceQuangTrung = false;
-            PlaceVietTin = false;
-            PlaceOnline = false;
-
-            PhaseFirst = false;
-            PhaseSecond = false;
-            PhaseBoth = false;
-
-            HasSeat = true;
-            HasSchedule = true;
-
-            Morning = false;
-            Afternoon = false;
-            Night = false;
+            Monday = Tuesday = Wednesday = Thursday = Friday = Saturday = Sunday =
+            Place137NVL = Place254NVL = PlaceHoaKhanh = PlacePhanThanh = PlaceQuangTrung = PlaceVietTin = PlaceOnline =
+            PhaseFirst = PhaseSecond = PhaseBoth =
+            Morning = Afternoon = Night = false;
+            HasSeat = HasSchedule = true;
         }
 
         /// <summary>
@@ -470,32 +449,11 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// </summary>
         private void OnResetFilter()
         {
-            Monday = false;
-            Tuesday = false;
-            Wednesday = false;
-            Thursday = false;
-            Friday = false;
-            Saturday = false;
-            Sunday = false;
-
-            Place137NVL = false;
-            Place254NVL = false;
-            PlaceHoaKhanh = false;
-            PlacePhanThanh = false;
-            PlaceQuangTrung = false;
-            PlaceVietTin = false;
-            PlaceOnline = false;
-
-            PhaseFirst = false;
-            PhaseSecond = false;
-            PhaseBoth = false;
-
-            HasSeat = false;
-            HasSchedule = false;
-
-            Morning = false;
-            Afternoon = false;
-            Night = false;
+            Monday = Tuesday = Wednesday = Thursday = Friday = Saturday = Sunday =
+            Place137NVL = Place254NVL = PlaceHoaKhanh = PlacePhanThanh = PlaceQuangTrung = PlaceVietTin = PlaceOnline =
+            PhaseFirst = PhaseSecond = PhaseBoth =
+            Morning = Afternoon = Night =
+            HasSeat = HasSchedule = false;
         }
 
         /// <summary>
@@ -527,8 +485,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private bool CheckTeacher(ClassGroupModel classGroupModel)
         {
-            if (SelectedTeacher == null || SelectedTeacher.TeacherId == 0)
-                return true;
+            if (SelectedTeacher == null || SelectedTeacher.TeacherId == 0) return true;
             return classGroupModel.GetTeacherModels().Contains(SelectedTeacher)
                 || classGroupModel.TempTeacher.Contains(SelectedTeacher.Name);
         }
@@ -645,12 +602,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         public void OnShowDetailsSchoolClasses()
         {
             ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
-            ShowDetailsSchoolClassesViewModel vm = showDetailsSchoolClassesUC.DataContext as ShowDetailsSchoolClassesViewModel;
-            vm.ClassGroupModel = _selectedClassGroup;
+            ShowDetailsSchoolClassesViewModel vm = (ShowDetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
+            vm.ClassGroupModel = SelectedClassGroup;
 
-            foreach (SchoolClassModel scm in _selectedClassGroup.GetSchoolClassModels())
+            foreach (SchoolClassModel scm in SelectedClassGroup.GetSchoolClassModels())
             {
-                if (scm.Type != _selectedClassGroup.CompulsoryClass.Type)
+                if (scm.Type != SelectedClassGroup.CompulsoryClass.Type)
                 {
                     vm.SchoolClassModels.Add(scm);
                 }
@@ -660,7 +617,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private void OnGotoCourse()
         {
-            string url = _selectedClassGroup.ClassGroup.GetUrl();
+            string url = SelectedClassGroup.ClassGroup.GetUrl();
             _openInBrowser.Open(url);
         }
 

@@ -60,14 +60,7 @@ namespace Cs4rsa
         {
             IServiceCollection services = new ServiceCollection();
             services.AddDbContext<Cs4rsaDbContext>();
-            services.AddSingleton<ICurriculumRepository, CurriculumRepository>();
-            services.AddSingleton<IDisciplineRepository, DisciplineRepository>();
-            services.AddSingleton<IKeywordRepository, KeywordRepository>();
-            services.AddSingleton<IStudentRepository, StudentRepository>();
-            services.AddSingleton<IProgramSubjectRepository, ProgramSubjectRepository>();
-            services.AddSingleton<IPreParSubjectRepository, PreParSubjectRepository>();
-            services.AddSingleton<IPreProDetailsRepository, PreProDetailRepository>();
-            services.AddSingleton<IParProDetailsRepository, ParProDetailRepository>();
+            services.AddSingleton<RawSql>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<CourseCrawler>();
@@ -135,7 +128,7 @@ namespace Cs4rsa
         private void CreateDbIfNotExists()
         {
             ISetting setting = Container.GetRequiredService<ISetting>();
-            string isDatabaseCreated = setting.Read(VMConstants.STPROPS_IS_DATABASE_CREATED);
+            string isDatabaseCreated = setting.Read(VmConstants.StDatabaseCreated);
             if (isDatabaseCreated == "false")
             {
                 Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();

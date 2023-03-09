@@ -11,7 +11,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class TeacherRepository : GenericRepository<Teacher>, ITeacherRepository
     {
-        public TeacherRepository(Cs4rsaDbContext context) : base(context)
+        public TeacherRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     .AsEnumerable()
                     .Where(teacher =>
                         (
-                             teacher.Name.ToLower().Contains(nameOrId)
+                             teacher.Name.ToLower().Contains(nameOrId.ToLower())
                           || teacher.TeacherId.ToString().Contains(nameOrId)
                         )
                         && !string.IsNullOrEmpty(nameOrId));

@@ -137,7 +137,7 @@ namespace Cs4rsa.Models
         /// </summary>
         private async Task IsAvaiableInThisSemester()
         {
-            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VMConstants.CHAR_SPACE });
+            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VmConstants.CharSpace });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
             int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);

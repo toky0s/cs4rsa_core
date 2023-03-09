@@ -1,4 +1,5 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.ViewModels.ManualScheduling;
 
 using System;
@@ -9,9 +10,10 @@ using System.Windows.Input;
 
 namespace Cs4rsa.Views.ManualScheduling
 {
-    public partial class Search : UserControl
+    public partial class Search : BaseUserControl
     {
         private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space };
+        private SearchViewModel Vm;
         public Search()
         {
             InitializeComponent();
@@ -53,7 +55,7 @@ namespace Cs4rsa.Views.ManualScheduling
             {
                 string url = (string)e.Data.GetData(DataFormats.UnicodeText);
                 Uri uri = new UriBuilder(url).Uri;
-                (DataContext as SearchViewModel).OnAddSubjectFromUriAsync(uri);
+                Vm.OnAddSubjectFromUriAsync(uri);
             }
         }
 
@@ -65,7 +67,30 @@ namespace Cs4rsa.Views.ManualScheduling
         private void BtnReDonwload_Click(object sender, RoutedEventArgs e)
         {
             SubjectModel subjectModel = (SubjectModel)((Button)sender).DataContext;
-            (DataContext as SearchViewModel).ReloadCommand.Execute(subjectModel);
+            Vm.ReloadCommand.Execute(subjectModel);
+        }
+
+        private void Btn_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            Vm.DeleteCommand.Execute(subjectModel);
+        }
+
+        private void Btn_GotoCourse_Click(object sender, RoutedEventArgs e)
+        {
+            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            Vm.GotoCourseCommand.Execute(subjectModel);
+        }
+
+        private void Btn_Details_Click(object sender, RoutedEventArgs e)
+        {
+            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            Vm.DetailCommand.Execute(subjectModel);
+        }
+
+        private void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Vm = (SearchViewModel)DataContext;
         }
     }
 }

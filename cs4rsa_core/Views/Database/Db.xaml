@@ -1,11 +1,12 @@
 ﻿<base:ScreenAbstract
   x:Class="Cs4rsa.Views.Database.Db"
-  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:local="clr-namespace:Cs4rsa.Views.Database"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:vm="clr-namespace:Cs4rsa.ViewModels.Database"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=vm:DbViewModel}"
@@ -63,32 +64,42 @@
               Margin="0,0,0,10"
               Style="{StaticResource MaterialDesignHeadline6TextBlock}"
               Text="Cảnh báo cập nhật" />
-            <TextBlock TextAlignment="Justify" TextWrapping="Wrap">
+            <TextBlock
+              Margin="0,0,0,5"
+              TextAlignment="Justify"
+              TextWrapping="Wrap">
               <TextBlock.Text>
-                Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian. 
+                Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian.
                 Đồng thời dữ liệu xếp lịch hiện tại ở màn hình Xếp lịch thủ công sẽ bị xoá.
                 Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật.
               </TextBlock.Text>
             </TextBlock>
             <ProgressBar
-              Margin="0,5,0,0"
+              Margin="0,0,0,5"
               Maximum="1000"
               Value="{Binding ProgressValue}" />
-            <Button
-              Margin="0,5,0,0"
+            <StackPanel
+              Margin="0,0,0,5"
               HorizontalAlignment="Right"
-              Command="{Binding StartUpdateCommand}"
-              Content="BẮT ĐẦU"
-              Style="{StaticResource MaterialDesignFlatButton}" />
+              Orientation="Horizontal">
+              <Button
+                HorizontalAlignment="Right"
+                Command="{Binding StartUpdateCommand}"
+                Content="BẮT ĐẦU"
+                Style="{StaticResource MaterialDesignFlatButton}" />
+              <Button
+                Command="{Binding RefreshCommand}"
+                Content="LÀM MỚI"
+                Style="{StaticResource MaterialDesignFlatButton}" />
+            </StackPanel>
+
           </StackPanel>
         </Border>
-
-        <Button Command="{Binding RefreshCommand}" Content="LÀM MỚI" />
       </StackPanel>
     </ScrollViewer>
 
     <TabControl Grid.Column="1">
-      <TabItem Header="MÔN HỌC">
+      <TabItem HorizontalAlignment="Left" Header="MÔN HỌC">
         <local:DclTab />
       </TabItem>
     </TabControl>

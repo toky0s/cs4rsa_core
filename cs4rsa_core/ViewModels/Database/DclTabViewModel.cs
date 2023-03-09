@@ -7,6 +7,7 @@ using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 
 using System.Collections.Generic;
@@ -100,7 +101,7 @@ namespace Cs4rsa.ViewModels.Database
             if (!File.Exists(filePath))
             {
                 Keyword kw = Keywords.Where(kw => kw.CourseId == courseId).First();
-                await File.WriteAllTextAsync(filePath, kw.Cache);
+                await File.WriteAllTextAsync(filePath, StringHelper.CacheGenAddStyle(kw.Cache));
             }
             _openInBrowser.Open(filePath);
         }

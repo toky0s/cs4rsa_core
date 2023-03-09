@@ -53,7 +53,7 @@ namespace Cs4rsa.Settings
             }
             catch
             {
-                throw new Exception(VMConstants.EX_SETTING_DOES_NOT_EXIST);
+                throw new Exception(VmConstants.SettingDoesNotExistException);
             }
         }
 

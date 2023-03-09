@@ -1,105 +1,114 @@
 ﻿<UserControl
-    x:Class="Cs4rsa.Dialogs.DialogViews.ShowDetailsSubjectUC"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:Cs4rsa.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:implements="clr-namespace:Cs4rsa.Dialogs.Implements"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-    x:Name="DetailsSubjectUC"
-    d:DataContext="{d:DesignInstance Type=implements:ShowDetailsSubjectViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    vml:DialogVMLocator.AutoHookedUpViewModel="True"
-    mc:Ignorable="d">
-    <UserControl.Resources>
-        <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
-    </UserControl.Resources>
-    <materialDesign:Card Padding="10">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <StackPanel
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,10"
-                Orientation="Vertical">
-                <TextBlock
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="Thông tin môn học"
-                    TextAlignment="Left" />
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding SubjectModel.SubjectCode}" />
-                    <TextBlock Text=" : " />
-                    <TextBlock Text="{Binding SubjectModel.SubjectName}" />
-                </StackPanel>
-            </StackPanel>
-            <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0">Mã môn:</TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="0">Số ĐVHT:</TextBlock>
-                <TextBlock Grid.Row="2" Grid.Column="0">Loại ĐVHT:</TextBlock>
-                <TextBlock Grid.Row="3" Grid.Column="0">Loại hình:</TextBlock>
-                <TextBlock Grid.Row="4" Grid.Column="0">Học kỳ:</TextBlock>
-                <TextBlock Grid.Row="5" Grid.Column="0">Môn học tiên quyết:</TextBlock>
-                <TextBlock Grid.Row="6" Grid.Column="0">Môn học song hành:</TextBlock>
-                <TextBlock Grid.Row="7" Grid.Column="0">Mô tả môn học:</TextBlock>
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.SubjectCode}" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.StudyUnit}" />
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.StudyUnitType}" />
-                <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.StudyType}" />
-                <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.Semester}" />
-                <TextBlock
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.PrerequisiteSubjectAsString}" />
-                <TextBlock
-                    Grid.Row="6"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.ParallelSubjectAsString}" />
-                <TextBlock
-                    Grid.Row="7"
-                    Grid.Column="1"
-                    Text="{Binding SubjectModel.Desciption, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=Không có giá trị}"
-                    TextAlignment="Justify"
-                    TextWrapping="WrapWithOverflow" />
-            </Grid>
-        </Grid>
-    </materialDesign:Card>
+  x:Class="Cs4rsa.Dialogs.DialogViews.ShowDetailsSubjectUC"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:converter="clr-namespace:Cs4rsa.Converters"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:implements="clr-namespace:Cs4rsa.Dialogs.Implements"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  x:Name="DetailsSubjectUC"
+  MaxWidth="500"
+  Padding="10"
+  d:DataContext="{d:DesignInstance Type=implements:ShowDetailsSubjectViewModel}"
+  vml:DialogVMLocator.AutoHookedUpViewModel="True"
+  mc:Ignorable="d">
+  <UserControl.Resources>
+    <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <StackPanel
+      Grid.Row="0"
+      Grid.ColumnSpan="2"
+      Margin="0,0,0,10"
+      Orientation="Vertical">
+      <TextBlock
+        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+        Text="Thông tin môn học"
+        TextAlignment="Left" />
+
+      <!--  Tên môn học  -->
+      <TextBlock
+        FontWeight="Bold"
+        Foreground="#587f0e"
+        Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
+        <TextBlock.Text>
+          <MultiBinding StringFormat="{}{0}:  {1}">
+            <Binding Path="SubjectModel.SubjectCode" />
+            <Binding Path="SubjectModel.SubjectName" />
+          </MultiBinding>
+        </TextBlock.Text>
+      </TextBlock>
+
+    </StackPanel>
+    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <TextBlock Grid.Row="0" Grid.Column="0">Mã môn:</TextBlock>
+      <TextBlock
+        Grid.Row="0"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.SubjectCode}" />
+      <TextBlock Grid.Row="1" Grid.Column="0">Số ĐVHT:</TextBlock>
+      <TextBlock
+        Grid.Row="1"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.StudyUnit}" />
+      <TextBlock Grid.Row="2" Grid.Column="0">Loại ĐVHT:</TextBlock>
+      <TextBlock
+        Grid.Row="2"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.StudyUnitType}" />
+      <TextBlock Grid.Row="3" Grid.Column="0">Loại hình:</TextBlock>
+      <TextBlock
+        Grid.Row="3"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.StudyType}" />
+      <TextBlock Grid.Row="4" Grid.Column="0">Học kỳ:</TextBlock>
+      <TextBlock
+        Grid.Row="4"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.Semester}" />
+      <TextBlock Grid.Row="5" Grid.Column="0">Môn học tiên quyết:</TextBlock>
+      <TextBlock
+        Grid.Row="5"
+        Grid.Column="1"
+        Foreground="Green"
+        Text="{Binding SubjectModel.PrerequisiteSubjectAsString, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Tiên quyết)}" />
+      <TextBlock Grid.Row="6" Grid.Column="0">Môn học song hành:</TextBlock>
+      <TextBlock
+        Grid.Row="6"
+        Grid.Column="1"
+        Foreground="Green"
+        Text="{Binding SubjectModel.ParallelSubjectAsString, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Song hành)}" />
+      <TextBlock Grid.Row="7" Grid.Column="0">Mô tả môn học:</TextBlock>
+      <TextBlock
+        Grid.Row="7"
+        Grid.Column="1"
+        Text="{Binding SubjectModel.Desciption, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=Không có giá trị}"
+        TextAlignment="Justify"
+        TextWrapping="WrapWithOverflow" />
+    </Grid>
+  </Grid>
 </UserControl>

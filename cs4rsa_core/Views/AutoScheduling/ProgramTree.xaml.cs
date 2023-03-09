@@ -49,7 +49,7 @@ namespace Cs4rsa.Views.AutoScheduling
 
         public async Task LoadData()
         {
-            await (DataContext as ProgramTreeViewModel).LoadStudents();
+            await ((ProgramTreeViewModel)DataContext).LoadStudents();
         }
     }
 }

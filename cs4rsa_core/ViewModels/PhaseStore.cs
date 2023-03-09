@@ -12,6 +12,9 @@ using System.Linq;
 namespace Cs4rsa.ViewModels
 {
     /// <summary>
+    /// PhaseStore - Bộ đánh giá giai đoạn học.
+    /// </summary>
+    /// <remarks>
     /// Rule đánh giá Start Week, EndWeek, Range Week, Between Point.
     /// 
     /// Chỉ đánh giá lại Start và End Week nếu giá trị tuần
@@ -25,7 +28,7 @@ namespace Cs4rsa.ViewModels
     /// tác Remove(s) tạo nên.
     /// 
     /// Thao tác Add ClassGroup Model(s) không đánh giá lại BetweenPoint từ lần thứ hai trở đi.
-    /// </summary>
+    /// </remarks>
     internal sealed partial class PhaseStore : ViewModelBase
     {
         private List<ClassGroupModel> _classGroupModels;

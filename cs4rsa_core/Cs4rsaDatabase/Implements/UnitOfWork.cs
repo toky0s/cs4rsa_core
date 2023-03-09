@@ -10,20 +10,20 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
     public class UnitOfWork : IUnitOfWork
     {
         private readonly Cs4rsaDbContext _context;
-        public UnitOfWork(Cs4rsaDbContext context)
+        public UnitOfWork(Cs4rsaDbContext context, RawSql rawSql)
         {
             _context = context;
-            Curriculums = new CurriculumRepository(_context);
-            Disciplines = new DisciplineRepository(_context);
-            Keywords = new KeywordRepository(_context);
-            UserSchedules = new SessionRepository(_context);
-            Students = new StudentRepository(_context);
-            Teachers = new TeacherRepository(_context);
-            ProgramSubjects = new ProgramSubjectRepository(_context);
-            PreParSubjects = new PreParSubjectRepository(_context);
-            PreProDetails = new PreProDetailRepository(_context);
-            ParProDetails = new ParProDetailRepository(_context);
-            KeywordTeachers = new KeywordTeacherRepository(_context);
+            Curriculums = new CurriculumRepository(_context, rawSql);
+            Disciplines = new DisciplineRepository(_context, rawSql);
+            Keywords = new KeywordRepository(_context, rawSql);
+            UserSchedules = new SessionRepository(_context, rawSql);
+            Students = new StudentRepository(_context, rawSql);
+            Teachers = new TeacherRepository(_context, rawSql);
+            ProgramSubjects = new ProgramSubjectRepository(_context, rawSql);
+            PreParSubjects = new PreParSubjectRepository(_context, rawSql);
+            PreProDetails = new PreProDetailRepository(_context, rawSql);
+            ParProDetails = new ParProDetailRepository(_context, rawSql);
+            KeywordTeachers = new KeywordTeacherRepository(_context, rawSql);
         }
 
         public ICurriculumRepository Curriculums { get; private set; }

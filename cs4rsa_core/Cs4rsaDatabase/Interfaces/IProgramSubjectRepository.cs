@@ -7,7 +7,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IProgramSubjectRepository : IGenericRepository<DbProgramSubject>
     {
-        Task<DbProgramSubject> GetByCourseIdAsync(string courseId);
         Task<bool> ExistsByCourseId(string courseId);
         IEnumerable<string> GetParByCourseId(string courseId);
         IEnumerable<string> GetPreByCourseId(string courseId);

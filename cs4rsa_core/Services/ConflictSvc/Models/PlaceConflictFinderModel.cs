@@ -123,7 +123,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public string GetId()
         {
-            return "pc" + VMConstants.CHAR_SPACE + FirstSchoolClass.SubjectCode + VMConstants.CHAR_SPACE + SecondSchoolClass.SubjectCode;
+            return "pc" + VmConstants.CharSpace + FirstSchoolClass.SubjectCode + VmConstants.CharSpace + SecondSchoolClass.SubjectCode;
         }
 
         public bool Equals(PlaceConflictFinderModel other)

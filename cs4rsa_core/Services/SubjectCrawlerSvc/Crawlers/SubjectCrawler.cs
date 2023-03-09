@@ -91,44 +91,42 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
         public async Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId, bool withTeacher)
         {
-            if (IsSubjectExists(htmlDocument))
-            {
-                HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
-                HtmlNode[] trTags = table.Descendants("tr").ToArray();
-                string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
+            if (!IsSubjectExists(htmlDocument)) return null;
 
-                string name = (await _unitOfWork.Keywords.GetKeyword(courseId)).SubjectName;
+            HtmlNode table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
+            HtmlNode[] trTags = table.Descendants("tr").ToArray();
+            string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
 
-                string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(VMConstants.CHAR_SPACE)[24];
-                string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
-                string studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
-                string semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
+            string name = (await _unitOfWork.Keywords.GetKeyword(courseId)).SubjectName;
 
-                string mustStudySubject = trTags[5].Elements("td").ToArray()[1].InnerText.Trim();
-                string parallelSubject = trTags[6].Elements("td").ToArray()[1].InnerText.Trim();
+            string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(VmConstants.CharSpace)[24];
+            string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
+            string studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
+            string semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
 
-                string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
+            string mustStudySubject = trTags[5].Elements("td").ToArray()[1].InnerText.Trim();
+            string parallelSubject = trTags[6].Elements("td").ToArray()[1].InnerText.Trim();
 
-                string rawSoup = htmlDocument.DocumentNode.OuterHtml;
-                return await Subject.CreateAsync(
-                    name,
-                    subjectCode,
-                    studyUnit,
-                    studyUnitType,
-                    studyType,
-                    semester,
-                    mustStudySubject,
-                    parallelSubject,
-                    description,
-                    rawSoup,
-                    courseId,
-                    _teacherCrawler,
-                    _unitOfWork,
-                    _htmlWeb,
-                    withTeacher
-                );
-            }
-            return null;
+            string description = trTags[7].Elements("td").ToArray()[1].InnerText.Trim();
+
+            string rawSoup = htmlDocument.DocumentNode.OuterHtml;
+            return await Subject.CreateAsync(
+                name,
+                subjectCode,
+                studyUnit,
+                studyUnitType,
+                studyType,
+                semester,
+                mustStudySubject,
+                parallelSubject,
+                description,
+                rawSoup,
+                courseId,
+                _teacherCrawler,
+                _unitOfWork,
+                _htmlWeb,
+                withTeacher
+            );
         }
 
         public async Task SaveCache(int keywordId, string htmlRaw)

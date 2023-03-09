@@ -18,7 +18,7 @@ namespace Cs4rsa.ViewModels.Profile
 {
     internal partial class TeacherViewModel : ViewModelBase
     {
-        private static readonly int SIZE = 20;
+        private static readonly int SIZE = 10;
 
         #region Commands
         public RelayCommand OpenOnWebCommand { get; set; }
@@ -48,7 +48,7 @@ namespace Cs4rsa.ViewModels.Profile
         private int _currentPage;
 
         [ObservableProperty]
-        private int _totalPage;
+        private long _totalPage;
 
         [ObservableProperty]
         private bool _canPreviousPage;
@@ -107,7 +107,7 @@ namespace Cs4rsa.ViewModels.Profile
         private async Task OnUpdate()
         {
             IsUpdating = true;
-            TeacherModel teacherModel = await _teacherCrawler.Crawl(SelectedTeacher.Url, VMConstants.INT_INVALID_COURSEID, true);
+            TeacherModel teacherModel = await _teacherCrawler.Crawl(SelectedTeacher.Url, VmConstants.IntInvalidCourseId, true);
             int selectedTeacherIndex = Lectures.IndexOf(SelectedTeacher);
             if (selectedTeacherIndex >= 0)
             {
@@ -171,7 +171,7 @@ namespace Cs4rsa.ViewModels.Profile
         public async Task LoadTeachers()
         {
             Lectures.Clear();
-            TotalPage = await _unitOfWork.Teachers.CountPageAsync(SIZE);
+            TotalPage = _unitOfWork.Teachers.CountPage(SIZE);
             IAsyncEnumerable<Teacher> teachers = _unitOfWork.Teachers.GetTeachersAsync(CurrentPage, SIZE);
             await foreach (Teacher teacher in teachers)
             {

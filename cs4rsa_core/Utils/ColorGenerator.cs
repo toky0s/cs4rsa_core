@@ -8,6 +8,10 @@ namespace Cs4rsa.Utils
 {
     public class ColorGenerator
     {
+        /// <summary>
+        /// Danh sách các màu sắc bị loại trừ trong quá trình 
+        /// tạo ngẫu nhiên màu sắc.
+        /// </summary>
         private static readonly List<string> _excludeColors = new()
         {
             "#ffffff",
@@ -16,21 +20,21 @@ namespace Cs4rsa.Utils
 
         private static readonly List<string> _generatedColors = new();
 
-        private readonly IKeywordRepository _keywordRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ColorGenerator(IKeywordRepository keywordRepository)
+        public ColorGenerator(IUnitOfWork unitOfWork)
         {
-            _keywordRepository = keywordRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<string> GetColorAsync(int courseId)
         {
-            return await _keywordRepository.GetColorAsync(courseId);
+            return await _unitOfWork.Keywords.GetColorAsync(courseId);
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
         {
-            return _keywordRepository.GetColorWithSubjectCode(subjectCode);
+            return _unitOfWork.Keywords.GetColorWithSubjectCode(subjectCode);
         }
 
         public static string GenerateColor()

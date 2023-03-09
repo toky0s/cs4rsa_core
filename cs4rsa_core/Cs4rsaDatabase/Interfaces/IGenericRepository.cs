@@ -10,7 +10,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// <summary>
         /// Lấy ra tổng số lượng <typeparamref name="T"/> bản ghi
         /// </summary>
-        Task<long> Count();
+        long Count();
         Task<T> GetByIdAsync(int id);
         IAsyncEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);

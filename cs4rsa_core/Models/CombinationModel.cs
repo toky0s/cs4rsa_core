@@ -53,8 +53,8 @@ namespace Cs4rsa.Models
             SubjecModels = subjectModels;
             _classGroupModels = classGroupModels;
             IsCanShow = !IsHaveAClassGroupHaveNotSchedule() && !IsHaveAClassGroupHaveZeroEmptySeat();
-            UpdateConflict.UpdateConflictModelCollection(ref _conflictModels, ref _classGroupModels);
-            UpdateConflict.UpdatePlaceConflictCollection(ref _placeConflictFinderModels, ref _classGroupModels);
+            UpdateConflict.UpdateConflictModelCollection(_conflictModels, _classGroupModels);
+            UpdateConflict.UpdatePlaceConflictCollection(_placeConflictFinderModels, _classGroupModels);
             IsConflict = _conflictModels.Count > 0 || _placeConflictFinderModels.Count > 0;
         }
 

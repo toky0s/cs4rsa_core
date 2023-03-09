@@ -188,7 +188,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 }
                 else
                 {
-                    throw new Exception(VMConstants.EX_INVALID_REGISTER_CODE);
+                    throw new Exception(VmConstants.InvalidRegisterCodeExcepion);
                 }
             }
             else
@@ -233,7 +233,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 }
             }
 
-            MessageBox.Show(VMConstants.EX_NOT_FOUND_BASE_SCHOOLCLASS_MODEL);
+            MessageBox.Show(VmConstants.NotFoundBaseSchoolClassModelException);
             return null;
         }
 

@@ -12,6 +12,7 @@
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   Width="600"
   Height="500"
+  Padding="10,10,10,15"
   d:DataContext="{d:DesignInstance Type=implements:ImportSessionViewModel}"
   vml:DialogVMLocator.AutoHookedUpViewModel="True"
   mc:Ignorable="d">
@@ -19,213 +20,211 @@
     <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceHolderConverter" />
     <validation:ShareStringRule x:Key="shareStringRule" />
   </base:BaseUserControl.Resources>
-  <materialDesign:Card Grid.Column="0" Padding="10,10,10,15">
-    <Grid>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="2*" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Grid
+      Grid.Row="0"
+      Grid.Column="0"
+      Margin="0,0,0,10">
       <Grid.RowDefinitions>
-        <RowDefinition Height="2*" />
-        <RowDefinition />
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition />
-        <ColumnDefinition />
-      </Grid.ColumnDefinitions>
-      <Grid
+      <TextBlock
         Grid.Row="0"
-        Grid.Column="0"
-        Margin="0,0,0,10">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="auto" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock
-          Grid.Row="0"
-          Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-          Text="Danh sách các bộ lịch" />
-        <ListBox
-          Grid.Row="1"
-          ItemsSource="{Binding ScheduleSessions}"
-          SelectedItem="{Binding SelectedScheduleSession}"
-          Style="{StaticResource MaterialDesignNavigationListBox}">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <StackPanel>
-                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding Name}" />
-                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SaveDate}" />
-              </StackPanel>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-        <Grid Grid.Row="2" VerticalAlignment="Center">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-          </Grid.ColumnDefinitions>
-          <StackPanel Grid.Column="0" VerticalAlignment="Center">
-            <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
-            <TextBlock>
-              <TextBlock.Style>
-                <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
-                      <Setter Property="Text" Value="Chưa tính toán" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
-                      <Setter Property="Text" Value="Đã hết hạn" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
-                      <Setter Property="Text" Value="Có thể sử dụng" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </TextBlock.Style>
-            </TextBlock>
-          </StackPanel>
-          <Button
-            Grid.Column="1"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
-            Content="{materialDesign:PackIcon Kind=Trash}"
-            IsEnabled="{Binding SelectedScheduleSession, TargetNullValue=False, Converter={StaticResource NullVisibilityConverter}}"
-            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-            ToolTip="Xoá bộ lịch đã chọn" />
-        </Grid>
-      </Grid>
-      <Grid
-        Grid.Row="0"
-        Grid.RowSpan="2"
-        Grid.Column="1"
-        Margin="10,0,0,0">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="*" />
-          <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <ScrollViewer
-          Grid.Row="0"
-          Margin="0,0,0,5"
-          Padding="3">
-          <ItemsControl ItemsSource="{Binding UserSubjects}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Orientation="Vertical" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <materialDesign:TransitioningContent>
-                  <materialDesign:TransitioningContent.OpeningEffects>
-                    <materialDesign:TransitionEffect Kind="ExpandIn" />
-                    <materialDesign:TransitionEffect Kind="FadeIn" />
-                    <materialDesign:TransitionEffect Kind="SlideInFromLeft" />
-                  </materialDesign:TransitioningContent.OpeningEffects>
-                  <materialDesign:Card Margin="5" Padding="10">
-                    <Grid>
-                      <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                      </Grid.RowDefinitions>
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
-                      </Grid.ColumnDefinitions>
-                      <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="0,0,0,3"
-                        Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-                        TextWrapping="WrapWithOverflow">
-                        <Run Text="{Binding ClassGroup, StringFormat={}{0} -}" />
-                        <Run Text="{Binding SubjectName}" />
-                      </TextBlock>
-                      <Button
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="1"
-                        Click="Button_Click"
-                        Content="{materialDesign:PackIcon Kind=ContentCopy}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Sao chép mã đăng ký"
-                        Visibility="{Binding RegisterCode, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
-                      <TextBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        IsReadOnly="True"
-                        Style="{StaticResource MaterialDesignComboBoxEditableTextBox}"
-                        Text="{Binding RegisterCode, Converter={StaticResource EmptyStringPlaceHolderConverter}, ConverterParameter=Không có mã đăng ký nào hết}" />
-                    </Grid>
-                  </materialDesign:Card>
-                </materialDesign:TransitioningContent>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </ScrollViewer>
-        <Grid Grid.Row="2">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-          </Grid.ColumnDefinitions>
-          <ToggleButton
-            Grid.Column="0"
-            Width="34"
-            Height="34"
-            Margin="0,0,5,0"
-            Content="{materialDesign:PackIcon Kind=Cached,
-                                              Size=21}"
-            IsChecked="{Binding IsUseCache}"
-            Loaded="TgBtn_IsUseCache_Loaded">
-            <ToggleButton.Style>
-              <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
-                <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+        Text="Danh sách các bộ lịch" />
+      <ListBox
+        Grid.Row="1"
+        ItemsSource="{Binding ScheduleSessions}"
+        SelectedItem="{Binding SelectedScheduleSession}"
+        Style="{StaticResource MaterialDesignNavigationListBox}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding Name}" />
+              <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SaveDate}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <Grid Grid.Row="2" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+          <TextBlock Text="Hiệu lực của bộ lịch đã chọn" />
+          <TextBlock>
+            <TextBlock.Style>
+              <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
                 <Style.Triggers>
-                  <DataTrigger Binding="{Binding IsUseCache}" Value="true">
-                    <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+                  <DataTrigger Binding="{Binding IsAvailableSession}" Value="-1">
+                    <Setter Property="Text" Value="Chưa tính toán" />
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding IsAvailableSession}" Value="0">
+                    <Setter Property="Text" Value="Đã hết hạn" />
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding IsAvailableSession}" Value="1">
+                    <Setter Property="Text" Value="Có thể sử dụng" />
                   </DataTrigger>
                 </Style.Triggers>
               </Style>
-            </ToggleButton.Style>
-          </ToggleButton>
-          <Button
-            Grid.Column="1"
-            Command="{Binding ImportCommand}"
-            Content="SỬ DỤNG" />
-        </Grid>
-      </Grid>
-      <Grid Grid.Row="1" Grid.Column="0">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="auto" />
-          <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock
-          Grid.Row="0"
-          Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-          Text="ShareString" />
-        <TextBox
-          x:Name="ShareStringTextBox"
-          Grid.Row="1"
-          Grid.Column="0"
-          Margin="0,0,0,5"
-          VerticalAlignment="Stretch"
-          materialDesign:HintAssist.HelperText="Share string được chia sẻ"
-          materialDesign:HintAssist.Hint="Share String của bạn"
-          materialDesign:TextFieldAssist.HasClearButton="True"
-          GotFocus="ShareString_GotFocus"
-          TextChanged="ShareString_TextChanged"
-          TextWrapping="Wrap"
-          VerticalScrollBarVisibility="Auto">
-          <TextBox.Text>
-            <Binding
-              Path="ShareStringText"
-              UpdateSourceTrigger="PropertyChanged"
-              ValidatesOnExceptions="True">
-              <Binding.ValidationRules>
-                <validation:ShareStringRule />
-              </Binding.ValidationRules>
-            </Binding>
-          </TextBox.Text>
-        </TextBox>
+            </TextBlock.Style>
+          </TextBlock>
+        </StackPanel>
+        <Button
+          Grid.Column="1"
+          Margin="0,0,5,0"
+          HorizontalAlignment="Right"
+          VerticalAlignment="Center"
+          Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
+          Content="{materialDesign:PackIcon Kind=Trash}"
+          IsEnabled="{Binding SelectedScheduleSession, TargetNullValue=False, Converter={StaticResource NullVisibilityConverter}}"
+          Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+          ToolTip="Xoá bộ lịch đã chọn" />
       </Grid>
     </Grid>
-  </materialDesign:Card>
+    <Grid
+      Grid.Row="0"
+      Grid.RowSpan="2"
+      Grid.Column="1"
+      Margin="10,0,0,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="auto" />
+      </Grid.RowDefinitions>
+      <ScrollViewer
+        Grid.Row="0"
+        Margin="0,0,0,5"
+        Padding="3">
+        <ItemsControl ItemsSource="{Binding UserSubjects}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <materialDesign:TransitioningContent>
+                <materialDesign:TransitioningContent.OpeningEffects>
+                  <materialDesign:TransitionEffect Kind="ExpandIn" />
+                  <materialDesign:TransitionEffect Kind="FadeIn" />
+                  <materialDesign:TransitionEffect Kind="SlideInFromLeft" />
+                </materialDesign:TransitioningContent.OpeningEffects>
+                <materialDesign:Card Margin="5" Padding="10">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="auto" />
+                      <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                      Grid.Row="0"
+                      Grid.Column="0"
+                      Margin="0,0,0,3"
+                      Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                      TextWrapping="WrapWithOverflow">
+                      <Run Text="{Binding ClassGroup, StringFormat={}{0} -}" />
+                      <Run Text="{Binding SubjectName}" />
+                    </TextBlock>
+                    <Button
+                      Grid.Row="0"
+                      Grid.RowSpan="2"
+                      Grid.Column="1"
+                      Click="Button_Click"
+                      Content="{materialDesign:PackIcon Kind=ContentCopy}"
+                      Style="{StaticResource MaterialDesignIconButton}"
+                      ToolTip="Sao chép mã đăng ký"
+                      Visibility="{Binding RegisterCode, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
+                    <TextBox
+                      Grid.Row="1"
+                      Grid.Column="0"
+                      IsReadOnly="True"
+                      Style="{StaticResource MaterialDesignComboBoxEditableTextBox}"
+                      Text="{Binding RegisterCode, Converter={StaticResource EmptyStringPlaceHolderConverter}, ConverterParameter=Không có mã đăng ký nào hết}" />
+                  </Grid>
+                </materialDesign:Card>
+              </materialDesign:TransitioningContent>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+      <Grid Grid.Row="2">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ToggleButton
+          Grid.Column="0"
+          Width="34"
+          Height="34"
+          Margin="0,0,5,0"
+          Content="{materialDesign:PackIcon Kind=Cached,
+                                            Size=21}"
+          IsChecked="{Binding IsUseCache}"
+          Loaded="TgBtn_IsUseCache_Loaded">
+          <ToggleButton.Style>
+            <Style BasedOn="{StaticResource MaterialDesignFlatPrimaryToggleButton}" TargetType="ToggleButton">
+              <Setter Property="ToolTip" Value="Sử dụng cache đang TẮT" />
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsUseCache}" Value="true">
+                  <Setter Property="ToolTip" Value="Sử dụng cache đang được BẬT" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ToggleButton.Style>
+        </ToggleButton>
+        <Button
+          Grid.Column="1"
+          Command="{Binding ImportCommand}"
+          Content="SỬ DỤNG" />
+      </Grid>
+    </Grid>
+    <Grid Grid.Row="1" Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <TextBlock
+        Grid.Row="0"
+        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+        Text="ShareString" />
+      <TextBox
+        x:Name="ShareStringTextBox"
+        Grid.Row="1"
+        Grid.Column="0"
+        Margin="0,0,0,5"
+        VerticalAlignment="Stretch"
+        materialDesign:HintAssist.HelperText="Share string được chia sẻ"
+        materialDesign:HintAssist.Hint="Share String của bạn"
+        materialDesign:TextFieldAssist.HasClearButton="True"
+        GotFocus="ShareString_GotFocus"
+        TextChanged="ShareString_TextChanged"
+        TextWrapping="Wrap"
+        VerticalScrollBarVisibility="Auto">
+        <TextBox.Text>
+          <Binding
+            Path="ShareStringText"
+            UpdateSourceTrigger="PropertyChanged"
+            ValidatesOnExceptions="True">
+            <Binding.ValidationRules>
+              <validation:ShareStringRule />
+            </Binding.ValidationRules>
+          </Binding>
+        </TextBox.Text>
+      </TextBox>
+    </Grid>
+  </Grid>
 </base:BaseUserControl>

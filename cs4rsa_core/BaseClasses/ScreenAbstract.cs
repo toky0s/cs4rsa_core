@@ -23,7 +23,7 @@ namespace Cs4rsa.BaseClasses
         /// <returns>Task</returns>
         public async Task LoadComponentsData()
         {
-            List<Task> tasks = _components.Select(ca => ca.LoadData()).ToList();
+            IEnumerable<Task> tasks = _components.Select(ca => ca.LoadData());
             await Task.WhenAll(tasks);
         }
 

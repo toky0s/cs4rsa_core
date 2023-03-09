@@ -12,7 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class StudentRepository : GenericRepository<Student>, IStudentRepository
     {
-        public StudentRepository(Cs4rsaDbContext context) : base(context)
+        public StudentRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
         {
         }
 
@@ -28,11 +28,9 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await _context.Students.AnyAsync(st => st.SpecialString.Equals(specialString));
         }
 
-        public async Task<Student> GetBySpecialStringAsync(string specialString)
+        public IAsyncEnumerable<Student> GetAllBySpecialStringNotNull()
         {
-            return await _context.Set<Student>()
-                .Where(st => st.SpecialString.Equals(specialString))
-                .FirstOrDefaultAsync();
+            return _context.Students.Where(s => !string.IsNullOrEmpty(s.SpecialString)).AsAsyncEnumerable();
         }
 
         public async Task<Student> GetByStudentIdAsync(string id)

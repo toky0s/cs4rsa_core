@@ -12,7 +12,6 @@ using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -57,7 +56,7 @@ namespace Cs4rsa.ViewModels.Profile
         /// Tổng số trang
         /// </summary>
         [ObservableProperty]
-        private int _totalPage;
+        private long _totalPage;
 
         private readonly IDtuStudentInfoCrawler _studentCrawler;
         private readonly IOpenInBrowser _openInBrowser;
@@ -93,7 +92,7 @@ namespace Cs4rsa.ViewModels.Profile
 
         public async Task OnInit()
         {
-            TotalPage = await _unitOfWork.Students.CountPageAsync(Limit);
+            TotalPage = _unitOfWork.Students.CountPage(Limit);
             NextPageCommand.NotifyCanExecuteChanged();
             PreviousPageCommand.NotifyCanExecuteChanged();
             await LoadStudents();
@@ -153,7 +152,7 @@ namespace Cs4rsa.ViewModels.Profile
         [RelayCommand]
         private void OnCleanFolder()
         {
-            DirectoryInfo imgFolder = new(IFolderManager.FD_STUDENT_IMGS);
+            DirectoryInfo imgFolder = new(IFolderManager.FdStudentImgs);
             IEnumerable<FileInfo> zeroLengthfiles = imgFolder.GetFiles().Where(f => f.Length == 0);
             foreach (FileInfo file in zeroLengthfiles)
             {
@@ -182,7 +181,7 @@ namespace Cs4rsa.ViewModels.Profile
             if (string.IsNullOrEmpty(clearValue))
             {
                 CurrentPage = 1;
-                TotalPage = await _unitOfWork.Students.CountPageAsync(Limit);
+                TotalPage = _unitOfWork.Students.CountPage(Limit);
                 await LoadStudents();
             }
             else

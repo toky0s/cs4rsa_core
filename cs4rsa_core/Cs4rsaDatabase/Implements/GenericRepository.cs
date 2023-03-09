@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -16,12 +15,17 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly Cs4rsaDbContext _context;
+        protected readonly RawSql _rawSql;
         protected readonly string _tableName;
-        public GenericRepository(Cs4rsaDbContext context)
+        public GenericRepository(
+            Cs4rsaDbContext context
+          , RawSql rawSql)
         {
             _context = context;
+            _rawSql = rawSql;
             _tableName = typeof(T).Name + "s";
         }
+
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);
@@ -37,30 +41,16 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             await _context.Set<T>().AddRangeAsync(entities);
         }
 
-        public async Task<long> Count()
+        public long Count()
         {
-            DbConnection connection = _context.Database.GetDbConnection();
-            long result = -1;
-            using (DbCommand cmd = connection.CreateCommand())
-            {
-                cmd.CommandText = $"SELECT COUNT(*) FROM {_tableName}";
-                if (connection.State.Equals(ConnectionState.Closed))
-                {
-                    connection.Open();
-                }
-                result = (long)await cmd.ExecuteScalarAsync();
-            }
-
-            if (connection.State.Equals(ConnectionState.Open))
-            {
-                connection.Close();
-            }
-            return result;
+            string sql = $@"SELECT COUNT(*) FROM {_tableName};";
+            return _rawSql.ExecScalar<long>(sql);
         }
 
-        public async Task<int> CountPageAsync(int limit)
+        public long CountPage(int limit)
         {
-            return (await _context.Set<T>().CountAsync() + limit - 1) / limit;
+            string sql = $@"SELECT CAST(ROUND(COUNT(*) / {limit} + 0.5, 0) AS INT) FROM {_tableName};";
+            return _rawSql.ExecScalar<long>(sql);
         }
 
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)

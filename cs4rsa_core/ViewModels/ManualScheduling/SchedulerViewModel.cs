@@ -75,8 +75,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             #region Messengers
             Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
             {
-                IEnumerable<ClassGroupModel> classes = m.Value;
-                foreach (ClassGroupModel c in classes)
+                foreach (ClassGroupModel c in m.Value)
                 {
                     RemoveScheduleItem(c.SubjectCode);
                     AddClassGroup(c);

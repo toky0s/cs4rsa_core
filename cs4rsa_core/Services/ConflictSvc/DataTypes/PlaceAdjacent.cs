@@ -35,8 +35,8 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             End = end;
             PlaceStart = placeStart;
             PlaceEnd = placeEnd;
-            StartAsString = Start.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
-            EndAsString = End.ToString(VMConstants.TIME_HH_MM_FORMAT, CultureInfo.CurrentCulture);
+            StartAsString = Start.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
+            EndAsString = End.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
             SchoolClass1 = schoolClass1;
             SchoolClass2 = schoolClass2;
         }

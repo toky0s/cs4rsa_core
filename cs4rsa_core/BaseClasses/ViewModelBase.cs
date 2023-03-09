@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.Constants;
 using Cs4rsa.ViewModels;
@@ -13,7 +12,7 @@ namespace Cs4rsa.BaseClasses
 {
     public abstract class ViewModelBase : ObservableRecipient
     {
-        public ViewModelBase() : base(WeakReferenceMessenger.Default)
+        public ViewModelBase() : base(((App)Application.Current).Messenger)
         {
         }
 
@@ -23,7 +22,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="uc">Dialog UC</param>
         protected virtual void OpenDialog(IDialog uc)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).OpenModal(uc);
+            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).OpenModal(uc);
         }
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace Cs4rsa.BaseClasses
         /// </summary>
         protected virtual void CloseDialog()
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).CloseModal();
+            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).CloseModal();
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="scrIdx">Screen Index</param>
         protected virtual async Task GotoScreen(int scrIdx)
         {
-            await (Application.Current.MainWindow as MainWindow).Goto(scrIdx);
+            await ((MainWindow)Application.Current.MainWindow).Goto(scrIdx);
         }
 
         /// <summary>
@@ -52,15 +51,14 @@ namespace Cs4rsa.BaseClasses
         /// <param name="isEnabled"></param>
         protected virtual void PreventOperation(bool prevent)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsWindowEnable = !prevent;
+            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).IsWindowEnable = !prevent;
         }
 
         /// <summary>
         /// Truy cập các ViewModel có chứa trong container
         /// </summary>
         /// <typeparam name="T">ViewModel Type</typeparam>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-        protected T GetViewModel<T>()
+        protected static T GetViewModel<T>()
         {
             object o = ((App)Application.Current).Container.GetService(typeof(T));
             if (o != null && o is T t)
@@ -69,7 +67,7 @@ namespace Cs4rsa.BaseClasses
             }
             else
             {
-                throw new Exception(VMConstants.EX_NOT_FOUND_VIEWMODEL);
+                throw new Exception(VmConstants.NotFoundViewModelException);
             }
         }
 
@@ -79,7 +77,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="isPrevent"></param>
         protected static void PreventCloseDialog(bool isPrevent)
         {
-            (Application.Current.MainWindow.DataContext as MainWindowViewModel).IsCloseOnClickAway = !isPrevent;
+            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).IsCloseOnClickAway = !isPrevent;
         }
     }
 }
