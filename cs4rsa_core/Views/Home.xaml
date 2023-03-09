@@ -9,9 +9,8 @@
   xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
-  d:DesignHeight="550"
-  d:DesignWidth="900"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  Loaded="ScreenAbstract_Loaded"
   mc:Ignorable="d">
   <Grid>
     <Grid.RowDefinitions>
@@ -119,38 +118,28 @@
                 người biết cái ứng dụng củ chuối này đã được tạo ra bởi tui.
               </TextBlock>
             </StackPanel>
-            <Button
-              Grid.Row="2"
-              Width="120"
-              Margin="15,0,0,5"
-              HorizontalAlignment="Left"
-              Command="{Binding GotoFormCommand}"
-              Style="{StaticResource MaterialDesignOutlinedButton}">
-              <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon
-                  Width="20"
-                  Height="20"
-                  Margin="0,0,2,0"
-                  Kind="GoogleDrive" />
-                <TextBlock VerticalAlignment="Center" Text="Góp ý" />
-              </StackPanel>
-            </Button>
-            <Button
-              Grid.Row="3"
-              Width="120"
-              Margin="15,0,0,0"
-              HorizontalAlignment="Left"
-              Command="{Binding DonateCommand}"
-              Style="{StaticResource MaterialDesignOutlinedButton}">
-              <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon
-                  Width="20"
-                  Height="20"
-                  Margin="0,0,2,0"
-                  Kind="Donate" />
-                <TextBlock VerticalAlignment="Center" Text="Ủng hộ tôi" />
-              </StackPanel>
-            </Button>
+            <StackPanel Grid.Row="2" Orientation="Vertical">
+              <Button
+                Margin="15,0,0,5"
+                HorizontalAlignment="Left"
+                Command="{Binding GotoFormCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon Margin="0,0,5,0" Kind="FormOutline" />
+                  <TextBlock Text="Góp ý" />
+                </StackPanel>
+              </Button>
+              <Button
+                Margin="15,0,0,0"
+                HorizontalAlignment="Left"
+                Command="{Binding DonateCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon Margin="0,0,5,0" Kind="DonateOutline" />
+                  <TextBlock Text="Ủng hộ tôi" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
           </Grid>
         </Grid>
       </materialDesign:Card>
@@ -195,11 +184,23 @@
                 Margin="15,0,0,5"
                 HorizontalAlignment="Left"
                 Command="{Binding GotoGitHubCommand}"
-                Style="{StaticResource MaterialDesignOutlinedButton}">
+                Style="{StaticResource MaterialDesignFlatButton}">
                 <Button.Content>
                   <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Margin="0,0,5,0" Kind="Github" />
                     <TextBlock>CS4RSA</TextBlock>
+                  </StackPanel>
+                </Button.Content>
+              </Button>
+              <Button
+                Margin="15,0,0,5"
+                HorizontalAlignment="Left"
+                Click="Btn_Update_Click"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <Button.Content>
+                  <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Margin="0,0,5,0" Kind="Update" />
+                    <TextBlock>Kiểm tra cập nhật</TextBlock>
                   </StackPanel>
                 </Button.Content>
               </Button>

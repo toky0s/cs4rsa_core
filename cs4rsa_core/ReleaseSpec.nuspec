@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Crediz</id>
+    <version>1.0.0</version>
+    <title>Crediz Application</title>
+    <authors>TruongAXin</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+     <!--<icon>crediz-icon.png</icon>--> 
+    <projectUrl>https://github.com/toky0s/cs4rsa_core</projectUrl>
+    <description>Ứng dụng xếp lịch DTU</description>
+    <releaseNotes>Init features.</releaseNotes>
+    <copyright>Cs4rsa</copyright>
+    <tags>cs4rsa crediz truongaxin</tags>
+  </metadata>
+  
+  <files>
+    <file src="bin\Release\net6.0-windows\**" target="lib\net6"/>
+  </files>
+</package>
