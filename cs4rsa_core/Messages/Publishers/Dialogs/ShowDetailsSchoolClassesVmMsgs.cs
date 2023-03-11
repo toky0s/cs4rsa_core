@@ -4,7 +4,7 @@ using Cs4rsa.Dialogs.DialogResults;
 
 namespace Cs4rsa.Messages.Publishers.Dialogs
 {
-    internal class ShowDetailsSchoolClassesVmMsgs
+    public class ShowDetailsSchoolClassesVmMsgs
     {
         /// <summary>
         /// Thoát lựa chọn lớp học

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Cs4rsa.Controls
 {
-    internal class IntTextBox : TextBox
+    public class IntTextBox : TextBox
     {
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {

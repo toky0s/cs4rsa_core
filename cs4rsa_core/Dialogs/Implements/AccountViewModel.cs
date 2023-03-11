@@ -20,7 +20,7 @@ using System.Windows;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    internal sealed partial class AccountViewModel : DialogVmBase
+    public sealed partial class AccountViewModel : DialogVmBase
     {
         #region Properties
         public ObservableCollection<Student> Students { get; set; }

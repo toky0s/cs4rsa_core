@@ -30,7 +30,7 @@ using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    internal partial class ChoosedViewModel : ViewModelBase
+    public partial class ChoosedViewModel : ViewModelBase
     {
         #region Properties
         private string _shareString;
@@ -150,7 +150,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private void OnSolve()
         {
             SolveConflictUC solveConflictUC = new();
-            SolveConflictViewModel vm = new(_selectedConflictModel, _unitOfWork);
+            SolveConflictViewModel vm = new(SelectedConflictModel, _unitOfWork);
             solveConflictUC.DataContext = vm;
             OpenDialog(solveConflictUC);
         }

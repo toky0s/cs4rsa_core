@@ -14,7 +14,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class KeywordRepository : GenericRepository<Keyword>, IKeywordRepository
     {
-        public KeywordRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
+        public KeywordRepository(Cs4rsaDbContext context) : base(context)
         {
         }
 

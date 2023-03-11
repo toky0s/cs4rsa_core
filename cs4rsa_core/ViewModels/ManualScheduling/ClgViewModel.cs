@@ -25,7 +25,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
     /// <summary>
     /// Class group View Model
     /// </summary>
-    internal sealed partial class ClgViewModel : ViewModelBase
+    public sealed partial class ClgViewModel : ViewModelBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }

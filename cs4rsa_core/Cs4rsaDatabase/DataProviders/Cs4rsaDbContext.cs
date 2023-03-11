@@ -9,7 +9,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
     {
         public Cs4rsaDbContext() : base()
         {
-
+            RSql = new RawSql(this);
         }
 
         public DbSet<Teacher> Teachers { get; set; }
@@ -24,6 +24,8 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         public DbSet<ParProDetail> ParProDetails { get; set; }
         public DbSet<PreProDetail> PreProDetails { get; set; }
         public DbSet<KeywordTeacher> KeywordTeachers { get; set; }
+        public DbSet<Setting> Settings { get; set; }
+        public RawSql RSql { get; private set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

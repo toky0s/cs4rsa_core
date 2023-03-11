@@ -5,6 +5,7 @@
                 xmlns:asmv2="urn:schemas-microsoft-com:asm.v2"
                 xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <SquirrelAwareVersion xmlns="urn:schema-squirrel-com:asm.v1">1</SquirrelAwareVersion>
     <assemblyIdentity version="1.0.0.0" name="cs4rsa_core"/>
     <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
         <security>

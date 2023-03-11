@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels.Profile
 {
-    internal partial class ProfileViewModel : ViewModelBase, IScreenViewModel
+    public partial class ProfileViewModel : ViewModelBase, IScreenViewModel
     {
         public void InitData()
         {

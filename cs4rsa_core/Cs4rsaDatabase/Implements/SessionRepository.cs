@@ -11,7 +11,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class SessionRepository : GenericRepository<UserSchedule>, IUserScheduleRepository
     {
-        public SessionRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
+        public SessionRepository(Cs4rsaDbContext context) : base(context)
         {
         }
 

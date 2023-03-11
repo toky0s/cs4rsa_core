@@ -10,7 +10,7 @@ using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    internal partial class SolveConflictViewModel : DialogVmBase
+    public partial class SolveConflictViewModel : DialogVmBase
     {
         [ObservableProperty]
         private SchoolClass _firstSC;

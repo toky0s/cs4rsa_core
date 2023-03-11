@@ -22,7 +22,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.Profile
 {
-    internal partial class StudentPfViewModel : ViewModelBase
+    public partial class StudentPfViewModel : ViewModelBase
     {
         private readonly int Limit;
         public ObservableCollection<StudentModel> StudentModels { get; set; }

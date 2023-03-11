@@ -12,7 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class PreProDetailRepository : GenericRepository<PreProDetail>, IPreProDetailsRepository
     {
-        public PreProDetailRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
+        public PreProDetailRepository(Cs4rsaDbContext context) : base(context)
         {
         }
 

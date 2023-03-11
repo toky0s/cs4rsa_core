@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Models.AutoScheduling
 {
-    internal partial class PlanTableModel : ObservableObject
+    public partial class PlanTableModel : ObservableObject
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -42,7 +42,7 @@ namespace Cs4rsa.Models.AutoScheduling
                     IsAvailable = await _unitOfWork.Keywords.ExistBySubjectCodeAsync(record.SubjectCode),
                     IsSelected = false,
                 };
-                _planRecordModels.Add(planRecordModel);
+                PlanRecordModels.Add(planRecordModel);
             }
             return this;
         }

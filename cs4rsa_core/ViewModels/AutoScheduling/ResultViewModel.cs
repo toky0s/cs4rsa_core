@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace Cs4rsa.ViewModels.AutoScheduling
 {
-    internal partial class ResultViewModel : ViewModelBase
+    public partial class ResultViewModel : ViewModelBase
     {
         public ObservableCollection<CombinationModel> CombinationModels { get; set; }
         private List<CombinationModel> _combiModels;

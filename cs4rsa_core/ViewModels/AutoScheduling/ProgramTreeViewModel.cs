@@ -32,7 +32,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.AutoScheduling
 {
-    internal sealed partial class ProgramTreeViewModel : ViewModelBase
+    public sealed partial class ProgramTreeViewModel : ViewModelBase
     {
         private readonly MyProgramUC _myProgramUC;
         private readonly AccountUC _accountUC;

@@ -8,7 +8,7 @@ namespace Cs4rsa.Controls
     /// MeasureOverride: Tính toán Width expected cho từng DayPanel.
     /// ArrangeOverride: Sắp xếp và tính toán lại Width của DayPanel theo hàng ngang.
     /// </summary>
-    internal class WeekPanel : Panel
+    public class WeekPanel : Panel
     {
         private const int DAY_OF_WEEK_COUNT = 7;
         private static double xPosition;

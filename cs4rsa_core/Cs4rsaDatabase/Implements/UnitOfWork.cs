@@ -10,20 +10,21 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
     public class UnitOfWork : IUnitOfWork
     {
         private readonly Cs4rsaDbContext _context;
-        public UnitOfWork(Cs4rsaDbContext context, RawSql rawSql)
+        public UnitOfWork(Cs4rsaDbContext context)
         {
             _context = context;
-            Curriculums = new CurriculumRepository(_context, rawSql);
-            Disciplines = new DisciplineRepository(_context, rawSql);
-            Keywords = new KeywordRepository(_context, rawSql);
-            UserSchedules = new SessionRepository(_context, rawSql);
-            Students = new StudentRepository(_context, rawSql);
-            Teachers = new TeacherRepository(_context, rawSql);
-            ProgramSubjects = new ProgramSubjectRepository(_context, rawSql);
-            PreParSubjects = new PreParSubjectRepository(_context, rawSql);
-            PreProDetails = new PreProDetailRepository(_context, rawSql);
-            ParProDetails = new ParProDetailRepository(_context, rawSql);
-            KeywordTeachers = new KeywordTeacherRepository(_context, rawSql);
+            Curriculums = new CurriculumRepository(_context);
+            Disciplines = new DisciplineRepository(_context);
+            Keywords = new KeywordRepository(_context);
+            UserSchedules = new SessionRepository(_context);
+            Students = new StudentRepository(_context);
+            Teachers = new TeacherRepository(_context);
+            ProgramSubjects = new ProgramSubjectRepository(_context);
+            PreParSubjects = new PreParSubjectRepository(_context);
+            PreProDetails = new PreProDetailRepository(_context);
+            ParProDetails = new ParProDetailRepository(_context);
+            KeywordTeachers = new KeywordTeacherRepository(_context);
+            Settings = new SettingRepository(_context);
         }
 
         public ICurriculumRepository Curriculums { get; private set; }
@@ -47,6 +48,8 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public IParProDetailsRepository ParProDetails { get; private set; }
 
         public IKeywordTeacherRepository KeywordTeachers { get; private set; }
+
+        public ISettingRepository Settings { get; private set; }
 
         public IDbContextTransaction BeginTrans()
         {
@@ -76,6 +79,11 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public RawSql GetRawSql()
+        {
+            return _context.RSql;
         }
 
         public void Rollback()

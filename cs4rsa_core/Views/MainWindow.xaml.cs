@@ -4,8 +4,6 @@ using Cs4rsa.Constants;
 
 using MaterialDesignThemes.Wpf;
 
-using Squirrel;
-
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,9 +18,6 @@ namespace Cs4rsa.Views
         public MainWindow()
         {
             InitializeComponent();
-            RenderScreen();
-            RenderMainMenu();
-            RenderCompactMenu();
         }
 
         private void RenderScreen()
@@ -157,13 +152,11 @@ namespace Cs4rsa.Views
 
         private async void MainWd_Loaded(object sender, RoutedEventArgs e)
         {
+            RenderScreen();
+            RenderMainMenu();
+            RenderCompactMenu();
             await Goto(0);
-            MessageBox.Show(
-                    "Message caan ressult"
-                  , ViewConstants.Screen01.MenuName
-                  , MessageBoxButton.OK
-                  , MessageBoxImage.Error
-            );
+            MessageBox.Show("Current Version 1.0.2");
         }
     }
 }

@@ -36,7 +36,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    internal sealed partial class SearchViewModel : ViewModelBase
+    public sealed partial class SearchViewModel : ViewModelBase
     {
         #region Fields
         private readonly ShowDetailsSubjectUC _showDetailsSubjectUC;

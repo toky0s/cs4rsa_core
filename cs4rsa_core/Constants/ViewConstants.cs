@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace Cs4rsa.Constants
 {
-    internal class CredizMenuItem
+    public class CredizMenuItem
     {
         /// <summary>
         /// Khởi tạo Menu Item đi cùng với ViewModel.
@@ -84,7 +84,7 @@ namespace Cs4rsa.Constants
         }
     }
 
-    internal abstract class ViewConstants
+    public abstract class ViewConstants
     {
         private const string ViewModelNamespace = "Cs4rsa.ViewModels";
 
@@ -144,8 +144,7 @@ namespace Cs4rsa.Constants
             "Thông tin"
             , PackIconKind.InformationOutline
             , PackIconKind.Information
-            , new Info()
-            , ViewModelNamespace + ".InfoViewModel");
+            , new Info());
 
         public static CredizMenuItem[] CredizMenu =
         {

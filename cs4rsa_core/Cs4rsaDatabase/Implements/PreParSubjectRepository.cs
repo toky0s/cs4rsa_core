@@ -6,7 +6,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class PreParSubjectRepository : GenericRepository<DbPreParSubject>, IPreParSubjectRepository
     {
-        public PreParSubjectRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
+        public PreParSubjectRepository(Cs4rsaDbContext context) : base(context)
         {
         }
 

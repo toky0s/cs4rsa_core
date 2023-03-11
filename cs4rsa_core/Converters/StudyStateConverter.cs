@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace Cs4rsa.Converters
 {
-    internal class StudyStateConverter : IValueConverter
+    public class StudyStateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

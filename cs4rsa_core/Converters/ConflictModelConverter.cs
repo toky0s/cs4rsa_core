@@ -9,7 +9,7 @@ namespace Cs4rsa.Converters
     /// <summary>
     /// Chuyển một Conflict Model thành một chuỗi thông tin hiển thị.
     /// </summary>
-    internal class ConflictModelConverter : IValueConverter
+    public class ConflictModelConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

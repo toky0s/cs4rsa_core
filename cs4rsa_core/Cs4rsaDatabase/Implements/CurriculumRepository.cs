@@ -6,7 +6,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
     public class CurriculumRepository : GenericRepository<Curriculum>, ICurriculumRepository
     {
-        public CurriculumRepository(Cs4rsaDbContext context, RawSql rawSql) : base(context, rawSql)
+        public CurriculumRepository(Cs4rsaDbContext context) : base(context)
         {
         }
     }

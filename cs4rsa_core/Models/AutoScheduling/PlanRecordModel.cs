@@ -4,7 +4,7 @@ using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
 
 namespace Cs4rsa.Models.AutoScheduling
 {
-    internal partial class PlanRecordModel : ObservableObject
+    public partial class PlanRecordModel : ObservableObject
     {
         [ObservableProperty]
         private string _subjectCode;

@@ -4,18 +4,17 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Dialogs.DialogViews;
-using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
-using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils.Interfaces;
 
 using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels
 {
-    internal partial class HomeViewModel : ViewModelBase, IScreenViewModel
+    public partial class HomeViewModel : ViewModelBase, IScreenViewModel
     {
         [ObservableProperty]
         private string _currentYearInfo;
@@ -30,27 +29,25 @@ namespace Cs4rsa.ViewModels
         private CourseCrawler _courseCrawler;
 
         #region Commands
-        public RelayCommand UpdateSubjectDatabaseCommand { get; set; }
+        public AsyncRelayCommand UpdateSubjectDbCommand { get; set; }
         public RelayCommand GotoFormCommand { get; set; }
         public RelayCommand DonateCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
         public RelayCommand ManualCommand { get; set; }
         #endregion
 
-        #region DI
-        private readonly ISetting _setting;
         private readonly IOpenInBrowser _openInBrowser;
-        #endregion
+        private readonly IUnitOfWork _unitOfWork;
 
         public HomeViewModel(
             CourseCrawler courseCrawler,
-            ISetting setting,
-            IOpenInBrowser openInBrowser
+            IOpenInBrowser openInBrowser,
+            IUnitOfWork unitOfWork
         )
         {
             _courseCrawler = courseCrawler;
-            _setting = setting;
             _openInBrowser = openInBrowser;
+            _unitOfWork = unitOfWork;
 
             Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
             {
@@ -60,7 +57,7 @@ namespace Cs4rsa.ViewModels
             _currentSemesterInfo = _courseCrawler.CurrentSemesterInfo;
             _currentYearInfo = _courseCrawler.CurrentYearInfo;
 
-            UpdateSubjectDatabaseCommand = new RelayCommand(OnUpdate);
+            UpdateSubjectDbCommand = new(OnUpdate);
             GotoFormCommand = new RelayCommand(OnGotoForm);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
             ManualCommand = new RelayCommand(OnGotoManualCommand);
@@ -89,9 +86,9 @@ namespace Cs4rsa.ViewModels
             _openInBrowser.Open(VmConstants.LinkProjectGoogleSheet);
         }
 
-        private void OnUpdate()
+        private async Task OnUpdate()
         {
-            Messenger.Send(new HomeVmMsgs.UpdateSubjectDbMsg(null));
+            await GotoScreen(4);
         }
 
         public void LoadIsNewSemester()
@@ -101,8 +98,8 @@ namespace Cs4rsa.ViewModels
                     CourseCrawler.CurrentSemesterValue != null
                     && CourseCrawler.CurrentYearValue != null
                 ) && (
-                    _setting.CurrentSetting.CurrentSemesterValue != CourseCrawler.CurrentSemesterValue
-                    || _setting.CurrentSetting.CurrentYearValue != CourseCrawler.CurrentYearValue
+                    _unitOfWork.Settings.GetBykey(VmConstants.StCurrentSemesterValue) != CourseCrawler.CurrentSemesterValue
+                    || _unitOfWork.Settings.GetBykey(VmConstants.StCurrentYearValue) != CourseCrawler.CurrentYearValue
                 );
         }
 
