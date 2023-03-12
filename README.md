@@ -4,7 +4,7 @@
 
 # English
 ## Download
-[For Windows 10 x86](https://drive.google.com/drive/u/0/folders/1mtnhC8AmVsPO0KnyOueQRbvcyHVnMzxO)
+[For Windows 10](https://github.com/toky0s/cs4rsa_core/releases)
 
 ## Main features
 Version 3.0.1
@@ -60,7 +60,7 @@ Version 1.1.2
 
 # Vietnamese
 ## Tải xuống
-[For Windows 10 x86](https://drive.google.com/drive/u/0/folders/1mtnhC8AmVsPO0KnyOueQRbvcyHVnMzxO)
+[Cho Windows 10](https://github.com/toky0s/cs4rsa_core/releases)
 
 ## Các chức năng chính
 Phiên bản 3.0.1
