@@ -1,12 +1,22 @@
 ﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
 
+using MaterialDesignThemes.Wpf;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using Squirrel;
+using Squirrel.Sources;
+
+using System;
+using System.Linq;
 using System.Windows;
 
 namespace Cs4rsa.Views
 {
     public partial class Home : ScreenAbstract
     {
-        //private UpdateManager _manager;
+        //UpdateManager _manager;
         public Home()
         {
             InitializeComponent();
@@ -17,12 +27,10 @@ namespace Cs4rsa.Views
             //try
             //{
             //    // Kiểm tra cập nhật
-            //    _manager = await UpdateManager.GitHubUpdateManager(VmConstants.LinkProjectPage);
-            //    Debug.WriteLine($"Current version {_manager.CurrentlyInstalledVersion()}");
+            //    UpdateManager _manager = new UpdateManager(new GithubSource(VmConstants.LinkProjectPage, string.Empty, true));
             //}
-            //catch (InvalidOperationException ex)
+            //catch (Exception ex)
             //{
-            //    Debug.WriteLine("Have no release in root repo.");
             //    MessageBox.Show(
             //        ex.Message
             //      , ViewConstants.Screen01.MenuName
@@ -32,8 +40,45 @@ namespace Cs4rsa.Views
             //}
         }
 
-        private void Btn_Update_Click(object sender, RoutedEventArgs e)
+        private async void Btn_Update_Click(object sender, RoutedEventArgs e)
         {
+            using var mgr = new UpdateManager(VmConstants.LinkProjectPage);
+            if (mgr.IsInstalledApp)
+            {
+                var newVersion = await mgr.UpdateApp();
+                // optionally restart the app automatically, or ask the user if/when they want to restart
+                if (newVersion != null)
+                {
+                    MessageBox.Show(
+                        $"Phiên bản hiện tại của ứng dụng là {mgr.CurrentlyInstalledVersion()}, phiên bản mới nhất hiện tại là {newVersion.Version}. " +
+                        $"Quá trình cập nhật sẽ tốn một ít thời gian và sẽ khởi động lại ứng dụng. Bạn có muốn tiếp tục?"
+                      , ViewConstants.Screen01.MenuName
+                      , MessageBoxButton.YesNoCancel
+                      , MessageBoxImage.Information
+                    );
+                    UpdateManager.RestartApp();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Phiên bản hiện tại của ứng dụng là {mgr.CurrentlyInstalledVersion()}, là PHIÊN BẢN MỚI NHẤT."
+                      , ViewConstants.Screen01.MenuName
+                      , MessageBoxButton.OK
+                      , MessageBoxImage.Information
+                    );
+                }
+            }
+            else
+            {
+                MessageBox.Show(
+                    $"[DEBUG] Ứng dụng chưa được cài đặt trên máy thật."
+                  , ViewConstants.Screen01.MenuName
+                  , MessageBoxButton.OK
+                  , MessageBoxImage.Information
+                );
+            }
+
+
             //try
             //{
             //    UpdateInfo updateInfo = await _manager.CheckForUpdate();
@@ -48,22 +93,23 @@ namespace Cs4rsa.Views
 
             //        if (result == MessageBoxResult.OK)
             //        {
-            //            await _manager.UpdateApp();
+            //            var newVersion = await _manager.UpdateApp();
+            //            if (newVersion != null) UpdateManager.RestartApp();
             //        }
-            //        Container.GetService<ISnackbarMessageQueue>()
-            //            .Enqueue(
-            //                "Cập nhật thành công hãy khởi động lại ứng dụng!"
-            //              , "KHỞI ĐỘNG LẠI"
-            //              , () =>
-            //                  {
-            //                      UpdateManager.RestartAppWhenExited();
-            //                  }
-            //            );
+            //        //Container.GetService<ISnackbarMessageQueue>()
+            //        //    .Enqueue(
+            //        //        "Cập nhật thành công hãy khởi động lại ứng dụng!"
+            //        //      , "KHỞI ĐỘNG LẠI"
+            //        //      , () =>
+            //        //          {
+
+            //        //          }
+            //        //    );
             //    }
             //    else
             //    {
             //        Container.GetService<ISnackbarMessageQueue>()
-            //            .Enqueue("Đây là phiên bản mới nhất");
+            //            .Enqueue($"Đây là phiên bản mới nhất {_manager.CurrentlyInstalledVersion()}");
             //    }
             //}
             //catch (Exception ex)
