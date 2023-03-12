@@ -42,7 +42,7 @@ namespace Cs4rsa.Views
 
         private async void Btn_Update_Click(object sender, RoutedEventArgs e)
         {
-            using var mgr = new UpdateManager(VmConstants.LinkProjectPage);
+            using var mgr = await UpdateManager.GitHubUpdateManager(VmConstants.LinkProjectPage);
             if (mgr.IsInstalledApp)
             {
                 var newVersion = await mgr.UpdateApp();
