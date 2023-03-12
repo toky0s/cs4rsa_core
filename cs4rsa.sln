@@ -7,10 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsa", "cs4rsa_core\Cs4rs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2BB9055-57B8-4383-B9A7-C1F0A15696D2}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cs4rsaTest", "Cs4rsaTest\Cs4rsaTest.csproj", "{86B6E588-9F04-4FED-86AA-04B874A54745}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,26 +45,6 @@ Global
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|x64.Build.0 = Release|Any CPU
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|x86.ActiveCfg = Release|Any CPU
 		{93ACCEED-955F-4AF0-A909-76FE718B0DD7}.Release|x86.Build.0 = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|ARM.Build.0 = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|x64.Build.0 = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Debug|x86.Build.0 = Debug|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|ARM.ActiveCfg = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|ARM.Build.0 = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|ARM64.Build.0 = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|x64.ActiveCfg = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|x64.Build.0 = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|x86.ActiveCfg = Release|Any CPU
-		{86B6E588-9F04-4FED-86AA-04B874A54745}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

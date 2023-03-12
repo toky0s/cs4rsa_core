@@ -51,9 +51,9 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
                 reportValue = jump;
             }
 
+            _unitOfWork.BeginTrans();
             try
             {
-                _unitOfWork.BeginTrans();
                 _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
                 _unitOfWork.Keywords.RemoveRange(_cs4rsaDbContext.Keywords);
 

@@ -4,7 +4,7 @@ using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes.Enums;
 
 namespace Cs4rsa.Models.Bases
 {
-    internal abstract class TreeItem : ObservableObject
+    public abstract class TreeItem : ObservableObject
     {
         public string Name { get; set; }
         public string Id { get; set; }

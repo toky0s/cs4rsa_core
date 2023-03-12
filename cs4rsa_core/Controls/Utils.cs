@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace Cs4rsa.Controls
 {
-    internal class Utils
+    public class Utils
     {
         public static readonly string[] TIME_LINES = new string[17]
         {

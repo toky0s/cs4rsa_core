@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Cs4rsa.Cs4rsaDatabase.DataProviders;
+
+using Microsoft.EntityFrameworkCore.Storage;
 
 using System.Threading.Tasks;
 
@@ -17,6 +19,8 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         IPreProDetailsRepository PreProDetails { get; }
         IParProDetailsRepository ParProDetails { get; }
         IKeywordTeacherRepository KeywordTeachers { get; }
+        ISettingRepository Settings { get; }
+        RawSql GetRawSql();
         int Complete();
         Task<int> CompleteAsync();
         Task<IDbContextTransaction> BeginTransAsync();

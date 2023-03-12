@@ -46,7 +46,7 @@ namespace Cs4rsa.Dialogs.Implements
     /// Author:
     /// toky0s
     /// </summary>
-    internal partial class SessionInputViewModel : ViewModelBase
+    public partial class SessionInputViewModel : ViewModelBase
     {
         [ObservableProperty]
         private string _sessionId;

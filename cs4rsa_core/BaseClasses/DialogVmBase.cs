@@ -2,7 +2,7 @@
 
 namespace Cs4rsa.BaseClasses
 {
-    internal abstract partial class DialogVmBase : ViewModelBase
+    public abstract partial class DialogVmBase : ViewModelBase
     {
         [ObservableProperty]
         private bool _isDialogOpen;

@@ -10,7 +10,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
     public class RawSql
     {
         private readonly DbConnection _connection;
-        public RawSql(Cs4rsaDbContext dbContext)
+        public RawSql(DbContext dbContext)
         {
             _connection = dbContext.Database.GetDbConnection();
         }
@@ -20,20 +20,28 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// </summary>
         /// <typeparam name="T">Kiểu dữ liệu trả về.</typeparam>
         /// <param name="sql">Câu lệnh SQL.</param>
-        /// <returns><typeparamref name="T"/></returns>
-        public T ExecScalar<T>(string sql)
+        /// <returns>Số lượng bảng ghi được áp dụng.</returns>
+        public long ExecScalar(string sql)
         {
             Debug.WriteLine(sql);
             DbCommand cmd = _connection.CreateCommand();
             cmd.CommandText = sql;
-            Debug.WriteLine(cmd.CommandText);
+
+            Debug.Assert(cmd != null);
+            Debug.Assert(sql != null);
+            Debug.Assert(_connection != null);
 
             if (_connection.State.Equals(ConnectionState.Closed)) _connection.Open();
-            T result = (T)cmd.ExecuteScalar();
+#nullable enable
+            object? result = cmd.ExecuteScalar();
             if (_connection.State.Equals(ConnectionState.Open)) _connection.Close();
+            if (result != null && result is long @actualResult)
+            {
+                return actualResult;
+            }
 
             cmd.Dispose();
-            return result;
+            return -1;
         }
 
         /// <summary>

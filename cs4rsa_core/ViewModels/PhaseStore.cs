@@ -29,7 +29,7 @@ namespace Cs4rsa.ViewModels
     /// 
     /// Thao tác Add ClassGroup Model(s) không đánh giá lại BetweenPoint từ lần thứ hai trở đi.
     /// </remarks>
-    internal sealed partial class PhaseStore : ViewModelBase
+    public sealed partial class PhaseStore : ViewModelBase
     {
         private List<ClassGroupModel> _classGroupModels;
         public ObservableCollection<int> BwpWeeks { get; set; }

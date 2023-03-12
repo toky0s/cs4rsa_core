@@ -160,7 +160,7 @@ namespace Cs4rsa.Dialogs.Implements
 
         private async Task OnDelete()
         {
-            string sessionName = _selectedScheduleSession.Name;
+            string sessionName = SelectedScheduleSession.Name;
             MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xoá phiên {sessionName}?",
                                                         "Thông báo",
                                                         MessageBoxButton.YesNo,
@@ -168,7 +168,7 @@ namespace Cs4rsa.Dialogs.Implements
             if (result == MessageBoxResult.Yes)
             {
                 await _unitOfWork.BeginTransAsync();
-                _unitOfWork.UserSchedules.Remove(_selectedScheduleSession);
+                _unitOfWork.UserSchedules.Remove(SelectedScheduleSession);
                 await _unitOfWork.CompleteAsync();
                 await _unitOfWork.CommitAsync();
                 await Reload();

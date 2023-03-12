@@ -18,8 +18,6 @@ using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
-using Cs4rsa.Settings;
-using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 using Cs4rsa.ViewModels;
@@ -34,8 +32,13 @@ using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Squirrel;
+
 using System;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cs4rsa
@@ -44,26 +47,79 @@ namespace Cs4rsa
     {
         public IServiceProvider Container { get; private set; }
         public IMessenger Messenger { get; private set; }
-
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Init Clowd.Squirrel
+            SquirrelAwareApp.HandleEvents(
+                onInitialInstall: OnAppInstall,
+                onAppUninstall: OnAppUninstall,
+                onEveryRun: OnAppRun
+            );
+
             base.OnStartup(e);
             Messenger = WeakReferenceMessenger.Default;
             Container = CreateServiceProvider();
-            Container.GetService<CourseCrawler>().InitInfor();
 
-            CreateDbIfNotExists();
+            // Database Init Data
+            CourseCrawler courseCrawler = Container.GetService<CourseCrawler>();
+            courseCrawler.InitInfor();
+            if (!File.Exists(VmConstants.DbFilePath))
+            {
+                Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
+
+                // Seed Settings
+                Container.GetService<IUnitOfWork>().Settings.InsertSemesterSetting(
+                      courseCrawler.CurrentYearInfo
+                    , courseCrawler.CurrentYearValue
+                    , courseCrawler.CurrentSemesterInfo
+                    , courseCrawler.CurrentSemesterValue
+                );
+
+                // Seed Data Discipline and Keyword
+                Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword();
+            }
+
+            // Init Folder
             InitFolders();
+        }
+
+        private static void OnAppInstall(SemanticVersion version, IAppTools tools)
+        {
+            tools.CreateShortcutForThisExe(ShortcutLocation.StartMenu | ShortcutLocation.Desktop);
+        }
+
+        private static void OnAppUninstall(SemanticVersion version, IAppTools tools)
+        {
+            tools.RemoveShortcutForThisExe(ShortcutLocation.StartMenu | ShortcutLocation.Desktop);
+        }
+
+        private static void OnAppRun(SemanticVersion version, IAppTools tools, bool firstRun)
+        {
+            tools.SetProcessAppUserModelId();
+            // show a welcome message when the app is first installed
+            if (firstRun) MessageBox.Show("Thanks for installing my application!");
+        }
+
+        private static async Task UpdateMyApp()
+        {
+            using var mgr = new UpdateManager(VmConstants.LinkProjectPage);
+            var newVersion = await mgr.UpdateApp();
+
+            // optionally restart the app automatically, or ask the user if/when they want to restart
+            if (newVersion != null)
+            {
+                UpdateManager.RestartApp();
+            }
         }
 
         private static IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();
             services.AddDbContext<Cs4rsaDbContext>();
-            services.AddSingleton<RawSql>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<CourseCrawler>();
+            services.AddSingleton<HttpClient>();
+
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
@@ -73,9 +129,10 @@ namespace Cs4rsa
             services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();
             services.AddSingleton<DisciplineCrawler>();
 
+            services.AddSingleton<ImageDownloader>();
+            services.AddSingleton<CourseCrawler>();
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
-            services.AddSingleton<ShareString>();
 
             HtmlWeb htmlWeb = new()
             {
@@ -87,8 +144,6 @@ namespace Cs4rsa
                 }
             };
             services.AddSingleton(htmlWeb);
-
-            services.AddSingleton<ISetting, Setting>();
             services.AddSingleton<SessionExtension>();
             services.AddSingleton<IOpenInBrowser, OpenInBrowser>();
             services.AddSingleton<IFolderManager, FolderManager>();
@@ -123,19 +178,6 @@ namespace Cs4rsa
         {
             IFolderManager folderManager = Container.GetRequiredService<IFolderManager>();
             folderManager.CreateFoldersAtStartUp();
-        }
-
-        private void CreateDbIfNotExists()
-        {
-            ISetting setting = Container.GetRequiredService<ISetting>();
-            string isDatabaseCreated = setting.Read(VmConstants.StDatabaseCreated);
-            if (isDatabaseCreated == "false")
-            {
-                Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
-                Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword();
-                setting.CurrentSetting.IsDatabaseCreated = "true";
-                setting.Save();
-            }
         }
     }
 }

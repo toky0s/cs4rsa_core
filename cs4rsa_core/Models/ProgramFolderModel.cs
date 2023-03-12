@@ -12,7 +12,7 @@ namespace Cs4rsa.Models
     /// <summary>
     /// Là một node trong cây thư mục môn học.
     /// </summary>
-    internal class ProgramFolderModel : TreeItem
+    public class ProgramFolderModel : TreeItem
     {
         public ObservableCollection<ProgramFolderModel> ChildFolders { get; set; }
         public ObservableCollection<ProgramSubjectModel> ChildSubjects { get; set; }

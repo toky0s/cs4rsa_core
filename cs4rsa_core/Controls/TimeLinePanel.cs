@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace Cs4rsa.Controls
 {
-    internal class TimeLinePanel : Panel
+    public class TimeLinePanel : Panel
     {
         protected override Size MeasureOverride(Size availableSize)
         {

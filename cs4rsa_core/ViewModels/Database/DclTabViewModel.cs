@@ -19,7 +19,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.Database
 {
-    internal partial class DclTabViewModel : ViewModelBase
+    public partial class DclTabViewModel : ViewModelBase
     {
         public ObservableCollection<Discipline> Disciplines { get; set; }
         public ObservableCollection<Keyword> Keywords { get; set; }

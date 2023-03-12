@@ -44,7 +44,7 @@
           HorizontalAlignment="Center"
           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
           Text="{Binding CourseCrawler.CurrentYearInfo}" />
-        <Button Command="{Binding UpdateSubjectDatabaseCommand}" Content="Cập nhật cơ sở dữ liệu môn học">
+        <Button Command="{Binding UpdateSubjectDbCommand}" Content="Cập nhật cơ sở dữ liệu môn học">
           <Button.Style>
             <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="Button">
               <Setter Property="HorizontalAlignment" Value="Center" />

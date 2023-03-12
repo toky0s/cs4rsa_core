@@ -54,9 +54,10 @@ namespace Cs4rsa.Constants
         public static string PathStudentProfileImg(string studentId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentImgs, $"{studentId}.jpg");
     }
 
-    internal abstract class VmConstants
+    public abstract class VmConstants
     {
-        public const string DbConnectionString = @"Data Source=cs4rsa.db";
+        public const string DbFilePath = "cs4rsa.db";
+        public const string DbConnectionString = $@"Data Source={DbFilePath}";
 
         public const string UnknowErrorException = "Lỗi không xác định";
         public const string InternetConnectException = "Lỗi kết nối mạng";
@@ -68,9 +69,6 @@ namespace Cs4rsa.Constants
         public const string NotFoundBaseSchoolClassModelException = "Base school class model cound not be found";
         public const string NotFoundViewModelException = "ViewModel cound not be found";
         public const string SchoolClassStudyTimeNotOnlyOneException = "SchoolClass's StudyTimes does not have only one item";
-
-        public const string StDatabaseCreated = "IsDatabaseCreated";
-        public const string StVersion = "Version";
 
         public const string LinkProject = "https://toky0s.github.io/cs4rsa_core/";
         public const string LinkProjectPage = "https://github.com/toky0s/cs4rsa_core";
@@ -94,5 +92,10 @@ namespace Cs4rsa.Constants
         public const string StrSpace = " ";
         public const string TimeFormat = "HH:mm";
         public const char CharSpace = ' ';
+
+        public const string StCurrentYearInfo = "CurrentYearInfo";
+        public const string StCurrentSemesterInfo = "CurrentSemesterInfo";
+        public const string StCurrentYearValue = "CurrentYearValue";
+        public const string StCurrentSemesterValue = "CurrentSemesterValue";
     }
 }

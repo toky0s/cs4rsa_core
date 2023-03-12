@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    internal partial class MainSchedulingViewModel : ViewModelBase, IScreenViewModel
+    public partial class MainSchedulingViewModel : ViewModelBase, IScreenViewModel
     {
         public MainSchedulingViewModel()
         {

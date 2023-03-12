@@ -12,7 +12,7 @@ namespace Cs4rsa.ViewModels
     /// Thực hiện khai báo các dịch vụ triển khai DI. 
     /// Thực hiện các chức năng liên quan đến đóng mở Dialog.
     /// </summary>
-    internal partial class MainWindowViewModel : ObservableRecipient
+    public partial class MainWindowViewModel : ObservableRecipient
     {
         #region Bindings
         [ObservableProperty]

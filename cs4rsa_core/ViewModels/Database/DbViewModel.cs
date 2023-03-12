@@ -9,7 +9,6 @@ using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers;
-using Cs4rsa.Settings.Interfaces;
 using Cs4rsa.Utils.Interfaces;
 
 using MaterialDesignThemes.Wpf;
@@ -23,7 +22,7 @@ using System.Windows;
 
 namespace Cs4rsa.ViewModels.Database
 {
-    internal partial class DbViewModel : ViewModelBase, IScreenViewModel
+    public partial class DbViewModel : ViewModelBase, IScreenViewModel
     {
         [ObservableProperty]
         private string _currentSemesterInf;
@@ -42,7 +41,6 @@ namespace Cs4rsa.ViewModels.Database
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly CourseCrawler _courseCrawler;
-        private readonly ISetting _setting;
         private readonly DisciplineCrawler _disciplineCrawler;
         private readonly IFolderManager _folderManager;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
@@ -50,7 +48,6 @@ namespace Cs4rsa.ViewModels.Database
         public DbViewModel(
             IUnitOfWork unitOfWork,
             CourseCrawler courseCrawler,
-            ISetting setting,
             ISnackbarMessageQueue snackbarMessageQueue,
             IFolderManager folderManager,
             DisciplineCrawler disciplineCrawler
@@ -58,7 +55,6 @@ namespace Cs4rsa.ViewModels.Database
         {
             _unitOfWork = unitOfWork;
             _courseCrawler = courseCrawler;
-            _setting = setting;
             _disciplineCrawler = disciplineCrawler;
             _snackbarMessageQueue = snackbarMessageQueue;
             _folderManager = folderManager;
@@ -116,7 +112,7 @@ namespace Cs4rsa.ViewModels.Database
             if (e.Result is string @message)
             {
                 MessageBox.Show(
-                    @message
+                      CredizText.Common001("Cập nhật cơ sở dữ liệu", @message)
                     , ViewConstants.Screen05.MenuName
                     , MessageBoxButton.OK
                     , MessageBoxImage.Error);
@@ -126,7 +122,7 @@ namespace Cs4rsa.ViewModels.Database
                 if (result == -1)
                 {
                     MessageBox.Show(
-                        CredizText.Common001("Cập nhật cơ sở dữ liệu")
+                          CredizText.Common001("Cập nhật cơ sở dữ liệu")
                         , ViewConstants.Screen05.MenuName
                         , MessageBoxButton.OK
                         , MessageBoxImage.Error
@@ -134,11 +130,12 @@ namespace Cs4rsa.ViewModels.Database
                 }
                 else
                 {
-                    _setting.CurrentSetting.CurrentSemesterValue = _courseCrawler.CurrentSemesterValue;
-                    _setting.CurrentSetting.CurrentYearValue = _courseCrawler.CurrentYearValue;
-                    _setting.CurrentSetting.CurrentYear = _courseCrawler.CurrentYearInfo;
-                    _setting.CurrentSetting.CurrentSemester = _courseCrawler.CurrentSemesterInfo;
-                    _setting.Save();
+                    _unitOfWork.Settings.UpdateSemesterSetting(
+                        _courseCrawler.CurrentYearInfo
+                      , _courseCrawler.CurrentYearValue
+                      , _courseCrawler.CurrentSemesterInfo
+                      , _courseCrawler.CurrentSemesterValue
+                    );
                     _folderManager.DelAllInThisFolder(Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches));
 
                     Messenger.Send(new UpdateVmMsgs.UpdateSuccessMsg());

@@ -8,7 +8,7 @@ namespace Cs4rsa.Converters
     /// Converter thực hiện thay thế chuỗi trống 
     /// bằng một template do người dùng truyền vào.
     /// </summary>
-    internal class EmptyStringPlaceholderConverter : IValueConverter
+    public class EmptyStringPlaceholderConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

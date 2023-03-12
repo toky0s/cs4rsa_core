@@ -17,13 +17,11 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         protected readonly Cs4rsaDbContext _context;
         protected readonly RawSql _rawSql;
         protected readonly string _tableName;
-        public GenericRepository(
-            Cs4rsaDbContext context
-          , RawSql rawSql)
+        public GenericRepository(Cs4rsaDbContext context)
         {
             _context = context;
-            _rawSql = rawSql;
             _tableName = typeof(T).Name + "s";
+            _rawSql = context.RSql;
         }
 
         public void Add(T entity)
@@ -44,13 +42,13 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public long Count()
         {
             string sql = $@"SELECT COUNT(*) FROM {_tableName};";
-            return _rawSql.ExecScalar<long>(sql);
+            return _rawSql.ExecScalar(sql);
         }
 
         public long CountPage(int limit)
         {
             string sql = $@"SELECT CAST(ROUND(COUNT(*) / {limit} + 0.5, 0) AS INT) FROM {_tableName};";
-            return _rawSql.ExecScalar<long>(sql);
+            return _rawSql.ExecScalar(sql);
         }
 
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)

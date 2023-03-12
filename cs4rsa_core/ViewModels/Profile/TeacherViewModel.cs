@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.ViewModels.Profile
 {
-    internal partial class TeacherViewModel : ViewModelBase
+    public partial class TeacherViewModel : ViewModelBase
     {
         private static readonly int SIZE = 10;
 

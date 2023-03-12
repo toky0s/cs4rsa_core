@@ -2,7 +2,7 @@
 
 namespace Cs4rsa.BaseClasses
 {
-    internal interface IScreenViewModel
+    public interface IScreenViewModel
     {
         /// <summary>
         /// Khởi tạo thông tin ViewModel của màn hình.

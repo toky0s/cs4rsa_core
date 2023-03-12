@@ -9,7 +9,7 @@ namespace Cs4rsa.Converters
     /// <summary>
     /// Converter này chuyển một ConflictType thành số nguyên, phục vụ hiển thị giao diện với trigger.
     /// </summary>
-    internal class ConflictTypeConverter : IValueConverter
+    public class ConflictTypeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

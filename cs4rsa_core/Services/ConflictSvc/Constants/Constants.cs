@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Services.ConflictSvc.Constants
 {
-    internal class Constants
+    public class Constants
     {
         public static readonly List<Tuple<Place, Place>> EXCLUDED_CONFLICT_PLACES = new()
         {
