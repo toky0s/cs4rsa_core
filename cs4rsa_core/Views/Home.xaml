@@ -10,7 +10,6 @@
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
-  Loaded="ScreenAbstract_Loaded"
   mc:Ignorable="d">
   <Grid>
     <Grid.RowDefinitions>

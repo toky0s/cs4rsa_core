@@ -7,19 +7,23 @@
     <ApplicationIcon>AppResources\logo.ico</ApplicationIcon>
     <RuntimeIdentifiers>win10-x86;win10-x64</RuntimeIdentifiers>
     <Win32Resource />
-    <ApplicationManifest>app1.manifest</ApplicationManifest>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="DataTypes\**" />
     <Compile Remove="Models\Interfaces\**" />
+    <Compile Remove="Releases\**" />
     <EmbeddedResource Remove="DataTypes\**" />
     <EmbeddedResource Remove="Models\Interfaces\**" />
+    <EmbeddedResource Remove="Releases\**" />
     <None Remove="DataTypes\**" />
     <None Remove="Models\Interfaces\**" />
+    <None Remove="Releases\**" />
     <Page Remove="DataTypes\**" />
     <Page Remove="Models\Interfaces\**" />
+    <Page Remove="Releases\**" />
   </ItemGroup>
 
   <ItemGroup>
