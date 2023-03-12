@@ -37,6 +37,7 @@ using Squirrel;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -48,16 +49,16 @@ namespace Cs4rsa
         public IMessenger Messenger { get; private set; }
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-            Messenger = WeakReferenceMessenger.Default;
-            Container = CreateServiceProvider();
-
             // Init Clowd.Squirrel
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: OnAppInstall,
                 onAppUninstall: OnAppUninstall,
                 onEveryRun: OnAppRun
             );
+
+            base.OnStartup(e);
+            Messenger = WeakReferenceMessenger.Default;
+            Container = CreateServiceProvider();
 
             // Database Init Data
             CourseCrawler courseCrawler = Container.GetService<CourseCrawler>();
@@ -117,7 +118,8 @@ namespace Cs4rsa
             services.AddDbContext<Cs4rsaDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<CourseCrawler>();
+            services.AddSingleton<HttpClient>();
+
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
@@ -127,9 +129,10 @@ namespace Cs4rsa
             services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();
             services.AddSingleton<DisciplineCrawler>();
 
+            services.AddSingleton<ImageDownloader>();
+            services.AddSingleton<CourseCrawler>();
             services.AddSingleton<ShareString>();
             services.AddSingleton<ColorGenerator>();
-            services.AddSingleton<ShareString>();
 
             HtmlWeb htmlWeb = new()
             {

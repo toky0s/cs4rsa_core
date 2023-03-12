@@ -28,16 +28,19 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFolderManager _folderManager;
         private readonly HtmlWeb _htmlWeb;
+        private readonly ImageDownloader _imageDownloader;
         #endregion
 
         public TeacherCrawler(
             IUnitOfWork unitOfWork,
             IFolderManager folderManager,
-            HtmlWeb htmlWeb)
+            HtmlWeb htmlWeb,
+            ImageDownloader imageDownloader)
         {
             _unitOfWork = unitOfWork;
             _folderManager = folderManager;
             _htmlWeb = htmlWeb;
+            _imageDownloader = imageDownloader;
 
             string path = Path.Combine(AppContext.BaseDirectory, IFolderManager.FdTeacherImgs);
             _strSavingTeacherImageFolderPath = _folderManager.CreateFolderIfNotExists(path);
@@ -185,14 +188,8 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             string imageUrl = GetTeacherImagePath(teacherId);
             string imageName = GetTeacherImageName(teacherId);
             string strImageFullPath = Path.Combine(_strSavingTeacherImageFolderPath, imageName);
-            using HttpClient httpClient = new();
-            HttpResponseMessage response = await httpClient.GetAsync(imageUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                using WebClient webClient = new();
-                webClient.DownloadFileAsync(new Uri(imageUrl), strImageFullPath);
-                return strImageFullPath;
-            }
+            bool result = await _imageDownloader.DownloadImage(imageUrl, strImageFullPath);
+            if (result) return strImageFullPath;
             return string.Empty;
         }
     }

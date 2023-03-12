@@ -28,15 +28,18 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurriculumCrawler _curriculumCrawler;
         private readonly HtmlWeb _htmlWeb;
+        private readonly ImageDownloader _imageDownloader;
 
         public DtuStudentInfoCrawlerV2(
             IUnitOfWork unitOfWork,
             ICurriculumCrawler curriculumCrawler,
+            ImageDownloader imageDownloader,
             HtmlWeb htmlWeb)
         {
             _unitOfWork = unitOfWork;
-            _curriculumCrawler = curriculumCrawler;
             _htmlWeb = htmlWeb;
+            _curriculumCrawler = curriculumCrawler;
+            _imageDownloader = imageDownloader;
         }
         public async Task<Student> Crawl(string specialString)
         {
@@ -166,31 +169,14 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
 
         public async Task<string> DownloadProfileImg(string studentCode)
         {
-            try
+            string url = $"http://hfs1.duytan.edu.vn/Upload/dichvu/sv_{studentCode}_01.jpg";
+            _ = await _imageDownloader.DownloadImage(url, CredizText.PathStudentProfileImg(studentCode));
+            FileInfo fi = new(CredizText.PathStudentProfileImg(studentCode));
+            if (fi.Exists && fi.Length > 0)
             {
-                string url = $"http://hfs1.duytan.edu.vn/Upload/dichvu/sv_{studentCode}_01.jpg";
-                using HttpClient httpClient = new();
-                HttpResponseMessage response = await httpClient.GetAsync(url);
-                if (response.IsSuccessStatusCode
-                 && response.Content != null)
-                {
-                    using WebClient webClient = new();
-                    await webClient.DownloadFileTaskAsync(
-                        new Uri(url)
-                        , CredizText.PathStudentProfileImg(studentCode)
-                    );
-                    FileInfo fi = new(CredizText.PathStudentProfileImg(studentCode));
-                    if (fi.Exists && fi.Length > 0)
-                    {
-                        return studentCode;
-                    }
-                }
-                return null;
+                return studentCode;
             }
-            catch
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

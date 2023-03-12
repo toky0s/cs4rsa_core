@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <SquirrelAwareVersion xmlns="urn:schema-squirrel-com:asm.v1">1</SquirrelAwareVersion>
+</assembly>
 <asmv1:assembly manifestVersion="1.0"
                 xmlns="urn:schemas-microsoft-com:asm.v1"
                 xmlns:asmv1="urn:schemas-microsoft-com:asm.v1"
                 xmlns:asmv2="urn:schemas-microsoft-com:asm.v2"
                 xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <SquirrelAwareVersion xmlns="urn:schema-squirrel-com:asm.v1">1</SquirrelAwareVersion>
-    <assemblyIdentity version="1.0.0.0" name="cs4rsa_core"/>
-    <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+  <assemblyIdentity version="1.0.0.0" name="cs4rsa_core"/>
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
         <security>
             <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
                 <requestedExecutionLevel level="asInvoker"
@@ -34,10 +36,7 @@
 
     <application xmlns="urn:schemas-microsoft-com:asm.v3">
         <windowsSettings>
-            <!-- Per Monitor V1 [OS >= Windows 8.1] Values: False, True, Per-monitor, True/PM -->
             <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/PM</dpiAware>
-            <!-- Per Monitor V1 [OS >= Windows 10 Anniversary Update (1607, 10.0.14393, Redstone 1)] Values: Unaware, System, PerMonitor -->
-            <!-- Per Monitor V2 [OS >= Windows 10 Creators Update (1703, 10.0.15063, Redstone 2)] Value: PerMonitorV2 -->
             <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
         </windowsSettings>
     </application>

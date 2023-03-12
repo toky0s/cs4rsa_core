@@ -156,7 +156,6 @@ namespace Cs4rsa.Views
             RenderMainMenu();
             RenderCompactMenu();
             await Goto(0);
-            MessageBox.Show("Current Version 1.0.2");
         }
     }
 }

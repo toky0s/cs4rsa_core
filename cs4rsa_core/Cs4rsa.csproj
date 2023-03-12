@@ -7,7 +7,7 @@
     <ApplicationIcon>AppResources\logo.ico</ApplicationIcon>
     <RuntimeIdentifiers>win10-x86;win10-x64</RuntimeIdentifiers>
     <Win32Resource />
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>app1.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clowd.Squirrel" Version="2.9.42" GeneratePathProperty="true"/>
+    <PackageReference Include="Clowd.Squirrel" Version="2.9.42" GeneratePathProperty="true" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
@@ -115,31 +115,4 @@
   <ItemGroup>
     <SplashScreen Include="AppResources\SplashScreen.png" />
   </ItemGroup>
-
-    <PropertyGroup>
-        <NugetTools>$(PkgNuGet_CommandLine)\tools</NugetTools>
-        <SquirrelTools>$(PkgClowd_Squirrel)\tools</SquirrelTools>
-
-        <Version>1.0.1</Version>
-
-        <NuspecFile>$(SolutionDir)cs4rsa_core\ReleaseSpec.nuspec</NuspecFile>
-
-        <IsPublishable>True</IsPublishable>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DebugType>full</DebugType>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <DebugType>full</DebugType>
-    </PropertyGroup>
-
-    <Target Name="GenerateRelease" AfterTargets="AfterBuild" Condition="$(Configuration) == Release">
-        <XmlPeek XmlInputPath="$(NuspecFile)" Query="/package/metadata/id/text()">
-            <Output TaskParameter="Result" ItemName="ID" />
-        </XmlPeek>
-        <Exec Command="$(NugetTools)\NuGet.exe pack $(NuspecFile) -Version $(Version) -Properties Configuration=Release -OutputDirectory $(SolutionDir)Deployment\GeneratedNugets" />
-        <Exec Command="$(SquirrelTools)\Squirrel.exe releasify -p=$(SolutionDir)Deployment\GeneratedNugets\@(ID).$(Version).nupkg --r=$(SolutionDir)Deployment\Releases -f=net6.0.2-x64"/>
-    </Target>
 </Project>
