@@ -49,14 +49,14 @@ namespace Cs4rsa.Views
                 // optionally restart the app automatically, or ask the user if/when they want to restart
                 if (newVersion != null)
                 {
-                    MessageBox.Show(
+                    var result = MessageBox.Show(
                         $"Phiên bản hiện tại của ứng dụng là {mgr.CurrentlyInstalledVersion()}, phiên bản mới nhất hiện tại là {newVersion.Version}. " +
                         $"Quá trình cập nhật sẽ tốn một ít thời gian và sẽ khởi động lại ứng dụng. Bạn có muốn tiếp tục?"
                       , ViewConstants.Screen01.MenuName
                       , MessageBoxButton.YesNoCancel
                       , MessageBoxImage.Information
                     );
-                    UpdateManager.RestartApp();
+                    if (result == MessageBoxResult.OK) UpdateManager.RestartApp();
                 }
                 else
                 {
