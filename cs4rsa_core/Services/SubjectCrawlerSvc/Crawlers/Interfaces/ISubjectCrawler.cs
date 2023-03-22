@@ -13,10 +13,14 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces
         Task<Subject> Crawl(HtmlDocument htmlDocument, int courseId, bool withTeacher);
 
         /// <summary>
-        /// Lưu tạm thông tin môn học đã lưu vào DB.
+        /// Tải Cache của một Subject.
         /// </summary>
-        /// <param name="keywordId">Keyword ID</param>
-        /// <param name="HtmlRaw">Đoạn HTML cần lưu</param>
-        Task SaveCache(int keywordId, string HtmlRaw);
+        /// <remarks>
+        /// Nếu subject không tồn tại trả về null.
+        /// Nếu quá trình tải gặp lỗi trả về null.
+        /// </remarks>
+        /// <param name="courseId">Course ID của Subject.</param>
+        /// <returns>Outer Html</returns>
+        Task<string> CrawlCache(string courseId);
     }
 }

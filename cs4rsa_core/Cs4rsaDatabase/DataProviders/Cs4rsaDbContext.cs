@@ -9,7 +9,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
     {
         public Cs4rsaDbContext() : base()
         {
-            RSql = new RawSql(this);
+            RSql = new RawSql();
         }
 
         public DbSet<Teacher> Teachers { get; set; }

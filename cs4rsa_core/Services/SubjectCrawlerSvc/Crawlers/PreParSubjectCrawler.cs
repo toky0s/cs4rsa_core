@@ -115,6 +115,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
         /// T1: Danh sách môn song hành.
         /// T2: Danh sách môn tiên quyết.
         /// </returns>
+        /// 
+        [Obsolete]
         public async Task<Tuple<IEnumerable<string>, IEnumerable<string>>> Run(string courseId, string sessionId)
         {
             string url = $"https://mydtu.duytan.edu.vn/Modules/curriculuminportal/CourseClassResultForStudent.aspx?courseid={courseId}";

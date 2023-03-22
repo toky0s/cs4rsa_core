@@ -21,6 +21,10 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
     {
         private static string _specialString;
         private static int _curid;
+        /// <summary>
+        /// Có thể thực hiện lưu DbProgramSubject hay không.
+        /// </summary>
+        private static bool _canSaveSubject;
 
         private HtmlNodeCollection _trNodes2001;
         private HtmlNodeCollection _trNodes2002;
@@ -228,16 +232,20 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 parrentNodeName
             );
 
-            DbProgramSubject dbProgramSubject = new()
+            if (_canSaveSubject)
             {
-                SubjectCode = subjectCode,
-                CourseId = courseId,
-                Name = name,
-                Credit = studyUnit,
-            };
+                DbProgramSubject dbProgramSubject = new()
+                {
+                    SubjectCode = subjectCode,
+                    CourseId = courseId,
+                    Name = name,
+                    Credit = studyUnit,
+                    CurriculumId = _curid
+                };
 
-            await _unitOfWork.ProgramSubjects.AddAsync(dbProgramSubject);
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.ProgramSubjects.AddAsync(dbProgramSubject);
+                await _unitOfWork.CompleteAsync();
+            }
 
             return subject;
         }
@@ -273,6 +281,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
             _specialString = specialString;
             _curid = curid;
+            _canSaveSubject = !_unitOfWork.Curriculums.ExistsById(curid.ToString());
 
             string url2001 = GetUrl(NODE_DAI_CUONG);
             string url2002 = GetUrl(NODE_GDTC_VA_QP);
@@ -308,6 +317,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                 GetFolderNode(1, pf2004, _trNodes2004, preparTasks2004)
             );
 
+            // Thêm task cào data của môn tiên quyết và song hành
             await Task.WhenAll(
                 preparTasks2001
                 .Concat(preparTasks2002)

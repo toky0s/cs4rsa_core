@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
@@ -83,49 +84,100 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public List<Keyword> GetSearchResult(string searchText, int limit)
         {
-            string sql =
-                     $" SELECT *"
-            + "\n" + $" FROM Keywords AS k"
-            + "\n" + $"     INNER JOIN Disciplines AS d"
-            + "\n" + $"     ON k.SubjectName LIKE \"%{searchText}%\""
-            + "\n" + $"     AND d.DisciplineId = k.DisciplineId"
-            + "\n" + $" UNION"
-            + "\n" + $" SELECT *"
-            + "\n" + $" FROM Keywords AS k"
-            + "\n" + $"     INNER JOIN Disciplines AS d"
-            + "\n" + $"     ON d.Name || \" \" || k.Keyword1 LIKE \"%{searchText}%\""
-            + "\n" + $"     AND d.DisciplineId = k.DisciplineId"
-            + "\n" + $" LIMIT {limit};";
+            StringBuilder sqlBuilder = new();
+            sqlBuilder.AppendLine("SELECT *");
+            sqlBuilder.AppendLine("FROM Keywords AS k");
+            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
+            sqlBuilder.AppendLine("    ON k.SubjectName LIKE @pattern");
+            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
+            sqlBuilder.AppendLine("UNION");
+            sqlBuilder.AppendLine("SELECT *");
+            sqlBuilder.AppendLine("FROM Keywords AS k");
+            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
+            sqlBuilder.AppendLine("    ON d.Name || ' ' || k.Keyword1 LIKE @pattern");
+            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
+            sqlBuilder.AppendLine("UNION");
+            sqlBuilder.AppendLine("SELECT *");
+            sqlBuilder.AppendLine("FROM Keywords AS k");
+            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
+            sqlBuilder.AppendLine($"   ON {RawSql.UseFunction<FuncRemoveAccent>("k.SubjectName")} LIKE @pattern");
+            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
+            sqlBuilder.AppendLine("LIMIT (@limit);");
 
-            return _rawSql.ExecReader(sql, (reader) =>
+            IDictionary<string, object> sqlParams = new Dictionary<string, object>
             {
-                List<Keyword> result = new();
-                while (reader.HasRows)
+                { "@pattern", $"%{searchText}%" },
+                { "@limit", limit }
+            };
+
+            return _rawSql.ExecReader(sqlBuilder.ToString(), sqlParams, (record) =>
+            {
+                Discipline ds = new()
                 {
-                    while (reader.Read())
-                    {
-                        Discipline ds = new()
-                        {
-                            DisciplineId = reader.GetInt32(7),
-                            Name = reader.GetString(8)
-                        };
-                        Keyword kw = new()
-                        {
-                            KeywordId = reader.GetInt32(0),
-                            Keyword1 = reader.GetString(1),
-                            CourseId = reader.GetInt32(2),
-                            SubjectName = reader.GetString(3),
-                            Color = reader.GetString(4),
-                            Cache = reader.IsDBNull(5) ? null : reader.GetString(5),
-                            DisciplineId = reader.GetInt32(6),
-                            Discipline = ds
-                        };
-                        result.Add(kw);
-                    }
-                    reader.NextResult();
-                }
-                return result;
+                    DisciplineId = record.GetInt32(7),
+                    Name = record.GetString(8)
+                };
+                Keyword kw = new()
+                {
+                    KeywordId = record.GetInt32(0),
+                    Keyword1 = record.GetString(1),
+                    CourseId = record.GetInt32(2),
+                    SubjectName = record.GetString(3),
+                    Color = record.GetString(4),
+                    Cache = record.IsDBNull(5) ? null : record.GetString(5),
+                    DisciplineId = record.GetInt32(6),
+                    Discipline = ds
+                };
+                return kw;
             });
+        }
+
+        public string GetCache(string courseId)
+        {
+            string sql = "SELECT Cache FROM Keywords WHERE CourseId = @CourseId";
+            Dictionary<string, object> param = new()
+            {
+                { "@CourseId", courseId}
+            };
+            return _rawSql.ExecScalar(sql, param, string.Empty);
+        }
+
+        public string GetColorBySubjectCode(string subjectCode)
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT Color");
+            sb.AppendLine("FROM Keywords AS kw");
+            sb.AppendLine("INNER JOIN Disciplines AS ds");
+            sb.AppendLine("ON ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("WHERE ds.Name || ' ' || kw.Keyword1 = @SubjectCode");
+            Dictionary<string, object> param = new()
+            {
+                { "@SubjectCode", subjectCode}
+            };
+            return _rawSql.ExecScalar(sb.ToString(), param, string.Empty);
+        }
+
+        public List<Keyword> GetKeywordsByDisciplineId(int disciplineId)
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache");
+            sb.AppendLine("FROM Keywords");
+            sb.AppendLine("WHERE DisciplineId = @DisciplineId");
+            Dictionary<string, object> param = new()
+            {
+                { "@DisciplineId", disciplineId}
+            };
+            return _rawSql.ExecReader(sb.ToString(), param, record =>
+                new Keyword()
+                {
+                      KeywordId = record.GetInt32(0)
+                    , Keyword1 = record.GetString(1)
+                    , CourseId = record.GetInt32(2)
+                    , SubjectName = record.GetString(3)
+                    , Color = record.GetString(4)
+                    , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
+                }
+            );
         }
     }
 }

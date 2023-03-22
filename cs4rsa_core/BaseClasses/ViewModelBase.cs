@@ -44,11 +44,14 @@ namespace Cs4rsa.BaseClasses
 
         /// <summary>
         /// Set value for MainWindow's IsEnabled.
-        /// 
-        /// isEnabled: true  -> MainWindow was enabled
-        /// isEnabled: false -> MainWindow was disabled
         /// </summary>
-        /// <param name="isEnabled"></param>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item>prevent: true  -> MainWindow was enabled</item>
+        /// <item>prevent: false -> MainWindow was disabled</item>
+        /// </list>
+        /// </remarks>
+        /// <param name="prevent"></param>
         protected virtual void PreventOperation(bool prevent)
         {
             ((MainWindowViewModel)Application.Current.MainWindow.DataContext).IsWindowEnable = !prevent;

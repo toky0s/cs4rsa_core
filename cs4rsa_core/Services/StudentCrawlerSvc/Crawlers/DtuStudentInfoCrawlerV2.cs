@@ -12,7 +12,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -137,8 +136,9 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                 Stream stream = await response.Content.ReadAsStreamAsync();
 
                 string imgPath = CredizText.PathStudentProfileImg(studentId);
-                using (FileStream fileStream = File.Create(imgPath))
+                if (!File.Exists(imgPath))
                 {
+                    using FileStream fileStream = File.Create(imgPath);
                     stream.Seek(0, SeekOrigin.Begin);
                     stream.CopyTo(fileStream);
                 }

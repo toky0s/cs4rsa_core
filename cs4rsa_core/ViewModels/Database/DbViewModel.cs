@@ -16,9 +16,7 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
-
 
 namespace Cs4rsa.ViewModels.Database
 {
@@ -74,7 +72,7 @@ namespace Cs4rsa.ViewModels.Database
             CurrentSemesterInf = _courseCrawler.CurrentSemesterInfo;
             CurrentYearInf = _courseCrawler.CurrentYearInfo;
         }
-
+            
 
         /// <summary>
         /// Cập nhật cơ sở dữ liệu môn học.
@@ -170,11 +168,6 @@ namespace Cs4rsa.ViewModels.Database
         public void InitData()
         {
             LoadInf();
-        }
-
-        public Task InitDataAsync()
-        {
-            return Task.FromResult<object>(null);
         }
     }
 }

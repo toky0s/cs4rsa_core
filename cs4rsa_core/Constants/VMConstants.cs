@@ -43,9 +43,15 @@ namespace Cs4rsa.Constants
         /// <param name="stdName">Student name</param>
         public static string AutoMsg001(string fName, string stdName) => $"File {fName} của sinh viên {stdName} không tồn tại.";
         public static string DbMsg001(int result) => $"Hoàn tất cập nhật {result} môn";
+        /// <summary>
+        /// File chương trình học dự kiến cho mã ngành không tồn tại
+        /// </summary>
+        /// <param name="currId">Mã ngành</param>
+        /// <returns>string</returns>
+        public static string DbMsg002(string currId) => $"File chương trình học dự kiến cho mã ngành {currId} không tồn tại";
         public static string PathProgramJsonFile(string stdId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPrograms, $"StudentProgram_{stdId}.json");
         public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPlans, $"{curid}.json");
-        public static string PathHtmlCacheFile(int courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches, $"{courseId}.html");
+        public static string PathHtmlCacheFile(string courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches, $"{courseId}.html");
         /// <summary>
         /// Đường dẫn tới hình ảnh hồ sơ sinh viên.
         /// </summary>

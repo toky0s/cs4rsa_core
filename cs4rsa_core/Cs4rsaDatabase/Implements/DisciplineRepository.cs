@@ -16,6 +16,19 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         }
 
+        public List<Discipline> GetAllDiscipline()
+        {
+            string sql = "SELECT DisciplineId, Name FROM Disciplines";
+            return _rawSql.ExecReader<Discipline>(sql, null, record =>
+            {
+                return new Discipline()
+                {
+                    DisciplineId = record.GetInt32(0),
+                    Name = record.GetString(1)
+                };
+            });
+        }
+
         public async Task<List<Discipline>> GetAllIncludeKeywordAsync()
         {
             return await _context.Disciplines.Include(discipline => discipline.Keywords).ToListAsync();

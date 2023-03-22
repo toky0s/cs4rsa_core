@@ -23,6 +23,12 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         Task<Keyword> GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
         Task<string> GetColorAsync(int courseId);
+        /// <summary>
+        /// Lấy ra Color dựa theo mã môn.
+        /// </summary>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <returns>Color</returns>
+        string GetColorBySubjectCode(string subjectCode);
         Task<int> CountAsync(string discipline, string keyword);
 
         /// <summary>
@@ -39,5 +45,21 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// <param name="subjectCode">Mã môn</param>
         /// <returns>Tồn tại trả về true, ngược lại trả về false.</returns>
         Task<bool> ExistBySubjectCodeAsync(string subjectCode);
+        /// <summary>
+        /// Lấy ra cache dựa theo Course ID.
+        /// </summary>
+        /// <remarks>
+        /// Sử dụng RawSql.
+        /// </remarks>
+        /// <param name="courseId">Course ID</param>
+        /// <returns>Cache</returns>
+        string GetCache(string courseId);
+        /// <summary>
+        /// Lấy ra danh sách các Keyword dựa theo Discipline ID.
+        /// </summary>
+        /// <remarks>Sử dụng RawSql, không Early Load Discipline.</remarks>
+        /// <param name="disciplineId">Discipline ID</param>
+        /// <returns>Danh sách các Keyword.</returns>
+        List<Keyword> GetKeywordsByDisciplineId(int disciplineId);
     }
 }

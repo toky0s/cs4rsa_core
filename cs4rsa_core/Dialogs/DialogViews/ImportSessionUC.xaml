@@ -88,7 +88,7 @@
           VerticalAlignment="Center"
           Command="{Binding DeleteCommand, UpdateSourceTrigger=PropertyChanged}"
           Content="{materialDesign:PackIcon Kind=Trash}"
-          IsEnabled="{Binding SelectedScheduleSession, TargetNullValue=False, Converter={StaticResource NullVisibilityConverter}}"
+          IsEnabled="{Binding SelectedScheduleSession, TargetNullValue=False, Converter={StaticResource NullableToVisibilityConverter}}"
           Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
           ToolTip="Xoá bộ lịch đã chọn" />
       </Grid>

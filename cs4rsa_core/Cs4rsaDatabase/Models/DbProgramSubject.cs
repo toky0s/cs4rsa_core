@@ -12,5 +12,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Models
 
         public List<ParProDetail> ParProDetails { get; set; }
         public List<PreProDetail> PreProDetails { get; set; }
+        public int CurriculumId { get; set; }
+        public Curriculum Curriculum { get; set; }
     }
 }

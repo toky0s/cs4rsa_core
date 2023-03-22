@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
+using Cs4rsa.Models.Database;
+
 namespace Cs4rsa.Messages.Publishers
 {
     internal sealed class DbVmMsgs
@@ -11,6 +13,17 @@ namespace Cs4rsa.Messages.Publishers
         {
             public RefreshMsg() : base()
             {
+            }
+        }
+
+        /// <summary>
+        /// Major Subject được lựa chọn
+        /// </summary>
+        internal sealed class SelectMajorMsg : ValueChangedMessage<MajorSubjectModel>
+        {
+            public SelectMajorMsg(MajorSubjectModel mj) : base(mj)
+            {
+
             }
         }
     }

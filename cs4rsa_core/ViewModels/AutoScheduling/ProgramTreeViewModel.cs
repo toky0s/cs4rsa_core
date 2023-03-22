@@ -10,7 +10,6 @@ using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Models;
-using Cs4rsa.Models.AutoScheduling;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
@@ -34,7 +33,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 {
     public sealed partial class ProgramTreeViewModel : ViewModelBase
     {
-        private readonly MyProgramUC _myProgramUC;
         private readonly AccountUC _accountUC;
 
         /// <summary>
@@ -50,7 +48,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private readonly List<List<ClassGroupModel>> _rltAftFilterCgms;
 
         public ObservableCollection<Student> Students { get; set; }
-        public ObservableCollection<PlanTableModel> PlanTableModels { get; set; }
         public ObservableCollection<ProgramFolderModel> ProgramFolderModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
 
@@ -182,12 +179,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         public AsyncRelayCommand ResetFilterCommand { get; set; }
 
         public RelayCommand CollapseCommand { get; set; }
-
-        /// <summary>
-        /// Hiển thị Dialog chứa chương trình học dự kiến
-        /// của người dùng hiện tại
-        /// </summary>
-        public RelayCommand MyProgramCommand { get; set; }
         public RelayCommand<ProgramSubjectModel> DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
         public RelayCommand GotoCourseCommand { get; set; }
@@ -211,7 +202,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _snackbarMessageQueue = snackbarMessageQueue;
             _subjectCrawler = subjectCrawler;
             _tempResult = new();
-            _myProgramUC = new() { DataContext = this };
             _accountUC = new();
             _rltAftFilterCgms = new();
 
@@ -219,7 +209,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             IsSave = true;
             IsUseFilter = true;
             ChoosedProSubjectModels = new();
-            PlanTableModels = new();
             ProgramFolderModels = new();
             Students = new();
             SubjectModels = new();
@@ -262,14 +251,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             );
 
             FilterChangedCommand = new(OnFiltering);
-
-            MyProgramCommand = new(
-                () => OpenDialog(_myProgramUC),
-                () => _selectedStudent != null && !_selectedStudent.StudentId.Equals("0")
-            );
-
             ResetFilterCommand = new(OnResetFilter);
-
             ValidGenCommand = new(
                 OnValidGen,
                 () => _tempResult.Any()
@@ -307,9 +289,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         partial void OnSelectedStudentChanged(Student value)
         {
-            Application.Current.Dispatcher.InvokeAsync(LoadStudentPlan);
             LoadProgramCommand.NotifyCanExecuteChanged();
-            MyProgramCommand.NotifyCanExecuteChanged();
         }
 
         private async Task OnResetFilter()
@@ -459,37 +439,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             if (Students.Any())
             {
                 SelectedStudent = Students.First();
-            }
-        }
-
-        /// <summary>
-        /// Load chương trình học dự kiến của sinh viên.
-        /// Đánh giá các môn học có sẵn trong học kỳ hiện tại
-        /// cùng với tình trạng học của môn học đó so với
-        /// chương trình học (Đã qua, Đang học/chưa có điểm, Chưa học)
-        /// </summary>
-        private async Task LoadStudentPlan()
-        {
-            if (SelectedStudent == null || !SelectedStudent.CurriculumId.HasValue) return;
-            string planPath = CredizText.PathPlanJsonFile(SelectedStudent.CurriculumId.Value);
-            if (File.Exists(planPath))
-            {
-                string json = await File.ReadAllTextAsync(planPath);
-                PlanTable[] planTables = JsonConvert.DeserializeObject<PlanTable[]>(json);
-                PlanTableModel[] result = await Task.WhenAll(planTables.Select(pt => PlanTableModel.Build(pt, _unitOfWork)));
-                PlanTableModels.Clear();
-                foreach (PlanTableModel ptm in result)
-                {
-                    PlanTableModels.Add(ptm);
-                }
-            }
-            else
-            {
-                MessageBox.Show(
-                    CredizText.AutoMsg001(planPath, SelectedStudent.Name),
-                    ViewConstants.Screen03.MenuName,
-                    MessageBoxButton.OK
-                );
             }
         }
 

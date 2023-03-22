@@ -16,6 +16,7 @@ using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -97,10 +98,12 @@ namespace Cs4rsa.Dialogs.Implements
                 if (student != null && student.CurriculumId.HasValue)
                 {
                     // 4. Lấy chương trình học
+                    Debug.WriteLine("4. Lấy chương trình học");
                     ProgramFolder[] programs = await _studentProgramCrawler.GetProgramFolders(specialStringV2, student.CurriculumId.Value);
                     string programFilePath = CredizText.PathProgramJsonFile(student.StudentId);
 
                     // 4.1 Lưu chương trình học vào file JSON
+                    Debug.WriteLine("4.1 Lưu chương trình học vào file JSON");
                     JsonSerializer serializer = new();
                     using (StreamWriter sw = new(programFilePath))
                     using (JsonWriter writer = new JsonTextWriter(sw))
@@ -108,13 +111,16 @@ namespace Cs4rsa.Dialogs.Implements
                         serializer.Serialize(writer, programs);
                     }
 
-                    // 5. Lấy chương trình học dự kiến
-                    IEnumerable<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(student.CurriculumId.Value, SessionId);
+                    // 5. Lấy chương trình học dự kiến (nếu nó rỗng thì chả làm gì hết)
+                    Debug.WriteLine("5. Lấy chương trình học dự kiến (nếu nó rỗng thì chả làm gì hết)");
+                    List<PlanTable> planTables = await _studentPlanCrawler.GetPlanTables(student.CurriculumId.Value, SessionId);
 
-                    // 5.1 Lưu chương trình học dự kiến vào file JSON
-                    using (StreamWriter sw = new(CredizText.PathPlanJsonFile(student.CurriculumId.Value)))
-                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    if (planTables.Count > 0)
                     {
+                        // 5.1 Lưu chương trình học dự kiến vào file JSON
+                        Debug.WriteLine("5.1 Lưu chương trình học dự kiến vào file JSON");
+                        using StreamWriter sw = new(CredizText.PathPlanJsonFile(student.CurriculumId.Value));
+                        using JsonWriter writer = new JsonTextWriter(sw);
                         serializer.Serialize(writer, planTables);
                     }
 

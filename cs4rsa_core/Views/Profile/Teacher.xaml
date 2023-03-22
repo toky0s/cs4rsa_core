@@ -111,7 +111,7 @@
           <materialDesign:TransitionerSlide.BackwardWipe>
             <materialDesign:SlideWipe Direction="Left" />
           </materialDesign:TransitionerSlide.BackwardWipe>
-          <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding SelectedTeacher, Converter={StaticResource NullVisibilityConverter}}">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding SelectedTeacher, Converter={StaticResource NullableToVisibilityConverter}}">
             <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -171,7 +171,7 @@
                     Margin="5,5,0,5"
                     Command="{Binding OpenOnWebCommand}"
                     Content="{materialDesign:PackIcon Kind=OpenInNew}"
-                    IsEnabled="{Binding SelectedTeacher, TargetNullValue=False, Converter={StaticResource NullVisibilityConverter}}"
+                    IsEnabled="{Binding SelectedTeacher, TargetNullValue=False, Converter={StaticResource NullableToVisibilityConverter}}"
                     ToolTip="Mở trong trình duyệt" />
                   <Button
                     Margin="5,5,0,5"

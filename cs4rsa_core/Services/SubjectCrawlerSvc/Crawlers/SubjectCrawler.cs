@@ -8,7 +8,9 @@ using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 
 using HtmlAgilityPack;
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,6 +60,24 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
                 await SaveCache(keyword.KeywordId, subject.RawSoup);
                 return subject;
+            }
+        }
+
+        public async Task<string> CrawlCache(string courseId)
+        {
+            try
+            {
+                string semesterId = _courseCrawler.CurrentSemesterValue;
+                string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
+                HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+                Debug.Assert(IsSubjectExists(htmlDocument));
+                if (IsSubjectExists(htmlDocument)) return htmlDocument.DocumentNode.OuterHtml;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ERROR] {ex.Message}");
+                return null;
             }
         }
 
@@ -129,7 +149,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             );
         }
 
-        public async Task SaveCache(int keywordId, string htmlRaw)
+        private async Task SaveCache(int keywordId, string htmlRaw)
         {
             await _unitOfWork.BeginTransAsync();
             Keyword keyword = await _unitOfWork.Keywords.GetByIdAsync(keywordId);

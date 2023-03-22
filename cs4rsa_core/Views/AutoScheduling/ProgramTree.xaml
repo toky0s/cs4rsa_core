@@ -91,13 +91,6 @@
           Content="{md:PackIcon Kind=AccountOutline}"
           Style="{StaticResource MaterialDesignOutlinedButton}"
           ToolTip="Thông tin tài khoản" />
-        <Button
-          Grid.Column="4"
-          Margin="0,0,5,0"
-          Command="{Binding MyProgramCommand}"
-          Content="{md:PackIcon Kind=FileTableOutline}"
-          Style="{StaticResource MaterialDesignOutlinedButton}"
-          ToolTip="Chương trình dự kiến" />
       </Grid>
       <md:Transitioner
         x:Name="Trans1"
