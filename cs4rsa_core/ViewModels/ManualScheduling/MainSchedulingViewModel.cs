@@ -1,23 +1,11 @@
 ﻿using Cs4rsa.BaseClasses;
 
-using System.Threading.Tasks;
-
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    public partial class MainSchedulingViewModel : ViewModelBase, IScreenViewModel
+    public partial class MainSchedulingViewModel : ViewModelBase
     {
         public MainSchedulingViewModel()
         {
-        }
-
-        public void InitData()
-        {
-
-        }
-
-        public Task InitDataAsync()
-        {
-            return Task.FromResult<object>(null);
         }
     }
 }

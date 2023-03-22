@@ -54,10 +54,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NuGet.CommandLine" Version="6.4.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
   </ItemGroup>
 
   <ItemGroup>

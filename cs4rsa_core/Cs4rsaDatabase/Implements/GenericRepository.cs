@@ -42,13 +42,13 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public long Count()
         {
             string sql = $@"SELECT COUNT(*) FROM {_tableName};";
-            return _rawSql.ExecScalar(sql);
+            return _rawSql.ExecScalar(sql, null, 0L);
         }
 
         public long CountPage(int limit)
         {
             string sql = $@"SELECT CAST(ROUND(COUNT(*) / {limit} + 0.5, 0) AS INT) FROM {_tableName};";
-            return _rawSql.ExecScalar(sql);
+            return _rawSql.ExecScalar(sql, null, 0L);
         }
 
         public IEnumerable<T> Find(Expression<Func<T, bool>> expression)

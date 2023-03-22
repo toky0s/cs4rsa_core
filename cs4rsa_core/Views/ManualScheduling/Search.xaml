@@ -42,9 +42,8 @@
         Margin="0,0,3,0"
         Padding="7"
         DisplayMemberPath="Name"
-        FontWeight="Normal"
         IsEditable="True"
-        ItemsSource="{Binding Disciplines, Mode=OneWay}"
+        ItemsSource="{Binding Disciplines}"
         SelectedItem="{Binding SelectedDiscipline}"
         Style="{StaticResource MaterialDesignOutlinedComboBox}" />
       <ComboBox
@@ -52,7 +51,7 @@
         Grid.Row="0"
         Grid.Column="1"
         Padding="7"
-        ItemsSource="{Binding DisciplineKeywordModels, Mode=OneWay}"
+        ItemsSource="{Binding DisciplineKeywordModels}"
         SelectedItem="{Binding SelectedKeyword}"
         SelectedValuePath="Keyword1"
         Style="{StaticResource MaterialDesignOutlinedComboBox}"

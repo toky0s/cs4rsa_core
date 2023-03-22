@@ -38,7 +38,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cs4rsa
@@ -52,8 +51,7 @@ namespace Cs4rsa
             // Init Clowd.Squirrel
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: OnAppInstall,
-                onAppUninstall: OnAppUninstall,
-                onEveryRun: OnAppRun
+                onAppUninstall: OnAppUninstall
             );
 
             base.OnStartup(e);
@@ -91,13 +89,6 @@ namespace Cs4rsa
         private static void OnAppUninstall(SemanticVersion version, IAppTools tools)
         {
             tools.RemoveShortcutForThisExe(ShortcutLocation.StartMenu | ShortcutLocation.Desktop);
-        }
-
-        private static void OnAppRun(SemanticVersion version, IAppTools tools, bool firstRun)
-        {
-            tools.SetProcessAppUserModelId();
-            // show a welcome message when the app is first installed
-            if (firstRun) MessageBox.Show("Thanks for installing my application!");
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -151,8 +142,11 @@ namespace Cs4rsa
             services.AddSingleton<AccountViewModel>();
             services.AddSingleton<ProgramTreeViewModel>();
             services.AddSingleton<ResultViewModel>();
+
             services.AddSingleton<DbViewModel>();
             services.AddSingleton<DclTabViewModel>();
+            services.AddSingleton<MajorSubjectViewModel>();
+            services.AddSingleton<MajorSubjectDetailsViewModel>();
 
             // Profile Screen
             services.AddSingleton<ProfileViewModel>();

@@ -1,0 +1,96 @@
+﻿<base:BaseUserControl
+  x:Class="Cs4rsa.Views.Database.MajorSubject"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:database="clr-namespace:Cs4rsa.ViewModels.Database"
+  xmlns:local="clr-namespace:Cs4rsa.Views.Database"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  Padding="10"
+  d:DataContext="{d:DesignInstance Type=database:MajorSubjectViewModel}"
+  vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  Loaded="BaseUserControl_Loaded"
+  mc:Ignorable="d">
+  <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding MajorSubjectModels.Count, Converter={StaticResource NotZeroToVisibilityConverter}}">
+      <ItemsControl
+        x:Name="ItemsControl_MajorSubject"
+        Grid.Row="0"
+        ItemsSource="{Binding MajorSubjectModels}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <md:Card
+              Width="350"
+              Margin="0,0,8,8"
+              Padding="16"
+              Cursor="Hand"
+              MouseDown="Card_GotoDetals_Clicked"
+              UniformCornerRadius="12">
+              <md:Card.Style>
+                <Style BasedOn="{StaticResource MaterialDesignElevatedCard}" TargetType="{x:Type md:Card}">
+                  <Setter Property="md:ElevationAssist.Elevation" Value="Dp0" />
+                  <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Trigger.EnterActions>
+                        <BeginStoryboard>
+                          <Storyboard>
+                            <ColorAnimation
+                              Storyboard.TargetProperty="(md:Card.Background).(SolidColorBrush.Color)"
+                              To="{StaticResource Primary100}"
+                              Duration="0:0:0.6">
+                              <ColorAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut" />
+                              </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </Trigger.EnterActions>
+                      <Trigger.ExitActions>
+                        <BeginStoryboard>
+                          <Storyboard>
+                            <ColorAnimation
+                              Storyboard.TargetProperty="(md:Card.Background).(SolidColorBrush.Color)"
+                              To="White"
+                              Duration="0:0:0.4">
+                              <ColorAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseOut" />
+                              </ColorAnimation.EasingFunction>
+                            </ColorAnimation>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </Trigger.ExitActions>
+                    </Trigger>
+                  </Style.Triggers>
+                </Style>
+              </md:Card.Style>
+              <StackPanel Orientation="Vertical">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding Curriculum.Name}" />
+                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding TotalSubject, StringFormat=Tổng {0} môn học}" />
+              </StackPanel>
+            </md:Card>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    <TextBlock Text="Không có mã ngành nào được tìm thấy">
+      <TextBlock.Style>
+        <Style BasedOn="{StaticResource MaterialDesignTextBlock}" TargetType="TextBlock">
+          <Setter Property="Visibility" Value="Collapsed" />
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding MajorSubjectModels.Count}" Value="0">
+              <Setter Property="Visibility" Value="Visible" />
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </TextBlock.Style>
+    </TextBlock>
+  </Grid>
+</base:BaseUserControl>

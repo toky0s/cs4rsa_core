@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +39,14 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
             HtmlDocument doc = new();
             doc.LoadHtml(html);
             HtmlNodeCollection planTableTags = doc.DocumentNode.SelectNodes(PLAN_TABLE_XPATH);
+
+            Debug.WriteLineIf(
+                planTableTags == null,
+                "Không tìm thấy chương trình học, có thể đang trong 23h-24h trong ngày. Thử lại vào thời gian thích hợp"
+            );
+
             List<PlanTable> planTables = new();
+            if (planTableTags == null) return planTables;
             foreach (HtmlNode planTableNode in planTableTags)
             {
                 PlanTable planTable = new();

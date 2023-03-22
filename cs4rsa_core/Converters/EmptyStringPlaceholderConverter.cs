@@ -12,7 +12,7 @@ namespace Cs4rsa.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (string.IsNullOrEmpty((string)value))
+            if (string.IsNullOrWhiteSpace((string)value))
             {
                 return (string)parameter;
             }
@@ -21,7 +21,7 @@ namespace Cs4rsa.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

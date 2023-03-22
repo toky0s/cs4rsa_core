@@ -17,90 +17,86 @@
       <ColumnDefinition Width="0.3*" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
-    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-      <StackPanel Margin="5">
-        <!--  Thông tin học kỳ  -->
-        <Border
-          Margin="0,0,0,5"
-          Padding="5"
-          BorderBrush="LightGray"
-          BorderThickness="1"
-          CornerRadius="4">
-          <StackPanel>
-            <TextBlock HorizontalAlignment="Center" Text="{Binding CurrentYearInf}" />
-            <TextBlock
-              HorizontalAlignment="Center"
-              Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-              Text="{Binding CurrentSemesterInf}" />
-          </StackPanel>
-        </Border>
-
-        <!--  Số lượng môn học  -->
-        <Border
-          Margin="0,0,0,5"
-          Padding="5"
-          BorderBrush="LightGray"
-          BorderThickness="1"
-          CornerRadius="4">
-          <StackPanel>
-            <TextBlock HorizontalAlignment="Center" Text="Số lượng môn học" />
-            <TextBlock
-              HorizontalAlignment="Center"
-              Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-              Text="{Binding SubjectQuantity}" />
-          </StackPanel>
-        </Border>
-
-        <!--  Cảnh báo cập nhật  -->
-        <Border
-          Margin="0,0,0,5"
-          Padding="5"
-          BorderBrush="LightGray"
-          BorderThickness="1"
-          CornerRadius="4">
-          <StackPanel>
-            <TextBlock
-              Grid.Column="1"
-              Margin="0,0,0,10"
-              Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-              Text="Cảnh báo cập nhật" />
-            <TextBlock
-              Margin="0,0,0,5"
-              TextAlignment="Justify"
-              TextWrapping="Wrap">
-              <TextBlock.Text>
-                Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian.
-                Đồng thời dữ liệu xếp lịch hiện tại ở màn hình Xếp lịch thủ công sẽ bị xoá.
-                Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật.
-              </TextBlock.Text>
-            </TextBlock>
-            <ProgressBar
-              Margin="0,0,0,5"
-              Maximum="1000"
-              Value="{Binding ProgressValue}" />
-            <StackPanel
-              Margin="0,0,0,5"
-              HorizontalAlignment="Right"
-              Orientation="Horizontal">
-              <Button
-                HorizontalAlignment="Right"
-                Command="{Binding StartUpdateCommand}"
-                Content="BẮT ĐẦU"
-                Style="{StaticResource MaterialDesignFlatButton}" />
-              <Button
-                Command="{Binding RefreshCommand}"
-                Content="LÀM MỚI"
-                Style="{StaticResource MaterialDesignFlatButton}" />
+    <Border
+      Grid.Column="0"
+      BorderBrush="{StaticResource Grey300}"
+      BorderThickness="0,0,1,0">
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="8">
+          <!--  Thông tin học kỳ  -->
+          <md:Card Margin="0,0,0,8" Style="{StaticResource CredizFilledCard}">
+            <StackPanel>
+              <TextBlock HorizontalAlignment="Center" Text="{Binding CurrentYearInf}" />
+              <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                Text="{Binding CurrentSemesterInf}" />
             </StackPanel>
+          </md:Card>
 
-          </StackPanel>
-        </Border>
-      </StackPanel>
-    </ScrollViewer>
+          <!--  Số lượng môn học  -->
+          <md:Card Margin="0,0,0,8" Style="{StaticResource CredizFilledCard}">
+            <StackPanel>
+              <TextBlock HorizontalAlignment="Center" Text="Số lượng môn học" />
+              <TextBlock
+                HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                Text="{Binding SubjectQuantity}" />
+            </StackPanel>
+          </md:Card>
 
-    <TabControl Grid.Column="1">
-      <TabItem HorizontalAlignment="Left" Header="MÔN HỌC">
-        <local:DclTab />
+          <!--  Cảnh báo cập nhật  -->
+          <md:Card Margin="0,0,0,8" Style="{StaticResource CredizFilledCard}">
+            <StackPanel>
+              <TextBlock
+                Grid.Column="1"
+                Margin="0,0,0,10"
+                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                Text="Cập nhật" />
+              <TextBlock
+                Margin="0,0,0,5"
+                TextAlignment="Justify"
+                TextWrapping="Wrap">
+                <TextBlock.Text>
+                  Việc cập nhật cơ sở dữ liệu môn học sẽ tốn một ít thời gian.
+                  Đồng thời dữ liệu xếp lịch hiện tại ở màn hình Xếp lịch thủ công sẽ bị xoá.
+                  Hãy đảm bảo tình trạng mạng ổn định và không ngắt giữa chừng trong lúc đang cập nhật.
+                </TextBlock.Text>
+              </TextBlock>
+              <ProgressBar
+                Margin="0,0,0,5"
+                Maximum="1000"
+                Value="{Binding ProgressValue}" />
+              <StackPanel
+                Margin="0,0,0,5"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                  HorizontalAlignment="Right"
+                  Command="{Binding StartUpdateCommand}"
+                  Content="Bắt đầu"
+                  Style="{StaticResource CredizFilledButton}" />
+                <Button
+                  Command="{Binding RefreshCommand}"
+                  Content="Làm mới"
+                  Style="{StaticResource CredizFilledButton}" />
+              </StackPanel>
+
+            </StackPanel>
+          </md:Card>
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+    <TabControl Grid.Column="1" HorizontalContentAlignment="Left">
+      <TabItem Header="Môn học">
+        <local:DclTab Padding="10" />
+      </TabItem>
+      <TabItem Header="Môn học theo ngành">
+        <md:Transitioner SelectedIndex="0">
+          <local:MajorSubject Padding="10" />
+          <local:MajorSubjectDetails Padding="10" />
+        </md:Transitioner>
       </TabItem>
     </TabControl>
   </Grid>

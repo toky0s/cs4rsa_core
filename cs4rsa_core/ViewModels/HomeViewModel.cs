@@ -107,10 +107,5 @@ namespace Cs4rsa.ViewModels
         {
 
         }
-
-        public Task InitDataAsync()
-        {
-            return Task.FromResult<object>(null);
-        }
     }
 }
