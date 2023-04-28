@@ -9,11 +9,12 @@ using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Messages.Publishers.UIs;
 using Cs4rsa.Messages.States;
 using Cs4rsa.ModelExtensions;
+using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 
@@ -85,7 +86,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             _phaseStore = phaseStore;
             _unitOfWork = unitOfWork;
 
-            #region WeakReferenceMessengers
+            #region Messengers
             Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
             {
                 DelSubjectMsgHandler(m.Value);
@@ -129,6 +130,21 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 ClassGroupModels.Clear();
                 ConflictModels.Clear();
                 PlaceConflictFinderModels.Clear();
+            });
+            
+            // Click vào block thì đồng thời select class group model tương ứng.
+            Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
+            {
+                if (m.Value is SchoolClassBlock @schoolClassBlock)
+                {
+                    ClassGroupModel result = ClassGroupModels
+                        .Where(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName))
+                        .FirstOrDefault();
+                    if (result != null)
+                    {
+                        SelectedClassGroupModel = result;
+                    }
+                }
             });
             #endregion
 
@@ -270,18 +286,19 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
-        private void UpdateConflictModelCollection(List<SchoolClass> schoolClasses)
+        private void UpdateConflictModelCollection(List<SchoolClassModel> schoolClassModels)
         {
             ConflictModels.Clear();
-            for (int i = 0; i < schoolClasses.Count; ++i)
+            for (int i = 0; i < schoolClassModels.Count; ++i)
             {
-                for (int k = i + 1; k < schoolClasses.Count; ++k)
+                for (int k = i + 1; k < schoolClassModels.Count; ++k)
                 {
-                    if (schoolClasses[i].ClassGroupName.Equals(schoolClasses[k].ClassGroupName))
+                    if (schoolClassModels[i].SchoolClass.ClassGroupName
+                        .Equals(schoolClassModels[k].SchoolClass.ClassGroupName))
                     {
                         continue;
                     }
-                    Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
+                    Conflict conflict = new(schoolClassModels[i], schoolClassModels[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -297,14 +314,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Place.
         /// </summary>
-        private void UpdatePlaceConflictCollection(List<SchoolClass> schoolClasses)
+        private void UpdatePlaceConflictCollection(List<SchoolClassModel> schoolClasseModels)
         {
             PlaceConflictFinderModels.Clear();
-            for (int i = 0; i < schoolClasses.Count; ++i)
+            for (int i = 0; i < schoolClasseModels.Count; ++i)
             {
-                for (int k = i + 1; k < schoolClasses.Count; ++k)
+                for (int k = i + 1; k < schoolClasseModels.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
+                    PlaceConflictFinder placeConflict = new(schoolClasseModels[i], schoolClasseModels[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
@@ -351,16 +368,17 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private void UpdateConflicts()
         {
-            List<SchoolClass> schoolClasses = new();
+            List<SchoolClassModel> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in ClassGroupModels)
             {
                 if (classGroupModel.IsSpecialClassGroup)
                 {
-                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
+                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels);
                 }
                 else
                 {
-                    schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels);
+                    //schoolClassModels.AddRange(classGroupModel.ClassGroup.SchoolClasses);
                 }
             }
             UpdateConflictModelCollection(schoolClasses);

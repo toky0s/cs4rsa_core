@@ -21,8 +21,8 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Badged.xaml" />
         <ResourceDictionary>
-          <!--  include your primary palette  -->
           <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Cyan.xaml" />
           </ResourceDictionary.MergedDictionaries>
@@ -42,8 +42,16 @@
           <SolidColorBrush x:Key="Grey200" Color="#EEEEEE" />
           <SolidColorBrush x:Key="Grey100" Color="#F5F5F5" />
 
+          <SolidColorBrush x:Key="OnlineBlockBackground" Color="#c0ffc0" />
+          <SolidColorBrush x:Key="OfflineBlockBackground" Color="#ffeaa7" />
+          <SolidColorBrush x:Key="OfflineBlockBorderBackground" Color="#ffbe76" />
+
           <cvt:IsNotNullConverter x:Key="IsNotNullConverter" />
+          <cvt:IsTypeOfCvt x:Key="cvtIsTypeOf" />
           <cvt:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
+          <cvt:DayCvt x:Key="DayCvt" />
+          <cvt:PlaceCvt x:Key="PlaceCvt" />
+          <cvt:DtuTimeBlockContentCvt x:Key="DtuTimeBlockContentCvt" />
 
           <Style x:Key="CredizFilledCard" TargetType="{x:Type materialDesign:Card}">
             <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
@@ -63,6 +71,7 @@
             <Setter Property="Padding" Value="24,12,24,12" />
           </Style>
 
+          <!--  CredizDataGrid  -->
           <Style
             x:Key="CredizDataGrid"
             BasedOn="{StaticResource MaterialDesignDataGrid}"
@@ -155,6 +164,8 @@
             </Style.Triggers>
           </Style>
         </ResourceDictionary>
+        <ResourceDictionary Source="Controls/Scrollbar.xaml" />
+        <ResourceDictionary Source="Styles/ToolTip_TimeBlock.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

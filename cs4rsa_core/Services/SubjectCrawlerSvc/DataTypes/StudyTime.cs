@@ -27,15 +27,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 
         public Session GetSession()
         {
-            if (!IsInMorning())
-            {
-                if (!IsInAfternoon())
-                {
-                    return Session.Night;
-                }
-                return Session.Afternoon;
-            }
-            return Session.Morning;
+            if (IsInMorning()) return Session.Morning;
+            if (IsInAfternoon()) return Session.Afternoon;
+            return Session.Night;
         }
 
 

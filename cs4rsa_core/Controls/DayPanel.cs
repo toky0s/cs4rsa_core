@@ -23,6 +23,16 @@ namespace Cs4rsa.Controls
                 child.Measure(availableSize);
             }
 
+            if (availableSize.Height == double.PositiveInfinity)
+            {
+                availableSize.Height = double.MaxValue;
+            }
+            
+            if (availableSize.Width == double.PositiveInfinity)
+            {
+                availableSize.Width = double.MaxValue;
+            }
+
             return availableSize;
         }
 

@@ -165,11 +165,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
             {
-                TimeBlock timeBlock = m.Value;
-                if (timeBlock.ScheduleTableItemType == ScheduleTableItemType.SchoolClass)
+                if (m.Value is SchoolClassBlock @schoolClassBlock)
                 {
                     SelectedSubjectModel = SubjectModels
-                        .Where(sm => sm.SubjectCode.Equals(timeBlock.Id))
+                        .Where(sm => sm.SubjectCode.Equals(schoolClassBlock.Id))
                         .FirstOrDefault();
                 }
             });

@@ -59,7 +59,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             }
             else
             {
-                return Phase.Non;
+                return Phase.Unknown;
             }
         }
     }

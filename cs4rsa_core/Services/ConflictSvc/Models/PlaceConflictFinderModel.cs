@@ -4,8 +4,8 @@ using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 
 using System;
@@ -16,38 +16,23 @@ namespace Cs4rsa.Services.ConflictSvc.Models
     /// <summary>
     /// Model này đại diện cho một xung đột vị trí học.
     /// </summary>
-    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem, IEquatable<PlaceConflictFinderModel>
+    public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem
     {
-        private SchoolClass _schoolClass1;
-        private SchoolClass _schoolClass2;
-        private ConflictPlace _conflictPlace;
-
-        public ConflictPlace ConflictPlace
-        {
-            get
-            {
-                return _conflictPlace;
-            }
-            set
-            {
-                _conflictPlace = value;
-            }
-        }
-
-        public SchoolClass FirstSchoolClass { get => _schoolClass1; set => _schoolClass1 = value; }
-        public SchoolClass SecondSchoolClass { get => _schoolClass2; set => _schoolClass2 = value; }
+        public ConflictPlace ConflictPlace { get; set; }
+        public SchoolClassModel FirstSchoolClass { get; set; }
+        public SchoolClassModel SecondSchoolClass { get; set; }
 
         public PlaceConflictFinderModel(PlaceConflictFinder placeConflictFinder)
         {
-            _conflictPlace = placeConflictFinder.GetPlaceConflict();
-            _schoolClass1 = placeConflictFinder.FirstSchoolClass;
-            _schoolClass2 = placeConflictFinder.SecondSchoolClass;
+            ConflictPlace = placeConflictFinder.GetPlaceConflict();
+            FirstSchoolClass = placeConflictFinder.FirstSchoolClass;
+            SecondSchoolClass = placeConflictFinder.SecondSchoolClass;
         }
 
         public string GetConflictInfo()
         {
             List<string> resultTimes = new();
-            foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in _conflictPlace.PlaceAdjacents)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in ConflictPlace.PlaceAdjacents)
             {
                 string day = item.Key.ToDayOfWeekText();
                 List<string> info = new();
@@ -70,8 +55,8 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public Phase GetPhase()
         {
-            Phase classGroupPhase1 = _schoolClass1.GetPhase();
-            Phase classGroupPhase2 = _schoolClass2.GetPhase();
+            Phase classGroupPhase1 = FirstSchoolClass.GetPhase();
+            Phase classGroupPhase2 = SecondSchoolClass.GetPhase();
             if (classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.First
                 || classGroupPhase1 == Phase.First && classGroupPhase2 == Phase.All
                 || classGroupPhase1 == Phase.All && classGroupPhase2 == Phase.First)
@@ -86,23 +71,21 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public IEnumerable<TimeBlock> GetBlocks()
         {
             const string BACKGROUND = "#f1f2f6";
-            foreach (var item in _conflictPlace.PlaceAdjacents)
+            foreach (var item in ConflictPlace.PlaceAdjacents)
             {
                 foreach (PlaceAdjacent placeAdjacent in item.Value)
                 {
-                    TimeBlock timeBlock = new()
-                    {
-                        Id = GetId(),
-                        Background = BACKGROUND,
-                        Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
-                        DayOfWeek = item.Key,
-                        Start = placeAdjacent.Start,
-                        End = placeAdjacent.End,
-                        Description = GetTimeBlockDescription(placeAdjacent),
-                        Class1 = _schoolClass1.ClassGroupName,
-                        Class2 = _schoolClass2.ClassGroupName,
-                        ScheduleTableItemType = ScheduleTableItemType.PlaceConflict
-                    };
+                    PlaceCfBlock timeBlock = new
+                    (
+                        placeAdjacent
+                        , GetId()
+                        , BACKGROUND
+                        , FirstSchoolClass.SchoolClassName + " x " + SecondSchoolClass.SchoolClassName
+                        , item.Key
+                        , placeAdjacent.Start
+                        , placeAdjacent.End
+                        , ScheduleTableItemType.PlaceConflict
+                    );
 
                     yield return timeBlock;
                 }
@@ -123,23 +106,11 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public string GetId()
         {
-            return "pc" + VmConstants.CharSpace + FirstSchoolClass.SubjectCode + VmConstants.CharSpace + SecondSchoolClass.SubjectCode;
-        }
-
-        public bool Equals(PlaceConflictFinderModel other)
-        {
-            if (other is null) return false;
-            return GetHashCode() == other.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as PlaceConflictFinderModel);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictPlace, ConflictPlace, FirstSchoolClass, SecondSchoolClass);
+            return "pc" 
+                + VmConstants.CharSpace 
+                + FirstSchoolClass.SubjectCode 
+                + VmConstants.CharSpace 
+                + SecondSchoolClass.SubjectCode;
         }
     }
 }

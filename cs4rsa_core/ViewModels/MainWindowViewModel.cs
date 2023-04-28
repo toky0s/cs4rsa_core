@@ -1,8 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Cs4rsa.BaseClasses;
+using Cs4rsa.Constants;
+using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
 using MaterialDesignThemes.Wpf;
+
+using System;
 
 namespace Cs4rsa.ViewModels
 {
@@ -14,7 +18,12 @@ namespace Cs4rsa.ViewModels
     /// </summary>
     public partial class MainWindowViewModel : ObservableRecipient
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         #region Bindings
+        [ObservableProperty]
+        private int _storedScreenIdx;
+        
         [ObservableProperty]
         private bool _isExpanded;
 
@@ -34,9 +43,12 @@ namespace Cs4rsa.ViewModels
         private ISnackbarMessageQueue _snackBarMessageQueue;
         #endregion
 
-        public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
+        public MainWindowViewModel(
+             ISnackbarMessageQueue snackbarMessageQueue
+           , IUnitOfWork unitOfWork)
         {
             _snackBarMessageQueue = snackbarMessageQueue;
+            _unitOfWork = unitOfWork;
             IsExpanded = false;
             IsWindowEnable = true;
         }
@@ -52,5 +64,16 @@ namespace Cs4rsa.ViewModels
         }
 
         public void CloseModal() => IsOpen = false;
+
+        internal void SaveScreenIdx(string currentMenuItemIndex)
+        {
+            _unitOfWork.Settings.InsertOrUpdateLastOfScreenIndex(currentMenuItemIndex);
+        }
+
+        internal void LoadInfor()
+        {
+            bool succeeded = int.TryParse(_unitOfWork.Settings.GetBykey(VmConstants.StLastOfScreenIdx), out int @result);
+            StoredScreenIdx = succeeded ? result : 0;
+        }
     }
 }

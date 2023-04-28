@@ -161,9 +161,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;
 
                 CleanDays();
-                // TODO: Chỉ remove những TimeBlock có sự thay đổi về Phase.
-                // Các TimeBlock có Phase trước và sau khi change BetweenPoint
-                // như nhau thì không cần thay đổi.
                 foreach (ClassGroupModel classGroupModel in classGroupModels)
                 {
                     AddClassGroup(classGroupModel);
@@ -300,15 +297,15 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             if (classGroupModel.IsSpecialClassGroup)
             {
                 schoolClassModels = classGroupModel
-                .CurrentSchoolClassModels
-                .Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
+                .CurrentSchoolClassModels;
+                //.Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
             }
             else
             {
-                schoolClassModels = classGroupModel
-                .ClassGroup
-                .SchoolClasses
-                .Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
+                schoolClassModels = classGroupModel.NormalSchoolClassModels;
+                //.ClassGroup
+                //.SchoolClasses
+                //.Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
             }
 
             foreach (SchoolClassModel schoolClassModel in schoolClassModels)
@@ -343,14 +340,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             }
         }
 
-        private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
-        {
-            SchoolClassModel schoolClassModel = new(schoolClass)
-            {
-                Color = color
-            };
-            return schoolClassModel;
-        }
+        //private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
+        //{
+        //    SchoolClassModel schoolClassModel = new(schoolClass)
+        //    {
+        //        Color = color
+        //    };
+        //    return schoolClassModel;
+        //}
 
         private void CleanDays()
         {

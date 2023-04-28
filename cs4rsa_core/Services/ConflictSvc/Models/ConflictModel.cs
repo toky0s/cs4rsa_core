@@ -4,8 +4,8 @@ using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
 
 using System;
@@ -13,10 +13,10 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Services.ConflictSvc.Models
 {
-    public class ConflictModel : IConflictModel, IScheduleTableItem, IEquatable<ConflictModel>
+    public class ConflictModel : IConflictModel, IScheduleTableItem
     {
-        private SchoolClass _schoolClass1;
-        private SchoolClass _schoolClass2;
+        private SchoolClassModel _schoolClass1;
+        private SchoolClassModel _schoolClass2;
         private ConflictTime _conflictTime;
 
         public ConflictTime ConflictTime
@@ -31,23 +31,14 @@ namespace Cs4rsa.Services.ConflictSvc.Models
             }
         }
 
-        public SchoolClass FirstSchoolClass { get => _schoolClass1; set => _schoolClass1 = value; }
-        public SchoolClass SecondSchoolClass { get => _schoolClass2; set => _schoolClass2 = value; }
-
-        public ConflictType ConflictType { get => ConflictType.Time; }
+        public SchoolClassModel FirstSchoolClass { get => _schoolClass1; set => _schoolClass1 = value; }
+        public SchoolClassModel SecondSchoolClass { get => _schoolClass2; set => _schoolClass2 = value; }
 
         public ConflictModel(Conflict conflict)
         {
             _schoolClass1 = conflict.FirstSchoolClass;
             _schoolClass2 = conflict.SecondSchoolClass;
             _conflictTime = conflict.GetConflictTime();
-        }
-
-        public ConflictModel(Conflict conflict, ConflictTime conflictTime)
-        {
-            _schoolClass1 = conflict.FirstSchoolClass;
-            _schoolClass2 = conflict.SecondSchoolClass;
-            _conflictTime = conflictTime;
         }
 
         /// <summary>
@@ -119,19 +110,16 @@ namespace Cs4rsa.Services.ConflictSvc.Models
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
-                    TimeBlock timeBlock = new()
-                    {
-                        Id = GetId(),
-                        Background = BACKGROUND,
-                        Content = _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
-                        DayOfWeek = item.Key,
-                        Start = studyTimeIntersect.Start,
-                        End = studyTimeIntersect.End,
-                        Description = GetFullConflictInfo(),
-                        Class1 = _schoolClass1.ClassGroupName,
-                        Class2 = _schoolClass2.ClassGroupName,
-                        ScheduleTableItemType = ScheduleTableItemType.TimeConflict
-                    };
+                    CfBlock timeBlock = new(
+                        studyTimeIntersect,
+                        GetId(),
+                        BACKGROUND,
+                        _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
+                        item.Key,
+                        ScheduleTableItemType.TimeConflict,
+                        _schoolClass1,
+                        _schoolClass2
+                    );
                     yield return timeBlock;
                 }
             }
@@ -140,22 +128,6 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public ScheduleTableItemType GetScheduleTableItemType()
         {
             return ScheduleTableItemType.TimeConflict;
-        }
-
-        public bool Equals(ConflictModel other)
-        {
-            if (other is null) return false;
-            return GetHashCode() == other.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ConflictModel);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_schoolClass1, _schoolClass2, _conflictTime, FirstSchoolClass, SecondSchoolClass, ConflictTime, ConflictType);
         }
 
         public string GetId()

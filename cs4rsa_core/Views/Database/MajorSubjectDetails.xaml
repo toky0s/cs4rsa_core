@@ -104,16 +104,6 @@
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <TextBlock Visibility="{Binding Cache, Converter={StaticResource StringIsEmptyVisibilityConverter}}">
-                <TextBlock.Style>
-                  <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Visible" />
-                    <Style.Triggers>
-                      <DataTrigger Binding="{Binding IsDownloading}" Value="True">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                      </DataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </TextBlock.Style>
                 <Hyperlink Click="BtnViewCache_Clicked">
                   Xem
                 </Hyperlink>

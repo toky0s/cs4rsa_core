@@ -7,15 +7,16 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 namespace Cs4rsa.Dialogs.Implements
 {
     public partial class SolveConflictViewModel : DialogVmBase
     {
         [ObservableProperty]
-        private SchoolClass _firstSC;
+        private SchoolClassModel _firstSC;
         [ObservableProperty]
-        private SchoolClass _secondSC;
+        private SchoolClassModel _secondSC;
         [ObservableProperty]
         private string fColor;
         [ObservableProperty]
@@ -31,8 +32,8 @@ namespace Cs4rsa.Dialogs.Implements
         {
             _firstSC = conflictModel.FirstSchoolClass;
             _secondSC = conflictModel.SecondSchoolClass;
-            RemoveCgFirstCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_firstSC.ClassGroupName)));
-            RemoveCgSecondCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_secondSC.ClassGroupName)));
+            RemoveCgFirstCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_firstSC.SchoolClass.ClassGroupName)));
+            RemoveCgSecondCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_secondSC.SchoolClass.ClassGroupName)));
             FColor = unitOfWork.Keywords.GetColorWithSubjectCode(_firstSC.SubjectCode);
             SColor = unitOfWork.Keywords.GetColorWithSubjectCode(_secondSC.SubjectCode);
         }

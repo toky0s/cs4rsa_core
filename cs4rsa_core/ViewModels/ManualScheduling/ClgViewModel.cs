@@ -605,7 +605,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             ShowDetailsSchoolClassesViewModel vm = (ShowDetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
             vm.ClassGroupModel = SelectedClassGroup;
 
-            foreach (SchoolClassModel scm in SelectedClassGroup.GetSchoolClassModels())
+            foreach (SchoolClassModel scm in SelectedClassGroup.NormalSchoolClassModels)
             {
                 if (scm.Type != SelectedClassGroup.CompulsoryClass.Type)
                 {

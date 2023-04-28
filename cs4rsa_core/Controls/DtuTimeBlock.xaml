@@ -1,0 +1,31 @@
+﻿<UserControl
+  x:Class="Cs4rsa.Controls.DtuTimeBlock"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:enumSubjectCrawler="clr-namespace:Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums"
+  xmlns:local="clr-namespace:Cs4rsa.Controls">
+  <Border
+    Grid.Row="1"
+    Width="80"
+    Padding="3"
+    HorizontalAlignment="Right"
+    BorderThickness="1"
+    CornerRadius="4">
+    <Border.Style>
+      <Style TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource OfflineBlockBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource OfflineBlockBorderBackground}" />
+        <Style.Triggers>
+          <DataTrigger Binding="{Binding SchoolClassUnit.Room.Place}" Value="{x:Static enumSubjectCrawler:Place.ONLINE}">
+            <Setter Property="Background" Value="{StaticResource OnlineBlockBackground}" />
+            <Setter Property="BorderBrush" Value="{StaticResource OnlineBlockBackground}" />
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+    </Border.Style>
+    <TextBlock
+      Style="{StaticResource MaterialDesignCaptionTextBlock}"
+      Text="{Binding Path=DataContext, RelativeSource={RelativeSource Self}, Converter={StaticResource DtuTimeBlockContentCvt}}"
+      TextWrapping="Wrap" />
+  </Border>
+</UserControl>

@@ -33,8 +33,8 @@
   <ItemGroup>
     <None Remove="cs4rsa.db" />
     <None Remove="cs4rsa_settings.json" />
+    <None Remove="Images\avatar.png" />
     <None Remove="Images\background.png" />
-    <None Remove="Images\default-avatar.jpg" />
     <None Remove="Images\donate.png" />
     <None Remove="Images\donate_viettel.png" />
     <None Remove="Images\github.png" />
@@ -103,10 +103,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\avatar.png" />
     <Resource Include="Images\background.png" />
-    <Resource Include="Images\default-avatar.jpg">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />
     <Resource Include="Images\github.png" />
@@ -115,5 +113,9 @@
 
   <ItemGroup>
     <SplashScreen Include="AppResources\SplashScreen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\ManualScheduling\BlockViews\" />
   </ItemGroup>
 </Project>

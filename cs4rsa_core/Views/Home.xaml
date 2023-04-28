@@ -86,7 +86,18 @@
         Grid.Column="0"
         Width="400"
         Margin="0,0,10,0"
-        HorizontalAlignment="Right">
+        HorizontalAlignment="Right"
+        Style="{StaticResource MaterialDesignOutlinedCard}"
+        UniformCornerRadius="12">
+        <materialDesign:Card.Clip>
+          <MultiBinding Converter="{StaticResource BorderClipConverter}">
+            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="UniformCornerRadius" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="BorderThickness" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="Padding" RelativeSource="{RelativeSource Self}" />
+          </MultiBinding>
+        </materialDesign:Card.Clip>
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180" />

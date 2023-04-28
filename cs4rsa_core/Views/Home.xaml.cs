@@ -15,7 +15,6 @@ namespace Cs4rsa.Views
             InitializeComponent();
         }
 
-        [Obsolete]
         private async void Btn_Update_Click(object sender, RoutedEventArgs e)
         {
             using var mgr = await UpdateManager.GitHubUpdateManager(VmConstants.LinkProjectPage);

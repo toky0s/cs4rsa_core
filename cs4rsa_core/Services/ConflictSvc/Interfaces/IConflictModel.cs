@@ -1,6 +1,6 @@
 ﻿using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 namespace Cs4rsa.Services.ConflictSvc.Interfaces
 {
@@ -9,8 +9,8 @@ namespace Cs4rsa.Services.ConflictSvc.Interfaces
     /// </summary>
     public interface IConflictModel
     {
-        SchoolClass FirstSchoolClass { get; set; }
-        SchoolClass SecondSchoolClass { get; set; }
+        SchoolClassModel FirstSchoolClass { get; set; }
+        SchoolClassModel SecondSchoolClass { get; set; }
         string GetConflictInfo();
         ConflictType GetConflictType();
         Phase GetPhase();

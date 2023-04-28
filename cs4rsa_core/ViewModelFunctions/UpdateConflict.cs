@@ -23,17 +23,17 @@ namespace Cs4rsa.ViewModelFunctions
             IEnumerable<ClassGroupModel> classGroupModels)
         {
             conflictModels.Clear();
-            List<SchoolClass> schoolClasses = new();
+            List<SchoolClassModel> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                schoolClasses.AddRange(classGroupModel.NormalSchoolClassModels);
             }
 
             for (int i = 0; i < schoolClasses.Count; ++i)
             {
                 for (int k = i + 1; k < schoolClasses.Count; ++k)
                 {
-                    if (schoolClasses[i].ClassGroupName.Equals(schoolClasses[k].ClassGroupName))
+                    if (schoolClasses[i].SchoolClass.ClassGroupName.Equals(schoolClasses[k].SchoolClass.ClassGroupName))
                         continue;
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
@@ -51,10 +51,10 @@ namespace Cs4rsa.ViewModelFunctions
             , IEnumerable<ClassGroupModel> classGroupModels)
         {
             placeConflictFinderModels.Clear();
-            List<SchoolClass> schoolClasses = new();
+            List<SchoolClassModel> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                schoolClasses.AddRange(classGroupModel.NormalSchoolClassModels);
             }
 
             for (int i = 0; i < schoolClasses.Count; ++i)

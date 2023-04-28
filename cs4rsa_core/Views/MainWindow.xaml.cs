@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
 using Cs4rsa.Constants;
+using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
 
@@ -15,6 +16,8 @@ namespace Cs4rsa.Views
     {
         private const int HeightAndWidth = 24;
         private int _currentMenuItemIndex = -1;
+        private MainWindowViewModel Vm;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -152,10 +155,17 @@ namespace Cs4rsa.Views
 
         private async void MainWd_Loaded(object sender, RoutedEventArgs e)
         {
+            Vm = (MainWindowViewModel)DataContext;
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
-            await Goto(0);
+            Vm.LoadInfor();
+            await Goto(Vm.StoredScreenIdx);
+        }
+
+        private void MainWd_Closed(object sender, System.EventArgs e)
+        {
+            Vm.SaveScreenIdx(_currentMenuItemIndex.ToString());
         }
     }
 }
