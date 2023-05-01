@@ -4,6 +4,7 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
@@ -42,6 +43,29 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 + $", ('{VmConstants.StCurrentYearInfo}', '{yearInf}')"
                 + $", ('{VmConstants.StCurrentYearValue}', '{yearVl}');";
             _rawSql.ExecNonQuery(sql, null);
+        }
+
+        public void InsertOrUpdateLastOfScreenIndex(string idx)
+        {
+            string countSettingSql = "SELECT COUNT(*) FROM Settings WHERE Key = @key LIMIT 1;";
+            Dictionary<string, object> param = new() 
+            { 
+                { "@idx", idx },
+                { "@key", VmConstants.StLastOfScreenIdx },
+            };
+            long countResult = _rawSql.ExecScalar(countSettingSql, param, 0L);
+            if (countResult == 0)
+            {
+                string insertSettingSql = $"INSERT INTO Settings(Key, Value) VALUES (@key, @idx);";
+                int insertResult = _rawSql.ExecNonQuery(insertSettingSql, param);
+                Debug.Assert(insertResult > 0);
+            }
+            else
+            {
+                string updateStSql = "UPDATE Settings SET Value = @idx WHERE Key = @key";
+                int insertResult = _rawSql.ExecNonQuery(updateStSql, param);
+                Debug.Assert(insertResult > 0);
+            }
         }
     }
 }

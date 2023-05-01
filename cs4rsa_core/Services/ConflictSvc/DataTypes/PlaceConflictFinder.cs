@@ -1,6 +1,7 @@
 ﻿using Cs4rsa.Services.ConflictSvc.Utils;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
     {
         private static readonly TimeSpan _timeDelta = new(0, 15, 0); // 15 minutes
 
-        public PlaceConflictFinder(SchoolClass schoolClass1, SchoolClass schoolClass2) : base(schoolClass1, schoolClass2)
+        public PlaceConflictFinder(SchoolClassModel schoolClass1, SchoolClassModel schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 
@@ -54,8 +55,8 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
             // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
             foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
             {
-                IEnumerable<PlaceMap> placeMap1 = _schoolClass1.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
-                IEnumerable<PlaceMap> placeMap2 = _schoolClass2.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                IEnumerable<PlaceMap> placeMap1 = _schoolClass1.SchoolClass.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
+                IEnumerable<PlaceMap> placeMap2 = _schoolClass2.SchoolClass.GetMetaDataMap().GetPlaceMapsAtDay(dayOfWeek);
                 List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
 
                 IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);

@@ -126,7 +126,7 @@
                 <Image
                   Grid.Row="0"
                   Margin="0,0,0,10"
-                  Source="{Binding SelectedTeacher.Path, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=/Images/default-avatar.jpg}"
+                  Source="{Binding SelectedTeacher.Path, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=/Images/avatar.png}"
                   Stretch="UniformToFill" />
                 <TextBlock
                   Grid.Row="1"

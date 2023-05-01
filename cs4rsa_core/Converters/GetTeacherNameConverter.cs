@@ -11,17 +11,18 @@ namespace Cs4rsa.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
-            {
-                List<TeacherModel> objects = (List<TeacherModel>)value;
-                return objects.Count > 0 ? objects[0].Name : parameter;
-            }
-            return parameter;
+            if (value == null) return parameter;
+            List<TeacherModel> teachers = (List<TeacherModel>)value;
+            return teachers.Count == 0
+                    ? parameter // (1)
+                    : teachers.Count == 1
+                        ? teachers[0].Name // (2)
+                        : string.Join(", ", teachers); // (3)
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

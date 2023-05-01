@@ -1,5 +1,5 @@
 ﻿using Cs4rsa.Interfaces;
-
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using System;
 
 namespace Cs4rsa.Models
@@ -7,18 +7,33 @@ namespace Cs4rsa.Models
     /// <summary>
     /// Đại diện cho một ô trong ScheduleControl.
     /// </summary>
-    public class TimeBlock
+    public abstract class TimeBlock
     {
-        public string Id { get; set; }
+        public string Name { get; set; }
+        public TimeBlock(
+            string id
+            , string background
+            , string content
+            , DayOfWeek dayOfWeek
+            , DateTime start
+            , DateTime end
+            , ScheduleTableItemType scheduleTableItemType)
+        {
+            Id = id;
+            Background = background;
+            Content = content;
+            DayOfWeek = dayOfWeek;
+            Start = start;
+            End = end;
+            ScheduleTableItemType = scheduleTableItemType;
+            Name = "TimeBlock";
+        }
+
+        public string Id { get; }
         /// <summary>
         /// Màu nền
         /// </summary>
         public string Background { get; set; }
-
-        /// <summary>
-        /// Mô tả
-        /// </summary>
-        public string Description { get; set; }
 
         /// <summary>
         /// Nội dung
@@ -39,22 +54,6 @@ namespace Cs4rsa.Models
         /// Ngày kết thúc
         /// </summary>
         public DateTime End { get; set; }
-
-        /// <summary>
-        /// Tên class group nếu có - mặc định Empty
-        /// </summary>
-        public string ClassGroupName { get; set; }
-
-        /// <summary>
-        /// Tên class 1 nếu có xung đột - mặc đinh Empty
-        /// </summary>
-        public string Class1 { get; set; }
-
-        /// <summary>
-        /// Tên class 2 nếu có xung đột - mặc đinh Empty
-        /// </summary>
-        public string Class2 { get; set; }
-
         public ScheduleTableItemType ScheduleTableItemType { get; set; }
     }
 }

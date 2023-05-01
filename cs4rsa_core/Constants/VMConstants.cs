@@ -103,5 +103,6 @@ namespace Cs4rsa.Constants
         public const string StCurrentSemesterInfo = "CurrentSemesterInfo";
         public const string StCurrentYearValue = "CurrentYearValue";
         public const string StCurrentSemesterValue = "CurrentSemesterValue";
+        public const string StLastOfScreenIdx = "LastOfScreenIdx";
     }
 }

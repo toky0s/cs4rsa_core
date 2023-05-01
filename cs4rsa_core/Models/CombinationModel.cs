@@ -110,16 +110,16 @@ namespace Cs4rsa.Models
         /// </summary>
         public bool IsHaveTimeConflicts()
         {
-            List<SchoolClass> schoolClasses = new();
+            List<SchoolClassModel> schoolClasseModels = new();
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                schoolClasseModels.AddRange(classGroupModel.NormalSchoolClassModels);
             }
-            for (int i = 0; i < schoolClasses.Count; ++i)
+            for (int i = 0; i < schoolClasseModels.Count; ++i)
             {
-                for (int k = i + 1; k < schoolClasses.Count; ++k)
+                for (int k = i + 1; k < schoolClasseModels.Count; ++k)
                 {
-                    Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
+                    Conflict conflict = new(schoolClasseModels[i], schoolClasseModels[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
@@ -132,10 +132,10 @@ namespace Cs4rsa.Models
 
         public bool IsHavePlaceConflicts()
         {
-            List<SchoolClass> schoolClasses = new();
+            List<SchoolClassModel> schoolClasses = new();
             foreach (ClassGroupModel classGroupModel in _classGroupModels)
             {
-                schoolClasses.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                schoolClasses.AddRange(classGroupModel.NormalSchoolClassModels);
             }
             for (int i = 0; i < schoolClasses.Count; ++i)
             {

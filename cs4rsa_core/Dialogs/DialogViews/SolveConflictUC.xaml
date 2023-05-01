@@ -2,16 +2,15 @@
   x:Class="Cs4rsa.Dialogs.DialogViews.SolveConflictUC"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:local="clr-namespace:Cs4rsa.Dialogs.DialogViews"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:vm="clr-namespace:Cs4rsa.Dialogs.Implements"
-  Padding="10"
-  d:DataContext="{d:DesignInstance Type=vm:SolveConflictViewModel}"
-  mc:Ignorable="d">
+  Padding="10">
   <StackPanel>
-    <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" TextAlignment="Left">
+    <TextBlock
+      Margin="0,0,0,16"
+      Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+      TextAlignment="Left">
       Giải quyết xung đột
     </TextBlock>
     <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
@@ -20,11 +19,12 @@
     </TextBlock>
     <TextBlock
       Grid.Row="1"
+      Margin="0,0,0,16"
       HorizontalAlignment="Center"
       Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-      <Run FontWeight="Bold" Text="{Binding FirstSC.ClassGroupName}" />
+      <Run FontWeight="Bold" Text="{Binding FirstSC.SchoolClass.ClassGroupName}" />
       <Run Text="hoặc" />
-      <Run FontWeight="Bold" Text="{Binding SecondSC.ClassGroupName}" />
+      <Run FontWeight="Bold" Text="{Binding SecondSC.SchoolClass.ClassGroupName}" />
       <Run Text="?" />
     </TextBlock>
     <Grid>
@@ -32,13 +32,12 @@
         <ColumnDefinition />
         <ColumnDefinition />
       </Grid.ColumnDefinitions>
-      <Border
+      <md:Card
         Grid.Column="0"
-        Margin="0,0,5,0"
+        Margin="0,0,8,0"
         Padding="5"
-        BorderBrush="Gray"
-        BorderThickness="1"
-        CornerRadius="4">
+        Style="{StaticResource MaterialDesignOutlinedCard}"
+        UniformCornerRadius="12">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -53,22 +52,21 @@
             CornerRadius="4" />
           <StackPanel Grid.Column="1">
             <TextBlock Text="{Binding FirstSC.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSC.ClassGroupName}" />
+            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSC.SchoolClass.ClassGroupName}" />
           </StackPanel>
           <Button
             Grid.Column="2"
             Command="{Binding RemoveCgFirstCmd}"
             Content="{md:PackIcon Kind=Close}"
-            Style="{StaticResource MaterialDesignToolButton}"
+            Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="Loại bỏ" />
         </Grid>
-      </Border>
-      <Border
+      </md:Card>
+      <md:Card
         Grid.Column="1"
         Padding="5"
-        BorderBrush="Gray"
-        BorderThickness="1"
-        CornerRadius="4">
+        Style="{StaticResource MaterialDesignOutlinedCard}"
+        UniformCornerRadius="12">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -83,16 +81,16 @@
             CornerRadius="4" />
           <StackPanel Grid.Column="1">
             <TextBlock Text="{Binding SecondSC.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSC.ClassGroupName}" />
+            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSC.SchoolClass.ClassGroupName}" />
           </StackPanel>
           <Button
             Grid.Column="2"
             Command="{Binding RemoveCgSecondCmd}"
             Content="{md:PackIcon Kind=Close}"
-            Style="{StaticResource MaterialDesignToolButton}"
+            Style="{StaticResource MaterialDesignIconButton}"
             ToolTip="Loại bỏ" />
         </Grid>
-      </Border>
+      </md:Card>
     </Grid>
   </StackPanel>
 </UserControl>

@@ -24,19 +24,7 @@ namespace Cs4rsa.Interfaces
         IEnumerable<TimeBlock> GetBlocks();
 
         /// <summary>
-        /// Mô tả:
-        ///      Implement phương thức này để xác định khối thời gian sẽ thuộc giai đoạn nào.
-        /// 
-        /// 
-        /// Trả về:
-        ///      Phase.First:
-        ///          Khối thời gian sẽ được vẽ trên bảng đầu tiên.
-        ///          
-        ///      Phase.Second:
-        ///          Khối thời gian sẽ được vẽ trên bảng thứ hai.
-        ///          
-        ///      Phase.All:
-        ///          Khối thời gian sẽ được vẽ trên cả hai bảng.
+        /// Implement phương thức này để xác định khối thời gian sẽ thuộc giai đoạn nào.
         /// </summary>
         /// <returns>
         /// <list type="bullet">

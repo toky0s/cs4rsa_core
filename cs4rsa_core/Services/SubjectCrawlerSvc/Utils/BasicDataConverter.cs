@@ -19,8 +19,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <returns></returns>
         public static Place ToPlace(string place)
         {
-            char[] splitChars = { VmConstants.CharSpace };
-            string[] slideds = place.Split(splitChars);
+            string[] slideds = place.Split(VmConstants.CharSpace);
             if (slideds.Contains("Quang"))
                 return Place.QUANGTRUNG;
             if (slideds.Contains("Nam"))

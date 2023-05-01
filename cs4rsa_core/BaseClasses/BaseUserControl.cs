@@ -17,16 +17,16 @@ namespace Cs4rsa.BaseClasses
     public abstract class BaseUserControl : UserControl
     {
         protected IMessenger Messenger { get; private set; }
-        protected IServiceProvider Container { get; }
+        protected IServiceProvider Container { get; private set; }
 
         protected BaseUserControl()
         {
-            Container = ((App)Application.Current).Container;
             Loaded += BaseUserControl_Loaded;
         }
 
-        private void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
+        protected void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            Container = ((App)Application.Current).Container;
             Messenger = ((App)Application.Current).Messenger;
         }
 

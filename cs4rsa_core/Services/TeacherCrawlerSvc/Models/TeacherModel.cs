@@ -7,18 +7,18 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Models
 {
     public class TeacherModel
     {
-        public int TeacherId { get; init; }
-        public string Name { get; init; }
-        public string Sex { get; init; }
-        public string Place { get; init; }
-        public string Degree { get; init; }
-        public string WorkUnit { get; init; }
-        public string Position { get; init; }
-        public string Subject { get; init; }
-        public string Form { get; init; }
+        public int TeacherId { get; }
+        public string Name { get; }
+        public string Sex { get; }
+        public string Place { get; }
+        public string Degree { get; }
+        public string WorkUnit { get; }
+        public string Position { get; }
+        public string Subject { get; }
+        public string Form { get; }
         public IEnumerable<string> TeachedSubjects { get; set; }
-        public string Path { get; init; }
-        public string Url { get; init; }
+        public string Path { get; }
+        public string Url { get; }
 
         public TeacherModel(Teacher teacher)
         {

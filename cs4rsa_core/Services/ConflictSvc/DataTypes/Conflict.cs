@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Services.ConflictSvc.Utils;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
     public class Conflict : BaseConflict
     {
-        public Conflict(SchoolClass schoolClass1, SchoolClass schoolClass2) : base(schoolClass1, schoolClass2)
+        public Conflict(SchoolClassModel schoolClass1, SchoolClassModel schoolClass2) : base(schoolClass1, schoolClass2)
         {
         }
 

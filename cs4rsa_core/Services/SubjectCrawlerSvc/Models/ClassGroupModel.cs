@@ -15,6 +15,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
     /// ClassGroupModel và ClassGroup:
     /// - ClassGroup là nơi cung cấp dữ liệu.
     /// - ClassGroupModel là nơi cung cấp các phương thức và dữ liệu tuỳ chỉnh dựa trên core đã có.
+    /// 
+    /// 31/03/2023 A Xin
+    /// - Thêm Color cho các thành phần phân cấp của ClassGroupModel
+    /// bao gồm SchoolClassModel và các thành phần khác.
     /// </summary>
     public class ClassGroupModel
     {
@@ -27,6 +31,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         {
             get { return _currentSchoolClassModels; }
         }
+
+        public IEnumerable<SchoolClassModel> NormalSchoolClassModels;
 
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
@@ -96,6 +102,8 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             Color = color;
             IsBelongSpecialSubject = isBelongSpecialSubject;
 
+            NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, Color));
+
             if (classGroup.SchoolClasses.Count > 0)
             {
                 _schedule = classGroup.GetSchedule();
@@ -111,13 +119,13 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 CompulsoryClass = GetCompulsoryClass();
                 IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
 
-                // Class Group thường với duy nhất một SchoolClass
+                // ClassGroup thường với duy nhất một SchoolClass
                 if (classGroup.SchoolClasses.Count == 1)
                 {
                     CodeSchoolClass = CompulsoryClass;
                     CurrentSchoolClassModels.Add(CompulsoryClass);
                 }
-                // Class Group thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
+                // ClassGroup thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
                 else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
                 {
                     SchoolClass schoolClass = classGroup.SchoolClasses
@@ -125,7 +133,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                         .FirstOrDefault();
                     if (schoolClass != null)
                     {
-                        CodeSchoolClass = new SchoolClassModel(schoolClass);
+                        CodeSchoolClass = new SchoolClassModel(schoolClass, color);
                         CurrentSchoolClassModels.Add(CompulsoryClass);
                         CurrentSchoolClassModels.Add(CodeSchoolClass);
                     }
@@ -158,11 +166,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public bool IsHaveSchedule()
         {
             return ClassGroup.GetSchedule().ScheduleTime.Count > 0;
-        }
-
-        public IEnumerable<SchoolClassModel> GetSchoolClassModels()
-        {
-            return ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc));
         }
 
         /**
@@ -220,7 +223,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             if (ClassGroup.SchoolClasses[0].SchoolClassName.Equals(ClassGroup.Name)
                 || ClassGroup.SchoolClasses.Count == 1)
             {
-                return new SchoolClassModel(ClassGroup.SchoolClasses[0]);
+                return new SchoolClassModel(ClassGroup.SchoolClasses[0], Color);
             }
 
             // Trường hợp có nhiều hơn 1 school class,
@@ -229,7 +232,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             {
                 if (schoolClass.RegisterCode == string.Empty)
                 {
-                    return new SchoolClassModel(schoolClass);
+                    return new SchoolClassModel(schoolClass, Color);
                 }
             }
 
@@ -254,7 +257,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         {
             _userSelectedSchoolClass = ClassGroup.SchoolClasses
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
-                .Select(schoolClass => new SchoolClassModel(schoolClass))
+                .Select(schoolClass => new SchoolClassModel(schoolClass, Color))
                 .FirstOrDefault();
 
             _currentSchoolClassModels.Clear();

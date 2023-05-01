@@ -1,16 +1,16 @@
-﻿using Cs4rsa.Interfaces;
+﻿using Cs4rsa.BaseClasses;
+using Cs4rsa.Interfaces;
+using Cs4rsa.Models;
 
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Cs4rsa.Controls
 {
-    public partial class ScheduleBlock : UserControl
+    public partial class ScheduleBlock: BaseUserControl
     {
-        public ScheduleBlock()
+        public ScheduleBlock(): base()
         {
             InitializeComponent();
         }
@@ -26,8 +26,10 @@ namespace Cs4rsa.Controls
                 "ScheduleTableItemType",
                 typeof(ScheduleTableItemType),
                 typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata(ScheduleTableItemType.SchoolClass, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
-            );
+                new FrameworkPropertyMetadata(
+                    ScheduleTableItemType.SchoolClass
+                  , FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+                );
 
         public string BlockName
         {
@@ -40,60 +42,42 @@ namespace Cs4rsa.Controls
                 "BlockName",
                 typeof(string),
                 typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata("Nội dung hiển thị", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+                new FrameworkPropertyMetadata(
+                    "Nội dung hiển thị"
+                  , FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
                 );
-        public string BlockColor
+
+        public Brush BlockColor
         {
-            get { return (string)GetValue(BlockColorProperty); }
+            get { return (Brush)GetValue(BlockColorProperty); }
             set { SetValue(BlockColorProperty, value); }
         }
 
         public static readonly DependencyProperty BlockColorProperty =
             DependencyProperty.Register(
                 "BlockColor",
-                typeof(string),
+                typeof(Brush),
                 typeof(ScheduleBlock),
-                new PropertyMetadata(OnBlockColorChanged));
+                new FrameworkPropertyMetadata());
 
-        private static void OnBlockColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public TimeBlock TimeBlock
         {
-            ScheduleBlock sender = (ScheduleBlock)d;
-            sender.OnBlockColorChanged(e);
+            get { return (TimeBlock)GetValue(TimeBlockProperty); }
+            set { SetValue(TimeBlockProperty, value); }
         }
 
-        private void OnBlockColorChanged(DependencyPropertyChangedEventArgs e)
+        // Using a DependencyProperty as the backing store for TimeBlock.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TimeBlockProperty =
+            DependencyProperty.Register(
+                "TimeBlock"
+                , typeof(TimeBlock)
+                , typeof(ScheduleBlock)
+                , new FrameworkPropertyMetadata(null)
+            );
+
+        private void SchoolClassBlock_Border_ToolTip__Loaded(object sender, RoutedEventArgs e)
         {
-            string strBrush = (string)e.NewValue;
-            BrushConverter brushConverter = new();
-            SolidColorBrush brushColor = (SolidColorBrush)brushConverter.ConvertFromString(strBrush);
-            Border_ScheduleBlock.Background = brushColor;
-        }
-
-        public string Description
-        {
-            get { return (string)GetValue(DescriptionProperty); }
-            set { SetValue(DescriptionProperty, value); }
-        }
-
-        public static readonly DependencyProperty DescriptionProperty =
-            DependencyProperty.Register(string.Empty +
-                "Description",
-                typeof(string),
-                typeof(ScheduleBlock),
-                new FrameworkPropertyMetadata("Mô tả buổi học", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
-                );
-
-        [Browsable(true)]
-        [Category("Action")]
-        [Description("Invoked when user clicks on SchoolClass Block")]
-        public event MouseButtonEventHandler ScheduleBlockClicked;
-
-        private void Border_ScheduleBlock_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                ScheduleBlockClicked?.Invoke(this, e);
-            }
+            
         }
     }
 }

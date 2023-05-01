@@ -2,6 +2,7 @@
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
@@ -136,30 +137,19 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 IEnumerable<StudyTime> studyTimes = Schedule.GetStudyTimesAtDay(dayOfWeek);
                 foreach (StudyTime studyTime in studyTimes)
                 {
-                    SchoolClassUnit schoolClassUnit = new()
-                    {
-                        ClassName = SchoolClassName,
-                        DayOfWeek = dayOfWeek,
-                        Start = studyTime.Start,
-                        End = studyTime.End,
-                        StudyWeek = StudyWeek,
-                        Teachers = Teachers,
-                        Room = DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room
-                    };
+                    SchoolClassUnit schoolClassUnit = new(
+                          this
+                        , dayOfWeek
+                        , studyTime.Start
+                        , studyTime.End
+                        , DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room
+                        , StudyWeek
+                        , Teachers
+                        , SchoolClassName
+                    );
                     yield return schoolClassUnit;
                 }
             }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || obj is not SchoolClass) return false;
-            return GetHashCode() == ((SchoolClass)obj).GetHashCode();
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(SubjectCode, ClassGroupName, SchoolClassName);
         }
     }
 }

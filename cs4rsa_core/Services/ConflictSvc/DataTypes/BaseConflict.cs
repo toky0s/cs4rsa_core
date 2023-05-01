@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 namespace Cs4rsa.Services.ConflictSvc.DataTypes
 {
@@ -7,13 +8,13 @@ namespace Cs4rsa.Services.ConflictSvc.DataTypes
     /// </summary>
     public abstract class BaseConflict
     {
-        protected SchoolClass _schoolClass1;
-        protected SchoolClass _schoolClass2;
+        protected SchoolClassModel _schoolClass1;
+        protected SchoolClassModel _schoolClass2;
 
-        public SchoolClass FirstSchoolClass => _schoolClass1;
-        public SchoolClass SecondSchoolClass => _schoolClass2;
+        public SchoolClassModel FirstSchoolClass => _schoolClass1;
+        public SchoolClassModel SecondSchoolClass => _schoolClass2;
 
-        public BaseConflict(SchoolClass schoolClass1, SchoolClass schoolClass2)
+        public BaseConflict(SchoolClassModel schoolClass1, SchoolClassModel schoolClass2)
         {
             _schoolClass1 = schoolClass1;
             _schoolClass2 = schoolClass2;
