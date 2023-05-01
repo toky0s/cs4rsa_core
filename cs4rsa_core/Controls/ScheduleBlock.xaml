@@ -4,7 +4,6 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:models="clr-namespace:Cs4rsa.Models"
   xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
-  xmlns:controls="clr-namespace:Cs4rsa.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,9 +13,98 @@
       d:DataContext="{d:DesignInstance Type=models:SchoolClassBlock}"
       x:Key="SchoolClassBlock_ToolTip" 
       Style="{StaticResource ToolTip_TimeBlock}">
-      <Border>
+      <Border Width="400">
         <Grid>
-          <TextBlock Text="{Binding Start}"></TextBlock>
+          <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+          </Grid.RowDefinitions>
+          <Border 
+            Background="#ecf0f1" 
+            Padding="20">
+            <StackPanel>
+              <TextBlock 
+                Margin="0 0 0 20"
+                Grid.Row="0" 
+                Text="{Binding Phase, Converter={StaticResource PhaseCvt}}">
+              </TextBlock>
+              <TextBlock
+                Grid.Row="1" 
+                TextWrapping="WrapWithOverflow"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                <TextBlock.Text>
+                  <MultiBinding StringFormat="{}{0}:  {1}">
+                    <Binding Path="SchoolClassUnit.ClassName" />
+                    <Binding Path="SchoolClassUnit.SchoolClass.SubjectName" />
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock 
+                Grid.Row="2" 
+                Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                <TextBlock.Text>
+                  <MultiBinding StringFormat="{}{0} {1:HH:mm} đến {2:HH:mm} ">
+                    <Binding Path="DayOfWeek" Converter="{StaticResource DayCvt}"/>
+                    <Binding Path="Start"/>
+                    <Binding Path="End"/>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+            </StackPanel>
+          </Border>
+
+          <Border Padding="20" Grid.Row="3">
+            <StackPanel>
+              <Grid 
+                Grid.Row="3"
+                Margin="0 0 0 7">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <md:PackIcon 
+                  Margin="0 0 5 0"
+                  Kind="LocationOutline"
+                  Grid.Column="0"/>
+                <TextBlock Grid.Column="1">
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Nơi học {0}, phòng {1}">
+                      <Binding Path="SchoolClassUnit.Room.Place" 
+                           Converter="{StaticResource PlaceCvt}"/>
+                      <Binding Path="SchoolClassUnit.Room.Name" />
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+              </Grid>
+
+              <Separator Grid.Row="4" Height="0.5"/>
+
+              <Grid 
+                Grid.Row="5" 
+                Margin="0 7 0 0">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <md:PackIcon 
+                  Margin="0 0 5 0"
+                  Kind="PeopleOutline"
+                  Grid.Column="0"/>
+                <TextBlock 
+                  Grid.Column="1" 
+                  Text="{Binding 
+                    SchoolClassUnit.Teachers
+                  , Converter={StaticResource TeacherCvt}
+                  , ConverterParameter=Không thể xác định}">
+                </TextBlock>
+              </Grid>
+            </StackPanel>
+          </Border>
         </Grid>
       </Border>
     </ToolTip>
@@ -24,56 +112,33 @@
   <Border
     x:Name="Border_ScheduleBlock"
     Padding="2"
-    Background="{Binding Path=BlockColor, RelativeSource={RelativeSource AncestorType=base:BaseUserControl, Mode=FindAncestor}}"
-    CornerRadius="6"
-    Cursor="Hand">
+    Background="{Binding 
+      Path=BlockColor
+    , RelativeSource={RelativeSource 
+        AncestorType=base:BaseUserControl
+      , Mode=FindAncestor}}"
+    CornerRadius="6">
     <Border.Style>
       <Style TargetType="{x:Type Border}">
         <Style.Triggers>
+          <!--School Class Block-->
           <DataTrigger Binding="{Binding 
             Path=DataContext.Name, 
             RelativeSource={RelativeSource 
               AncestorType=base:BaseUserControl
             , Mode=FindAncestor}}" 
             Value="SchoolClassBlock">
-            <Setter Property="ToolTip" Value="{StaticResource SchoolClassBlock_ToolTip}"/>
-          </DataTrigger>
-
-          <DataTrigger Binding="{Binding 
-            Path=DataContext.Name, 
-            RelativeSource={RelativeSource 
-              AncestorType=base:BaseUserControl
-            , Mode=FindAncestor}}"
-            Value="CfBlock">
-            <Setter Property="ToolTip">
-              <Setter.Value>
-                <ToolTip Style="{StaticResource ToolTip_TimeBlock}">
-                  <TextBlock Text="Cf Xin" />
-                </ToolTip>
-              </Setter.Value>
-            </Setter>
-          </DataTrigger>
-
-          <DataTrigger Binding="{Binding 
-            Path=DataContext.Name, 
-            RelativeSource={RelativeSource 
-              AncestorType=base:BaseUserControl
-            , Mode=FindAncestor}}"
-            Value="PlaceCfBlock">
-            <Setter Property="ToolTip">
-              <Setter.Value>
-                <ToolTip Style="{StaticResource ToolTip_TimeBlock}">
-                  <TextBlock Text="Place Cf Xin" />
-                </ToolTip>
-              </Setter.Value>
-            </Setter>
+            <Setter Property="ToolTip" 
+                    Value="{StaticResource SchoolClassBlock_ToolTip}"/>
           </DataTrigger>
         </Style.Triggers>
       </Style>
     </Border.Style>
     <TextBlock
       FontSize="10"
-      Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
+      Text="{Binding 
+        BlockName, 
+        RelativeSource={RelativeSource AncestorType=UserControl}}"
       TextWrapping="Wrap" />
   </Border>
 </base:BaseUserControl>

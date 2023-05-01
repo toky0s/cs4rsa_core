@@ -15,15 +15,19 @@
     <Compile Remove="DataTypes\**" />
     <Compile Remove="Models\Interfaces\**" />
     <Compile Remove="Releases\**" />
+    <Compile Remove="Views\ManualScheduling\BlockViews\**" />
     <EmbeddedResource Remove="DataTypes\**" />
     <EmbeddedResource Remove="Models\Interfaces\**" />
     <EmbeddedResource Remove="Releases\**" />
+    <EmbeddedResource Remove="Views\ManualScheduling\BlockViews\**" />
     <None Remove="DataTypes\**" />
     <None Remove="Models\Interfaces\**" />
     <None Remove="Releases\**" />
+    <None Remove="Views\ManualScheduling\BlockViews\**" />
     <Page Remove="DataTypes\**" />
     <Page Remove="Models\Interfaces\**" />
     <Page Remove="Releases\**" />
+    <Page Remove="Views\ManualScheduling\BlockViews\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -113,9 +117,5 @@
 
   <ItemGroup>
     <SplashScreen Include="AppResources\SplashScreen.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\ManualScheduling\BlockViews\" />
   </ItemGroup>
 </Project>

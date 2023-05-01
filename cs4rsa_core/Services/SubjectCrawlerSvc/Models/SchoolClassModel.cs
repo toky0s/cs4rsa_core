@@ -68,9 +68,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                       item
                     , GetId()
                     , Color
-                    , SchoolClassName
+                    , content: SchoolClassName
                     , item.DayOfWeek
                     , ScheduleTableItemType.SchoolClass
+                    , Phase
                 );
 
                 yield return timeBlock;

@@ -35,7 +35,7 @@ namespace Cs4rsa.Constants
             IconKind = iconKind;
             IconKindOnSelected = iconKindOnSelected;
             Screen = screen;
-            _vm = vm;
+            Vm = vm;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Cs4rsa.Constants
         public PackIconKind IconKind { get; }
         public PackIconKind IconKindOnSelected { get; }
         public ScreenAbstract Screen { get; }
-        private readonly string _vm;
+        public string Vm { get; }
 
         /// <summary>
         /// Khi một màn hình kế thừa từ <see cref="ScreenAbstract"/>
@@ -74,8 +74,8 @@ namespace Cs4rsa.Constants
         /// </summary>
         public void LoadSelfData()
         {
-            if (_vm == null) return;
-            Type viewModelType = Type.GetType(_vm);
+            if (Vm == null) return;
+            Type viewModelType = Type.GetType(Vm);
             object viewModel = ActivatorUtilities.GetServiceOrCreateInstance(((App)Application.Current).Container, viewModelType);
             if (viewModel is IScreenViewModel)
             {

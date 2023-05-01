@@ -7,9 +7,7 @@
   xmlns:local="clr-namespace:Cs4rsa.Views.Profile"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:profile="clr-namespace:Cs4rsa.ViewModels.Profile"
-  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   d:DataContext="{d:DesignInstance Type=profile:ProfileViewModel}"
-  vml:ViewModelLocator.AutoHookedUpViewModel="True"
   Loaded="ScreenAbstract_Loaded"
   mc:Ignorable="d">
   <TabControl

@@ -32,7 +32,7 @@
       <Border
         Grid.Row="0"
         Grid.Column="1"
-        Padding="0,0,0,10"
+        Padding="0,0,0,5"
         BorderBrush="{StaticResource Grey300}"
         BorderThickness="0,0,0,0">
         <Grid>
@@ -118,7 +118,7 @@
                     Text="{Binding}" />
                   <Separator
                     Grid.Column="1"
-                    Height="1"
+                    Height="0.5"
                     Background="{StaticResource Grey300}"
                     SnapsToDevicePixels="True" />
                 </Grid>
@@ -129,7 +129,7 @@
           <Border
             Grid.Column="1"
             BorderBrush="{StaticResource Grey300}"
-            BorderThickness="1"
+            BorderThickness="0.5"
             CornerRadius="12">
             <Border.Clip>
               <MultiBinding Converter="{StaticResource BorderClipConverter}">
@@ -141,7 +141,9 @@
               </MultiBinding>
             </Border.Clip>
 
-            <ItemsControl ItemsSource="{Binding Path=Week, RelativeSource={RelativeSource AncestorType=base:BaseUserControl, Mode=FindAncestor}}">
+            <ItemsControl ItemsSource="{Binding 
+                Path=Week, 
+                RelativeSource={RelativeSource AncestorType=base:BaseUserControl, Mode=FindAncestor}}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                   <local:WeekPanel />

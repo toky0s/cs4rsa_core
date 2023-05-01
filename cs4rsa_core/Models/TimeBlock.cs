@@ -1,5 +1,5 @@
 ﻿using Cs4rsa.Interfaces;
-
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using System;
 
 namespace Cs4rsa.Models
