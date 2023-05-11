@@ -451,18 +451,17 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 string json = await File.ReadAllTextAsync(programPath);
                 ProgramFolder[] programFolders = JsonConvert.DeserializeObject<ProgramFolder[]>(json);
 
-                List<Task<ProgramFolderModel>> tasks = new();
+                List<ProgramFolderModel> pfms = new();
                 foreach (ProgramFolder programFolder in programFolders)
                 {
-                    Task<ProgramFolderModel> pfmTask = ProgramFolderModel.CreateAsync(
+                    ProgramFolderModel pfmTask = ProgramFolderModel.Create(
                         programFolder,
                         _colorGenerator,
                         _unitOfWork
                     );
-                    tasks.Add(pfmTask);
+                    pfms.Add(pfmTask);
                 }
-                ProgramFolderModel[] pfms = await Task.WhenAll(tasks);
-
+                
                 foreach (ProgramFolderModel pfm in pfms)
                 {
                     ProgramFolderModels.Add(pfm);
@@ -520,7 +519,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 else
                 {
                     /// TODO: xem xét trường hợp môn học chưa bắt đầu
-                    SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                    SubjectModel sm = SubjectModel.Create(subject, _colorGenerator);
                     SubjectModels.Add(sm);
                     psm.AddCgms(sm.ClassGroupModels);
                     if (IsUseFilter)

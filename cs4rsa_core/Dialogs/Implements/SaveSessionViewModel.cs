@@ -66,7 +66,7 @@ namespace Cs4rsa.Dialogs.Implements
         // 
         private async Task Save()
         {
-            List<ScheduleDetail> sessionDetails = (await _shareString.ConvertToUserSubjects(ClassGroupModels))
+            List<ScheduleDetail> sessionDetails = _shareString.ConvertToUserSubjects(ClassGroupModels)
                                                     .Select(us => new ScheduleDetail()
                                                     {
                                                         SubjectCode = us.SubjectCode,

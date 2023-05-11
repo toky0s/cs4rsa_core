@@ -7,7 +7,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IKeywordRepository : IGenericRepository<Keyword>
     {
-        Task<Keyword> GetKeyword(string discipline, string keyword1);
+        Keyword GetKeyword(string discipline, string keyword1);
 
         /// <summary>
         /// Get Keyword bằng Course ID
@@ -20,16 +20,16 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// </summary>
         /// <param name="subjectCode">Mã môn</param>
         /// <returns></returns>
-        Task<Keyword> GetKeyword(string subjectCode);
+        Keyword GetKeyword(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
-        Task<string> GetColorAsync(int courseId);
+        string GetColor(int courseId);
         /// <summary>
         /// Lấy ra Color dựa theo mã môn.
         /// </summary>
         /// <param name="subjectCode">Mã môn</param>
         /// <returns>Color</returns>
         string GetColorBySubjectCode(string subjectCode);
-        Task<int> CountAsync(string discipline, string keyword);
+        long Count(string discipline, string keyword1);
 
         /// <summary>
         /// Tìm tất cả các Keyword phù hợp với điều kiện.
@@ -60,6 +60,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// <remarks>Sử dụng RawSql, không Early Load Discipline.</remarks>
         /// <param name="disciplineId">Discipline ID</param>
         /// <returns>Danh sách các Keyword.</returns>
-        List<Keyword> GetKeywordsByDisciplineId(int disciplineId);
+        IEnumerable<Keyword> GetKeywordsByDisciplineId(int disciplineId);
     }
 }

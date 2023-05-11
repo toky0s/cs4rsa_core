@@ -8,6 +8,7 @@ namespace Cs4rsa.Views.ManualScheduling
         public MainScheduling()
         {
             InitializeComponent();
+            RegisterComponent(CpnSearch);
         }
     }
 }

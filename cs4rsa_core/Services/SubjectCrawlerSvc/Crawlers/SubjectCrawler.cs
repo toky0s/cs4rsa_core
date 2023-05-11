@@ -45,7 +45,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
         public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache, bool withTeacher)
         {
-            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+            Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
             {
                 HtmlDocument htmlDocument = new();

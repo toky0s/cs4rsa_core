@@ -35,7 +35,7 @@ namespace Cs4rsa.ViewModels.Database
         public void LoadPlanJsonFile()
         {
             MajorSubjectModels.Clear();
-            List<Curriculum> curriculums = _unitOfWork.Curriculums.GetAllCurr();
+            IEnumerable<Curriculum> curriculums = _unitOfWork.Curriculums.GetAllCurr();
             foreach (Curriculum curr in curriculums)
             {
                 MajorSubjectModel mj = new()

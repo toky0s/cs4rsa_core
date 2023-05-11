@@ -13,15 +13,14 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
         }
 
-        List<Curriculum> ICurriculumRepository.GetAllCurr()
+        IEnumerable<Curriculum> ICurriculumRepository.GetAllCurr()
         {
             return _rawSql.ExecReader(
                 "SELECT * FROM Curriculums"
                 , null
                 , record => new Curriculum()
                 {
-                    CurriculumId = record.GetInt32(0)
-                    ,
+                    CurriculumId = record.GetInt32(0),
                     Name = record.IsDBNull(1)
                             ? "Chưa thể xác định"
                             : record.GetString(1)
@@ -38,7 +37,8 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             long result = _rawSql.ExecScalar(
                 "SELECT COUNT(*) FROM DbProgramSubjects WHERE CurriculumId = @CurriculumId"
                 , param
-                , 0L);
+                , 0L
+                , true);
             return Convert.ToInt32(result);
         }
 

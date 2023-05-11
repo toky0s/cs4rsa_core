@@ -19,29 +19,73 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         {
         }
 
-        public async Task<string> GetColorAsync(int courseId)
+        public string GetColor(int courseId)
         {
-            Keyword keyword = await _context.Keywords.FirstOrDefaultAsync(keyword => keyword.CourseId == courseId);
-            return keyword != null ? keyword.Color : string.Empty;
+            return _rawSql.ExecScalar(
+                "SELECT Color FROM Keywords WHERE CourseId = @CourseID"
+                , new Dictionary<string, object>()
+                {
+                    { "@CourseID", courseId }
+                }
+                , string.Empty
+            );
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
         {
-            Keyword keyword = (from discipline in _context.Disciplines
-                               join kw in _context.Keywords on discipline.DisciplineId equals kw.DisciplineId
-                               where discipline.Name + VmConstants.StrSpace + kw.Keyword1 == subjectCode
-                               select kw).FirstOrDefault();
-            return keyword.Color;
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT Color");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("   , Keywords AS kw");
+            sb.AppendLine("WHERE ds.Name || ' ' || kw.Keyword1 = @subjectCode");
+            sb.AppendLine("AND ds.DisciplineId = kw.DisciplineId");
+            return _rawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    { "@subjectCode", subjectCode }
+                }
+                , string.Empty
+            );
         }
 
-        public async Task<Keyword> GetKeyword(string discipline, string keyword1)
+        public Keyword GetKeyword(string discipline, string keyword1)
         {
-            IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from ds in _context.Disciplines
-                                                                      from kw in _context.Keywords
-                                                                      where ds.Name == discipline && kw.Keyword1 == keyword1
-                                                                      && ds.DisciplineId == kw.DisciplineId
-                                                                      select kw;
-            return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  kw.KeywordId");
+            sb.AppendLine(", kw.Keyword1");
+            sb.AppendLine(", kw.CourseId");
+            sb.AppendLine(", kw.SubjectName");
+            sb.AppendLine(", kw.Color");
+            sb.AppendLine(", kw.Cache");
+            sb.AppendLine(", kw.DisciplineId");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return _rawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString(),
+                new Dictionary<string, object>()
+                {
+                    { "@discipline",  discipline },
+                    { "@keyword1", keyword1 } 
+                },
+                record =>
+                {
+                    return new Keyword()
+                    {
+                        KeywordId = record.GetInt32(0),
+                        Keyword1 = record.GetString(1),
+                        CourseId = record.GetInt32(2),
+                        SubjectName = record.GetString(3),
+                        Color = record.GetString(4),
+                        Cache = record.IsDBNull(5) ? null : record.GetString(5),
+                        DisciplineId = record.GetInt32(6)
+                    };
+                }
+            );
         }
 
         public async Task<Keyword> GetKeyword(int courseId)
@@ -52,21 +96,31 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
         }
 
-        public async Task<Keyword> GetKeyword(string subjectCode)
+        public Keyword GetKeyword(string subjectCode)
         {
             char[] splitChars = { VmConstants.CharSpace };
             string[] slices = subjectCode.Split(splitChars);
-            return await GetKeyword(slices[0], slices[1]);
+            return GetKeyword(slices[0], slices[1]);
         }
 
-        public async Task<int> CountAsync(string discipline, string keyword)
+        public long Count(string discipline, string keyword1)
         {
-            var query = from d in _context.Disciplines
-                        join k in _context.Keywords
-                        on d.DisciplineId equals k.DisciplineId
-                        where d.Name == discipline && k.Keyword1 == keyword
-                        select k;
-            return await query.CountAsync();
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT COUNT(*)");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return _rawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    {"@discipline", discipline },
+                    {"@keyword1", keyword1 }
+                }
+                , 0L
+            );
         }
 
         public async Task<bool> ExistBySubjectCodeAsync(string subjectCode)
@@ -129,7 +183,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     Discipline = ds
                 };
                 return kw;
-            });
+            }).ToList();
         }
 
         public string GetCache(string courseId)
@@ -157,7 +211,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             return _rawSql.ExecScalar(sb.ToString(), param, string.Empty);
         }
 
-        public List<Keyword> GetKeywordsByDisciplineId(int disciplineId)
+        public IEnumerable<Keyword> GetKeywordsByDisciplineId(int disciplineId)
         {
             StringBuilder sb = new();
             sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache");

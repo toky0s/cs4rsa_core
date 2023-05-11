@@ -107,7 +107,7 @@ namespace Cs4rsa.Models
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly ColorGenerator _colorGenerator;
-        private ProgramSubjectModel(
+        public ProgramSubjectModel(
             ProgramSubject programSubject,
             ColorGenerator colorGenerator,
             IUnitOfWork unitOfWork
@@ -130,34 +130,21 @@ namespace Cs4rsa.Models
             IsDownloaded = false;
             IsChoosed = false;
             IsStarted = false;
+
+            Color = _colorGenerator.GetColor(int.Parse(ProgramSubject.CourseId));
+            IsAvaiableInThisSemester();
         }
 
         /// <summary>
         /// Kiểm tra xem ProgramSubjectModel này có sẵn trong học kỳ này hay không.
         /// </summary>
-        private async Task IsAvaiableInThisSemester()
+        private void IsAvaiableInThisSemester()
         {
             string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VmConstants.CharSpace });
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
-            int count = await _unitOfWork.Keywords.CountAsync(discipline, keyword1);
+            long count = _unitOfWork.Keywords.Count(discipline, keyword1);
             IsAvaiable = count > 0;
-        }
-
-        private async Task<ProgramSubjectModel> InitializeAsync()
-        {
-            Color = await _colorGenerator.GetColorAsync(int.Parse(ProgramSubject.CourseId));
-            await IsAvaiableInThisSemester();
-            return this;
-        }
-
-        public static Task<ProgramSubjectModel> CreateAsync(
-            ProgramSubject programSubject,
-            ColorGenerator colorGenerator,
-            IUnitOfWork unitOfWork)
-        {
-            ProgramSubjectModel ret = new(programSubject, colorGenerator, unitOfWork);
-            return ret.InitializeAsync();
         }
 
         /// <summary>

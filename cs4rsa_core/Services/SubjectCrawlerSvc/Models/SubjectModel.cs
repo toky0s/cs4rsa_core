@@ -107,7 +107,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             }
         }
 
-        public static Task<SubjectModel> CreateAsync(Subject subject, ColorGenerator colorGenerator)
+        public static SubjectModel Create(Subject subject, ColorGenerator colorGenerator)
         {
             SubjectModel subjectModel = new(subject, colorGenerator);
             return subjectModel.InitializeAsync();
@@ -178,9 +178,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             );
         }
 
-        private async Task<SubjectModel> InitializeAsync()
+        private SubjectModel InitializeAsync()
         {
-            Color = await _colorGenerator.GetColorAsync(Subject.CourseId);
+            Color = _colorGenerator.GetColor(Subject.CourseId);
             IsSpecialSubject = Subject.IsSpecialSubject();
             ClassGroupModels = Subject.ClassGroups
                 .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))

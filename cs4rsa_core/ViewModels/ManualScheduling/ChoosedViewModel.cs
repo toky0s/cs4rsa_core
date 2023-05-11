@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
@@ -59,7 +58,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #endregion
 
         #region Commands
-        public AsyncRelayCommand OpenShareStringWindowCommand { get; set; }
+        public RelayCommand OpenShareStringWindowCommand { get; set; }
         public RelayCommand SaveCommand { get; set; }
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
@@ -153,7 +152,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
-            OpenShareStringWindowCommand = new AsyncRelayCommand(OnOpenShareStringWindow);
+            OpenShareStringWindowCommand = new(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new();
             ConflictModels = new();
@@ -254,11 +253,11 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             OpenDialog(saveSessionUC);
         }
 
-        private async Task OnOpenShareStringWindow()
+        private void OnOpenShareStringWindow()
         {
             ShareStringUC shareStringUC = new();
             ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
-            await UpdateShareString();
+            UpdateShareString();
             vm.ShareString = _shareString;
             OpenDialog(shareStringUC);
         }
@@ -361,9 +360,9 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteAllCommand.NotifyCanExecuteChanged();
         }
 
-        private async Task UpdateShareString()
+        private void UpdateShareString()
         {
-            _shareString = await _shareStringGenerator.GetShareString(ClassGroupModels);
+            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
         }
 
         private void UpdateConflicts()

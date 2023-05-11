@@ -18,7 +18,7 @@ namespace Cs4rsa.Views.Database
             InitializeComponent();
         }
 
-        private void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
+        private void MajorSubject_Loaded(object sender, RoutedEventArgs e)
         {
             viewModel = (MajorSubjectViewModel)DataContext;
             viewModel.LoadPlanJsonFile();

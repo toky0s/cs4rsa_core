@@ -70,7 +70,10 @@ namespace Cs4rsa.Dialogs.Implements
             _isAvailableSession = -1;
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, () => _selectedScheduleSession != null);
-            ImportCommand = new RelayCommand(OnImport, () => UserSubjects.Any());
+            ImportCommand = new RelayCommand(
+                OnImport, 
+                () => UserSubjects.Any() && IsAvailableSession == 1
+            );
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 

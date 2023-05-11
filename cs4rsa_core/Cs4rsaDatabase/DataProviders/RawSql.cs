@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,9 +24,14 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
             if (_connection.State.Equals(ConnectionState.Closed)) _connection.Open();
         }
 
-        private void CloseConnection()
+        private void CloseConnection(bool isNestedOrIEnumerable = false)
         {
-            if (_connection.State.Equals(ConnectionState.Open)) _connection.Close();
+            Debug.WriteLineIf(isNestedOrIEnumerable, "CloseConnection: Fail because it is in nested query");
+            Debug.WriteLineIf(!isNestedOrIEnumerable, "CloseConnection: Success");
+            if (_connection.State.Equals(ConnectionState.Open) && !isNestedOrIEnumerable)
+            {
+                _connection.Close();
+            }
         }
 
         /// <summary>
@@ -38,23 +44,46 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
           , IDictionary<string, object> sqlParams
           , T defaultValueIfNull)
         {
+            return ExecScalar(sql, sqlParams, defaultValueIfNull, false);
+        }
+
+        /// <summary>
+        /// Thực thi SQL Scalar.
+        /// </summary>
+        /// <typeparam name="T">Kiểu dữ liệu trả về.</typeparam>
+        /// <param name="sql">Câu lệnh SQL.</param>
+        public T ExecScalar<T>(
+            string sql
+          , IDictionary<string, object> sqlParams
+          , T defaultValueIfNull
+          , bool isNestedOrIEnumerable)
+        {
             Debug.Assert(sql != null);
             Debug.Assert(_connection != null);
             Debug.WriteLine(sql);
-            SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteCommand cmd = _connection.CreateCommand();
             cmd.CommandText = sql;
-            AddParams(ref cmd, sqlParams);
+            AddParams(cmd, sqlParams);
 
             OpenConnection();
             object result = cmd.ExecuteScalar();
-            CloseConnection();
+            CloseConnection(isNestedOrIEnumerable);
 
-            cmd.Dispose();
-            if (result != null)
-            {
-                return (T)result;
-            }
-            return defaultValueIfNull;
+            if (result == null) return defaultValueIfNull;
+            return (T)result;
+        }
+
+        public T ExecReaderGetFirstOrDefault<T>(
+            string sql
+          , IDictionary<string, object> sqlParams
+          , Func<SQLiteDataReader, T> record)
+        {
+            var result = ExecReader(
+                sql
+              , sqlParams
+              , record).ToList();
+            if (result.Count > 0) return result[0];
+            return default;
         }
 
         /// <summary>
@@ -67,31 +96,62 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// <param name="sql">Câu lệnh SQL.</param>
         /// <param name="record">Phương thức tiền xử lý kết quả từ <see cref="IDataRecord"></see></param>
         /// <returns><typeparamref name="T"/></returns>
-        public List<T> ExecReader<T>(
+        public IEnumerable<T> ExecReader<T>(
             string sql
           , IDictionary<string, object> sqlParams
           , Func<SQLiteDataReader, T> record)
+        {
+            try
+            {
+                return ExecReader(sql, sqlParams, record, false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("May be you are performing a nested query operation.");
+                Debug.WriteLine("In this case, you can use another ExecReader overload with isNestedOrInIEnumerable param is True");
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Thực thi truy vấn SQL.
+        /// </summary>
+        /// <remarks>
+        /// Không thực hiện các <see cref="ExecReader"/> lồng.
+        /// </remarks>
+        /// <typeparam name="T">Kết quả mong muốn mà phương thức xử lý sẽ trả về.</typeparam>
+        /// <param name="sql">Câu lệnh SQL.</param>
+        /// <param name="record">Phương thức tiền xử lý kết quả từ <see cref="IDataRecord"></see></param>
+        /// <param name="isNestedOrInIEnumerable">
+        /// Các truy vấn có cấu trúc lồng nhau như trong Foreach,
+        /// hoặc kết quả được trả về dưới dạng IEnumerable.
+        /// </param>
+        /// <returns><typeparamref name="T"/></returns>
+        public IEnumerable<T> ExecReader<T>(
+            string sql
+          , IDictionary<string, object> sqlParams
+          , Func<SQLiteDataReader, T> record
+          , bool isNestedOrInIEnumerable)
         {
             Debug.Assert(record != null);
             Debug.Assert(sql != null);
             Debug.WriteLine(BeautifyParams(sqlParams));
             Debug.WriteLine(sql);
 
-            SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteCommand cmd = _connection.CreateCommand();
             cmd.CommandText = sql;
-            AddParams(ref cmd, sqlParams);
+            AddParams(cmd, sqlParams);
             OpenConnection();
-            List<T> result = new();
-            SQLiteDataReader reader = cmd.ExecuteReader();
-
+            using SQLiteDataReader reader = cmd.ExecuteReader();
             while (reader.HasRows)
+            {
                 while (reader.Read())
-                    result.Add(record(reader));
-
-            cmd.Dispose();
-            reader.Close();
-            CloseConnection();
-            return result;
+                {
+                    yield return record(reader);
+                }
+            }
+            CloseConnection(isNestedOrInIEnumerable);
         }
 
         /// <summary>
@@ -104,15 +164,13 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         {
             Debug.WriteLine(BeautifyParams(sqlParams));
             Debug.WriteLine(sql);
-            SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteCommand cmd = _connection.CreateCommand();
             cmd.CommandText = sql;
-            AddParams(ref cmd, sqlParams);
+            AddParams(cmd, sqlParams);
 
             if (_connection.State.Equals(ConnectionState.Closed)) _connection.Open();
             int result = cmd.ExecuteNonQuery(CommandBehavior.SingleResult);
             if (_connection.State.Equals(ConnectionState.Open)) _connection.Close();
-
-            cmd.Dispose();
             return result;
         }
 
@@ -145,7 +203,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
             return sb.ToString();
         }
 
-        private static void AddParams(ref SQLiteCommand cmd, IDictionary<string, object> sqlParams)
+        private static void AddParams(SQLiteCommand cmd, IDictionary<string, object> sqlParams)
         {
             if (sqlParams != null)
             {

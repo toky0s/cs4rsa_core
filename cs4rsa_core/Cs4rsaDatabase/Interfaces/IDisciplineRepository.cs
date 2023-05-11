@@ -7,7 +7,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
     public interface IDisciplineRepository : IGenericRepository<Discipline>
     {
-        Task<List<Discipline>> GetAllIncludeKeywordAsync();
+        IEnumerable<Discipline> GetAllIncludeKeyword();
         /// <summary>
         /// Lấy ra tất cả Discipline.
         /// </summary>
@@ -15,6 +15,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Interfaces
         /// RawlSql và Không Early Load Keywords.
         /// </remarks>
         /// <returns>Danh sách Discipline</returns>
-        List<Discipline> GetAllDiscipline();
+        IEnumerable<Discipline> GetAllDiscipline();
+        Discipline GetDisciplineByID(int id);
     }
 }

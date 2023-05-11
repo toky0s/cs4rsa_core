@@ -53,7 +53,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     Color = record.IsDBNull(4) ? null : record.GetString(4),
                     Cache = record.IsDBNull(5) ? null : record.GetString(5),
                 }
-            );
+            ).ToList();
         }
 
         public IEnumerable<string> GetParByCourseId(string courseId)

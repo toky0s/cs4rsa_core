@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Utils
 {
@@ -27,9 +26,9 @@ namespace Cs4rsa.Utils
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<string> GetColorAsync(int courseId)
+        public string GetColor(int courseId)
         {
-            return await _unitOfWork.Keywords.GetColorAsync(courseId);
+            return _unitOfWork.Keywords.GetColor(courseId);
         }
 
         public string GetColorWithSubjectCode(string subjectCode)

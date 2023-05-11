@@ -26,14 +26,14 @@ namespace Cs4rsa.Utils
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<string> GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
+        public string GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
             if (!classGroupModels.Any())
             {
                 return string.Empty;
             }
 
-            IEnumerable<UserSubject> userSubjects = await ConvertToUserSubjects(classGroupModels);
+            IEnumerable<UserSubject> userSubjects = ConvertToUserSubjects(classGroupModels);
             string json = JsonConvert.SerializeObject(userSubjects);
             return StringHelper.EncodeTo64(json);
         }
@@ -51,7 +51,7 @@ namespace Cs4rsa.Utils
             }
         }
 
-        public async Task<IEnumerable<UserSubject>> ConvertToUserSubjects(IEnumerable<ClassGroupModel> classGroupModels)
+        public IEnumerable<UserSubject> ConvertToUserSubjects(IEnumerable<ClassGroupModel> classGroupModels)
         {
             List<UserSubject> userSubjects = new();
             foreach (ClassGroupModel classGroupModel in classGroupModels)
@@ -78,7 +78,7 @@ namespace Cs4rsa.Utils
                 UserSubject userSubject = new()
                 {
                     SubjectCode = classGroupModel.SubjectCode,
-                    SubjectName = (await _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode)).SubjectName,
+                    SubjectName = _unitOfWork.Keywords.GetKeyword(classGroupModel.SubjectCode).SubjectName,
                     ClassGroup = classGroupModel.ClassGroup.Name,
                     SchoolClass = selectedSchoolClassName,
                     RegisterCode = registerCode

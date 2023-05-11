@@ -4,13 +4,14 @@ using Cs4rsa.ViewModels.ManualScheduling;
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Cs4rsa.Views.ManualScheduling
 {
-    public partial class Search : BaseUserControl
+    public partial class Search : BaseUserControl, IComponent
     {
         private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space };
         private SearchViewModel Vm;
@@ -88,9 +89,10 @@ namespace Cs4rsa.Views.ManualScheduling
             Vm.DetailCommand.Execute(subjectModel);
         }
 
-        private void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
+        public Task LoadData()
         {
             Vm = (SearchViewModel)DataContext;
+            return Task.FromResult<object>(null);
         }
     }
 }
