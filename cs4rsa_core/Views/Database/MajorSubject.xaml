@@ -5,17 +5,20 @@
   xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:database="clr-namespace:Cs4rsa.ViewModels.Database"
-  xmlns:local="clr-namespace:Cs4rsa.Views.Database"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
   Padding="10"
   d:DataContext="{d:DesignInstance Type=database:MajorSubjectViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
-  Loaded="BaseUserControl_Loaded"
+  Loaded="MajorSubject_Loaded"
   mc:Ignorable="d">
   <Grid>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding MajorSubjectModels.Count, Converter={StaticResource NotZeroToVisibilityConverter}}">
+    <ScrollViewer 
+      VerticalScrollBarVisibility="Auto" 
+      Visibility="{Binding 
+        MajorSubjectModels.Count, 
+        Converter={StaticResource NotZeroToVisibilityConverter}}">
       <ItemsControl
         x:Name="ItemsControl_MajorSubject"
         Grid.Row="0"
@@ -30,12 +33,14 @@
             <md:Card
               Width="350"
               Margin="0,0,8,8"
-              Padding="16"
+              Padding="10"
               Cursor="Hand"
               MouseDown="Card_GotoDetals_Clicked"
               UniformCornerRadius="12">
               <md:Card.Style>
-                <Style BasedOn="{StaticResource MaterialDesignElevatedCard}" TargetType="{x:Type md:Card}">
+                <Style 
+                  BasedOn="{StaticResource MaterialDesignElevatedCard}" 
+                  TargetType="{x:Type md:Card}">
                   <Setter Property="md:ElevationAssist.Elevation" Value="Dp0" />
                   <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">

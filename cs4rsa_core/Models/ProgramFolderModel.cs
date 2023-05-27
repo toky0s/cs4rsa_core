@@ -5,7 +5,6 @@ using Cs4rsa.Utils;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Models
 {
@@ -36,12 +35,12 @@ namespace Cs4rsa.Models
             NodeType = programFolder.GetNodeType();
         }
 
-        private async Task<ProgramFolderModel> InitializeAsync(ProgramFolder programFolder)
+        private ProgramFolderModel InitializeAsync(ProgramFolder programFolder)
         {
             List<ProgramFolderModel> folders = new();
             foreach (ProgramFolder item in programFolder.ChildProgramFolders)
             {
-                ProgramFolderModel programFolderModel = await CreateAsync(item, _colorGenerator, _unitOfWork);
+                ProgramFolderModel programFolderModel = Create(item, _colorGenerator, _unitOfWork);
                 folders.Add(programFolderModel);
             }
             ChildFolders = new ObservableCollection<ProgramFolderModel>(folders);
@@ -55,7 +54,11 @@ namespace Cs4rsa.Models
             List<ProgramSubjectModel> subjects = new();
             foreach (ProgramSubject item in _programFolder.ChildProgramSubjects)
             {
-                ProgramSubjectModel programSubjectModel = await ProgramSubjectModel.CreateAsync(item, _colorGenerator, _unitOfWork);
+                ProgramSubjectModel programSubjectModel = new (
+                      item
+                    , _colorGenerator
+                    , _unitOfWork
+                );
                 subjects.Add(programSubjectModel);
             }
             ChildSubjects = new ObservableCollection<ProgramSubjectModel>(subjects);
@@ -66,7 +69,10 @@ namespace Cs4rsa.Models
             return this;
         }
 
-        public static Task<ProgramFolderModel> CreateAsync(ProgramFolder programFolder, ColorGenerator colorGenerator, IUnitOfWork unitOfWork)
+        public static ProgramFolderModel Create(
+            ProgramFolder programFolder
+            , ColorGenerator colorGenerator
+            , IUnitOfWork unitOfWork)
         {
             ProgramFolderModel ret = new(programFolder, colorGenerator, unitOfWork);
             return ret.InitializeAsync(programFolder);

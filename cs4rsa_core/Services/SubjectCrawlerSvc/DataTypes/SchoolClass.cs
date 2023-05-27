@@ -112,7 +112,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         }
 
         /// <summary>
-        /// Get SchoolClass Units.
+        /// GetByPaging SchoolClass Units.
         /// </summary>
         /// <remarks>
         /// Vì bản thân một SchoolClass bao gồm nhiều tiết học được trải dài trong một Tuần.

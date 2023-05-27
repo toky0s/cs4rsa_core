@@ -3,133 +3,140 @@ using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 
-using Microsoft.EntityFrameworkCore;
-
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
-    public class KeywordRepository : GenericRepository<Keyword>, IKeywordRepository
+    public class KeywordRepository : IKeywordRepository
     {
-        public KeywordRepository(Cs4rsaDbContext context) : base(context)
+        public string GetColor(int courseId)
         {
-        }
-
-        public async Task<string> GetColorAsync(int courseId)
-        {
-            Keyword keyword = await _context.Keywords.FirstOrDefaultAsync(keyword => keyword.CourseId == courseId);
-            return keyword != null ? keyword.Color : string.Empty;
+            return RawSql.ExecScalar(
+                "SELECT Color FROM Keywords WHERE CourseId = @CourseID"
+                , new Dictionary<string, object>()
+                {
+                    { "@CourseID", courseId }
+                }
+                , string.Empty
+            );
         }
 
         public string GetColorWithSubjectCode(string subjectCode)
         {
-            Keyword keyword = (from discipline in _context.Disciplines
-                               join kw in _context.Keywords on discipline.DisciplineId equals kw.DisciplineId
-                               where discipline.Name + VmConstants.StrSpace + kw.Keyword1 == subjectCode
-                               select kw).FirstOrDefault();
-            return keyword.Color;
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT Color");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("   , Keywords AS kw");
+            sb.AppendLine("WHERE ds.Name || ' ' || kw.Keyword1 = @subjectCode");
+            sb.AppendLine("AND ds.DisciplineId = kw.DisciplineId");
+            return RawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    { "@subjectCode", subjectCode }
+                }
+                , string.Empty
+            );
         }
 
-        public async Task<Keyword> GetKeyword(string discipline, string keyword1)
+        public Keyword GetKeyword(string discipline, string keyword1)
         {
-            IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from ds in _context.Disciplines
-                                                                      from kw in _context.Keywords
-                                                                      where ds.Name == discipline && kw.Keyword1 == keyword1
-                                                                      && ds.DisciplineId == kw.DisciplineId
-                                                                      select kw;
-            return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  kw.KeywordId");
+            sb.AppendLine(", kw.Keyword1");
+            sb.AppendLine(", kw.CourseId");
+            sb.AppendLine(", kw.SubjectName");
+            sb.AppendLine(", kw.Color");
+            sb.AppendLine(", kw.Cache");
+            sb.AppendLine(", kw.DisciplineId");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return RawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString(),
+                new Dictionary<string, object>()
+                {
+                    { "@discipline",  discipline },
+                    { "@keyword1", keyword1 } 
+                },
+                record =>
+                {
+                    return new Keyword()
+                    {
+                        KeywordId = record.GetInt32(0),
+                        Keyword1 = record.GetString(1),
+                        CourseId = record.GetInt32(2),
+                        SubjectName = record.GetString(3),
+                        Color = record.GetString(4),
+                        Cache = record.IsDBNull(5) ? null : record.GetString(5),
+                        DisciplineId = record.GetInt32(6)
+                    };
+                }
+            );
         }
 
-        public async Task<Keyword> GetKeyword(int courseId)
+        public Keyword GetKeyword(int courseId)
         {
-            IQueryable<Keyword> keywordByDisciplineAndKeyword1Query = from kw in _context.Keywords
-                                                                      where kw.CourseId == courseId
-                                                                      select kw;
-            return await keywordByDisciplineAndKeyword1Query.FirstOrDefaultAsync();
-        }
-
-        public async Task<Keyword> GetKeyword(string subjectCode)
-        {
-            char[] splitChars = { VmConstants.CharSpace };
-            string[] slices = subjectCode.Split(splitChars);
-            return await GetKeyword(slices[0], slices[1]);
-        }
-
-        public async Task<int> CountAsync(string discipline, string keyword)
-        {
-            var query = from d in _context.Disciplines
-                        join k in _context.Keywords
-                        on d.DisciplineId equals k.DisciplineId
-                        where d.Name == discipline && k.Keyword1 == keyword
-                        select k;
-            return await query.CountAsync();
-        }
-
-        public async Task<bool> ExistBySubjectCodeAsync(string subjectCode)
-        {
-            char[] splitChars = { VmConstants.CharSpace };
-            string[] slices = subjectCode.Split(splitChars);
-            return await (
-                from ds in _context.Disciplines
-                from kw in _context.Keywords
-                where ds.Name == slices[0] && kw.Keyword1 == slices[1]
-                && ds.DisciplineId == kw.DisciplineId
-                select kw
-            ).AnyAsync();
-        }
-
-        public List<Keyword> GetSearchResult(string searchText, int limit)
-        {
-            StringBuilder sqlBuilder = new();
-            sqlBuilder.AppendLine("SELECT *");
-            sqlBuilder.AppendLine("FROM Keywords AS k");
-            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
-            sqlBuilder.AppendLine("    ON k.SubjectName LIKE @pattern");
-            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
-            sqlBuilder.AppendLine("UNION");
-            sqlBuilder.AppendLine("SELECT *");
-            sqlBuilder.AppendLine("FROM Keywords AS k");
-            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
-            sqlBuilder.AppendLine("    ON d.Name || ' ' || k.Keyword1 LIKE @pattern");
-            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
-            sqlBuilder.AppendLine("UNION");
-            sqlBuilder.AppendLine("SELECT *");
-            sqlBuilder.AppendLine("FROM Keywords AS k");
-            sqlBuilder.AppendLine("    INNER JOIN Disciplines AS d");
-            sqlBuilder.AppendLine($"   ON {RawSql.UseFunction<FuncRemoveAccent>("k.SubjectName")} LIKE @pattern");
-            sqlBuilder.AppendLine("    AND d.DisciplineId = k.DisciplineId");
-            sqlBuilder.AppendLine("LIMIT (@limit);");
-
-            IDictionary<string, object> sqlParams = new Dictionary<string, object>
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  KeywordId");
+            sb.AppendLine(", Keyword1");
+            sb.AppendLine(", CourseId");
+            sb.AppendLine(", SubjectName");
+            sb.AppendLine(", Color");
+            sb.AppendLine(", Cache");
+            sb.AppendLine(", DisciplineId");
+            sb.AppendLine("FROM Keywords");
+            sb.AppendLine("WHERE CourseId = @courseId");
+            Dictionary<string, object> param = new()
             {
-                { "@pattern", $"%{searchText}%" },
-                { "@limit", limit }
+                {"@courseId", courseId }
             };
+            return RawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString()
+                , param
+                , r => new Keyword()
+                {
+                      KeywordId = r.GetInt32(0)
+                    , Keyword1 = r.GetString(1)
+                    , CourseId = r.GetInt32(2)
+                    , SubjectName = r.GetString(3)
+                    , Color = r.GetString(4)
+                    , Cache = r.IsDBNull(5) ? null : r.GetString(5)
+                    , DisciplineId = r.GetInt32(6)
+                }
+            );
+        }
 
-            return _rawSql.ExecReader(sqlBuilder.ToString(), sqlParams, (record) =>
-            {
-                Discipline ds = new()
+        public Keyword GetKeyword(string subjectCode)
+        {
+            char[] splitChars = { VmConstants.CharSpace };
+            string[] slices = subjectCode.Split(splitChars);
+            return GetKeyword(slices[0], slices[1]);
+        }
+
+        public long Count(string discipline, string keyword1)
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("SELECT COUNT(*)");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return RawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
                 {
-                    DisciplineId = record.GetInt32(7),
-                    Name = record.GetString(8)
-                };
-                Keyword kw = new()
-                {
-                    KeywordId = record.GetInt32(0),
-                    Keyword1 = record.GetString(1),
-                    CourseId = record.GetInt32(2),
-                    SubjectName = record.GetString(3),
-                    Color = record.GetString(4),
-                    Cache = record.IsDBNull(5) ? null : record.GetString(5),
-                    DisciplineId = record.GetInt32(6),
-                    Discipline = ds
-                };
-                return kw;
-            });
+                    {"@discipline", discipline },
+                    {"@keyword1", keyword1 }
+                }
+                , 0L
+            );
         }
 
         public string GetCache(string courseId)
@@ -139,7 +146,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             {
                 { "@CourseId", courseId}
             };
-            return _rawSql.ExecScalar(sql, param, string.Empty);
+            return RawSql.ExecScalar(sql, param, string.Empty);
         }
 
         public string GetColorBySubjectCode(string subjectCode)
@@ -154,7 +161,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             {
                 { "@SubjectCode", subjectCode}
             };
-            return _rawSql.ExecScalar(sb.ToString(), param, string.Empty);
+            return RawSql.ExecScalar(sb.ToString(), param, string.Empty);
         }
 
         public List<Keyword> GetKeywordsByDisciplineId(int disciplineId)
@@ -167,7 +174,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             {
                 { "@DisciplineId", disciplineId}
             };
-            return _rawSql.ExecReader(sb.ToString(), param, record =>
+            return RawSql.ExecReader(sb.ToString(), param, record =>
                 new Keyword()
                 {
                       KeywordId = record.GetInt32(0)
@@ -178,6 +185,92 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
                 }
             );
+        }
+
+        public int UpdateCacheByKeywordID(int keywordID, string cache)
+        {
+            return RawSql.ExecNonQuery(
+                "UPDATE Keywords SET Cache = @cache WHERE KeywordId = @keywordID"
+                , new Dictionary<string, object>()
+                {
+                    {"@cache", cache },
+                    {"@keywordID", keywordID },
+                });
+        }
+
+        public int Insert(Keyword keyword)
+        {
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("INSERT INTO Keywords")
+                .AppendLine("VALUES")
+                .AppendLine("(@KeywordId, @Keyword1, @CourseId, @SubjectName, @Color, @Cache, @DisciplineId)");
+            return RawSql.ExecNonQuery(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    { "@KeywordId", keyword.KeywordId},
+                    { "@Keyword1", keyword.Keyword1},
+                    { "@CourseId", keyword.CourseId},
+                    { "@SubjectName", keyword.SubjectName},
+                    { "@Color", keyword.Color},
+                    { "@Cache", keyword.Cache},
+                    { "@DisciplineId", keyword.DisciplineId},
+                }
+            );
+        }
+
+        public int DeleteAll()
+        {
+            return RawSql.ExecNonQuery("DELETE FROM Keywords");
+        }
+
+        public Keyword GetByCourseId(int intCourseId)
+        {
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("SELECT kw.KeywordId")
+                .AppendLine(", kw.Keyword1")
+                .AppendLine(", kw.CourseId")
+                .AppendLine(", kw.SubjectName")
+                .AppendLine(", kw.Color")
+                .AppendLine(", kw.Cache")
+                .AppendLine(", ds.DisciplineId")
+                .AppendLine(", ds.Name")
+                .AppendLine("FROM")
+                .AppendLine("  Keywords AS kw")
+                .AppendLine(", Disciplines AS ds")
+                .AppendLine("WHERE")
+                .AppendLine("    CourseId = @CourseId")
+                .AppendLine("AND kw.DisciplineId = ds.DisciplineId");
+            Dictionary<string, object> param = new()
+            {
+                { "@CourseId", intCourseId}
+            };
+            return RawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString()
+                , param
+                , record =>
+                new Keyword()
+                {
+                      KeywordId = record.GetInt32(0)
+                    , Keyword1 = record.GetString(1)
+                    , CourseId = record.GetInt32(2)
+                    , SubjectName = record.GetString(3)
+                    , Color = record.GetString(4)
+                    , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
+                    , DisciplineId = record.GetInt32(6)
+                    , Discipline = 
+                    new Discipline() 
+                    { 
+                          DisciplineId = record.GetInt32(6)
+                        , Name = record.GetString(7)
+                    }
+                }
+            );
+        }
+
+        public long Count()
+        {
+            return RawSql.ExecScalar("SELECT COUNT(*) FROM Keywords", 0L);
         }
     }
 }

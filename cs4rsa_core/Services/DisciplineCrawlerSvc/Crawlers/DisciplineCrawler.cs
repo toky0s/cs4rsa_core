@@ -1,7 +1,6 @@
 ﻿using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
-using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Utils;
 
@@ -10,25 +9,23 @@ using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
 {
     public class DisciplineCrawler : BaseCrawler
     {
-        private readonly Cs4rsaDbContext _cs4rsaDbContext;
         private readonly CourseCrawler _homeCourseSearch;
         private readonly IUnitOfWork _unitOfWork;
         private readonly HtmlWeb _htmlWeb;
 
         public DisciplineCrawler(
-            Cs4rsaDbContext cs4rsaDbContext,
             CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             HtmlWeb htmlWeb
         )
         {
-            _cs4rsaDbContext = cs4rsaDbContext;
             _homeCourseSearch = courseCrawler;
             _unitOfWork = unitOfWork;
             _htmlWeb = htmlWeb;
@@ -38,8 +35,8 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
         /// Cào data từ Course DTU và lưu vào database.
         /// </summary>
         public int GetDisciplineAndKeyword(
-            BackgroundWorker backgroundWorker = null,
-            int numberOfSubjects = 0
+            BackgroundWorker backgroundWorker,
+            int numberOfSubjects
         )
         {
             int result = 0;
@@ -51,72 +48,77 @@ namespace Cs4rsa.Services.DisciplineCrawlerSvc.Crawlers
                 reportValue = jump;
             }
 
-            _unitOfWork.BeginTrans();
-            try
+            StringBuilder sbDiscipline = new();
+            sbDiscipline.AppendLine("INSERT INTO Disciplines");
+            sbDiscipline.AppendLine("VALUES");
+
+            StringBuilder sbKeyword = new();
+            sbKeyword.AppendLine("INSERT INTO Keywords");
+            sbKeyword.AppendLine("VALUES");
+
+            _unitOfWork.Keywords.DeleteAll();
+            _unitOfWork.Disciplines.DeleteAll();
+
+            string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.CurrentSemesterValue}&t={GetTimeFromEpoch()}";
+
+            HtmlDocument document = _htmlWeb.Load(URL);
+            IEnumerable<HtmlNode> trTags = document.DocumentNode
+                .Descendants("tr")
+                .Where(node => node.HasClass("lop"));
+
+            string currentDiscipline = null;
+            int disciplineId = 0;
+            int keywordId = 1;
+            foreach (HtmlNode trTag in trTags)
             {
-                _unitOfWork.Disciplines.RemoveRange(_cs4rsaDbContext.Disciplines);
-                _unitOfWork.Keywords.RemoveRange(_cs4rsaDbContext.Keywords);
+                HtmlNode[] tdTags = trTag.Descendants("td").ToArray();
+                HtmlNode disciplineAnchorTag = tdTags[0].Element("a");
+                string courseId = GetCourseIdFromHref(disciplineAnchorTag.Attributes["href"].Value);
+                string disciplineAndKeyword = disciplineAnchorTag.InnerText.Trim();
+                string[] disciplineAndKeywordSplit = StringHelper.SplitAndRemoveAllSpace(disciplineAndKeyword);
+                string discipline = disciplineAndKeywordSplit[0];
 
-                string URL = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx?keyword2=*&scope=1&hocky={_homeCourseSearch.CurrentSemesterValue}&t={GetTimeFromEpoch()}";
-
-                HtmlDocument document = _htmlWeb.Load(URL);
-                IEnumerable<HtmlNode> trTags = document.DocumentNode
-                    .Descendants("tr")
-                    .Where(node => node.HasClass("lop"));
-
-                string currentDiscipline = null;
-                int disciplineId = 0;
-                foreach (HtmlNode trTag in trTags)
+                if (currentDiscipline == null || currentDiscipline != discipline)
                 {
-                    HtmlNode[] tdTags = trTag.Descendants("td").ToArray();
-                    HtmlNode disciplineAnchorTag = tdTags[0].Element("a");
-                    string courseId = GetCourseIdFromHref(disciplineAnchorTag.Attributes["href"].Value);
-                    string disciplineAndKeyword = disciplineAnchorTag.InnerText.Trim();
-                    string[] disciplineAndKeywordSplit = StringHelper.SplitAndRemoveAllSpace(disciplineAndKeyword);
-                    string discipline = disciplineAndKeywordSplit[0];
-
-                    if (currentDiscipline == null || currentDiscipline != discipline)
-                    {
-                        currentDiscipline = discipline;
-                        disciplineId++;
-                        Discipline discipline1 = new() { DisciplineId = disciplineId, Name = discipline };
-                        _unitOfWork.Disciplines.Add(discipline1);
-                    }
-
-                    if (discipline == currentDiscipline)
-                    {
-                        string keyword1 = disciplineAndKeywordSplit[1];
-                        string color = ColorGenerator.GenerateColor();
-                        HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
-                        string subjectName = subjectNameAnchorTag.InnerText.Trim();
-                        Keyword keyword = new()
-                        {
-                            Keyword1 = keyword1,
-                            CourseId = int.Parse(courseId),
-                            DisciplineId = disciplineId,
-                            SubjectName = subjectName,
-                            Color = color
-                        };
-                        _unitOfWork.Keywords.Add(keyword);
-                        result++;
-                    }
-
-                    // report work progress
-                    if (backgroundWorker != null)
-                    {
-                        backgroundWorker.ReportProgress((int)reportValue);
-                        reportValue += jump;
-                    }
+                    currentDiscipline = discipline;
+                    disciplineId++;
+                    // Build discipline insert query
+                    sbDiscipline.AppendLine($"({disciplineId}, '{discipline}'),");
                 }
-                _unitOfWork.Complete();
-                _unitOfWork.Commit();
-                return result;
+
+                if (discipline == currentDiscipline)
+                {
+                    string keyword1 = disciplineAndKeywordSplit[1];
+                    string color = ColorGenerator.GenerateColor();
+                    HtmlNode subjectNameAnchorTag = tdTags[1].Element("a");
+                    string subjectName = subjectNameAnchorTag.InnerText.Trim();
+                    // Build keyword insert query
+                    sbKeyword.AppendLine($"({keywordId}, '{keyword1}', {courseId}, '{subjectName}', '{color}', NULL, {disciplineId}),");
+                    keywordId++;
+                    result++;
+                }
+
+                // report work progress
+                if (backgroundWorker != null)
+                {
+                    backgroundWorker.ReportProgress((int)reportValue);
+                    reportValue += jump;
+                }
             }
-            catch
-            {
-                _unitOfWork.Rollback();
-                return -1;
-            }
+
+            #region Remove Commas
+            sbDiscipline.RemoveLastCharAfterAppendLine();
+            sbKeyword.RemoveLastCharAfterAppendLine();
+            sbDiscipline.Append(';');
+            sbKeyword.Append(';');
+            #endregion
+
+            #region Execute Command
+            RawSql.ExecNonQuery(sbDiscipline.ToString());
+            RawSql.ExecNonQuery(sbKeyword.ToString());
+            #endregion
+
+            return result;
         }
 
         private static string GetCourseIdFromHref(string hrefValue)

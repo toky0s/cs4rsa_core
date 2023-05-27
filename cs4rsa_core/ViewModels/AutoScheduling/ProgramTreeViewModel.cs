@@ -261,10 +261,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             Messenger.Register<SessionInputVmMsgs.ExitFindStudentMsg>(this, (r, m) =>
             {
-                Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    await LoadStudents();
-                });
+                Application.Current.Dispatcher.Invoke(LoadStudents);
             });
 
             Messenger.Register<AccountVmMsgs.DelStudentMsg>(this, (r, m) =>
@@ -425,11 +422,11 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// Tải thông tin sinh viên có sẵn chương trình học.
         /// </summary>
         /// <returns>Task</returns>
-        public async Task LoadStudents()
+        public void LoadStudents()
         {
             Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
-            await foreach (Student student in students)
+            IEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
+            foreach (Student student in students)
             {
                 if (File.Exists(CredizText.PathProgramJsonFile(student.StudentId)))
                 {
@@ -451,18 +448,17 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 string json = await File.ReadAllTextAsync(programPath);
                 ProgramFolder[] programFolders = JsonConvert.DeserializeObject<ProgramFolder[]>(json);
 
-                List<Task<ProgramFolderModel>> tasks = new();
+                List<ProgramFolderModel> pfms = new();
                 foreach (ProgramFolder programFolder in programFolders)
                 {
-                    Task<ProgramFolderModel> pfmTask = ProgramFolderModel.CreateAsync(
+                    ProgramFolderModel pfmTask = ProgramFolderModel.Create(
                         programFolder,
                         _colorGenerator,
                         _unitOfWork
                     );
-                    tasks.Add(pfmTask);
+                    pfms.Add(pfmTask);
                 }
-                ProgramFolderModel[] pfms = await Task.WhenAll(tasks);
-
+                
                 foreach (ProgramFolderModel pfm in pfms)
                 {
                     ProgramFolderModels.Add(pfm);
@@ -520,7 +516,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
                 else
                 {
                     /// TODO: xem xét trường hợp môn học chưa bắt đầu
-                    SubjectModel sm = await SubjectModel.CreateAsync(subject, _colorGenerator);
+                    SubjectModel sm = SubjectModel.Create(subject, _colorGenerator);
                     SubjectModels.Add(sm);
                     psm.AddCgms(sm.ClassGroupModels);
                     if (IsUseFilter)

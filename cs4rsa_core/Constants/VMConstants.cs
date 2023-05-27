@@ -27,6 +27,11 @@ namespace Cs4rsa.Constants
         public static string Common002(string actionName) => $"{actionName} thành công";
         public static string ManualMsg001(string name) => $"Đã bỏ chọn lớp {name}";
         public static string ManualMsg002(string subjectName) => $"Đã xoá môn {subjectName}";
+        /// <summary>
+        /// Không tồn tại CourseId
+        /// </summary>
+        /// <param name="courseId">Course ID</param>
+        /// <returns>string</returns>
         public static string ManualMsg003(string courseId) => $"Không tồn tại {courseId}";
         public static string ManualMsg004() => $"Sai đường dẫn";
         public static string TeacherMsg001(int tcId) => $"Đã sao chép mã {tcId} vào Clipboard";
@@ -63,6 +68,7 @@ namespace Cs4rsa.Constants
     public abstract class VmConstants
     {
         public const string DbFilePath = "cs4rsa.db";
+        public const string InitDbFilePath = "Cs4rsaDatabase\\DataProviders\\cs4rsa.db.sql";
         public const string DbConnectionString = $@"Data Source={DbFilePath}";
 
         public const string UnknowErrorException = "Lỗi không xác định";

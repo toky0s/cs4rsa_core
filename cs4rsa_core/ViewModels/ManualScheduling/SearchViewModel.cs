@@ -9,7 +9,6 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Dialogs.DialogResults;
 using Cs4rsa.Dialogs.DialogViews;
 using Cs4rsa.Dialogs.Implements;
-using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Messages.Publishers.UIs;
@@ -28,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,11 +41,13 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #region Fields
         private readonly ShowDetailsSubjectUC _showDetailsSubjectUC;
         private readonly ImportSessionUC _importSessionUC;
+        private List<Discipline> _searchDisciplines;
+        private List<Keyword> _searchKeywords;
         #endregion
 
         #region Commands
         public AsyncRelayCommand AddCommand { get; set; }
-        public AsyncRelayCommand ImportDialogCommand { get; set; }
+        public RelayCommand ImportDialogCommand { get; set; }
         public AsyncRelayCommand<SubjectModel> ReloadCommand { get; set; }
         public RelayCommand<SubjectModel> DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
@@ -155,12 +157,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 ImportSubjects(m.Value);
             });
 
-            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, async (r, m) =>
+            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
             {
                 DisciplineKeywordModels.Clear();
                 Disciplines.Clear();
                 SubjectModels.Clear();
-                await ReloadDisciplineAndKeyWord();
+                ReloadDisciplineAndKeyWord();
             });
 
             Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
@@ -221,13 +223,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             ReloadCommand = new(OnReload);
             #endregion
 
-            Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                await Task.WhenAll(
-                    LoadDiscipline()
-                  , LoadSavedSchedules()
-                );
-            });
+            LoadDiscipline();
+            Application.Current.Dispatcher.Invoke(LoadSavedSchedules);
         }
 
         partial void OnSltCombiChanged(CombinationModel value)
@@ -279,7 +276,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         partial void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
         {
-            if (value != null && value.Keyword != null)
+            if (value != null && value.Keyword != null && value.Discipline.DisciplineId != 0)
             {
                 Discipline dcl = Disciplines.First(dcl => dcl.DisciplineId == value.Discipline.DisciplineId);
                 SelectedDiscipline = dcl;
@@ -308,20 +305,22 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// <summary>
         /// Load danh sách các bộ lịch đã lưu
         /// </summary>
-        private async Task LoadSavedSchedules()
+        private void LoadSavedSchedules()
         {
             SavedSchedules.Clear();
-            IAsyncEnumerable<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
-            await foreach (UserSchedule session in sessions)
+            List<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
+            foreach (UserSchedule session in sessions)
             {
                 SavedSchedules.Add(session);
             }
         }
 
-        private async Task LoadDiscipline()
+        private void LoadDiscipline()
         {
-            List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
-            foreach (Discipline discipline in disciplines)
+            _searchDisciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
+            _searchKeywords = _searchDisciplines.SelectMany(d => d.Keywords).ToList();
+
+            foreach (Discipline discipline in _searchDisciplines)
             {
                 Disciplines.Add(discipline);
             }
@@ -338,7 +337,9 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             subjectModel.IsError = false;
             subjectModel.ErrorMessage = null;
 
-            Keyword kw = await _unitOfWork.Keywords.GetKeyword(subjectModel.CourseId);
+            Keyword kw = _unitOfWork.Keywords.GetKeyword(subjectModel.CourseId);
+            Discipline ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
+            kw.Discipline = ds;
             if (subjectModel.UserSubject == null)
             {
                 await OnAddSubjectAsync(kw);
@@ -352,7 +353,18 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private void LoadSearchItemSource(string text)
         {
             FullMatchSearchingKeywords.Clear();
-            List<Keyword> keywords = _unitOfWork.Keywords.GetSearchResult(text, 10);
+            IEnumerable<Keyword> keywords = _searchKeywords
+                .Where(k => StringHelper.ReplaceVietNamese(k.SubjectName)
+                                        .ToLower()
+                                        .Contains(StringHelper.ReplaceVietNamese(text).ToLower())
+                         || StringHelper.ReplaceVietNamese(k.Discipline.Name + k.Keyword1)
+                                        .ToLower()
+                                        .Contains(
+                                            StringHelper.ReplaceVietNamese(text
+                                            .Replace(VmConstants.StrSpace, string.Empty)
+                                        ).ToLower())
+                )
+                .Take(10);
             foreach (Keyword kw in keywords)
             {
                 FullMatchSearchingKeyword fullMatch = new()
@@ -423,20 +435,23 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// <summary>
         /// Load lại data môn học từ cơ sở dữ liệu lên
         /// </summary>
-        private async Task ReloadDisciplineAndKeyWord()
+        private void ReloadDisciplineAndKeyWord()
         {
             Disciplines.Clear();
-            List<Discipline> disciplines = await _unitOfWork.Disciplines.GetAllIncludeKeywordAsync();
-            disciplines.ForEach(discipline => Disciplines.Add(discipline));
+            IEnumerable<Discipline> disciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
+            foreach (Discipline discipline in disciplines)
+            {
+                Disciplines.Add(discipline);
+            }
             SelectedDiscipline = Disciplines[0];
             LoadKeywordByDiscipline(SelectedDiscipline);
         }
 
-        private async Task OnOpenImportDialog()
+        private void OnOpenImportDialog()
         {
             ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
             OpenDialog(_importSessionUC);
-            await vm.LoadScheduleSession();
+            vm.LoadScheduleSession();
         }
 
         private async Task HandleImportSubjects(IEnumerable<UserSubject> userSubjects)
@@ -445,21 +460,20 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SubjectModels.Clear();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
 
-            List<Task<Keyword>> kwTasks = new();
+            List<Keyword> kws = new();
             foreach (UserSubject userSubject in userSubjects)
             {
-                Task<Keyword> kwTask = _unitOfWork.Keywords.GetKeyword(userSubject.SubjectCode);
-                kwTasks.Add(kwTask);
+                Keyword kw = _unitOfWork.Keywords.GetKeyword(userSubject.SubjectCode);
+                kws.Add(kw);
             }
 
-            Keyword[] keywords = await Task.WhenAll(kwTasks);
-            InsertPseudoSubjects(keywords, userSubjects);
+            InsertPseudoSubjects(kws, userSubjects);
 
             List<Task> downloadTasks = new();
             List<UserSubject> listOfUserSubjects = userSubjects.ToList();
-            for (int i = 0; i < keywords.Length; i++)
+            for (int i = 0; i < kws.Count; i++)
             {
-                downloadTasks.Add(OnAddSubjectAsync(keywords[i], listOfUserSubjects[i]));
+                downloadTasks.Add(OnAddSubjectAsync(kws[i], listOfUserSubjects[i]));
             }
             await Task.WhenAll(downloadTasks);
             SelectedSubjectModel = SubjectModels[0];
@@ -477,12 +491,13 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             AddCommand.NotifyCanExecuteChanged();
         }
 
-        private void InsertPseudoSubjects(Keyword[] keywords, IEnumerable<UserSubject> userSubjects)
+        private void InsertPseudoSubjects(List<Keyword> keywords, IEnumerable<UserSubject> userSubjects)
         {
             UserSubject[] userSubjectArr = userSubjects.ToArray();
-            for (int i = 0; i < keywords.Length; i++)
+            for (int i = 0; i < keywords.Count; i++)
             {
                 Keyword kw = keywords[i];
+                kw.Discipline = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
                 SubjectModel pseudoSubjectModel = SubjectModel.CreatePseudo(
                     kw.SubjectName,
                     kw.Discipline.Name + VmConstants.StrSpace + kw.Keyword1,
@@ -638,21 +653,17 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             bool isUseCache)
         {
             Subject subject;
-            if (courseId != VmConstants.IntInvalidCourseId)
-            {
-                subject = await _subjectCrawler.Crawl(courseId, isUseCache, true);
-            }
-            else
+            if (courseId == VmConstants.IntInvalidCourseId)
             {
                 subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache, true);
             }
-
-            if (subject != null)
+            else
             {
-                AddCommand.NotifyCanExecuteChanged();
-                return await SubjectModel.CreateAsync(subject, _colorGenerator);
+                subject = await _subjectCrawler.Crawl(courseId, isUseCache, true);
             }
-            return null;
+            if (subject == null) return null;
+            AddCommand.NotifyCanExecuteChanged();
+            return SubjectModel.Create(subject, _colorGenerator);
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)
@@ -666,7 +677,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             bool isDtuCourseHost = uri.Host == "courses.duytan.edu.vn";
             bool isRightAbsPath = uri.AbsolutePath == "/Sites/Home_ChuongTrinhDaoTao.aspx";
 
-            if (courseId != null && p != null && timespan != null && t != null && isDtuCourseHost && isRightAbsPath)
+            if (
+                    courseId != null 
+                 && p != null 
+                 && timespan != null 
+                 && t != null 
+                 && isDtuCourseHost 
+                 && isRightAbsPath
+            )
             {
                 int intCourseId = int.Parse(courseId);
                 if (IsAlreadyDownloaded(intCourseId))
@@ -675,15 +693,15 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                     return;
                 }
 
-                IEnumerable<Keyword> keywords = _unitOfWork.Keywords.Find(kw => kw.CourseId == intCourseId);
-                if (!keywords.Any())
+                Keyword keyword = _unitOfWork.Keywords.GetByCourseId(intCourseId);
+                if (keyword == null)
                 {
                     _snackbarMessageQueue.Enqueue(CredizText.ManualMsg003(courseId));
                     return;
                 }
 
-                InsertPseudoSubject(keywords.First());
-                await OnAddSubjectAsync(keywords.First());
+                InsertPseudoSubject(keyword);
+                await OnAddSubjectAsync(keyword);
             }
             else
             {

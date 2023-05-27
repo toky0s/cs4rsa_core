@@ -5,7 +5,6 @@ using Cs4rsa.ViewModels;
 
 using MaterialDesignThemes.Wpf;
 
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -86,7 +85,7 @@ namespace Cs4rsa.Views
                     ToolTip = item.MenuName,
                     Foreground = Brushes.White,
                     Style = (Style)FindResource("MaterialDesignToolButton"),
-                    Command = new AsyncRelayCommand(() => Goto(idx))
+                    Command = new RelayCommand(() => Goto(idx))
                 };
 
                 CompactMenu.Children.Add(button);
@@ -109,7 +108,7 @@ namespace Cs4rsa.Views
         /// </list>
         /// </summary>
         /// <param name="index">Index màn hình.</param>
-        public async Task Goto(int index)
+        public void Goto(int index)
         {
             PackIcon icon;
             Button button;
@@ -139,28 +138,28 @@ namespace Cs4rsa.Views
             button.Content = icon;
 
             ViewConstants.CredizMenu[index].LoadSelfData();
-            await ViewConstants.CredizMenu[index].Screen.LoadComponentsData();
+            ViewConstants.CredizMenu[index].Screen.LoadComponentsData();
 
             CredizTransitioner.SelectedIndex = index;
             _currentMenuItemIndex = index;
         }
 
-        private async void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox listView = sender as ListBox;
-            await Goto(listView.SelectedIndex);
+            Goto(listView.SelectedIndex);
             // Close Drawer
             DrawerHost.CloseDrawerCommand.Execute(null, null);
         }
 
-        private async void MainWd_Loaded(object sender, RoutedEventArgs e)
+        private void MainWd_Loaded(object sender, RoutedEventArgs e)
         {
             Vm = (MainWindowViewModel)DataContext;
             RenderScreen();
             RenderMainMenu();
             RenderCompactMenu();
             Vm.LoadInfor();
-            await Goto(Vm.StoredScreenIdx);
+            Goto(Vm.StoredScreenIdx);
         }
 
         private void MainWd_Closed(object sender, System.EventArgs e)

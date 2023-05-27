@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Cs4rsa.Utils
 {
@@ -46,6 +47,14 @@ namespace Cs4rsa.Utils
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
             return Encoding.UTF8.GetString(encodedDataAsBytes);
         }
+
+        public static string ReplaceVietNamese(string text)
+        {
+            Regex regex = new("\\p{IsCombiningDiacriticalMarks}+");
+            string temp = text.Normalize(NormalizationForm.FormD);
+            return regex.Replace(temp, string.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
+        }
+
 
         public static string CacheGenAddStyle(string cache)
         {

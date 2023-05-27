@@ -207,11 +207,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             if (_withTeacher)
             {
                 string teacherName = GetTeacherName(trTagClassLop);
-                IEnumerable<Teacher> dbTeachers = _unitOfWork.Teachers.GetTeacherByNameOrId(teacherName);
+                Teacher dbTeachers = _unitOfWork.Teachers.GetTeacherByName(teacherName);
                 TeacherModel teacherModel;
-                if (dbTeachers.Any())
+                if (dbTeachers != null)
                 {
-                    teacherModel = new(dbTeachers.First());
+                    teacherModel = new(dbTeachers);
                 }
                 else if (!string.IsNullOrEmpty(teacherName))
                 {

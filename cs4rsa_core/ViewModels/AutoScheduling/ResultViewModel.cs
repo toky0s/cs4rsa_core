@@ -116,9 +116,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             _snbMsgQueue.Enqueue(
                 VmConstants.SnbSaveToStore,
                 VmConstants.SnbGotoStore,
-                async () =>
+                () =>
                 {
-                    await GotoScreen(1);
+                    GotoScreen(1);
                     GetViewModel<SearchViewModel>().GotoViewCommand.Execute(1);
                 });
         }

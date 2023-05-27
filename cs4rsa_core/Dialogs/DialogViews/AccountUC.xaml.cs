@@ -13,10 +13,10 @@ namespace Cs4rsa.Dialogs.DialogViews
             InitializeComponent();
         }
 
-        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             AccountViewModel accountVm = DataContext as AccountViewModel;
-            await accountVm.LoadStudent();
+            accountVm.LoadStudent();
         }
 
         public bool IsCloseOnClickAway() => true;

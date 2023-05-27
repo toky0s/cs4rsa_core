@@ -45,7 +45,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
         public async Task<Subject> Crawl(string discipline, string keyword1, bool isUseCache, bool withTeacher)
         {
-            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
+            Keyword keyword = _unitOfWork.Keywords.GetKeyword(discipline, keyword1);
             if (isUseCache && keyword.Cache != null)
             {
                 HtmlDocument htmlDocument = new();
@@ -58,7 +58,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={keyword.CourseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
                 Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
-                await SaveCache(keyword.KeywordId, subject.RawSoup);
+                _unitOfWork.Keywords.UpdateCacheByKeywordID(keyword.KeywordId, subject.RawSoup);
                 return subject;
             }
         }
@@ -71,7 +71,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 string url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
                 HtmlDocument htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
                 Debug.Assert(IsSubjectExists(htmlDocument));
-                if (IsSubjectExists(htmlDocument)) return htmlDocument.DocumentNode.OuterHtml;
+                if (IsSubjectExists(htmlDocument)) {
+                    return htmlDocument.DocumentNode.OuterHtml;
+                };
                 return null;
             }
             catch (Exception ex)
@@ -83,7 +85,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
 
         public async Task<Subject> Crawl(int courseId, bool isUseCache, bool withTeacher)
         {
-            Keyword keyword = await _unitOfWork.Keywords.GetKeyword(courseId);
+            Keyword keyword = _unitOfWork.Keywords.GetKeyword(courseId);
             if (keyword == null)
             {
                 return null;
@@ -103,7 +105,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 Subject subject = await Crawl(htmlDocument, keyword.CourseId, withTeacher);
                 if (subject != null)
                 {
-                    await SaveCache(keyword.KeywordId, subject.RawSoup);
+                    _unitOfWork.Keywords.UpdateCacheByKeywordID(keyword.KeywordId, subject.RawSoup);
                 }
                 return subject;
             }
@@ -117,7 +119,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
             HtmlNode[] trTags = table.Descendants("tr").ToArray();
             string subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
 
-            string name = (await _unitOfWork.Keywords.GetKeyword(courseId)).SubjectName;
+            string name = _unitOfWork.Keywords.GetKeyword(courseId).SubjectName;
 
             string studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(VmConstants.CharSpace)[24];
             string studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
@@ -147,16 +149,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers
                 _htmlWeb,
                 withTeacher
             );
-        }
-
-        private async Task SaveCache(int keywordId, string htmlRaw)
-        {
-            await _unitOfWork.BeginTransAsync();
-            Keyword keyword = await _unitOfWork.Keywords.GetByIdAsync(keywordId);
-            keyword.Cache = htmlRaw;
-            _unitOfWork.Keywords.Update(keyword);
-            await _unitOfWork.CompleteAsync();
-            await _unitOfWork.CommitAsync();
         }
 
         private static bool IsSubjectExists(HtmlDocument htmlDocument)

@@ -12,7 +12,6 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Dialogs.Implements
 {
@@ -34,7 +33,7 @@ namespace Cs4rsa.Dialogs.Implements
         }
 
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
-        public AsyncRelayCommand SaveCommand { get; set; }
+        public RelayCommand SaveCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly CourseCrawler _courseCrawler;
@@ -53,7 +52,7 @@ namespace Cs4rsa.Dialogs.Implements
             _shareString = shareString;
             _name = string.Empty;
 
-            SaveCommand = new AsyncRelayCommand(Save, () => _name.Length > 0);
+            SaveCommand = new RelayCommand(Save, () => _name.Length > 0);
         }
 
         // 
@@ -64,17 +63,18 @@ namespace Cs4rsa.Dialogs.Implements
         // 2. Với các lớp có LAB, tức sẽ có một base class và một lớp (thường là LAB), sẽ chọn lớp này.
         // 3. Với các special class group, chọn lớp khác base class.
         // 
-        private async Task Save()
+        private void Save()
         {
-            List<ScheduleDetail> sessionDetails = (await _shareString.ConvertToUserSubjects(ClassGroupModels))
-                                                    .Select(us => new ScheduleDetail()
-                                                    {
-                                                        SubjectCode = us.SubjectCode,
-                                                        SubjectName = us.SubjectName,
-                                                        ClassGroup = us.ClassGroup,
-                                                        SelectedSchoolClass = us.SchoolClass,
-                                                        RegisterCode = us.RegisterCode
-                                                    }).ToList();
+            List<ScheduleDetail> sessionDetails = _shareString
+                .ConvertToUserSubjects(ClassGroupModels)
+                .Select(us => new ScheduleDetail()
+                {
+                    SubjectCode = us.SubjectCode,
+                    SubjectName = us.SubjectName,
+                    ClassGroup = us.ClassGroup,
+                    SelectedSchoolClass = us.SchoolClass,
+                    RegisterCode = us.RegisterCode
+                }).ToList();
             UserSchedule session = new()
             {
                 Name = Name.Trim(),
@@ -84,8 +84,7 @@ namespace Cs4rsa.Dialogs.Implements
                 SessionDetails = sessionDetails
             };
 
-            await _unitOfWork.UserSchedules.AddAsync(session);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.UserSchedules.Add(session);
             CloseDialog();
             string message = $"Đã lưu phiên hiện tại với tên {Name}";
             _snackbarMessageQueue.Enqueue(message);

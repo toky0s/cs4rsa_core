@@ -5,10 +5,8 @@
   xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
-  xmlns:vm="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
   xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
-  vml:ViewModelLocator.AutoHookedUpViewModel="True"
-  Loaded="BaseUserControl_Loaded">
+  vml:ViewModelLocator.AutoHookedUpViewModel="True">
   <base:BaseUserControl.Resources>
     <ResourceDictionary>
       <system:Int32 x:Key="SearchViewIdx">0</system:Int32>

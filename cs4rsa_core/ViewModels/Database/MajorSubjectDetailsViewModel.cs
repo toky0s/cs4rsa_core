@@ -42,10 +42,13 @@ namespace Cs4rsa.ViewModels.Database
                 SelectedMSubjectModel = msg.Value;
                 LoadStudentPlan();
                 DbProgramSubjects.Clear();
-                List<DtoDbProgramSubject> result = _unitOfWork
+                IEnumerable<DtoDbProgramSubject> result = _unitOfWork
                                                 .ProgramSubjects
                                                 .GetDbProgramSubjectsByCrrId(msg.Value.Curriculum.CurriculumId);
-                result.ForEach(dps => DbProgramSubjects.Add(dps));
+                foreach (DtoDbProgramSubject dtoDb in result)
+                {
+                    DbProgramSubjects.Add(dtoDb);
+                }
             });
         }
 

@@ -63,7 +63,7 @@ namespace Cs4rsa
             courseCrawler.InitInfor();
             if (!File.Exists(VmConstants.DbFilePath))
             {
-                Container.GetRequiredService<Cs4rsaDbContext>().Database.EnsureCreated();
+                RawSql.CreateDbIfNotExist();
 
                 // Seed Settings
                 Container.GetService<IUnitOfWork>().Settings.InsertSemesterSetting(
@@ -74,7 +74,7 @@ namespace Cs4rsa
                 );
 
                 // Seed Data Discipline and Keyword
-                Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword();
+                _ = Container.GetService<DisciplineCrawler>().GetDisciplineAndKeyword(null, 0);
             }
 
             // Init Folder
@@ -94,7 +94,6 @@ namespace Cs4rsa
         private static IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddDbContext<Cs4rsaDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<HttpClient>();
@@ -102,7 +101,6 @@ namespace Cs4rsa
             services.AddSingleton<ICurriculumCrawler, CurriculumCrawler>();
             services.AddSingleton<ITeacherCrawler, TeacherCrawler>();
             services.AddSingleton<ISubjectCrawler, SubjectCrawler>();
-            services.AddSingleton<IPreParSubjectCrawler, PreParSubjectCrawler>();
             services.AddSingleton<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
             services.AddSingleton<IStudentProgramCrawler, StudentProgramCrawler>();
             services.AddSingleton<IStudentPlanCrawler, StudentPlanCrawler>();

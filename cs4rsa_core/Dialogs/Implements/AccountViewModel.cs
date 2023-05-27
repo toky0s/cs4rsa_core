@@ -32,7 +32,7 @@ namespace Cs4rsa.Dialogs.Implements
 
         #region Commands
         public AsyncRelayCommand FindCommand { get; set; }
-        public AsyncRelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
         #endregion
 
         private readonly IUnitOfWork _unitOfWork;
@@ -48,7 +48,7 @@ namespace Cs4rsa.Dialogs.Implements
             SnackbarMessageQueue = snackbarMessageQueue;
 
             FindCommand = new AsyncRelayCommand(OnFind);
-            DeleteCommand = new AsyncRelayCommand(OnDelete);
+            DeleteCommand = new(OnDelete);
 
             Students = new();
 
@@ -58,7 +58,7 @@ namespace Cs4rsa.Dialogs.Implements
             });
         }
 
-        private async Task OnDelete()
+        private void OnDelete()
         {
             string name = SelectedStudent.Name;
             string id = SelectedStudent.StudentId;
@@ -66,22 +66,20 @@ namespace Cs4rsa.Dialogs.Implements
             Student actionData = SelectedStudent.DeepClone();
 
             _unitOfWork.Students.Remove(SelectedStudent);
-            await _unitOfWork.CompleteAsync();
             Students.RemoveAt(index);
 
             Messenger.Send(new AccountVmMsgs.DelStudentMsg(id));
             SnackbarMessageQueue.Enqueue(
                 $"Bạn vừa xoá {name}",
                 VmConstants.SnbRestore,
-                async (obj) => await OnRestore(obj),
+                obj => OnRestore(obj),
                 actionData
             );
         }
 
-        private async Task OnRestore(Student obj)
+        private void OnRestore(Student obj)
         {
-            await _unitOfWork.Students.AddAsync(obj);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork.Students.Add(obj);
             Students.Add(obj);
             Messenger.Send(new AccountVmMsgs.UndoDelStudentMsg(obj));
         }
@@ -91,7 +89,6 @@ namespace Cs4rsa.Dialogs.Implements
             try
             {
                 PreventCloseDialog(true);
-                await _unitOfWork.BeginTransAsync();
                 SessionInputUC sessionInputUC = new();
                 SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
                 vm.SessionId = SessionId;
@@ -99,11 +96,9 @@ namespace Cs4rsa.Dialogs.Implements
                 OpenDialog(sessionInputUC);
                 await vm.Find();
                 SessionId = string.Empty;
-                await _unitOfWork.CommitAsync();
             }
             catch (Exception e)
             {
-                await _unitOfWork.RollbackAsync();
                 MessageBox.Show(
                     $"Gặp lỗi không mong muốn: {e.Message}",
                     "Error",
@@ -118,11 +113,11 @@ namespace Cs4rsa.Dialogs.Implements
             }
         }
 
-        public async Task LoadStudent()
+        public void LoadStudent()
         {
             Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
-            await foreach (Student student in students)
+            IEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
+            foreach (Student student in students)
             {
                 Students.Add(student);
             }

@@ -3,24 +3,49 @@ using Cs4rsa.Cs4rsaDatabase.DTOs;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 
-using Microsoft.EntityFrameworkCore;
-
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
-    public class ProgramSubjectRepository : GenericRepository<DbProgramSubject>, IProgramSubjectRepository
+    public class ProgramSubjectRepository : IProgramSubjectRepository
     {
-        public ProgramSubjectRepository(Cs4rsaDbContext context) : base(context)
+        public void Add(DbProgramSubject programSubject)
         {
+            long dbProgramSubjectId = RawSql.ExecScalar("SELECT COUNT(*) + 1 FROM DbProgramSubjects", 0L);
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("INSERT INTO DbProgramSubjects VALUES")
+                .AppendLine("(")
+                .AppendLine("  @DbProgramSubjectId")
+                .AppendLine(", @SubjectCode")
+                .AppendLine(", @CourseId")
+                .AppendLine(", @Name")
+                .AppendLine(", @Credit")
+                .AppendLine(", @CurriculumId")
+                .AppendLine(")");
+
+            Dictionary<string, object> param = new()
+            {
+                { "@DbProgramSubjectId", dbProgramSubjectId},
+                { "@SubjectCode", programSubject.SubjectCode},
+                { "@CourseId", programSubject.CourseId},
+                { "@Name", programSubject.Name},
+                { "@Credit", programSubject.Credit},
+                { "@CurriculumId", programSubject.CurriculumId},
+            };
+
+            RawSql.ExecNonQuery(sb.ToString(), param);
         }
 
-        public async Task<bool> ExistsByCourseId(string courseId)
+        public bool ExistsByCourseId(string courseId)
         {
-            return await _context.DbProgramSubjects.AnyAsync(ps => ps.CourseId.Equals(courseId));
+            return RawSql.ExecScalar(
+                "SELECT COUNT(*) FROM DbProgramSubjects WHERE CourseId = @courseId"
+                , new Dictionary<string, object>()
+                {
+                    {"@courseId", courseId }
+                }
+                , 0L) >= 1L;
         }
 
         public List<DtoDbProgramSubject> GetDbProgramSubjectsByCrrId(int crrId)
@@ -41,7 +66,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             {
                 { "@CurriculumId", crrId }
             };
-            return _rawSql.ExecReader(
+            return RawSql.ExecReader(
                   sql.ToString()
                 , param
                 , record => new DtoDbProgramSubject()
@@ -54,22 +79,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     Cache = record.IsDBNull(5) ? null : record.GetString(5),
                 }
             );
-        }
-
-        public IEnumerable<string> GetParByCourseId(string courseId)
-        {
-            return from p in _context.DbProgramSubjects
-                   join d in _context.ParProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
-                   join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
-                   select a.SubjectCode;
-        }
-
-        public IEnumerable<string> GetPreByCourseId(string courseId)
-        {
-            return from p in _context.DbProgramSubjects
-                   join d in _context.PreProDetails on p.DbProgramSubjectId equals d.ProgramSubjectId
-                   join a in _context.DbPreParSubjects on d.PreParSubjectId equals a.DbPreParSubjectId
-                   select a.SubjectCode;
         }
     }
 }

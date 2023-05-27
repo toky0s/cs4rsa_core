@@ -25,8 +25,8 @@ namespace Cs4rsa.ViewModels.Profile
         public RelayCommand DetailsViewCommand { get; set; }
         public RelayCommand SubjectsViewCommand { get; set; }
         public AsyncRelayCommand UpdateCommand { get; set; }
-        public AsyncRelayCommand PreviousPageCommand { get; set; }
-        public AsyncRelayCommand NextPageCommand { get; set; }
+        public RelayCommand PreviousPageCommand { get; set; }
+        public RelayCommand NextPageCommand { get; set; }
         #endregion
 
         #region Services
@@ -118,21 +118,21 @@ namespace Cs4rsa.ViewModels.Profile
             IsUpdating = false;
         }
 
-        private async Task OnPreviousPage()
+        private void OnPreviousPage()
         {
             if (CurrentPage > 1)
             {
                 CurrentPage--;
-                await LoadTeachers();
+                LoadTeachers();
             }
         }
 
-        private async Task OnNextPage()
+        private void OnNextPage()
         {
             if (CurrentPage < TotalPage)
             {
                 CurrentPage++;
-                await LoadTeachers();
+                LoadTeachers();
             }
         }
 
@@ -155,7 +155,7 @@ namespace Cs4rsa.ViewModels.Profile
             searchText = searchText.Trim();
             if (searchText == string.Empty)
             {
-                LoadTeachers().Wait();
+                LoadTeachers();
                 return;
             }
             IEnumerable<TeacherModel> teachers = _unitOfWork.Teachers
@@ -168,12 +168,12 @@ namespace Cs4rsa.ViewModels.Profile
             }
         }
 
-        public async Task LoadTeachers()
+        public void LoadTeachers()
         {
             Lectures.Clear();
             TotalPage = _unitOfWork.Teachers.CountPage(SIZE);
-            IAsyncEnumerable<Teacher> teachers = _unitOfWork.Teachers.GetTeachersAsync(CurrentPage, SIZE);
-            await foreach (Teacher teacher in teachers)
+            List<Teacher> teachers = _unitOfWork.Teachers.GetTeachers(CurrentPage, SIZE);
+            foreach (Teacher teacher in teachers)
             {
                 Lectures.Add(new TeacherModel(teacher));
             }

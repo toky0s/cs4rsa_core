@@ -3,7 +3,6 @@ using Cs4rsa.Constants;
 
 using Squirrel;
 
-using System;
 using System.Windows;
 
 namespace Cs4rsa.Views

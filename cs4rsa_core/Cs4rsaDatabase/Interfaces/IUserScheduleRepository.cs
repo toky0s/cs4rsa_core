@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 namespace Cs4rsa.Cs4rsaDatabase.Interfaces
 {
-    public interface IUserScheduleRepository : IGenericRepository<UserSchedule>
+    public interface IUserScheduleRepository
     {
-        IEnumerable<ScheduleDetail> GetSessionDetails(int sessionId);
+        List<ScheduleDetail> GetSessionDetails(int sessionId);
+        int Remove(UserSchedule userSchedule);
+        void Add(UserSchedule userSchedule);
+        List<UserSchedule> GetAll();
     }
 }

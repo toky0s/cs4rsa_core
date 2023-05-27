@@ -47,15 +47,18 @@ namespace Cs4rsa.ViewModels.Database
         partial void OnSltDisciplineChanged(Discipline value)
         {
             if (value == null) return;
-            List<Keyword> keywords = _unitOfWork.Keywords.GetKeywordsByDisciplineId(value.DisciplineId);
+            IEnumerable<Keyword> keywords = _unitOfWork.Keywords.GetKeywordsByDisciplineId(value.DisciplineId);
             Keywords.Clear();
-            keywords.ForEach(kw => Keywords.Add(kw));
+            foreach (Keyword kw in keywords)
+            {
+                Keywords.Add(kw);
+            }
         }
 
         private void LoadDisciplines()
         {
             Disciplines.Clear();
-            List<Discipline> disciplines = _unitOfWork.Disciplines.GetAllDiscipline();
+            IEnumerable<Discipline> disciplines = _unitOfWork.Disciplines.GetAllDiscipline();
             foreach (Discipline dcl in disciplines)
             {
                 Disciplines.Add(dcl);

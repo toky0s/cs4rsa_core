@@ -90,23 +90,23 @@ namespace Cs4rsa.ViewModels.Profile
             DownloadCommand.NotifyCanExecuteChanged();
         }
 
-        public async Task OnInit()
+        public void OnInit()
         {
             TotalPage = _unitOfWork.Students.CountPage(Limit);
             NextPageCommand.NotifyCanExecuteChanged();
             PreviousPageCommand.NotifyCanExecuteChanged();
-            await LoadStudents();
+            LoadStudents();
         }
 
         /// <summary>
         /// Tải các sinh viên đã lưu trong DB.
         /// </summary>
         /// <returns>Task</returns>
-        private async Task LoadStudents()
+        private void LoadStudents()
         {
             SavedStudentModels.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.Get(CurrentPage, Limit);
-            await foreach (Student student in students)
+            List<Student> students = _unitOfWork.Students.GetByPaging(CurrentPage, Limit);
+            foreach (Student student in students)
             {
                 SavedStudentModels.Add(student);
             }
@@ -164,32 +164,32 @@ namespace Cs4rsa.ViewModels.Profile
         /// <summary>
         /// Quay về trang trước.
         /// </summary>
-        [RelayCommand(AllowConcurrentExecutions = true, CanExecute = "CanPreviousPage")]
-        private async Task OnPreviousPage()
+        [RelayCommand(CanExecute = "CanPreviousPage")]
+        private void OnPreviousPage()
         {
             if (CurrentPage > 1)
             {
                 CurrentPage--;
-                await LoadStudents();
+                LoadStudents();
             }
         }
 
-        [RelayCommand(AllowConcurrentExecutions = true)]
-        public async Task OnSearch()
+        [RelayCommand]
+        public void OnSearch()
         {
             string clearValue = SearchStudentId.Trim();
             if (string.IsNullOrEmpty(clearValue))
             {
                 CurrentPage = 1;
                 TotalPage = _unitOfWork.Students.CountPage(Limit);
-                await LoadStudents();
+                LoadStudents();
             }
             else
             {
-                int totalItem = await _unitOfWork.Students.CountByContainsId(clearValue);
+                long totalItem = _unitOfWork.Students.CountByContainsId(clearValue);
                 TotalPage = totalItem / Limit;
                 CurrentPage = 1;
-                await LoadStudents(clearValue, Limit, CurrentPage);
+                LoadStudents(clearValue, Limit, CurrentPage);
             }
             NextPageCommand.NotifyCanExecuteChanged();
             PreviousPageCommand.NotifyCanExecuteChanged();
@@ -202,11 +202,14 @@ namespace Cs4rsa.ViewModels.Profile
         /// <param name="pageSize">Số lượng phần tử mỗi trang.</param>
         /// <param name="page">Số trang.</param>
         /// <returns>Danh sách sinh viên.</returns>
-        private async Task LoadStudents(string studentIdCriteria, int pageSize, int page)
+        private void LoadStudents(string studentIdCriteria, int pageSize, int page)
         {
             SavedStudentModels.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetStudentsByContainsId(studentIdCriteria, pageSize, page);
-            await foreach (Student student in students)
+            IEnumerable<Student> students = _unitOfWork.Students.GetStudentsByContainsId(
+                studentIdCriteria
+                , pageSize
+                , page);
+            foreach (Student student in students)
             {
                 SavedStudentModels.Add(student);
             }
@@ -220,13 +223,13 @@ namespace Cs4rsa.ViewModels.Profile
         /// <summary>
         /// Tới trang sau.
         /// </summary>
-        [RelayCommand(AllowConcurrentExecutions = true, CanExecute = "CanNextPage")]
-        private async Task OnNextPage()
+        [RelayCommand(CanExecute = "CanNextPage")]
+        private void OnNextPage()
         {
             if (CurrentPage < TotalPage)
             {
                 CurrentPage++;
-                await LoadStudents();
+                LoadStudents();
             }
         }
 
@@ -336,26 +339,17 @@ namespace Cs4rsa.ViewModels.Profile
             {
                 item.ImgPath = imgPath;
                 // 1. Lưu kết quả trong trường hợp tải ảnh thành công.
-                await _unitOfWork.BeginTransAsync();
-                try
+                Student student = new()
                 {
-                    Student student = new()
-                    {
-                        StudentId = studentId,
-                        AvatarImgPath = imgPath,
-                    };
-                    await _unitOfWork.Students.AddAsync(student);
-                    await _unitOfWork.CompleteAsync();
-                    await _unitOfWork.CommitAsync();
+                    StudentId = studentId,
+                    AvatarImgPath = imgPath,
+                };
+                _unitOfWork.Students.Add(student);
 
-                    if (string.IsNullOrEmpty(SearchStudentId) || studentId.Contains(SearchStudentId))
-                    {
-                        SavedStudentModels.Add(student);
-                    }
-                }
-                catch
+                if (string.IsNullOrWhiteSpace(SearchStudentId) 
+                    || studentId.Contains(SearchStudentId))
                 {
-                    await _unitOfWork.RollbackAsync();
+                    SavedStudentModels.Add(student);
                 }
             }
         }

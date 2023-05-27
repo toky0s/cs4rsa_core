@@ -52,11 +52,6 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             return intructorIdParam.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)[1];
         }
 
-        private async Task<bool> IsTeacherHasInDatabase(int instructorId)
-        {
-            return await _unitOfWork.Teachers.GetByIdAsync(instructorId) is not null;
-        }
-
         public async Task<TeacherModel> Crawl(string url, int courseId, bool isUpdate)
         {
             if (url == null)
@@ -66,12 +61,11 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
 
             int teacherId = int.Parse(GetIntructorId(url));
             TeacherModel teacherModel;
-            if (await IsTeacherHasInDatabase(teacherId) && !isUpdate)
+            if (_unitOfWork.Teachers.ExistByID(teacherId) && !isUpdate)
             {
-                Teacher teacher = await _unitOfWork.Teachers.GetByIdAsync(teacherId);
+                Teacher teacher = _unitOfWork.Teachers.GetTeacherById(teacherId);
                 teacher.Url = url;
                 _unitOfWork.Teachers.Update(teacher);
-                await _unitOfWork.CompleteAsync();
                 teacherModel = new TeacherModel(teacher);
             }
             else
@@ -81,7 +75,9 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                 {
                     return null;
                 }
-                HtmlNodeCollection infoNodes = _htmlDocument.DocumentNode.SelectNodes("//span[contains(@class, 'info_gv')]");
+                HtmlNodeCollection infoNodes = _htmlDocument
+                    .DocumentNode
+                    .SelectNodes("//span[contains(@class, 'info_gv')]");
                 string id = StringHelper.SuperCleanString(infoNodes[0].InnerText);
                 string name = StringHelper.SuperCleanString(infoNodes[1].InnerText);
                 string sex = StringHelper.SuperCleanString(infoNodes[2].InnerText);
@@ -100,9 +96,9 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
 
                 string strPath = await OnDownloadImage(id);
 
-                if (isUpdate && await IsTeacherHasInDatabase(teacherId))
+                if (isUpdate && _unitOfWork.Teachers.ExistByID(teacherId))
                 {
-                    Teacher teacher = await _unitOfWork.Teachers.GetByIdAsync(teacherId);
+                    Teacher teacher = _unitOfWork.Teachers.GetTeacherById(teacherId);
                     teacher.Name = name;
                     teacher.Sex = sex;
                     teacher.Place = place;
@@ -132,10 +128,9 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                         TeachedSubjects = string.Join(VmConstants.SeparatorTeacherSubject, teachedSubjects),
                         Url = url
                     };
-                    await _unitOfWork.Teachers.AddAsync(teacher);
-                    await CreateKeywordSubjectIfNotExist(teacherId, courseId);
+                    _unitOfWork.Teachers.Add(teacher);
+                    CreateKeywordSubjectIfNotExist(teacherId, courseId);
                 }
-                await _unitOfWork.CompleteAsync();
                 teacherModel = new TeacherModel(
                     int.Parse(id),
                     name,
@@ -155,19 +150,16 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             return teacherModel;
         }
 
-        private async Task CreateKeywordSubjectIfNotExist(int teacherId, int courseId)
+        private void CreateKeywordSubjectIfNotExist(int teacherId, int courseId)
         {
-            if (!_unitOfWork.KeywordTeachers
-                .Find(kt => kt.CourseId == courseId && kt.TeacherId == teacherId)
-                .Any())
+            if (!_unitOfWork.KeywordTeachers.Exists(teacherId, courseId))
             {
                 KeywordTeacher kt = new()
                 {
                     CourseId = courseId,
                     TeacherId = teacherId
                 };
-                await _unitOfWork.KeywordTeachers.AddAsync(kt);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.KeywordTeachers.Add(kt);
             }
         }
 

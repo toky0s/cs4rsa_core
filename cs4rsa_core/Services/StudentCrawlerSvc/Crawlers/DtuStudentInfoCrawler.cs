@@ -70,13 +70,12 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
             string imageBase64Data = imageSrcData.Replace("data:image/jpg;base64,", string.Empty);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
-            Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
+            Curriculum existCurriculum = _unitOfWork.Curriculums.GetByID(curriculum.CurriculumId);
             if (existCurriculum == null)
             {
-                await _unitOfWork.Curriculums.AddAsync(curriculum);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Curriculums.Insert(curriculum);
             }
-            Student studentExist = await _unitOfWork.Students.GetByStudentIdAsync(studentId);
+            Student studentExist = _unitOfWork.Students.GetByStudentId(studentId);
             if (studentExist == null)
             {
                 Student student = new()
@@ -92,8 +91,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                     //AvatarImgPath = imageBase64Data,
                     CurriculumId = curriculum.CurriculumId
                 };
-                await _unitOfWork.Students.AddAsync(student);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Students.Add(student);
                 return student;
             }
             return studentExist;

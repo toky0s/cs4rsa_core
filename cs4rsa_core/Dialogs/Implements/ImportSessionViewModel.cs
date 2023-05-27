@@ -40,7 +40,8 @@ namespace Cs4rsa.Dialogs.Implements
         [ObservableProperty]
         private bool _isUseCache;
 
-        public string ShareStringText { get; set; }
+        [ObservableProperty]
+        private string _shareStringText;
 
         #endregion
 
@@ -70,7 +71,11 @@ namespace Cs4rsa.Dialogs.Implements
             _isAvailableSession = -1;
 
             DeleteCommand = new AsyncRelayCommand(OnDelete, () => _selectedScheduleSession != null);
-            ImportCommand = new RelayCommand(OnImport, () => UserSubjects.Any());
+            ImportCommand = new RelayCommand(
+                OnImport,
+                () => (UserSubjects.Any() && IsAvailableSession == 1)
+                    || (UserSubjects.Count > 0 && !string.IsNullOrWhiteSpace(ShareStringText))
+            );
             CloseDialogCommand = new RelayCommand(CloseDialog);
         }
 
@@ -95,31 +100,37 @@ namespace Cs4rsa.Dialogs.Implements
                 UserSubjects.Clear();
                 IEnumerable<UserSubject> userSubjects = _unitOfWork.UserSchedules
                     .GetSessionDetails(userSchedule.UserScheduleId)
-                    .Select(sd => new UserSubject()
-                    {
-                        SubjectCode = sd.SubjectCode,
-                        SubjectName = sd.SubjectName,
-                        ClassGroup = sd.ClassGroup,
-                        SchoolClass = sd.SelectedSchoolClass,
-                        RegisterCode = sd.RegisterCode
-                    }
+                    .Select(
+                        sd => new UserSubject()
+                        {
+                            SubjectCode = sd.SubjectCode,
+                            SubjectName = sd.SubjectName,
+                            ClassGroup = sd.ClassGroup,
+                            SchoolClass = sd.SelectedSchoolClass,
+                            RegisterCode = sd.RegisterCode
+                        }
                     );
 
                 foreach (UserSubject userSubject in userSubjects)
+                {
                     UserSubjects.Add(userSubject);
+                }
             }
         }
 
         public void LoadShareString(string shareString)
         {
             UserSubjects.Clear();
-            if (!string.IsNullOrEmpty(shareString))
+            if (!string.IsNullOrWhiteSpace(shareString))
             {
                 IEnumerable<UserSubject> userSubjects = ShareString.GetSubjectFromShareString(shareString);
                 if (userSubjects != null)
                 {
                     foreach (UserSubject userSubject in userSubjects)
+                    {
                         UserSubjects.Add(userSubject);
+                    }
+                    ImportCommand.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -141,12 +152,12 @@ namespace Cs4rsa.Dialogs.Implements
             }
         }
 
-        public async Task LoadScheduleSession()
+        public void LoadScheduleSession()
         {
             ScheduleSessions.Clear();
             UserSubjects.Clear();
-            IAsyncEnumerable<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
-            await foreach (UserSchedule session in sessions)
+            List<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
+            foreach (UserSchedule session in sessions)
             {
                 ScheduleSessions.Add(session);
             }
@@ -161,25 +172,36 @@ namespace Cs4rsa.Dialogs.Implements
         private async Task OnDelete()
         {
             string sessionName = SelectedScheduleSession.Name;
-            MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xoá phiên {sessionName}?",
-                                                        "Thông báo",
-                                                        MessageBoxButton.YesNo,
-                                                        MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show(
+                  $"Bạn có chắc muốn xoá phiên {sessionName}?"
+                , "Thông báo"
+                , MessageBoxButton.YesNo
+                , MessageBoxImage.Question
+            );
             if (result == MessageBoxResult.Yes)
             {
-                await _unitOfWork.BeginTransAsync();
-                _unitOfWork.UserSchedules.Remove(SelectedScheduleSession);
-                await _unitOfWork.CompleteAsync();
-                await _unitOfWork.CommitAsync();
-                await Reload();
+                int removeResult = _unitOfWork.UserSchedules.Remove(SelectedScheduleSession);
+                if (removeResult == 1)
+                {
+                    Reload();
+                }
+                else
+                {
+                    _ = MessageBox.Show(
+                          CredizText.Common001("Xoá phiên")
+                        , "Thông báo"
+                        , MessageBoxButton.OK
+                        , MessageBoxImage.Error
+                    );
+                }
             }
         }
 
-        private async Task Reload()
+        private void Reload()
         {
             ScheduleSessions.Clear();
             UserSubjects.Clear();
-            await LoadScheduleSession();
+            LoadScheduleSession();
         }
     }
 }
