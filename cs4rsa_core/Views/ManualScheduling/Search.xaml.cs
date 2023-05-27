@@ -4,7 +4,6 @@ using Cs4rsa.ViewModels.ManualScheduling;
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -89,10 +88,9 @@ namespace Cs4rsa.Views.ManualScheduling
             Vm.DetailCommand.Execute(subjectModel);
         }
 
-        public Task LoadData()
+        public void LoadData()
         {
             Vm = (SearchViewModel)DataContext;
-            return Task.FromResult<object>(null);
         }
     }
 }

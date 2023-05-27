@@ -21,10 +21,9 @@ namespace Cs4rsa.BaseClasses
         /// được đăng ký cho Màn hình này.
         /// </summary>
         /// <returns>Task</returns>
-        public async Task LoadComponentsData()
+        public void LoadComponentsData()
         {
-            IEnumerable<Task> tasks = _components.Select(ca => ca.LoadData());
-            await Task.WhenAll(tasks);
+            _components.ForEach(ca => ca.LoadData());
         }
 
         /// <summary>

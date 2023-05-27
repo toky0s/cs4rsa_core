@@ -6,11 +6,11 @@ namespace Cs4rsa.Cs4rsaDatabase.Models
     /// <summary>
     /// Thông tin tổng quan bộ lịch của người dùng đã lưu
     /// 
-    ///     UserScheduleId: Id
-    ///     Name:           Tên bộ lịch
-    ///     SaveDate:       Ngày lưu
-    ///     SemesterValue:  Giá trị học kỳ
-    ///     YearValue:      Giá trị năm học
+    ///     UserScheduleId  :Id
+    ///     Name            :Tên bộ lịch
+    ///     SaveDate        :Ngày lưu
+    ///     SemesterValue   :Giá trị học kỳ
+    ///     YearValue       :Giá trị năm học
     /// </summary>
     public class UserSchedule
     {

@@ -261,10 +261,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             Messenger.Register<SessionInputVmMsgs.ExitFindStudentMsg>(this, (r, m) =>
             {
-                Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    await LoadStudents();
-                });
+                Application.Current.Dispatcher.Invoke(LoadStudents);
             });
 
             Messenger.Register<AccountVmMsgs.DelStudentMsg>(this, (r, m) =>
@@ -425,11 +422,11 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// Tải thông tin sinh viên có sẵn chương trình học.
         /// </summary>
         /// <returns>Task</returns>
-        public async Task LoadStudents()
+        public void LoadStudents()
         {
             Students.Clear();
-            IAsyncEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
-            await foreach (Student student in students)
+            IEnumerable<Student> students = _unitOfWork.Students.GetAllBySpecialStringNotNull();
+            foreach (Student student in students)
             {
                 if (File.Exists(CredizText.PathProgramJsonFile(student.StudentId)))
                 {

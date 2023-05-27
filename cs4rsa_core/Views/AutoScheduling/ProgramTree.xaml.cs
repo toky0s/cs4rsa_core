@@ -2,7 +2,6 @@
 using Cs4rsa.Models;
 using Cs4rsa.ViewModels.AutoScheduling;
 
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -47,9 +46,9 @@ namespace Cs4rsa.Views.AutoScheduling
             Trans1.SelectedIndex = Trans1.SelectedIndex == PROGRAM_TREE_INDEX ? FILTER_INDEX : PROGRAM_TREE_INDEX;
         }
 
-        public async Task LoadData()
+        public void LoadData()
         {
-            await ((ProgramTreeViewModel)DataContext).LoadStudents();
+            ((ProgramTreeViewModel)DataContext).LoadStudents();
         }
     }
 }

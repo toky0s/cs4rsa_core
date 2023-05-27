@@ -15,9 +15,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
-        /// <summary>
-        /// Đường dẫn tới hình ảnh hồ sơ
-        /// </summary>
         public string AvatarImgPath { get; set; }
         public int? CurriculumId { get; set; }
     }

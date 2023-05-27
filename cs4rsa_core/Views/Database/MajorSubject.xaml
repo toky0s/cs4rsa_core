@@ -33,7 +33,7 @@
             <md:Card
               Width="350"
               Margin="0,0,8,8"
-              Padding="16"
+              Padding="10"
               Cursor="Hand"
               MouseDown="Card_GotoDetals_Clicked"
               UniformCornerRadius="12">

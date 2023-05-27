@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <None Remove="cs4rsa.db" />
+    <None Remove="Cs4rsaDatabase\DataProviders\cs4rsa.db.sql" />
     <None Remove="cs4rsa_settings.json" />
     <None Remove="Images\avatar.png" />
     <None Remove="Images\background.png" />
@@ -48,16 +49,19 @@
 
   <ItemGroup>
     <Content Include="AppResources\logo.ico" />
+    <Content Include="Cs4rsaDatabase\DataProviders\cs4rsa.db.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Clowd.Squirrel" Version="2.9.42" GeneratePathProperty="true" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
   </ItemGroup>
 

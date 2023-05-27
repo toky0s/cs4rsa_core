@@ -5,15 +5,12 @@ using Cs4rsa.Cs4rsaDatabase.Models;
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace Cs4rsa.Cs4rsaDatabase.Implements
 {
-    public class SettingRepository : GenericRepository<Setting>, ISettingRepository
+    public class SettingRepository : ISettingRepository
     {
-        public SettingRepository(Cs4rsaDbContext context) : base(context)
-        {
-        }
-
         public string GetBykey(string key)
         {
             string sql = $"SELECT Value FROM Settings WHERE Key = @Key LIMIT 1";
@@ -21,28 +18,60 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             {
                 {"@Key", key}
             };
-            return _rawSql.ExecScalar(sql, param, "");
+            return RawSql.ExecScalar(sql, param, "");
         }
 
-        public void UpdateSemesterSetting(string yearInf, string yearVl, string semesterInf, string semesterVl)
+        public void UpdateSemesterSetting(
+              string yearInf
+            , string yearVl
+            , string semesterInf
+            , string semesterVl
+        )
         {
-            string sql =
-                  $"UPDATE Settings SET Value = '{semesterInf}' WHERE Key = '{VmConstants.StCurrentSemesterInfo}';"
-                + $"UPDATE Settings SET Value = '{semesterVl}'  WHERE Key = '{VmConstants.StCurrentSemesterValue}';"
-                + $"UPDATE Settings SET Value = '{yearInf}'     WHERE Key = '{VmConstants.StCurrentYearInfo}';"
-                + $"UPDATE Settings SET Value = '{yearVl}'      WHERE Key = '{VmConstants.StCurrentYearValue}\'";
-            _rawSql.ExecNonQuery(sql, null);
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("UPDATE Settings SET Value = @semesterInf WHERE Key = @StCurrentSemesterInfo;")
+                .AppendLine("UPDATE Settings SET Value = @semesterVl  WHERE Key = @StCurrentSemesterValue;")
+                .AppendLine("UPDATE Settings SET Value = @yearInf     WHERE Key = @StCurrentYearInfo;")
+                .AppendLine("UPDATE Settings SET Value = @yearVl      WHERE Key = @StCurrentYearValue;");
+            Dictionary<string, object> param = new()
+            {
+                { "@semesterInf", semesterInf},
+                { "@semesterVl", semesterVl},
+                { "@yearInf", yearInf},
+                { "@yearVl", yearVl},
+                { "@StCurrentSemesterInfo", VmConstants.StCurrentSemesterInfo},
+                { "@StCurrentSemesterValue", VmConstants.StCurrentSemesterValue},
+                { "@StCurrentYearInfo", VmConstants.StCurrentYearInfo},
+                { "@StCurrentYearValue", VmConstants.StCurrentYearValue},
+            };
+            RawSql.ExecNonQuery(sb.ToString(), param);
         }
 
-        public void InsertSemesterSetting(string yearInf, string yearVl, string semesterInf, string semesterVl)
+        public void InsertSemesterSetting(
+              string yearInf
+            , string yearVl
+            , string semesterInf
+            , string semesterVl
+        )
         {
-            string sql =
-                   "INSERT INTO Settings(Key, Value) VALUES"
-                + $"  ('{VmConstants.StCurrentSemesterInfo}', '{semesterInf}')"
-                + $", ('{VmConstants.StCurrentSemesterValue}', '{semesterVl}')"
-                + $", ('{VmConstants.StCurrentYearInfo}', '{yearInf}')"
-                + $", ('{VmConstants.StCurrentYearValue}', '{yearVl}');";
-            _rawSql.ExecNonQuery(sql, null);
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("INSERT INTO Settings(Key, Value) VALUES")
+                .AppendLine("  (@StCurrentSemesterInfo, @semesterInf)")
+                .AppendLine(", (@StCurrentSemesterValue, @semesterVl)")
+                .AppendLine(", (@StCurrentYearInfo, @yearInf)")
+                .AppendLine(", (@StCurrentYearValue, @yearVl)");
+            Dictionary<string, object> param = new()
+            {
+                { "@StCurrentSemesterInfo", VmConstants.StCurrentSemesterInfo },
+                { "@StCurrentSemesterValue", VmConstants.StCurrentSemesterValue },
+                { "@StCurrentYearInfo", VmConstants.StCurrentYearInfo },
+                { "@StCurrentYearValue", VmConstants.StCurrentYearValue },
+                { "@semesterInf", semesterInf},
+                { "@semesterVl", semesterVl},
+                { "@yearInf", yearInf },
+                { "@yearVl", yearVl}
+            };
+            RawSql.ExecNonQuery(sb.ToString(), param);
         }
 
         public void InsertOrUpdateLastOfScreenIndex(string idx)
@@ -53,17 +82,17 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 { "@idx", idx },
                 { "@key", VmConstants.StLastOfScreenIdx },
             };
-            long countResult = _rawSql.ExecScalar(countSettingSql, param, 0L);
+            long countResult = RawSql.ExecScalar(countSettingSql, param, 0L);
             if (countResult == 0)
             {
                 string insertSettingSql = $"INSERT INTO Settings(Key, Value) VALUES (@key, @idx);";
-                int insertResult = _rawSql.ExecNonQuery(insertSettingSql, param);
+                int insertResult = RawSql.ExecNonQuery(insertSettingSql, param);
                 Debug.Assert(insertResult > 0);
             }
             else
             {
                 string updateStSql = "UPDATE Settings SET Value = @idx WHERE Key = @key";
-                int insertResult = _rawSql.ExecNonQuery(updateStSql, param);
+                int insertResult = RawSql.ExecNonQuery(updateStSql, param);
                 Debug.Assert(insertResult > 0);
             }
         }

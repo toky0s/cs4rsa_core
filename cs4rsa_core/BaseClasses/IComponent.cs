@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Cs4rsa.BaseClasses
+﻿namespace Cs4rsa.BaseClasses
 {
     /// <summary>
     /// Triển khai toàn bộ việc Load thông tin khởi tạo ở đây.
@@ -19,6 +17,6 @@ namespace Cs4rsa.BaseClasses
         /// được điều hướng tới bằng <see cref="Cs4rsa.Views.MainWindow.Goto(int)"/>.
         /// </summary>
         /// <returns>Task</returns>
-        Task LoadData();
+        void LoadData();
     }
 }

@@ -6,11 +6,42 @@
   xmlns:converter="clr-namespace:Cs4rsa.Converters"
   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:viewmodels="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
-  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator" 
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+  d:DataContext="{d:DesignInstance Type=viewmodels:ClgViewModel}"
   vml:ViewModelLocator.AutoHookedUpViewModel="True"
-  Loaded="UserControl_Loaded">
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  Loaded="UserControl_Loaded"
+  mc:Ignorable="d">
   <base:BaseUserControl.Resources>
     <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
+    <ContextMenu 
+        x:Key="ClassGroupContextMenu" 
+        DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
+      <MenuItem
+        Command="{Binding GotoCourseCommand}"
+        Header="Xem chi tiết trong Course"
+        Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
+      <MenuItem
+        Command="{Binding ShowDetailsSchoolClassesCommand}"
+        Header="Xem danh sách lớp thành phần"
+        Icon="{materialDesign:PackIcon Kind=ListStatus}">
+        <MenuItem.Style>
+          <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                  <Condition Binding="{Binding SelectedClassGroup, Converter={StaticResource IsNotNullConverter}}" Value="True" />
+                  <Condition Binding="{Binding SelectedClassGroup.IsBelongSpecialSubject}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Visibility" Value="Visible" />
+              </MultiDataTrigger>
+            </Style.Triggers>
+          </Style>
+        </MenuItem.Style>
+      </MenuItem>
+    </ContextMenu>
   </base:BaseUserControl.Resources>
   <Grid>
     <Grid.RowDefinitions>
@@ -43,33 +74,6 @@
       ItemsSource="{Binding ClassGroupModels}"
       PreviewMouseLeftButtonDown="ListBox_PreviewMouseLeftButtonDown"
       SelectedItem="{Binding SelectedClassGroup}">
-      <ListBox.Resources>
-        <ContextMenu x:Key="ClassGroupContextMenu" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
-          <MenuItem
-            Command="{Binding GotoCourseCommand}"
-            Header="Xem chi tiết trong Course"
-            Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
-          <MenuItem
-            Command="{Binding ShowDetailsSchoolClassesCommand}"
-            Header="Xem danh sách lớp thành phần"
-            Icon="{materialDesign:PackIcon Kind=ListStatus}">
-            <MenuItem.Style>
-              <Style TargetType="MenuItem">
-                <Setter Property="Visibility" Value="Collapsed" />
-                <Style.Triggers>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding SelectedClassGroup, Converter={StaticResource IsNotNullConverter}}" Value="True" />
-                      <Condition Binding="{Binding SelectedClassGroup.IsBelongSpecialSubject}" Value="True" />
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Visibility" Value="Visible" />
-                  </MultiDataTrigger>
-                </Style.Triggers>
-              </Style>
-            </MenuItem.Style>
-          </MenuItem>
-        </ContextMenu>
-      </ListBox.Resources>
       <ListBox.ItemTemplate>
         <DataTemplate>
           <Grid>

@@ -10,8 +10,6 @@ using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.CourseSearchSvc.Crawlers;
 using Cs4rsa.Utils.Interfaces;
 
-using System.Threading.Tasks;
-
 namespace Cs4rsa.ViewModels
 {
     public partial class HomeViewModel : ViewModelBase, IScreenViewModel
@@ -29,7 +27,7 @@ namespace Cs4rsa.ViewModels
         private CourseCrawler _courseCrawler;
 
         #region Commands
-        public AsyncRelayCommand UpdateSubjectDbCommand { get; set; }
+        public RelayCommand UpdateSubjectDbCommand { get; set; }
         public RelayCommand GotoFormCommand { get; set; }
         public RelayCommand DonateCommand { get; set; }
         public RelayCommand GotoGitHubCommand { get; set; }
@@ -86,9 +84,9 @@ namespace Cs4rsa.ViewModels
             _openInBrowser.Open(VmConstants.LinkProjectGoogleSheet);
         }
 
-        private async Task OnUpdate()
+        private void OnUpdate()
         {
-            await GotoScreen(4);
+            GotoScreen(4);
         }
 
         public void LoadIsNewSemester()

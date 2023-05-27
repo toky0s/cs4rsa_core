@@ -5,7 +5,6 @@ using Cs4rsa.ViewModels;
 using Cs4rsa.Views;
 
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cs4rsa.BaseClasses
@@ -37,9 +36,9 @@ namespace Cs4rsa.BaseClasses
         /// <inheritdoc cref="MainWindow.Goto(int)"/>
         /// </summary>
         /// <param name="scrIdx">Screen Index</param>
-        protected virtual async Task GotoScreen(int scrIdx)
+        protected static void GotoScreen(int scrIdx)
         {
-            await ((MainWindow)Application.Current.MainWindow).Goto(scrIdx);
+            ((MainWindow)Application.Current.MainWindow).Goto(scrIdx);
         }
 
         /// <summary>

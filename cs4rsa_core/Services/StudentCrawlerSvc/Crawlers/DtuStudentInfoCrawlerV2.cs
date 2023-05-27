@@ -20,7 +20,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
     /// <summary>
     /// 23/1/2022 Version 2 DTU Student Info Crawler
     /// - Fix XPath
-    /// - Fix Get Image
+    /// - Fix GetByPaging Image
     /// </summary>
     public class DtuStudentInfoCrawlerV2 : BaseCrawler, IDtuStudentInfoCrawler
     {
@@ -81,14 +81,13 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
             string imgPath = await LoadImage(imageSrc, studentId);
 
             Curriculum curriculum = await _curriculumCrawler.GetCurriculum(specialString);
-            Curriculum existCurriculum = await _unitOfWork.Curriculums.GetByIdAsync(curriculum.CurriculumId);
+            Curriculum existCurriculum = _unitOfWork.Curriculums.GetByID(curriculum.CurriculumId);
 
             if (existCurriculum == null)
             {
-                await _unitOfWork.Curriculums.AddAsync(curriculum);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Curriculums.Insert(curriculum);
             }
-            Student studentExist = await _unitOfWork.Students.GetByStudentIdAsync(studentId);
+            Student studentExist = _unitOfWork.Students.GetByStudentId(studentId);
             if (studentExist == null)
             {
                 Student student = new()
@@ -104,8 +103,7 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                     AvatarImgPath = imgPath,
                     CurriculumId = curriculum.CurriculumId
                 };
-                await _unitOfWork.Students.AddAsync(student);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Students.Add(student);
                 return student;
             }
             else
@@ -121,7 +119,6 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
                 studentExist.AvatarImgPath = imgPath;
                 studentExist.CurriculumId = curriculum.CurriculumId;
                 _unitOfWork.Students.Update(studentExist);
-                await _unitOfWork.CompleteAsync();
                 return studentExist;
             }
         }

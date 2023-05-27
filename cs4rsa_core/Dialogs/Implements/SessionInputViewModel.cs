@@ -87,10 +87,10 @@ namespace Cs4rsa.Dialogs.Implements
             else
             {
                 // 2. Ngừng tìm kiếm khi special string đã tồn tại trong DB
-                if (await _unitOfWork.Students.ExistsBySpecialString(specialStringV2))
+                if (_unitOfWork.Students.ExistsBySpecialString(specialStringV2))
                 {
-                    IEnumerable<Student> students = _unitOfWork.Students.Find(st => st.SpecialString.Equals(specialStringV2));
-                    _snackbarMessageQueue.Enqueue($"{students.First().Name} đã tồn tại trong cơ sở dữ liệu");
+                    Student resultStudent = _unitOfWork.Students.GetBySpecialString(specialStringV2);
+                    _snackbarMessageQueue.Enqueue($"{resultStudent.Name} đã tồn tại trong cơ sở dữ liệu");
                     return;
                 }
                 // 3. Lấy thông tin sinh viên

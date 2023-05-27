@@ -57,7 +57,7 @@
 
           <Style x:Key="CredizFilledCard" TargetType="{x:Type materialDesign:Card}">
             <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
-            <Setter Property="Padding" Value="16" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="UniformCornerRadius" Value="12" />
             <Setter Property="Foreground" Value="{StaticResource CredizDarkForegroundBrush}" />
             <Setter Property="Background" Value="{StaticResource CredizPrimaryHueLightX2Brush}" />

@@ -25,9 +25,9 @@ namespace Cs4rsa.Views.Profile
             ((StudentPfViewModel)DataContext).OpenInFolderCommand.Execute(stm.StudentId);
         }
 
-        public async Task LoadData()
+        public void LoadData()
         {
-            await ((StudentPfViewModel)DataContext).OnInit();
+            ((StudentPfViewModel)DataContext).OnInit();
         }
 
         private void Txt_StudentCodeForDownload_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -55,11 +55,11 @@ namespace Cs4rsa.Views.Profile
             snackbar.Enqueue(CredizText.StudentMsg001(studentId));
         }
 
-        private async void Txt_SearchById_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Txt_SearchById_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                await ((StudentPfViewModel)DataContext).OnSearch();
+                ((StudentPfViewModel)DataContext).OnSearch();
             }
         }
     }

@@ -109,7 +109,7 @@
 
               <!--  Compact Menu  -->
               <StackPanel
-                x:Name="CompactMenu"
+                Name="CompactMenu"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal" />
 

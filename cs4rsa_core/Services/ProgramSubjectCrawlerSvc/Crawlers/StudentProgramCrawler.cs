@@ -64,7 +64,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         }
 
         /// <summary>
-        /// Get Folder Node
+        /// GetByPaging Folder Node
         /// 
         /// Đệ quy sâu lấy thông tin của folder node.
         /// </summary>
@@ -95,7 +95,9 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                     }
                     else
                     {
-                        parentFolderNode.ChildProgramSubjects.Add(await GetProgramSubject(node, parentFolderNode, preparTasks));
+                        parentFolderNode.ChildProgramSubjects.Add(
+                            GetProgramSubject(node, parentFolderNode, preparTasks)
+                        );
                     }
                 }
             }
@@ -104,7 +106,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         }
 
         /// <summary>
-        /// Get Program Folder
+        /// GetByPaging Program Folder
         /// 
         /// Tạo mới một instance Program Folder từ một Html trNode.
         /// </summary>
@@ -152,14 +154,14 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
         }
 
         /// <summary>
-        /// Get Program Subject
+        /// GetByPaging Program Subject
         /// 
         /// Lấy ra một Program Subject từ một tr node.
         /// </summary>
         /// <param name="node">tr Html Node.</param>
         /// <param name="parentNode">Program Folder cha chứa Program Subject này.</param>
         /// <returns>ProgramSubject</returns>
-        private async Task<ProgramSubject> GetProgramSubject(HtmlNode node, ProgramFolder parentNode, List<Task> preparTasks)
+        private ProgramSubject GetProgramSubject(HtmlNode node, ProgramFolder parentNode, List<Task> preparTasks)
         {
             HtmlDocument doc = new();
             doc.LoadHtml(node.InnerHtml);
@@ -243,8 +245,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
                     CurriculumId = _curid
                 };
 
-                await _unitOfWork.ProgramSubjects.AddAsync(dbProgramSubject);
-                await _unitOfWork.CompleteAsync();
+                _unitOfWork.ProgramSubjects.Add(dbProgramSubject);
             }
 
             return subject;
@@ -281,7 +282,7 @@ namespace Cs4rsa.Services.ProgramSubjectCrawlerSvc.Crawlers
 
             _specialString = specialString;
             _curid = curid;
-            _canSaveSubject = !_unitOfWork.Curriculums.ExistsById(curid.ToString());
+            _canSaveSubject = !_unitOfWork.Curriculums.ExistsById(curid);
 
             string url2001 = GetUrl(NODE_DAI_CUONG);
             string url2002 = GetUrl(NODE_GDTC_VA_QP);

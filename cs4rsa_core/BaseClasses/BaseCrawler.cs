@@ -5,7 +5,7 @@ namespace Cs4rsa.BaseClasses
     public abstract class BaseCrawler : ViewModelBase
     {
         /// <summary>
-        /// Get time from Epoch
+        /// GetByPaging time from Epoch
         /// 
         /// Mô tả:
         ///     Lấy ra thời gian đếm bằng milli giây kể từ ngày 01-01-1970.

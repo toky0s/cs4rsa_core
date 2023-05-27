@@ -5,33 +5,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 {
     public class RawSql
     {
-        private readonly SQLiteConnection _connection;
-        public RawSql()
+        public static void CreateDbIfNotExist()
         {
-            _connection = new SQLiteConnection(VmConstants.DbConnectionString);
-        }
-
-        private void OpenConnection()
-        {
-            if (_connection.State.Equals(ConnectionState.Closed)) _connection.Open();
-        }
-
-        private void CloseConnection(bool isNestedOrIEnumerable = false)
-        {
-            Debug.WriteLineIf(isNestedOrIEnumerable, "CloseConnection: Fail because it is in nested query");
-            Debug.WriteLineIf(!isNestedOrIEnumerable, "CloseConnection: Success");
-            if (_connection.State.Equals(ConnectionState.Open) && !isNestedOrIEnumerable)
-            {
-                _connection.Close();
-            }
+            SQLiteConnection.CreateFile(VmConstants.DbFilePath);
+            string text = File.ReadAllText(VmConstants.InitDbFilePath);
+            ExecNonQuery(text);
         }
 
         /// <summary>
@@ -39,49 +25,44 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// </summary>
         /// <typeparam name="T">Kiểu dữ liệu trả về.</typeparam>
         /// <param name="sql">Câu lệnh SQL.</param>
-        public T ExecScalar<T>(
+        /// <param name="defaultValueIfNull">Giá trị trả về mặc định nếu kết quả NULL.</param>
+        public static T ExecScalar<T>(
+            string sql
+          , T defaultValueIfNull)
+        {
+            return ExecScalar(sql, null, defaultValueIfNull);
+        }
+
+        /// <summary>
+        /// Thực thi SQL Scalar.
+        /// </summary>
+        /// <typeparam name="T">Kiểu dữ liệu trả về.</typeparam>
+        /// <param name="sql">Câu lệnh SQL.</param>
+        /// <param name="sqlParams">Tham số.</param>
+        /// <param name="defaultValueIfNull">Giá trị trả về mặc định nếu kết quả NULL.</param>
+        public static T ExecScalar<T>(
             string sql
           , IDictionary<string, object> sqlParams
           , T defaultValueIfNull)
         {
-            return ExecScalar(sql, sqlParams, defaultValueIfNull, false);
-        }
-
-        /// <summary>
-        /// Thực thi SQL Scalar.
-        /// </summary>
-        /// <typeparam name="T">Kiểu dữ liệu trả về.</typeparam>
-        /// <param name="sql">Câu lệnh SQL.</param>
-        public T ExecScalar<T>(
-            string sql
-          , IDictionary<string, object> sqlParams
-          , T defaultValueIfNull
-          , bool isNestedOrIEnumerable)
-        {
-            Debug.Assert(sql != null);
-            Debug.Assert(_connection != null);
+            Debug.WriteLine(BeautifyParams(sqlParams));
             Debug.WriteLine(sql);
-            using SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteConnection connection = new(VmConstants.DbConnectionString);
+            connection.Open();
+            using SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = sql;
             AddParams(cmd, sqlParams);
-
-            OpenConnection();
             object result = cmd.ExecuteScalar();
-            CloseConnection(isNestedOrIEnumerable);
-
             if (result == null) return defaultValueIfNull;
             return (T)result;
         }
 
-        public T ExecReaderGetFirstOrDefault<T>(
+        public static T ExecReaderGetFirstOrDefault<T>(
             string sql
           , IDictionary<string, object> sqlParams
           , Func<SQLiteDataReader, T> record)
         {
-            var result = ExecReader(
-                sql
-              , sqlParams
-              , record).ToList();
+            List<T> result = ExecReader(sql, sqlParams, record);
             if (result.Count > 0) return result[0];
             return default;
         }
@@ -89,69 +70,65 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// <summary>
         /// Thực thi truy vấn SQL.
         /// </summary>
-        /// <remarks>
-        /// Không thực hiện các <see cref="ExecReader"/> lồng.
-        /// </remarks>
         /// <typeparam name="T">Kết quả mong muốn mà phương thức xử lý sẽ trả về.</typeparam>
         /// <param name="sql">Câu lệnh SQL.</param>
         /// <param name="record">Phương thức tiền xử lý kết quả từ <see cref="IDataRecord"></see></param>
         /// <returns><typeparamref name="T"/></returns>
-        public IEnumerable<T> ExecReader<T>(
-            string sql
-          , IDictionary<string, object> sqlParams
-          , Func<SQLiteDataReader, T> record)
+        public static List<T> ExecReader<T>(string sql, Func<SQLiteDataReader, T> record)
         {
-            try
-            {
-                return ExecReader(sql, sqlParams, record, false);
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine("May be you are performing a nested query operation.");
-                Debug.WriteLine("In this case, you can use another ExecReader overload with isNestedOrInIEnumerable param is True");
-                throw ex;
-            }
+            return ExecReader(sql, null, record);
         }
 
         /// <summary>
         /// Thực thi truy vấn SQL.
         /// </summary>
         /// <remarks>
-        /// Không thực hiện các <see cref="ExecReader"/> lồng.
+        /// Trong trường hợp thực hiện các <see cref="ExecReader"/> lồng
+        /// đưa <paramref name="isNestedOrInIEnumerable"/> về true.
         /// </remarks>
         /// <typeparam name="T">Kết quả mong muốn mà phương thức xử lý sẽ trả về.</typeparam>
         /// <param name="sql">Câu lệnh SQL.</param>
         /// <param name="record">Phương thức tiền xử lý kết quả từ <see cref="IDataRecord"></see></param>
         /// <param name="isNestedOrInIEnumerable">
         /// Các truy vấn có cấu trúc lồng nhau như trong Foreach,
-        /// hoặc kết quả được trả về dưới dạng IEnumerable.
+        /// hoặc kết quả được trả về dưới dạng IEnumerable sẽ phải set
+        /// param này thành true để đánh dấu việc đóng Connection khi
+        /// kết thúc câu query đúng cách.
         /// </param>
-        /// <returns><typeparamref name="T"/></returns>
-        public IEnumerable<T> ExecReader<T>(
+        /// <returns>IEnumerable<typeparamref name="T"/></returns>
+        public static List<T> ExecReader<T>(
             string sql
           , IDictionary<string, object> sqlParams
-          , Func<SQLiteDataReader, T> record
-          , bool isNestedOrInIEnumerable)
+          , Func<SQLiteDataReader, T> record)
         {
-            Debug.Assert(record != null);
-            Debug.Assert(sql != null);
             Debug.WriteLine(BeautifyParams(sqlParams));
             Debug.WriteLine(sql);
 
-            using SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteConnection connection = new(VmConstants.DbConnectionString);
+            connection.Open();
+            using SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = sql;
             AddParams(cmd, sqlParams);
-            OpenConnection();
             using SQLiteDataReader reader = cmd.ExecuteReader();
+            List<T> result = new();
             while (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    yield return record(reader);
+                    result.Add(record(reader));
                 }
             }
-            CloseConnection(isNestedOrInIEnumerable);
+            return result;
+        }
+
+        /// <summary>
+        /// Thực thi câu lệnh DML.
+        /// </summary>
+        /// <param name="sql">Câu lệnh SQL mà không cần tham số.</param>
+        /// <returns>Số record được thao tác.</returns>
+        public static int ExecNonQuery(string sql)
+        {
+            return ExecNonQuery(sql, null);
         }
 
         /// <summary>
@@ -160,17 +137,16 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// <param name="sql">Câu lệnh SQL.</param>
         /// <param name="sqlParams">Danh sách các tham số.</param>
         /// <returns>Số record được thao tác.</returns>
-        public int ExecNonQuery(string sql, IDictionary<string, object> sqlParams)
+        public static int ExecNonQuery(string sql, IDictionary<string, object> sqlParams)
         {
             Debug.WriteLine(BeautifyParams(sqlParams));
             Debug.WriteLine(sql);
-            using SQLiteCommand cmd = _connection.CreateCommand();
+            using SQLiteConnection connection = new(VmConstants.DbConnectionString);
+            connection.Open();
+            using SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = sql;
             AddParams(cmd, sqlParams);
-
-            if (_connection.State.Equals(ConnectionState.Closed)) _connection.Open();
-            int result = cmd.ExecuteNonQuery(CommandBehavior.SingleResult);
-            if (_connection.State.Equals(ConnectionState.Open)) _connection.Close();
+            int result = cmd.ExecuteNonQuery();
             return result;
         }
 
@@ -189,11 +165,20 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
             {
                 handler.AppendFormatted(paramValue.Key);
                 handler.AppendLiteral(": ");
-                handler.AppendFormatted(
-                    paramValue.Value.ToString().Length <= limit
-                    ? paramValue.Value
-                    : paramValue.Value.ToString()[limit..] + $"...({paramValue.Value.ToString().Length - limit})"
-                );
+
+                if (paramValue.Value != null)
+                {
+                    handler.AppendFormatted(
+                        paramValue.Value.ToString().Length <= limit
+                        ? paramValue.Value
+                        : paramValue.Value.ToString()[limit..] + $"...({paramValue.Value.ToString().Length - limit})"
+                    );
+                }
+                else
+                {
+                    handler.AppendFormatted("NULL");
+                }
+
                 sb.AppendLine(ref handler2);
             }
             handler.AppendLiteral("====== Params (");
@@ -213,34 +198,58 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
                 }
             }
         }
-
-        public static string UseFunction<T>(params string[] args) where T : SQLiteFunction
-        {
-            StringBuilder sb = new();
-            string fn = sb
-                .Append(typeof(T).Name)
-                .Append('(')
-                .Append(string.Join(',', args))
-                .Append(')')
-                .ToString();
-            Debug.WriteLine($"Use function {fn}");
-            return fn;
-        }
     }
 
-    /// <summary>
-    /// Hàm thay thế ký tự tiếng Việt có dấu thành không dấu.
-    /// </summary>
-    /// 
-    [SQLiteFunction(Name = "FuncRemoveAccent", Arguments = 1, FuncType = FunctionType.Scalar, FuncFlags = SQLiteFunctionFlags.SQLITE_DETERMINISTIC)]
-    public class FuncRemoveAccent : SQLiteFunction
+    #region String Builder Extension
+    public static class RawSqlStringBuilderExtension
     {
-        public override object Invoke(object[] args)
+        private static readonly Dictionary<string, EnumerableRowCollection<string>> _tableColumnNames = new();
+
+        /// <summary>
+        /// Hỗ trợ tạo tự động mệnh đề Select
+        /// với tên các cột của bảng được truyền vào.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Đối tượng DAO matching với 
+        /// tên bảng trong cơ sở dữ liệu vật lý.
+        /// </typeparam>
+        /// <param name="sb">StringBuilder</param>
+        public static StringBuilder AppendSelectColumns<T>(this StringBuilder sb)
         {
-            string s = (string)args[0];
-            Regex regex = new("\\p{IsCombiningDiacriticalMarks}+");
-            string temp = s.Normalize(NormalizationForm.FormD);
-            return regex.Replace(temp, string.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
+            string tableName = typeof(T).Name + "s";
+            if (_tableColumnNames.TryGetValue(tableName, out EnumerableRowCollection<string> value))
+            {
+                sb.AppendLine(string.Join("\n, ", value));
+            }
+            else
+            {
+                using SQLiteConnection cnn = new(VmConstants.DbConnectionString);
+                cnn.Open();
+                DataTable columnTable = cnn.GetSchema("Columns");
+                EnumerableRowCollection<string> rowCollection =
+                    from c in columnTable.AsEnumerable()
+                    where c["TABLE_NAME"].Equals(typeof(T).Name + "s")
+                    select c["COLUMN_NAME"].ToString();
+                _tableColumnNames.Add(tableName, rowCollection);
+                sb.AppendLine(string.Join("\n, ", rowCollection));
+            }
+            return sb;
+        }
+
+        /// <summary>
+        /// Loại bỏ ký tự cuối cùng trong StringBuilder.
+        /// </summary>
+        /// <remarks>
+        /// Được sử dụng trong trường hợp Bulk Insert, để loại bỏ
+        /// dấu phẩy ở cuối câu lệnh INSERT.
+        /// </remarks>
+        /// <param name="sb">StringBuilder</param>
+        /// <returns>StringBuilder</returns>
+        public static StringBuilder RemoveLastCharAfterAppendLine(this StringBuilder sb)
+        {
+            sb.Length -= 3;
+            return sb;
         }
     }
+    #endregion
 }
