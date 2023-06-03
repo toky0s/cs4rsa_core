@@ -58,11 +58,18 @@ namespace Cs4rsa.Constants
         public static string PathPlanJsonFile(int curid) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentPlans, $"{curid}.json");
         public static string PathHtmlCacheFile(string courseId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdHtmlCaches, $"{courseId}.html");
         /// <summary>
+        /// Trả về đường dẫn tới hình ảnh mặc định của giảng viên.
+        /// </summary>
+        /// <returns>Đường dẫn</returns>
+        public static string PathDefaultLectureImage() => Path.Combine(AppContext.BaseDirectory, "Images", "avatar.png");
+        /// <summary>
         /// Đường dẫn tới hình ảnh hồ sơ sinh viên.
         /// </summary>
         /// <param name="studentId">Mã sinh viên</param>
         /// <returns>Đường dẫn</returns>
         public static string PathStudentProfileImg(string studentId) => Path.Combine(AppContext.BaseDirectory, IFolderManager.FdStudentImgs, $"{studentId}.jpg");
+
+        internal static string PathDefaultStudentImage() => Path.Combine(AppContext.BaseDirectory, "Images", "student-avatar.jpg");
     }
 
     public abstract class VmConstants

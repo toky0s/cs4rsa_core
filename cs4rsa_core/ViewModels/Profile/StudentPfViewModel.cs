@@ -13,20 +13,36 @@ using Cs4rsa.Utils.Interfaces;
 using MaterialDesignThemes.Wpf;
 
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Cs4rsa.Cs4rsaDatabase.DataProviders;
 
 namespace Cs4rsa.ViewModels.Profile
 {
     public partial class StudentPfViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Giới hạn số lượng hình ảnh
+        /// được tải trong một trang.
+        /// </summary>
         private readonly int Limit;
+        /// <summary>
+        /// Danh sách Student cần tải.
+        /// </summary>
         public ObservableCollection<StudentModel> StudentModels { get; set; }
+        /// <summary>
+        /// Danh sách của Student đang được lưu trong DB.
+        /// </summary>
         public ObservableCollection<Student> SavedStudentModels { get; set; }
+        /// <summary>
+        /// Danh sách Student được hiển thị trên giao diện.
+        /// </summary>
+        public ObservableCollection<Student> UiStudents { get; set; }
 
         /// <summary>
         /// Tìm kiếm mã sinh viên.
@@ -77,41 +93,84 @@ namespace Cs4rsa.ViewModels.Profile
 
             StudentModels = new();
             SavedStudentModels = new();
+            UiStudents = new();
             BatchSize = 5;
             WaitBySecond = 3;
             CurrentPage = 1;
-            Limit = 20;
+            Limit = 10;
 
             StudentModels.CollectionChanged += StudentModels_CollectionChanged;
         }
 
-        private void StudentModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        partial void OnSearchStudentIdChanged(string oldValue, string newValue)
+        {
+            Task.Run(() =>
+            {
+                if (string.IsNullOrWhiteSpace(newValue))
+                {
+                    Application.Current.Dispatcher.Invoke(() => {
+                        StartPaging();
+                    });
+                    return;
+                }
+                IEnumerable<Student> students = SavedStudentModels
+                    .Where(st => st.StudentId.Contains(newValue));
+                if (students.Any())
+                {
+                    Application.Current.Dispatcher.Invoke(() => UiStudents.Clear());
+                    foreach (Student student in students)
+                    {
+                        Application.Current.Dispatcher.Invoke(() => UiStudents.Add(student));
+                    }
+                }
+            });
+        }
+
+        private void StudentModels_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             DownloadCommand.NotifyCanExecuteChanged();
         }
 
         public void OnInit()
         {
-            TotalPage = _unitOfWork.Students.CountPage(Limit);
+            LoadStudents();
+            StartPaging();
             NextPageCommand.NotifyCanExecuteChanged();
             PreviousPageCommand.NotifyCanExecuteChanged();
-            LoadStudents();
+        }
+
+        private void StartPaging()
+        {
+            UiStudents.Clear();
+            var pagingStudents = SavedStudentModels
+                .Skip(Limit * (CurrentPage - 1))
+                .Take(Limit);
+            foreach (var student in pagingStudents)
+            {
+                UiStudents.Add(student);    
+            }
+            NextPageCommand.NotifyCanExecuteChanged();
+            PreviousPageCommand.NotifyCanExecuteChanged();
         }
 
         /// <summary>
-        /// Tải các sinh viên đã lưu trong DB.
+        /// Tải tất cả các sinh viên đã lưu trong DB.
         /// </summary>
         /// <returns>Task</returns>
         private void LoadStudents()
         {
             SavedStudentModels.Clear();
-            List<Student> students = _unitOfWork.Students.GetByPaging(CurrentPage, Limit);
-            foreach (Student student in students)
+            _unitOfWork.Students.GetAll().ForEach(st =>
             {
-                SavedStudentModels.Add(student);
-            }
-            NextPageCommand.NotifyCanExecuteChanged();
-            PreviousPageCommand.NotifyCanExecuteChanged();
+                SavedStudentModels.Add(st);
+            });
+            TotalPage = MathUtils.CountPage(SavedStudentModels.Count, Limit);
+        }
+
+        [RelayCommand]
+        private void OnOpenContainFolder()
+        {
+            _openInBrowser.Open(IFolderManager.FdStudentImgs);
         }
 
         [RelayCommand(AllowConcurrentExecutions = true, CanExecute = "CanDownload")]
@@ -153,12 +212,14 @@ namespace Cs4rsa.ViewModels.Profile
         private void OnCleanFolder()
         {
             DirectoryInfo imgFolder = new(IFolderManager.FdStudentImgs);
-            IEnumerable<FileInfo> zeroLengthfiles = imgFolder.GetFiles().Where(f => f.Length == 0);
+            IEnumerable<FileInfo> zeroLengthfiles = imgFolder
+                .GetFiles()
+                .Where(f => f.Length == 0);
             foreach (FileInfo file in zeroLengthfiles)
             {
                 file.Delete();
             }
-            _snackbarMsgQueue.Enqueue(CredizText.Common002("Làm sạch thư mục chứa ảnh"));
+            _snackbarMsgQueue.Enqueue(CredizText.Common002("Xoá ảnh lỗi"));
         }
 
         /// <summary>
@@ -170,48 +231,7 @@ namespace Cs4rsa.ViewModels.Profile
             if (CurrentPage > 1)
             {
                 CurrentPage--;
-                LoadStudents();
-            }
-        }
-
-        [RelayCommand]
-        public void OnSearch()
-        {
-            string clearValue = SearchStudentId.Trim();
-            if (string.IsNullOrEmpty(clearValue))
-            {
-                CurrentPage = 1;
-                TotalPage = _unitOfWork.Students.CountPage(Limit);
-                LoadStudents();
-            }
-            else
-            {
-                long totalItem = _unitOfWork.Students.CountByContainsId(clearValue);
-                TotalPage = totalItem / Limit;
-                CurrentPage = 1;
-                LoadStudents(clearValue, Limit, CurrentPage);
-            }
-            NextPageCommand.NotifyCanExecuteChanged();
-            PreviousPageCommand.NotifyCanExecuteChanged();
-        }
-
-        /// <summary>
-        /// Tìm kiếm sinh viên.
-        /// </summary>
-        /// <param name="studentIdCriteria">Điều kiện tìm kiếm mã sinh viên.</param>
-        /// <param name="pageSize">Số lượng phần tử mỗi trang.</param>
-        /// <param name="page">Số trang.</param>
-        /// <returns>Danh sách sinh viên.</returns>
-        private void LoadStudents(string studentIdCriteria, int pageSize, int page)
-        {
-            SavedStudentModels.Clear();
-            IEnumerable<Student> students = _unitOfWork.Students.GetStudentsByContainsId(
-                studentIdCriteria
-                , pageSize
-                , page);
-            foreach (Student student in students)
-            {
-                SavedStudentModels.Add(student);
+                StartPaging();
             }
         }
 
@@ -229,7 +249,7 @@ namespace Cs4rsa.ViewModels.Profile
             if (CurrentPage < TotalPage)
             {
                 CurrentPage++;
-                LoadStudents();
+                StartPaging();
             }
         }
 
@@ -281,10 +301,16 @@ namespace Cs4rsa.ViewModels.Profile
             }
         }
 
+        /// <summary>
+        /// Thêm mã sinh viên để download.
+        /// </summary>
+        /// <param name="studentId">Mã sinh viên.</param>
         public void AddStudentIdToDownload(string studentId)
         {
-            if (string.IsNullOrEmpty(studentId)) return;
+            if (string.IsNullOrWhiteSpace(studentId)) return;
 
+            // Trường hợp trong cùng một phiên sử dụng ứng dụng
+            // người dùng thực hiện tải cùng một mã hai lần.
             if (StudentModels.Any(sm => sm.StudentId.Equals(studentId)))
             {
                 // Move on top
@@ -344,10 +370,31 @@ namespace Cs4rsa.ViewModels.Profile
                     StudentId = studentId,
                     AvatarImgPath = imgPath,
                 };
-                _unitOfWork.Students.Add(student);
+                
+                if (_unitOfWork.Students.ExistsByStudentCode(studentId))
+                {
+                    Student s = _unitOfWork.Students.GetByStudentId(studentId);
+                    s.AvatarImgPath = imgPath;
+                    _unitOfWork.Students.Update(s);
+                }
+                else
+                {
+                    _unitOfWork.Students.Add(student);
+                }
 
-                if (string.IsNullOrWhiteSpace(SearchStudentId) 
-                    || studentId.Contains(SearchStudentId))
+                // Nếu đang có sẵn trong danh sách thì thực hiện replace.
+                if (SavedStudentModels.Any(st => st.StudentId.Equals(studentId)))
+                {
+                    for (int i = 0; i < SavedStudentModels.Count; i++)
+                    {
+                        if (SavedStudentModels[i].StudentId.Equals(studentId))
+                        {
+                            SavedStudentModels[i] = student;
+                            break;
+                        }
+                    }
+                }
+                else
                 {
                     SavedStudentModels.Add(student);
                 }

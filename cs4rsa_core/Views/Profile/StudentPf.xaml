@@ -61,7 +61,7 @@
 
       <!--  Nhập mã sinh viên để tải xuống  -->
       <TextBox
-        x:Name="Txt_StudentCodeForDownload"
+        Name="Txt_StudentCodeForDownload"
         Grid.Row="2"
         Margin="0,0,0,5"
         Padding="4"
@@ -86,6 +86,7 @@
 
         <!--  Các nút chức năng  -->
         <md:PopupBox
+          Name="PopupBox_FunctionButtons"
           Grid.Column="1"
           Width="{Binding ElementName=Btn_Search, Path=ActualHeight}"
           Height="{Binding ElementName=Btn_Search, Path=ActualHeight}"
@@ -105,18 +106,27 @@
               Command="{Binding GetClipboardCommand}"
               Content="{md:PackIcon Kind=Clipboard}"
               ToolTip="Từ clipboard" />
-            <Button Content="{md:PackIcon Kind=FileExcel}" ToolTip="Từ tệp tin Excel" />
+            <Button 
+              Content="{md:PackIcon Kind=FileExcel}" 
+              ToolTip="Từ tệp tin Excel" />
             <Button
               Command="{Binding CleanFolderCommand}"
               Content="{md:PackIcon Kind=Broom}"
-              ToolTip="Dọn dẹp" />
-            <Button Content="{md:PackIcon Kind=FolderImage}" ToolTip="Mở thư mục" />
+              ToolTip="Dọn dẹp các ảnh bị lỗi" />
+            <Button 
+              Content="{md:PackIcon Kind=FolderImage}" 
+              ToolTip="Mở thư mục chứa ảnh" 
+              Command="{Binding OpenContainFolderCommand}"/>
           </StackPanel>
         </md:PopupBox>
       </Grid>
 
-      <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Visible">
-        <ItemsControl ItemsSource="{Binding StudentModels}">
+      <!--List chứa hình ảnh sinh viên-->
+      <ScrollViewer 
+        Grid.Row="4" 
+        VerticalScrollBarVisibility="Visible">
+        <ItemsControl 
+          ItemsSource="{Binding StudentModels}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Border
@@ -214,150 +224,103 @@
                       </Style>
                     </Button.Style>
                   </Button>
-
                 </Grid>
               </Border>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
-
     </Grid>
 
     <Grid Grid.Column="1" Margin="0,0,0,0">
       <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
-      <Grid Grid.Row="0" Margin="0,0,0,5">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-
-        <!--  Tìm kiếm bằng mã sinh viên  -->
-        <TextBox
-          x:Name="Txt_SearchById"
-          Grid.Column="1"
-          Margin="0,0,5,0"
-          md:HintAssist.Hint="Tìm kiếm"
-          md:TextFieldAssist.HasTrailingIcon="True"
-          md:TextFieldAssist.TrailingIcon="SubdirectoryArrowLeft"
-          KeyDown="Txt_SearchById_KeyDown"
-          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-          Text="{Binding SearchStudentId, UpdateSourceTrigger=PropertyChanged}" />
-
-        <!--  Nút tìm kiếm  -->
-        <Button
-          Grid.Column="2"
-          Command="{Binding SearchCommand}"
-          Content="{md:PackIcon Kind=Magnify}"
-          Style="{StaticResource MaterialDesignIconButton}"
-          ToolTip="Tìm kiếm" />
-      </Grid>
-
-      <!--  View Mode  -->
-      <ListBox
-        Name="ListBox_ViewMode"
-        Grid.Row="1"
+      <!--  Tìm kiếm bằng mã sinh viên  -->
+      <TextBox
         Margin="0,0,0,5"
-        SelectedIndex="0"
-        Style="{StaticResource MaterialDesignToolToggleListBox}">
-        <ListBoxItem Content="{md:PackIcon Kind=ViewGridOutline}" />
-        <ListBoxItem Content="{md:PackIcon Kind=ListBoxOutline}" />
-      </ListBox>
+        Name="Txt_SearchById"
+        Grid.Row="0" 
+        md:HintAssist.Hint="Tìm kiếm"
+        md:TextFieldAssist.HasTrailingIcon="True"
+        md:TextFieldAssist.TrailingIcon="SubdirectoryArrowLeft"
+        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+        Text="{Binding SearchStudentId, UpdateSourceTrigger=PropertyChanged}" />
 
       <!--  Danh sách các sinh viên đã lưu  -->
-      <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-        <ScrollViewer.Style>
-          <Style BasedOn="{StaticResource MaterialDesignScrollViewer}" TargetType="ScrollViewer">
-            <Setter Property="Visibility" Value="Collapsed" />
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding ElementName=ListBox_ViewMode, Path=SelectedIndex}" Value="0">
-                <Setter Property="Visibility" Value="Visible" />
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </ScrollViewer.Style>
-        <ItemsControl ItemsSource="{Binding SavedStudentModels}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <md:Card Margin="0,5,5,0" Padding="5">
-                <StackPanel>
-                  <Image
-                    Width="100"
-                    Height="120"
-                    Source="{Binding AvatarImgPath}"
-                    Stretch="Uniform" />
-                  <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Text="{Binding StudentId}"
-                      TextWrapping="WrapWithOverflow" />
-                    <Label
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Center"
-                      Content="{md:PackIcon Kind=ContentCopy}"
-                      Cursor="Hand"
-                      MouseDown="Label_MouseDown"
-                      ToolTip="Sao chép">
-                      <Label.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignLabel}" TargetType="Label">
-                          <Setter Property="Foreground" Value="SlateGray" />
-                          <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                              <Setter Property="Foreground" Value="Black" />
-                            </Trigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Label.Style>
-                    </Label>
+      <ScrollViewer 
+        Grid.Row="1" 
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding UiStudents}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <md:Card 
+                  Width="130"
+                  Margin="0,5,5,0"
+                  Style="{StaticResource MaterialDesignOutlinedCard}"
+                  UniformCornerRadius="12">
+                  <md:Card.Clip>
+                    <MultiBinding Converter="{StaticResource BorderClipConverter}">
+                      <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                      <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+                      <Binding Path="UniformCornerRadius" RelativeSource="{RelativeSource Self}" />
+                      <Binding Path="BorderThickness" RelativeSource="{RelativeSource Self}" />
+                      <Binding Path="Padding" RelativeSource="{RelativeSource Self}" />
+                    </MultiBinding>
+                  </md:Card.Clip>
+                  <StackPanel>
+                    <Image
+                      Source="{Binding BitmapFrame}"
+                      Stretch="UniformToFill" />
+                    <Border Padding="5">
+                      <StackPanel 
+                        HorizontalAlignment="Center" 
+                        Orientation="Horizontal">
+                        <TextBlock
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Text="{Binding StudentId}"
+                          TextWrapping="WrapWithOverflow" />
+                        <Label
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center"
+                          Content="{md:PackIcon Kind=ContentCopy}"
+                          Cursor="Hand"
+                          MouseDown="Label_MouseDown"
+                          ToolTip="Sao chép">
+                          <Label.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignLabel}" TargetType="Label">
+                              <Setter Property="Foreground" Value="SlateGray" />
+                              <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                  <Setter Property="Foreground" Value="Black" />
+                                </Trigger>
+                              </Style.Triggers>
+                            </Style>
+                          </Label.Style>
+                        </Label>
+                      </StackPanel>
+                    </Border>
                   </StackPanel>
-                </StackPanel>
-              </md:Card>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-        </ItemsControl>
+                </md:Card>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </StackPanel>
       </ScrollViewer>
-
-      <!--  List View Mode  -->
-      <ListView Grid.Row="2" ItemsSource="{Binding SavedStudentModels}">
-        <ListView.Style>
-          <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="ListView">
-            <Setter Property="Visibility" Value="Collapsed" />
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding ElementName=ListBox_ViewMode, Path=SelectedIndex}" Value="1">
-                <Setter Property="Visibility" Value="Visible" />
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </ListView.Style>
-        <ListView.View>
-          <GridView AllowsColumnReorder="False">
-            <GridViewColumn DisplayMemberBinding="{Binding StudentId}" Header="Mã sinh viên" />
-            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Họ và tên" />
-            <GridViewColumn DisplayMemberBinding="{Binding PhoneNumber}" Header="Số điện thoại" />
-            <GridViewColumn DisplayMemberBinding="{Binding Address}" Header="Địa chỉ" />
-            <GridViewColumn DisplayMemberBinding="{Binding Email}" Header="Email" />
-            <GridViewColumn DisplayMemberBinding="{Binding CurriculumId}" Header="Mã ngành" />
-          </GridView>
-        </ListView.View>
-      </ListView>
 
       <!--  Paging Functions  -->
       <StackPanel
-        Grid.Row="3"
+        Grid.Row="2"
         HorizontalAlignment="Right"
         Orientation="Horizontal">
         <TextBlock

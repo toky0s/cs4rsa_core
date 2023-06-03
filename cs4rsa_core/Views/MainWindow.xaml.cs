@@ -133,7 +133,6 @@ namespace Cs4rsa.Views
                 Width = HeightAndWidth,
                 Height = HeightAndWidth
             };
-            ListViewMenu.SelectedIndex = index;
             button = CompactMenu.Children[index] as Button;
             button.Content = icon;
 

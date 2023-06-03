@@ -167,11 +167,14 @@ namespace Cs4rsa.Services.StudentCrawlerSvc.Crawlers
         public async Task<string> DownloadProfileImg(string studentCode)
         {
             string url = $"http://hfs1.duytan.edu.vn/Upload/dichvu/sv_{studentCode}_01.jpg";
-            _ = await _imageDownloader.DownloadImage(url, CredizText.PathStudentProfileImg(studentCode));
-            FileInfo fi = new(CredizText.PathStudentProfileImg(studentCode));
-            if (fi.Exists && fi.Length > 0)
+            bool result = await _imageDownloader.DownloadImage(url, CredizText.PathStudentProfileImg(studentCode));
+            if (result)
             {
-                return studentCode;
+                FileInfo fi = new(CredizText.PathStudentProfileImg(studentCode));
+                if (fi.Exists && fi.Length > 0)
+                {
+                    return studentCode;
+                }
             }
             return null;
         }

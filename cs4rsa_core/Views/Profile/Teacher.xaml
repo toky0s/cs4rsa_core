@@ -25,6 +25,7 @@
         <RowDefinition />
         <RowDefinition Height="auto" />
       </Grid.RowDefinitions>
+      <!--Tìm kiếm giảng viên-->
       <TextBox
         Grid.Row="0"
         VerticalAlignment="Top"
@@ -100,8 +101,18 @@
     </Grid>
     <materialDesign:Card
       Grid.Column="1"
-      Margin="10,0,0,0"
-      Padding="10">
+      Style="{StaticResource MaterialDesignOutlinedCard}"
+      UniformCornerRadius="12"
+      Margin="10,0,0,10">
+      <materialDesign:Card.Clip>
+        <MultiBinding Converter="{StaticResource BorderClipConverter}">
+          <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+          <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+          <Binding Path="UniformCornerRadius" RelativeSource="{RelativeSource Self}" />
+          <Binding Path="BorderThickness" RelativeSource="{RelativeSource Self}" />
+          <Binding Path="Padding" RelativeSource="{RelativeSource Self}" />
+        </MultiBinding>
+      </materialDesign:Card.Clip>
       <materialDesign:Transitioner x:Name="Transitioner" SelectedIndex="{Binding CurrentIndex}">
         <materialDesign:TransitionerSlide>
           <materialDesign:TransitionerSlide.OpeningEffects>
@@ -111,32 +122,39 @@
           <materialDesign:TransitionerSlide.BackwardWipe>
             <materialDesign:SlideWipe Direction="Left" />
           </materialDesign:TransitionerSlide.BackwardWipe>
-          <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding SelectedTeacher, Converter={StaticResource NullableToVisibilityConverter}}">
-            <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-              </Grid.RowDefinitions>
-              <Grid Grid.Row="0">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="300" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!--Hình ảnh giảng viên-->
+            <Image
+              Grid.Row="0"
+              Margin="0,0,0,10"
+              Source="{Binding SelectedTeacher.BitmapFrame}"
+              Stretch="UniformToFill" />
+
+            <!--Phần thông tin-->
+            <ScrollViewer Grid.Row="1"
+              VerticalScrollBarVisibility="Auto" 
+              Visibility="{Binding 
+                SelectedTeacher, 
+                Converter={StaticResource NullableToVisibilityConverter}}">
+              <Grid>
                 <Grid.RowDefinitions>
-                  <RowDefinition Height="1*" />
-                  <RowDefinition Height="auto" />
-                  <RowDefinition Height="2*" />
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Image
-                  Grid.Row="0"
-                  Margin="0,0,0,10"
-                  Source="{Binding SelectedTeacher.Path, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=/Images/avatar.png}"
-                  Stretch="UniformToFill" />
                 <TextBlock
-                  Grid.Row="1"
+                  Grid.Row="0"
                   HorizontalAlignment="Center"
-                  Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                  Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                   Text="{Binding SelectedTeacher.Name}"
                   TextAlignment="Center"
                   TextWrapping="WrapWithOverflow" />
                 <StackPanel
-                  Grid.Row="2"
+                  Grid.Row="1"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Orientation="Horizontal">
@@ -163,37 +181,46 @@
                     </Label.Style>
                   </Label>
                 </StackPanel>
-              </Grid>
+                <StackPanel Grid.Row="2">
 
-              <StackPanel Grid.Row="1">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                  <Button
-                    Margin="5,5,0,5"
-                    Command="{Binding OpenOnWebCommand}"
-                    Content="{materialDesign:PackIcon Kind=OpenInNew}"
-                    IsEnabled="{Binding SelectedTeacher, TargetNullValue=False, Converter={StaticResource NullableToVisibilityConverter}}"
-                    ToolTip="Mở trong trình duyệt" />
-                  <Button
-                    Margin="5,5,0,5"
-                    Command="{Binding SubjectsViewCommand}"
-                    Content="{materialDesign:PackIcon Kind=Teacher}"
-                    ToolTip="Danh sách môn đã/đang giảng dạy" />
-                  <Button
-                    Margin="5"
-                    Command="{Binding UpdateCommand}"
-                    Content="{materialDesign:PackIcon Kind=Refresh}"
-                    ToolTip="Làm mới" />
+                  <!--Các nút chức năng-->
+                  <Border>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                      <Button
+                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                        Command="{Binding OpenOnWebCommand}"
+                        Content="{materialDesign:PackIcon Kind=OpenInNew}"
+                        IsEnabled="{Binding SelectedTeacher, TargetNullValue=False, Converter={StaticResource NullableToVisibilityConverter}}"
+                        ToolTip="Mở trong trình duyệt" />
+                      <Button
+                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                        Command="{Binding SubjectsViewCommand}"
+                        Content="{materialDesign:PackIcon Kind=Teacher}"
+                        ToolTip="Danh sách môn đã/đang giảng dạy" />
+                      <Button
+                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                        Command="{Binding UpdateCommand}"
+                        Content="{materialDesign:PackIcon Kind=Refresh}"
+                        ToolTip="Làm mới" />
+                    </StackPanel>
+                  </Border>
+                  <Border 
+                    Padding="10"
+                    Grid.Row="2">
+                    <StackPanel Grid.Row="1">
+                      <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
+                      <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}" />
+                      <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}" />
+                      <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}" TextWrapping="WrapWithOverflow" />
+                      <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}" />
+                      <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />
+                      <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}" />
+                    </StackPanel>
+                  </Border>
                 </StackPanel>
-                <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
-                <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Quê quán: {0}}" />
-                <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Chức vụ: {0}}" />
-                <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị công tác: {0}}" TextWrapping="WrapWithOverflow" />
-                <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Vị trí: {0}}" />
-                <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />
-                <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}" />
-              </StackPanel>
-            </Grid>
-          </ScrollViewer>
+              </Grid>
+            </ScrollViewer>
+          </Grid>
         </materialDesign:TransitionerSlide>
         <materialDesign:TransitionerSlide>
           <materialDesign:TransitionerSlide.OpeningEffects>
@@ -209,25 +236,28 @@
               <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel
-              Grid.Row="0"
-              VerticalAlignment="Center"
-              Orientation="Horizontal">
-              <Button
-                Command="{Binding DetailsViewCommand}"
-                Content="{materialDesign:PackIcon Kind=ArrowBack}"
-                Style="{StaticResource MaterialDesignIconButton}" />
-              <TextBlock
+                Grid.Row="0"
                 VerticalAlignment="Center"
-                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                Text="Danh sách các môn" />
+                Orientation="Horizontal">
+              <Button
+                  Command="{Binding DetailsViewCommand}"
+                  Content="{materialDesign:PackIcon Kind=ArrowBack}"
+                  Style="{StaticResource MaterialDesignIconButton}" />
+              <TextBlock
+                  VerticalAlignment="Center"
+                  Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                  Text="Danh sách các môn" />
             </StackPanel>
-            <ListBox Grid.Row="1" ItemsSource="{Binding SelectedTeacher.TeachedSubjects}">
-              <ListBox.ItemTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding}" />
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
+            <ScrollViewer Grid.Row="1">
+              <ListBox
+                  ItemsSource="{Binding SelectedTeacher.TeachedSubjects}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </ScrollViewer>
           </Grid>
         </materialDesign:TransitionerSlide>
       </materialDesign:Transitioner>

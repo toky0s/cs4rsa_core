@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.BaseClasses
 {
@@ -28,12 +26,11 @@ namespace Cs4rsa.BaseClasses
 
         /// <summary>
         /// Đăng ký một Component cho Màn hình này.
-        /// Thực hiện đăng ký các component trong
-        /// phần xử lý sự kiện Loaded khi màn hình đã
-        /// tải thành công.
+        /// Thực hiện gọi method này trong constructor của
+        /// Component cha.
         /// </summary>
-        /// <param name="component">IComponent</param>
-        protected void RegisterComponent(IComponent component)
+        /// <param name="component">Component con.</param>
+        public void RegisterComponent(IComponent component)
         {
             _components.Add(component);
         }

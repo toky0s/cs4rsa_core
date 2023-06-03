@@ -252,4 +252,19 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         }
     }
     #endregion
+
+    #region Utils Function
+    public class MathUtils
+    {
+        public static int CountPage(int amount, int limit)
+        {
+            int page = amount / limit;
+            if (page * limit < amount)
+            {
+                return page + 1;
+            }
+            return page;
+        }
+    }
+    #endregion
 }

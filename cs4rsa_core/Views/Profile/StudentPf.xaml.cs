@@ -6,7 +6,6 @@ using Cs4rsa.ViewModels.Profile;
 
 using MaterialDesignThemes.Wpf;
 
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -53,14 +52,6 @@ namespace Cs4rsa.Views.Profile
             Clipboard.SetData(DataFormats.Text, studentId);
             ISnackbarMessageQueue snackbar = (ISnackbarMessageQueue)Container.GetService(typeof(ISnackbarMessageQueue));
             snackbar.Enqueue(CredizText.StudentMsg001(studentId));
-        }
-
-        private void Txt_SearchById_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                ((StudentPfViewModel)DataContext).OnSearch();
-            }
         }
     }
 }

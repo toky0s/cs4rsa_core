@@ -7,6 +7,7 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
+using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
 
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace Cs4rsa.ViewModels.Profile
         #endregion
 
         #region Properties
+        private List<Teacher> _cacheAllTeachers;
         public ObservableCollection<TeacherModel> Lectures { get; set; }
 
         [ObservableProperty]
@@ -87,6 +89,7 @@ namespace Cs4rsa.ViewModels.Profile
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
             _teacherCrawler = teacherCrawler;
+            _cacheAllTeachers = new();
 
             Lectures = new();
             CurrentPage = 1;
@@ -96,7 +99,21 @@ namespace Cs4rsa.ViewModels.Profile
 
         partial void OnSearchTextChanged(string value)
         {
-            Filter(value);
+            value = value.Trim().ToLower();
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                LoadTeachers();
+                return;
+            }
+            IEnumerable<TeacherModel> teachers = _cacheAllTeachers
+                .Where(t => StringHelper.ReplaceVietNamese(t.Name.ToLower())
+                    .Contains(StringHelper.ReplaceVietNamese(value)))
+                .Select(teacher => new TeacherModel(teacher));
+            Lectures.Clear();
+            foreach (TeacherModel teacher in teachers)
+            {
+                Lectures.Add(teacher);
+            }
         }
 
         partial void OnSelectedTeacherChanged(TeacherModel value)
@@ -150,27 +167,12 @@ namespace Cs4rsa.ViewModels.Profile
             _openInBrowser.Open(SelectedTeacher.Url);
         }
 
-        private void Filter(string searchText)
-        {
-            searchText = searchText.Trim();
-            if (searchText == string.Empty)
-            {
-                LoadTeachers();
-                return;
-            }
-            IEnumerable<TeacherModel> teachers = _unitOfWork.Teachers
-                .GetTeacherByNameOrId(searchText)
-                .Select(teacher => new TeacherModel(teacher));
-            Lectures.Clear();
-            foreach (TeacherModel teacher in teachers)
-            {
-                Lectures.Add(teacher);
-            }
-        }
-
         public void LoadTeachers()
         {
             Lectures.Clear();
+            _cacheAllTeachers.Clear();
+
+            _cacheAllTeachers = _unitOfWork.Teachers.GetTeachers();
             TotalPage = _unitOfWork.Teachers.CountPage(SIZE);
             List<Teacher> teachers = _unitOfWork.Teachers.GetTeachers(CurrentPage, SIZE);
             foreach (Teacher teacher in teachers)
@@ -179,7 +181,7 @@ namespace Cs4rsa.ViewModels.Profile
             }
             if (Lectures.Any())
             {
-                SelectedTeacher = Lectures.FirstOrDefault();
+                SelectedTeacher = Lectures.First();
             }
             ReEvaluatePreviousNextButton();
         }
