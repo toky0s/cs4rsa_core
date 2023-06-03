@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,19 +22,18 @@ namespace Cs4rsa.Utils
         /// <returns>Tải ảnh thành công trả về true, ngược lại trả về false.</returns>
         public async Task<bool> DownloadImage(string url, string saveTo)
         {
-            Debug.Assert(url != null);
-            Debug.Assert(saveTo != null);
-
             try
             {
                 using HttpResponseMessage res = await _httpClient.GetAsync(url);
                 res.EnsureSuccessStatusCode();
-                byte[] bytes = await res.Content.ReadAsByteArrayAsync();
-                await File.WriteAllBytesAsync(saveTo, bytes);
+                using HttpContent content = res.Content;
+                byte[] bytes = await content.ReadAsByteArrayAsync();
+                File.WriteAllBytes(saveTo, bytes);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message, "ERROR");
                 return false;
             }
         }

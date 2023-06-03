@@ -4,7 +4,6 @@ using Cs4rsa.ViewModels.Profile;
 
 using MaterialDesignThemes.Wpf;
 
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

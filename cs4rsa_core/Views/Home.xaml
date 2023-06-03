@@ -154,10 +154,21 @@
         </Grid>
       </materialDesign:Card>
       <materialDesign:Card
+        Style="{StaticResource MaterialDesignOutlinedCard}"
+        UniformCornerRadius="12"
         Grid.Column="1"
         Width="400"
         Margin="10,0,0,0"
         HorizontalAlignment="Left">
+        <materialDesign:Card.Clip>
+          <MultiBinding Converter="{StaticResource BorderClipConverter}">
+            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="UniformCornerRadius" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="BorderThickness" RelativeSource="{RelativeSource Self}" />
+            <Binding Path="Padding" RelativeSource="{RelativeSource Self}" />
+          </MultiBinding>
+        </materialDesign:Card.Clip>
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="160" />

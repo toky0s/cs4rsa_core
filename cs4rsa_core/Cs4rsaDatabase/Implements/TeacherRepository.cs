@@ -168,7 +168,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 sb.ToString()
                 , new Dictionary<string, object>()
                 {
-                    { "@page", page == 1 ? 0 : page},
+                    { "@page", page - 1},
                     { "@limit", limit}
                 }
                 , r => new Teacher()
@@ -230,6 +230,32 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public long CountPage(int size)
         {
             return RawSql.ExecScalar($"SELECT CAST(ROUND(COUNT(*) / {size} + 0.5, 0) AS INT) FROM Teachers", 0L);
+        }
+
+        public List<Teacher> GetTeachers()
+        {
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("SELECT")
+                .AppendSelectColumns<Teacher>()
+                .AppendLine("FROM Teachers");
+            return RawSql.ExecReader(
+                sb.ToString()
+                , r => new Teacher()
+                {
+                      TeacherId= r.GetInt32(0)
+                    , Name= r.GetString(1)
+                    , Sex= r.GetString(2)
+                    , Place= r.GetString(3)
+                    , Degree= r.GetString(4)
+                    , WorkUnit= r.GetString(5)
+                    , Position= r.GetString(6)
+                    , Subject= r.IsDBNull(7) ? string.Empty : r.GetString(7)
+                    , Form= r.GetString(8)
+                    , TeachedSubjects= r.GetString(9)
+                    , Path= r.GetString(10)
+                    , Url = r.GetString(11)
+                }
+            );
         }
     }
 }

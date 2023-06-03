@@ -178,9 +178,9 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
             string imageUrl = GetTeacherImagePath(teacherId);
             string imageName = GetTeacherImageName(teacherId);
             string strImageFullPath = Path.Combine(_strSavingTeacherImageFolderPath, imageName);
+            File.Delete(strImageFullPath);
             bool result = await _imageDownloader.DownloadImage(imageUrl, strImageFullPath);
-            if (result) return strImageFullPath;
-            return string.Empty;
+            return result ? strImageFullPath : string.Empty;
         }
     }
 }

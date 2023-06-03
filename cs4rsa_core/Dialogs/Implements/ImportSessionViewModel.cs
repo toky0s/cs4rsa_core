@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cs4rsa.Dialogs.Implements
@@ -46,7 +45,7 @@ namespace Cs4rsa.Dialogs.Implements
         #endregion
 
         #region Commands
-        public AsyncRelayCommand DeleteCommand { get; set; }
+        public RelayCommand DeleteCommand { get; set; }
         public RelayCommand ImportCommand { get; set; }
         public RelayCommand CloseDialogCommand { get; set; }
         #endregion
@@ -70,13 +69,13 @@ namespace Cs4rsa.Dialogs.Implements
             UserSubjects = new();
             _isAvailableSession = -1;
 
-            DeleteCommand = new AsyncRelayCommand(OnDelete, () => _selectedScheduleSession != null);
-            ImportCommand = new RelayCommand(
+            DeleteCommand = new(OnDelete, () => _selectedScheduleSession != null);
+            ImportCommand = new(
                 OnImport,
                 () => (UserSubjects.Any() && IsAvailableSession == 1)
                     || (UserSubjects.Count > 0 && !string.IsNullOrWhiteSpace(ShareStringText))
             );
-            CloseDialogCommand = new RelayCommand(CloseDialog);
+            CloseDialogCommand = new(CloseDialog);
         }
 
         partial void OnSelectedScheduleSessionChanged(UserSchedule value)
@@ -169,7 +168,7 @@ namespace Cs4rsa.Dialogs.Implements
             Messenger.Send(new ImportSessionVmMsgs.ExitImportSubjectMsg(UserSubjects));
         }
 
-        private async Task OnDelete()
+        private void OnDelete()
         {
             string sessionName = SelectedScheduleSession.Name;
             MessageBoxResult result = MessageBox.Show(

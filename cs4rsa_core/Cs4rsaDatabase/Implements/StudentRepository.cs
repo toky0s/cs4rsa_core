@@ -83,16 +83,16 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                 }
                 , r => new Student()
                 {
-                      StudentId = r.GetString(0)
-                    , SpecialString = r.GetString(1)
-                    , Name = r.GetString(2)
-                    , BirthDay = DateTime.Parse(r.GetString(3))
-                    , Cmnd = r.GetString(4)
-                    , Email = r.GetString(5)
-                    , PhoneNumber = r.GetString(6)
-                    , Address = r.GetString(7)
+                      StudentId     = r.GetString(0)
+                    , SpecialString = r.IsDBNull(1) ? null : r.GetString(1)
+                    , Name          = r.IsDBNull(2) ? null : r.GetString(2)
+                    , BirthDay      = DateTime.Parse(r.GetString(3))
+                    , Cmnd          = r.IsDBNull(4) ? null : r.GetString(4)
+                    , Email         = r.IsDBNull(5) ? null : r.GetString(5)
+                    , PhoneNumber   = r.IsDBNull(6) ? null : r.GetString(6)
+                    , Address       = r.IsDBNull(7) ? null : r.GetString(7)
                     , AvatarImgPath = r.GetString(8)
-                    , CurriculumId = r.GetInt32(9)
+                    , CurriculumId  = r.IsDBNull(9) ? null : r.GetInt32(9)
                 }
             );
         }
@@ -134,37 +134,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             );
         }
 
-        public List<Student> GetByPaging(int limit, int page)
-        {
-            StringBuilder sb = new StringBuilder()
-                .AppendLine("SELECT")
-                .AppendSelectColumns<Student>()
-                .AppendLine("FROM Students")
-                .AppendLine("LIMIT @limit")
-                .AppendLine("OFFSET @page * @limit");
-            return RawSql.ExecReader(
-                sb.ToString()
-                , new Dictionary<string, object>()
-                {
-                    { "@page", page},
-                    { "@limit", limit}
-                }
-                , r => new Student()
-                {
-                      StudentId = r.GetString(0)
-                    , SpecialString = r.GetString(1)
-                    , Name = r.GetString(2)
-                    , BirthDay = DateTime.Parse(r.GetString(3))
-                    , Cmnd = r.GetString(4)
-                    , Email = r.GetString(5)
-                    , PhoneNumber = r.GetString(6)
-                    , Address = r.GetString(7)
-                    , AvatarImgPath = r.GetString(8)
-                    , CurriculumId = r.GetInt32(9)
-                }
-            );
-        }
-
         public int Remove(Student student)
         {
             if (student.StudentId == null)
@@ -185,16 +154,16 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
         public int Update(Student student)
         {
             StringBuilder sb = new StringBuilder()
-                .AppendLine("UPDATE Students")
-                .AppendLine("SpecialString  = @SpecialString")
-                .AppendLine("Name           = @Name")
-                .AppendLine("BirthDay       = @BirthDay")
-                .AppendLine("Cmnd           = @Cmnd")
-                .AppendLine("Email          = @Email")
-                .AppendLine("PhoneNumber    = @PhoneNumber")
-                .AppendLine("Address        = @Address")
-                .AppendLine("AvatarImgPath  = @AvatarImgPath")
-                .AppendLine("CurriculumId   = @CurriculumId")
+                .AppendLine("UPDATE Students SET")
+                .AppendLine("  SpecialString  = @SpecialString")
+                .AppendLine(", Name           = @Name")
+                .AppendLine(", BirthDay       = @BirthDay")
+                .AppendLine(", Cmnd           = @Cmnd")
+                .AppendLine(", Email          = @Email")
+                .AppendLine(", PhoneNumber    = @PhoneNumber")
+                .AppendLine(", Address        = @Address")
+                .AppendLine(", AvatarImgPath  = @AvatarImgPath")
+                .AppendLine(", CurriculumId   = @CurriculumId")
                 .AppendLine("WHERE")
                 .AppendLine("StudentId = @StudentId");
 
@@ -248,11 +217,6 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
             RawSql.ExecNonQuery(sb.ToString(), param);
         }
 
-        public long CountPage(int limit)
-        {
-            return RawSql.ExecScalar($"SELECT CAST(ROUND(COUNT(*) / {limit} + 0.5, 0) AS INT) FROM Students", 0L);
-        }
-
         public Student GetBySpecialString(string specialString)
         {
             StringBuilder sb = new StringBuilder()
@@ -278,6 +242,55 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
                     , Address = r.GetString(7)
                     , AvatarImgPath = r.GetString(8)
                     , CurriculumId = r.GetInt32(9)
+                }
+            );
+        }
+
+        public bool ExistsByStudentCode(string studentCode)
+        {
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("SELECT COUNT(*)")
+                .AppendLine("FROM Students")
+                .AppendLine("WHERE StudentId = @studentCode");
+
+            return RawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    { "@studentCode", studentCode }
+                }
+                , 0L) > 0L;
+        }
+
+        public List<Student> GetAll()
+        {
+            StringBuilder sb = new StringBuilder()
+                .AppendLine("SELECT")
+                .AppendSelectColumns<Student>()
+                .AppendLine("FROM Students");
+            return RawSql.ExecReader(
+                sb.ToString()
+                /* 
+                 * Khởi tạo Student đã bao gồm xử lý cho việc
+                 * nhập Student qua SessionId và qua chức năng
+                 * tìm kiếm hình ảnh sinh viên.
+                 * */
+                , r => new Student()
+                {
+                      StudentId     = r.GetString(0)
+                    , SpecialString = r.IsDBNull(1) ? null : r.GetString(1)
+                    , Name          = r.IsDBNull(2) ? null : r.GetString(2)
+                    /* 
+                     * Với chức năng tìm kiếm hình ảnh sinh viên 
+                     * BirthDay được set thành Min của DateTime.
+                     */
+                    , BirthDay      = DateTime.Parse(r.GetString(3))
+                    , Cmnd          = r.IsDBNull(4) ? null : r.GetString(4)
+                    , Email         = r.IsDBNull(5) ? null : r.GetString(5)
+                    , PhoneNumber   = r.IsDBNull(6) ? null : r.GetString(6)
+                    , Address       = r.IsDBNull(7) ? null : r.GetString(7)
+                    , AvatarImgPath = r.GetString(8)
+                    , CurriculumId  = r.IsDBNull(9) ? null : r.GetInt32(9)
                 }
             );
         }

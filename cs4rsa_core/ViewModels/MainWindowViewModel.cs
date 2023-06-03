@@ -6,8 +6,6 @@ using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
 using MaterialDesignThemes.Wpf;
 
-using System;
-
 namespace Cs4rsa.ViewModels
 {
     /// <summary>
@@ -72,7 +70,9 @@ namespace Cs4rsa.ViewModels
 
         internal void LoadInfor()
         {
-            bool succeeded = int.TryParse(_unitOfWork.Settings.GetBykey(VmConstants.StLastOfScreenIdx), out int @result);
+            bool succeeded = int.TryParse(
+                _unitOfWork.Settings.GetBykey(VmConstants.StLastOfScreenIdx)
+                , out int @result);
             StoredScreenIdx = succeeded ? result : 0;
         }
     }

@@ -8,7 +8,6 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:profile="clr-namespace:Cs4rsa.ViewModels.Profile"
   d:DataContext="{d:DesignInstance Type=profile:ProfileViewModel}"
-  Loaded="ScreenAbstract_Loaded"
   mc:Ignorable="d">
   <TabControl
     Padding="5,5,5,0"
