@@ -28,6 +28,7 @@
     <Page Remove="Models\Interfaces\**" />
     <Page Remove="Releases\**" />
     <Page Remove="Views\ManualScheduling\BlockViews\**" />
+    <Compile Remove="Exceptions\Xin.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,5 +128,9 @@
 
   <ItemGroup>
     <SplashScreen Include="AppResources\SplashScreen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>
