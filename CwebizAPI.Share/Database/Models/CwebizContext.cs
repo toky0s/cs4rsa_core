@@ -35,17 +35,17 @@ public partial class CwebizContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Course__3214EC07BAA96B98");
+            entity.HasKey(e => e.Id).HasName("PK__Course__3214EC07827F8E6D");
 
             entity.ToTable("Course");
 
-            entity.HasIndex(e => e.SemesterInfor, "UQ__Course__A8232F1CE6149AC7").IsUnique();
+            entity.HasIndex(e => e.SemesterInfor, "UQ__Course__A8232F1CC304E843").IsUnique();
 
-            entity.HasIndex(e => e.SemesterValue, "UQ__Course__B1935875C5A2A570").IsUnique();
+            entity.HasIndex(e => e.SemesterValue, "UQ__Course__B1935875E0A61725").IsUnique();
 
-            entity.HasIndex(e => e.YearInfor, "UQ__Course__BF305DB9FD524035").IsUnique();
+            entity.HasIndex(e => e.YearInfor, "UQ__Course__BF305DB9C28F85D0").IsUnique();
 
-            entity.HasIndex(e => e.YearValue, "UQ__Course__C795062E554BDB75").IsUnique();
+            entity.HasIndex(e => e.YearValue, "UQ__Course__C795062EDB1A78F2").IsUnique();
 
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
@@ -62,11 +62,11 @@ public partial class CwebizContext : DbContext
 
         modelBuilder.Entity<Curriculum>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Curricul__3214EC076A032CA3");
+            entity.HasKey(e => e.Id).HasName("PK__Curricul__3214EC075856D3BD");
 
             entity.ToTable("Curriculum");
 
-            entity.HasIndex(e => e.Name, "UQ__Curricul__737584F6FFE6999A").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Curricul__737584F629AB6FF7").IsUnique();
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(100);
@@ -74,13 +74,16 @@ public partial class CwebizContext : DbContext
 
         modelBuilder.Entity<CwebizUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__CwebizUs__3214EC075967B322");
+            entity.HasKey(e => e.Id).HasName("PK__CwebizUs__3214EC075B6533E4");
 
             entity.ToTable("CwebizUser");
 
-            entity.HasIndex(e => e.Username, "UQ__CwebizUs__536C85E42DA8036D").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__CwebizUs__536C85E406BB3377").IsUnique();
 
             entity.Property(e => e.Password).IsUnicode(false);
+            entity.Property(e => e.StudentId)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Username)
                 .HasMaxLength(30)
                 .IsUnicode(false);
@@ -88,11 +91,11 @@ public partial class CwebizContext : DbContext
 
         modelBuilder.Entity<Discipline>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Discipli__3214EC07A2C64F45");
+            entity.HasKey(e => e.Id).HasName("PK__Discipli__3214EC076FE6023E");
 
             entity.ToTable("Discipline");
 
-            entity.HasIndex(e => e.Name, "UQ__Discipli__737584F62353C105").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Discipli__737584F6E69FDECF").IsUnique();
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(100);
@@ -104,13 +107,13 @@ public partial class CwebizContext : DbContext
 
         modelBuilder.Entity<Keyword>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Keyword__3214EC07C2C56EE6");
+            entity.HasKey(e => e.Id).HasName("PK__Keyword__3214EC07E8F05640");
 
             entity.ToTable("Keyword");
 
-            entity.HasIndex(e => e.CourseId, "UQ__Keyword__C92D71A628DDC0CB").IsUnique();
+            entity.HasIndex(e => e.CourseId, "UQ__Keyword__C92D71A65EFDAEA0").IsUnique();
 
-            entity.HasIndex(e => e.Color, "UQ__Keyword__E11D38453C474CAE").IsUnique();
+            entity.HasIndex(e => e.Color, "UQ__Keyword__E11D3845B4319AE1").IsUnique();
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Color)
@@ -126,15 +129,13 @@ public partial class CwebizContext : DbContext
 
         modelBuilder.Entity<Student>(entity =>
         {
-            entity.HasKey(e => e.StudentId).HasName("PK__Student__32C52B99181D6CBD");
+            entity.HasKey(e => e.StudentId).HasName("PK__Student__32C52B99450EFDF4");
 
             entity.ToTable("Student");
 
-            entity.HasIndex(e => e.CwebizUserId, "CwebizUserId_CwebizUser_Id").IsUnique();
+            entity.HasIndex(e => e.SpecialString, "UQ__Student__5DB990369640D2C5").IsUnique();
 
-            entity.HasIndex(e => e.SpecialString, "UQ__Student__5DB99036F5E7C2C8").IsUnique();
-
-            entity.HasIndex(e => e.Cmnd, "UQ__Student__B1BC1171C04079FF").IsUnique();
+            entity.HasIndex(e => e.Cmnd, "UQ__Student__B1BC1171FE3B7668").IsUnique();
 
             entity.Property(e => e.StudentId)
                 .HasMaxLength(20)
@@ -158,10 +159,6 @@ public partial class CwebizContext : DbContext
             entity.HasOne(d => d.Curriculum).WithMany(p => p.Students)
                 .HasForeignKey(d => d.CurriculumId)
                 .HasConstraintName("CurriculumId_Curriculum_Id");
-
-            entity.HasOne(d => d.CwebizUser).WithOne(p => p.Student)
-                .HasForeignKey<Student>(d => d.CwebizUserId)
-                .HasConstraintName("FK__Student__CwebizU__403A8C7D");
         });
 
         OnModelCreatingPartial(modelBuilder);

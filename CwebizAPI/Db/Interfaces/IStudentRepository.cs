@@ -30,7 +30,6 @@ namespace CwebizAPI.Db.Interfaces
         #endregion
 
         #region Student
-
         /// <summary>
         /// Thêm mới một sinh viên.
         /// </summary>

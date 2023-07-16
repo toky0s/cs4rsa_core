@@ -23,7 +23,7 @@ namespace CwebizAPI.Share.DTOs.Requests
         /// <summary>
         /// ASP.NET_SessionID
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Trường này không được để trống")]
         public string? AspNetSessionId { get; set; }
     }
 }

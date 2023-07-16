@@ -21,7 +21,6 @@ namespace CwebizAPI.Converters
                 Id = keyword.Id,
                 Keyword1 = keyword.Keyword1,
                 CourseId = keyword.CourseId,
-                Cache = keyword.Cache,
                 Color = keyword.Color,
                 SubjectName = keyword.SubjectName
             };

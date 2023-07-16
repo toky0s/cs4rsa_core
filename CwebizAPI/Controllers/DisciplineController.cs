@@ -5,6 +5,7 @@
 using CwebizAPI.Businesses;
 using CwebizAPI.Settings;
 using CwebizAPI.Share.DTOs.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ namespace CwebizAPI.Controllers
     /// <summary>
     /// Discipline Controller.
     /// </summary>
+    [Authorize(Roles = "Trial")]
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [Consumes("application/json")]
@@ -37,7 +39,6 @@ namespace CwebizAPI.Controllers
         [HttpGet("Disciplines", Name = "Lấy ra danh sách các Discipline")]
         public async Task<ActionResult<IEnumerable<DtoRpDiscipline>>> Get()
         {
-            // Phân quyền đoạn này.
             return Ok(await _buDiscipline.GetAllDtoDiscipline());
         }
 

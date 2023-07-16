@@ -25,9 +25,5 @@ public partial class Student
 
     public int? CurriculumId { get; set; }
 
-    public int? CwebizUserId { get; set; }
-
     public virtual Curriculum? Curriculum { get; set; }
-
-    public virtual CwebizUser? CwebizUser { get; set; }
 }

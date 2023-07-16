@@ -24,6 +24,7 @@ namespace CwebizAPI.Businesses
     /// <remarks>
     /// Created Date: 16/06/2023
     /// Modified Date: 16/06/2023
+    /// 15/07/2023: Chỉnh sửa tài liệu Register
     /// Author: Truong A Xin
     /// </remarks>
     public class BuRegister
@@ -45,6 +46,15 @@ namespace CwebizAPI.Businesses
             _jwtTokenSvc = jwtTokenSvc;
         }
         
+        /// <summary>
+        /// Đăng ký một sinh viên vào hệ thống Cwebiz.
+        /// </summary>
+        /// <param name="registerInformation">Thông tin đăng ký.</param>
+        /// <returns>DTO Response Register.</returns>
+        /// <exception cref="BadHttpRequestException">
+        /// ASP.NET Session ID không hợp lệ,
+        /// Thông tin Email không trùng khớp
+        /// </exception>
         public async Task<DtoRpRegister> Register(DtoRqRegister registerInformation)
         {
             string? specialString = await _specialStringCrawler.GetSpecialString(registerInformation.AspNetSessionId!);
@@ -125,9 +135,10 @@ namespace CwebizAPI.Businesses
             CwebizUser cwebizUser = new()
             {
                 Username = dtoRqLinkAccount.Username!,
+                // Mã hoá Password.
                 Password = BCrypt.Net.BCrypt.HashPassword(dtoRqLinkAccount.Password),
-                UserType = (int)UserType.Student,
-                Student = student
+                UserType = UserRole.Student.DbValue,
+                StudentId = student.StudentId
             };
                     
             _unitOfWork.UserRepository?.Insert(cwebizUser);

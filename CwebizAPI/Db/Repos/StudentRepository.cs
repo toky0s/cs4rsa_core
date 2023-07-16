@@ -142,7 +142,8 @@ public class StudentRepository : IStudentRepository
     {
         if (studentId == null) throw new ArgumentNullException(nameof(studentId));
         return await (from s in _cwebizContext.Students
-            where s.StudentId.Equals(studentId) && s.CwebizUser != null
+            from u in _cwebizContext.CwebizUsers
+            where s.StudentId.Equals(studentId) && u.StudentId.Equals(studentId)
             select s).AnyAsync();
     }
 }
