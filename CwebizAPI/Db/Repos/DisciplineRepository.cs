@@ -73,13 +73,6 @@ namespace CwebizAPI.Db.Repos
             _disposed = true;
         }
 
-        public async Task UpdateCacheByKeywordId(int keywordId, string cache)
-        {
-            Keyword keyword = (await _dbContext.Keywords.FirstOrDefaultAsync(k => k.Id == keywordId))!;
-            keyword.Cache = cache;
-            _dbContext.Entry(keyword).State = EntityState.Modified;
-        }
-
         public async Task<Keyword> GetKeyword(string discipline, string keyword1)
         {
             return (await (from kw in _dbContext.Keywords

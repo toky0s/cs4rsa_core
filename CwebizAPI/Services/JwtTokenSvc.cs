@@ -3,10 +3,12 @@
  */
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using CwebizAPI.Services.Interfaces;
 using CwebizAPI.Services.Tokens;
+using CwebizAPI.Share.Database.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CwebizAPI.Services;
@@ -16,33 +18,45 @@ namespace CwebizAPI.Services;
 /// </summary>
 /// <remarks>
 /// Created Date: 17/06/2023
-/// Modified Date: 17/06/2023
+/// Modified Date:
+/// 17/06/2023: Init
+/// 24/06/2023: GetLoginJwtSecurityToken
 /// Author: Truong A Xin
 /// </remarks>
 public class JwtTokenSvc : IJwtTokenSvc
 {
     private readonly IConfiguration _configuration;
+
+    #region Register Configs
+    
     // Thời gian hết hạn 30 phút
-    private const int ExpiredTime = 30;
+    private const int RegisterExpiredTime = 30;
     private const string JwtRegisterSubject = "JwtForRegister:Subject";
     private const string JwtRegisterKey = "JwtForRegister:Key";
     private const string JwtRegisterIssuer = "JwtForRegister:Issuer";
     private const string JwtRegisterAudience = "JwtForRegister:Audience";
+    
+    #endregion
 
+    #region Login Configs
+
+    // Thời gian hết hạn 7 ngày
+    private const int LoginExpiredTime = 7;
+    private const string JwtRequestKey = "JwtForRequest:Key";
+    private const string JwtRequestIssuer = "JwtForRequest:Issuer";
+    private const string JwtRequestAudience = "JwtForRequest:Audience";
+
+    #endregion
+    
     public JwtTokenSvc(IConfiguration configuration)
     {
         _configuration = configuration;
     }
     
-    /// <summary>
-    /// Tạo JWT cho việc đăng ký Student.
-    /// </summary>
-    /// <param name="registerToken">RegisterToken</param>
-    /// <returns>JwtSecurityToken</returns>
     public JwtSecurityToken GetRegisterJwtSecurityToken(RegisterToken registerToken)
     {
         long iat = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
-        long exp = (long)DateTime.UtcNow.AddMinutes(ExpiredTime).Subtract(DateTime.UnixEpoch).TotalSeconds;
+        long exp = (long)DateTime.UtcNow.AddMinutes(RegisterExpiredTime).Subtract(DateTime.UnixEpoch).TotalSeconds;
 
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_configuration[JwtRegisterKey]!));
         SigningCredentials signIn = new(key, SecurityAlgorithms.HmacSha256);
@@ -57,23 +71,45 @@ public class JwtTokenSvc : IJwtTokenSvc
             { JwtRegisteredClaimNames.Iat, iat },
             { JwtRegisteredClaimNames.Exp, exp },
             { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
-            { "StudentId", registerToken.StudentId!}
+            { "StudentId", registerToken.StudentId! }
         };
-        
+
         return new JwtSecurityToken(jwtHeader, jwtPayload);
     }
 
     /// <summary>
-    /// Xác thực token.
+    /// Hàm sinh Token cho Login.
     /// </summary>
-    /// <param name="token">Chuỗi token.</param>
-    /// <param name="validatedToken">Nếu validate thành công trả về validatedToken, ngược lại NULL</param>
-    /// <param name="principal">Nếu validate thành công trả về principal, ngược lại NULL</param>
-    /// <returns>Trả về true nếu validate thành công. Ngược lại trả về false.</returns>
+    /// <param name="cwebizUser"></param>
+    /// <returns>JwtSecurityToken</returns>
+    public JwtSecurityToken GetLoginJwtSecurityToken(CwebizUser cwebizUser)
+    {
+        long iat = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        long exp = (long)DateTime.UtcNow.AddDays(LoginExpiredTime).Subtract(DateTime.UnixEpoch).TotalSeconds;
+
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_configuration[JwtRequestKey]!));
+        SigningCredentials signIn = new(key, SecurityAlgorithms.HmacSha256);
+        JwtHeader jwtHeader = new(signIn);
+
+        JwtPayload jwtPayload = new()
+        {
+            { JwtRegisteredClaimNames.Iss, _configuration[JwtRequestIssuer] },
+            { JwtRegisteredClaimNames.Aud, _configuration[JwtRequestAudience] },
+            { JwtRegisteredClaimNames.Iat, iat },
+            { JwtRegisteredClaimNames.Exp, exp },
+            { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
+        };
+        
+        jwtPayload.AddClaim(new Claim(ClaimTypes.Name, cwebizUser.Username));
+        jwtPayload.AddClaim(new Claim(ClaimTypes.NameIdentifier, cwebizUser.Id.ToString()));
+        
+        return new JwtSecurityToken(jwtHeader, jwtPayload);
+    }
+
     public bool ValidateToken(string token, out SecurityToken? validatedToken, out IPrincipal? principal)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters();
+        JwtSecurityTokenHandler tokenHandler = new();
+        TokenValidationParameters validationParameters = GetValidationParameters();
 
         IPrincipal claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
         if (claimsPrincipal.Identity is { IsAuthenticated: true })

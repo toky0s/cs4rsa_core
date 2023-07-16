@@ -1,4 +1,5 @@
-﻿using CwebizAPI.Businesses;
+﻿using System.Text;
+using CwebizAPI.Businesses;
 using CwebizAPI.Crawlers;
 using CwebizAPI.Db;
 
@@ -14,8 +15,11 @@ using CwebizAPI.Crawlers.StudentCrawlerSvc.Crawlers;
 using CwebizAPI.Crawlers.StudentCrawlerSvc.Crawlers.Interfaces;
 using CwebizAPI.Db.Interfaces;
 using CwebizAPI.Jobs.DisciplineJob;
+using CwebizAPI.Middlewares;
 using CwebizAPI.Services;
 using CwebizAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CwebizAPI
 {
@@ -24,10 +28,38 @@ namespace CwebizAPI
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+            ConfigurationManager configuration = builder.Configuration;
+            
+            #region JWT Authentication
 
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = configuration["JwtForRequest:Issuer"],
+                    ValidAudience = configuration["JwtForRequest:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtForRequest:Key"]!)),
+                    ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    RequireExpirationTime = true
+                };
+            });
+            #endregion
+            
+            #region Services
             // Add services to the container.
             builder.Services.AddLogging();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IJwtTokenSvc, JwtTokenSvc>();
+            builder.Services.AddScoped<IImageStorageSvc, ImageStorageSvc>();
+            #endregion
 
             #region Crawler
             builder.Services.AddScoped<HtmlWeb>();
@@ -39,20 +71,18 @@ namespace CwebizAPI
             builder.Services.AddScoped<ICurriculumCrawler, CurriculumCrawler>();
             builder.Services.AddScoped<ISpecialStringCrawler, SpecialStringCrawlerV2>();
             #endregion
-
-            #region Services
-            builder.Services.AddScoped<IJwtTokenSvc, JwtTokenSvc>();
-            #endregion
             
             #region Businesses
-            builder.Services.AddScoped<IImageStorageSvc, ImageStorageSvc>();
             builder.Services.AddScoped<BuDiscipline>();
             builder.Services.AddScoped<BuRegister>();
+            builder.Services.AddScoped<BuLogin>();
+            builder.Services.AddScoped<BuUser>();
             #endregion
+
+            #region CORS
 
             builder.Services.AddCors(options =>
             {
-                ConfigurationManager configuration = builder.Configuration;
                 options.AddPolicy(Policies.CredizBlazorPolicy, policy =>
                 {
                     policy.WithOrigins(configuration.GetSection("Origins:Fe").Value!)
@@ -61,10 +91,7 @@ namespace CwebizAPI
                 });
             });
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            #endregion
 
             #region Quartz Jobs
             builder.Services.AddQuartz(q =>
@@ -77,7 +104,7 @@ namespace CwebizAPI
                     .WithDailyTimeIntervalSchedule(quartzBuilder =>
                     {
                         quartzBuilder
-                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(23, 00))
+                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(12, 00))
                             .OnEveryDay()
                             .Build();
                     })
@@ -90,6 +117,11 @@ namespace CwebizAPI
                 options.AwaitApplicationStarted = true;
             });
             #endregion
+            
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             WebApplication app = builder.Build();
 
@@ -100,10 +132,14 @@ namespace CwebizAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseExceptionHandler("/Error");
+
             app.UseHttpsRedirection();
 
             app.UseCors();
-            
+
+            app.UseAuthentication();
+            app.UseUserClaims();
             app.UseAuthorization();
 
             app.MapControllers();

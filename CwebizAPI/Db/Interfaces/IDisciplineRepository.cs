@@ -52,7 +52,6 @@ namespace CwebizAPI.Db.Interfaces
         /// </summary>
         /// <param name="keywords">Danh sách Keyword.</param>
         void InsertAll(IEnumerable<Keyword> keywords);
-        Task UpdateCacheByKeywordId(int keywordId, string cache);
         Task<Keyword> GetKeyword(string discipline, string keyword1);
         
         /// <summary>

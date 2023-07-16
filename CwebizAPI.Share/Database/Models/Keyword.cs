@@ -15,8 +15,6 @@ public partial class Keyword
 
     public string Color { get; set; } = null!;
 
-    public string? Cache { get; set; }
-
     public int? DisciplineId { get; set; }
 
     public virtual Discipline? Discipline { get; set; }

@@ -13,5 +13,5 @@ public partial class CwebizUser
 
     public int UserType { get; set; }
 
-    public virtual Student? Student { get; set; }
+    public string? StudentId { get; set; }
 }

@@ -5,9 +5,12 @@
 
 -- Run Migrate.cmd
 
-DROP DATABASE Cwebiz;
+USE master;
+ALTER DATABASE [Cwebiz] set single_user with rollback immediate
+DROP DATABASE [Cwebiz]
 
 IF
+     
 NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'Cwebiz')
 BEGIN
     CREATE DATABASE Cwebiz;
@@ -27,6 +30,7 @@ CREATE TABLE CwebizUser
     [Username]    VARCHAR(30)   UNIQUE NOT NULL,
     [Password]    VARCHAR(MAX)  NOT NULL,
     [UserType]    INT           NOT NULL,
+    [StudentId]   VARCHAR(20)
 );
 END;
 
@@ -60,11 +64,9 @@ CREATE TABLE Student
     [Address]         NVARCHAR(200),
     [AvatarImgPath]   VARCHAR(MAX),
     [CurriculumId]    INT,
-    [CwebizUserId]    INT   REFERENCES CwebizUser(Id),
     CONSTRAINT CurriculumId_Curriculum_Id
         FOREIGN KEY (CurriculumId)
             REFERENCES Curriculum(Id),
-    CONSTRAINT CwebizUserId_CwebizUser_Id UNIQUE (CwebizUserId)
 );
 END ;
 
@@ -110,7 +112,6 @@ CREATE TABLE Keyword
     [CourseId]      INT             NOT NULL UNIQUE,
     [SubjectName]   NVARCHAR(100)   NOT NULL,
     [Color]         VARCHAR(7)      NOT NULL UNIQUE,
-    [Cache]         NVARCHAR(MAX),
     [DisciplineId]  INT,
     CONSTRAINT DisciplineId_Discipline_Id
         FOREIGN KEY (DisciplineId)

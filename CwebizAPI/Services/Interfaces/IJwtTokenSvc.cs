@@ -5,6 +5,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Principal;
 using CwebizAPI.Services.Tokens;
+using CwebizAPI.Share.Database.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CwebizAPI.Services.Interfaces;
@@ -27,11 +28,18 @@ public interface IJwtTokenSvc
     JwtSecurityToken GetRegisterJwtSecurityToken(RegisterToken registerToken);
     
     /// <summary>
-    /// Thực hiện xác thực Token.
+    /// Lấy ra JwtSecurityToken cho Login
     /// </summary>
-    /// <param name="token">Thông tin token.</param>
-    /// <param name="validatedToken">SecurityToken</param>
-    /// <param name="principal">IPrincipal</param>
-    /// <returns>Trả về True nếu xác thực thành công, ngược lại trả về False.</returns>
+    /// <param name="cwebizUser">Thông tin người dùng.</param>
+    /// <returns>JwtSecurityToken</returns>
+    JwtSecurityToken GetLoginJwtSecurityToken(CwebizUser cwebizUser);
+    
+    /// <summary>
+    /// Xác thực token.
+    /// </summary>
+    /// <param name="token">Chuỗi token.</param>
+    /// <param name="validatedToken">Nếu validate thành công trả về validatedToken, ngược lại NULL</param>
+    /// <param name="principal">Nếu validate thành công trả về principal, ngược lại NULL</param>
+    /// <returns>Trả về true nếu validate thành công. Ngược lại trả về false.</returns>
     bool ValidateToken(string token, out SecurityToken? validatedToken, out IPrincipal? principal);
 }

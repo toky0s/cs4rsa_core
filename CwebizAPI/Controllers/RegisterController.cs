@@ -46,14 +46,13 @@ namespace CwebizAPI.Controllers
         /// Thông tin đăng ký bao gồm một Jwt Token xác thực cho việc
         /// tạo tài khoản và liên kết tài khoản.
         /// </returns>
-        [HttpPost("", Name = "Register account for a students")]
-        public async Task<ActionResult<DtoRpRegister>> RegisterStudent(
+        [HttpPost("AddStudent", Name = "Register account for a students")]
+        public async Task<IActionResult> RegisterStudent(
             [FromBody] DtoRqRegister registerInformation
         )
         {
             if (!ModelState.IsValid) throw new BadHttpRequestException("Thông tin đăng ký không hợp lệ");
             return Ok(await _buRegister.Register(registerInformation));
-
         }
 
         /// <summary>
