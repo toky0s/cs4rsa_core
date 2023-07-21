@@ -1,7 +1,6 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.ViewModels;
-
-using System.Windows;
+﻿using System;
+using System.Linq;
+using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
@@ -43,24 +42,77 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         /// </summary>
         public Phase GetPhase()
         {
-            PhaseStore phaseStore = (PhaseStore)((App)Application.Current).Container.GetService(typeof(PhaseStore));
-            int betweenPointValue = phaseStore.BwpValue;
-            if (EndWeek <= betweenPointValue)
-            {
+            if (IsSummerSmt(StartWeek)) return Phase.First;
+            if (IsFirstSmtAllPhase(StartWeek, EndWeek) || IsSecondSmtAllPhase(StartWeek, EndWeek)) return Phase.All;
+            if (IsFirstSmtFirstPhase(StartWeek, EndWeek) || IsSecondSmtFirstPhase(StartWeek, EndWeek))
                 return Phase.First;
-            }
-            else if (StartWeek > betweenPointValue)
-            {
+            if (IsFirstSmtSecondPhase(StartWeek, EndWeek) || IsSecondSmtSecondPhase(StartWeek, EndWeek))
                 return Phase.Second;
-            }
-            else if (StartWeek <= betweenPointValue && EndWeek > betweenPointValue)
-            {
-                return Phase.All;
-            }
-            else
-            {
-                return Phase.Unknown;
-            }
+            return Phase.Unknown;
         }
+
+        /// <summary>
+        /// Lấy ra số tuần học.
+        /// </summary>
+        /// <param name="start">Tuần bắt đầu.</param>
+        /// <param name="end">Tuần kết thúc.</param>
+        /// <returns>Số tuần học.</returns>
+        /// <exception cref="ArgumentException">Không xác định được tuần bắt đầu hoặc tuần kết thúc.</exception>
+        private static int GetLearnWeekAmount(int start, int end)
+        {
+            if (start == 0) throw new ArgumentException("Không xác định được tuần bắt đầu");
+            if (end == 0) throw new ArgumentException("Không xác định được tuần kết thúc");
+            return end - start + 1;
+        }
+        
+        #region First semester
+
+        private static bool IsFirstSmtFirstPhase(int start, int end)
+        {
+            int lwAmount = GetLearnWeekAmount(start, end);
+            return lwAmount is >= 5 and < 10 && start == 1;
+        }
+
+        private static bool IsFirstSmtSecondPhase(int start, int end)
+        {
+            return !IsFirstSmtFirstPhase(start, end);
+        }
+        
+        private static bool IsFirstSmtAllPhase(int start, int end)
+        {
+            return GetLearnWeekAmount(start, end) >= 10;
+        }
+        
+        #endregion
+
+        #region Second Semester
+
+        private static bool IsSecondSmtFirstPhase(int start, int end)
+        {
+            int[] startWeeks = { 27, 28 };
+            return startWeeks.Contains(start) && GetLearnWeekAmount(start, end) < 10;
+        }
+        
+        private static bool IsSecondSmtSecondPhase(int start, int end)
+        {
+            return !IsSecondSmtFirstPhase(start, end);
+        }
+        
+        private static bool IsSecondSmtAllPhase(int start, int end)
+        {
+            return GetLearnWeekAmount(start, end) >= 10;
+        }
+
+        #endregion
+
+        #region Summer semester
+        
+        private static bool IsSummerSmt(int start)
+        {
+            return start >= 43;
+        }
+        
+        #endregion
+        
     }
 }

@@ -32,8 +32,6 @@ using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Squirrel;
-
 using System;
 using System.IO;
 using System.Net;
@@ -48,12 +46,6 @@ namespace Cs4rsa
         public IMessenger Messenger { get; private set; }
         protected override void OnStartup(StartupEventArgs e)
         {
-            // Init Clowd.Squirrel
-            SquirrelAwareApp.HandleEvents(
-                onInitialInstall: OnAppInstall,
-                onAppUninstall: OnAppUninstall
-            );
-
             base.OnStartup(e);
             Messenger = WeakReferenceMessenger.Default;
             Container = CreateServiceProvider();
@@ -79,16 +71,6 @@ namespace Cs4rsa
 
             // Init Folder
             InitFolders();
-        }
-
-        private static void OnAppInstall(SemanticVersion version, IAppTools tools)
-        {
-            tools.CreateShortcutForThisExe(ShortcutLocation.StartMenu | ShortcutLocation.Desktop);
-        }
-
-        private static void OnAppUninstall(SemanticVersion version, IAppTools tools)
-        {
-            tools.RemoveShortcutForThisExe(ShortcutLocation.StartMenu | ShortcutLocation.Desktop);
         }
 
         private static IServiceProvider CreateServiceProvider()
@@ -129,7 +111,6 @@ namespace Cs4rsa
             services.AddSingleton<SaveSessionViewModel>();
             services.AddSingleton<ImportSessionViewModel>();
             services.AddSingleton<ShareStringViewModel>();
-            services.AddSingleton<PhaseStore>();
 
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchViewModel>();

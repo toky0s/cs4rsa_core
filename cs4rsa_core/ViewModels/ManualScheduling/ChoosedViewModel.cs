@@ -69,20 +69,17 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
-        private readonly PhaseStore _phaseStore;
         private readonly IUnitOfWork _unitOfWork;
         #endregion
 
         public ChoosedViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
-            PhaseStore phaseStore,
             IUnitOfWork unitOfWork
         )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
             _shareStringGenerator = shareString;
-            _phaseStore = phaseStore;
             _unitOfWork = unitOfWork;
 
             #region Messengers
@@ -199,7 +196,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             }
 
             ClassGroupModels.Clear();
-            _phaseStore.RemoveAll();
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -224,7 +220,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             string message = CredizText.ManualMsg001(_selectedClassGroupModel.Name);
             ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
-            _phaseStore.RemoveClassGroup(_selectedClassGroupModel);
             Messenger.Send(new DelClassGroupChoiceMsg(_selectedClassGroupModel));
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
@@ -342,7 +337,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 else
                     ClassGroupModels.Add(classGroupModel);
             }
-            _phaseStore.AddClassGroupModel(classGroupModel);
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
             DeleteAllCommand.NotifyCanExecuteChanged();
@@ -353,7 +347,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             foreach (ClassGroupModel classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
-                _phaseStore.AddClassGroupModel(classGroupModel);
             }
             UpdateConflicts();
             SaveCommand.NotifyCanExecuteChanged();
@@ -402,7 +395,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 if (ClassGroupModels[i].Name == className)
                 {
                     actionData = ClassGroupModels[i].DeepClone();
-                    _phaseStore.RemoveClassGroup(ClassGroupModels[i]);
                     Messenger.Send(new DelClassGroupChoiceMsg(ClassGroupModels[i]));
                     ClassGroupModels.RemoveAt(i);
                     _snackbarMessageQueue.Enqueue(

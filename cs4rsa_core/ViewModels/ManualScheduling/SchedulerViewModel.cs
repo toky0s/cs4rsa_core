@@ -51,26 +51,14 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         public ObservableCollection<string> Timelines { get; }
 
-        public PhaseStore PhaseStore
-        {
-            get
-            {
-                return _phaseStore;
-            }
-        }
         #endregion
 
         #region Commands
         public RelayCommand ResetBetweenPointCommand { get; set; }
         #endregion
 
-        #region DI
-        private readonly PhaseStore _phaseStore;
-        #endregion
-
-        public SchedulerViewModel(PhaseStore phaseStore)
+        public SchedulerViewModel()
         {
-            _phaseStore = phaseStore;
 
             #region Messengers
             Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
@@ -145,7 +133,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Messenger.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
             {
                 CleanDays();
-                _phaseStore.RemoveAll();
             });
 
             Messenger.Register<ChoosedVmMsgs.UndoDelMsg>(this, (r, m) =>
@@ -178,12 +165,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
             {
                 CleanDays();
-                _phaseStore.RemoveAll();
             });
-            #endregion
-
-            #region Commands
-            ResetBetweenPointCommand = new(() => _phaseStore.EvaluateBetweenPoint());
             #endregion
 
             #region Weeks and Timelines
