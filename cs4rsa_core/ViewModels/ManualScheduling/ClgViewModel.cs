@@ -303,16 +303,13 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         #endregion
 
         #region Services
-        private readonly PhaseStore _phaseStore;
         private readonly IOpenInBrowser _openInBrowser;
         #endregion
 
         public ClgViewModel(
-            PhaseStore phaseStore,
             IOpenInBrowser openInBrowser
         )
         {
-            _phaseStore = phaseStore;
             _openInBrowser = openInBrowser;
 
             Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
@@ -351,7 +348,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
                 string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
                 classGroupModel.ReRenderScheduleRequest(schoolClassName);
-                _phaseStore.AddClassGroupModel(classGroupModel);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 
@@ -384,7 +380,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 }
                 else
                 {
-                    _phaseStore.AddClassGroupModel(value);
                     Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
                 }
             }
@@ -393,31 +388,31 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private bool CanResetFilter()
         {
             return
-            Monday != false
-            || Tuesday != false
-            || Wednesday != false
-            || Thursday != false
-            || Friday != false
-            || Saturday != false
-            || Sunday != false
+            Monday
+            || Tuesday
+            || Wednesday
+            || Thursday
+            || Friday
+            || Saturday
+            || Sunday
 
-            || Place137NVL != false
-            || Place254NVL != false
-            || PlaceHoaKhanh != false
-            || PlacePhanThanh != false
-            || PlaceQuangTrung != false
-            || PlaceVietTin != false
-            || PlaceOnline != false
+            || Place137NVL
+            || Place254NVL
+            || PlaceHoaKhanh
+            || PlacePhanThanh
+            || PlaceQuangTrung
+            || PlaceVietTin
+            || PlaceOnline
 
-            || PhaseFirst != false
-            || PhaseSecond != false
-            || PhaseBoth != false
+            || PhaseFirst
+            || PhaseSecond
+            || PhaseBoth
 
-            || HasSeat != false
-            || HasSchedule != false
-            || Morning != false
-            || Afternoon != false
-            || Night != false;
+            || HasSeat
+            || HasSchedule
+            || Morning
+            || Afternoon
+            || Night;
         }
 
         private bool ClassGroupFilter(object obj)

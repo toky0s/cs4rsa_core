@@ -110,7 +110,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         #region Services
         private readonly ColorGenerator _colorGenerator;
-        private readonly PhaseStore _phaseStore;
         private readonly CourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
@@ -120,7 +119,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         public SearchViewModel(
             ColorGenerator colorGenerator,
-            PhaseStore phaseStore,
             CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
@@ -134,7 +132,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             #endregion
 
             #region Services
-            _phaseStore = phaseStore;
             _courseCrawler = courseCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
@@ -177,7 +174,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<AutoVmMsgs.SaveStoreMsg>(this, (r, m) =>
             {
-                _phaseStore.RemoveAll();
                 SubjectModels.Clear();
                 ComModels.Clear();
 
@@ -240,11 +236,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 }
 
                 // Đánh giá Phase Store xác định tuần ngăn cách
-                _phaseStore.AddClassGroupModels(value.ClassGroupModels);
-
                 foreach (ClassGroupModel cgm in value.ClassGroupModels)
                 {
-                    _phaseStore.AddClassGroupModel(cgm);
                     Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(cgm));
                 }
 
@@ -415,7 +408,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             #endregion
 
             SubjectModels.Clear();
-            _phaseStore.RemoveAll();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
             UpdateCreditTotal();
             UpdateSubjectAmount();
@@ -538,7 +530,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjectModels, classGroupModels);
 
             string message = CredizText.ManualMsg002(sm.SubjectName);
-            _phaseStore.RemoveClassGroup(sm);
             SubjectModels.Remove(sm);
             _snackbarMessageQueue.Enqueue(message, VmConstants.SnbRestore, AddSubjectWithCgm, actionData);
             UpdateCreditTotal();
@@ -642,7 +633,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             {
                 classGroupModel
             };
-            _phaseStore.AddClassGroupModel(classGroupModel);
             Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(cgms));
         }
 
@@ -795,7 +785,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             if (actionData.Item2 != null)
             {
-                _phaseStore.AddClassGroupModels(classes);
                 Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(classes));
             }
         }

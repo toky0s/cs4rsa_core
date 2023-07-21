@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>AppResources\logo.ico</ApplicationIcon>
     <RuntimeIdentifiers>win10-x86;win10-x64</RuntimeIdentifiers>
     <Win32Resource />
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
+    <TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
+    <AssemblyName>Cwebiz</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,7 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Clowd.Squirrel" Version="2.9.42" GeneratePathProperty="true" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.49" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
@@ -128,9 +128,5 @@
 
   <ItemGroup>
     <SplashScreen Include="AppResources\SplashScreen.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>

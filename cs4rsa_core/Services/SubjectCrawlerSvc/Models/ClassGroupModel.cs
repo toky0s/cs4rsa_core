@@ -191,7 +191,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 }
                 else
                 {
-                    throw new Exception(VmConstants.InvalidRegisterCodeExcepion);
+                    throw new Exception(VmConstants.InvalidRegisterCodeException);
                 }
             }
             else
