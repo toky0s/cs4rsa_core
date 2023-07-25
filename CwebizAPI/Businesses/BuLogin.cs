@@ -4,10 +4,10 @@
 
 using System.IdentityModel.Tokens.Jwt;
 using CwebizAPI.Db.Interfaces;
+using CwebizAPI.DTOs.Requests;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Services.Interfaces;
 using CwebizAPI.Share.Database.Models;
-using CwebizAPI.Share.DTOs.Requests;
-using CwebizAPI.Share.DTOs.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CwebizAPI.Businesses;

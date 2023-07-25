@@ -9,11 +9,11 @@ using CwebizAPI.Crawlers.StudentCrawlerSvc.Crawlers.Interfaces;
 using CwebizAPI.Crawlers.StudentCrawlerSvc.Models;
 using CwebizAPI.Db.Enums;
 using CwebizAPI.Db.Interfaces;
+using CwebizAPI.DTOs.Requests;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Services.Interfaces;
 using CwebizAPI.Services.Tokens;
 using CwebizAPI.Share.Database.Models;
-using CwebizAPI.Share.DTOs.Requests;
-using CwebizAPI.Share.DTOs.Responses;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CwebizAPI.Businesses
@@ -143,7 +143,7 @@ namespace CwebizAPI.Businesses
                     
             _unitOfWork.UserRepository?.Insert(cwebizUser);
             await _unitOfWork.SaveChangeAsync();
-            return new DtoRpLinkStudent()
+            return new DtoRpLinkStudent
             {
                 StudentId = studentId,
                 UserName = dtoRqLinkAccount.Username,

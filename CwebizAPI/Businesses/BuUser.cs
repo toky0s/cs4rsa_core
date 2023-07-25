@@ -4,8 +4,8 @@
 
 using CwebizAPI.Db.Enums;
 using CwebizAPI.Db.Interfaces;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Share.Database.Models;
-using CwebizAPI.Share.DTOs.Responses;
 
 namespace CwebizAPI.Businesses;
 

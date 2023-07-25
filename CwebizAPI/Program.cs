@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
+using Algolia.Search.Clients;
 using CwebizAPI.Businesses;
 using CwebizAPI.Crawlers;
 using CwebizAPI.Db;
@@ -13,11 +15,16 @@ using CwebizAPI.Crawlers.CurriculumCrawlerSvc.Crawlers.Interfaces;
 using CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers;
 using CwebizAPI.Crawlers.StudentCrawlerSvc.Crawlers;
 using CwebizAPI.Crawlers.StudentCrawlerSvc.Crawlers.Interfaces;
+using CwebizAPI.Crawlers.SubjectCrawlerSvc.Crawlers;
+using CwebizAPI.Crawlers.SubjectCrawlerSvc.Crawlers.Interfaces;
+using CwebizAPI.Crawlers.TeacherCrawlerSvc.Crawlers;
+using CwebizAPI.Crawlers.TeacherCrawlerSvc.Crawlers.Interfaces;
 using CwebizAPI.Db.Interfaces;
 using CwebizAPI.Jobs.DisciplineJob;
 using CwebizAPI.Middlewares;
 using CwebizAPI.Services;
 using CwebizAPI.Services.Interfaces;
+using CwebizAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -59,6 +66,8 @@ namespace CwebizAPI
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IJwtTokenSvc, JwtTokenSvc>();
             builder.Services.AddScoped<IImageStorageSvc, ImageStorageSvc>();
+            builder.Services.AddScoped<ISvcSubjectCvt, SvcSubjectCvt>();
+            builder.Services.AddScoped<ColorGenerator>();
             #endregion
 
             #region Crawler
@@ -70,6 +79,8 @@ namespace CwebizAPI
             builder.Services.AddScoped<IDtuStudentInfoCrawler, DtuStudentInfoCrawlerV2>();
             builder.Services.AddScoped<ICurriculumCrawler, CurriculumCrawler>();
             builder.Services.AddScoped<ISpecialStringCrawler, SpecialStringCrawlerV2>();
+            builder.Services.AddScoped<ISubjectCrawler, SubjectCrawler>();
+            builder.Services.AddScoped<ITeacherCrawler, TeacherCrawler>();
             #endregion
             
             #region Businesses
@@ -77,6 +88,7 @@ namespace CwebizAPI
             builder.Services.AddScoped<BuRegister>();
             builder.Services.AddScoped<BuLogin>();
             builder.Services.AddScoped<BuUser>();
+            builder.Services.AddScoped<BuSubject>();
             #endregion
 
             #region CORS
@@ -117,8 +129,23 @@ namespace CwebizAPI
                 options.AwaitApplicationStarted = true;
             });
             #endregion
+
+            #region Algolia Search
             
-            builder.Services.AddControllers();
+            builder.Services.AddSingleton<ISearchClient>(new SearchClient(
+                configuration["AlgoliaSearch:ApplicationID"], 
+                configuration["AlgoliaSearch:AdminAPIKey"])
+            );
+
+            #endregion
+                
+            builder.Services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    JsonStringEnumConverter enumConverter = new();
+                    options.JsonSerializerOptions.Converters.Add(enumConverter);
+                });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

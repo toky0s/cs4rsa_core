@@ -33,9 +33,9 @@ namespace CwebizAPI.Utils
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<string> GetColor(int courseId)
+        public async Task<string> GetColor(string courseId)
         {
-            return await _unitOfWork.DisciplineRepository!.GetColor(courseId);
+            return await _unitOfWork.DisciplineRepository.GetColor(courseId);
         }
 
         public async Task<string> GetColorWithSubjectCode(string subjectCode)

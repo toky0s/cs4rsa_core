@@ -7,6 +7,8 @@ using CwebizAPI.Db.Comparers;
 using CwebizAPI.Utils;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using Algolia.Search.Clients;
+using CwebizAPI.Converters;
 using CwebizAPI.Db.Interfaces;
 using CwebizAPI.Share.Database.Models;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -19,6 +21,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
     /// <remarks>
     /// Created Date: 21/06/2023
     /// Modified Date: 21/06/2023
+    /// 25/07/2023: Add Algolia Search.
     /// Author: Truong A Xin
     /// </remarks>
     public class DisciplineCrawler : BaseCrawler
@@ -27,16 +30,19 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly HtmlWeb _htmlWeb;
         private readonly ILogger<DisciplineCrawler> _logger;
+        private readonly ISearchClient _searchClient;
 
         public DisciplineCrawler(
             CourseCrawler courseCrawler,
             IUnitOfWork unitOfWork,
             HtmlWeb htmlWeb,
-            ILogger<DisciplineCrawler> logger
+            ILogger<DisciplineCrawler> logger,
+            ISearchClient searchClient
         )
         {
             _courseCrawler = courseCrawler;
             _logger = logger;
+            _searchClient = searchClient;
             _unitOfWork = unitOfWork;
             _htmlWeb = htmlWeb;
         }
@@ -48,12 +54,14 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
         ///         3. Thực hiện check và thêm vào các môn mới.
         ///     4. Nếu là học kỳ mới
         ///         5. Xoá toàn bộ và thêm mới lại.
+        /// 6. Cập nhật Index trên Algolia Search.
         /// </summary>
         public async Task GetDisciplineAndKeyword()
         {
             await using IDbContextTransaction trans = await _unitOfWork.DbContext.Database.BeginTransactionAsync();
             const int update = 1;
             const int create = 2;
+            const int algoliaHasChange = 3;
             int mode;
 
             #region Kiểm tra thông tin học kỳ hiện tại
@@ -61,8 +69,8 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
             Course? course = null;
             await _courseCrawler.InitInformation();
             if (_courseCrawler is { CurrentYearValue: not null, CurrentSemesterValue: not null }
-                && !await _unitOfWork.DisciplineRepository?.Exists(_courseCrawler.CurrentYearValue,
-                    _courseCrawler.CurrentSemesterValue)!
+                && !await _unitOfWork.DisciplineRepository.Exists(_courseCrawler.CurrentYearValue,
+                    _courseCrawler.CurrentSemesterValue)
                )
             {
                 course = new Course
@@ -80,9 +88,9 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
             {
                 if (_courseCrawler is { CurrentYearValue: not null, CurrentSemesterValue: not null })
                 {
-                    course = await _unitOfWork.DisciplineRepository?.GetCourse(_courseCrawler.CurrentYearValue,
+                    course = await _unitOfWork.DisciplineRepository.GetCourse(_courseCrawler.CurrentYearValue,
                         _courseCrawler.CurrentSemesterValue
-                    )!;
+                    );
                 }
 
                 mode = update;
@@ -98,7 +106,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
             if (mode == create)
             {
                 _logger.LogInformation("Start clear discipline and keyword");
-                _unitOfWork.DisciplineRepository?.DeleteAllDisciplineAndKeyword();
+                _unitOfWork.DisciplineRepository.DeleteAllDisciplineAndKeyword();
             }
 
             _logger.LogInformation("Start get information");
@@ -119,7 +127,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                 HtmlNode disciplineAnchorTag = tdTags[0].Element("a");
                 string courseId = GetCourseIdFromHref(disciplineAnchorTag.Attributes["href"].Value);
                 string disciplineAndKeyword = disciplineAnchorTag.InnerText.Trim();
-                string[] disciplineAndKeywordSplit = StringHelper.SplitAndRemoveAllSpace(disciplineAndKeyword);
+                string[] disciplineAndKeywordSplit = disciplineAndKeyword.SplitAndRemoveAllSpace();
 
                 string disciplineName = disciplineAndKeywordSplit[0];
 
@@ -152,13 +160,12 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                 {
                     Id = keywordId,
                     Keyword1 = keyword1,
-                    CourseId = int.Parse(courseId),
+                    CourseId = courseId,
                     SubjectName = subjectName,
                     Color = color,
                     DisciplineId = disciplineId,
                     Discipline = disciplines.First(d => d != null && d.Id == disciplineId)
                 };
-                //_unitOfWork.DisciplineRepository.Insert(kw);
                 disciplines.First(d => d != null && d.Id == disciplineId)?.Keywords.Add(keyword);
                 keywords.Add(keyword);
                 keywordId++;
@@ -174,7 +181,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                 _logger.LogInformation(
                     message: "New Disciplines\n {ExceptDisciplines}",
                     string.Join('\n', disciplines.Select(d => d?.Name)));
-                _unitOfWork.DisciplineRepository?.InsertAll(disciplines);
+                _unitOfWork.DisciplineRepository.InsertAll(disciplines);
             }
             else
             {
@@ -243,6 +250,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                     }
 
                     _unitOfWork.DisciplineRepository.InsertAll(exceptKeywords);
+                    mode = algoliaHasChange;
                 }
                 else
                 {
@@ -252,9 +260,29 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                 #endregion
             }
 
-            _logger.LogInformation("Save information");
+            _logger.LogInformation("Saving information");
             await _unitOfWork.SaveChangeAsync();
             await trans.CommitAsync();
+            _logger.LogInformation("Saving success");
+            
+            // Start update Index to Algolia if have change Discipline or Keyword.
+            if (mode == algoliaHasChange)
+            {
+                _logger.LogInformation("Start UpdateAlgolia");
+                await UpdateAlgolia();
+                _logger.LogInformation("Finished UpdateAlgolia");
+            }
+        }
+
+        /// <summary>
+        /// Serialization Algolia
+        /// </summary>
+        private async Task UpdateAlgolia()
+        {
+            SearchIndex index = _searchClient.InitIndex("IDX_Discipline_Keyword");
+            await index.ClearObjectsAsync();
+            List<Discipline> disciplines = await _unitOfWork.DisciplineRepository.GetAllDiscipline();
+            await index.SaveObjectsAsync(disciplines.ToDtoRpSubjectItems());
         }
 
         private static string GetCourseIdFromHref(string hrefValue)

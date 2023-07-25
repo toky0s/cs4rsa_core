@@ -4,9 +4,9 @@
 
 using System.Diagnostics;
 using CwebizAPI.Db.Interfaces;
-
 using Microsoft.EntityFrameworkCore;
 using CwebizAPI.Share.Database.Models;
+using CwebizAPI.Utils;
 
 namespace CwebizAPI.Db.Repos
 {
@@ -22,6 +22,7 @@ namespace CwebizAPI.Db.Repos
     {
         private bool _disposed;
         private readonly CwebizContext _dbContext;
+
         public DisciplineRepository(CwebizContext dbContext)
         {
             _dbContext = dbContext;
@@ -42,8 +43,8 @@ namespace CwebizAPI.Db.Repos
         public async Task<List<Discipline>> GetAllDiscipline()
         {
             return await (from ds in _dbContext.Disciplines
-                    orderby ds.Name
-                    select ds).ToListAsync();
+                orderby ds.Name
+                select ds).ToListAsync();
         }
 
         public IEnumerable<Discipline?> GetAllIncludeKeyword()
@@ -70,24 +71,25 @@ namespace CwebizAPI.Db.Repos
                     _dbContext.Dispose();
                 }
             }
+
             _disposed = true;
         }
 
-        public async Task<Keyword> GetKeyword(string discipline, string keyword1)
+        public async Task<Keyword?> GetKeyword(string discipline, string keyword1)
         {
             return (await (from kw in _dbContext.Keywords
                 from ds in _dbContext.Disciplines
                 where kw.Keyword1 == keyword1
                       && ds.Name!.Equals(discipline)
                       && ds.Id == kw.DisciplineId
-                select kw).FirstOrDefaultAsync())!;
+                select kw).FirstOrDefaultAsync());
         }
 
-        public async Task<Keyword> GetKeyword(int courseId)
+        public async Task<Keyword?> GetKeywordByCourseId(string courseId)
         {
             return (await (from kw in _dbContext.Keywords
-                where kw.CourseId == courseId
-                select kw).FirstOrDefaultAsync())!;
+                where kw.CourseId.Equals(courseId)
+                select kw).FirstOrDefaultAsync());
         }
 
         public async Task<Keyword> GetKeyword(string subjectCode)
@@ -108,10 +110,10 @@ namespace CwebizAPI.Db.Repos
                 select kw.Color).FirstOrDefaultAsync())!;
         }
 
-        public async Task<string> GetColor(int courseId)
+        public async Task<string> GetColor(string courseId)
         {
             return (await (from kw in _dbContext.Keywords
-                where kw.CourseId == courseId
+                where kw.CourseId.Equals(courseId)
                 select kw.Color).FirstOrDefaultAsync())!;
         }
 
@@ -133,9 +135,9 @@ namespace CwebizAPI.Db.Repos
         public async Task<List<Keyword>> GetKeywordsByDisciplineId(int disciplineId)
         {
             return await (from kw in _dbContext.Keywords
-                    where kw.DisciplineId == disciplineId
-                    orderby kw.Keyword1
-                    select kw).ToListAsync();
+                where kw.DisciplineId == disciplineId
+                orderby kw.Keyword1
+                select kw).ToListAsync();
         }
 
         public void Insert(Keyword keyword)
@@ -161,9 +163,9 @@ namespace CwebizAPI.Db.Repos
         public async Task<bool> Exists(string yearValue, string semesterValue)
         {
             return await (from cf in _dbContext.Courses
-                          where cf.YearValue.Equals(yearValue)
-                             && cf.SemesterValue.Equals(semesterValue)
-                          select cf).AnyAsync();
+                where cf.YearValue.Equals(yearValue)
+                      && cf.SemesterValue.Equals(semesterValue)
+                select cf).AnyAsync();
         }
 
         public Course? Insert(Course? course)
@@ -175,8 +177,50 @@ namespace CwebizAPI.Db.Repos
         public Task<Course?> GetCourse(string yearValue, string semesterValue)
         {
             return (from cf in _dbContext.Courses
-                    where cf.YearValue.Equals(yearValue) && cf.SemesterValue.Equals(semesterValue)
-                    select cf).FirstAsync();
+                where cf.YearValue.Equals(yearValue) && cf.SemesterValue.Equals(semesterValue)
+                select cf).FirstAsync();
+        }
+
+        public Task<Course?> GetLatestCourse()
+        {
+            return (from c in _dbContext.Courses
+                orderby c.CreatedDate descending
+                select c).FirstOrDefaultAsync();
+        }
+
+        public Task<List<Keyword>> GetKeywordsByQuery(string? text, int limit)
+        {
+            IQueryable<Keyword> keywords;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                keywords = from kw in _dbContext.Keywords
+                    from ds in _dbContext.Disciplines
+                    orderby ds.Name, kw.Keyword1, kw.SubjectName
+                    where kw.DisciplineId == ds.Id
+                    select kw;
+            }
+            else
+            {
+                text = text.Trim().ToLower().SuperCleanString();
+                bool hasSpace = text.Contains(' ');
+                string[] slices = text.Trim().ToLower().Split(' ');
+
+                keywords = from kw in _dbContext.Keywords
+                    from ds in _dbContext.Disciplines
+                    where
+                        // Keyword1 chứa đoạn text
+                        kw.Keyword1.ToLower().Contains(text)
+                        // Tên môn học bắt đầu bằng text
+                        || kw.SubjectName.ToLower().StartsWith(text)
+                        && kw.DisciplineId == ds.Id
+                    orderby ds.Name, kw.Keyword1, kw.SubjectName
+                    select kw;
+            }
+
+            return keywords
+                .Include(kw => kw.Discipline)
+                .Take(limit)
+                .ToListAsync();
         }
 
         public void InsertAll(IEnumerable<Discipline?> disciplines)
@@ -186,7 +230,7 @@ namespace CwebizAPI.Db.Repos
 
         public async Task<List<Keyword>> GetAllKeyword()
         {
-            return await _dbContext.Keywords!.ToListAsync();
+            return await _dbContext.Keywords.ToListAsync();
         }
 
         public void InsertAll(IEnumerable<Keyword> keywords)
@@ -197,9 +241,9 @@ namespace CwebizAPI.Db.Repos
         public async Task<Discipline> GetDisciplineByName(string? name)
         {
             return await (from discipline in _dbContext.Disciplines
-                          where discipline.Name != null 
-                             && discipline.Name.Equals(name)
-                          select discipline).FirstAsync();
+                where discipline.Name != null
+                      && discipline.Name.Equals(name)
+                select discipline).FirstAsync();
         }
     }
 }

@@ -9,7 +9,7 @@ public partial class Keyword
 
     public string Keyword1 { get; set; } = null!;
 
-    public int CourseId { get; set; }
+    public string CourseId { get; set; } = null!;
 
     public string SubjectName { get; set; } = null!;
 

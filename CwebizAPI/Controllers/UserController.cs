@@ -4,8 +4,8 @@
 
 using System.Security.Claims;
 using CwebizAPI.Businesses;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Settings;
-using CwebizAPI.Share.DTOs.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

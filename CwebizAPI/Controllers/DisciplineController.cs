@@ -3,8 +3,8 @@
  */
 
 using CwebizAPI.Businesses;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Settings;
-using CwebizAPI.Share.DTOs.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace CwebizAPI.Controllers
     /// <summary>
     /// Discipline Controller.
     /// </summary>
-    [Authorize(Roles = "Trial")]
+    [Authorize(Roles = "Trial, Student, Admin")]
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [Consumes("application/json")]
@@ -68,9 +68,9 @@ namespace CwebizAPI.Controllers
         /// </remarks>
         /// <param name="disciplineId">Mã ngành</param>
         /// <returns>Danh sách mã môn liên quan</returns>
-        [HttpGet("Keywords", Name = "Get Keywords by Discipline ID")]
+        [HttpGet("Keywords/{DisciplineId:int}", Name = "Get Keywords by Discipline ID")]
         public async Task<ActionResult<List<DtoRpKeyword>>> GetKeywordsByDisciplineId(
-            [FromQuery(Name = "DisciplineId")] int disciplineId)
+            [FromRoute(Name = "DisciplineId")] int disciplineId)
         {
             // Phân quyền đoạn này.
             return Ok(await _buDiscipline.GetKeywordsByDisciplineId(disciplineId));

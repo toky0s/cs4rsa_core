@@ -27,6 +27,16 @@ namespace CwebizAPI.Db
                 return _disciplineRepository;
             }
         }
+        
+        private ITeacherRepository? _teacherRepository;
+        public ITeacherRepository TeacherRepository 
+        { 
+            get
+            {
+                _teacherRepository ??= new TeacherRepo(DbContext);
+                return _teacherRepository;
+            }
+        }
 
         private IStudentRepository? _studentRepository;
         public IStudentRepository? StudentRepository
