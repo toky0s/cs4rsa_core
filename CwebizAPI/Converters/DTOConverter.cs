@@ -79,5 +79,21 @@ namespace CwebizAPI.Converters
                 }
             ));
         }
+
+        /// <summary>
+        /// Chuyển đổi Course thành DtoRpCourse.
+        /// </summary>
+        /// <param name="course">Course</param>
+        /// <returns>DTO Response Course.</returns>
+        public static DtoRpCourse ToDtoRpCourse(this Course course)
+        {
+            return new DtoRpCourse
+            {
+                SemesterInfo = course.SemesterInfor,
+                SemesterValue = course.SemesterValue,
+                YearInfo = course.YearInfor,
+                YearValue = course.YearValue
+            };
+        }
     }
 }

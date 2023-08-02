@@ -3,7 +3,7 @@
     public enum ImplementType
     {
         Started,
-        Unstart,
+        NotStartYet,
         Canceled
     }
 }

@@ -29,7 +29,7 @@ public class DtoRpClassGroup
     public string Name { get; set; }
     public bool HaveSchedule { get; set; }
     public ObservableCollection<Place> Places { get; set; }
-    public IEnumerable<string> TempTeacher { get; set; }
+    public IEnumerable<string> TempTeachers { get; set; }
     public string SubjectCode { get; set; }
     public List<string> RegisterCodes { get; set; }
 

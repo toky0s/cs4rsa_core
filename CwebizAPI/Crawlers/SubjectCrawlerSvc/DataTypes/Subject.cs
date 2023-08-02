@@ -30,7 +30,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         public string Semester => _semester;
         public IEnumerable<string> MustStudySubject { get; }
         public IEnumerable<string> ParallelSubject { get; }
-        public string Desciption { get; }
+        public string Description { get; }
         public readonly string CourseId;
 
         private Subject(string name, string subjectCode, string studyUnit,
@@ -54,7 +54,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
             SubjectCode = subjectCode;
             MustStudySubject = SubjectSpliter(mustStudySubject);
             ParallelSubject = SubjectSpliter(parallelSubject);
-            Desciption = description;
+            Description = description;
             CourseId = courseId;
         }
 

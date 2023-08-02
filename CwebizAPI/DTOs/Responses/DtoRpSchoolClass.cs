@@ -23,6 +23,5 @@ public class DtoRpSchoolClass
     public IEnumerable<string> Rooms { get; set; }
     public IEnumerable<string> TempTeachers { get; set; }
     public IEnumerable<Place> Places { get; set; }
-    public IEnumerable<TeacherModel> Teachers { get; set; }
     public Phase Phase { get; set; }
 }

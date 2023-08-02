@@ -5,28 +5,27 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
 {
     public class Schedule
     {
-        private readonly Dictionary<DayOfWeek, List<StudyTime>> _scheduleTime;
-        public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime => _scheduleTime;
+        public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime { get; }
 
         public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
         {
-            _scheduleTime = scheduleTime;
+            ScheduleTime = scheduleTime;
         }
 
         public IEnumerable<DayOfWeek> GetSchoolDays()
         {
-            return _scheduleTime.Keys;
+            return ScheduleTime.Keys;
         }
 
         public IEnumerable<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
         {
-            return _scheduleTime[DayOfWeek];
+            return ScheduleTime[DayOfWeek];
         }
 
         public IEnumerable<Session> GetSessions()
         {
             List<Session> sessions = new();
-            foreach (IEnumerable<StudyTime> studyTimes in _scheduleTime.Values)
+            foreach (IEnumerable<StudyTime> studyTimes in ScheduleTime.Values)
             {
                 sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()));
             }
@@ -36,7 +35,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         public override string ToString()
         {
             List<string> results = new();
-            foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in _scheduleTime)
+            foreach (KeyValuePair<DayOfWeek, List<StudyTime>> item in ScheduleTime)
             {
                 string thu = item.Key.ToCs4rsaThu();
                 string timesRange = string.Empty;

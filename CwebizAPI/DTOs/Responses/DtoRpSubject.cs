@@ -37,7 +37,7 @@ public class DtoRpSubject
     /// <summary>
     /// Mô tả
     /// </summary>
-    public string Desciption { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Môn tiên quyết

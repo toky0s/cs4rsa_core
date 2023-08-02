@@ -100,6 +100,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
 
             #region Lấy thông Disciplines
 
+            // Danh sách Discipline được cào từ Web, mặc định chúng sẽ được set ID trong quá trình cào.
             List<Discipline?> disciplines = new();
             List<Keyword> keywords = new();
 
@@ -182,6 +183,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                     message: "New Disciplines\n {ExceptDisciplines}",
                     string.Join('\n', disciplines.Select(d => d?.Name)));
                 _unitOfWork.DisciplineRepository.InsertAll(disciplines);
+                mode = algoliaHasChange;
             }
             else
             {
@@ -201,23 +203,27 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                     _logger.LogInformation(
                         message: "Except Disciplines\n{ExceptDisciplines}",
                         string.Join('\n', exceptDisciplines.Select(d => d?.Name)));
+                    
+                    /*
+                     * Reset lại ID của các Discipline đã được cào từ WEB trước đó.
+                     */
+                    foreach (Discipline? discipline in exceptDisciplines.Where(discipline => discipline != null))
+                    {
+                        if (discipline != null)
+                        {
+                            discipline.Id = default;
+                        }
+                    }
+
+                    _unitOfWork.DisciplineRepository.InsertAll(exceptDisciplines);
+                    await _unitOfWork.SaveChangeAsync();
+                    mode = algoliaHasChange;
                 }
                 else
                 {
                     _logger.LogInformation("Have no changes in Disciplines");
                 }
-
-                foreach (Discipline? discipline in exceptDisciplines.Where(discipline => discipline != null))
-                {
-                    if (discipline != null)
-                    {
-                        discipline.Id = default;
-                    }
-                }
-
-                _unitOfWork.DisciplineRepository.InsertAll(exceptDisciplines);
-                await _unitOfWork.SaveChangeAsync();
-
+                
                 #endregion
 
                 #region Kiểm tra và thêm mới Keyword của từng Discipline nếu có

@@ -45,7 +45,7 @@ public class SvcSubjectCvt : ISvcSubjectCvt
             Color = color,
             IsSpecialSubject = isSpecialSubject,
             ClassGroups = classGroups,
-            Desciption = subject.Desciption,
+            Description = subject.Description,
             Semester = subject.Semester,
             StudyType = subject.StudyType,
             StudyUnitType = subject.StudyUnitType
@@ -80,7 +80,7 @@ public class SvcSubjectCvt : ISvcSubjectCvt
         dtoRpClassGroup.CurrentSchoolClassModels = new List<DtoRpSchoolClass>();
         dtoRpClassGroup.Places = new ObservableCollection<Place>(classGroup.GetPlaces());
         dtoRpClassGroup.EmptySeat = classGroup.GetEmptySeat();
-        dtoRpClassGroup.TempTeacher = classGroup.GetTempTeachers();
+        dtoRpClassGroup.TempTeachers = classGroup.GetTempTeachers();
         dtoRpClassGroup.ImplementType = classGroup.GetImplementType();
         dtoRpClassGroup.RegistrationType = classGroup.GetRegistrationType();
         dtoRpClassGroup.RegisterCodes = classGroup.RegisterCodes;

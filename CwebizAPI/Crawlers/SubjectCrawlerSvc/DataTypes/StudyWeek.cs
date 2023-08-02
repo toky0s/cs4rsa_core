@@ -4,8 +4,8 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
 {
     public class StudyWeek
     {
-        public int StartWeek { get; private set; }
-        public int EndWeek { get; private set; }
+        public int StartWeek { get; }
+        public int EndWeek { get; }
 
         /// <summary>
         /// Một StudyWeek đại diện cho khoảng tuần học của một Lớp.

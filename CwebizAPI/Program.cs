@@ -89,6 +89,7 @@ namespace CwebizAPI
             builder.Services.AddScoped<BuLogin>();
             builder.Services.AddScoped<BuUser>();
             builder.Services.AddScoped<BuSubject>();
+            builder.Services.AddScoped<BuCourse>();
             #endregion
 
             #region CORS
@@ -143,6 +144,7 @@ namespace CwebizAPI
                 .AddControllers()
                 .AddJsonOptions(options =>
                 {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
                     JsonStringEnumConverter enumConverter = new();
                     options.JsonSerializerOptions.Converters.Add(enumConverter);
                 });

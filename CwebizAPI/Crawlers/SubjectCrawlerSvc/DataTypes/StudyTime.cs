@@ -4,29 +4,23 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
 {
     public class StudyTime
     {
-        private readonly DateTime _start;
-        private readonly DateTime _end;
-        public DateTime Start { get { return _start; } }
-        public DateTime End { get { return _end; } }
-
-        private readonly string _startAsString;
-        private readonly string _endAsString;
-        public string StartAsString => _startAsString;
-        public string EndAsString => _endAsString;
+        public DateTime Start { get; }
+        public DateTime End { get; }
+        public string StartAsString { get; }
+        public string EndAsString { get; }
 
         public StudyTime(string start, string end)
         {
-            _startAsString = start;
-            _endAsString = end;
-            _start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            _end = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            StartAsString = start;
+            EndAsString = end;
+            Start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            End = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public Session GetSession()
         {
             if (IsInMorning()) return Session.Morning;
-            if (IsInAfternoon()) return Session.Afternoon;
-            return Session.Night;
+            return IsInAfternoon() ? Session.Afternoon : Session.Night;
         }
 
 
@@ -36,15 +30,11 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         /// <returns></returns>
         private bool IsInMorning()
         {
-            DateTime[] MorningTime =  {
+            DateTime[] morningTime =  {
                 DateTime.ParseExact("07:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
                 DateTime.ParseExact("11:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
-            if (_start <= MorningTime[1])
-            {
-                return true;
-            }
-            return false;
+            return Start <= morningTime[1];
         }
 
         /// <summary>
@@ -53,15 +43,11 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         /// <returns></returns>
         private bool IsInAfternoon()
         {
-            DateTime[] AfternoonTime =  {
+            DateTime[] afternoonTime =  {
                 DateTime.ParseExact("13:00", "HH:mm", System.Globalization.CultureInfo.InvariantCulture),
                 DateTime.ParseExact("17:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
-            if (_start >= AfternoonTime[0] && _start <= AfternoonTime[1])
-            {
-                return true;
-            }
-            return false;
+            return Start >= afternoonTime[0] && Start <= afternoonTime[1];
         }
     }
 }

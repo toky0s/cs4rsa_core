@@ -52,7 +52,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.Utils
                 return ImplementType.Canceled;
             if (text.Equals("Lớp Học Đã Bắt Đầu"))
                 return ImplementType.Started;
-            return ImplementType.Unstart;
+            return ImplementType.NotStartYet;
         }
 
         public static string ToDayOfWeekText(this DayOfWeek day)
