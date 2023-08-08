@@ -24,6 +24,7 @@ using CwebizAPI.Jobs.DisciplineJob;
 using CwebizAPI.Middlewares;
 using CwebizAPI.Services;
 using CwebizAPI.Services.Interfaces;
+using CwebizAPI.Share.Database.Models;
 using CwebizAPI.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -63,6 +64,7 @@ namespace CwebizAPI
             #region Services
             // Add services to the container.
             builder.Services.AddLogging();
+            builder.Services.AddDbContext<CwebizContext>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IJwtTokenSvc, JwtTokenSvc>();
             builder.Services.AddScoped<IImageStorageSvc, ImageStorageSvc>();

@@ -191,7 +191,7 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
 
                 #region Kiểm tra và thêm mới Discipline nếu có.
 
-                List<Discipline> dbDisciplines = await _unitOfWork.DisciplineRepository?.GetAllDiscipline()!;
+                List<Discipline> dbDisciplines = await _unitOfWork.DisciplineRepository.GetAllDiscipline()!;
                 List<Discipline?> exceptDisciplines = disciplines
                     .Except(dbDisciplines, new DisciplineEqualityComparer()!)
                     .ToList();
@@ -246,16 +246,25 @@ namespace CwebizAPI.Crawlers.DisciplineCrawlerSvc.Crawlers
                      * tương ứng với các Discipline sở hữu chúng trong DB - đây là
                      * kết quả của việc cào dự liệu và set các DisciplineId một cách tuần tự.
                      * Nhằm tránh FK_Discipline của Keyword khi Insert mới vào DB không tìm thấy.
+                     *
+                     * Nhắm tránh lỗi: instance of entity type cannot be tracked because another instance with same key value is tracked
+                     * trước khi thực hiện Insert các except keywords, thông tin về Discipline instance được gán trước
+                     * đó sẽ về null, keyword id cũng sẽ được set lại bằng max keyword id + 1.
                      */
-                    foreach (Keyword keyword in exceptKeywords.Where(keyword => keyword.Discipline != null))
+                    int maxKeywordId = await _unitOfWork.DisciplineRepository.GetKeywordMaxId();
+                    foreach (Keyword keyword in exceptKeywords)
                     {
-                        Discipline actualDiscipline =
-                            await _unitOfWork.DisciplineRepository.GetDisciplineByName(keyword.Discipline?.Name);
-                        keyword.Discipline = actualDiscipline;
-                        keyword.DisciplineId = actualDiscipline.Id;
+                        keyword.DisciplineId = keyword.Discipline?.Id;
+                        keyword.Discipline = default;
+                        keyword.Id = ++maxKeywordId;
                     }
 
+                    _logger.LogInformation(
+                        message: "Modified success: Except Keywords\n{ExceptKeywords}",
+                        string.Join('\n', exceptKeywords.Select(kw => $"{kw.Id} {kw.Discipline?.Name} {kw.SubjectName}")));
+                    _logger.LogInformation("Do insert all except keywords");
                     _unitOfWork.DisciplineRepository.InsertAll(exceptKeywords);
+                    _logger.LogInformation("Do insert all except keywords finished");
                     mode = algoliaHasChange;
                 }
                 else

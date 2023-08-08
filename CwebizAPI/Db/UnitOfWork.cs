@@ -59,9 +59,14 @@ namespace CwebizAPI.Db
             }
         }
 
-        public CwebizContext DbContext { get; } = new();
+        public CwebizContext DbContext { get; }
 
         private bool _disposed;
+
+        public UnitOfWork(CwebizContext dbContext)
+        {
+            DbContext = dbContext;
+        }
 
         private void Dispose(bool disposing)
         {

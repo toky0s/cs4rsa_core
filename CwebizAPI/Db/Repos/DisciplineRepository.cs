@@ -188,6 +188,13 @@ namespace CwebizAPI.Db.Repos
                 select c).FirstOrDefaultAsync();
         }
 
+        public Task<int> GetKeywordMaxId()
+        {
+            return (from kw in _dbContext.Keywords
+                orderby kw.Id descending
+                select kw.Id).FirstOrDefaultAsync();
+        }
+
         public Task<List<Keyword>> GetKeywordsByQuery(string? text, int limit)
         {
             IQueryable<Keyword> keywords;
@@ -235,7 +242,7 @@ namespace CwebizAPI.Db.Repos
 
         public void InsertAll(IEnumerable<Keyword> keywords)
         {
-            _dbContext.Keywords!.AddRange(keywords);
+            _dbContext.Keywords.AddRange(keywords);
         }
 
         public async Task<Discipline> GetDisciplineByName(string? name)

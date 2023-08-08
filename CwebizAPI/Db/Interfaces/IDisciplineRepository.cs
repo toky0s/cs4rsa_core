@@ -148,5 +148,11 @@ namespace CwebizAPI.Db.Interfaces
         /// </summary>
         /// <returns>Thông tin Course</returns>
         Task<Course?> GetLatestCourse();
+
+        /// <summary>
+        /// Lấy ra Max Keyword ID.
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetKeywordMaxId();
     }
 }
