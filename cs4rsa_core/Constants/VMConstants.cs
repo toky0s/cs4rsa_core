@@ -77,17 +77,10 @@ namespace Cs4rsa.Constants
         public const string DbFilePath = "cs4rsa.db";
         public const string InitDbFilePath = "Cs4rsaDatabase\\DataProviders\\cs4rsa.db.sql";
         public const string DbConnectionString = $@"Data Source={DbFilePath}";
-
-        public const string UnknownErrorException = "Lỗi không xác định";
-        public const string InternetConnectException = "Lỗi kết nối mạng";
-        public const string SettingDoesNotExistException = "Setting is not exist";
         public const string SchoolClassNameIsDiffException = "SchoolClass's Name is difference!";
         public const string InvalidRegisterCodeException = "Register code is invalid!";
-        public const string ClassGroupModelWasNullException = "ClassGroupModel was null!";
-        public const string NotFoundClassFormException = "Class Form could not be found!";
         public const string NotFoundBaseSchoolClassModelException = "Base school class model cound not be found";
         public const string NotFoundViewModelException = "ViewModel cound not be found";
-        public const string SchoolClassStudyTimeNotOnlyOneException = "SchoolClass's StudyTimes does not have only one item";
 
         public const string LinkProject = "https://toky0s.github.io/cs4rsa_core/";
         public const string LinkProjectPage = "https://github.com/toky0s/cs4rsa_core";
@@ -97,7 +90,6 @@ namespace Cs4rsa.Constants
         public const string SnbInvalidUnselectSubjectName = "Tên lớp cần bỏ chọn không hợp lệ";
         public const string SnbUnselectAll = "Đã bỏ chọn tất cả";
         public const string SnbDeleteAll = "Đã xoá tất cả";
-        public const string SnbInvalidShareString = "Thông tin nhập bị lỗi";
         public const string SnbAlreadyDownloaded = "Đã được tải xuống";
         public const string SnbCopySuccess = "Đã sao chép";
         public const string SnbSaveToStore = "Đã lưu vào kho";

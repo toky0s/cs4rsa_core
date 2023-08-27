@@ -169,7 +169,6 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         [ObservableProperty]
         private bool _isDownloading;
 
-        public AsyncRelayCommand CannotAddReasonCommand { get; set; }
         public AsyncRelayCommand LoadProgramCommand { get; set; }
         public AsyncRelayCommand DownloadCommand { get; set; }
         public AsyncRelayCommand FilterChangedCommand { get; set; }
@@ -177,13 +176,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         public AsyncRelayCommand<ProgramSubjectModel> AddCommand { get; set; }
         public AsyncRelayCommand CalculateCommand { get; set; }
         public AsyncRelayCommand ResetFilterCommand { get; set; }
-
-        public RelayCommand CollapseCommand { get; set; }
         public RelayCommand<ProgramSubjectModel> DeleteCommand { get; set; }
         public RelayCommand DeleteAllCommand { get; set; }
-        public RelayCommand GotoCourseCommand { get; set; }
         public RelayCommand ShowOnSimuCommand { get; set; }
-        public RelayCommand OpenInNewWindowCommand { get; set; }
         public RelayCommand AccountCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
@@ -229,11 +224,11 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             CalculateCommand = new(
                 OnCalculate,
-                () => ChoosedProSubjectModels.Where(psm => psm.IsDownloaded)
-                                             .Count() == ChoosedProSubjectModels.Count
-                    && ChoosedProSubjectModels.Any()
-                    && !_tempResult.Any()
-                    && !_isCalculated
+                () => ChoosedProSubjectModels
+                          .Count(psm => psm.IsDownloaded) == ChoosedProSubjectModels.Count
+                      && ChoosedProSubjectModels.Any()
+                      && !_tempResult.Any()
+                      && !_isCalculated
             );
 
             DeleteCommand = new((psm) => OnDelete(psm));
@@ -246,8 +241,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             DownloadCommand = new(
                 OnDownload,
                 () => ChoosedProSubjectModels
-                        .Where(psm => psm.IsDownloaded == false)
-                        .Any()
+                    .Any(psm => psm.IsDownloaded == false)
             );
 
             FilterChangedCommand = new(OnFiltering);
@@ -266,7 +260,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             Messenger.Register<AccountVmMsgs.DelStudentMsg>(this, (r, m) =>
             {
-                Student student = Students.Where(student => student.StudentId.Equals(m.Value)).First();
+                Student student = Students.First(student => student.StudentId.Equals(m.Value));
                 Students.Remove(student);
                 ProgramFolderModels.Clear();
             });
@@ -478,19 +472,16 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private async Task OnDownload()
         {
             IEnumerable<ProgramSubjectModel> needToDownloadPsms = ChoosedProSubjectModels.Where(psm => psm.IsDownloaded == false);
-            foreach (ProgramSubjectModel psm in needToDownloadPsms)
+            IEnumerable<ProgramSubjectModel> programSubjectModels = needToDownloadPsms as ProgramSubjectModel[] ?? needToDownloadPsms.ToArray();
+            foreach (ProgramSubjectModel psm in programSubjectModels)
             {
                 psm.IsDownloading = true;
             }
 
-            if (needToDownloadPsms.Any())
+            if (programSubjectModels.Any())
             {
                 IsDownloading = true;
-                List<Task> tasks = new();
-                foreach (ProgramSubjectModel psm in needToDownloadPsms)
-                {
-                    tasks.Add(Download(psm));
-                }
+                List<Task> tasks = programSubjectModels.Select(Download).ToList();
                 await Task.WhenAll(tasks);
                 IsDownloading = false;
                 IsCalculated = false;
@@ -499,12 +490,11 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             CalculateCommand.NotifyCanExecuteChanged();
         }
 
-        public async Task Download(ProgramSubjectModel psm)
+        private async Task Download(ProgramSubjectModel psm)
         {
-            Subject subject;
             try
             {
-                subject = await _subjectCrawler.Crawl(int.Parse(psm.CourseId), true, true);
+                Subject subject = await _subjectCrawler.Crawl(int.Parse(psm.CourseId), true, true);
 
                 if (subject == null)
                 {
@@ -557,15 +547,15 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         private async Task OnValidGen()
         {
             List<CombinationModel> cbms = await Task.Run(ValidGenDoWork);
-            if (cbms.Count > 0)
+            switch (cbms.Count)
             {
-                Messenger.Send(new AutoVmMsgs.AddCombinationsMsg(cbms));
-                IsValidGen = true;
-                ValidGenCommand.NotifyCanExecuteChanged();
-            }
-            else if (cbms.Count == 0)
-            {
-
+                case > 0:
+                    Messenger.Send(new AutoVmMsgs.AddCombinationsMsg(cbms));
+                    IsValidGen = true;
+                    ValidGenCommand.NotifyCanExecuteChanged();
+                    break;
+                case 0:
+                    break;
             }
         }
 
@@ -653,61 +643,61 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         /// </summary>
         private bool IsFreeDayFilter(ClassGroupModel classGroupModel)
         {
-            Dictionary<Session, bool> Mon = new()
+            Dictionary<Session, bool> mon = new()
             {
                 { Session.Morning,   Mon_Mor },
                 { Session.Afternoon, Mon_Aft },
                 { Session.Night,     Mon_Nig },
             };
-            Dictionary<Session, bool> Tue = new()
+            Dictionary<Session, bool> tue = new()
             {
                 { Session.Morning,   Tue_Mor },
                 { Session.Afternoon, Tue_Aft },
                 { Session.Night,     Tue_Nig },
             };
-            Dictionary<Session, bool> Wed = new()
+            Dictionary<Session, bool> wed = new()
             {
                 { Session.Morning,   Wed_Mor },
                 { Session.Afternoon, Wed_Aft },
                 { Session.Night,     Wed_Nig },
             };
-            Dictionary<Session, bool> Thur = new()
+            Dictionary<Session, bool> thur = new()
             {
                 { Session.Morning,   Thur_Mor },
                 { Session.Afternoon, Thur_Aft },
                 { Session.Night,     Thur_Nig },
             };
-            Dictionary<Session, bool> Fri = new()
+            Dictionary<Session, bool> fri = new()
             {
                 { Session.Morning,   Fri_Mor },
                 { Session.Afternoon, Fri_Aft },
                 { Session.Night,     Fri_Nig },
             };
-            Dictionary<Session, bool> Sat = new()
+            Dictionary<Session, bool> sat = new()
             {
                 { Session.Morning,   Sat_Mor },
                 { Session.Afternoon, Sat_Aft },
                 { Session.Night,     Sat_Nig },
             };
-            Dictionary<Session, bool> Sun = new()
+            Dictionary<Session, bool> sun = new()
             {
                 { Session.Morning,   Sun_Mor },
                 { Session.Afternoon, Sun_Aft },
                 { Session.Night,     Sun_Nig },
             };
 
-            Dictionary<DayOfWeek, Dictionary<Session, bool>> DayOfWeekAndSessionFilter = new()
+            Dictionary<DayOfWeek, Dictionary<Session, bool>> dayOfWeekAndSessionFilter = new()
             {
-                { DayOfWeek.Monday,     Mon  },
-                { DayOfWeek.Tuesday,    Tue  },
-                { DayOfWeek.Wednesday,  Wed  },
-                { DayOfWeek.Thursday,   Thur },
-                { DayOfWeek.Friday,     Fri  },
-                { DayOfWeek.Saturday,   Sat  },
-                { DayOfWeek.Sunday,     Sun  },
+                { DayOfWeek.Monday,     mon  },
+                { DayOfWeek.Tuesday,    tue  },
+                { DayOfWeek.Wednesday,  wed  },
+                { DayOfWeek.Thursday,   thur },
+                { DayOfWeek.Friday,     fri  },
+                { DayOfWeek.Saturday,   sat  },
+                { DayOfWeek.Sunday,     sun  },
             };
 
-            foreach (KeyValuePair<DayOfWeek, Dictionary<Session, bool>> dayOfWeekFilter in DayOfWeekAndSessionFilter)
+            foreach (KeyValuePair<DayOfWeek, Dictionary<Session, bool>> dayOfWeekFilter in dayOfWeekAndSessionFilter)
             {
                 foreach (KeyValuePair<Session, bool> sessionKeyValuePair in dayOfWeekFilter.Value)
                 {
@@ -749,17 +739,9 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
             if (!classGroupModel.Places.Any()) return true;
 
-            foreach (KeyValuePair<Place, bool> placeKeyValue in placeFilters)
-            {
-                if (placeKeyValue.Value)
-                {
-                    if (classGroupModel.Places.Contains(placeKeyValue.Key))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return placeFilters
+                .Where(placeKeyValue => placeKeyValue.Value)
+                .Any(placeKeyValue => classGroupModel.Places.Contains(placeKeyValue.Key));
         }
 
         private bool IsRemoveClassGroupInValid(ClassGroupModel classGroupModel)

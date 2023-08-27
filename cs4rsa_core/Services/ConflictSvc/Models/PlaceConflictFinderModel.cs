@@ -99,11 +99,6 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 + $"{placeAdjacent.SchoolClass2.SchoolClassName} bắt đầu lúc {placeAdjacent.EndAsString} - {placeAdjacent.PlaceEnd.ToActualPlace()}";
         }
 
-        public ScheduleTableItemType GetScheduleTableItemType()
-        {
-            return ScheduleTableItemType.PlaceConflict;
-        }
-
         public string GetId()
         {
             return "pc" 

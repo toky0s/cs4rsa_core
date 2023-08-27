@@ -347,7 +347,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 ClassGroupResult classGroupResult = m.Value;
                 ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
                 string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
-                classGroupModel.ReRenderScheduleRequest(schoolClassName);
+                classGroupModel.ReRenderSchedule(schoolClassName);
                 Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
             });
 

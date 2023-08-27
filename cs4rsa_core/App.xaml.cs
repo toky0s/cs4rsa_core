@@ -115,7 +115,7 @@ namespace Cs4rsa
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<SearchViewModel>();
             services.AddSingleton<ClgViewModel>();
-            services.AddSingleton<ChoosedViewModel>();
+            services.AddSingleton<ChoseViewModel>();
             services.AddSingleton<SchedulerViewModel>();
             services.AddSingleton<MainSchedulingViewModel>();
             services.AddSingleton<AccountViewModel>();

@@ -35,8 +35,6 @@ namespace Cs4rsa.Interfaces
         /// </returns>
         Phase GetPhase();
 
-        ScheduleTableItemType GetScheduleTableItemType();
-
         string GetId();
     }
 }

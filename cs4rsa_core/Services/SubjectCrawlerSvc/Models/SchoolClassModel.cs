@@ -80,8 +80,6 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public Phase GetPhase() => SchoolClass.GetPhase();
 
-        public ScheduleTableItemType GetScheduleTableItemType() => ScheduleTableItemType.SchoolClass;
-
         public string GetId() => SubjectCode;
     }
 }

@@ -6,12 +6,11 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 {
-    public class RawSql
+    public abstract class RawSql
     {
         public static void CreateDbIfNotExist()
         {
@@ -63,8 +62,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
           , Func<SQLiteDataReader, T> record)
         {
             List<T> result = ExecReader(sql, sqlParams, record);
-            if (result.Count > 0) return result[0];
-            return default;
+            return result.Count > 0 ? result[0] : default;
         }
 
         /// <summary>
@@ -82,19 +80,10 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// <summary>
         /// Thực thi truy vấn SQL.
         /// </summary>
-        /// <remarks>
-        /// Trong trường hợp thực hiện các <see cref="ExecReader"/> lồng
-        /// đưa <paramref name="isNestedOrInIEnumerable"/> về true.
-        /// </remarks>
         /// <typeparam name="T">Kết quả mong muốn mà phương thức xử lý sẽ trả về.</typeparam>
         /// <param name="sql">Câu lệnh SQL.</param>
+        /// <param name="sqlParams">Params</param>
         /// <param name="record">Phương thức tiền xử lý kết quả từ <see cref="IDataRecord"></see></param>
-        /// <param name="isNestedOrInIEnumerable">
-        /// Các truy vấn có cấu trúc lồng nhau như trong Foreach,
-        /// hoặc kết quả được trả về dưới dạng IEnumerable sẽ phải set
-        /// param này thành true để đánh dấu việc đóng Connection khi
-        /// kết thúc câu query đúng cách.
-        /// </param>
         /// <returns>IEnumerable<typeparamref name="T"/></returns>
         public static List<T> ExecReader<T>(
             string sql
@@ -169,9 +158,9 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
                 if (paramValue.Value != null)
                 {
                     handler.AppendFormatted(
-                        paramValue.Value.ToString().Length <= limit
+                        paramValue.Value.ToString()!.Length <= limit
                         ? paramValue.Value
-                        : paramValue.Value.ToString()[limit..] + $"...({paramValue.Value.ToString().Length - limit})"
+                        : paramValue.Value.ToString()?[limit..] + $"...({paramValue.Value.ToString()!.Length - limit})"
                     );
                 }
                 else
@@ -190,12 +179,10 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 
         private static void AddParams(SQLiteCommand cmd, IDictionary<string, object> sqlParams)
         {
-            if (sqlParams != null)
+            if (sqlParams == null) return;
+            foreach (KeyValuePair<string, object> paramValue in sqlParams)
             {
-                foreach (KeyValuePair<string, object> paramValue in sqlParams)
-                {
-                    cmd.Parameters.AddWithValue(paramValue.Key, paramValue.Value);
-                }
+                cmd.Parameters.AddWithValue(paramValue.Key, paramValue.Value);
             }
         }
     }
@@ -245,16 +232,15 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// </remarks>
         /// <param name="sb">StringBuilder</param>
         /// <returns>StringBuilder</returns>
-        public static StringBuilder RemoveLastCharAfterAppendLine(this StringBuilder sb)
+        public static void RemoveLastCharAfterAppendLine(this StringBuilder sb)
         {
             sb.Length -= 3;
-            return sb;
         }
     }
     #endregion
 
     #region Utils Function
-    public class MathUtils
+    public abstract class MathUtils
     {
         public static int CountPage(int amount, int limit)
         {

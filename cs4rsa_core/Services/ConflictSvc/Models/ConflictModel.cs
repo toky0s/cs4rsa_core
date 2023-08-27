@@ -124,12 +124,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                 }
             }
         }
-
-        public ScheduleTableItemType GetScheduleTableItemType()
-        {
-            return ScheduleTableItemType.TimeConflict;
-        }
-
+        
         public string GetId()
         {
             return "tc" + VmConstants.CharSpace + FirstSchoolClass.SubjectCode + VmConstants.CharSpace + SecondSchoolClass.SubjectCode;

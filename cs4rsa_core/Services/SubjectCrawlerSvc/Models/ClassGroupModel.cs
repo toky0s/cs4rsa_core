@@ -187,7 +187,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                     .Any(schoolClass => schoolClass.SchoolClassName == schoolClassName);
                 if (isValidSchoolClassName)
                 {
-                    ReRenderScheduleRequest(schoolClassName);
+                    ReRenderSchedule(schoolClassName);
                 }
                 else
                 {
@@ -240,6 +240,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return null;
         }
 
+        // TODO: Check here for render TimeBlock
         /**
          * Mô tả:
          *      Trừ school class bắt buộc, các special class group 
@@ -249,11 +250,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
          *      2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký
          * 
          * Tham số:
-         *      schoolClassName:
-         *          Trường hợp registerCode là null hoặc empty, 
-         *          schoolClassName sẽ được sử dụng để tìm kiếm school class tương ứng.
+         *      schoolClassName: Sẽ được sử dụng để tìm kiếm school class tương ứng.
          */
-        public void ReRenderScheduleRequest(string schoolClassName)
+        public void ReRenderSchedule(string schoolClassName)
         {
             _userSelectedSchoolClass = ClassGroup.SchoolClasses
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)

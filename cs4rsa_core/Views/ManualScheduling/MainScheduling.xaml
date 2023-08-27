@@ -19,7 +19,7 @@
     <local:Clg 
       x:Name="CpnClg" 
       Grid.Column="1" />
-    <local:Choosed 
+    <local:Chose 
       x:Name="CpnChoosed" 
       Grid.Column="2" />
     <local:Scheduler 

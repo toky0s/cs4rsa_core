@@ -1,6 +1,5 @@
 ﻿using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 using System.Collections.Generic;
@@ -37,11 +36,9 @@ namespace Cs4rsa.ViewModelFunctions
                         continue;
                     Conflict conflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictTime conflictTime = conflict.GetConflictTime();
-                    if (conflictTime != null)
-                    {
-                        ConflictModel conflictModel = new(conflict);
-                        conflictModels.Add(conflictModel);
-                    }
+                    if (conflictTime == null) continue;
+                    ConflictModel conflictModel = new(conflict);
+                    conflictModels.Add(conflictModel);
                 }
             }
         }
@@ -63,11 +60,9 @@ namespace Cs4rsa.ViewModelFunctions
                 {
                     PlaceConflictFinder placeConflict = new(schoolClasses[i], schoolClasses[k]);
                     ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
-                    if (conflictPlace != null)
-                    {
-                        PlaceConflictFinderModel placeConflictModel = new(placeConflict);
-                        placeConflictFinderModels.Add(placeConflictModel);
-                    }
+                    if (conflictPlace == null) continue;
+                    PlaceConflictFinderModel placeConflictModel = new(placeConflict);
+                    placeConflictFinderModels.Add(placeConflictModel);
                 }
             }
         }

@@ -182,17 +182,16 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
         /// <returns>Trả về một Schedule.</returns>
         public static Schedule GetSchedule(IEnumerable<SchoolClass> schoolClasses)
         {
-            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
+            Dictionary<DayOfWeek, List<StudyTime>> dayOfWeekStudyTimePairs = new();
             foreach (SchoolClass schoolClass in schoolClasses)
             {
                 IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
-                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
-                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                    dayOfWeekStudyTimePairs.TryAdd(pair.Key, pair.Value);
                 }
             }
-            Schedule schedule = new(DayOfWeekStudyTimePairs);
+            Schedule schedule = new(dayOfWeekStudyTimePairs);
             return schedule;
         }
 

@@ -9,12 +9,10 @@ using Cs4rsa.Messages.States;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 using Cs4rsa.Utils;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -51,10 +49,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         public ObservableCollection<string> Timelines { get; }
 
-        #endregion
-
-        #region Commands
-        public RelayCommand ResetBetweenPointCommand { get; set; }
         #endregion
 
         public SchedulerViewModel()
@@ -94,9 +88,9 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 {
                     AddClassGroup(cgm);
                 }
-                ChoosedViewModel choosedSessionViewModel = GetViewModel<ChoosedViewModel>();
-                ObservableCollection<ConflictModel> conflictModels = choosedSessionViewModel.ConflictModels;
-                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;
+                ChoseViewModel choseSessionViewModel = GetViewModel<ChoseViewModel>();
+                ObservableCollection<ConflictModel> conflictModels = choseSessionViewModel.ConflictModels;
+                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choseSessionViewModel.PlaceConflictFinderModels;
                 foreach (ConflictModel conflictModel in conflictModels)
                 {
                     AddScheduleItem(conflictModel);
@@ -142,10 +136,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
             {
-                ChoosedViewModel choosedSessionViewModel = GetViewModel<ChoosedViewModel>();
-                ObservableCollection<ClassGroupModel> classGroupModels = choosedSessionViewModel.ClassGroupModels;
-                ObservableCollection<ConflictModel> conflictModels = choosedSessionViewModel.ConflictModels;
-                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choosedSessionViewModel.PlaceConflictFinderModels;
+                ChoseViewModel choseSessionViewModel = GetViewModel<ChoseViewModel>();
+                ObservableCollection<ClassGroupModel> classGroupModels = choseSessionViewModel.ClassGroupModels;
+                ObservableCollection<ConflictModel> conflictModels = choseSessionViewModel.ConflictModels;
+                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choseSessionViewModel.PlaceConflictFinderModels;
 
                 CleanDays();
                 foreach (ClassGroupModel classGroupModel in classGroupModels)
@@ -296,7 +290,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             }
         }
 
+        // TODO: Check here for render TimeBlock
         /// <summary>
+        /// IMPORTANT!!!
+        /// 
         /// Vẽ một <see cref="IScheduleTableItem"/> lên mô phỏng.
         /// </summary>
         /// <param name="scheduleItem">IScheduleTableItem</param>

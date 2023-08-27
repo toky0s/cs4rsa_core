@@ -30,7 +30,7 @@ using static Cs4rsa.Messages.Publishers.ChoosedVmMsgs;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    public partial class ChoosedViewModel : ViewModelBase
+    public partial class ChoseViewModel : ViewModelBase
     {
         #region Properties
         private string _shareString;
@@ -72,7 +72,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         private readonly IUnitOfWork _unitOfWork;
         #endregion
 
-        public ChoosedViewModel(
+        public ChoseViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             ShareString shareString,
             IUnitOfWork unitOfWork
