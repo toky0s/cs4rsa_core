@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Interfaces;
+﻿using Cs4rsa.Interfaces;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
@@ -105,7 +104,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
-            const string BACKGROUND = "#e74c3c";
+            const string background = "#e74c3c";
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
             {
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
@@ -113,7 +112,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
                     CfBlock timeBlock = new(
                         studyTimeIntersect,
                         GetId(),
-                        BACKGROUND,
+                        background,
                         _schoolClass1.SchoolClassName + " x " + _schoolClass2.SchoolClassName,
                         item.Key,
                         ScheduleTableItemType.TimeConflict,
@@ -127,7 +126,7 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         
         public string GetId()
         {
-            return "tc" + VmConstants.CharSpace + FirstSchoolClass.SubjectCode + VmConstants.CharSpace + SecondSchoolClass.SubjectCode;
+            return "tc" + ' ' + FirstSchoolClass.SubjectCode + ' ' + SecondSchoolClass.SubjectCode;
         }
     }
 }

@@ -102,7 +102,6 @@ namespace Cs4rsa.Constants
         public const int IntInvalidCourseId = 0;
         public const string StrSpace = " ";
         public const string TimeFormat = "HH:mm";
-        public const char CharSpace = ' ';
 
         public const string StCurrentYearInfo = "CurrentYearInfo";
         public const string StCurrentSemesterInfo = "CurrentSemesterInfo";

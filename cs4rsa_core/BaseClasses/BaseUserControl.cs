@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-
-using Cs4rsa.Constants;
+﻿using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Utils;
 using Cs4rsa.Utils.Interfaces;
@@ -16,7 +14,6 @@ namespace Cs4rsa.BaseClasses
 {
     public abstract class BaseUserControl : UserControl
     {
-        protected IMessenger Messenger { get; private set; }
         protected IServiceProvider Container { get; private set; }
 
         protected BaseUserControl()
@@ -27,7 +24,6 @@ namespace Cs4rsa.BaseClasses
         protected void BaseUserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Container = ((App)Application.Current).Container;
-            Messenger = ((App)Application.Current).Messenger;
         }
 
         protected void OpenHtmlCacheFile(string courseId)

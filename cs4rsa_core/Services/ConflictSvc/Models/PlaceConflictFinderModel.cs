@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Interfaces;
+﻿using Cs4rsa.Interfaces;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
@@ -102,9 +101,9 @@ namespace Cs4rsa.Services.ConflictSvc.Models
         public string GetId()
         {
             return "pc" 
-                + VmConstants.CharSpace 
+                + ' ' 
                 + FirstSchoolClass.SubjectCode 
-                + VmConstants.CharSpace 
+                + ' ' 
                 + SecondSchoolClass.SubjectCode;
         }
     }

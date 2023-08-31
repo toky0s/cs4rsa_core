@@ -10,6 +10,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Cs4rsa.Constants
@@ -61,7 +62,7 @@ namespace Cs4rsa.Constants
         public PackIconKind IconKind { get; }
         public PackIconKind IconKindOnSelected { get; }
         public ScreenAbstract Screen { get; }
-        public string Vm { get; }
+        private string Vm { get; }
 
         /// <summary>
         /// Khi một màn hình kế thừa từ <see cref="ScreenAbstract"/>
@@ -74,14 +75,16 @@ namespace Cs4rsa.Constants
         /// </summary>
         public void LoadSelfData()
         {
-            if (Vm == null) return;
+            if (Vm is null) return;
             Type viewModelType = Type.GetType(Vm);
-            object viewModel = ActivatorUtilities.GetServiceOrCreateInstance(((App)Application.Current).Container, viewModelType);
-            if (viewModel is IScreenViewModel)
+            if (viewModelType is null)
             {
-                IScreenViewModel vm = (IScreenViewModel)viewModel;
-                vm.InitData();
+                Debug.WriteLine($"Can not found VM with name {Vm}");
+                return;
             }
+            object viewModel = ActivatorUtilities.GetServiceOrCreateInstance(((App)Application.Current).Container, viewModelType);
+            if (viewModel is not IScreenViewModel vm) return;
+            vm.InitData();
         }
     }
 

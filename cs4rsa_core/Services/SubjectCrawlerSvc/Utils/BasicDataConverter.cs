@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
 
 using System;
 using System.Linq;
@@ -19,7 +18,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <returns></returns>
         public static Place ToPlace(string place)
         {
-            string[] slideds = place.Split(VmConstants.CharSpace);
+            string[] slideds = place.Split(' ');
             if (slideds.Contains("Quang"))
                 return Place.QUANGTRUNG;
             if (slideds.Contains("Nam"))

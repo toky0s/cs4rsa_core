@@ -13,7 +13,7 @@ namespace Cs4rsa.BaseClasses
         [ObservableProperty]
         private IDialog _dialogUc;
 
-        protected DialogVmBase() : base()
+        protected DialogVmBase()
         {
             IsDialogOpen = false;
             IsCloseOnClickAway = false;
