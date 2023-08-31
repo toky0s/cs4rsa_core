@@ -36,7 +36,7 @@ public class CourseController : ControllerBase
     /// Lấy ra thông tin Course mới nhất.
     /// </summary>
     /// <returns>DTO Response Course.</returns>
-    [HttpGet(template: "LatestCourse",Name = "Lấy ra Course mới nhất")]
+    [HttpGet(template: "LatestCourse",Name = "GetLatestCourse")]
     public async Task<ActionResult<DtoRpCourse>> GetLatestCourse()
     {
         return await _buCourse.GetLatestCourse();

@@ -46,7 +46,7 @@ namespace CwebizAPI.Controllers
         /// Thông tin đăng ký bao gồm một Jwt Token xác thực cho việc
         /// tạo tài khoản và liên kết tài khoản.
         /// </returns>
-        [HttpPost("AddStudent", Name = "Register account for a students")]
+        [HttpPost("AddStudent", Name = "AddStudent")]
         public async Task<IActionResult> RegisterStudent(
             [FromBody] DtoRqRegister registerInformation
         )
@@ -60,7 +60,7 @@ namespace CwebizAPI.Controllers
         /// thông tin sinh viên đã đăng ký trước đó.
         /// </summary>
         /// <returns>DtoRqLinkAccount</returns>
-        [HttpPost("CreateAndLink", Name = "Create account and link to the registered student")]
+        [HttpPost("CreateAndLink", Name = "CreateAndLink")]
         public async Task<IActionResult> CreateAccountAndLinkStudent(
             [FromBody] DtoRqLinkAccount accountInformation)
         {
