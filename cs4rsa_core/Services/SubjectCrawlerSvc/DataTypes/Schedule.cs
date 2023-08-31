@@ -70,8 +70,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
             return schedule1.GetSchoolDays().Intersect(schedule2.GetSchoolDays());
         }
 
-
+        // TODO: Check here for render TimeBlock
         /// <summary>
+        /// IMPORTANT!!!
+        /// 
         /// Gộp danh sách các Schedule lại thành 1.
         /// </summary>
         /// <param name="schedules"></param>

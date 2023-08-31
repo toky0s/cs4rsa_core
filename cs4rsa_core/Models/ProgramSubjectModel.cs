@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using Cs4rsa.Constants;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Models.Bases;
 using Cs4rsa.Services.ProgramSubjectCrawlerSvc.DataTypes;
@@ -140,7 +139,7 @@ namespace Cs4rsa.Models
         /// </summary>
         private void IsAvaiableInThisSemester()
         {
-            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(new char[] { VmConstants.CharSpace });
+            string[] subjectCodeSlices = ProgramSubject.SubjectCode.Split(' ');
             string discipline = subjectCodeSlices[0];
             string keyword1 = subjectCodeSlices[1];
             long count = _unitOfWork.Keywords.Count(discipline, keyword1);

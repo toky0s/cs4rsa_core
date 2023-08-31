@@ -8,8 +8,15 @@
     <Win32Resource />
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
-    <TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
     <AssemblyName>Cwebiz</AssemblyName>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Version>3.0.1</Version>
+    <Title>Credit Simulation 4nd Register Support Application for Duy Tan University</Title>
+    <Authors>Trương A Xin</Authors>
+    <Description>Ứng dụng hỗ trợ xếp lịch cho sinh viên đại học Duy Tân</Description>
+    <PackageProjectUrl>https://github.com/toky0s/cs4rsa_core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/toky0s/cs4rsa_core</RepositoryUrl>
+    <PackageReleaseNotes>Bug fixes and improve performance</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -89,7 +96,7 @@
     <Page Update="Views\AutoScheduling\Auto.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Views\ManualScheduling\Choosed.xaml">
+    <Page Update="Views\ManualScheduling\Chose.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\ManualScheduling\Clg.xaml">

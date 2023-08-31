@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Messages.Publishers.Dialogs;
+using Cs4rsa.Services.ConflictSvc.Interfaces;
 using Cs4rsa.Services.ConflictSvc.Models;
 using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
@@ -17,16 +18,12 @@ namespace Cs4rsa.Dialogs.Implements
         private SchoolClassModel _firstSC;
         [ObservableProperty]
         private SchoolClassModel _secondSC;
-        [ObservableProperty]
-        private string fColor;
-        [ObservableProperty]
-        private string sColor;
 
         public RelayCommand RemoveCgFirstCmd { get; set; }
         public RelayCommand RemoveCgSecondCmd { get; set; }
 
         public SolveConflictViewModel(
-            ConflictModel conflictModel,
+            IConflictModel conflictModel,
             IUnitOfWork unitOfWork
         )
         {

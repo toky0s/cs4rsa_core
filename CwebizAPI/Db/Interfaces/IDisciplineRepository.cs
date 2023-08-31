@@ -52,22 +52,23 @@ namespace CwebizAPI.Db.Interfaces
         /// </summary>
         /// <param name="keywords">Danh sách Keyword.</param>
         void InsertAll(IEnumerable<Keyword> keywords);
-        Task<Keyword> GetKeyword(string discipline, string keyword1);
+        Task<Keyword?> GetKeyword(string discipline, string keyword1);
         
         /// <summary>
         /// Lấy ra danh sách tất cả các Keyword.
+        /// Trong đó, bao gồm tên của Discipline.
         /// </summary>
         /// <returns>Danh sách các Keyword.</returns>
         Task<List<Keyword>> GetAllKeyword();
 
         /// <summary>
-        /// GetByPaging Keyword bằng Course ID
+        /// Get Keyword bằng Course ID
         /// </summary>
         /// <param name="courseId">Course ID</param>
-        Task<Keyword> GetKeyword(int courseId);
+        Task<Keyword?> GetKeywordByCourseId(string courseId);
 
         /// <summary>
-        /// GetByPaging Keyword bằng Subject Code
+        /// Get Keyword bằng Subject Code
         /// </summary>
         /// <param name="subjectCode">Mã môn</param>
         /// <returns></returns>
@@ -85,7 +86,7 @@ namespace CwebizAPI.Db.Interfaces
         /// </summary>
         /// <param name="courseId">Course ID.</param>
         /// <returns>Mã màu.</returns>
-        Task<string> GetColor(int courseId);
+        Task<string> GetColor(string courseId);
         
         /// <summary>
         /// Lấy ra Color dựa theo mã môn.
@@ -141,5 +142,17 @@ namespace CwebizAPI.Db.Interfaces
         /// <returns>Course.</returns>
         Task<Course?> GetCourse(string yearValue, string semesterValue);
         #endregion
+
+        /// <summary>
+        /// Lấy ra Course mới nhất.
+        /// </summary>
+        /// <returns>Thông tin Course</returns>
+        Task<Course?> GetLatestCourse();
+
+        /// <summary>
+        /// Lấy ra Max Keyword ID.
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetKeywordMaxId();
     }
 }

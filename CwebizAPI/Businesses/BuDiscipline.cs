@@ -4,8 +4,8 @@
 
 using CwebizAPI.Converters;
 using CwebizAPI.Db.Interfaces;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Share.Database.Models;
-using CwebizAPI.Share.DTOs.Responses;
 
 namespace CwebizAPI.Businesses
 {
@@ -31,7 +31,7 @@ namespace CwebizAPI.Businesses
         /// <returns>Danh sách các Discipline.</returns>
         public async Task<IEnumerable<DtoRpDiscipline>> GetAllDtoDiscipline()
         {
-            List<Discipline> dbDisciplines = await _unitOfWork.DisciplineRepository!.GetAllDiscipline();
+            List<Discipline> dbDisciplines = await _unitOfWork.DisciplineRepository.GetAllDiscipline();
             return dbDisciplines.ToDtoDisciplines();
         }
 
@@ -42,7 +42,7 @@ namespace CwebizAPI.Businesses
         /// <returns>Danh sách các Keyword</returns>
         public async Task<IEnumerable<DtoRpKeyword>> GetKeywordsByDisciplineId(int disciplineId)
         {
-            List<Keyword> keywords = await _unitOfWork.DisciplineRepository!.GetKeywordsByDisciplineId(disciplineId);
+            List<Keyword> keywords = await _unitOfWork.DisciplineRepository.GetKeywordsByDisciplineId(disciplineId);
             return keywords.ToDtoKeywords();
         }
     }

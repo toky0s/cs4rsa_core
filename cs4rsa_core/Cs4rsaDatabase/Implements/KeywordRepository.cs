@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Cs4rsaDatabase.DataProviders;
+﻿using Cs4rsa.Cs4rsaDatabase.DataProviders;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 
@@ -114,8 +113,7 @@ namespace Cs4rsa.Cs4rsaDatabase.Implements
 
         public Keyword GetKeyword(string subjectCode)
         {
-            char[] splitChars = { VmConstants.CharSpace };
-            string[] slices = subjectCode.Split(splitChars);
+            string[] slices = subjectCode.Split(' ');
             return GetKeyword(slices[0], slices[1]);
         }
 

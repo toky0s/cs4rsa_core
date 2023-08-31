@@ -13,12 +13,12 @@ namespace Cs4rsa.ViewModels.AutoScheduling
     {
         private readonly List<int> _currentIndexes = new();
         private readonly List<IEnumerable<ClassGroupModel>> _classGroupModelsOfClass;
-        private readonly int PLACEHOLDER = -1;
+        private const int Placeholder = -1;
         public readonly List<List<int>> TempResult = new();
         public Cs4rsaGen(List<IEnumerable<ClassGroupModel>> classGroupModelsOfClass)
         {
             _classGroupModelsOfClass = classGroupModelsOfClass;
-            _classGroupModelsOfClass.ForEach(item => _currentIndexes.Add(PLACEHOLDER));
+            _classGroupModelsOfClass.ForEach(item => _currentIndexes.Add(Placeholder));
         }
 
         public void Backtracking(int k)
@@ -47,15 +47,13 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             return JsonSerializer.Deserialize<T>(serialized);
         }
 
-        private static bool IsSuccess(List<int> result, int amount)
+        private static bool IsSuccess(IReadOnlyCollection<int> result, int amount)
         {
-            foreach (int item in result)
+            if (result.Any(item => item == -1))
             {
-                if (item == -1)
-                {
-                    return false;
-                }
+                return false;
             }
+
             return result.Count == amount;
         }
     }

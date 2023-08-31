@@ -2,8 +2,8 @@
  * Copyright 2023 CS4RSA.Cwebiz
  */
 
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Share.Database.Models;
-using CwebizAPI.Share.DTOs.Responses;
 
 namespace CwebizAPI.Converters
 {
@@ -58,6 +58,42 @@ namespace CwebizAPI.Converters
         public static IEnumerable<DtoRpDiscipline> ToDtoDisciplines(this IEnumerable<Discipline> disciplines)
         {
             return disciplines.Select(discipline => discipline.ToDtoDiscipline());
+        }
+        
+        /// <summary>
+        /// Chuyển đổi một list các Discipline thành DtoRpSubjectItem.
+        /// </summary>
+        /// <param name="disciplines">Disciplines</param>
+        /// <returns>IEnumerable of DtoRpSubjectItem</returns>
+        public static IEnumerable<DtoRpSubjectItem> ToDtoRpSubjectItems(this IEnumerable<Discipline> disciplines)
+        {
+            return disciplines.SelectMany(ds => ds.Keywords.Select(kw =>
+
+                new DtoRpSubjectItem
+                {
+                    SubjectName = kw.SubjectName,
+                    Color = kw.Color,
+                    SubjectCode = ds.Name + " " + kw.Keyword1,
+                    ObjectID = kw.CourseId,
+                    DisciplineName = ds.Name
+                }
+            ));
+        }
+
+        /// <summary>
+        /// Chuyển đổi Course thành DtoRpCourse.
+        /// </summary>
+        /// <param name="course">Course</param>
+        /// <returns>DTO Response Course.</returns>
+        public static DtoRpCourse ToDtoRpCourse(this Course course)
+        {
+            return new DtoRpCourse
+            {
+                SemesterInfo = course.SemesterInfor,
+                SemesterValue = course.SemesterValue,
+                YearInfo = course.YearInfor,
+                YearValue = course.YearValue
+            };
         }
     }
 }

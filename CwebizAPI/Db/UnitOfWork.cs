@@ -27,6 +27,16 @@ namespace CwebizAPI.Db
                 return _disciplineRepository;
             }
         }
+        
+        private ITeacherRepository? _teacherRepository;
+        public ITeacherRepository TeacherRepository 
+        { 
+            get
+            {
+                _teacherRepository ??= new TeacherRepo(DbContext);
+                return _teacherRepository;
+            }
+        }
 
         private IStudentRepository? _studentRepository;
         public IStudentRepository? StudentRepository
@@ -49,9 +59,14 @@ namespace CwebizAPI.Db
             }
         }
 
-        public CwebizContext DbContext { get; } = new();
+        public CwebizContext DbContext { get; }
 
         private bool _disposed;
+
+        public UnitOfWork(CwebizContext dbContext)
+        {
+            DbContext = dbContext;
+        }
 
         private void Dispose(bool disposing)
         {

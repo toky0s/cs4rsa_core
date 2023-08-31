@@ -3,9 +3,9 @@
  */
 
 using CwebizAPI.Businesses;
+using CwebizAPI.DTOs.Requests;
+using CwebizAPI.DTOs.Responses;
 using CwebizAPI.Settings;
-using CwebizAPI.Share.DTOs.Requests;
-using CwebizAPI.Share.DTOs.Responses;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 

@@ -21,7 +21,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="uc">Dialog UC</param>
         protected virtual void OpenDialog(IDialog uc)
         {
-            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).OpenModal(uc);
+            ((MainWindowViewModel)Application.Current.MainWindow!.DataContext).OpenModal(uc);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Cs4rsa.BaseClasses
         /// </summary>
         protected virtual void CloseDialog()
         {
-            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).CloseModal();
+            ((MainWindowViewModel)Application.Current.MainWindow!.DataContext).CloseModal();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="scrIdx">Screen Index</param>
         protected static void GotoScreen(int scrIdx)
         {
-            ((MainWindow)Application.Current.MainWindow).Goto(scrIdx);
+            ((MainWindow)Application.Current.MainWindow!).Goto(scrIdx);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="prevent"></param>
         protected virtual void PreventOperation(bool prevent)
         {
-            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).IsWindowEnable = !prevent;
+            ((MainWindowViewModel)Application.Current.MainWindow!.DataContext).IsWindowEnable = !prevent;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Cs4rsa.BaseClasses
         /// <param name="isPrevent"></param>
         protected static void PreventCloseDialog(bool isPrevent)
         {
-            ((MainWindowViewModel)Application.Current.MainWindow.DataContext).IsCloseOnClickAway = !isPrevent;
+            ((MainWindowViewModel)Application.Current.MainWindow!.DataContext).IsCloseOnClickAway = !isPrevent;
         }
     }
 }

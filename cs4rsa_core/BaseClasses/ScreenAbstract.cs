@@ -11,7 +11,7 @@ namespace Cs4rsa.BaseClasses
 
         protected ScreenAbstract()
         {
-            _components = new();
+            _components = new List<IComponent>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Cs4rsa.BaseClasses
         /// Component cha.
         /// </summary>
         /// <param name="component">Component con.</param>
-        public void RegisterComponent(IComponent component)
+        protected void RegisterComponent(IComponent component)
         {
             _components.Add(component);
         }

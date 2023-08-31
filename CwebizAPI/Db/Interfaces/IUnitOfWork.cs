@@ -16,7 +16,8 @@ namespace CwebizAPI.Db.Interfaces
     /// </remarks>
     public interface IUnitOfWork
     {
-        public IDisciplineRepository? DisciplineRepository { get; }
+        public IDisciplineRepository DisciplineRepository { get; }
+        public ITeacherRepository TeacherRepository { get; }
         public IStudentRepository? StudentRepository { get; }
         public IUserRepository? UserRepository { get; }
         CwebizContext DbContext { get; }

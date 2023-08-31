@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
@@ -20,29 +19,25 @@ using System.Windows;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    public sealed partial class AccountViewModel : DialogVmBase
+    public sealed class AccountViewModel : DialogVmBase
     {
         #region Properties
-        public ObservableCollection<Student> Students { get; set; }
+        public ObservableCollection<Student> Students { get; }
         public Student SelectedStudent { get; set; }
 
-        [ObservableProperty]
-        private string _sessionId;
         #endregion
 
         #region Commands
-        public AsyncRelayCommand FindCommand { get; set; }
-        public RelayCommand DeleteCommand { get; set; }
+        public AsyncRelayCommand FindCommand { get; }
+        public RelayCommand DeleteCommand { get; }
         #endregion
 
         private readonly IUnitOfWork _unitOfWork;
 
-        [ObservableProperty]
-        private ISnackbarMessageQueue _snackbarMessageQueue;
         public AccountViewModel(
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue
-        ) : base()
+        )
         {
             _unitOfWork = unitOfWork;
             SnackbarMessageQueue = snackbarMessageQueue;
@@ -89,11 +84,11 @@ namespace Cs4rsa.Dialogs.Implements
             try
             {
                 PreventCloseDialog(true);
-                SessionInputUC sessionInputUC = new();
-                SessionInputViewModel vm = sessionInputUC.DataContext as SessionInputViewModel;
+                SessionInputUC sessionInputUc = new();
+                SessionInputViewModel vm = (SessionInputViewModel)sessionInputUc.DataContext;
                 vm.SessionId = SessionId;
 
-                OpenDialog(sessionInputUC);
+                OpenDialog(sessionInputUc);
                 await vm.Find();
                 SessionId = string.Empty;
             }

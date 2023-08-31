@@ -400,8 +400,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             #region Clone ClassGroup Models
             List<ClassGroupModel> classGroupModels = new();
-            ChoosedViewModel choosedVm = GetViewModel<ChoosedViewModel>();
-            foreach (ClassGroupModel classGroupModel in choosedVm.ClassGroupModels)
+            ChoseViewModel choseVm = GetViewModel<ChoseViewModel>();
+            foreach (ClassGroupModel classGroupModel in choseVm.ClassGroupModels)
             {
                 classGroupModels.Add(classGroupModel.DeepClone());
             }
@@ -509,7 +509,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            ClassGroupModel classGroupModel = GetViewModel<ChoosedViewModel>()
+            ClassGroupModel classGroupModel = GetViewModel<ChoseViewModel>()
                 .ClassGroupModels
                 .FirstOrDefault(cgm => cgm.SubjectCode.Equals(sm.SubjectCode));
 
@@ -623,7 +623,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                     .Where(cgm => cgm.Name.Equals(userSubject.ClassGroup))
                     .First();
             Debug.Assert(classGroupModel != null);
-            if (classGroupModel == null) return;
             if (subjectModel.IsSpecialSubject)
             {
                 classGroupModel.PickSchoolClass(userSubject.SchoolClass);

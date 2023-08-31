@@ -92,7 +92,7 @@ BEGIN
 CREATE TABLE Discipline
 (
     [Id]        INT             NOT NULL PRIMARY KEY,
-    [Name]      NVARCHAR(100)   UNIQUE,
+    [Name]      VARCHAR(10)   UNIQUE,
     [CourseId]  INT,
     CONSTRAINT CourseId_Course_Id
         FOREIGN KEY (CourseId)
@@ -108,8 +108,8 @@ BEGIN
 CREATE TABLE Keyword
 (
     [Id]            INT             NOT NULL PRIMARY KEY,
-    [Keyword1]      NVARCHAR(100)   NOT NULL,
-    [CourseId]      INT             NOT NULL UNIQUE,
+    [Keyword1]      VARCHAR(10)      NOT NULL,
+    [CourseId]      VARCHAR(4)      NOT NULL UNIQUE,
     [SubjectName]   NVARCHAR(100)   NOT NULL,
     [Color]         VARCHAR(7)      NOT NULL UNIQUE,
     [DisciplineId]  INT,
