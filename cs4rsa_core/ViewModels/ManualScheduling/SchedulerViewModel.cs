@@ -272,8 +272,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             IEnumerable<SchoolClassModel> schoolClassModels;
             if (classGroupModel.IsSpecialClassGroup)
             {
-                schoolClassModels = classGroupModel
-                .CurrentSchoolClassModels;
+                schoolClassModels = classGroupModel.CurrentSchoolClassModels;
                 //.Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
             }
             else
@@ -306,9 +305,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 int dayIndex = timeBlock.DayOfWeek.ToIndex();
                 if (phase == Phase.First || phase == Phase.Second)
                 {
-                    ObservableCollection<ObservableCollection<TimeBlock>> week = phase == Phase.First
-                                                                               ? Week1
-                                                                               : Week2;
+                    var week = phase == Phase.First ? Week1 : Week2;
                     week[dayIndex].Add(timeBlock);
                 }
                 else if (phase == Phase.All)

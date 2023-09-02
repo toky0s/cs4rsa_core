@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="e7286418-e4d3-44c8-bca8-0de43a52854f" name="@localhost Mapping">
+      <data-sources db="c85f483a-7fc6-4ead-a241-266388993b9a" />
+    </mapping>
+    <mapping uuid="892f1533-48a1-457e-bf21-7ae3553639c2" name="@DESKTOP-GD9867B Mapping">
+      <data-sources db="d452f1c4-ed42-414c-b6c7-9d343165862f" />
+      <scope>
+        <node kind="database" qname="Cwebiz" />
+      </scope>
+    </mapping>
+  </component>
+</project>
