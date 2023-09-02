@@ -177,7 +177,7 @@ namespace Cs4rsa.ViewModels.Profile
         private async Task OnDownload()
         {
             GetClipboardCommand.CanExecute(false);
-            IEnumerable<Task[]> taskChunk = StudentModels
+            IEnumerable<IEnumerable<Task>> taskChunk = StudentModels
                 .Where(st => st.IsSuccess == false)
                 .Select(st => CreateDownloadTask(st.StudentId))
                 .Chunk(BatchSize);

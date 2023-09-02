@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Cs4rsaDatabase.Interfaces;
+﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Cs4rsaDatabase.Models;
 using Cs4rsa.Services.TeacherCrawlerSvc.Crawlers.Interfaces;
 using Cs4rsa.Services.TeacherCrawlerSvc.Models;
@@ -108,7 +107,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                     teacher.Subject = subject;
                     teacher.Form = form;
                     teacher.Path = strPath;
-                    teacher.TeachedSubjects = string.Join(VmConstants.SeparatorTeacherSubject, teachedSubjects);
+                    teacher.TeachedSubjects = string.Join("$", teachedSubjects);
                     _unitOfWork.Teachers.Update(teacher);
                 }
                 else
@@ -125,7 +124,7 @@ namespace Cs4rsa.Services.TeacherCrawlerSvc.Crawlers
                         Subject = subject,
                         Form = form,
                         Path = strPath,
-                        TeachedSubjects = string.Join(VmConstants.SeparatorTeacherSubject, teachedSubjects),
+                        TeachedSubjects = string.Join("$", teachedSubjects),
                         Url = url
                     };
                     _unitOfWork.Teachers.Add(teacher);

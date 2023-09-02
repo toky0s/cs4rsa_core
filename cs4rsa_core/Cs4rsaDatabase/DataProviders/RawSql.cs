@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Cs4rsa.Cs4rsaDatabase.DataProviders
@@ -141,39 +143,36 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
 
         private static string BeautifyParams(IDictionary<string, object> sqlParams)
         {
-            if (sqlParams == null) return "Command was executed without param.";
+            if (sqlParams == null || sqlParams.Count == 0)
+            {
+                return "Command was executed without param.";
+            }
             StringBuilder sb = new();
-            StringBuilder.AppendInterpolatedStringHandler handler = new(literalLength: 23, formattedCount: 1, sb);
-            handler.AppendLiteral("====== Params (");
-            handler.AppendFormatted(sqlParams.Count);
-            handler.AppendLiteral(") ======");
-            sb.AppendLine(ref handler);
-            StringBuilder.AppendInterpolatedStringHandler handler2 = new(literalLength: 2, formattedCount: 2, sb);
+            sb.Append("====== Params (");
+            sb.Append(sqlParams.Count);
+            sb.AppendLine(") ======");
             const int limit = 30;
             foreach (KeyValuePair<string, object> paramValue in sqlParams)
             {
-                handler.AppendFormatted(paramValue.Key);
-                handler.AppendLiteral(": ");
+                sb.Append(paramValue.Key);
+                sb.Append(": ");
 
-                if (paramValue.Value != null)
+                if (paramValue.Value is null)
                 {
-                    handler.AppendFormatted(
-                        paramValue.Value.ToString()!.Length <= limit
-                        ? paramValue.Value
-                        : paramValue.Value.ToString()?[limit..] + $"...({paramValue.Value.ToString()!.Length - limit})"
-                    );
+                    sb.Append("NULL");
                 }
                 else
                 {
-                    handler.AppendFormatted("NULL");
+                    sb.AppendLine(
+                        paramValue.Value.ToString()!.Length <= limit
+                        ? paramValue.Value.ToString()
+                        : paramValue.Value.ToString()?.Substring(0, limit) + $"...({paramValue.Value.ToString()!.Length - limit})"
+                    );
                 }
-
-                sb.AppendLine(ref handler2);
             }
-            handler.AppendLiteral("====== Params (");
-            handler.AppendFormatted(sqlParams.Count);
-            handler.AppendLiteral(") ======");
-            sb.AppendLine(ref handler);
+            sb.Append("====== Params (");
+            sb.Append(sqlParams.Count);
+            sb.AppendLine(") ======");
             return sb.ToString();
         }
 
@@ -190,7 +189,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
     #region String Builder Extension
     public static class RawSqlStringBuilderExtension
     {
-        private static readonly Dictionary<string, EnumerableRowCollection<string>> _tableColumnNames = new();
+        private static readonly Dictionary<string, IEnumerable<string>> _tableColumnNames = new();
 
         /// <summary>
         /// Hỗ trợ tạo tự động mệnh đề Select
@@ -204,7 +203,7 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         public static StringBuilder AppendSelectColumns<T>(this StringBuilder sb)
         {
             string tableName = typeof(T).Name + "s";
-            if (_tableColumnNames.TryGetValue(tableName, out EnumerableRowCollection<string> value))
+            if (_tableColumnNames.TryGetValue(tableName, out IEnumerable<string> value))
             {
                 sb.AppendLine(string.Join("\n, ", value));
             }
@@ -213,12 +212,17 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
                 using SQLiteConnection cnn = new(VmConstants.DbConnectionString);
                 cnn.Open();
                 DataTable columnTable = cnn.GetSchema("Columns");
-                EnumerableRowCollection<string> rowCollection =
-                    from c in columnTable.AsEnumerable()
-                    where c["TABLE_NAME"].Equals(typeof(T).Name + "s")
-                    select c["COLUMN_NAME"].ToString();
-                _tableColumnNames.Add(tableName, rowCollection);
-                sb.AppendLine(string.Join("\n, ", rowCollection));
+
+                List<string> columnNames = new List<string>();
+                foreach (DataRow dataRow in columnTable.Rows)
+                {
+                    if (dataRow["TABLE_NAME"].Equals(typeof(T).Name + "s"))
+                    {
+                        columnNames.Add(dataRow["COLUMN_NAME"].ToString());
+                    }
+                }
+                _tableColumnNames.Add(tableName, columnNames);
+                sb.AppendLine(string.Join("\n, ", columnNames));
             }
             return sb;
         }

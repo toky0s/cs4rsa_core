@@ -6,18 +6,16 @@ using Cs4rsa.BaseClasses;
 using Cs4rsa.Cs4rsaDatabase.Interfaces;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Services.ConflictSvc.Interfaces;
-using Cs4rsa.Services.ConflictSvc.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
 using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
 namespace Cs4rsa.Dialogs.Implements
 {
     public partial class SolveConflictViewModel : DialogVmBase
     {
-        [ObservableProperty]
-        private SchoolClassModel _firstSC;
-        [ObservableProperty]
-        private SchoolClassModel _secondSC;
+        [ObservableProperty] private SchoolClassModel _firstSc;
+        [ObservableProperty] private SchoolClassModel _secondSc;
+        [ObservableProperty] private string _fColor;
+        [ObservableProperty] private string _sColor;
 
         public RelayCommand RemoveCgFirstCmd { get; set; }
         public RelayCommand RemoveCgSecondCmd { get; set; }
@@ -27,12 +25,12 @@ namespace Cs4rsa.Dialogs.Implements
             IUnitOfWork unitOfWork
         )
         {
-            _firstSC = conflictModel.FirstSchoolClass;
-            _secondSC = conflictModel.SecondSchoolClass;
-            RemoveCgFirstCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_firstSC.SchoolClass.ClassGroupName)));
-            RemoveCgSecondCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_secondSC.SchoolClass.ClassGroupName)));
-            FColor = unitOfWork.Keywords.GetColorWithSubjectCode(_firstSC.SubjectCode);
-            SColor = unitOfWork.Keywords.GetColorWithSubjectCode(_secondSC.SubjectCode);
+            FirstSc = conflictModel.FirstSchoolClass;
+            SecondSc = conflictModel.SecondSchoolClass;
+            RemoveCgFirstCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_firstSc.SchoolClass.ClassGroupName)));
+            RemoveCgSecondCmd = new(() => Messenger.Send(new SolveConflictVmMsgs.RemoveChoicedClassMsg(_secondSc.SchoolClass.ClassGroupName)));
+            FColor = unitOfWork.Keywords.GetColorWithSubjectCode(_firstSc.SubjectCode);
+            SColor = unitOfWork.Keywords.GetColorWithSubjectCode(_secondSc.SubjectCode);
         }
     }
 }

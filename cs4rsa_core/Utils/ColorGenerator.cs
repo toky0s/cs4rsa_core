@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Cs4rsaDatabase.Interfaces;
 
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -42,9 +43,10 @@ namespace Cs4rsa.Utils
             string color;
             do
             {
-                int red = (RandomNumberGenerator.GetInt32(256) + 255) / 2;
-                int green = (RandomNumberGenerator.GetInt32(256) + 255) / 2;
-                int blue = (RandomNumberGenerator.GetInt32(256) + 255) / 2;
+                Random rand = new();
+                int red = (rand.Next(0, 257) + 255) / 2;
+                int green = (rand.Next(0, 257) + 255) / 2;
+                int blue = (rand.Next(0, 257) + 255) / 2;
                 color = $"#{red:X2}{green:X2}{blue:X2}";
             }
             while (_excludeColors.Contains(color) || _generatedColors.Contains(color));

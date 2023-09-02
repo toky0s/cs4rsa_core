@@ -16,12 +16,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Cs4rsa.Dialogs.Implements
 {
-    public sealed class AccountViewModel : DialogVmBase
+    public sealed partial class AccountViewModel : DialogVmBase
     {
         #region Properties
+
+        [ObservableProperty] private ISnackbarMessageQueue _snackbarMessageQueue;
+        [ObservableProperty] private string _sessionId;
         public ObservableCollection<Student> Students { get; }
         public Student SelectedStudent { get; set; }
 

@@ -52,7 +52,7 @@ namespace Cs4rsa
 
             // Database Init Data
             CourseCrawler courseCrawler = Container.GetService<CourseCrawler>();
-            courseCrawler.InitInfor();
+            courseCrawler.InitInformation();
             if (!File.Exists(VmConstants.DbFilePath))
             {
                 RawSql.CreateDbIfNotExist();

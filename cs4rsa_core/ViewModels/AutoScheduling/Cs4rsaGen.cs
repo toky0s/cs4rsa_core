@@ -1,8 +1,9 @@
 ﻿using Cs4rsa.Services.SubjectCrawlerSvc.Models;
 
+using Newtonsoft.Json;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 
 namespace Cs4rsa.ViewModels.AutoScheduling
 {
@@ -43,8 +44,19 @@ namespace Cs4rsa.ViewModels.AutoScheduling
 
         private static T Clone<T>(T source)
         {
-            string serialized = JsonSerializer.Serialize(source);
-            return JsonSerializer.Deserialize<T>(serialized);
+
+            if (source is null)
+            {
+                return default;
+            }
+
+            var deserializeSettings = new JsonSerializerSettings
+            {
+                ObjectCreationHandling = ObjectCreationHandling.Replace
+            };
+
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+
         }
 
         private static bool IsSuccess(IReadOnlyCollection<int> result, int amount)

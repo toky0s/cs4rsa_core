@@ -143,7 +143,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
         public string GetClassSuffix()
         {
-            return Name[(ClassGroup.SubjectCode.Length + 1)..];
+            return Name.Substring(ClassGroup.SubjectCode.Length + 1);
         }
 
         public bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)

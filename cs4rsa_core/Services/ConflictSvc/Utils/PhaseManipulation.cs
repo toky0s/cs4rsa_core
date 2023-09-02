@@ -105,10 +105,10 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
         }
     }
 
-    public readonly struct PhaseIntersect
+    public class PhaseIntersect
     {
         public static readonly PhaseIntersect NullInstance = new() { StartWeek = 0, EndWeek = 0 };
-        public int StartWeek { get; init; }
-        public int EndWeek { get; init; }
+        public int StartWeek { get; set; }
+        public int EndWeek { get; set; }
     }
 }

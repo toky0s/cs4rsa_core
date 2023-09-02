@@ -22,17 +22,13 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
         private readonly IUnitOfWork _unitOfWork;
         private static bool _getYearAtFirst;
 
-        [ObservableProperty]
-        public string _currentYearValue;
+        [ObservableProperty] private string _currentYearValue;
 
-        [ObservableProperty]
-        public string _currentYearInfo;
+        [ObservableProperty] private string _currentYearInfo;
 
-        [ObservableProperty]
-        public string _currentSemesterValue;
+        [ObservableProperty] private string _currentSemesterValue;
 
-        [ObservableProperty]
-        public string _currentSemesterInfo;
+        [ObservableProperty] private string _currentSemesterInfo;
 
         public CourseCrawler(
             HtmlWeb htmlWeb,
@@ -50,18 +46,18 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
         /// <exception cref="System.Net.WebException">
         /// Trong trường hợp bạn DOS server Duy Tân bằng việc cập nhật cache.
         /// </exception>
-        public void InitInfor()
+        public void InitInformation()
         {
             try
             {
-                string URL_YEAR_COMBOBOX = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
-                HtmlDocument document = _htmlWeb.Load(URL_YEAR_COMBOBOX);
+                string urlYearCombobox = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
+                HtmlDocument document = _htmlWeb.Load(urlYearCombobox);
 
                 CurrentYearInfo = GetCurrentInfo(document, true);
                 CurrentYearValue = GetCurrentValue(document, true);
 
-                string URL_SEMESTER_COMBOBOX = $"http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={CurrentYearValue}";
-                document = _htmlWeb.Load(URL_SEMESTER_COMBOBOX);
+                string urlSemesterCombobox = $"http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadHocKy.aspx?hockyname=cboHocKy1&namhoc={CurrentYearValue}";
+                document = _htmlWeb.Load(urlSemesterCombobox);
                 CurrentSemesterValue = GetCurrentValue(document, false);
                 CurrentSemesterInfo = GetCurrentInfo(document, false);
                 Debug.WriteLine($"Init mà không gặp lỗi", typeof(CourseCrawler).Namespace);

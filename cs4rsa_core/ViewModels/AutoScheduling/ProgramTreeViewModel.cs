@@ -169,7 +169,7 @@ namespace Cs4rsa.ViewModels.AutoScheduling
         [ObservableProperty]
         private bool _isDownloading;
 
-        public AsyncRelayCommand LoadProgramCommand { get; set; }
+        public RelayCommand LoadProgramCommand { get; set; }
         public AsyncRelayCommand DownloadCommand { get; set; }
         public AsyncRelayCommand FilterChangedCommand { get; set; }
         public AsyncRelayCommand ValidGenCommand { get; set; }
@@ -433,13 +433,13 @@ namespace Cs4rsa.ViewModels.AutoScheduling
             }
         }
 
-        private async Task LoadProgramSubject()
+        private void LoadProgramSubject()
         {
             ProgramFolderModels.Clear();
             string programPath = CredizText.PathProgramJsonFile(SelectedStudent.StudentId);
             if (File.Exists(programPath))
             {
-                string json = await File.ReadAllTextAsync(programPath);
+                string json = File.ReadAllText(programPath);
                 ProgramFolder[] programFolders = JsonConvert.DeserializeObject<ProgramFolder[]>(json);
 
                 List<ProgramFolderModel> pfms = new();

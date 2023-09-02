@@ -5,10 +5,10 @@
     /// </summary>
     public class UserSubject
     {
-        public string SubjectCode { get; init; }
-        public string ClassGroup { get; init; }
-        public string SubjectName { get; init; }
-        public string RegisterCode { get; init; }
-        public string SchoolClass { get; init; }
+        public string SubjectCode { get; set; }
+        public string ClassGroup { get; set; }
+        public string SubjectName { get; set; }
+        public string RegisterCode { get; set; }
+        public string SchoolClass { get; set; }
     }
 }

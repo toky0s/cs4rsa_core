@@ -7,7 +7,7 @@ namespace Cs4rsa.Utils
 {
     public class FolderManager : IFolderManager
     {
-        public void CreateFoldersAtStartUp()
+        public override void CreateFoldersAtStartUp()
         {
             for (int i = 0; i < IFolderManager.Folders.Length; ++i)
             {
@@ -16,7 +16,7 @@ namespace Cs4rsa.Utils
             }
         }
 
-        public string CreateFolderIfNotExists(string path)
+        public override string CreateFolderIfNotExists(string path)
         {
             if (!Directory.Exists(path))
             {
@@ -26,7 +26,7 @@ namespace Cs4rsa.Utils
             return path;
         }
 
-        public void DelAllInThisFolder(string folderPath)
+        public override void DelAllInThisFolder(string folderPath)
         {
             string[] filePaths = Directory.GetFiles(folderPath);
             for (int i = 0; i < filePaths.Length; i++)

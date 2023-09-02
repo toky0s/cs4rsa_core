@@ -22,9 +22,9 @@
       Margin="0,0,0,16"
       HorizontalAlignment="Center"
       Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-      <Run FontWeight="Bold" Text="{Binding FirstSC.SchoolClass.ClassGroupName}" />
+      <Run FontWeight="Bold" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
       <Run Text="hoặc" />
-      <Run FontWeight="Bold" Text="{Binding SecondSC.SchoolClass.ClassGroupName}" />
+      <Run FontWeight="Bold" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
       <Run Text="?" />
     </TextBlock>
     <Grid>
@@ -51,8 +51,8 @@
             Background="{Binding FColor}"
             CornerRadius="4" />
           <StackPanel Grid.Column="1">
-            <TextBlock Text="{Binding FirstSC.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSC.SchoolClass.ClassGroupName}" />
+            <TextBlock Text="{Binding FirstSc.SubjectName}" />
+            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
           </StackPanel>
           <Button
             Grid.Column="2"
@@ -80,8 +80,8 @@
             Background="{Binding SColor}"
             CornerRadius="4" />
           <StackPanel Grid.Column="1">
-            <TextBlock Text="{Binding SecondSC.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSC.SchoolClass.ClassGroupName}" />
+            <TextBlock Text="{Binding SecondSc.SubjectName}" />
+            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
           </StackPanel>
           <Button
             Grid.Column="2"

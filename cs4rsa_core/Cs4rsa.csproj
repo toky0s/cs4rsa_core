@@ -9,7 +9,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AnalysisLevel>latest</AnalysisLevel>
     <AssemblyName>Cwebiz</AssemblyName>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <Version>3.0.1</Version>
     <Title>Credit Simulation 4nd Register Support Application for Duy Tan University</Title>
     <Authors>Trương A Xin</Authors>
@@ -17,6 +17,7 @@
     <PackageProjectUrl>https://github.com/toky0s/cs4rsa_core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/toky0s/cs4rsa_core</RepositoryUrl>
     <PackageReleaseNotes>Bug fixes and improve performance</PackageReleaseNotes>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -75,6 +76,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.117" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -126,6 +128,7 @@
     <Content Include="Images\avatar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Reference Include="System.Web" />
     <Resource Include="Images\background.png" />
     <Resource Include="Images\donate.png" />
     <Resource Include="Images\donate_viettel.png" />

@@ -4,7 +4,7 @@
     /// Class triển khai Interface này sẽ triển khai
     /// các phương thức thao tác với thư mục.
     /// </summary>
-    public interface IFolderManager
+    public abstract class IFolderManager
     {
         public static readonly string FdStudentPrograms = "StudentPrograms";
         public static readonly string FdStudentPlans = "StudentPlans";
@@ -20,13 +20,13 @@
             , FdHtmlCaches
         };
 
-        string CreateFolderIfNotExists(string path);
-        void CreateFoldersAtStartUp();
+        public abstract string CreateFolderIfNotExists(string path);
+    public abstract void CreateFoldersAtStartUp();
 
-        /// <summary>
-        /// Xoá bỏ mọi file có trong folder.
-        /// </summary>
-        /// <param name="folderPath">Folder Path</param>
-        void DelAllInThisFolder(string folderPath);
+    /// <summary>
+    /// Xoá bỏ mọi file có trong folder.
+    /// </summary>
+    /// <param name="folderPath">Folder Path</param>
+    public abstract void DelAllInThisFolder(string folderPath);
     }
 }

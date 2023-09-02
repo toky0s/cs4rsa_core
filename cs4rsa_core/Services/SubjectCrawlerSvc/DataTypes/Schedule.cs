@@ -51,7 +51,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 string result = $"{thu}{timesRange}";
                 results.Add(result);
             }
-            return string.Join('\n', results.ToArray());
+            return string.Join("\n", results.ToArray());
         }
     }
 

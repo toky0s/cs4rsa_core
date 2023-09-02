@@ -6,6 +6,7 @@ using Cs4rsa.Services.TeacherCrawlerSvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
 {
@@ -188,7 +189,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.DataTypes
                 IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
-                    dayOfWeekStudyTimePairs.TryAdd(pair.Key, pair.Value);
+                    if (!dayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                    {
+                        dayOfWeekStudyTimePairs[pair.Key] = pair.Value;
+                    }
                 }
             }
             Schedule schedule = new(dayOfWeekStudyTimePairs);
