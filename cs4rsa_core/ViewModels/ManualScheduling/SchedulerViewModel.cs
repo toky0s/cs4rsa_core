@@ -1,11 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 
 using Cs4rsa.BaseClasses;
 using Cs4rsa.Interfaces;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
-using Cs4rsa.Messages.States;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes.Enums;
 using Cs4rsa.Services.ConflictSvc.Models;
@@ -19,12 +17,7 @@ using System.Linq;
 
 namespace Cs4rsa.ViewModels.ManualScheduling
 {
-    /// <summary>
-    /// Phải THẬT biết những gì mình biết. Thế mới là HỌC.
-    /// 
-    /// SchedulerViewModel chả quản lý cái quần gì hết. Nó chỉ hiển thị thôi.
-    /// </summary>
-    internal sealed class SchedulerViewModel : ViewModelBase
+    internal sealed partial class SchedulerViewModel : ViewModelBase
     {
         private readonly List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
 
@@ -132,28 +125,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Messenger.Register<ChoosedVmMsgs.UndoDelMsg>(this, (r, m) =>
             {
                 AddClassGroup(m.Value);
-            });
-
-            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
-            {
-                ChoseViewModel choseSessionViewModel = GetViewModel<ChoseViewModel>();
-                ObservableCollection<ClassGroupModel> classGroupModels = choseSessionViewModel.ClassGroupModels;
-                ObservableCollection<ConflictModel> conflictModels = choseSessionViewModel.ConflictModels;
-                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choseSessionViewModel.PlaceConflictFinderModels;
-
-                CleanDays();
-                foreach (ClassGroupModel classGroupModel in classGroupModels)
-                {
-                    AddClassGroup(classGroupModel);
-                }
-                foreach (ConflictModel conflictModel in conflictModels)
-                {
-                    AddScheduleItem(conflictModel);
-                }
-                foreach (PlaceConflictFinderModel placeConflict in placeConflicts)
-                {
-                    AddScheduleItem(placeConflict);
-                }
             });
 
             Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
@@ -266,21 +237,17 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// Thay thế ClassGroupModel cũ trong bộ mô phỏng (nếu có)
         /// bằng ClassGroupModel mới được thêm.
         /// </summary>
-        /// <param name="classGroupModel"></param>
+        /// <param name="classGroupModel">ClassGroupModel</param>
         private void AddClassGroup(ClassGroupModel classGroupModel)
         {
             IEnumerable<SchoolClassModel> schoolClassModels;
             if (classGroupModel.IsSpecialClassGroup)
             {
                 schoolClassModels = classGroupModel.CurrentSchoolClassModels;
-                //.Select(sc => GetSchoolClassModelCallback(sc.SchoolClass, classGroupModel.Color));
             }
             else
             {
                 schoolClassModels = classGroupModel.NormalSchoolClassModels;
-                //.ClassGroup
-                //.SchoolClasses
-                //.Select(sc => GetSchoolClassModelCallback(sc, classGroupModel.Color));
             }
 
             foreach (SchoolClassModel schoolClassModel in schoolClassModels)
@@ -288,8 +255,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 AddScheduleItem(schoolClassModel);
             }
         }
-
-        // TODO: Check here for render TimeBlock
+        
         /// <summary>
         /// IMPORTANT!!!
         /// 
@@ -315,15 +281,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 }
             }
         }
-
-        //private static SchoolClassModel GetSchoolClassModelCallback(SchoolClass schoolClass, string color)
-        //{
-        //    SchoolClassModel schoolClassModel = new(schoolClass)
-        //    {
-        //        Color = color
-        //    };
-        //    return schoolClassModel;
-        //}
 
         private void CleanDays()
         {

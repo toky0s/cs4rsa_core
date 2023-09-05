@@ -5,7 +5,9 @@
   xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
-  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:vm="clr-namespace:Cs4rsa.ViewModels.ManualScheduling"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
   vml:ViewModelLocator.AutoHookedUpViewModel="True">
   <base:BaseUserControl.Resources>
     <ResourceDictionary>

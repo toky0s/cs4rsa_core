@@ -10,7 +10,6 @@ using Cs4rsa.Dialogs.Implements;
 using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Messages.Publishers.Dialogs;
 using Cs4rsa.Messages.Publishers.UIs;
-using Cs4rsa.Messages.States;
 using Cs4rsa.ModelExtensions;
 using Cs4rsa.Models;
 using Cs4rsa.Services.ConflictSvc.DataTypes;
@@ -90,10 +89,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
             {
-                Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    DelAllSubjectMsgHandler();
-                });
+                DelAllSubjectMsgHandler();
             });
 
             Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
@@ -116,11 +112,6 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 RemoveChoosedClassMsgHandler(m.Value);
             });
 
-            Messenger.Register<PhaseStoreMsgs.BetweenPointChangedMsg>(this, (r, m) =>
-            {
-                UpdateConflicts();
-            });
-
             Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
             {
                 ClassGroupModels.Clear();
@@ -131,15 +122,12 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             // Click vào block thì đồng thời select class group model tương ứng.
             Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
             {
-                if (m.Value is SchoolClassBlock @schoolClassBlock)
+                if (m.Value is not SchoolClassBlock schoolClassBlock) return;
+                ClassGroupModel result = ClassGroupModels
+                    .FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
+                if (result != null)
                 {
-                    ClassGroupModel result = ClassGroupModels
-                        .Where(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName))
-                        .FirstOrDefault();
-                    if (result != null)
-                    {
-                        SelectedClassGroupModel = result;
-                    }
+                    SelectedClassGroupModel = result;
                 }
             });
             #endregion
@@ -149,11 +137,11 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
             CopyCodeCommand = new RelayCommand(OnCopyCode);
             SolveConflictCommand = new RelayCommand(OnSolve);
-            OpenShareStringWindowCommand = new(OnOpenShareStringWindow);
+            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
 
-            PlaceConflictFinderModels = new();
-            ConflictModels = new();
-            ClassGroupModels = new();
+            PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+            ConflictModels = new ObservableCollection<ConflictModel>();
+            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
         }
 
         /// <summary>
@@ -161,10 +149,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// </summary>
         private void OnSolve()
         {
-            SolveConflictUC solveConflictUC = new();
+            SolveConflictUC solveConflictUc = new();
             SolveConflictViewModel vm = new(SelectedConflictModel, _unitOfWork);
-            solveConflictUC.DataContext = vm;
-            OpenDialog(solveConflictUC);
+            solveConflictUc.DataContext = vm;
+            OpenDialog(solveConflictUc);
         }
 
         /// <summary>
@@ -331,9 +319,9 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             if (classGroupModel != null)
             {
-                int ClassGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
-                if (ClassGroupModelIndex != -1)
-                    ClassGroupModels[ClassGroupModelIndex] = classGroupModel;
+                int classGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
+                if (classGroupModelIndex != -1)
+                    ClassGroupModels[classGroupModelIndex] = classGroupModel;
                 else
                     ClassGroupModels.Add(classGroupModel);
             }

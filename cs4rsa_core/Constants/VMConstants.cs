@@ -78,7 +78,6 @@ namespace Cs4rsa.Constants
         public const string InitDbFilePath = "Cs4rsaDatabase\\DataProviders\\cs4rsa.db.sql";
         public const string DbConnectionString = $@"Data Source={DbFilePath}";
         public const string SchoolClassNameIsDiffException = "SchoolClass's Name is difference!";
-        public const string InvalidRegisterCodeException = "Register code is invalid!";
         public const string NotFoundBaseSchoolClassModelException = "Base school class model cound not be found";
         public const string NotFoundViewModelException = "ViewModel cound not be found";
 

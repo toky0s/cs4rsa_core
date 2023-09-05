@@ -26,13 +26,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
-        private readonly List<SchoolClassModel> _currentSchoolClassModels;
-        public List<SchoolClassModel> CurrentSchoolClassModels
-        {
-            get { return _currentSchoolClassModels; }
-        }
+        public List<SchoolClassModel> CurrentSchoolClassModels { get; }
 
-        public IEnumerable<SchoolClassModel> NormalSchoolClassModels;
+        public readonly IEnumerable<SchoolClassModel> NormalSchoolClassModels;
 
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
@@ -42,12 +38,10 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         public IEnumerable<string> TempTeacher { get; }
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
-        public Phase Phase { get => ClassGroup.GetPhase(); }
+        public Phase Phase => ClassGroup.GetPhase();
 
-        private Schedule _schedule;
-        public Schedule Schedule { get => _schedule; }
-        public ImplementType ImplementType { get; }
-        public RegistrationType RegistrationType { get; }
+        public Schedule Schedule { get; private set; }
+
         public string Color { get; }
         public SchoolClassModel CompulsoryClass { get; }
         public SchoolClassModel CodeSchoolClass { get; }
@@ -55,8 +49,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         /// <summary>
         /// Với trường hợp Special SchoolClass, người dùng sẽ phải chọn thêm một SchoolClass.
         /// </summary>
-        private SchoolClassModel _userSelectedSchoolClass;
-        public SchoolClassModel UserSelectedSchoolClass { get => _userSelectedSchoolClass; }
+        public SchoolClassModel UserSelectedSchoolClass { get; private set; }
 
         /// <summary>
         /// Hậu tố tên lớp, nếu môn Class Name là: ACC 001 B thì hậu tố là B.
@@ -106,14 +99,14 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
             if (classGroup.SchoolClasses.Count > 0)
             {
-                _schedule = classGroup.GetSchedule();
-                _currentSchoolClassModels = new();
+                Schedule = classGroup.GetSchedule();
+                CurrentSchoolClassModels = new();
 
                 Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
                 EmptySeat = classGroup.GetEmptySeat();
                 TempTeacher = classGroup.GetTempTeachers();
-                ImplementType = classGroup.GetImplementType();
-                RegistrationType = classGroup.GetRegistrationType();
+                classGroup.GetImplementType();
+                classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
                 ClassSuffix = GetClassSuffix();
                 CompulsoryClass = GetCompulsoryClass();
@@ -129,24 +122,21 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
                 {
                     SchoolClass schoolClass = classGroup.SchoolClasses
-                        .Where(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName))
-                        .FirstOrDefault();
-                    if (schoolClass != null)
-                    {
-                        CodeSchoolClass = new SchoolClassModel(schoolClass, color);
-                        CurrentSchoolClassModels.Add(CompulsoryClass);
-                        CurrentSchoolClassModels.Add(CodeSchoolClass);
-                    }
+                        .FirstOrDefault(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName));
+                    if (schoolClass == null) return;
+                    CodeSchoolClass = new SchoolClassModel(schoolClass, color);
+                    CurrentSchoolClassModels.Add(CompulsoryClass);
+                    CurrentSchoolClassModels.Add(CodeSchoolClass);
                 }
             }
         }
 
-        public string GetClassSuffix()
+        private string GetClassSuffix()
         {
             return Name.Substring(ClassGroup.SubjectCode.Length + 1);
         }
 
-        public bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
+        private bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
         {
             return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
                 .Distinct()
@@ -168,17 +158,12 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
             return ClassGroup.GetSchedule().ScheduleTime.Count > 0;
         }
 
-        /**
-         * Mô tả:
-         *      Chọn school class cho một class group thuộc special subject.
-         *      
-         *      
-         * Tham số:
-         *      schoolClassName:
-         *          Với class group chứa nhiều mã đăng ký (special class group), 
-         *          school class name là duy nhất sẽ được quét để tìm kiếm 
-         *          school class mà người dùng đã chọn.
-         */
+        /// <summary>
+        /// Chọn school class cho một class group thuộc special subject.
+        /// </summary>
+        /// <param name="schoolClassName">Với class group chứa nhiều mã đăng ký (special class group), school class name
+        /// là duy nhất sẽ được quét để tìm kiếm school class mà người dùng đã chọn.</param>
+        /// <exception cref="Exception">Register code is invalid</exception>
         public void PickSchoolClass(string schoolClassName)
         {
             if (IsBelongSpecialSubject)
@@ -191,7 +176,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
                 }
                 else
                 {
-                    throw new Exception(VmConstants.InvalidRegisterCodeException);
+                    throw new Exception("Register code is invalid");
                 }
             }
             else
@@ -228,12 +213,9 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
 
             // Trường hợp có nhiều hơn 1 school class,
             // chọn school class nào không có mã đăng ký.
-            foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses)
+            foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses.Where(schoolClass => schoolClass.RegisterCode.Equals(string.Empty)))
             {
-                if (schoolClass.RegisterCode == string.Empty)
-                {
-                    return new SchoolClassModel(schoolClass, Color);
-                }
+                return new SchoolClassModel(schoolClass, Color);
             }
 
             MessageBox.Show(VmConstants.NotFoundBaseSchoolClassModelException);
@@ -241,28 +223,23 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Models
         }
 
         // TODO: Check here for render TimeBlock
-        /**
-         * Mô tả:
-         *      Trừ school class bắt buộc, các special class group 
-         *      cần một school class đi kèm (có thể có mã đăng ký hoặc không).
-         *      
-         *      1. ClassGroupModel là một đại diện duy nhất của một ClassGroup
-         *      2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký
-         * 
-         * Tham số:
-         *      schoolClassName: Sẽ được sử dụng để tìm kiếm school class tương ứng.
-         */
+        /// <summary>
+        /// Trừ school class bắt buộc, các special class group cần một school class đi kèm (có thể có mã đăng ký hoặc không).
+        /// 1. ClassGroupModel là một đại diện duy nhất của một ClassGroup.
+        /// 2. ClassGroup có thể có nhiều hình thức vì nó có nhiều mã đăng ký.
+        /// </summary>
+        /// <param name="schoolClassName">Sẽ được sử dụng để tìm kiếm school class tương ứng.</param>
         public void ReRenderSchedule(string schoolClassName)
         {
-            _userSelectedSchoolClass = ClassGroup.SchoolClasses
+            UserSelectedSchoolClass = ClassGroup.SchoolClasses
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
                 .Select(schoolClass => new SchoolClassModel(schoolClass, Color))
                 .FirstOrDefault();
 
-            _currentSchoolClassModels.Clear();
-            _currentSchoolClassModels.Add(CompulsoryClass);
-            _currentSchoolClassModels.Add(_userSelectedSchoolClass);
-            _schedule = ClassGroup.GetSchedule(_currentSchoolClassModels.Select(scm => scm.SchoolClass));
+            CurrentSchoolClassModels.Clear();
+            CurrentSchoolClassModels.Add(CompulsoryClass);
+            CurrentSchoolClassModels.Add(UserSelectedSchoolClass);
+            Schedule = ClassGroup.GetSchedule(CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
         }
     }
 }

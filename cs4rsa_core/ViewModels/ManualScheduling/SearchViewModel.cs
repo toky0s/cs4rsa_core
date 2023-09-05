@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,8 +38,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
     public sealed partial class SearchViewModel : ViewModelBase
     {
         #region Fields
-        private readonly ShowDetailsSubjectUC _showDetailsSubjectUC;
-        private readonly ImportSessionUC _importSessionUC;
+        private readonly ImportSessionUC _importSessionUc;
         private List<Discipline> _searchDisciplines;
         private List<Keyword> _searchKeywords;
         #endregion
@@ -127,8 +125,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         )
         {
             #region Fields
-            _showDetailsSubjectUC = new();
-            _importSessionUC = new();
+            ShowDetailsSubjectUC showDetailsSubjectUc = new();
+            _importSessionUc = new ImportSessionUC();
             #endregion
 
             #region Services
@@ -164,11 +162,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
             Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
             {
-                if (m.Value is SchoolClassBlock @schoolClassBlock)
+                if (m.Value is SchoolClassBlock schoolClassBlock)
                 {
                     SelectedSubjectModel = SubjectModels
-                        .Where(sm => sm.SubjectCode.Equals(schoolClassBlock.Id))
-                        .FirstOrDefault();
+                        .FirstOrDefault(sm => sm.SubjectCode.Equals(schoolClassBlock.Id))!;
                 }
             });
 
@@ -199,7 +196,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             Disciplines = new();
             FullMatchSearchingKeywords = new();
             SavedSchedules = new();
-            ComModels = new();
+            ComModels = new ObservableCollection<CombinationModel>();
             SearchText = string.Empty;
             IsUseCache = true;
             #endregion
@@ -213,8 +210,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new((SubjectModel subjectModel) =>
             {
-                ((ShowDetailsSubjectViewModel)_showDetailsSubjectUC.DataContext).SubjectModel = subjectModel;
-                OpenDialog(_showDetailsSubjectUC);
+                ((ShowDetailsSubjectViewModel)showDetailsSubjectUc.DataContext).SubjectModel = subjectModel;
+                OpenDialog(showDetailsSubjectUc);
             });
             ReloadCommand = new(OnReload);
             #endregion
@@ -225,27 +222,24 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         partial void OnSltCombiChanged(CombinationModel value)
         {
-            // TODO: Handle Special Subject sau khi đi nghĩa vụ về
-            if (value != null)
+            if (value == null) return;
+            IEnumerable<SubjectModel> subjectModels = value.SubjecModels;
+            SubjectModels.Clear();
+            foreach (SubjectModel sjm in subjectModels)
             {
-                IEnumerable<SubjectModel> subjectModels = value.SubjecModels;
-                SubjectModels.Clear();
-                foreach (SubjectModel sjm in subjectModels)
-                {
-                    SubjectModels.Add(sjm);
-                }
-
-                // Đánh giá Phase Store xác định tuần ngăn cách
-                foreach (ClassGroupModel cgm in value.ClassGroupModels)
-                {
-                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(cgm));
-                }
-
-                SelectedSubjectModel = SubjectModels.FirstOrDefault();
-
-                AddCommand.NotifyCanExecuteChanged();
-                DeleteAllCommand.NotifyCanExecuteChanged();
+                SubjectModels.Add(sjm);
             }
+
+            // Đánh giá Phase Store xác định tuần ngăn cách
+            foreach (ClassGroupModel cgm in value.ClassGroupModels)
+            {
+                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(cgm));
+            }
+
+            SelectedSubjectModel = SubjectModels.FirstOrDefault();
+
+            AddCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.NotifyCanExecuteChanged();
         }
 
         partial void OnSelectedSubjectModelChanged(SubjectModel value)
@@ -269,23 +263,21 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         partial void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
         {
-            if (value != null && value.Keyword != null && value.Discipline.DisciplineId != 0)
+            if (value is not { Keyword: not null } || value.Discipline.DisciplineId == 0) return;
+            Discipline dcl = Disciplines.First(dcl => dcl.DisciplineId == value.Discipline.DisciplineId);
+            SelectedDiscipline = dcl;
+            SelectedKeyword = value.Keyword;
+            SearchText = string.Empty;
+            AddCommand.NotifyCanExecuteChanged();
+            if (!IsAlreadyDownloaded(value.Keyword.CourseId))
             {
-                Discipline dcl = Disciplines.First(dcl => dcl.DisciplineId == value.Discipline.DisciplineId);
-                SelectedDiscipline = dcl;
-                SelectedKeyword = value.Keyword;
-                SearchText = string.Empty;
-                AddCommand.NotifyCanExecuteChanged();
-                if (!IsAlreadyDownloaded(value.Keyword.CourseId))
-                {
-                    Application.Current.Dispatcher.InvokeAsync(
-                        async () =>
-                        {
-                            InsertPseudoSubject(value.Keyword);
-                            await OnAddSubjectAsync(SelectedKeyword);
-                        }
-                    );
-                }
+                Application.Current.Dispatcher.InvokeAsync(
+                    async () =>
+                    {
+                        InsertPseudoSubject(value.Keyword);
+                        await OnAddSubjectAsync(SelectedKeyword);
+                    }
+                );
             }
         }
 
@@ -328,7 +320,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         {
             subjectModel.IsDownloading = true;
             subjectModel.IsError = false;
-            subjectModel.ErrorMessage = null;
+            subjectModel.ErrorMessage = string.Empty;
 
             Keyword kw = _unitOfWork.Keywords.GetKeyword(subjectModel.CourseId);
             Discipline ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
@@ -441,8 +433,8 @@ namespace Cs4rsa.ViewModels.ManualScheduling
 
         private void OnOpenImportDialog()
         {
-            ImportSessionViewModel vm = _importSessionUC.DataContext as ImportSessionViewModel;
-            OpenDialog(_importSessionUC);
+            ImportSessionViewModel vm = (ImportSessionViewModel)_importSessionUc.DataContext;
+            OpenDialog(_importSessionUc);
             vm.LoadScheduleSession();
         }
 
@@ -452,12 +444,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SubjectModels.Clear();
             Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
 
-            List<Keyword> kws = new();
-            foreach (UserSubject userSubject in userSubjects)
-            {
-                Keyword kw = _unitOfWork.Keywords.GetKeyword(userSubject.SubjectCode);
-                kws.Add(kw);
-            }
+            List<Keyword> kws = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeyword(userSubject.SubjectCode)).ToList();
 
             InsertPseudoSubjects(kws, userSubjects);
 
@@ -483,7 +470,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             AddCommand.NotifyCanExecuteChanged();
         }
 
-        private void InsertPseudoSubjects(List<Keyword> keywords, IEnumerable<UserSubject> userSubjects)
+        private void InsertPseudoSubjects(IReadOnlyList<Keyword> keywords, IEnumerable<UserSubject> userSubjects)
         {
             UserSubject[] userSubjectArr = userSubjects.ToArray();
             for (int i = 0; i < keywords.Count; i++)
@@ -541,10 +528,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
         /// Load Keyword sau khi chọn discipline.
         /// </summary>
         /// <param name="discipline">Discipline.</param>
-        public void LoadKeywordByDiscipline(Discipline discipline)
+        private void LoadKeywordByDiscipline(Discipline discipline)
         {
             DisciplineKeywordModels.Clear();
-            Discipline currentDiscipline = Disciplines.Where(d => d.DisciplineId == discipline.DisciplineId).FirstOrDefault();
+            Discipline currentDiscipline = Disciplines.First(d => d.DisciplineId == discipline.DisciplineId);
             List<Keyword> keywords = currentDiscipline.Keywords;
             keywords.ForEach(keyword => DisciplineKeywordModels.Add(keyword));
             SelectedKeyword = DisciplineKeywordModels[0];
@@ -618,10 +605,10 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             SubjectModel subjectModel = await OnAddSubjectAsync(keyword);
             if (subjectModel == null) return;
 
-            ClassGroupModel classGroupModel;
-            classGroupModel = subjectModel.ClassGroupModels
-                    .Where(cgm => cgm.Name.Equals(userSubject.ClassGroup))
-                    .First();
+            // Lấy ra ClassGroupModel có tên bằng với tên đã lưu.
+            ClassGroupModel classGroupModel = subjectModel
+                .ClassGroupModels
+                .First(cgm => cgm.Name.Equals(userSubject.ClassGroup));
             Debug.Assert(classGroupModel != null);
             if (subjectModel.IsSpecialSubject)
             {
