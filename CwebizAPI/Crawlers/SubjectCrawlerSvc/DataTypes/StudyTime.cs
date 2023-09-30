@@ -8,6 +8,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         public DateTime End { get; }
         public string StartAsString { get; }
         public string EndAsString { get; }
+        public Session Session { get; }
 
         public StudyTime(string start, string end)
         {
@@ -15,14 +16,14 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
             EndAsString = end;
             Start = DateTime.ParseExact(start, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
             End = DateTime.ParseExact(end, "HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            Session = GetSession();
         }
 
-        public Session GetSession()
+        private Session GetSession()
         {
             if (IsInMorning()) return Session.Morning;
             return IsInAfternoon() ? Session.Afternoon : Session.Night;
         }
-
 
         /// <summary>
         /// Kiểm tra đây có phải là buổi sáng hay không.

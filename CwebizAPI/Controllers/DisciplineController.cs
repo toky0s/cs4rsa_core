@@ -36,7 +36,7 @@ namespace CwebizAPI.Controllers
         /// của sinh viên.
         /// </remarks>
         /// <returns>Danh sách các Discipline.</returns>
-        [HttpGet("Disciplines", Name = "Lấy ra danh sách các Discipline")]
+        [HttpGet("Disciplines", Name = "GetListDiscipline")]
         public async Task<ActionResult<IEnumerable<DtoRpDiscipline>>> Get()
         {
             return Ok(await _buDiscipline.GetAllDtoDiscipline());
@@ -68,7 +68,7 @@ namespace CwebizAPI.Controllers
         /// </remarks>
         /// <param name="disciplineId">Mã ngành</param>
         /// <returns>Danh sách mã môn liên quan</returns>
-        [HttpGet("Keywords/{DisciplineId:int}", Name = "Get Keywords by Discipline ID")]
+        [HttpGet("Keywords/{DisciplineId:int}", Name = "GetKeywordsByDisciplineId")]
         public async Task<ActionResult<List<DtoRpKeyword>>> GetKeywordsByDisciplineId(
             [FromRoute(Name = "DisciplineId")] int disciplineId)
         {

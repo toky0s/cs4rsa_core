@@ -92,6 +92,7 @@ namespace CwebizAPI
             builder.Services.AddScoped<BuUser>();
             builder.Services.AddScoped<BuSubject>();
             builder.Services.AddScoped<BuCourse>();
+            builder.Services.AddScoped<BuSchedule>();
             #endregion
 
             #region CORS
@@ -113,17 +114,11 @@ namespace CwebizAPI
             {
                 q.UseMicrosoftDependencyInjectionJobFactory();
                 q.AddJob<DisciplineJob>(opts => opts.WithIdentity(DisciplineJob.JobKey));
-                q.AddTrigger(opts => opts
-                    .ForJob(DisciplineJob.JobKey)
-                    .WithIdentity(DisciplineJob.Identity)
-                    .WithDailyTimeIntervalSchedule(quartzBuilder =>
-                    {
-                        quartzBuilder
-                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(12, 00))
-                            .OnEveryDay()
-                            .Build();
-                    })
-                );
+                q.AddTrigger(configurator =>
+                {
+                    configurator.WithCronSchedule("0 0 23 ? * MON-SUN *")
+                        .ForJob(DisciplineJob.JobKey);
+                });
             });
 
             builder.Services.AddQuartzServer(options =>

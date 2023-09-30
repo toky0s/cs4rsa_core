@@ -40,7 +40,7 @@ public class LoginController : ControllerBase
     /// <param name="dtoRqLogin">Thông tin đăng nhập.</param>
     /// <returns>IActionResult</returns>
     /// <exception cref="BadHttpRequestException"></exception>
-    [HttpPost("Login")]
+    [HttpPost("Login", Name = "Login")]
     public async Task<IActionResult> Login([FromBody] DtoRqLogin dtoRqLogin)
     {
         if (ModelState.IsValid)
