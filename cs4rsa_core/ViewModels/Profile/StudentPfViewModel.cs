@@ -30,7 +30,7 @@ namespace Cs4rsa.ViewModels.Profile
         /// Giới hạn số lượng hình ảnh
         /// được tải trong một trang.
         /// </summary>
-        private readonly int Limit;
+        private readonly int _limit;
         /// <summary>
         /// Danh sách Student cần tải.
         /// </summary>
@@ -91,13 +91,13 @@ namespace Cs4rsa.ViewModels.Profile
             _unitOfWork = unitOfWork;
             _snackbarMsgQueue = snackbarMsgQueue;
 
-            StudentModels = new();
-            SavedStudentModels = new();
-            UiStudents = new();
+            StudentModels = new ObservableCollection<StudentModel>();
+            SavedStudentModels = new ObservableCollection<Student>();
+            UiStudents = new ObservableCollection<Student>();
             BatchSize = 5;
             WaitBySecond = 3;
             CurrentPage = 1;
-            Limit = 10;
+            _limit = 10;
 
             StudentModels.CollectionChanged += StudentModels_CollectionChanged;
         }
@@ -108,20 +108,17 @@ namespace Cs4rsa.ViewModels.Profile
             {
                 if (string.IsNullOrWhiteSpace(newValue))
                 {
-                    Application.Current.Dispatcher.Invoke(() => {
-                        StartPaging();
-                    });
+                    Application.Current.Dispatcher.Invoke(StartPaging);
                     return;
                 }
                 IEnumerable<Student> students = SavedStudentModels
-                    .Where(st => st.StudentId.Contains(newValue));
-                if (students.Any())
+                    .Where(st => st.StudentId.Contains(newValue))
+                    .ToArray();
+                if (!students.Any()) return;
+                Application.Current.Dispatcher.Invoke(() => UiStudents.Clear());
+                foreach (Student student in students)
                 {
-                    Application.Current.Dispatcher.Invoke(() => UiStudents.Clear());
-                    foreach (Student student in students)
-                    {
-                        Application.Current.Dispatcher.Invoke(() => UiStudents.Add(student));
-                    }
+                    Application.Current.Dispatcher.Invoke(() => UiStudents.Add(student));
                 }
             });
         }
@@ -142,10 +139,10 @@ namespace Cs4rsa.ViewModels.Profile
         private void StartPaging()
         {
             UiStudents.Clear();
-            var pagingStudents = SavedStudentModels
-                .Skip(Limit * (CurrentPage - 1))
-                .Take(Limit);
-            foreach (var student in pagingStudents)
+            IEnumerable<Student> pagingStudents = SavedStudentModels
+                .Skip(_limit * (CurrentPage - 1))
+                .Take(_limit);
+            foreach (Student student in pagingStudents)
             {
                 UiStudents.Add(student);    
             }
@@ -164,7 +161,7 @@ namespace Cs4rsa.ViewModels.Profile
             {
                 SavedStudentModels.Add(st);
             });
-            TotalPage = MathUtils.CountPage(SavedStudentModels.Count, Limit);
+            TotalPage = MathUtils.CountPage(SavedStudentModels.Count, _limit);
         }
 
         [RelayCommand]
@@ -182,9 +179,12 @@ namespace Cs4rsa.ViewModels.Profile
                 .Select(st => CreateDownloadTask(st.StudentId))
                 .Chunk(BatchSize);
 
-            foreach (Task[] tasks in taskChunk)
+            // Thực thi tải ảnh theo batch
+            foreach (IEnumerable<Task> tasks in taskChunk)
             {
                 await Task.WhenAll(tasks);
+                LoadStudents();
+                StartPaging();
                 await Task.Delay(WaitBySecond * 1000);
             }
             DownloadCommand.NotifyCanExecuteChanged();
@@ -212,10 +212,10 @@ namespace Cs4rsa.ViewModels.Profile
         private void OnCleanFolder()
         {
             DirectoryInfo imgFolder = new(IFolderManager.FdStudentImgs);
-            IEnumerable<FileInfo> zeroLengthfiles = imgFolder
+            IEnumerable<FileInfo> zeroLengthFiles = imgFolder
                 .GetFiles()
                 .Where(f => f.Length == 0);
-            foreach (FileInfo file in zeroLengthfiles)
+            foreach (FileInfo file in zeroLengthFiles)
             {
                 file.Delete();
             }
@@ -339,9 +339,7 @@ namespace Cs4rsa.ViewModels.Profile
         /// <returns>Task</returns>
         private async Task CreateDownloadTask(string studentId)
         {
-            StudentModel item = StudentModels
-                .Where(sm => sm.StudentId.Equals(studentId))
-                .First();
+            StudentModel item = StudentModels.First(sm => sm.StudentId.Equals(studentId));
 
             item.IsDownloading = true;
             item.Downloaded = false;

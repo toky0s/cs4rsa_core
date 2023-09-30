@@ -55,7 +55,7 @@ namespace Cs4rsa.ViewModels
             _currentSemesterInfo = _courseCrawler.CurrentSemesterInfo;
             _currentYearInfo = _courseCrawler.CurrentYearInfo;
 
-            UpdateSubjectDbCommand = new(OnUpdate);
+            UpdateSubjectDbCommand = new RelayCommand(OnUpdate);
             GotoFormCommand = new RelayCommand(OnGotoForm);
             GotoGitHubCommand = new RelayCommand(OnGotoGithubCommand);
             ManualCommand = new RelayCommand(OnGotoManualCommand);
