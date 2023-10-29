@@ -141,12 +141,13 @@
               </MultiBinding>
             </Border.Clip>
 
-            <ItemsControl ItemsSource="{Binding 
-                Path=Week, 
-                RelativeSource={RelativeSource AncestorType=base:BaseUserControl, Mode=FindAncestor}}">
+            <!--Fix XDG0066 warning-->
+            <ItemsControl 
+              Name="IC_WeekPanelContainer" 
+              ItemsSource="{Binding Path=Week, RelativeSource={RelativeSource AncestorType=base:BaseUserControl, Mode=FindAncestor}}">
               <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                  <local:WeekPanel />
+                  <local:WeekPanel Height="{Binding ElementName=IC_WeekPanelContainer, Path=Height}"/>
                 </ItemsPanelTemplate>
               </ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
@@ -179,7 +180,6 @@
           </Border>
         </Grid>
       </ScrollViewer>
-
     </Grid>
   </Border>
 </base:BaseUserControl>

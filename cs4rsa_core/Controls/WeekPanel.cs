@@ -10,16 +10,11 @@ namespace Cs4rsa.Controls
     /// </summary>
     public class WeekPanel : Panel
     {
-        private const int DAY_OF_WEEK_COUNT = 7;
-        private static double xPosition;
+        private double _xPosition;
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (double.IsInfinity(availableSize.Height))
-            {
-                availableSize.Height = double.MaxValue;
-            }
-            availableSize.Width /= DAY_OF_WEEK_COUNT;
-            xPosition = availableSize.Width;
+            availableSize.Width /= 7;
+            _xPosition = availableSize.Width;
             foreach (ContentPresenter child in Children)
             {
                 child.Measure(availableSize);
@@ -29,10 +24,10 @@ namespace Cs4rsa.Controls
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double w = finalSize.Width / DAY_OF_WEEK_COUNT;
+            double w = finalSize.Width / 7;
             for (int i = 0; i < Children.Count; i++)
             {
-                Children[i].Arrange(new Rect(xPosition * i, 0, w, finalSize.Height));
+                Children[i].Arrange(new Rect(_xPosition * i, 0, w, finalSize.Height));
             }
             return finalSize;
         }

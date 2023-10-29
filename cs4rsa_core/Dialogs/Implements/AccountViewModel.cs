@@ -71,7 +71,7 @@ namespace Cs4rsa.Dialogs.Implements
             SnackbarMessageQueue.Enqueue(
                 $"Bạn vừa xoá {name}",
                 VmConstants.SnbRestore,
-                obj => OnRestore(obj),
+                OnRestore,
                 actionData
             );
         }
