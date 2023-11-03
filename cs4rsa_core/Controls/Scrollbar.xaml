@@ -1,4 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
   <SolidColorBrush x:Key="StandardBorderBrush" Color="#888" />
   <SolidColorBrush x:Key="StandardBackgroundBrush" Color="Black" />
@@ -12,7 +14,18 @@
   <SolidColorBrush x:Key="HorizontalNormalBrush" Color="#C8C8C8" />
   <SolidColorBrush x:Key="HorizontalNormalBorderBrush" Color="#888" />
 
-  <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
+    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Color="#BBB" Offset="0.0"/>
+                <GradientStop Color="#EEE" Offset="0.1"/>
+                <GradientStop Color="#EEE" Offset="0.9"/>
+                <GradientStop Color="#FFF" Offset="1.0"/>
+            </GradientStopCollection>
+        </GradientBrush.GradientStops>
+    </LinearGradientBrush>
+
+    <Style x:Key="ScrollBarLineButton" TargetType="{x:Type RepeatButton}">
     <Setter Property="Visibility" Value="Hidden" />
     <Setter Property="SnapsToDevicePixels" Value="True" />
     <Setter Property="OverridesDefaultStyle" Value="true" />

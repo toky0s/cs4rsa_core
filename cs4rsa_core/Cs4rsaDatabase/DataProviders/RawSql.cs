@@ -6,8 +6,6 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Cs4rsa.Cs4rsaDatabase.DataProviders

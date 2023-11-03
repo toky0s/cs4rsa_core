@@ -17,9 +17,9 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
             return ScheduleTime.Keys;
         }
 
-        public IEnumerable<StudyTime> GetStudyTimesAtDay(DayOfWeek DayOfWeek)
+        public IEnumerable<StudyTime> GetStudyTimesAtDay(DayOfWeek dayOfWeek)
         {
-            return ScheduleTime[DayOfWeek];
+            return ScheduleTime[dayOfWeek];
         }
 
         public IEnumerable<Session> GetSessions()
@@ -27,7 +27,7 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
             List<Session> sessions = new();
             foreach (IEnumerable<StudyTime> studyTimes in ScheduleTime.Values)
             {
-                sessions.AddRange(studyTimes.Select(studyTime => studyTime.GetSession()));
+                sessions.AddRange(studyTimes.Select(studyTime => studyTime.Session));
             }
             return sessions.Distinct();
         }
@@ -73,17 +73,16 @@ namespace CwebizAPI.Crawlers.SubjectCrawlerSvc.DataTypes
         /// <returns></returns>
         public static Schedule MergeSchedule(IEnumerable<Schedule> schedules)
         {
-            Dictionary<DayOfWeek, List<StudyTime>> DayOfWeekStudyTimePairs = new();
+            Dictionary<DayOfWeek, List<StudyTime>> dayOfWeekStudyTimePairs = new();
             foreach (Schedule item in schedules)
             {
                 IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = item.ScheduleTime;
                 foreach (KeyValuePair<DayOfWeek, List<StudyTime>> pair in dayAndStudyTimes)
                 {
-                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
-                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                    dayOfWeekStudyTimePairs.TryAdd(pair.Key, pair.Value);
                 }
             }
-            Schedule schedule = new(DayOfWeekStudyTimePairs);
+            Schedule schedule = new(dayOfWeekStudyTimePairs);
             return schedule;
         }
     }

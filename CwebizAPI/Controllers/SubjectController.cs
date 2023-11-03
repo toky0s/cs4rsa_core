@@ -40,7 +40,7 @@ public class SubjectController : ControllerBase
     /// <param name="discipline">Discipline Name, CS</param>
     /// <param name="keyword">Keyword, 100</param>
     /// <returns>Thông tin môn học.</returns>
-    [HttpGet("Crawl/{Discipline}/{Keyword}", Name = "Crawl Subject by Discipline and Keyword")]
+    [HttpGet("Crawl/{Discipline}/{Keyword}", Name = "GetSubjectByDisciplineKeyword")]
     public async Task<IActionResult> GetSubject(
         [FromRoute(Name = "Discipline")] string discipline,
         [FromRoute(Name = "Keyword")] string keyword)
@@ -55,7 +55,7 @@ public class SubjectController : ControllerBase
     /// </summary>
     /// <param name="courseId">Course ID</param>
     /// <returns>Thông tin môn học.</returns>
-    [HttpGet("Crawl/{CourseId}", Name = "Crawl Subject by Course ID")]
+    [HttpGet("Crawl/{CourseId}", Name = "CrawlSubjectByCourseId")]
     public async Task<IActionResult> GetSubject(
         [FromRoute(Name = "CourseId")] string courseId)
     {

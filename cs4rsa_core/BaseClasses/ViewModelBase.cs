@@ -63,14 +63,12 @@ namespace Cs4rsa.BaseClasses
         protected static T GetViewModel<T>()
         {
             object o = ((App)Application.Current).Container.GetService(typeof(T));
-            if (o != null && o is T t)
+            if (o is T t)
             {
                 return t;
             }
-            else
-            {
-                throw new Exception(VmConstants.NotFoundViewModelException);
-            }
+
+            throw new Exception(VmConstants.NotFoundViewModelException);
         }
 
         /// <summary>

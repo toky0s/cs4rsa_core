@@ -48,9 +48,9 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
         /// </exception>
         public void InitInformation()
         {
+            const string urlYearCombobox = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
             try
             {
-                string urlYearCombobox = "http://courses.duytan.edu.vn/Modules/academicprogram/ajax/LoadNamHoc.aspx?namhocname=cboNamHoc2&id=2";
                 HtmlDocument document = _htmlWeb.Load(urlYearCombobox);
 
                 CurrentYearInfo = GetCurrentInfo(document, true);
@@ -106,11 +106,9 @@ namespace Cs4rsa.Services.CourseSearchSvc.Crawlers
             {
                 string years = optionElements.Last().InnerText.Trim();
                 _getYearAtFirst = false;
-                if (!years.Contains(DateTime.Now.Year.ToString()))
-                {
-                    years = optionElements.ElementAt(1).InnerText.Trim();
-                    _getYearAtFirst = true;
-                }
+                if (years.Contains(DateTime.Now.Year.ToString())) return years;
+                years = optionElements.ElementAt(1).InnerText.Trim();
+                _getYearAtFirst = true;
                 return years;
             }
             else

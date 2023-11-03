@@ -565,7 +565,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
                 SubjectModel subjectModel = await DownloadSubject(
                     keyword.Discipline.Name,
                     keyword.Keyword1,
-                    VmConstants.IntInvalidCourseId,
+                    0,
                     IsUseCache
                 );
 
@@ -629,7 +629,7 @@ namespace Cs4rsa.ViewModels.ManualScheduling
             bool isUseCache)
         {
             Subject subject;
-            if (courseId == VmConstants.IntInvalidCourseId)
+            if (courseId == 0)
             {
                 subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache, true);
             }

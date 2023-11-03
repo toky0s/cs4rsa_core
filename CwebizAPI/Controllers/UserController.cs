@@ -20,7 +20,7 @@ namespace CwebizAPI.Controllers;
 /// Modified Date: 21/06/2023
 /// Author: Truong A Xin
 /// </remarks>
-[Authorize(Roles = "Student, Admin")]
+[Authorize(Roles = "Trial, Student, Admin")]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
 [Consumes("application/json")]
@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     /// Lấy thông tin người dùng hiện tại.
     /// </summary>
     /// <returns>IActionResult</returns>
-    [HttpGet("GetMe", Name = "Get User information of current user")]
+    [HttpGet("GetMe", Name = "GetUserInfo")]
     public async Task<IActionResult> GetUser()
     {
         string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
