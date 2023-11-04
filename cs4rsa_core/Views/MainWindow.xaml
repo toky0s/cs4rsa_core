@@ -104,7 +104,7 @@
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                  Text="{Binding ElementName=MainWd, Path=Title}" />
+                  Text="{Binding CurrentScreenName}" />
               </StackPanel>
 
               <!--  Compact Menu  -->

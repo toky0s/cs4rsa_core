@@ -20,6 +20,9 @@ namespace Cs4rsa.ViewModels
 
         #region Bindings
         [ObservableProperty]
+        private string _currentScreenName;
+
+        [ObservableProperty]
         private int _storedScreenIdx;
         
         [ObservableProperty]
