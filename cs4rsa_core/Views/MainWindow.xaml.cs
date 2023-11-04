@@ -141,6 +141,7 @@ namespace Cs4rsa.Views
 
             CredizTransitioner.SelectedIndex = index;
             _currentMenuItemIndex = index;
+            Vm.CurrentScreenName = ViewConstants.CredizMenu[index].MenuName;
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
