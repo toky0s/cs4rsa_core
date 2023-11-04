@@ -58,35 +58,20 @@ namespace Cs4rsa.Controls
             }
             _isGotoByClick = false;
 
-            if (verticalOffset > _previousVerticalOffset)
+            if (verticalOffset > _previousVerticalOffset || verticalOffset == 0)
             {
                 STable_BtnGoto.Click -= STable_BtnGoto_GoUp;
                 STable_BtnGoto.Click += STable_BtnGoto_GoDown;
                 STable_BtnGoto.ToolTip = "Xuống dưới";
                 STable_BtnGoto.Content = new PackIcon { Kind = PackIconKind.ArrowDown };
             }
-            else
+
+            if (verticalOffset < _previousVerticalOffset || verticalOffset == maxVerticalOffset)
             {
                 STable_BtnGoto.Click -= STable_BtnGoto_GoDown;
                 STable_BtnGoto.Click += STable_BtnGoto_GoUp;
                 STable_BtnGoto.ToolTip = "Lên trên";
                 STable_BtnGoto.Content = new PackIcon { Kind = PackIconKind.ArrowUp };
-            }
-
-            if (verticalOffset == maxVerticalOffset)
-            {
-                STable_BtnGoto.Click -= STable_BtnGoto_GoDown;
-                STable_BtnGoto.Click += STable_BtnGoto_GoUp;
-                STable_BtnGoto.ToolTip = "Lên trên";
-                STable_BtnGoto.Content = new PackIcon { Kind = PackIconKind.ArrowUp };
-            }
-
-            if (verticalOffset == 0)
-            {
-                STable_BtnGoto.Click -= STable_BtnGoto_GoUp;
-                STable_BtnGoto.Click += STable_BtnGoto_GoDown;
-                STable_BtnGoto.ToolTip = "Xuống dưới";
-                STable_BtnGoto.Content = new PackIcon { Kind = PackIconKind.ArrowDown };
             }
 
             _previousVerticalOffset = verticalOffset;
