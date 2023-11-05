@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ExamListExcelReader.Models;
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExamListExcelReader_ConsoleApp
 {
@@ -7,11 +10,15 @@ namespace ExamListExcelReader_ConsoleApp
     {
         public static void Main(string[] args)
         {
-            IEnumerable<int> result = ExamListExcelReader.StudentReader.Read("E:\\DS thi TN T9.xlsx");
-            foreach (int value in result)
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            IEnumerable<Student> result = ExamListExcelReader.StudentReader
+                .Read("C:\\Users\\truon\\Downloads\\20231027_18h00_ENG422_DICH THUAT VAN CHUONG.xlsx");
+            var orderResult = result.OrderBy(r => r.Code);
+            foreach (var item in orderResult)
             {
-                Console.WriteLine(value);
+                Console.WriteLine(item);
             }
+            Console.ReadLine();
         }
     }
 }
