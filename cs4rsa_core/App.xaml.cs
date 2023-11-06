@@ -37,6 +37,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Cs4rsa
 {
@@ -44,6 +45,23 @@ namespace Cs4rsa
     {
         public IServiceProvider Container { get; private set; }
         public IMessenger Messenger { get; private set; }
+
+        public App()
+        {
+            Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            string errorMessage = string.Format("An unhandled exception occurred: {0} {1}", e.Exception.Message, e.Exception.StackTrace);
+            errorMessage += "Inner exception: " + e.Exception.InnerException.Message + " " + e.Exception.InnerException.StackTrace;
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Clipboard.SetText(errorMessage);
+            // OR whatever you want like logging etc. MessageBox it's just example
+            // for quick debugging etc.
+            e.Handled = true;
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

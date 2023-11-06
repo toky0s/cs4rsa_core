@@ -44,8 +44,8 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
           , IDictionary<string, object> sqlParams
           , T defaultValueIfNull)
         {
-            Debug.WriteLine(BeautifyParams(sqlParams));
-            Debug.WriteLine(sql);
+            //Debug.WriteLine(BeautifyParams(sqlParams));
+            //Debug.WriteLine(sql);
             using SQLiteConnection connection = new(VmConstants.DbConnectionString);
             connection.Open();
             using SQLiteCommand cmd = connection.CreateCommand();
@@ -90,8 +90,8 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
           , IDictionary<string, object> sqlParams
           , Func<SQLiteDataReader, T> record)
         {
-            Debug.WriteLine(BeautifyParams(sqlParams));
-            Debug.WriteLine(sql);
+            //Debug.WriteLine(BeautifyParams(sqlParams));
+            //Debug.WriteLine(sql);
 
             using SQLiteConnection connection = new(VmConstants.DbConnectionString);
             connection.Open();
@@ -128,8 +128,8 @@ namespace Cs4rsa.Cs4rsaDatabase.DataProviders
         /// <returns>Số record được thao tác.</returns>
         public static int ExecNonQuery(string sql, IDictionary<string, object> sqlParams)
         {
-            Debug.WriteLine(BeautifyParams(sqlParams));
-            Debug.WriteLine(sql);
+            //Debug.WriteLine(BeautifyParams(sqlParams));
+            //Debug.WriteLine(sql);
             using SQLiteConnection connection = new(VmConstants.DbConnectionString);
             connection.Open();
             using SQLiteCommand cmd = connection.CreateCommand();
