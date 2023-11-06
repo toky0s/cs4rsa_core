@@ -36,9 +36,15 @@ namespace ExamListExcelReader
             "họ và tên"
         };
 
-        private static readonly string[] _matchCasesClass =
+        private static readonly string[] _matchCasesSubjectClass =
         {
-            "lớp"
+            "lớp",
+            "lớp môn học"
+        };
+
+        private static readonly string[] _matchCasesMainClass =
+        {
+            "lớp sinh hoạt"
         };
 
         private static readonly string[] _matchCasesBirthDate =
@@ -117,10 +123,16 @@ namespace ExamListExcelReader
             return MatchCase(_matchCasesSex, text);
         }
         
-        public static bool HeaderMatcher_Is_Class(this string text)
+        public static bool HeaderMatcher_Is_SubjectClass(this string text)
         {
             ProtectParam(text);
-            return MatchCase(_matchCasesClass, text);
+            return MatchCase(_matchCasesSubjectClass, text);
+        }
+
+        public static bool HeaderMatcher_Is_MainClass(this string text)
+        {
+            ProtectParam(text);
+            return MatchCase(_matchCasesMainClass, text);
         }
 
         public static bool HeaderMatcher_Is_STT(this string text)

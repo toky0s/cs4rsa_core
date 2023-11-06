@@ -6,9 +6,11 @@
         LastName,
         FirstName,
         FullName,
-        Class,
-        BirthDate,
-        BornPlace,
-        Sex
+        SubjectClass,
+        MainClass,
+        //BirthDate,
+        //BornPlace,
+        Sex,
+        Null
     }
 }
