@@ -1,0 +1,39 @@
+﻿<base:BaseUserControl
+    x:Class="Cs4rsa.Module.ManuallySchedule.Views.Scheduler"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
+    xmlns:control="clr-namespace:Cs4rsa.Controls"
+    xmlns:converter="clr-namespace:Cs4rsa.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+    d:DataContext="{d:DesignInstance Type=viewmodels:SchedulerViewModel}"
+    vml:ViewModelLocator.AutoHookedUpViewModel="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+  xmlns:prism="http://prismlibrary.com/"
+prism:ViewModelLocator.AutoWireViewModel="True" 
+    mc:Ignorable="d">
+    <base:BaseUserControl.Resources />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Giai đoạn 1 (hoặc học kỳ Hè)" Style="{StaticResource MaterialDesignTextBlock}">
+        </TextBlock>
+        <control:STable
+            Grid.Row="1"
+            ItemsSource="{Binding Timelines}"
+            Week="{Binding Week1}" />
+        <TextBlock Grid.Row="2" Text="Giai đoạn 2" Style="{StaticResource MaterialDesignTextBlock}"></TextBlock>
+        <control:STable
+            Grid.Row="3"
+            ItemsSource="{Binding Timelines}"
+            Week="{Binding Week2}" />
+    </Grid>
+</base:BaseUserControl>

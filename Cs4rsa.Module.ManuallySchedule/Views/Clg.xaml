@@ -1,0 +1,371 @@
+﻿<base:BaseUserControl
+  x:Class="Cs4rsa.Module.ManuallySchedule.Views.Clg"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
+  xmlns:converter="clr-namespace:Cs4rsa.Converters"
+  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator" 
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+  d:DataContext="{d:DesignInstance Type=viewmodels:ClgViewModel}"
+  vml:ViewModelLocator.AutoHookedUpViewModel="True"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  Loaded="UserControl_Loaded"
+  xmlns:prism="http://prismlibrary.com/"
+prism:ViewModelLocator.AutoWireViewModel="True" 
+  mc:Ignorable="d">
+  <base:BaseUserControl.Resources>
+    <converter:EmptySeatCheckerConverter x:Key="EmptySeatCheckerConverter" />
+    <ContextMenu 
+        x:Key="ClassGroupContextMenu" 
+        DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=UserControl, Mode=FindAncestor}}">
+      <MenuItem
+        Command="{Binding GotoCourseCommand}"
+        Header="Xem chi tiết trong Course"
+        Icon="{materialDesign:PackIcon Kind=OpenInNew}" />
+      <MenuItem
+        Command="{Binding ShowDetailsSchoolClassesCommand}"
+        Header="Xem danh sách lớp thành phần"
+        Icon="{materialDesign:PackIcon Kind=ListStatus}">
+        <MenuItem.Style>
+          <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+              <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                  <Condition Binding="{Binding SelectedClassGroup, Converter={StaticResource IsNotNullConverter}}" Value="True" />
+                  <Condition Binding="{Binding SelectedClassGroup.IsBelongSpecialSubject}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Visibility" Value="Visible" />
+              </MultiDataTrigger>
+            </Style.Triggers>
+          </Style>
+        </MenuItem.Style>
+      </MenuItem>
+    </ContextMenu>
+  </base:BaseUserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+      <TextBlock>
+        <TextBlock.Style>
+          <Style BasedOn="{StaticResource MaterialDesignBody1TextBlock}" TargetType="TextBlock">
+            <Setter Property="Text">
+              <Setter.Value>
+                <MultiBinding StringFormat="{}{0} ({1})">
+                  <Binding Path="SelectedSubject.SubjectName" />
+                  <Binding Path="ClassGroupModels.Count" />
+                </MultiBinding>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </TextBlock.Style>
+      </TextBlock>
+    </StackPanel>
+    <ListBox
+      x:Name="ClassGroupListBox"
+      Grid.Row="1"
+      Grid.Column="0"
+      HorizontalContentAlignment="Stretch"
+      ItemsSource="{Binding ClassGroupModels}"
+      PreviewMouseLeftButtonDown="ListBox_PreviewMouseLeftButtonDown"
+      SelectedItem="{Binding SelectedClassGroup}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="15" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border
+              Grid.Column="0"
+              Width="15"
+              Background="{Binding Color}"
+              CornerRadius="4" />
+            <StackPanel
+              Grid.Column="1"
+              Margin="0,5,0,0"
+              Orientation="Vertical">
+              <TextBlock Margin="5,0,0,0" Text="{Binding Name}" />
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="5,0,0,0" Text="{Binding EmptySeat, StringFormat=Còn trống {0} chỗ}">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" TargetType="TextBlock">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding EmptySeat, Converter={StaticResource EmptySeatCheckerConverter}, ConverterParameter=5}" Value="True">
+                          <Setter Property="Foreground" Value="#c0392b" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+                <TextBlock
+                  Margin="5,0,0,0"
+                  Foreground="#c0392b"
+                  Text="Không có lịch">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource MaterialDesignCaptionTextBlock}" TargetType="TextBlock">
+                      <Setter Property="Visibility" Value="Hidden" />
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding HaveSchedule}" Value="false">
+                          <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+      <ListBox.ItemContainerStyle>
+        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
+          <Setter Property="ContextMenu" Value="{StaticResource ClassGroupContextMenu}" />
+          <!--  CS0053 Các ClassGroup không có bất cứ SchoolClass nào sẽ bị Disable và không thể chọn  -->
+          <Setter Property="IsEnabled" Value="{Binding ClassGroup.SchoolClasses.Count}" />
+        </Style>
+      </ListBox.ItemContainerStyle>
+    </ListBox>
+    <Button
+      Grid.Row="2"
+      Margin="0,-40,16,0"
+      HorizontalAlignment="Right"
+      VerticalAlignment="Bottom"
+      Command="{Binding ResetFilterCommand}"
+      Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+      ToolTip="Làm sạch bộ lọc">
+      <materialDesign:PackIcon Kind="FilterOffOutline" />
+    </Button>
+    <Grid Grid.Row="3">
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel
+          Grid.Row="1"
+          Grid.Column="0"
+          VerticalAlignment="Bottom"
+          Orientation="Vertical">
+          <CheckBox Content="Chỉ những lớp còn chỗ" IsChecked="{Binding HasSeat}" />
+          <CheckBox
+            Margin="0,0,0,5"
+            Content="Chỉ những lớp có lịch"
+            IsChecked="{Binding HasSchedule}" />
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="40*" />
+              <ColumnDefinition Width="60*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Margin="0,0,5,5">
+              <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon
+                    Margin="0,0,5,0"
+                    Foreground="White"
+                    Kind="CalendarMonth" />
+                  <TextBlock Foreground="White" Text="Thứ" />
+                </StackPanel>
+              </GroupBox.Header>
+              <StackPanel>
+                <CheckBox Content="Hai" IsChecked="{Binding Monday}" />
+                <CheckBox Content="Ba" IsChecked="{Binding Tuesday}" />
+                <CheckBox Content="Tư" IsChecked="{Binding Wednesday}" />
+                <CheckBox Content="Năm" IsChecked="{Binding Thursday}" />
+                <CheckBox Content="Sáu" IsChecked="{Binding Friday}" />
+                <CheckBox Content="Bảy" IsChecked="{Binding Saturday}" />
+                <CheckBox Content="CN" IsChecked="{Binding Sunday}" />
+              </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Margin="0,0,0,5">
+              <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon
+                    Margin="0,0,5,0"
+                    Foreground="White"
+                    Kind="MapMarkerOutline" />
+                  <TextBlock Foreground="White" Text="Nơi học" />
+                </StackPanel>
+              </GroupBox.Header>
+              <StackPanel x:Name="CheckBoxContainer_Place">
+                <CheckBox Content="Quang Trung" IsChecked="{Binding PlaceQuangTrung}" />
+                <CheckBox
+                  x:Name="CheckBox_phanthanh"
+                  Content="Phan Thanh"
+                  IsChecked="{Binding PlacePhanThanh}" />
+                <CheckBox
+                  x:Name="CheckBox_viettin"
+                  Content="Việt Tin"
+                  IsChecked="{Binding PlaceVietTin}" />
+                <CheckBox
+                  x:Name="CheckBox_hoakhanh"
+                  Content="Hoà Khánh"
+                  IsChecked="{Binding PlaceHoaKhanh}" />
+                <CheckBox
+                  x:Name="CheckBox_137_nvl"
+                  Content="137 NVL"
+                  IsChecked="{Binding Place137NVL}" />
+                <CheckBox
+                  x:Name="CheckBox_254_nvl"
+                  Content="254 NVL"
+                  IsChecked="{Binding Place254NVL}" />
+                <CheckBox
+                  x:Name="CheckBox_online"
+                  Content="Online"
+                  IsChecked="{Binding PlaceOnline}" />
+              </StackPanel>
+            </GroupBox>
+          </Grid>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Margin="0,0,0,5">
+              <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon
+                    Margin="0,0,5,0"
+                    Foreground="White"
+                    Kind="HumanMaleBoard" />
+                  <TextBlock Foreground="White" Text="{Binding TeacherCount, StringFormat=Giảng viên ({0})}" />
+                </StackPanel>
+              </GroupBox.Header>
+              <StackPanel>
+                <ComboBox
+                  x:Name="ComboxBox_Teachers"
+                  Grid.Column="0"
+                  DisplayMemberPath="Name"
+                  ItemsSource="{Binding Teachers}"
+                  SelectedItem="{Binding SelectedTeacher}">
+                  <ComboBox.ToolTip>
+                    <ToolTip Placement="Right">
+                      <ToolTip.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
+                          <Setter Property="Content">
+                            <Setter.Value>
+                              <Grid>
+                                <Grid.ColumnDefinitions>
+                                  <ColumnDefinition Width="Auto" />
+                                  <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                  Grid.Column="0"
+                                  Height="111"
+                                  Margin="0,0,7,0"
+                                  Source="{Binding Path=SelectedTeacher.Path}" />
+                                <StackPanel Grid.Column="1">
+                                  <TextBlock Text="{Binding SelectedTeacher.Name, StringFormat=Tên: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Nơi sinh: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Học hàm\\học vị: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Chức vụ: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />
+                                  <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}" />
+                                </StackPanel>
+                              </Grid>
+                            </Setter.Value>
+                          </Setter>
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedTeacher.Name}" Value="TẤT CẢ">
+                              <Setter Property="Content">
+                                <Setter.Value>
+                                  <TextBlock>TẤT CẢ</TextBlock>
+                                </Setter.Value>
+                              </Setter>
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </ToolTip.Style>
+                    </ToolTip>
+                  </ComboBox.ToolTip>
+                </ComboBox>
+              </StackPanel>
+            </GroupBox>
+          </Grid>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="60*" />
+              <ColumnDefinition Width="40*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Margin="0,0,5,5">
+              <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon
+                    Margin="0,0,5,0"
+                    Foreground="White"
+                    Kind="BookOpen" />
+                  <TextBlock Foreground="White" Text="Giai đoạn" />
+                </StackPanel>
+              </GroupBox.Header>
+              <StackPanel x:Name="RadioButtonContainer_Phase">
+                <CheckBox
+                  Name="first"
+                  Content="Giai đoạn 1"
+                  IsChecked="{Binding PhaseFirst}"
+                  ToolTip="Chỉ những lớp ở giai đoạn 1" />
+                <CheckBox
+                  Name="second"
+                  Command="{Binding FilterCommand}"
+                  Content="Giai đoạn 2"
+                  IsChecked="{Binding PhaseSecond}"
+                  ToolTip="Chỉ những lớp ở giai đoạn 2" />
+                <CheckBox
+                  Name="both"
+                  Content="Hai giai đoạn"
+                  IsChecked="{Binding PhaseBoth}"
+                  ToolTip="Chỉ những lớp kéo dài cả hai giai đoạn" />
+              </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Margin="0,0,0,5">
+              <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                  <materialDesign:PackIcon
+                    Margin="0,0,5,0"
+                    Foreground="White"
+                    Kind="WeatherNight" />
+                  <TextBlock Foreground="White" Text="Buổi" />
+                </StackPanel>
+              </GroupBox.Header>
+              <StackPanel Orientation="Vertical">
+                <CheckBox
+                  x:Name="CheckBox_Morning"
+                  Content="Sáng"
+                  IsChecked="{Binding Morning}">
+                  <CheckBox.ToolTip>
+                    <ToolTip>
+                      7:00 - 11:00
+                    </ToolTip>
+                  </CheckBox.ToolTip>
+                </CheckBox>
+                <CheckBox
+                  x:Name="CheckBox_Afternoon"
+                  Content="Chiều"
+                  IsChecked="{Binding Afternoon}">
+                  <CheckBox.ToolTip>
+                    <ToolTip>
+                      13:00 - 17:00
+                    </ToolTip>
+                  </CheckBox.ToolTip>
+                </CheckBox>
+                <CheckBox
+                  x:Name="CheckBox_Night"
+                  Content="Tối"
+                  IsChecked="{Binding Night}">
+                  <CheckBox.ToolTip>
+                    <ToolTip>
+                      18:00 - 21:00
+                    </ToolTip>
+                  </CheckBox.ToolTip>
+                </CheckBox>
+              </StackPanel>
+            </GroupBox>
+          </Grid>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </Grid>
+</base:BaseUserControl>

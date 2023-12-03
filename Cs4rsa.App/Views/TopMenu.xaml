@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Cs4rsa.App.Views.TopMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <md:ColorZone
+            Padding="5"
+            Mode="PrimaryMid">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Name="PART_TopMenuTitle"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                </StackPanel>
+
+                <StackPanel
+                    Name="PART_CompactMenu"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                </StackPanel>
+            </DockPanel>
+        </md:ColorZone>
+    </Grid>
+</UserControl>

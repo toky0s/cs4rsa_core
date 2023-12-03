@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/toky0s/cs4rsa_core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/toky0s/cs4rsa_core</RepositoryUrl>
     <PackageReleaseNotes>Bug fixes and improve performance</PackageReleaseNotes>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

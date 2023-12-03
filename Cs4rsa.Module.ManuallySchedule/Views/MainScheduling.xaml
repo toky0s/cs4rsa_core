@@ -1,0 +1,31 @@
+﻿<base:ScreenAbstract
+  x:Class="Cs4rsa.Module.ManuallySchedule.Views.MainScheduling"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
+  xmlns:vml="clr-namespace:Cs4rsa.ViewModelLocator"
+  xmlns:prism="http://prismlibrary.com/"
+  xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
+  prism:ViewModelLocator.AutoWireViewModel="True" >
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1.5*" />
+      <ColumnDefinition Width="1.3*" />
+      <ColumnDefinition Width="1*" />
+      <ColumnDefinition Width="2.7*" />
+    </Grid.ColumnDefinitions>
+    <views:Search 
+      x:Name="CpnSearch" 
+      Grid.Column="0" />
+    <views:Clg 
+      x:Name="CpnClg" 
+      Grid.Column="1" />
+    <views:Chose 
+      x:Name="CpnChoosed" 
+      Grid.Column="2" />
+    <views:Scheduler 
+      x:Name="CpnScheduler" 
+      Grid.Column="3" 
+      Margin="0,0,5,0" />
+  </Grid>
+</base:ScreenAbstract>
