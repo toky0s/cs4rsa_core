@@ -1,10 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Cs4rsa.Common;
+using Cs4rsa.Messages.Publishers;
+using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Service.Conflict.DataTypes.Enums;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.ScheduleTable.Interfaces;
+using Cs4rsa.UI.ScheduleTable.Models;
+
+using Prism.Events;
+using Prism.Mvvm;
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Cs4rsa.Module.ManuallySchedule.Events;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
-    internal sealed partial class SchedulerViewModel : ViewModelBase
+    public class SchedulerViewModel : BindableBase
     {
         private readonly List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
 
@@ -31,112 +43,103 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         #endregion
 
-        public SchedulerViewModel()
+        private IEventAggregator _eventAggregator;
+        public SchedulerViewModel(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
 
-            #region Messengers
-            Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
-                foreach (ClassGroupModel c in m.Value)
+                foreach (var c in payload)
                 {
                     RemoveScheduleItem(c.SubjectCode);
                     AddClassGroup(c);
                 }
             });
 
-            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(CleanDays);
+
+            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
+
+            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
+
+            eventAggregator.GetEvent<ChoosedVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
             {
-                CleanDays();
+                RemoveScheduleItem(payload.SubjectCode);
+                AddClassGroup(payload);
             });
 
-            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelAllMsg>().Subscribe(payload =>
             {
-                RemoveScheduleItem(m.Value.SubjectCode);
-            });
+                var classGroupModels = payload.Item1;
+                var conflictModels = payload.Item2;
+                var placeConflicts = payload.Item3;
 
-            Messenger.Register<ChoosedVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
-            {
-                ClassGroupModel classGroupModel = m.Value;
-                RemoveScheduleItem(m.Value.SubjectCode);
-                AddClassGroup(classGroupModel);
-            });
-
-            Messenger.Register<ChoosedVmMsgs.UndoDelAllMsg>(this, (r, m) =>
-            {
-                IEnumerable<ClassGroupModel> classGroupModels = m.Value;
-                foreach (ClassGroupModel cgm in classGroupModels)
+                foreach (var cgm in classGroupModels)
                 {
                     AddClassGroup(cgm);
                 }
-                ChoseViewModel choseSessionViewModel = GetViewModel<ChoseViewModel>();
-                ObservableCollection<ConflictModel> conflictModels = choseSessionViewModel.ConflictModels;
-                ObservableCollection<PlaceConflictFinderModel> placeConflicts = choseSessionViewModel.PlaceConflictFinderModels;
-                foreach (ConflictModel conflictModel in conflictModels)
+                foreach (var conflictModel in conflictModels)
                 {
                     AddScheduleItem(conflictModel);
                 }
-                foreach (PlaceConflictFinderModel placeConflict in placeConflicts)
+                foreach (var placeConflict in placeConflicts)
                 {
                     AddScheduleItem(placeConflict);
                 }
             });
 
-            Messenger.Register<ChoosedVmMsgs.ConflictCollChangedMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.ConflictCollChangedMsg>().Subscribe(payload =>
             {
-                IEnumerable<string> conflictIds = m.Value.Select(cm => cm.GetId());
+                var conflictIds = payload.Select(cm => cm.GetId());
                 RemoveConflictNotInContains(conflictIds, ConflictType.Time);
-                AddNewConflicts(m.Value);
+                AddNewConflicts(payload);
             });
 
-            Messenger.Register<ChoosedVmMsgs.PlaceConflictCollChangedMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.PlaceConflictCollChangedMsg>().Subscribe(payload =>
             {
-                IEnumerable<string> conflictIds = m.Value.Select(cm => cm.GetId());
+                var conflictIds = payload.Select(cm => cm.GetId());
                 RemoveConflictNotInContains(conflictIds, ConflictType.Place);
-                AddNewConflicts(m.Value);
+                AddNewConflicts(payload);
             });
 
-            Messenger.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(payload =>
             {
-                ClassGroupModel classGroupModel = m.Value;
-                foreach (SchoolClassModel scm in classGroupModel.CurrentSchoolClassModels)
+                foreach (var scm in payload.CurrentSchoolClassModels)
                 {
                     RemoveScheduleItem(scm.SubjectCode);
                 }
             });
 
-            Messenger.Register<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(payload =>
             {
                 CleanDays();
             });
 
-            Messenger.Register<ChoosedVmMsgs.UndoDelMsg>(this, (r, m) =>
-            {
-                AddClassGroup(m.Value);
-            });
+            eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddClassGroup);
 
-            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
-            {
-                CleanDays();
-            });
-            #endregion
+            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
+            //{
+            //    CleanDays();
+            //});
 
             #region Weeks and Timelines
-            Phase1_Monday = new();
-            Phase1_Tuesday = new();
-            Phase1_Wednesday = new();
-            Phase1_Thursday = new();
-            Phase1_Friday = new();
-            Phase1_Saturday = new();
-            Phase1_Sunday = new();
-            Phase2_Monday = new();
-            Phase2_Tuesday = new();
-            Phase2_Wednesday = new();
-            Phase2_Thursday = new();
-            Phase2_Friday = new();
-            Phase2_Saturday = new();
-            Phase2_Sunday = new();
+            Phase1_Monday = new ObservableCollection<TimeBlock>();
+            Phase1_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase1_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase1_Thursday = new ObservableCollection<TimeBlock>();
+            Phase1_Friday = new ObservableCollection<TimeBlock>();
+            Phase1_Saturday = new ObservableCollection<TimeBlock>();
+            Phase1_Sunday = new ObservableCollection<TimeBlock>();
+            Phase2_Monday = new ObservableCollection<TimeBlock>();
+            Phase2_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase2_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase2_Thursday = new ObservableCollection<TimeBlock>();
+            Phase2_Friday = new ObservableCollection<TimeBlock>();
+            Phase2_Saturday = new ObservableCollection<TimeBlock>();
+            Phase2_Sunday = new ObservableCollection<TimeBlock>();
 
-            Week1 = new()
+            Week1 = new ObservableCollection<ObservableCollection<TimeBlock>>()
             {
                 Phase1_Monday,
                 Phase1_Tuesday,
@@ -147,7 +150,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 Phase1_Sunday
             };
 
-            Week2 = new()
+            Week2 = new ObservableCollection<ObservableCollection<TimeBlock>>()
             {
                 Phase2_Monday,
                 Phase2_Tuesday,
@@ -158,10 +161,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 Phase2_Sunday
             };
 
-            _schedules = new() { Week1, Week2 };
+            _schedules = new List<ObservableCollection<ObservableCollection<TimeBlock>>>() { Week1, Week2 };
 
-            Timelines = new();
-            foreach (string timeline in Controls.Utils.TIME_LINES)
+            Timelines = new ObservableCollection<string>();
+            foreach (var timeline in Cs4rsa.UI.ScheduleTable.Utils.Utils.TimeLines)
             {
                 Timelines.Add(timeline);
             }
@@ -179,11 +182,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private bool Exists(IScheduleTableItem item)
         {
-            foreach (ObservableCollection<ObservableCollection<TimeBlock>> week in _schedules)
+            foreach (var week in _schedules)
             {
-                foreach (ObservableCollection<TimeBlock> day in week)
+                foreach (var day in week)
                 {
-                    foreach (TimeBlock timeBlock in day)
+                    foreach (var timeBlock in day)
                     {
                         if (timeBlock.Id == item.GetId()) return true;
                     }
@@ -202,11 +205,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </param>
         private void RemoveScheduleItem(string id)
         {
-            foreach (ObservableCollection<ObservableCollection<TimeBlock>> week in _schedules)
+            foreach (var week in _schedules)
             {
-                foreach (ObservableCollection<TimeBlock> day in week)
+                foreach (var day in week)
                 {
-                    int currentIndex = 0;
+                    var currentIndex = 0;
                     while (currentIndex < day.Count)
                     {
                         if (id == day[currentIndex].Id)
@@ -237,7 +240,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 schoolClassModels = classGroupModel.NormalSchoolClassModels;
             }
 
-            foreach (SchoolClassModel schoolClassModel in schoolClassModels)
+            foreach (var schoolClassModel in schoolClassModels)
             {
                 AddScheduleItem(schoolClassModel);
             }
@@ -251,11 +254,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="scheduleItem">IScheduleTableItem</param>
         private void AddScheduleItem(IScheduleTableItem scheduleItem)
         {
-            IEnumerable<TimeBlock> timeBlocks = scheduleItem.GetBlocks();
-            Phase phase = scheduleItem.GetPhase();
-            foreach (TimeBlock timeBlock in timeBlocks)
+            var timeBlocks = scheduleItem.GetBlocks();
+            var phase = scheduleItem.GetPhase();
+            foreach (var timeBlock in timeBlocks)
             {
-                int dayIndex = timeBlock.DayOfWeek.ToIndex();
+                var dayIndex = timeBlock.DayOfWeek.ToIndex();
                 if (phase == Phase.First || phase == Phase.Second)
                 {
                     var week = phase == Phase.First ? Week1 : Week2;
@@ -290,11 +293,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void RemoveConflictNotInContains(IEnumerable<string> conflictIds, ConflictType conflictType)
         {
-            foreach (ObservableCollection<ObservableCollection<TimeBlock>> week in _schedules)
+            foreach (var week in _schedules)
             {
-                foreach (ObservableCollection<TimeBlock> day in week)
+                foreach (var day in week)
                 {
-                    int currentIndex = 0;
+                    var currentIndex = 0;
                     while (currentIndex < day.Count)
                     {
                         if (!conflictIds.Contains(day[currentIndex].Id)

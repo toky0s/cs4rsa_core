@@ -43,6 +43,9 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Prism, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.8.1.97\lib\net47\Prism.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -59,34 +62,45 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomControls\STable.xaml.cs">
+      <DependentUpon>STable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Events\ScheduleBlockMsgs.cs" />
+    <Compile Include="Interfaces\IConflictModel.cs" />
     <Compile Include="Interfaces\IScheduleTableItem.cs" />
     <Compile Include="Models\CfBlock.cs" />
+    <Compile Include="Models\ConflictModel.cs" />
     <Compile Include="Models\PlaceCfBlock.cs" />
+    <Compile Include="Models\PlaceConflictFinderModel.cs" />
     <Compile Include="Models\SchoolClassBlock.cs" />
     <Compile Include="Models\TimeBlock.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="Panels\WeekPanel.cs" />
-    <Page Include="UserControls\ScheduleBlock.xaml">
+    <Page Include="CustomControls\ScheduleBlock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\ScheduleTable.xaml">
+    <Page Include="CustomControls\ScheduleTable.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\UserControl1.xaml">
+    <Page Include="CustomControls\STable.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControls\UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Panels\DayPanel.cs" />
-    <Compile Include="UserControls\ScheduleBlock.xaml.cs">
+    <Compile Include="CustomControls\ScheduleBlock.xaml.cs">
       <DependentUpon>ScheduleBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ScheduleTable.xaml.cs">
+    <Compile Include="CustomControls\ScheduleTable.xaml.cs">
       <DependentUpon>ScheduleTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="Panels\TimeLinePanel.cs" />
-    <Compile Include="UserControls\UserControl1.xaml.cs">
+    <Compile Include="CustomControls\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -114,6 +128,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
+      <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>
+      <Name>Cs4rsa.Service.Conflict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
+      <Project>{995CC365-28E3-4525-8B0A-960A4F894C15}</Project>
+      <Name>Cs4rsa.Service.SubjectCrawler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />

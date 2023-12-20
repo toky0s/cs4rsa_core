@@ -45,10 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BasicDataConverter.cs" />
     <Compile Include="Crawlers\CourseHtmlGetter.cs" />
     <Compile Include="Crawlers\Interfaces\ICourseHtmlGetter.cs" />
     <Compile Include="Crawlers\Interfaces\IPreParSubjectCrawler.cs" />
     <Compile Include="Crawlers\Interfaces\ISubjectCrawler.cs" />
+    <Compile Include="Crawlers\ScheduleParser.cs" />
     <Compile Include="Crawlers\SubjectCrawler.cs" />
     <Compile Include="DataTypes\ClassGroup.cs" />
     <Compile Include="DataTypes\Cs4rsaMetaData.cs" />
@@ -83,6 +85,10 @@
     <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
       <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
       <Name>Cs4rsa.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
+      <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
+      <Name>Cs4rsa.Service.TeacherCrawler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

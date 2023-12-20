@@ -14,7 +14,7 @@ namespace Cs4rsa.Database.Implements
         {
             _rawSql = rawSql;
         }
-        public string GetColor(int courseId)
+        public string GetColor(string courseId)
         {
             return _rawSql.ExecScalar(
                 "SELECT Color FROM Keywords WHERE CourseId = @CourseID"
@@ -71,7 +71,7 @@ namespace Cs4rsa.Database.Implements
                 {
                     KeywordId = record.GetInt32(0),
                     Keyword1 = record.GetString(1),
-                    CourseId = record.GetInt32(2),
+                    CourseId = record.GetString(2),
                     SubjectName = record.GetString(3),
                     Color = record.GetString(4),
                     Cache = record.IsDBNull(5) ? null : record.GetString(5),
@@ -80,7 +80,7 @@ namespace Cs4rsa.Database.Implements
             );
         }
 
-        public Keyword GetKeyword(int courseId)
+        public Keyword GetKeyword(string courseId)
         {
             var sb = new StringBuilder();
             sb.AppendLine("SELECT");
@@ -104,7 +104,7 @@ namespace Cs4rsa.Database.Implements
                 {
                       KeywordId = r.GetInt32(0)
                     , Keyword1 = r.GetString(1)
-                    , CourseId = r.GetInt32(2)
+                    , CourseId = r.GetString(2)
                     , SubjectName = r.GetString(3)
                     , Color = r.GetString(4)
                     , Cache = r.IsDBNull(5) ? null : r.GetString(5)
@@ -113,7 +113,7 @@ namespace Cs4rsa.Database.Implements
             );
         }
 
-        public Keyword GetKeyword(string subjectCode)
+        public Keyword GetKeywordBySubjectCode(string subjectCode)
         {
             var slices = subjectCode.Split(' ');
             return GetKeyword(slices[0], slices[1]);
@@ -179,7 +179,7 @@ namespace Cs4rsa.Database.Implements
                 {
                       KeywordId = record.GetInt32(0)
                     , Keyword1 = record.GetString(1)
-                    , CourseId = record.GetInt32(2)
+                    , CourseId = record.GetString(2)
                     , SubjectName = record.GetString(3)
                     , Color = record.GetString(4)
                     , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
@@ -225,7 +225,7 @@ namespace Cs4rsa.Database.Implements
             return _rawSql.ExecNonQuery("DELETE FROM Keywords");
         }
 
-        public Keyword GetByCourseId(int intCourseId)
+        public Keyword GetByCourseId(string intCourseId)
         {
             var sb = new StringBuilder()
                 .AppendLine("SELECT kw.KeywordId")
@@ -254,7 +254,7 @@ namespace Cs4rsa.Database.Implements
                 {
                       KeywordId = record.GetInt32(0)
                     , Keyword1 = record.GetString(1)
-                    , CourseId = record.GetInt32(2)
+                    , CourseId = record.GetString(2)
                     , SubjectName = record.GetString(3)
                     , Color = record.GetString(4)
                     , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
@@ -272,6 +272,11 @@ namespace Cs4rsa.Database.Implements
         public long Count()
         {
             return _rawSql.ExecScalar("SELECT COUNT(*) FROM Keywords", 0L);
+        }
+
+        public string GetCache(string discipline, string keyword1)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

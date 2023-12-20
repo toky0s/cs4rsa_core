@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Cs4rsa.Database.Models
+﻿namespace Cs4rsa.Database.Models
 {
     public class Setting
     {
-        [Key]
-        public string Key { get; set; }
-        public string Value { get; set; }
+        public string SemesterValue { get; set; }
+        public string YearValue { get; set; }
+        public string SemesterInfo { get; set; }
+        public string YearInfo { get; set; }
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace Cs4rsa.Module.ManuallySchedule.ViewModels
+﻿using Prism.Mvvm;
+
+namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
-    public partial class MainSchedulingViewModel : ViewModelBase
+    public class MainSchedulingViewModel : BindableBase
     {
         public MainSchedulingViewModel()
         {

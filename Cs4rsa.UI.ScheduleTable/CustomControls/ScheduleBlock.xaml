@@ -1,16 +1,13 @@
-﻿<base:BaseUserControl
-  x:Class="Cs4rsa.Controls.ScheduleBlock"
+﻿<UserControl
+  x:Class="Cs4rsa.UI.ScheduleTable.CustomControls.ScheduleBlock"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:models="clr-namespace:Cs4rsa.Models"
-  xmlns:base="clr-namespace:Cs4rsa.BaseClasses"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
-  <base:BaseUserControl.Resources>
+  <UserControl.Resources>
     <ToolTip 
-      d:DataContext="{d:DesignInstance Type=models:SchoolClassBlock}"
       x:Key="SchoolClassBlock_ToolTip" 
       Style="{StaticResource ToolTip_TimeBlock}">
       <Border Width="400">
@@ -108,14 +105,14 @@
         </Grid>
       </Border>
     </ToolTip>
-  </base:BaseUserControl.Resources>
+  </UserControl.Resources>
   <Border
     x:Name="Border_ScheduleBlock"
     Padding="2"
     Background="{Binding 
       Path=BlockColor
     , RelativeSource={RelativeSource 
-        AncestorType=base:BaseUserControl
+        AncestorType=UserControl
       , Mode=FindAncestor}}"
     CornerRadius="6">
     <Border.Style>
@@ -125,7 +122,7 @@
           <DataTrigger Binding="{Binding 
             Path=DataContext.Name, 
             RelativeSource={RelativeSource 
-              AncestorType=base:BaseUserControl
+              AncestorType=UserControl
             , Mode=FindAncestor}}" 
             Value="SchoolClassBlock">
             <Setter Property="ToolTip" 
@@ -141,4 +138,4 @@
         RelativeSource={RelativeSource AncestorType=UserControl}}"
       TextWrapping="Wrap" />
   </Border>
-</base:BaseUserControl>
+</UserControl>

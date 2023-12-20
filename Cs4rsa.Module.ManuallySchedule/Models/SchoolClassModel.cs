@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.TeacherCrawler.Models;
+using Cs4rsa.UI.ScheduleTable.Interfaces;
+using Cs4rsa.UI.ScheduleTable.Models;
+
+using System.Collections.Generic;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {
@@ -55,17 +61,17 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public IEnumerable<TimeBlock> GetBlocks()
         {
-            foreach (SchoolClassUnit item in SchoolClass.GetSchoolClassUnits())
+            foreach (var item in SchoolClass.GetSchoolClassUnits())
             {
-                SchoolClassBlock timeBlock = new
+                var timeBlock = new SchoolClassBlock
                 (
-                      item
-                    , GetId()
-                    , Color
-                    , content: SchoolClassName
-                    , item.DayOfWeek
-                    , ScheduleTableItemType.SchoolClass
-                    , Phase
+                    item,
+                    GetId(),
+                    Color,
+                    content: SchoolClassName,
+                    item.DayOfWeek,
+                    ScheduleTableItemType.SchoolClass,
+                    Phase
                 );
 
                 yield return timeBlock;

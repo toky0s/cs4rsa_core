@@ -1,14 +1,13 @@
-﻿using Cs4rsa.BaseClasses;
-using Cs4rsa.Interfaces;
+﻿using Cs4rsa.UI.ScheduleTable.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
-using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.CustomControls
 {
-    public partial class ScheduleBlock: BaseUserControl
+    public partial class ScheduleBlock: UserControl
     {
         public ScheduleBlock(): base()
         {

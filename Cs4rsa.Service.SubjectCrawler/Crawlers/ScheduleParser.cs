@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Constants;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
+﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
 
 using HtmlAgilityPack;
 
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
+namespace Cs4rsa.Service.SubjectCrawler.Crawlers
 {
     /// <summary>
     /// Bộ phân tích này dùng để chuyển một <td> tag thành Schedule [{'T2:': ['07:00-09:00', '07:00-10:15']}]
@@ -42,19 +41,19 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
             string[] dataFromTrTag = ExtractDataFromTrTag(tdTag);
             string[] times = CleanTimeItem(dataFromTrTag);
             // Convert to generic data;
-            Dictionary<DayOfWeek, List<StudyTime>> scheduleTime = new();
-            Regex regexDate = new(@"^T[2-7]:$|^CN:$");
-            Regex regexTime = new(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            var scheduleTime = new Dictionary<DayOfWeek, List<StudyTime>>();
+            var regexDate = new Regex(@"^T[2-7]:$|^CN:$");
+            var regexTime = new Regex(@"^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
 
             int i = 0;
-            DayOfWeek dayOfWeek = DayOfWeek.Sunday;
-            Dictionary<DayOfWeek, List<string>> dateTimeStringPairs = new();
+            var dayOfWeek = DayOfWeek.Sunday;
+            var dateTimeStringPairs = new Dictionary<DayOfWeek, List<string>>();
             while (i < times.Length)
             {
                 if (regexDate.IsMatch(times[i]))
                 {
                     dayOfWeek = DateToDateWeek(times[i]);
-                    List<string> timeStrings = new();
+                    var timeStrings = new List<string>();
                     dateTimeStringPairs.Add(dayOfWeek, timeStrings);
                 }
                 if (regexTime.IsMatch(times[i]))
@@ -78,7 +77,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <param name="trTag"></param>
         private static string[] ExtractDataFromTrTag(HtmlNode tdTag)
         {
-            string[] separatingStrings = { VmConstants.StrSpace, "\n", "\r", "-", "," };
+            string[] separatingStrings = { " ", "\n", "\r", "-", "," };
             string[] trTagSplitDatas = tdTag.InnerText.Trim().Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return trTagSplitDatas;
         }
@@ -90,7 +89,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <returns>Trả về array time item đã được clean.</returns>
         private static string[] CleanTimeItem(string[] tdTagSplitDatas)
         {
-            Regex timeRegex = new(@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+            var timeRegex = new Regex(@"^T[2-7]:|CN:|^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
             string[] times = tdTagSplitDatas.Where(item => timeRegex.IsMatch(item)).ToArray();
             return times;
         }
@@ -103,11 +102,11 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         private static List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
             timeStrings = timeStrings.Distinct().ToList();
-            List<StudyTime> studyTimes = new();
+            var studyTimes = new List<StudyTime>();
             int i = 0;
             while (i < timeStrings.Count)
             {
-                StudyTime studyTime = new(timeStrings[i], timeStrings[i + 1]);
+                var studyTime = new StudyTime(timeStrings[i], timeStrings[i + 1]);
                 studyTimes.Add(studyTime);
                 i += 2;
             }
@@ -121,16 +120,16 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         /// <returns>Enum Week.</returns>
         private static DayOfWeek DateToDateWeek(string date)
         {
-            return date switch
+            switch (date)
             {
-                "T2:" => DayOfWeek.Monday,
-                "T3:" => DayOfWeek.Tuesday,
-                "T4:" => DayOfWeek.Wednesday,
-                "T5:" => DayOfWeek.Thursday,
-                "T6:" => DayOfWeek.Friday,
-                "T7:" => DayOfWeek.Saturday,
-                _ => DayOfWeek.Sunday,
-            };
+                case "T2:" : return DayOfWeek.Monday;
+                case "T3:" : return DayOfWeek.Tuesday;
+                case "T4:" : return DayOfWeek.Wednesday;
+                case "T5:" : return DayOfWeek.Thursday;
+                case "T6:" : return DayOfWeek.Friday;
+                case "T7:" : return DayOfWeek.Saturday;
+                default    : return DayOfWeek.Sunday;
+            }
         }
     }
 }

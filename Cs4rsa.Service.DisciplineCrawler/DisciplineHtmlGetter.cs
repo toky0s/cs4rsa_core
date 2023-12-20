@@ -1,7 +1,5 @@
 ﻿using HtmlAgilityPack;
 
-using System.Threading.Tasks;
-
 namespace Cs4rsa.Service.DisciplineCrawler
 {
     public class DisciplineHtmlGetter : IDisciplineHtmlGetter

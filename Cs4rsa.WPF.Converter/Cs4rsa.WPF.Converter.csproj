@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90F0B45E-0A96-43C0-A59A-10F4D1331022}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cs4rsa.WPF.Converter</RootNamespace>
+    <AssemblyName>Cs4rsa.WPF.Converter</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base64ImageConverter.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="ConflictModelConverter.cs" />
+    <Compile Include="ConflictTypeConverter.cs" />
+    <Compile Include="DayCvt.cs" />
+    <Compile Include="DtuTimeBlockContentCvt.cs" />
+    <Compile Include="EmptySeatCheckerConverter.cs" />
+    <Compile Include="EmptyStringPlaceholderConverter.cs" />
+    <Compile Include="GetTeacherNameConverter.cs" />
+    <Compile Include="IsNotNullConverter.cs" />
+    <Compile Include="IsTypeOfCvt.cs" />
+    <Compile Include="PhaseCvt.cs" />
+    <Compile Include="PlaceCvt.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
+      <Project>{25F1347B-1717-4A4E-93AF-75BE80A5678A}</Project>
+      <Name>Cs4rsa.Service.Conflict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
+      <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
+      <Name>Cs4rsa.Service.SubjectCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
+      <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
+      <Name>Cs4rsa.Service.TeacherCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.ScheduleTable\Cs4rsa.UI.ScheduleTable.csproj">
+      <Project>{E4D5B2AB-45CE-46DC-A23E-0761EEDE55AA}</Project>
+      <Name>Cs4rsa.UI.ScheduleTable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.TeacherCrawler.Models;
 
 using System;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 // ClassGroup thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
                 else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
                 {
-                    SchoolClass schoolClass = classGroup.SchoolClasses
+                    var schoolClass = classGroup.SchoolClasses
                         .FirstOrDefault(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName));
                     if (schoolClass == null) return;
                     CodeSchoolClass = new SchoolClassModel(schoolClass, color);
@@ -166,7 +167,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         {
             if (IsBelongSpecialSubject)
             {
-                bool isValidSchoolClassName = ClassGroup.SchoolClasses
+                var isValidSchoolClassName = ClassGroup.SchoolClasses
                     .Any(schoolClass => schoolClass.SchoolClassName == schoolClassName);
                 if (isValidSchoolClassName)
                 {
@@ -179,7 +180,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             }
             else
             {
-                string message = $"SchoolClass with code {schoolClassName} is not belong special subject!";
+                var message = $"SchoolClass with code {schoolClassName} is not belong special subject!";
                 throw new Exception(message);
             }
         }
@@ -211,12 +212,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
             // Trường hợp có nhiều hơn 1 school class,
             // chọn school class nào không có mã đăng ký.
-            foreach (SchoolClass schoolClass in ClassGroup.SchoolClasses.Where(schoolClass => schoolClass.RegisterCode.Equals(string.Empty)))
+            foreach (var schoolClass in ClassGroup.SchoolClasses.Where(schoolClass => schoolClass.RegisterCode.Equals(string.Empty)))
             {
                 return new SchoolClassModel(schoolClass, Color);
             }
 
-            MessageBox.Show(VmConstants.NotFoundBaseSchoolClassModelException);
+            MessageBox.Show("Base school class model cound not be found");
             return null;
         }
 

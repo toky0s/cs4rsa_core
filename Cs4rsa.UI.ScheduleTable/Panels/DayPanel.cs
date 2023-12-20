@@ -3,7 +3,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.Panels
 {
     public class DayPanel : Panel
     {
@@ -12,13 +12,13 @@ namespace Cs4rsa.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            _unitHeight = availableSize.Height / Utils.TIME_LINES.Length;
+            _unitHeight = availableSize.Height / Utils.Utils.TimeLines.Length;
             _startPoint = _unitHeight / 2;
             foreach (ContentPresenter child in Children)
             {
                 TimeBlock block = (TimeBlock)child.Content;
-                int start = Utils.GetTimeIndex(block.Start);
-                int end = Utils.GetTimeIndex(block.End);
+                int start = Utils.Utils.GetTimeIndex(block.Start);
+                int end = Utils.Utils.GetTimeIndex(block.End);
                 availableSize.Height = (end - start) * _unitHeight;
                 child.Measure(availableSize);
             }
@@ -27,7 +27,7 @@ namespace Cs4rsa.Controls
             {
                 availableSize.Height = double.MaxValue;
             }
-            
+
             if (availableSize.Width == double.PositiveInfinity)
             {
                 availableSize.Width = double.MaxValue;
@@ -41,8 +41,8 @@ namespace Cs4rsa.Controls
             foreach (ContentPresenter child in Children)
             {
                 TimeBlock block = (TimeBlock)child.Content;
-                int start = Utils.GetTimeIndex(block.Start);
-                int end = Utils.GetTimeIndex(block.End);
+                int start = Utils.Utils.GetTimeIndex(block.Start);
+                int end = Utils.Utils.GetTimeIndex(block.End);
                 double y = start * _unitHeight + _startPoint;
                 double height = (end - start) * _unitHeight;
                 child.Arrange(new Rect(0, y, finalSize.Width - 2, height));

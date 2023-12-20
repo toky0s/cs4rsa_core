@@ -56,19 +56,18 @@ namespace Cs4rsa.Database.Implements
                     { "@DisciplineId", discipline.DisciplineId}
                 };
                 discipline.Keywords = _rawSql.ExecReader(
-                    sb.ToString()
-                    , param
-                    , record =>
-                    new Keyword
+                    sb.ToString(),
+                    param,
+                    record => new Keyword
                     {
-                          KeywordId = record.GetInt32(0)
-                        , Keyword1 = record.GetString(1)
-                        , CourseId = record.GetInt32(2)
-                        , SubjectName = record.GetString(3)
-                        , Color = record.GetString(4)
-                        , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
-                        , Discipline = discipline
-                        , DisciplineId = discipline.DisciplineId
+                         KeywordId = record.GetInt32(0),
+                         Keyword1 = record.GetString(1),
+                         CourseId = record.GetString(2),
+                         SubjectName = record.GetString(3),
+                         Color = record.GetString(4),
+                         Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5),
+                         Discipline = discipline,
+                         DisciplineId = discipline.DisciplineId
                     }
                 );
             }

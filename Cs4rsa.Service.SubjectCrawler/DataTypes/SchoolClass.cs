@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.TeacherCrawler.Models;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
@@ -39,7 +40,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// 
         /// Tương ứng với TempTeachers.
         /// </summary>
-        // public IEnumerable<TeacherModel> Teachers { get; set; }
+        public IEnumerable<TeacherModel> Teachers { get; set; }
         public List<string> TempTeachers { get; set; }
         public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }

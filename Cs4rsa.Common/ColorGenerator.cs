@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 
-namespace Cs4rsa.Utils
+namespace Cs4rsa.Common
 {
     public class ColorGenerator
     {
@@ -10,13 +11,12 @@ namespace Cs4rsa.Utils
         /// Danh sách các màu sắc bị loại trừ trong quá trình 
         /// tạo ngẫu nhiên màu sắc.
         /// </summary>
-        private static readonly List<string> _excludeColors = new()
-        {
+        private static readonly string[] _excludeColors = new string[] {
             "#ffffff",
             "#111111"
         };
 
-        private static readonly List<string> _generatedColors = new();
+        private static readonly List<string> _generatedColors = new List<string>();
 
         public static string GenerateColor()
         {
@@ -25,9 +25,9 @@ namespace Cs4rsa.Utils
             do
             {
                 Random rand = new();
-                int red = (rand.Next(0, 257) + 255) / 2;
-                int green = (rand.Next(0, 257) + 255) / 2;
-                int blue = (rand.Next(0, 257) + 255) / 2;
+                var red = (rand.Next(0, 257) + 255) / 2;
+                var green = (rand.Next(0, 257) + 255) / 2;
+                var blue = (rand.Next(0, 257) + 255) / 2;
                 color = $"#{red:X2}{green:X2}{blue:X2}";
             }
             while (_excludeColors.Contains(color) || _generatedColors.Contains(color));

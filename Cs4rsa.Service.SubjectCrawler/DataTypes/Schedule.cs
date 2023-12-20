@@ -39,7 +39,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         {
             var results = (
                 from item in ScheduleTime 
-                let thu = item.Key.ToCs4rsaThu() 
+                let thu = item.Key.ToCs4rsaVietnamese() 
                 let timesRange = item.Value.Aggregate(
                     string.Empty, 
                     (current, studyTime) => current + $"\nTừ {studyTime.StartAsString} đến {studyTime.EndAsString}") 

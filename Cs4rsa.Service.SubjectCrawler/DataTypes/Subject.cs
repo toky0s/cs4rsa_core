@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
 using Cs4rsa.Common;
 using Cs4rsa.Service.SubjectCrawler.Utils;
 using HtmlAgilityPack;
@@ -18,6 +19,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         private readonly string _rawSoup;
         
         public List<string> TempTeachers { get; set; }
+        public List<string> TeacherUrls { get; private set; }
         public List<ClassGroup> ClassGroups { get; }
 
         public string Name { get; }
@@ -179,6 +181,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
              *  XinTA - Ngày 29/01/2023 - Cập nhật tài liệu
              *  XinTA - Ngày 07/03/2023 - Add Debug, update if clause flow.
              *  XinTA - Ngày 19/07/2023 - Project CWEBIZ - Integrate
+             *  XinTA - Ngày 16/12/2023 - Migrate
              */
             var tempTeachers = new List<string>();
             var teacherName = GetTeacherName(trTagClassLop);
@@ -187,6 +190,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             {
                 tempTeachers.Add(teacherName);
             }
+
+            string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
+            TeacherUrls.Add(teacherUrl);
             #endregion
 
             var schoolClassName = aTag.InnerText.Trim();
@@ -259,6 +265,14 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             return schoolClass;
         }
 
+        private string GetTeacherInfoPageUrl(string urlSubjectDetailPage)
+        {
+            var htmlWeb = new HtmlWeb();
+            var htmlDocument = htmlWeb.Load(urlSubjectDetailPage);
+            var aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
+            return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+        }
+
         /// <summary>
         /// Trả về teacherModel Name của một school class. Đồng thời thêm teacherModel Name này vào
         /// temp teachers nhằm đảm bảo không thất thoát các teacherModel không có detail page.
@@ -312,14 +326,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
             var trTags = bodyCalendar.Descendants("tr");
             return trTags;
-        }
-
-        private async Task<string> GetTeacherInfoPageUrl(string urlSubjectDetailPage)
-        {
-            var htmlWeb = new HtmlWeb();
-            var htmlDocument = await htmlWeb.LoadFromWebAsync(urlSubjectDetailPage);
-            var aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
-            return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
         }
 
         private static string GetSubjectDetailPageUrl(HtmlNode aTag)

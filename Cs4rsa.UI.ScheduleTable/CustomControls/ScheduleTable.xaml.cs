@@ -1,19 +1,19 @@
-﻿using Cs4rsa.BaseClasses;
-using Cs4rsa.UI.ScheduleTable.Models;
+﻿using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
 
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.CustomControls
 {
-    public partial class STable : BaseUserControl
+    public partial class ScheduleTable : UserControl
     {
         private bool _isGotoByClick = false;
         private double _previousVerticalOffset = 0;
 
-        public STable()
+        public ScheduleTable()
         {
             InitializeComponent();
         }
@@ -39,18 +39,18 @@ namespace Cs4rsa.Controls
 
         public static readonly DependencyProperty WeekProperty =
             DependencyProperty.Register(
-                name: "Week", 
-                propertyType: typeof(ObservableCollection<ObservableCollection<TimeBlock>>), 
+                name: "Week",
+                propertyType: typeof(ObservableCollection<ObservableCollection<TimeBlock>>),
                 ownerType: typeof(STable),
                 typeMetadata: new FrameworkPropertyMetadata(null));
 
-        private void STable_ScrollViewer_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
+        private void STable_ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             double verticalOffset = STable_ScrollViewer.VerticalOffset;
             double maxVerticalOffset = STable_ScrollViewer.ScrollableHeight;
             // verticalOffset tăng dần khi người dùng cuộc xuống
             // verticalOffset giảm dần khi người dùng cuộn lên
-            
+
             if ((verticalOffset == maxVerticalOffset || verticalOffset == 0) && _isGotoByClick)
             {
                 STable_BtnGoto.Visibility = Visibility.Collapsed;

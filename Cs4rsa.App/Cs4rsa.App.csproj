@@ -157,28 +157,28 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
-      <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
+      <Project>{B090DEC9-515E-47D1-8EEA-B47503CA635F}</Project>
       <Name>Cs4rsa.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Database.csproj">
       <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
       <Name>Cs4rsa.Database</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Module.ManuallySchedule\Cs4rsa.Module.ManuallySchedule.csproj">
+      <Project>{15E1E43A-7866-4E85-9DDB-F7A860F31E0E}</Project>
+      <Name>Cs4rsa.Module.ManuallySchedule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
       <Project>{82462320-ee93-4afa-bcb0-b32c8cc81ab4}</Project>
       <Name>Cs4rsa.Service.CourseCrawler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Dialog\Cs4rsa.Service.Dialog.csproj">
+      <Project>{538dfb38-a978-441d-9351-7bd5535be39f}</Project>
+      <Name>Cs4rsa.Service.Dialog</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.DisciplineCrawler\Cs4rsa.Service.DisciplineCrawler.csproj">
       <Project>{14541ac5-7358-4b89-a188-1bbb66bce24b}</Project>
       <Name>Cs4rsa.Service.DisciplineCrawler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
-      <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
-      <Name>Cs4rsa.Service.SubjectCrawler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
-      <Project>{f16f72d3-a7ff-4b79-9e09-39fa6f1a31c9}</Project>
-      <Name>Cs4rsa.Service.TeacherCrawler</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

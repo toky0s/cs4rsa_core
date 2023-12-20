@@ -12,12 +12,8 @@ namespace Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces
         /// <param name="courseId">
         /// Course ID của môn học, cùng với Teacher ID sẽ được thêm vào KeywordTeacher table
         /// để xác định xem giảng viên dạy môn nào.</param>
-        /// <param name="isUpdate">
-        /// Cờ cập nhật, nếu cờ này true sau khi cào thông tin của giảng viên sẽ được cập nhật (nếu có), 
-        /// ngược lại thông tin của giảng viên sẽ được thêm vào DB.
-        /// </param>
         /// <returns>TeacherModel</returns>
-        Task<TeacherModel> Crawl(string url, int courseId, bool isUpdate);
+        Task<TeacherModel> Crawl(string url, string courseId);
 
         Task<string> OnDownloadImage(string teacherId, string folder);
     }

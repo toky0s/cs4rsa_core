@@ -81,10 +81,10 @@ CREATE TABLE IF NOT EXISTS "DbProgramSubjects" (
 	CONSTRAINT "FK_DbProgramSubjects_Curriculums_CurriculumId" FOREIGN KEY("CurriculumId") REFERENCES "Curriculums"("CurriculumId") ON DELETE CASCADE
 );
 DROP TABLE IF EXISTS "Keywords";
-CREATE TABLE IF NOT EXISTS "Keywords" (
+CREATE TABLE IF NOT EXISTS "Keywords" ( 
 	"KeywordId"	INTEGER NOT NULL,
 	"Keyword1"	TEXT,
-	"CourseId"	INTEGER NOT NULL,
+	"CourseId"	TEXT,
 	"SubjectName"	TEXT,
 	"Color"	TEXT,
 	"Cache"	TEXT,

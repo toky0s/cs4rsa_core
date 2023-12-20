@@ -1,11 +1,10 @@
-﻿using Cs4rsa.Interfaces;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.UI.ScheduleTable.Models;
+﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.ScheduleTable.Interfaces;
 
 using System;
 
-namespace Cs4rsa.Models
+namespace Cs4rsa.UI.ScheduleTable.Models
 {
     public class SchoolClassBlock : TimeBlock
     {
@@ -16,7 +15,7 @@ namespace Cs4rsa.Models
             , string content
             , DayOfWeek dayOfWeek
             , ScheduleTableItemType scheduleTableItemType
-            , Phase phase) 
+            , Phase phase)
             : base(
                   id
                 , background
@@ -32,7 +31,7 @@ namespace Cs4rsa.Models
             Name = "SchoolClassBlock";
         }
 
-        public SchoolClassUnit SchoolClassUnit { get;}
-        public Phase Phase { get;}
+        public SchoolClassUnit SchoolClassUnit { get; }
+        public Phase Phase { get; }
     }
 }

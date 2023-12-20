@@ -33,7 +33,6 @@ namespace Cs4rsa.App.Views
 
             regionManager.RegisterViewWithRegion(RegionInfo.TopMenu, typeof(TopMenu));
             regionManager.RegisterViewWithRegion(RegionInfo.Home, typeof(Home));
-            regionManager.RegisterViewWithRegion(RegionInfo.Manual, typeof(Home));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Cs4rsa.Common
             {
                 return;
             }
-            string arg = "/select, \"" + path + "\"";
+            var arg = "/select, \"" + path + "\"";
             Process.Start("explorer.exe", arg);
         }
     }

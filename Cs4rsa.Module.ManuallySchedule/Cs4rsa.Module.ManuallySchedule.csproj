@@ -42,6 +42,9 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Prism, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
@@ -53,6 +56,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,16 +67,55 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\EmptyStringPlaceholderConverter.cs" />
+    <Compile Include="Dialogs\Models\ClassGroupResult.cs" />
+    <Compile Include="Dialogs\Models\UserSubject.cs" />
+    <Compile Include="Dialogs\ViewModels\ImportSessionViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SaveSessionViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShareStringViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
+    <Compile Include="Dialogs\Views\ImportSessionUC.xaml.cs">
+      <DependentUpon>ImportSessionUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">
+      <DependentUpon>SaveSessionUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShareStringUC.xaml.cs">
+      <DependentUpon>ShareStringUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShowDetailsSchoolClassesUC.xaml.cs">
+      <DependentUpon>ShowDetailsSchoolClassesUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShowDetailsSubjectUC.xaml.cs">
+      <DependentUpon>ShowDetailsSubjectUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\SolveConflictUC.xaml.cs">
+      <DependentUpon>SolveConflictUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Events\ChoosedVmMsgs.cs" />
+    <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
+    <Compile Include="Events\ExitImportSubjectMsg.cs" />
+    <Compile Include="Events\ImportSessionVmMsgs.cs" />
+    <Compile Include="Events\SearchVmMsgs.cs" />
+    <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
+    <Compile Include="Events\SolveConflictVmMsgs.cs" />
+    <Compile Include="Events\UpdateVmMsgs.cs" />
+    <Compile Include="Events\Values\SearchValues.cs" />
     <Compile Include="Interfaces\IPreParSubjectCrawler.cs" />
-    <Compile Include="Interfaces\ISubjectCrawler.cs" />
     <Compile Include="ManuallyScheduleModule.cs" />
     <Compile Include="Models\ClassGroupModel.cs" />
+    <Compile Include="Models\CombinationModel.cs" />
+    <Compile Include="Models\FullMatchSearchingKeyword.cs" />
     <Compile Include="Models\SchoolClassModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\BasicDataConverter.cs" />
-    <Compile Include="Utils\ScheduleParser.cs" />
+    <Compile Include="RegionInfo.cs" />
+    <Compile Include="Utils\ShareString.cs" />
     <Compile Include="Utils\SubjectCodeParser.cs" />
+    <Compile Include="Validations\ShareStringRule.cs" />
+    <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
     <Compile Include="ViewModels\ChoseViewModel.cs" />
     <Compile Include="ViewModels\ClgViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
@@ -102,6 +145,31 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Dialogs\Views\ImportSessionUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\SaveSessionUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ShareStringUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ShowDetailsSchoolClassesUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ShowDetailsSubjectUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\SolveConflictUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Chose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,9 +196,45 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
+      <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
+      <Name>Cs4rsa.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Database.csproj">
+      <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
+      <Name>Cs4rsa.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Event\Cs4rsa.Event.csproj">
+      <Project>{1d99c751-5266-45ee-8688-ac61378f6ccc}</Project>
+      <Name>Cs4rsa.Event</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
+      <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>
+      <Name>Cs4rsa.Service.Conflict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
+      <Project>{82462320-ee93-4afa-bcb0-b32c8cc81ab4}</Project>
+      <Name>Cs4rsa.Service.CourseCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Dialog\Cs4rsa.Service.Dialog.csproj">
+      <Project>{538dfb38-a978-441d-9351-7bd5535be39f}</Project>
+      <Name>Cs4rsa.Service.Dialog</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
       <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
       <Name>Cs4rsa.Service.SubjectCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
+      <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
+      <Name>Cs4rsa.Service.TeacherCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.ScheduleTable\Cs4rsa.UI.ScheduleTable.csproj">
+      <Project>{e4d5b2ab-45ce-46dc-a23e-0761eede55aa}</Project>
+      <Name>Cs4rsa.UI.ScheduleTable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
+      <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
+      <Name>Cs4rsa.WPF.Converter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

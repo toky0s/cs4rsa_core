@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.Panels
 {
     public class TimeLinePanel : Panel
     {
@@ -12,7 +12,7 @@ namespace Cs4rsa.Controls
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double _unitHeight = finalSize.Height / Utils.TIME_LINES.Length;
+            double _unitHeight = finalSize.Height / Utils.Utils.TimeLines.Length;
             for (int i = 0; i < InternalChildren.Count; i++)
             {
                 double x = 0;

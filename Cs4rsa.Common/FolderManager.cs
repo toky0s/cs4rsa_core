@@ -9,9 +9,9 @@ namespace Cs4rsa.Common
     {
         public override void CreateFoldersAtStartUp()
         {
-            for (int i = 0; i < Folders.Length; ++i)
+            for (var i = 0; i < Folders.Length; ++i)
             {
-                string path = Path.Combine(AppContext.BaseDirectory, Folders[i]);
+                var path = Path.Combine(AppContext.BaseDirectory, Folders[i]);
                 CreateFolderIfNotExists(path);
             }
         }
@@ -20,7 +20,7 @@ namespace Cs4rsa.Common
         {
             if (!Directory.Exists(path))
             {
-                DirectoryInfo directory = Directory.CreateDirectory(path);
+                var directory = Directory.CreateDirectory(path);
                 return directory.FullName;
             }
             return path;
@@ -28,8 +28,8 @@ namespace Cs4rsa.Common
 
         public override void DelAllInThisFolder(string folderPath)
         {
-            string[] filePaths = Directory.GetFiles(folderPath);
-            for (int i = 0; i < filePaths.Length; i++)
+            var filePaths = Directory.GetFiles(folderPath);
+            for (var i = 0; i < filePaths.Length; i++)
             {
                 File.Delete(filePaths[i]);
             }

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.Panels
 {
     /// <summary>
     /// Một WeekPanel sẽ chứa 7 DayPanel tương ứng.

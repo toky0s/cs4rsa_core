@@ -65,5 +65,10 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             var tables = htmlDocument.DocumentNode.Descendants("table");
             return tables.Any();
         }
+
+        public Task<Subject> Crawl(string cache)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

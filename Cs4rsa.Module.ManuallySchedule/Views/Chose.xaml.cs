@@ -14,7 +14,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void Btn_SolveConflict_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ((ChoseViewModel)DataContext).SolveConflictCommand.Execute(null);
+            ((ChoseViewModel)DataContext).SolveConflictCommand.Execute();
         }
 
         private void Listbox_Choiced_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -25,7 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void ContextMenu_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            ContextMenu ctxMenu = (ContextMenu)sender;
+            var ctxMenu = (ContextMenu)sender;
             ctxMenu.DataContext = Vm;
         }
 

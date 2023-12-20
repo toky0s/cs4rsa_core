@@ -11,6 +11,6 @@ namespace Cs4rsa.App
         public static readonly string TopMenu = "TopMenu";
         public static readonly string Main = "Main";
         public static readonly string Home = "Home";
-        public static readonly string Manual = "Manual";
+        public static readonly string Manual = "ManualRegion";
     }
 }

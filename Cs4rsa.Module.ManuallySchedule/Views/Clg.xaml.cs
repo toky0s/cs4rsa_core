@@ -1,8 +1,11 @@
-﻿using Cs4rsa.Module.ManuallySchedule.ViewModels;
+﻿using Cs4rsa.Module.ManuallySchedule.Models;
+
+using System.Windows.Controls;
+using Cs4rsa.Module.ManuallySchedule.ViewModels;
 
 namespace Cs4rsa.Module.ManuallySchedule.Views
 {
-    public partial class Clg : BaseUserControl
+    public partial class Clg : UserControl
     {
         private ClgViewModel Vm;
         public Clg()
@@ -24,7 +27,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         private void ListBox_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (Vm.SelectedClassGroup == null || Vm.SelectedClassGroup.IsBelongSpecialSubject == false) return;
-            Vm.ShowDetailsSchoolClassesCommand.Execute(null);
+            Vm.ShowDetailsSchoolClassesCommand.Execute();
         }
     }
 }

@@ -12,13 +12,13 @@
         public static readonly string FdTeacherImgs = "TeacherImages";
         public static readonly string FdHtmlCaches = "HtmlCaches";
 
-        public static readonly string[] Folders = [
+        public static readonly string[] Folders = new string[] {
               FdStudentPrograms
             , FdStudentPlans
             , FdStudentImgs
             , FdTeacherImgs
             , FdHtmlCaches
-        ];
+        };
 
         public abstract string CreateFolderIfNotExists(string path);
         public abstract void CreateFoldersAtStartUp();

@@ -10,21 +10,15 @@ namespace Cs4rsa.Service.TeacherCrawler.Crawlers
 {
     public class TeacherCrawler : ITeacherCrawler
     {
-        private readonly HtmlWeb _htmlWeb;
-
-        public TeacherCrawler(HtmlWeb htmlWeb)
-        {
-            _htmlWeb = htmlWeb;
-        }
-
-        public async Task<TeacherModel> Crawl(string url, int courseId, bool isUpdate)
+        public async Task<TeacherModel> Crawl(string url, string courseId)
         {
             if (url == null)
             {
                 return null;
             }
-            
-            var htmlDocument = await _htmlWeb.LoadFromWebAsync(url);
+
+            HtmlWeb htmlWeb = new HtmlWeb();
+            var htmlDocument = await htmlWeb.LoadFromWebAsync(url);
             if (htmlDocument == null)
             {
                 return null;

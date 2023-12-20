@@ -4,13 +4,24 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.TeacherCrawler.Models;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
     /// <summary>
     /// Class group View Model
     /// </summary>
-    public sealed partial class ClgViewModel : ViewModelBase
+    public sealed partial class ClgViewModel : BindableBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
@@ -18,344 +29,174 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private readonly ICollectionView _classGroupModelsView;
 
-        [ObservableProperty]
         private ClassGroupModel _selectedClassGroup;
+        public ClassGroupModel SelectedClassGroup
+        {
+            get { return _selectedClassGroup; }
+            set { SetProperty(ref _selectedClassGroup, value); OnSelectedClassGroupChanged(value); }
+        }
 
-        [ObservableProperty]
         private int _teacherCount;
+        public int TeacherCount
+        {
+            get { return _teacherCount; }
+            set { SetProperty(ref _teacherCount, value); }
+        }
 
-        [ObservableProperty]
         private TeacherModel _selectedTeacher;
+        public TeacherModel SelectedTeacher
+        {
+            get { return _selectedTeacher; }
+            set { SetProperty(ref _selectedTeacher, value); OnFilter(); }
+        }
 
-        [ObservableProperty]
         private SubjectModel _selectedSubject;
+        public SubjectModel SelectedSubject
+        {
+            get { return _selectedSubject; }
+            set { SetProperty(ref _selectedSubject, value); }
+        }
         #endregion
 
         #region Day Filters
         private bool _monday;
-        public bool Monday
-        {
-            get => _monday;
-            set
-            {
-                _monday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _tuesday;
-        public bool Tuesday
-        {
-            get => _tuesday;
-            set
-            {
-                _tuesday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
-        private bool _wednessday;
-        public bool Wednesday
-        {
-            get => _wednessday;
-            set
-            {
-                _wednessday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
+        private bool _wednesday;
         private bool _thursday;
-        public bool Thursday
-        {
-            get => _thursday;
-            set
-            {
-                _thursday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _friday;
-        public bool Friday
-        {
-            get => _friday;
-            set
-            {
-                _friday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _saturday;
-        public bool Saturday
-        {
-            get => _saturday;
-            set
-            {
-                _saturday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _sunday;
-        public bool Sunday
-        {
-            get => _sunday;
-            set
-            {
-                _sunday = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
+        public bool Monday { get => _monday; set { SetProperty(ref _monday, value); OnFilter(); } }
+        public bool Tuesday { get => _tuesday; set { SetProperty(ref _tuesday, value); OnFilter(); } }
+        public bool Wednesday { get => _wednesday; set { SetProperty(ref _wednesday, value); OnFilter(); } }
+        public bool Thursday { get => _thursday; set { SetProperty(ref _thursday, value); OnFilter(); } }
+        public bool Friday { get => _friday; set { SetProperty(ref _friday, value); OnFilter(); } }
+        public bool Saturday { get => _saturday; set { SetProperty(ref _saturday, value); OnFilter(); } }
+        public bool Sunday { get => _sunday; set { SetProperty(ref _sunday, value); OnFilter(); } }
         #endregion
 
         #region Seat Filters
         private bool _hasSeat;
-
-        public bool HasSeat
-        {
-            get { return _hasSeat; }
-            set
-            {
-                _hasSeat = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
+        public bool HasSeat { get => _hasSeat; set { SetProperty(ref _hasSeat, value); OnFilter(); } }
 
         private bool _hasSchedule;
-        public bool HasSchedule
-        {
-            get { return _hasSchedule; }
-            set
-            {
-                _hasSchedule = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
+        public bool HasSchedule { get => _hasSchedule; set { SetProperty(ref _hasSchedule, value); OnFilter(); } }
         #endregion
 
         #region Session Filters
         private bool _morning;
+        public bool Morning { get => _morning; set { SetProperty(ref _morning, value); OnFilter(); } }
 
-        public bool Morning
-        {
-            get { return _morning; }
-            set
-            {
-                _morning = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
         private bool _afternoon;
+        public bool Afternoon { get => _afternoon; set { SetProperty(ref _afternoon, value); OnFilter(); } }
 
-        public bool Afternoon
-        {
-            get { return _afternoon; }
-            set
-            {
-                _afternoon = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
         private bool _night;
-
-        public bool Night
-        {
-            get { return _night; }
-            set
-            {
-                _night = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
+        public bool Night { get => _night; set { SetProperty(ref _night, value); OnFilter(); } }
         #endregion
 
         #region Phase Filters
         private bool _onlyPhaseFirst;
-
-        public bool PhaseFirst
-        {
-            get { return _onlyPhaseFirst; }
-            set
-            {
-                _onlyPhaseFirst = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
+        public bool PhaseFirst { get => _onlyPhaseFirst; set { SetProperty(ref _onlyPhaseFirst, value); OnFilter(); } }
 
         private bool _onlyPhaseSecond;
+        public bool PhaseSecond { get => _onlyPhaseSecond; set { SetProperty(ref _onlyPhaseSecond, value); OnFilter(); } }
+        public bool PhaseBoth { get => _bothPhase; set { SetProperty(ref _bothPhase, value); OnFilter(); } }
 
-        public bool PhaseSecond
-        {
-            get { return _onlyPhaseSecond; }
-            set
-            {
-                _onlyPhaseSecond = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
         private bool _bothPhase;
-
-        public bool PhaseBoth
-        {
-            get { return _bothPhase; }
-            set
-            {
-                _bothPhase = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
-
         #endregion
 
         #region Place Filters
-        private bool _placeQuangTrung;
-        public bool PlaceQuangTrung
-        {
-            get { return _placeQuangTrung; }
-            set
-            {
-                _placeQuangTrung = value; OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _placeHoaKhanh;
-        public bool PlaceHoaKhanh
-        {
-            get { return _placeHoaKhanh; }
-            set { _placeHoaKhanh = value; OnPropertyChanged(); OnFilter(); }
-        }
-
         private bool _placePhanThanh;
-        public bool PlacePhanThanh
-        {
-            get { return _placePhanThanh; }
-            set { _placePhanThanh = value; OnPropertyChanged(); OnFilter(); }
-        }
-
         private bool _placeVietTin;
-        public bool PlaceVietTin
-        {
-            get { return _placeVietTin; }
-            set { _placeVietTin = value; OnPropertyChanged(); OnFilter(); }
-        }
-
         private bool _place137NVL;
-        public bool Place137NVL
-        {
-            get { return _place137NVL; }
-            set { _place137NVL = value; OnPropertyChanged(); OnFilter(); }
-        }
-
         private bool _place254NVL;
-        public bool Place254NVL
-        {
-            get { return _place254NVL; }
-            set
-            {
-                _place254NVL = value;
-                OnPropertyChanged();
-                OnFilter();
-            }
-        }
-
         private bool _placeOnline;
-
-        public bool PlaceOnline
-        {
-            get { return _placeOnline; }
-            set { _placeOnline = value; OnPropertyChanged(); OnFilter(); }
-        }
-
+        private bool _placeQuangTrung;
+        public bool PlaceHoaKhanh { get => _placeHoaKhanh; set { SetProperty(ref _placeHoaKhanh, value); OnFilter(); } }
+        public bool PlacePhanThanh { get => _placePhanThanh; set { SetProperty(ref _placePhanThanh, value); OnFilter(); } }
+        public bool PlaceVietTin { get => _placeVietTin; set { SetProperty(ref _placeVietTin, value); OnFilter(); } }
+        public bool Place137NVL { get => _place137NVL; set { SetProperty(ref _place137NVL, value); OnFilter(); } }
+        public bool Place254NVL { get => _place254NVL; set { SetProperty(ref _place254NVL, value); OnFilter(); } }
+        public bool PlaceOnline { get => _placeOnline; set { SetProperty(ref _placeOnline, value); OnFilter(); } }
+        public bool PlaceQuangTrung { get => _placeQuangTrung; set { SetProperty(ref _placeQuangTrung, value); OnFilter(); } }
         #endregion
 
         #region Commands
-        public RelayCommand GotoCourseCommand { get; set; }
-        public RelayCommand ShowDetailsSchoolClassesCommand { get; set; }
-        public RelayCommand FilterCommand { get; set; }
-        public RelayCommand ResetFilterCommand { get; set; }
+        public DelegateCommand GotoCourseCommand { get; set; }
+        public DelegateCommand ShowDetailsSchoolClassesCommand { get; set; }
+        public DelegateCommand FilterCommand { get; set; }
+        public DelegateCommand ResetFilterCommand { get; set; }
         #endregion
 
         #region Services
         private readonly IOpenInBrowser _openInBrowser;
+        private readonly IDialogService _dialogService;
+        private readonly IEventAggregator _eventAggregator;
         #endregion
 
         public ClgViewModel(
-            IOpenInBrowser openInBrowser
-        )
+            IOpenInBrowser openInBrowser, 
+            IDialogService dialogService,
+            IEventAggregator eventAggregator)
         {
             _openInBrowser = openInBrowser;
+            _eventAggregator = eventAggregator;
+            _dialogService = dialogService;
 
-            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
             {
                 ClassGroupModels.Clear();
                 SelectedSubject = null;
             });
 
-            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(() =>
             {
                 ClassGroupModels.Clear();
                 TeacherCount = 0;
                 SelectedSubject = null;
             });
 
-            Messenger.Register<SearchVmMsgs.SelectedSubjectChangedMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Subscribe(payload =>
             {
-                SelectedSubjectChangedHandler(m.Value);
+                SelectedSubjectChangedHandler(payload);
             });
 
-            Messenger.Register<ChoosedVmMsgs.DelClassGroupChoiceMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(cgm =>
             {
                 SelectedClassGroup = null;
             });
 
-            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
-            {
-                ClassGroupModels.Clear();
-                Teachers.Clear();
-            });
+            //_eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(this, (r, m) =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    Teachers.Clear();
+            //});
 
             // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
-            Messenger.Register<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
             {
-                ClassGroupResult classGroupResult = m.Value;
-                ClassGroupModel classGroupModel = classGroupResult.ClassGroupModel;
-                string schoolClassName = classGroupResult.SelectedSchoolClassModel.SchoolClassName;
+                var classGroupModel = payload.ClassGroupModel;
+                var schoolClassName = payload.SelectedSchoolClassModel.SchoolClassName;
                 classGroupModel.ReRenderSchedule(schoolClassName);
-                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
+                eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
             });
 
-            ClassGroupModels = new();
+            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
             _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
             _classGroupModelsView.Filter = ClassGroupFilter;
 
             TeacherCount = 0;
-            Teachers = new();
-            GotoCourseCommand = new RelayCommand(OnGotoCourse);
-            ShowDetailsSchoolClassesCommand = new RelayCommand(OnShowDetailsSchoolClasses);
-            FilterCommand = new RelayCommand(OnFilter);
-            ResetFilterCommand = new RelayCommand(OnResetFilter, CanResetFilter);
+            Teachers = new ObservableCollection<TeacherModel>();
+            GotoCourseCommand = new DelegateCommand(OnGotoCourse);
+            ShowDetailsSchoolClassesCommand = new DelegateCommand(OnShowDetailsSchoolClasses);
+            FilterCommand = new DelegateCommand(OnFilter);
+            ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
 
             InitFilter();
         }
 
-        partial void OnSelectedTeacherChanged(TeacherModel value)
-        {
-            OnFilter();
-        }
-
-        partial void OnSelectedClassGroupChanged(ClassGroupModel value)
+        private void OnSelectedClassGroupChanged(ClassGroupModel value)
         {
             if (value != null)
             {
@@ -365,7 +206,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
                 else
                 {
-                    Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(value));
+                    _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(value);
                 }
             }
         }
@@ -402,7 +243,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private bool ClassGroupFilter(object obj)
         {
-            ClassGroupModel classGroupModel = obj as ClassGroupModel;
+            var classGroupModel = obj as ClassGroupModel;
             return CheckDayOfWeek(classGroupModel)
                 && CheckSession(classGroupModel)
                 && CheckSeat(classGroupModel)
@@ -442,7 +283,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void OnFilter()
         {
             _classGroupModelsView.Refresh();
-            ResetFilterCommand.NotifyCanExecuteChanged();
+            ResetFilterCommand.RaiseCanExecuteChanged();
         }
 
         private bool CheckSeat(ClassGroupModel classGroupModel)
@@ -483,7 +324,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 return true;
             }
 
-            Dictionary<DayOfWeek, bool> checkedDates = new()
+            var checkedDates = new Dictionary<DayOfWeek, bool>()
             {
                 { DayOfWeek.Monday, Monday },
                 { DayOfWeek.Tuesday, Tuesday },
@@ -498,7 +339,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 .Where(pair => pair.Value)
                 .ToDictionary(p => p.Key, p => p.Value);
 
-            foreach (DayOfWeek day in checkedDates.Keys)
+            foreach (var day in checkedDates.Keys)
             {
                 if (!classGroupModel.Schedule.GetSchoolDays().Contains(day))
                     return false;
@@ -513,17 +354,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 Night == false)
                 return true;
 
-            Dictionary<Session, bool> checkSessions = new()
+            var checkSessions = new Dictionary<Session, bool>()
             {
                 { Session.Morning, Morning },
                 { Session.Afternoon, Afternoon },
                 { Session.Night, Night }
             };
 
-            checkSessions = checkSessions.Where(pair => pair.Value == true)
+            checkSessions = checkSessions
+                .Where(pair => pair.Value == true)
                 .ToDictionary(p => p.Key, p => p.Value);
 
-            foreach (Session session in checkSessions.Keys)
+            foreach (var session in checkSessions.Keys)
             {
                 if (!classGroupModel.Schedule.GetSessions().Contains(session))
                     return false;
@@ -555,20 +397,20 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 && _place254NVL == false
                 && _placeOnline == false)
                 return true;
-            Dictionary<Place, bool> checkboxAndPlace = new()
+            var checkboxAndPlace = new Dictionary<Place, bool>()
             {
-                { Place.QUANGTRUNG, _placeQuangTrung },
-                { Place.VIETTIN, _placeVietTin },
-                { Place.PHANTHANH, _placePhanThanh },
-                { Place.HOAKHANH, _placeHoaKhanh },
-                { Place.NVL_137, _place137NVL },
-                { Place.NVL_254, _place254NVL },
-                { Place.ONLINE, _placeOnline }
+                { Place.QuangTrung, _placeQuangTrung },
+                { Place.VietTin, _placeVietTin },
+                { Place.PhanThanh, _placePhanThanh },
+                { Place.HoaKhanh, _placeHoaKhanh },
+                { Place.Nvl137, _place137NVL },
+                { Place.Nvl254, _place254NVL },
+                { Place.Online, _placeOnline }
             };
             checkboxAndPlace = checkboxAndPlace
                 .Where(pair => pair.Value)
                 .ToDictionary(p => p.Key, p => p.Value);
-            foreach (Place place in checkboxAndPlace.Keys)
+            foreach (var place in checkboxAndPlace.Keys)
             {
                 if (!classGroupModel.Places.Contains(place))
                     return false;
@@ -581,23 +423,23 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public void OnShowDetailsSchoolClasses()
         {
-            ShowDetailsSchoolClassesUC showDetailsSchoolClassesUC = new();
-            ShowDetailsSchoolClassesViewModel vm = (ShowDetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
+            var showDetailsSchoolClassesUC = new ShowDetailsSchoolClassesUC();
+            var vm = (ShowDetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
             vm.ClassGroupModel = SelectedClassGroup;
 
-            foreach (SchoolClassModel scm in SelectedClassGroup.NormalSchoolClassModels)
+            foreach (var scm in SelectedClassGroup.NormalSchoolClassModels)
             {
                 if (scm.Type != SelectedClassGroup.CompulsoryClass.Type)
                 {
                     vm.SchoolClassModels.Add(scm);
                 }
             }
-            OpenDialog(showDetailsSchoolClassesUC);
+            _dialogService.OpenDialog(showDetailsSchoolClassesUC);
         }
 
         private void OnGotoCourse()
         {
-            string url = SelectedClassGroup.ClassGroup.GetUrl();
+            var url = SelectedClassGroup.ClassGroup.GetUrl();
             _openInBrowser.Open(url);
         }
 
@@ -609,19 +451,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             if (SelectedSubject != null && SelectedSubject.ClassGroupModels != null)
             {
                 #region Add ClassGroupModel
-                foreach (ClassGroupModel classGroupModel in SelectedSubject.ClassGroupModels)
+                foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
                 #endregion
 
                 #region Add Teacher
-                TeacherModel allTeacher = new(0, "TẤT CẢ");
+                var allTeacher = new TeacherModel(0, "TẤT CẢ");
                 Teachers.Add(allTeacher);
 
-                List<string> tempTeachers = SelectedSubject.TempTeachers;
+                var tempTeachers = SelectedSubject.TempTeachers;
                 // Chống trùng lặp giảng viên
-                foreach (TeacherModel teacher in SelectedSubject.Teachers)
+                foreach (var teacher in SelectedSubject.Teachers)
                 {
                     if (teacher != null && !Teachers.Where(t => t.TeacherId == teacher.TeacherId).Any())
                     {
@@ -634,9 +476,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // mà không có detail page được xem là giảng viên thỉnh giảng
                 if (tempTeachers.Count > 0)
                 {
-                    for (int i = 0; i < tempTeachers.Count; i++)
+                    for (var i = 0; i < tempTeachers.Count; i++)
                     {
-                        TeacherModel guestLecturer = new(i + 1, tempTeachers[i]);
+                        var guestLecturer = new TeacherModel(i + 1, tempTeachers[i]);
                         Teachers.Add(guestLecturer);
                     }
                 }

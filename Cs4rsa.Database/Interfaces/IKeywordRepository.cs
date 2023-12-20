@@ -12,16 +12,16 @@ namespace Cs4rsa.Database.Interfaces
         /// GetByPaging Keyword bằng Course ID
         /// </summary>
         /// <param name="courseId">Course ID</param>
-        Keyword GetKeyword(int courseId);
+        Keyword GetKeyword(string courseId);
 
         /// <summary>
         /// GetByPaging Keyword bằng Subject Code
         /// </summary>
         /// <param name="subjectCode">Mã môn</param>
         /// <returns></returns>
-        Keyword GetKeyword(string subjectCode);
+        Keyword GetKeywordBySubjectCode(string subjectCode);
         string GetColorWithSubjectCode(string subjectCode);
-        string GetColor(int courseId);
+        string GetColor(string courseId);
         /// <summary>
         /// Lấy ra Color dựa theo mã môn.
         /// </summary>
@@ -39,6 +39,7 @@ namespace Cs4rsa.Database.Interfaces
         /// <param name="courseId">Course ID</param>
         /// <returns>Cache</returns>
         string GetCache(string courseId);
+        string GetCache(string discipline, string keyword1);
         /// <summary>
         /// Lấy ra danh sách các Keyword dựa theo Discipline ID.
         /// </summary>
@@ -48,7 +49,7 @@ namespace Cs4rsa.Database.Interfaces
         List<Keyword> GetKeywordsByDisciplineId(int disciplineId);
         int Insert(Keyword keyword);
         int DeleteAll();
-        Keyword GetByCourseId(int intCourseId);
+        Keyword GetByCourseId(string courseId);
         long Count();
     }
 }

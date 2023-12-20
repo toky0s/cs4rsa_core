@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Cs4rsa.Service.TeacherCrawler.Models
+﻿namespace Cs4rsa.Service.TeacherCrawler.Models
 {
     public class TeacherModel
     {
@@ -23,6 +21,7 @@ namespace Cs4rsa.Service.TeacherCrawler.Models
         {
             
         }
+
         public TeacherModel(int teacherId, string name)
         {
             TeacherId = teacherId;

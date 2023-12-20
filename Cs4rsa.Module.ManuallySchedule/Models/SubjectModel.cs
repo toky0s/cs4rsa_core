@@ -1,57 +1,102 @@
-﻿using System;
+﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
+using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.TeacherCrawler.Models;
+
+using Prism.Mvvm;
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {
-    public partial class SubjectModel : ObservableObject
+    public partial class SubjectModel : BindableBase
     {
-        [ObservableProperty]
-        public Subject _subject;
+        private Subject _subject;
+        public Subject Subject
+        {
+            get { return _subject; }
+            set { SetProperty(ref _subject, value); }
+        }
 
         public readonly UserSubject UserSubject;
-        public List<TeacherModel> Teachers => Subject.Teachers;
+
+        public TeacherModel[] _teachers;
+        public TeacherModel[] Teachers { get => _teachers; }
         public List<string> TempTeachers => Subject.TempTeachers;
         public List<ClassGroupModel> ClassGroupModels { get; private set; }
         public string SubjectName { get; private set; }
         public string SubjectCode { get; private set; }
-        public int CourseId { get; private set; }
+        public string CourseId { get; private set; }
         public string StudyUnitType => Subject.StudyUnitType;
         public string StudyType => Subject.StudyType;
         public string Semester => Subject.Semester;
-        public string Desciption => Subject.Desciption;
+        public string Desciption => Subject.Description;
 
-        [ObservableProperty]
-        public string _prerequisiteSubjectAsString;
+        private string _prerequisiteSubjectAsString;
+        public string PrerequisiteSubjectAsString
+        {
+            get { return _prerequisiteSubjectAsString; }
+            set { SetProperty(ref _prerequisiteSubjectAsString, value); }
+        }
 
-        [ObservableProperty]
-        public string _parallelSubjectAsString;
+        private string _parallelSubjectAsString;
+        public string ParallelSubjectAsString
+        {
+            get { return _parallelSubjectAsString; }
+            set { SetProperty(ref _parallelSubjectAsString, value); }
+        }
 
-        [ObservableProperty]
         private bool _isDownloading;
+        public bool IsDownloading
+        {
+            get { return _isDownloading; }
+            set { SetProperty(ref _isDownloading, value); }
+        }
 
-        [ObservableProperty]
         private int _studyUnit;
+        public int StudyUnit
+        {
+            get { return _studyUnit; }
+            set { SetProperty(ref _studyUnit, value); }
+        }
 
-        [ObservableProperty]
-        public bool _isSpecialSubject;
+        private bool _isSpecialSubject;
+        public bool IsSpecialSubject
+        {
+            get { return _isSpecialSubject; }
+            set { SetProperty(ref _isSpecialSubject, value); }
+        }
 
-        [ObservableProperty]
         private bool _isError;
+        public bool IsError
+        {
+            get { return _isError; }
+            set { SetProperty(ref _isError, value); }
+        }
 
-        [ObservableProperty]
         private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { SetProperty(ref _errorMessage, value); }
+        }
 
-        public string Color { get; set; }
-
-        #region Services
-        private readonly ColorGenerator _colorGenerator;
-        #endregion
+        private string _color;
+        public string Color
+        {
+            get { return _color; }
+            set { SetProperty(ref _color, value); }
+        }
 
         public SubjectModel() { }
 
-        private SubjectModel(Subject subject, ColorGenerator colorGenerator)
+        public SubjectModel(
+            Subject subject, 
+            TeacherModel[] teacherModels, 
+            string color)
         {
-            _colorGenerator = colorGenerator;
+            Color = color;
             Subject = subject;
             SubjectName = subject.Name;
             SubjectCode = subject.SubjectCode;
@@ -59,13 +104,28 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             StudyUnit = subject.StudyUnit;
             PrerequisiteSubjectAsString = GetMustStudySubjects();
             ParallelSubjectAsString = GetParallelSubjects();
+            IsSpecialSubject = Subject.IsSpecialSubject();
+            ClassGroupModels = Subject.ClassGroups
+                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
+                .ToList();
+
+            _teachers = teacherModels;
         }
 
-        private SubjectModel(
+        /// <summary>
+        /// Tạo Pseudo Subject.
+        /// </summary>
+        /// <param name="teacherModels">Danh sách giảng viên</param>
+        /// <param name="subjectName">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="color">Màu sắc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <returns></returns>
+        public SubjectModel(
             string subjectName,
             string subjectCode,
             string color,
-            int courseId)
+            string courseId)
         {
             SubjectName = subjectName;
             SubjectCode = subjectCode;
@@ -75,11 +135,19 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             IsError = false;
         }
 
-        private SubjectModel(
+        /// <summary>
+        /// Tạo Pseudo Subject với UserSubject được import bởi người dùng.
+        /// </summary>
+        /// <param name="subjectName">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="color">Màu sắc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <param name="userSubject">UserSubject</param>
+        public SubjectModel(
             string subjectName,
             string subjectCode,
             string color,
-            int courseId,
+            string courseId,
             UserSubject userSubject)
         {
             SubjectName = subjectName;
@@ -98,12 +166,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             }
         }
 
-        public static SubjectModel Create(Subject subject, ColorGenerator colorGenerator)
-        {
-            SubjectModel subjectModel = new(subject, colorGenerator);
-            return subjectModel.InitializeAsync();
-        }
-
         public void AssignData(SubjectModel subjectModel)
         {
             if (!IsDownloading)
@@ -120,63 +182,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             IsDownloading = false;
             IsError = false;
             ErrorMessage = null;
-        }
-
-        /// <summary>
-        /// Tạo Pseudo Subject.
-        /// </summary>
-        /// <param name="subjectName">Tên môn học</param>
-        /// <param name="subjectCode">Mã môn</param>
-        /// <param name="color">Màu sắc</param>
-        /// <param name="courseId">Course ID</param>
-        /// <returns></returns>
-        public static SubjectModel CreatePseudo(
-             string subjectName
-            , string subjectCode
-            , string color
-            , int courseId)
-        {
-            return new SubjectModel(
-                  subjectName
-                , subjectCode
-                , color
-                , courseId
-            );
-        }
-
-        /// <summary>
-        /// Tạo Pseudo Subject với UserSubject được import bởi người dùng.
-        /// </summary>
-        /// <param name="subjectName">Tên môn học</param>
-        /// <param name="subjectCode">Mã môn</param>
-        /// <param name="color">Màu sắc</param>
-        /// <param name="courseId">Course ID</param>
-        /// <param name="userSubject">UserSubject</param>
-        /// <returns></returns>
-        public static SubjectModel CreatePseudo(
-             string subjectName
-            , string subjectCode
-            , string color
-            , int courseId
-            , UserSubject userSubject)
-        {
-            return new SubjectModel(
-                  subjectName
-                , subjectCode
-                , color
-                , courseId
-                , userSubject
-            );
-        }
-
-        private SubjectModel InitializeAsync()
-        {
-            Color = _colorGenerator.GetColor(Subject.CourseId);
-            IsSpecialSubject = Subject.IsSpecialSubject();
-            ClassGroupModels = Subject.ClassGroups
-                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
-                .ToList();
-            return this;
         }
 
         public string GetMustStudySubjects()

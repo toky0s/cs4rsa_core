@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Utils;
+﻿using Cs4rsa.Common;
 
 using System.Collections.Generic;
 using System.Text;
@@ -9,22 +9,22 @@ namespace Cs4rsa.Service.DisciplineCrawler
     {
         public static string GetBulkInsertSql(List<Discipline> disciplines)
         {
-            StringBuilder sbDiscipline = new StringBuilder();
+            var sbDiscipline = new StringBuilder();
             sbDiscipline.AppendLine("INSERT INTO Disciplines");
             sbDiscipline.AppendLine("VALUES");
 
-            StringBuilder sbKeyword = new StringBuilder();
+            var sbKeyword = new StringBuilder();
             sbKeyword.AppendLine("INSERT INTO Keywords");
             sbKeyword.AppendLine("VALUES");
 
-            int disciplineCount = disciplines.Count;
-            int kwId = 1;
-            for (int i = 0; i < disciplineCount; i++)
+            var disciplineCount = disciplines.Count;
+            var kwId = 1;
+            for (var i = 0; i < disciplineCount; i++)
             {
                 sbDiscipline.AppendLine($"({i + 1}, '{disciplines[i].Name}'),");
-                foreach (Keyword keyword in disciplines[i].Keywords)
+                foreach (var keyword in disciplines[i].Keywords)
                 {
-                    string color = ColorGenerator.GenerateColor();
+                    var color = ColorGenerator.GenerateColor();
                     sbKeyword.AppendLine($"({kwId}, '{keyword.Keyword1}', {keyword.CourseId}, '{keyword.SubjectName}', '{color}', NULL, {i + 1}),");
                     kwId++;
                 }

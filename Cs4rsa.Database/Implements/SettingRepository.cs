@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Database.Models;
 
 namespace Cs4rsa.Database.Implements
 {
@@ -96,6 +97,11 @@ namespace Cs4rsa.Database.Implements
                 const string updateStSql = "UPDATE Settings SET Value = @idx WHERE Key = @key";
                 _rawSql.ExecNonQuery(updateStSql, param);
             }
+        }
+
+        public Setting GetSetting()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System;
 using System.Linq;
@@ -20,26 +20,23 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
         {
             string[] slideds = place.Split(' ');
             if (slideds.Contains("Quang"))
-                return Place.QUANGTRUNG;
+                return Place.QuangTrung;
             if (slideds.Contains("Nam"))
-                return Place.HOAKHANH;
+                return Place.HoaKhanh;
             if (slideds.Contains("209"))
-                return Place.PHANTHANH;
+                return Place.PhanThanh;
             if (slideds.Contains("334/4"))
-                return Place.VIETTIN;
+                return Place.VietTin;
             if (slideds.Contains("254"))
-                return Place.NVL_254;
+                return Place.Nvl254;
             if (slideds.Contains("137"))
-                return Place.NVL_137;
-            return Place.ONLINE;
+                return Place.Nvl137;
+            return Place.Online;
         }
 
         public static StudyUnitType ToStudyUnitType(string text)
         {
-            return text switch
-            {
-                _ => StudyUnitType.Credit,
-            };
+            return StudyUnitType.Credit;
         }
 
         public static RegistrationType ToRegistrationType(string text)
@@ -55,7 +52,7 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
                 return ImplementType.Canceled;
             if (text.Equals("Lớp Học Đã Bắt Đầu"))
                 return ImplementType.Started;
-            return ImplementType.Unstart;
+            return ImplementType.NotStartYet;
         }
 
         public static string ToDayOfWeekText(this DayOfWeek day)

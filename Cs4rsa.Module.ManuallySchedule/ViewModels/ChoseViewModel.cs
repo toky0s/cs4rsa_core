@@ -3,11 +3,31 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+
+using Cs4rsa.Common;
+using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Messages.Publishers.UIs;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Service.Conflict.DataTypes;
+using Cs4rsa.Service.Conflict.Models;
+using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.UI.ScheduleTable.Models;
+
 using MaterialDesignThemes.Wpf;
+
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+
+using static Cs4rsa.Module.ManuallySchedule.Events.ChoosedVmMsgs;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
-    public partial class ChoseViewModel : ViewModelBase
+    public class ChoseViewModel : BindableBase
     {
         #region Properties
         private string _shareString;
@@ -20,102 +40,114 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get => _selectedClassGroupModel;
             set
             {
-                _selectedClassGroupModel = value;
-                OnPropertyChanged();
-                DeleteCommand.NotifyCanExecuteChanged();
+                SetProperty(ref _selectedClassGroupModel, value);
+                DeleteCommand.RaiseCanExecuteChanged();
             }
         }
 
         public ObservableCollection<ConflictModel> ConflictModels { get; set; }
 
-        [ObservableProperty]
         private ConflictModel _selectedConflictModel;
+        public ConflictModel SelectedConflictModel
+        {
+            get { return _selectedConflictModel; }
+            set { SetProperty(ref _selectedConflictModel, value); }
+        }
 
         public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
         #endregion
 
         #region Commands
-        public RelayCommand OpenShareStringWindowCommand { get; set; }
-        public RelayCommand SaveCommand { get; set; }
-        public RelayCommand DeleteCommand { get; set; }
-        public RelayCommand DeleteAllCommand { get; set; }
-        public RelayCommand CopyCodeCommand { get; set; }
-        public RelayCommand SolveConflictCommand { get; set; }
+        public DelegateCommand OpenShareStringWindowCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand DeleteCommand { get; set; }
+        public DelegateCommand DeleteAllCommand { get; set; }
+        public DelegateCommand CopyCodeCommand { get; set; }
+        public DelegateCommand SolveConflictCommand { get; set; }
         #endregion
 
         #region DI
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareStringGenerator;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IDialogService _dialogService;
         #endregion
 
         public ChoseViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
-            ShareString shareString,
-            IUnitOfWork unitOfWork
+            IUnitOfWork unitOfWork,
+            IEventAggregator eventAggregator,
+            IDialogService dialogService,
+            ShareString shareString
         )
         {
             _snackbarMessageQueue = snackbarMessageQueue;
             _shareStringGenerator = shareString;
+            _eventAggregator = eventAggregator;
+            _dialogService = dialogService;
             _unitOfWork = unitOfWork;
 
             #region Messengers
-            Messenger.Register<SearchVmMsgs.DelSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
             {
-                DelSubjectMsgHandler(m.Value);
+                DelSubjectMsgHandler(payload);
             });
 
-            Messenger.Register<SearchVmMsgs.DelAllSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
+
+            eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
             {
-                DelAllSubjectMsgHandler();
+                eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
+                AddClassGroupModel(payload);
             });
 
-            Messenger.Register<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>(this, (r, m) =>
-            {
-                Messenger.Send(new ClassGroupAddedMsg(m.Value));
-                AddClassGroupModel(m.Value);
-            });
-
-            Messenger.Register<SearchVmMsgs.SelectCgmsMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    AddClassGroupModelsAndReload(m.Value);
+                    AddClassGroupModelsAndReload(payload);
                 });
             });
 
-            Messenger.Register<SolveConflictVmMsgs.RemoveChoicedClassMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
             {
-                CloseDialog();
-                RemoveChoosedClassMsgHandler(m.Value);
+                _dialogService.CloseDialog();
+                RemoveChoosedClassMsgHandler(payload);
             });
 
-            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
-            {
-                ClassGroupModels.Clear();
-                ConflictModels.Clear();
-                PlaceConflictFinderModels.Clear();
-            });
-            
+            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    ConflictModels.Clear();
+            //    PlaceConflictFinderModels.Clear();
+            //});
+
             // Click vào block thì đồng thời select class group model tương ứng.
-            Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
             {
-                if (m.Value is not SchoolClassBlock schoolClassBlock) return;
-                ClassGroupModel result = ClassGroupModels
-                    .FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
-                if (result != null)
+                if (payload.GetType() == typeof(SchoolClassBlock))
                 {
-                    SelectedClassGroupModel = result;
+                    var schoolClassBlock = (SchoolClassBlock)payload;
+                    var result = ClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
+                    if (result != null)
+                    {
+                        SelectedClassGroupModel = result;
+                    }
+                }
+                else
+                {
+                    return;
                 }
             });
             #endregion
 
-            SaveCommand = new RelayCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);
-            DeleteCommand = new RelayCommand(OnDelete, () => _selectedClassGroupModel != null);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
-            CopyCodeCommand = new RelayCommand(OnCopyCode);
-            SolveConflictCommand = new RelayCommand(OnSolve);
-            OpenShareStringWindowCommand = new RelayCommand(OnOpenShareStringWindow);
+            SaveCommand = new DelegateCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);
+            DeleteCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
+            DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
+            CopyCodeCommand = new DelegateCommand(OnCopyCode);
+            SolveConflictCommand = new DelegateCommand(OnSolve);
+            OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
             ConflictModels = new ObservableCollection<ConflictModel>();
@@ -127,10 +159,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void OnSolve()
         {
-            SolveConflictUC solveConflictUc = new();
-            SolveConflictViewModel vm = new(SelectedConflictModel, _unitOfWork);
+            var solveConflictUc = new SolveConflictUC();
+            var vm = new SolveConflictViewModel(SelectedConflictModel, _unitOfWork, _eventAggregator);
             solveConflictUc.DataContext = vm;
-            OpenDialog(solveConflictUc);
+            _dialogService.OpenDialog(solveConflictUc);
         }
 
         /// <summary>
@@ -140,13 +172,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (SelectedClassGroupModel.RegisterCodes.Count > 0)
             {
-                string registerCode = SelectedClassGroupModel.RegisterCodes[0];
+                var registerCode = SelectedClassGroupModel.RegisterCodes[0];
                 Clipboard.SetData(DataFormats.Text, registerCode);
-                _snackbarMessageQueue.Enqueue(VmConstants.SnbCopySuccess + VmConstants.StrSpace + registerCode);
+                _snackbarMessageQueue.Enqueue($"Sao chép thành công {registerCode}");
             }
             else
             {
-                _snackbarMessageQueue.Enqueue(VmConstants.SnbNfRegisterCode);
+                _snackbarMessageQueue.Enqueue("Lớp này không có mã đăng ký");
             }
         }
 
@@ -155,18 +187,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void OnDeleteAll()
         {
-            List<ClassGroupModel> actionData = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            var actionData = new List<ClassGroupModel>();
+            foreach (var classGroupModel in ClassGroupModels)
             {
                 actionData.Add(classGroupModel.DeepClone());
             }
 
             ClassGroupModels.Clear();
             UpdateConflicts();
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new DelAllClassGroupChoiceMsg(DBNull.Value));
-            _snackbarMessageQueue.Enqueue(VmConstants.SnbUnselectAll, VmConstants.SnbRestore, OnRestore, actionData);
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish(DBNull.Value);
+            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
         }
 
         /// <summary>
@@ -175,30 +207,30 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="classGroupModels">Danh sách lớp hoàn tác</param>
         private void OnRestore(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            foreach (var classGroupModel in classGroupModels)
             {
                 AddClassGroupModel(classGroupModel);
             }
-            Messenger.Send(new UndoDelAllMsg(classGroupModels));
+            var payload = Tuple.Create(classGroupModels, ConflictModels, PlaceConflictFinderModels);
+            _eventAggregator.GetEvent<UndoDelAllMsg>().Publish(payload);
         }
 
         private void OnDelete()
         {
-            string message = CredizText.ManualMsg001(_selectedClassGroupModel.Name);
-            ClassGroupModel actionData = _selectedClassGroupModel.DeepClone();
-            Messenger.Send(new DelClassGroupChoiceMsg(_selectedClassGroupModel));
+            var actionData = _selectedClassGroupModel.DeepClone();
+            _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(_selectedClassGroupModel);
 
             ClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(
-                message,
-                VmConstants.SnbRestore,
+                $"Đã xoá lớp {_selectedClassGroupModel.Name}",
+                "HOÀN TÁC",
                 (obj) => AddClassGroupModel(actionData),
                 actionData
             );
 
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
-            DeleteCommand.NotifyCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            DeleteCommand.RaiseCanExecuteChanged();
             UpdateConflicts();
         }
 
@@ -208,19 +240,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <returns>Task</returns>
         private void OpenSaveDialog()
         {
-            SaveSessionUC saveSessionUC = new();
-            SaveSessionViewModel vm = saveSessionUC.DataContext as SaveSessionViewModel;
+            var saveSessionUc = new SaveSessionUC();
+            var vm = (SaveSessionViewModel)saveSessionUc.DataContext;
             vm.ClassGroupModels = ClassGroupModels;
-            OpenDialog(saveSessionUC);
+            _dialogService.OpenDialog(saveSessionUc);
         }
 
         private void OnOpenShareStringWindow()
         {
-            ShareStringUC shareStringUC = new();
-            ShareStringViewModel vm = shareStringUC.DataContext as ShareStringViewModel;
+            var shareStringUc = new ShareStringUC();
+            var vm = shareStringUc.DataContext as ShareStringViewModel;
             UpdateShareString();
             vm.ShareString = _shareString;
-            OpenDialog(shareStringUC);
+            _dialogService.OpenDialog(shareStringUc);
         }
 
         /// <summary>
@@ -232,7 +264,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// bằng với ClassGroupModel được truyền vào nếu không trả về -1.</returns>
         private int IsReallyHaveAnotherVersionInChoicedList(ClassGroupModel classGroupModel)
         {
-            for (int i = 0; i < ClassGroupModels.Count; ++i)
+            for (var i = 0; i < ClassGroupModels.Count; ++i)
             {
                 if (ClassGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
                 {
@@ -249,74 +281,119 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void UpdateConflictModelCollection(List<SchoolClassModel> schoolClassModels)
         {
             ConflictModels.Clear();
-            for (int i = 0; i < schoolClassModels.Count; ++i)
+            for (var i = 0; i < schoolClassModels.Count; ++i)
             {
-                for (int k = i + 1; k < schoolClassModels.Count; ++k)
+                for (var k = i + 1; k < schoolClassModels.Count; ++k)
                 {
                     if (schoolClassModels[i].SchoolClass.ClassGroupName
                         .Equals(schoolClassModels[k].SchoolClass.ClassGroupName))
                     {
                         continue;
                     }
-                    Conflict conflict = new(schoolClassModels[i], schoolClassModels[k]);
-                    ConflictTime conflictTime = conflict.GetConflictTime();
+
+                    var lessonA = new Lesson(
+                            schoolClassModels[i].StudyWeek,
+                            schoolClassModels[i].Schedule,
+                            schoolClassModels[i].DayPlaceMetaData,
+                            schoolClassModels[i].SchoolClass.GetMetaDataMap(),
+                            schoolClassModels[i].Phase,
+                            schoolClassModels[i].SchoolClassName,
+                            schoolClassModels[i].SchoolClass.ClassGroupName,
+                            schoolClassModels[i].SubjectCode
+                    );
+
+                    var lessonB = new Lesson(
+                            schoolClassModels[k].StudyWeek,
+                            schoolClassModels[k].Schedule,
+                            schoolClassModels[k].DayPlaceMetaData,
+                            schoolClassModels[k].SchoolClass.GetMetaDataMap(),
+                            schoolClassModels[k].Phase,
+                            schoolClassModels[k].SchoolClassName,
+                            schoolClassModels[k].SchoolClass.ClassGroupName,
+                            schoolClassModels[k].SubjectCode
+                    );
+
+                    var conflict = new Conflict(lessonA, lessonB);
+                    var conflictTime = conflict.GetConflictTime();
                     if (conflictTime != null)
                     {
-                        ConflictModel conflictModel = new(conflict);
+                        var conflictModel = new ConflictModel(conflict);
                         ConflictModels.Add(conflictModel);
                     }
                 }
             }
-            Messenger.Send(new ConflictCollChangedMsg(ConflictModels));
+            _eventAggregator.GetEvent<ConflictCollChangedMsg>().Publish(ConflictModels);
         }
 
         /// <summary>
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Place.
         /// </summary>
-        private void UpdatePlaceConflictCollection(List<SchoolClassModel> schoolClasseModels)
+        private void UpdatePlaceConflictCollection(List<SchoolClassModel> schoolClassModels)
         {
             PlaceConflictFinderModels.Clear();
-            for (int i = 0; i < schoolClasseModels.Count; ++i)
+            for (var i = 0; i < schoolClassModels.Count; ++i)
             {
-                for (int k = i + 1; k < schoolClasseModels.Count; ++k)
+                for (var k = i + 1; k < schoolClassModels.Count; ++k)
                 {
-                    PlaceConflictFinder placeConflict = new(schoolClasseModels[i], schoolClasseModels[k]);
-                    ConflictPlace conflictPlace = placeConflict.GetPlaceConflict();
+                    var lessonA = new Lesson(
+                        schoolClassModels[i].StudyWeek,
+                        schoolClassModels[i].Schedule,
+                        schoolClassModels[i].DayPlaceMetaData,
+                        schoolClassModels[i].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[i].Phase,
+                        schoolClassModels[i].SchoolClassName,
+                        schoolClassModels[i].SchoolClass.ClassGroupName,
+                        schoolClassModels[i].SubjectCode
+                    );
+
+                    var lessonB = new Lesson(
+                        schoolClassModels[k].StudyWeek,
+                        schoolClassModels[k].Schedule,
+                        schoolClassModels[k].DayPlaceMetaData,
+                        schoolClassModels[k].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[k].Phase,
+                        schoolClassModels[k].SchoolClassName,
+                        schoolClassModels[k].SchoolClass.ClassGroupName,
+                        schoolClassModels[k].SubjectCode
+                    );
+
+                    var placeConflict = new PlaceConflictFinder(lessonA, lessonB);
+                    var conflictPlace = placeConflict.GetPlaceConflict();
                     if (conflictPlace != null)
                     {
-                        PlaceConflictFinderModel placeConflictModel = new(placeConflict);
+                        var placeConflictModel = new PlaceConflictFinderModel(placeConflict);
                         PlaceConflictFinderModels.Add(placeConflictModel);
                     }
                 }
             }
-            Messenger.Send(new PlaceConflictCollChangedMsg(PlaceConflictFinderModels));
+            _eventAggregator.GetEvent<PlaceConflictCollChangedMsg>().Publish(PlaceConflictFinderModels);
         }
 
         private void AddClassGroupModel(ClassGroupModel classGroupModel)
         {
             if (classGroupModel != null)
             {
-                int classGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
+                var classGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (classGroupModelIndex != -1)
                     ClassGroupModels[classGroupModelIndex] = classGroupModel;
                 else
                     ClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            foreach (ClassGroupModel classGroupModel in classGroupModels)
+            foreach (var classGroupModel in classGroupModels)
             {
                 ClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         private void UpdateShareString()
@@ -326,8 +403,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void UpdateConflicts()
         {
-            List<SchoolClassModel> schoolClasses = new();
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            var schoolClasses = new List<SchoolClassModel>();
+            foreach (var classGroupModel in ClassGroupModels)
             {
                 if (classGroupModel.IsSpecialClassGroup)
                 {
@@ -352,27 +429,27 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (className == string.Empty || className == null)
             {
-                _snackbarMessageQueue.Enqueue(VmConstants.SnbInvalidUnselectSubjectName);
+                _snackbarMessageQueue.Enqueue("Tên lớp cần bỏ chọn không hợp lệ");
                 return;
             }
             ClassGroupModel actionData;
-            for (int i = 0; i < ClassGroupModels.Count; i++)
+            for (var i = 0; i < ClassGroupModels.Count; i++)
             {
                 if (ClassGroupModels[i].Name == className)
                 {
                     actionData = ClassGroupModels[i].DeepClone();
-                    Messenger.Send(new DelClassGroupChoiceMsg(ClassGroupModels[i]));
+                    _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(ClassGroupModels[i]);
                     ClassGroupModels.RemoveAt(i);
                     _snackbarMessageQueue.Enqueue(
-                        CredizText.ManualMsg001(className),
-                        VmConstants.SnbRestore,
-                        (obj) => AddClassGroupModel(actionData),
+                        $"Đã xoá {className}",
+                        "HOÀN TÁC",
+                        obj => AddClassGroupModel(actionData),
                         actionData
                     );
 
-                    SaveCommand.NotifyCanExecuteChanged();
-                    DeleteAllCommand.NotifyCanExecuteChanged();
-                    DeleteCommand.NotifyCanExecuteChanged();
+                    SaveCommand.RaiseCanExecuteChanged();
+                    DeleteAllCommand.RaiseCanExecuteChanged();
+                    DeleteCommand.RaiseCanExecuteChanged();
                     UpdateConflicts();
                     break;
                 }
@@ -385,7 +462,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
         private void DelSubjectMsgHandler(SubjectModel subjectModel)
         {
-            foreach (ClassGroupModel classGroupModel in ClassGroupModels)
+            foreach (var classGroupModel in ClassGroupModels)
             {
                 if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
                 {
@@ -394,8 +471,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
             }
             UpdateConflicts();
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -406,9 +483,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             ClassGroupModels.Clear();
             UpdateConflicts();
-            SaveCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new DelAllClassGroupChoiceMsg(DBNull.Value));
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish(DBNull.Value);
         }
         #endregion
     }

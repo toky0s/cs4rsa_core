@@ -1,11 +1,21 @@
-﻿using Prism.Ioc;
-using Prism.Modularity;
+﻿using Cs4rsa.Common;
+using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Database.Implements;
+using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Module.ManuallySchedule.Views;
+using Cs4rsa.Service.Dialog;
+using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.Service.SubjectCrawler.Crawlers;
+using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
+using Cs4rsa.Service.TeacherCrawler.Crawlers;
+using Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MaterialDesignThemes.Wpf;
+
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Regions;
 
 namespace Cs4rsa.Module.ManuallySchedule
 {
@@ -13,12 +23,20 @@ namespace Cs4rsa.Module.ManuallySchedule
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            throw new NotImplementedException();
+            var regionManager = containerProvider.Resolve<IRegionManager>();
+            regionManager.RegisterViewWithRegion("ManualRegion", typeof(MainScheduling));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            throw new NotImplementedException();
+            containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+            containerRegistry.RegisterSingleton<ShareString>();
+            containerRegistry.RegisterSingleton<IDialogService, DialogService>();
+            containerRegistry.RegisterSingleton<ITeacherCrawler, TeacherCrawler>();
+            containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
+            containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
+            containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
         }
     }
 }

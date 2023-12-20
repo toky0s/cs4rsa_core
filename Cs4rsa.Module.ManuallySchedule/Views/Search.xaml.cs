@@ -3,11 +3,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
+using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.ViewModels;
 
 namespace Cs4rsa.Module.ManuallySchedule.Views
 {
-    public partial class Search : BaseUserControl, IComponent
+    public partial class Search: UserControl
     {
         private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space };
         private SearchViewModel Vm;
@@ -50,8 +52,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         {
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                string url = (string)e.Data.GetData(DataFormats.UnicodeText);
-                Uri uri = new UriBuilder(url).Uri;
+                var url = (string)e.Data.GetData(DataFormats.UnicodeText);
+                var uri = new UriBuilder(url).Uri;
                 Vm.OnAddSubjectFromUriAsync(uri);
             }
         }
@@ -63,25 +65,25 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void BtnReDonwload_Click(object sender, RoutedEventArgs e)
         {
-            SubjectModel subjectModel = (SubjectModel)((Button)sender).DataContext;
+            var subjectModel = (SubjectModel)((Button)sender).DataContext;
             Vm.ReloadCommand.Execute(subjectModel);
         }
 
         private void Btn_Delete_Click(object sender, RoutedEventArgs e)
         {
-            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.DeleteCommand.Execute(subjectModel);
         }
 
         private void Btn_GotoCourse_Click(object sender, RoutedEventArgs e)
         {
-            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.GotoCourseCommand.Execute(subjectModel);
         }
 
         private void Btn_Details_Click(object sender, RoutedEventArgs e)
         {
-            SubjectModel subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.DetailCommand.Execute(subjectModel);
         }
 

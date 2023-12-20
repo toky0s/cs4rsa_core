@@ -1,9 +1,9 @@
-﻿using Cs4rsa.Models;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.ScheduleTable.Models;
 
 using System.Collections.Generic;
 
-namespace Cs4rsa.Interfaces
+namespace Cs4rsa.UI.ScheduleTable.Interfaces
 {
     public enum ScheduleTableItemType
     {

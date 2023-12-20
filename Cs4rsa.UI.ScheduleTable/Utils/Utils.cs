@@ -1,13 +1,11 @@
-﻿using Cs4rsa.Constants;
-
-using System;
+﻿using System;
 using System.Globalization;
 
-namespace Cs4rsa.Controls
+namespace Cs4rsa.UI.ScheduleTable.Utils
 {
     public class Utils
     {
-        public static readonly string[] TIME_LINES = new string[17]
+        public static readonly string[] TimeLines = new string[17]
         {
             "07:00",
             "08:00",
@@ -30,8 +28,8 @@ namespace Cs4rsa.Controls
 
         public static int GetTimeIndex(DateTime dateTime)
         {
-            string time = dateTime.ToString(VmConstants.TimeFormat, CultureInfo.CurrentCulture);
-            return Array.IndexOf(TIME_LINES, time);
+            string time = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
+            return Array.IndexOf(TimeLines, time);
         }
     }
 }

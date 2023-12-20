@@ -1,11 +1,11 @@
-﻿using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
-using Cs4rsa.Utils;
+﻿using Cs4rsa.Common;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
+namespace Cs4rsa.Module.ManuallySchedule.Utils
 {
     /// <summary>
     /// Trình phân tích mã môn.
@@ -29,17 +29,17 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
                 yield break;
             // CS 211 - Lập Trình Cơ Sở, IS 301 - Cơ Sở Dữ Liệu
             // CS 366 - L.A.M.P. (Linux, Apache, MySQL, PHP), CS 372 - Quản Trị Mạng, CS 376 - Giới Thiệu An Ninh Mạng
-            Regex regex = new("\\((.*?)\\)");
+            var regex = new Regex("\\((.*?)\\)");
             if (from == GetFrom.Course)
             {
-                MatchCollection matchList = regex.Matches(text);
-                IEnumerable<string> stringList = matchList.Cast<Match>().Select(match => match.Value);
-                List<string> output = new();
-                foreach (string item in stringList)
+                var matchList = regex.Matches(text);
+                var stringList = matchList.Cast<Match>().Select(match => match.Value);
+                var output = new List<string>();
+                foreach (var item in stringList)
                 {
-                    int start = item.IndexOf("(") + 1;
-                    int length = item.IndexOf(")") - start;
-                    string subjectCode = item.Substring(start, length);
+                    var start = item.IndexOf("(") + 1;
+                    var length = item.IndexOf(")") - start;
+                    var subjectCode = item.Substring(start, length);
                     yield return subjectCode;
                 }
             }
@@ -48,18 +48,18 @@ namespace Cs4rsa.Services.SubjectCrawlerSvc.Utils
                 text = regex.Replace(text, string.Empty);
                 if (text.Contains(','))
                 {
-                    string[] textSplits = text.Split(new char[] { ',' });
-                    foreach (string slice in textSplits)
+                    var textSplits = text.Split(new char[] { ',' });
+                    foreach (var slice in textSplits)
                     {
-                        string rawSubjectCode = slice.Split(new char[] { '-' })[0];
-                        string subjectCode = StringHelper.SuperCleanString(rawSubjectCode);
+                        var rawSubjectCode = slice.Split(new char[] { '-' })[0];
+                        var subjectCode = StringHelper.SuperCleanString(rawSubjectCode);
                         yield return subjectCode;
                     }
                 }
                 else
                 {
-                    string rawSubjectCode = text.Split(new char[] { '-' })[0];
-                    string subjectCode = StringHelper.SuperCleanString(rawSubjectCode);
+                    var rawSubjectCode = text.Split(new char[] { '-' })[0];
+                    var subjectCode = StringHelper.SuperCleanString(rawSubjectCode);
                     yield return subjectCode;
                 }
             }

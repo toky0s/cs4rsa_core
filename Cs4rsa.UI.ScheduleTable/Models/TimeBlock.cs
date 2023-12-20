@@ -1,5 +1,4 @@
-﻿using Cs4rsa.Interfaces;
-using Cs4rsa.Services.SubjectCrawlerSvc.DataTypes.Enums;
+﻿using Cs4rsa.UI.ScheduleTable.Interfaces;
 
 using System;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cs4rsa.Services.SubjectCrawlerSvc.Crawlers.Interfaces
+namespace Cs4rsa.Module.ManuallySchedule.Interfaces
 {
     public interface IPreParSubjectCrawler
     {

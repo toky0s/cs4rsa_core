@@ -59,31 +59,18 @@ namespace Cs4rsa.Service.SubjectCrawler.Utils
                     return ImplementType.NotStartYet;
             }
         }
-
-        public static string ToDayOfWeekText(this DayOfWeek day)
-        {
-            return day == DayOfWeek.Sunday ? "Chủ Nhật" : $"Thứ {(int)day + 1}";
-        }
         
-        public static string ToCs4rsaThu(this DayOfWeek dayOfWeek)
+        public static string ToCs4rsaVietnamese(this DayOfWeek dayOfWeek)
         {
             switch (dayOfWeek)
             {
-                case DayOfWeek.Sunday:
-                    return "Chủ Nhật";
-                case DayOfWeek.Monday:
-                    return "Thứ Hai";
-                case DayOfWeek.Tuesday:
-                    return "Thứ Ba";
-                case DayOfWeek.Wednesday:
-                    return "Thứ Tư";
-                case DayOfWeek.Thursday:
-                    return "Thứ Năm";
-                case DayOfWeek.Friday:
-                    return "Thứ Sáu";
-                case DayOfWeek.Saturday:
-                default:
-                    return "Thứ Bảy";
+                case DayOfWeek.Sunday       : return "Chủ Nhật";
+                case DayOfWeek.Monday       : return "Thứ Hai";
+                case DayOfWeek.Tuesday      : return "Thứ Ba";
+                case DayOfWeek.Wednesday    : return "Thứ Tư";
+                case DayOfWeek.Thursday     : return "Thứ Năm";
+                case DayOfWeek.Friday       : return "Thứ Sáu";
+                default                     : return "Thứ Bảy";
             }
         }
     }

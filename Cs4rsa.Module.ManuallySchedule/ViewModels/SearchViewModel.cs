@@ -1,13 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
+
+using Cs4rsa.Common;
+using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Database.Models;
+using Cs4rsa.Messages.Publishers.UIs;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
+using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces;
+using Cs4rsa.UI.ScheduleTable.Models;
+
 using MaterialDesignThemes.Wpf;
+
+using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
@@ -21,18 +40,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Commands
-        public AsyncRelayCommand AddCommand { get; set; }
-        public RelayCommand ImportDialogCommand { get; set; }
-        public AsyncRelayCommand<SubjectModel> ReloadCommand { get; set; }
-        public RelayCommand<SubjectModel> DeleteCommand { get; set; }
-        public RelayCommand DeleteAllCommand { get; set; }
+        public DelegateCommand AddCommand { get; set; }
+        public DelegateCommand ImportDialogCommand { get; set; }
+        public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
+        public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
+        public DelegateCommand DeleteAllCommand { get; set; }
 
         /// <summary>
         /// Command đi tới trang Course.
         /// </summary>
-        public RelayCommand<SubjectModel> GotoCourseCommand { get; set; }
-        public RelayCommand<SubjectModel> DetailCommand { get; set; }
-        public RelayCommand<int> GotoViewCommand { get; set; }
+        public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
+        public DelegateCommand<SubjectModel> DetailCommand { get; set; }
+        public DelegateCommand<Int32> GotoViewCommand { get; set; }
         #endregion
 
         #region Properties
@@ -47,205 +66,258 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public ObservableCollection<CombinationModel> ComModels { get; set; }
 
-        [ObservableProperty]
         private CombinationModel _sltCombi;
+        public CombinationModel SltCombi
+        {
+            get { return _sltCombi; }
+            set { SetProperty(ref _sltCombi, value); OnSltCombiChanged(value); }
+        }
 
-        [ObservableProperty]
         private Discipline _selectedDiscipline;
+        public Discipline SelectedDiscipline
+        {
+            get { return _selectedDiscipline; }
+            set
+            {
+                SetProperty(ref _selectedDiscipline, value);
+                if (value != null)
+                {
+                    LoadKeywordByDiscipline(value);
+                }
+            }
+        }
 
-        [ObservableProperty]
         private Keyword _selectedKeyword;
+        public Keyword SelectedKeyword
+        {
+            get { return _selectedKeyword; }
+            set
+            {
+                SetProperty(ref _selectedKeyword, value);
+                AddCommand.RaiseCanExecuteChanged();
+            }
+        }
 
-        [ObservableProperty]
         private FullMatchSearchingKeyword _searchingKeyword;
+        public FullMatchSearchingKeyword SearchingKeyword
+        {
+            get { return _searchingKeyword; }
+            set
+            {
+                SetProperty(ref _searchingKeyword, value);
+                OnSearchingKeywordChanged(value);
+            }
+        }
 
-        [ObservableProperty]
         private SubjectModel _selectedSubjectModel;
+        public SubjectModel SelectedSubjectModel
+        {
+            get { return _selectedSubjectModel; }
+            set 
+            { 
+                SetProperty(ref _selectedSubjectModel, value); 
+                OnSelectedSubjectModelChanged(value); 
+            }
+        }
 
-        [ObservableProperty]
         private string _searchText;
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                SetProperty(ref _searchText, value);
+                if (value.Trim().Length == 0) return;
+                LoadSearchItemSource(value);
+            }
+        }
 
-        [ObservableProperty]
         private int _totalSubject;
+        public int TotalSubject
+        {
+            get { return _totalSubject; }
+            set { SetProperty(ref _totalSubject, value); }
+        }
 
-        [ObservableProperty]
         private int _totalCredits;
+        public int TotalCredits
+        {
+            get { return _totalCredits; }
+            set { SetProperty(ref _totalCredits, value); }
+        }
 
-        [ObservableProperty]
         private bool _isUseCache;
+        public bool IsUseCache
+        {
+            get { return _isUseCache; }
+            set { SetProperty(ref _isUseCache, value); }
+        }
 
         /// <summary>
         /// Index hiện tại của View Search
         /// 0: Search
         /// 1: Store
         /// </summary>
-        [ObservableProperty]
         private int _crrScrIdx;
+        public int CrrScrIdx
+        {
+            get { return _crrScrIdx; }
+            set { SetProperty(ref _crrScrIdx, value); }
+        }
         #endregion
 
         #region Services
-        private readonly ColorGenerator _colorGenerator;
-        private readonly CourseCrawler _courseCrawler;
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
+        private readonly IDialogService _dialogService;
+        private readonly IEventAggregator _eventAggregator;
+        private readonly ITeacherCrawler _teacherCrawler;
         #endregion
 
         public SearchViewModel(
-            ColorGenerator colorGenerator,
-            CourseCrawler courseCrawler,
+            ITeacherCrawler teacherCrawler,
+            IEventAggregator eventAggregator,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
+            IDialogService dialogService,
             ISnackbarMessageQueue snackbarMessageQueue
         )
         {
             #region Fields
-            ShowDetailsSubjectUC showDetailsSubjectUc = new();
+            var showDetailsSubjectUc = new ShowDetailsSubjectUC();
             _importSessionUc = new ImportSessionUC();
             #endregion
 
             #region Services
-            _courseCrawler = courseCrawler;
+            _teacherCrawler = teacherCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
-            _colorGenerator = colorGenerator;
             _openInBrowser = openInBrowser;
             _snackbarMessageQueue = snackbarMessageQueue;
+            _dialogService = dialogService;
+            _eventAggregator = eventAggregator;
             #endregion
 
             #region Messengers
-            Messenger.Register<ImportSessionVmMsgs.ExitImportSubjectMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe((value) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-                    await HandleImportSubjects(m.Value);
+                    await HandleImportSubjects(value);
                 });
             });
 
-            Messenger.Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
-            {
-                ImportSubjects(m.Value);
-            });
+            //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
+            //{
+            //    ImportSubjects(m.Value);
+            //});
 
-            Messenger.Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
-            {
-                DisciplineKeywordModels.Clear();
-                Disciplines.Clear();
-                SubjectModels.Clear();
-                ReloadDisciplineAndKeyWord();
-            });
+            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe().Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
+            //{
+            //    DisciplineKeywordModels.Clear();
+            //    Disciplines.Clear();
+            //    SubjectModels.Clear();
+            //    ReloadDisciplineAndKeyWord();
+            //});
 
-            Messenger.Register<ScheduleBlockMsgs.SelectedMsg>(this, (r, m) =>
+            eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(value =>
             {
-                if (m.Value is SchoolClassBlock schoolClassBlock)
+                if (value is SchoolClassBlock schoolClassBlock)
                 {
-                    SelectedSubjectModel = SubjectModels
-                        .FirstOrDefault(sm => sm.SubjectCode.Equals(schoolClassBlock.Id))!;
+                    SelectedSubjectModel = SubjectModels.FirstOrDefault(sm => sm.SubjectCode.Equals(schoolClassBlock.Id));
                 }
             });
 
-            Messenger.Register<AutoVmMsgs.SaveStoreMsg>(this, (r, m) =>
-            {
-                SubjectModels.Clear();
-                ComModels.Clear();
+            //eventAggregator.GetEvent<AutoVmMsgs.SaveStoreMsg>().Subscribe().Register<AutoVmMsgs.SaveStoreMsg>(this, (r, m) =>
+            //{
+            //    SubjectModels.Clear();
+            //    ComModels.Clear();
 
-                Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
+            //    Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
 
-                AddCommand.NotifyCanExecuteChanged();
-                DeleteAllCommand.NotifyCanExecuteChanged();
+            //    AddCommand.NotifyCanExecuteChanged();
+            //    DeleteAllCommand.NotifyCanExecuteChanged();
 
-                UpdateCreditTotal();
-                UpdateSubjectAmount();
+            //    UpdateCreditTotal();
+            //    UpdateSubjectAmount();
 
-                foreach (CombinationModel item in m.Value)
-                {
-                    ComModels.Add(item);
-                }
-            });
+            //    foreach (CombinationModel item in m.Value)
+            //    {
+            //        ComModels.Add(item);
+            //    }
+            //});
 
             #endregion
 
             #region Pros
-            DisciplineKeywordModels = new();
-            SubjectModels = new();
-            Disciplines = new();
-            FullMatchSearchingKeywords = new();
-            SavedSchedules = new();
+            DisciplineKeywordModels = new ObservableCollection<Keyword>();
+            SubjectModels = new ObservableCollection<SubjectModel>();
+            Disciplines = new ObservableCollection<Discipline>();
+            FullMatchSearchingKeywords = new ObservableCollection<FullMatchSearchingKeyword>();
+            SavedSchedules = new ObservableCollection<UserSchedule>();
             ComModels = new ObservableCollection<CombinationModel>();
             SearchText = string.Empty;
             IsUseCache = true;
             #endregion
 
             #region Commands
-            AddCommand = new AsyncRelayCommand(OnAdd, () => !IsAlreadyDownloaded(SelectedKeyword));
-            DeleteCommand = new(OnDelete);
-            ImportDialogCommand = new(OnOpenImportDialog);
-            GotoCourseCommand = new(OnGotoCourse);
-            GotoViewCommand = new((idx) => CrrScrIdx = idx);
-            DeleteAllCommand = new RelayCommand(OnDeleteAll, () => SubjectModels.Any());
-            DetailCommand = new((SubjectModel subjectModel) =>
+            AddCommand = new DelegateCommand(OnAdd, () => !IsAlreadyDownloaded(SelectedKeyword));
+            DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
+            ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
+            GotoCourseCommand = new DelegateCommand<SubjectModel>(OnGotoCourse);
+            //GotoViewCommand = new DelegateCommand<int>(idx => CrrScrIdx = idx);
+            DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
+            DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
             {
                 ((ShowDetailsSubjectViewModel)showDetailsSubjectUc.DataContext).SubjectModel = subjectModel;
-                OpenDialog(showDetailsSubjectUc);
+                _dialogService.OpenDialog(showDetailsSubjectUc);
             });
-            ReloadCommand = new(OnReload);
+            ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
             #endregion
 
             LoadDiscipline();
             Application.Current.Dispatcher.Invoke(LoadSavedSchedules);
         }
 
-        partial void OnSltCombiChanged(CombinationModel value)
+        private void OnSltCombiChanged(CombinationModel value)
         {
             if (value == null) return;
-            IEnumerable<SubjectModel> subjectModels = value.SubjecModels;
+            var subjectModels = value.SubjectModels;
             SubjectModels.Clear();
-            foreach (SubjectModel sjm in subjectModels)
+            foreach (var sjm in subjectModels)
             {
                 SubjectModels.Add(sjm);
             }
 
             // Đánh giá Phase Store xác định tuần ngăn cách
-            foreach (ClassGroupModel cgm in value.ClassGroupModels)
+            foreach (var cgm in value.ClassGroupModels)
             {
-                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(cgm));
+                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(cgm);
             }
 
             SelectedSubjectModel = SubjectModels.FirstOrDefault();
 
-            AddCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
-        partial void OnSelectedSubjectModelChanged(SubjectModel value)
+        private void OnSelectedSubjectModelChanged(SubjectModel value)
         {
-            DeleteCommand.NotifyCanExecuteChanged();
-            Messenger.Send(new SearchVmMsgs.SelectedSubjectChangedMsg(value));
+            DeleteCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Publish(value);
         }
 
-        partial void OnSelectedDisciplineChanged(Discipline value)
+        private void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
         {
-            if (value != null)
-            {
-                LoadKeywordByDiscipline(value);
-            }
-        }
-
-        partial void OnSelectedKeywordChanged(Keyword value)
-        {
-            AddCommand.NotifyCanExecuteChanged();
-        }
-
-        partial void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
-        {
-            if (value is not { Keyword: not null } || value.Discipline.DisciplineId == 0) return;
-            Discipline dcl = Disciplines.First(dcl => dcl.DisciplineId == value.Discipline.DisciplineId);
+            if (value == null || value.Keyword == null || value.Discipline.DisciplineId == 0) return;
+            var dcl = Disciplines.First(d => d.DisciplineId == value.Discipline.DisciplineId);
             SelectedDiscipline = dcl;
             SelectedKeyword = value.Keyword;
             SearchText = string.Empty;
-            AddCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
             if (!IsAlreadyDownloaded(value.Keyword.CourseId))
             {
                 Application.Current.Dispatcher.InvokeAsync(
@@ -258,20 +330,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        partial void OnSearchTextChanged(string value)
-        {
-            if (value.Trim().Length == 0) return;
-            LoadSearchItemSource(value);
-        }
-
         /// <summary>
         /// Load danh sách các bộ lịch đã lưu
         /// </summary>
         private void LoadSavedSchedules()
         {
             SavedSchedules.Clear();
-            List<UserSchedule> sessions = _unitOfWork.UserSchedules.GetAll();
-            foreach (UserSchedule session in sessions)
+            var sessions = _unitOfWork.UserSchedules.GetAll();
+            foreach (var session in sessions)
             {
                 SavedSchedules.Add(session);
             }
@@ -282,7 +348,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _searchDisciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
             _searchKeywords = _searchDisciplines.SelectMany(d => d.Keywords).ToList();
 
-            foreach (Discipline discipline in _searchDisciplines)
+            foreach (var discipline in _searchDisciplines)
             {
                 Disciplines.Add(discipline);
             }
@@ -293,14 +359,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Tải lại môn học bị lỗi.
         /// </summary>
         /// <param name="subjectModel">SubjectModel</param>
-        private async Task OnReload(SubjectModel subjectModel)
+        private async void OnReload(SubjectModel subjectModel)
         {
             subjectModel.IsDownloading = true;
             subjectModel.IsError = false;
             subjectModel.ErrorMessage = string.Empty;
 
-            Keyword kw = _unitOfWork.Keywords.GetKeyword(subjectModel.CourseId);
-            Discipline ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
+            var kw = _unitOfWork.Keywords.GetKeywordBySubjectCode(subjectModel.CourseId);
+            var ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
             kw.Discipline = ds;
             if (subjectModel.UserSubject == null)
             {
@@ -315,21 +381,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void LoadSearchItemSource(string text)
         {
             FullMatchSearchingKeywords.Clear();
-            IEnumerable<Keyword> keywords = _searchKeywords
-                .Where(k => StringHelper.ReplaceVietNamese(k.SubjectName)
-                                        .ToLower()
-                                        .Contains(StringHelper.ReplaceVietNamese(text).ToLower())
-                         || StringHelper.ReplaceVietNamese(k.Discipline.Name + k.Keyword1)
-                                        .ToLower()
-                                        .Contains(
-                                            StringHelper.ReplaceVietNamese(text
-                                            .Replace(VmConstants.StrSpace, string.Empty)
-                                        ).ToLower())
-                )
-                .Take(10);
-            foreach (Keyword kw in keywords)
+            var keywords = _searchKeywords
+                .Where(k => StringHelper.ReplaceVietnamese(k.SubjectName).ToLower().Contains(StringHelper.ReplaceVietnamese(text).ToLower())
+                         || StringHelper.ReplaceVietnamese(k.Discipline.Name + k.Keyword1).ToLower().Contains(StringHelper.ReplaceVietnamese(text.Replace(" ", string.Empty)).ToLower())
+                ).Take(10);
+            foreach (var kw in keywords)
             {
-                FullMatchSearchingKeyword fullMatch = new()
+                var fullMatch = new FullMatchSearchingKeyword()
                 {
                     Keyword = kw,
                     Discipline = kw.Discipline
@@ -338,17 +396,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
 
             if (FullMatchSearchingKeywords.Count > 0) return;
-            Keyword keyword = new()
+            var keyword = new Keyword()
             {
-                CourseId = 000000,
+                CourseId = "000000",
                 SubjectName = "Không tìm thấy tên môn này",
                 Color = "#ffffff"
             };
-            Discipline discipline = new()
+            var discipline = new Discipline()
             {
                 Name = "Không tìm thấy mã môn này"
             };
-            FullMatchSearchingKeyword fullMatchSearchingKeyword = new()
+            var fullMatchSearchingKeyword = new FullMatchSearchingKeyword()
             {
                 Keyword = keyword,
                 Discipline = discipline
@@ -359,37 +417,37 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void OnDeleteAll()
         {
             #region Clone Subject Models
-            List<SubjectModel> subjects = new();
-            foreach (SubjectModel subjectModel in SubjectModels)
+            var subjects = new List<SubjectModel>();
+            foreach (var subjectModel in SubjectModels)
             {
-                SubjectModel restoreSubject = subjectModel.DeepClone();
+                var restoreSubject = subjectModel.DeepClone();
                 subjects.Add(restoreSubject);
             }
             #endregion
 
             #region Clone ClassGroup Models
-            List<ClassGroupModel> classGroupModels = new();
-            ChoseViewModel choseVm = GetViewModel<ChoseViewModel>();
-            foreach (ClassGroupModel classGroupModel in choseVm.ClassGroupModels)
-            {
-                classGroupModels.Add(classGroupModel.DeepClone());
-            }
+            var classGroupModels = new List<ClassGroupModel>();
+            //ChoseViewModel choseVm = GetViewModel<ChoseViewModel>();
+            //foreach (ClassGroupModel classGroupModel in choseVm.ClassGroupModels)
+            //{
+            //    classGroupModels.Add(classGroupModel.DeepClone());
+            //}
             #endregion
 
             SubjectModels.Clear();
-            Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
             UpdateCreditTotal();
             UpdateSubjectAmount();
-            AddCommand.NotifyCanExecuteChanged();
-            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjects, classGroupModels);
-            _snackbarMessageQueue.Enqueue(VmConstants.SnbDeleteAll, VmConstants.SnbRestore, AddSubjectWithCgm, actionData);
+            AddCommand.RaiseCanExecuteChanged();
+            var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjects, classGroupModels);
+            _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", AddSubjectWithCgm, actionData);
         }
 
         private void OnGotoCourse(SubjectModel subjectModel)
         {
-            int courseId = subjectModel.CourseId;
-            string semesterValue = _courseCrawler.CurrentSemesterValue;
-            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
+            var courseId = subjectModel.CourseId;
+            var semesterValue = _unitOfWork.Settings.GetSetting().SemesterValue;
+            var url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             _openInBrowser.Open(url);
         }
 
@@ -400,7 +458,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             Disciplines.Clear();
             IEnumerable<Discipline> disciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
-            foreach (Discipline discipline in disciplines)
+            foreach (var discipline in disciplines)
             {
                 Disciplines.Add(discipline);
             }
@@ -410,8 +468,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnOpenImportDialog()
         {
-            ImportSessionViewModel vm = (ImportSessionViewModel)_importSessionUc.DataContext;
-            OpenDialog(_importSessionUc);
+            var vm = (ImportSessionViewModel)_importSessionUc.DataContext;
+            _dialogService.OpenDialog(_importSessionUc);
             vm.LoadScheduleSession();
         }
 
@@ -419,17 +477,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (userSubjects == null) return;
             SubjectModels.Clear();
-            Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
 
-            List<Keyword> kws = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeyword(userSubject.SubjectCode)).ToList();
+            var keywords = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeywordBySubjectCode(userSubject.SubjectCode)).ToList();
 
-            InsertPseudoSubjects(kws, userSubjects);
+            InsertPseudoSubjects(keywords, userSubjects);
 
-            List<Task> downloadTasks = new();
-            List<UserSubject> listOfUserSubjects = userSubjects.ToList();
-            for (int i = 0; i < kws.Count; i++)
+            var downloadTasks = new List<Task>();
+            var listOfUserSubjects = userSubjects.ToList();
+            for (var i = 0; i < keywords.Count; i++)
             {
-                downloadTasks.Add(OnAddSubjectAsync(kws[i], listOfUserSubjects[i]));
+                downloadTasks.Add(OnAddSubjectAsync(keywords[i], listOfUserSubjects[i]));
             }
             await Task.WhenAll(downloadTasks);
             SelectedSubjectModel = SubjectModels[0];
@@ -437,26 +495,26 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void InsertPseudoSubject(Keyword keyword)
         {
-            SubjectModel pseudoSubjectModel = SubjectModel.CreatePseudo(
+            var pseudoSubjectModel = new SubjectModel(
                 keyword.SubjectName,
-                keyword.Discipline.Name + VmConstants.StrSpace + keyword.Keyword1,
+                keyword.Discipline.Name + " " + keyword.Keyword1,
                 keyword.Color,
                 keyword.CourseId
             );
             SubjectModels.Insert(0, pseudoSubjectModel);
-            AddCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
         }
 
         private void InsertPseudoSubjects(IReadOnlyList<Keyword> keywords, IEnumerable<UserSubject> userSubjects)
         {
-            UserSubject[] userSubjectArr = userSubjects.ToArray();
-            for (int i = 0; i < keywords.Count; i++)
+            var userSubjectArr = userSubjects.ToArray();
+            for (var i = 0; i < keywords.Count; i++)
             {
-                Keyword kw = keywords[i];
+                var kw = keywords[i];
                 kw.Discipline = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
-                SubjectModel pseudoSubjectModel = SubjectModel.CreatePseudo(
+                var pseudoSubjectModel = new SubjectModel(
                     kw.SubjectName,
-                    kw.Discipline.Name + VmConstants.StrSpace + kw.Keyword1,
+                    kw.Discipline.Name + " " + kw.Keyword1,
                     kw.Color,
                     kw.CourseId,
                     userSubjectArr[i]
@@ -473,32 +531,30 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
 
-            ClassGroupModel classGroupModel = GetViewModel<ChoseViewModel>()
-                .ClassGroupModels
-                .FirstOrDefault(cgm => cgm.SubjectCode.Equals(sm.SubjectCode));
+            // Get ClassGroupModel hiện được chọn trong ChoseViewModel
+            // sau đó clone một bản để có thể Undo.
+            ClassGroupModel classGroupModel = null;
+
+            //classGroupModel = GetViewModel<ChoseViewModel>()
+            //    .ClassGroupModels
+            //    .FirstOrDefault(cgm => cgm.SubjectCode.Equals(sm.SubjectCode));
 
             if (classGroupModel != null)
             {
-                ClassGroupModel classGroupModelClone = classGroupModel.DeepClone();
+                var classGroupModelClone = classGroupModel.DeepClone();
                 classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
             }
 
-            Messenger.Send(new SearchVmMsgs.DelSubjectMsg(sm));
-            SubjectModel subjectModel = sm.DeepClone();
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Publish(sm);
+            var subjectModel = sm.DeepClone();
 
-            List<SubjectModel> subjectModels = new()
-            {
-                subjectModel
-            };
-
-            Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData = new(subjectModels, classGroupModels);
-
-            string message = CredizText.ManualMsg002(sm.SubjectName);
+            var subjectModels = new List<SubjectModel>() { subjectModel };
+            var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjectModels, classGroupModels);
             SubjectModels.Remove(sm);
-            _snackbarMessageQueue.Enqueue(message, VmConstants.SnbRestore, AddSubjectWithCgm, actionData);
+            _snackbarMessageQueue.Enqueue($"Đã xoá môn {sm.SubjectName}", "HOÀN TÁC", AddSubjectWithCgm, actionData);
             UpdateCreditTotal();
             UpdateSubjectAmount();
-            AddCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -508,13 +564,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void LoadKeywordByDiscipline(Discipline discipline)
         {
             DisciplineKeywordModels.Clear();
-            Discipline currentDiscipline = Disciplines.First(d => d.DisciplineId == discipline.DisciplineId);
-            List<Keyword> keywords = currentDiscipline.Keywords;
+            var currentDiscipline = Disciplines.First(d => d.DisciplineId == discipline.DisciplineId);
+            var keywords = currentDiscipline.Keywords;
             keywords.ForEach(keyword => DisciplineKeywordModels.Add(keyword));
             SelectedKeyword = DisciplineKeywordModels[0];
         }
 
-        private async Task OnAdd()
+        private async void OnAdd()
         {
             InsertPseudoSubject(SelectedKeyword);
             await OnAddSubjectAsync(SelectedKeyword);
@@ -524,7 +580,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Thêm một task tải Subject.
         /// </summary>
         /// <remarks>
-        /// Thực hiện tại Subject. Thông báo nếu Subject không tồn tại, ngược lại
+        /// Thực hiện tải Subject. Thông báo nếu Subject không tồn tại, ngược lại
         /// thay thế pseudo Subject bằng Subject đã tải được. 
         /// <br></br>
         /// Nếu không có Subject nào đang được tải, thực hiện select Subject 
@@ -539,16 +595,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             try
             {
-                SubjectModel subjectModel = await DownloadSubject(
-                    keyword.Discipline.Name,
-                    keyword.Keyword1,
-                    0,
-                    IsUseCache
-                );
+                var subjectModel = await DownloadSubject(keyword, IsUseCache);
 
                 if (subjectModel == null)
                 {
-                    _snackbarMessageQueue.Enqueue(VmConstants.SnbNotFoundSubjectInThisSemester);
+                    _snackbarMessageQueue.Enqueue($"Không tìm thấy môn {keyword.SubjectName} trong học kỳ này");
                     return null;
                 }
 
@@ -579,11 +630,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="userSubject">UserSubject</param>
         private async Task OnAddSubjectAsync(Keyword keyword, UserSubject userSubject)
         {
-            SubjectModel subjectModel = await OnAddSubjectAsync(keyword);
+            var subjectModel = await OnAddSubjectAsync(keyword);
             if (subjectModel == null) return;
 
             // Lấy ra ClassGroupModel có tên bằng với tên đã lưu.
-            ClassGroupModel classGroupModel = subjectModel
+            var classGroupModel = subjectModel
                 .ClassGroupModels
                 .First(cgm => cgm.Name.Equals(userSubject.ClassGroup));
             Debug.Assert(classGroupModel != null);
@@ -592,64 +643,62 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 classGroupModel.PickSchoolClass(userSubject.SchoolClass);
             }
 
-            List<ClassGroupModel> cgms = new()
+            var cgms = new List<ClassGroupModel>()
             {
                 classGroupModel
             };
-            Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(cgms));
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Publish(cgms);
         }
 
-        private async Task<SubjectModel> DownloadSubject(
-            string discipline,
-            string keyword1,
-            int courseId,
-            bool isUseCache)
+        private async Task<SubjectModel> DownloadSubject(Keyword keyword, bool isUseCache)
         {
             Subject subject;
-            if (courseId == 0)
+            if (isUseCache && keyword.Cache != null)
             {
-                subject = await _subjectCrawler.Crawl(discipline, keyword1, isUseCache, true);
+                subject = await _subjectCrawler.Crawl(keyword.Cache);
             }
             else
             {
-                subject = await _subjectCrawler.Crawl(courseId, isUseCache, true);
+                var semester = _unitOfWork.Settings.GetByKey("CurrentSemesterValue");
+                subject = await _subjectCrawler.Crawl(keyword.CourseId, semester);
             }
             if (subject == null) return null;
-            AddCommand.NotifyCanExecuteChanged();
-            return SubjectModel.Create(subject, _colorGenerator);
+            AddCommand.RaiseCanExecuteChanged();
+
+            var teacherModels = await Task.WhenAll(subject.TeacherUrls.Select(url => _teacherCrawler.Crawl(url, keyword.CourseId)));
+            return new SubjectModel(subject, teacherModels, keyword.Color);
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)
         {
-            NameValueCollection queries = HttpUtility.ParseQueryString(uri.Query);
-            string courseId = queries.Get("courseid");
-            string p = queries.Get("p");
-            string timespan = queries.Get("timespan");
-            string t = queries.Get("t");
+            var queries = HttpUtility.ParseQueryString(uri.Query);
+            var courseId = queries.Get("courseid");
+            var p = queries.Get("p");
+            var timespan = queries.Get("timespan");
+            var t = queries.Get("t");
 
-            bool isDtuCourseHost = uri.Host == "courses.duytan.edu.vn";
-            bool isRightAbsPath = uri.AbsolutePath == "/Sites/Home_ChuongTrinhDaoTao.aspx";
+            var isDtuCourseHost = uri.Host == "courses.duytan.edu.vn";
+            var isRightAbsPath = uri.AbsolutePath == "/Sites/Home_ChuongTrinhDaoTao.aspx";
 
             if (
-                    courseId != null 
-                 && p != null 
-                 && timespan != null 
-                 && t != null 
-                 && isDtuCourseHost 
+                    courseId != null
+                 && p != null
+                 && timespan != null
+                 && t != null
+                 && isDtuCourseHost
                  && isRightAbsPath
             )
             {
-                int intCourseId = int.Parse(courseId);
-                if (IsAlreadyDownloaded(intCourseId))
+                if (IsAlreadyDownloaded(courseId))
                 {
-                    _snackbarMessageQueue.Enqueue(VmConstants.SnbAlreadyDownloaded);
+                    _snackbarMessageQueue.Enqueue("Môn này đã được tải");
                     return;
                 }
 
-                Keyword keyword = _unitOfWork.Keywords.GetByCourseId(intCourseId);
+                var keyword = _unitOfWork.Keywords.GetByCourseId(courseId);
                 if (keyword == null)
                 {
-                    _snackbarMessageQueue.Enqueue(CredizText.ManualMsg003(courseId));
+                    _snackbarMessageQueue.Enqueue($"Không tồn tại {courseId}");
                     return;
                 }
 
@@ -658,7 +707,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             else
             {
-                _snackbarMessageQueue.Enqueue(CredizText.ManualMsg004());
+                _snackbarMessageQueue.Enqueue("Sai đường dẫn");
             }
         }
 
@@ -667,7 +716,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void UpdateSubjectAmount()
         {
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            DeleteAllCommand.RaiseCanExecuteChanged();
             TotalSubject = SubjectModels.Count;
         }
 
@@ -677,7 +726,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void UpdateCreditTotal()
         {
             TotalCredits = 0;
-            foreach (SubjectModel subject in SubjectModels)
+            foreach (var subject in SubjectModels)
             {
                 TotalCredits += subject.StudyUnit;
             }
@@ -688,9 +737,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// sẵn trong danh sách đã tải xuống hay chưa.
         /// </summary>
         /// <param name="courseId">Course ID</param>
-        private bool IsAlreadyDownloaded(int courseId)
+        private bool IsAlreadyDownloaded(string courseId)
         {
-            IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
+            var courseIds = SubjectModels.Select(item => item.CourseId);
             return courseIds.Contains(courseId);
         }
 
@@ -698,7 +747,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (keyword != null)
             {
-                IEnumerable<int> courseIds = SubjectModels.Select(item => item.CourseId);
+                var courseIds = SubjectModels.Select(item => item.CourseId);
                 return courseIds.Contains(keyword.CourseId);
             }
             return true;
@@ -706,23 +755,23 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void ImportSubjects(CombinationModel combinationModel)
         {
-            foreach (SubjectModel subject in SubjectModels)
+            foreach (var subject in SubjectModels)
             {
-                Messenger.Send(new SearchVmMsgs.DelSubjectMsg(subject));
+                _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Publish(subject);
             }
             SubjectModels.Clear();
 
-            foreach (SubjectModel subject in combinationModel.SubjecModels)
+            foreach (var subject in combinationModel.SubjectModels)
             {
                 SubjectModels.Add(subject);
             }
             TotalSubject = SubjectModels.Count;
-            AddCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
-            foreach (ClassGroupModel classGroupModel in combinationModel.ClassGroupModels)
+            foreach (var classGroupModel in combinationModel.ClassGroupModels)
             {
-                Messenger.Send(new ClassGroupSessionVmMsgs.ClassGroupAddedMsg(classGroupModel));
+                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
             }
         }
 
@@ -731,10 +780,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void AddSubjectWithCgm(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
         {
-            IEnumerable<SubjectModel> subjectModels = actionData.Item1;
-            IEnumerable<ClassGroupModel> classes = actionData.Item2;
+            var subjectModels = actionData.Item1;
+            var classes = actionData.Item2;
 
-            foreach (SubjectModel subjectModel in subjectModels)
+            foreach (var subjectModel in subjectModels)
             {
                 SubjectModels.Add(subjectModel);
             }
@@ -742,13 +791,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedSubjectModel = actionData.Item1.First();
 
             TotalSubject = SubjectModels.Count;
-            AddCommand.NotifyCanExecuteChanged();
+            AddCommand.RaiseCanExecuteChanged();
             UpdateCreditTotal();
             UpdateSubjectAmount();
 
             if (actionData.Item2 != null)
             {
-                Messenger.Send(new SearchVmMsgs.SelectCgmsMsg(classes));
+                _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Publish(classes);
             }
         }
 
@@ -758,7 +807,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="subjectModel">SubjectModel</param>
         private void ReplacePseudoSubject(SubjectModel subjectModel)
         {
-            for (int i = 0; i < SubjectModels.Count; i++)
+            for (var i = 0; i < SubjectModels.Count; i++)
             {
                 if (SubjectModels[i].CourseId.Equals(subjectModel.CourseId))
                 {
@@ -773,9 +822,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         /// <param name="errMsg">Error Message</param>
         /// <param name="courseId">Course ID</param>
-        private void AddErrorToPseudoSubject(string errMsg, int courseId)
+        private void AddErrorToPseudoSubject(string errMsg, string courseId)
         {
-            for (int i = 0; i < SubjectModels.Count; i++)
+            for (var i = 0; i < SubjectModels.Count; i++)
             {
                 if (SubjectModels[i].CourseId.Equals(courseId))
                 {
