@@ -152,18 +152,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _isUseCache; }
             set { SetProperty(ref _isUseCache, value); }
         }
-
-        /// <summary>
-        /// Index hiện tại của View Search
-        /// 0: Search
-        /// 1: Store
-        /// </summary>
-        private int _crrScrIdx;
-        public int CrrScrIdx
-        {
-            get { return _crrScrIdx; }
-            set { SetProperty(ref _crrScrIdx, value); }
-        }
         #endregion
 
         #region Services

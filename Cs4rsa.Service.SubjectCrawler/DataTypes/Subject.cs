@@ -61,6 +61,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             
             TempTeachers = new List<string>();
             ClassGroups = new List<ClassGroup>();
+            TeacherUrls = new List<string>();
 
             Name = name;
             SubjectCode = subjectCode;

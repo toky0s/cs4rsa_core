@@ -2,15 +2,16 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Views.Scheduler"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
+    xmlns:customControls="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converter="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
+    xmlns:prism="http://prismlibrary.com/"
+    Height="{Binding ElementName=Scheduler, Path=ActualHeight}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:customControls="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
-    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources />
     <Grid>
@@ -20,13 +21,18 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Giai đoạn 1 (hoặc học kỳ Hè)" Style="{StaticResource MaterialDesignTextBlock}">
-        </TextBlock>
+        <TextBlock
+            Grid.Row="0"
+            Style="{StaticResource MaterialDesignTextBlock}"
+            Text="Giai đoạn 1 (hoặc học kỳ Hè)" />
         <customControls:STable
             Grid.Row="1"
             ItemsSource="{Binding Timelines}"
             Week="{Binding Week1}" />
-        <TextBlock Grid.Row="2" Text="Giai đoạn 2" Style="{StaticResource MaterialDesignTextBlock}"></TextBlock>
+        <TextBlock
+            Grid.Row="2"
+            Style="{StaticResource MaterialDesignTextBlock}"
+            Text="Giai đoạn 2" />
         <customControls:STable
             Grid.Row="3"
             ItemsSource="{Binding Timelines}"

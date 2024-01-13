@@ -65,7 +65,7 @@ namespace Cs4rsa.Database.Implements
                          CourseId = record.GetString(2),
                          SubjectName = record.GetString(3),
                          Color = record.GetString(4),
-                         Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5),
+                         Cache = record.IsDBNull(5) ? null : record.GetString(5),
                          Discipline = discipline,
                          DisciplineId = discipline.DisciplineId
                     }

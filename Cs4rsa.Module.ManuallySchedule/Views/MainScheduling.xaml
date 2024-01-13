@@ -1,20 +1,42 @@
 ﻿<UserControl
-  x:Class="Cs4rsa.Module.ManuallySchedule.Views.MainScheduling"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:prism="http://prismlibrary.com/"
-  xmlns:info="clr-namespace:Cs4rsa.Module.ManuallySchedule"
-  prism:ViewModelLocator.AutoWireViewModel="True" >
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="1.5*" />
-      <ColumnDefinition Width="1.3*" />
-      <ColumnDefinition Width="1*" />
-      <ColumnDefinition Width="2.7*" />
-    </Grid.ColumnDefinitions>
-        <ItemsControl Grid.Column="0" x:Name="Search" prism:RegionManager.RegionName="{x:Static info:RegionInfo.Search}"/>
-        <ItemsControl Grid.Column="1" x:Name="ClassGroup" prism:RegionManager.RegionName="{x:Static info:RegionInfo.ClassGroup}"/>
-        <ItemsControl Grid.Column="2" x:Name="Chose" prism:RegionManager.RegionName="{x:Static info:RegionInfo.Chose}"/>
-        <ItemsControl Grid.Column="3" Margin="0,0,5,0"  x:Name="Scheduler" prism:RegionManager.RegionName="{x:Static info:RegionInfo.Scheduler}"/>
+    x:Class="Cs4rsa.Module.ManuallySchedule.Views.MainScheduling"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:info="clr-namespace:Cs4rsa.Module.ManuallySchedule"
+    xmlns:prism="http://prismlibrary.com/"
+    Height="{Binding ElementName=ManualRegion, Path=ActualHeight}"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="1.3*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2.7*" />
+        </Grid.ColumnDefinitions>
+
+        <ItemsControl
+            x:Name="Search"
+            Grid.Row="0"
+            Grid.Column="0"
+            prism:RegionManager.RegionName="{x:Static info:RegionInfo.Search}" />
+        <ItemsControl
+            x:Name="ClassGroup"
+            Grid.Row="0"
+            Grid.Column="1"
+            prism:RegionManager.RegionName="{x:Static info:RegionInfo.ClassGroup}" />
+        <ItemsControl
+            x:Name="Chose"
+            Grid.Row="0"
+            Grid.Column="2"
+            prism:RegionManager.RegionName="{x:Static info:RegionInfo.Chose}" />
+        <ItemsControl
+            x:Name="Scheduler"
+            Grid.Row="0"
+            Grid.Column="3"
+            Margin="0,0,5,0"
+            prism:RegionManager.RegionName="{x:Static info:RegionInfo.Scheduler}" />
     </Grid>
 </UserControl>
