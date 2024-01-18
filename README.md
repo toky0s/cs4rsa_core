@@ -62,6 +62,13 @@ Version 1.1.2
 ## Tải xuống
 [Cho Windows 10](https://github.com/toky0s/cs4rsa_core/releases)
 
+- Portal: Tầng cao nhất chịu trách nhiệm gắn kết các module, ghép nối các giao diện.
+- Modules: Tầng nghiệp vụ.
+- Converters: Tầng này cung cấp tất cả các tiện ích converter, consume một số model từ tầng service và các chức năng từ tầng Infrastructure.
+- Events: Global event đi cùng với IEventAggregator phân phối event trên toàn bộ app và module.
+- Services: Cung cấp các service căn bản của app. Có thể tích hợp vào bất kỳ module nào.
+- Infrastructures (Utils, Database) : Tầng không phụ thuộc có thể hoạt động độc lập.
+
 ## Các chức năng chính
 Phiên bản 3.0.1
 - 🆕 (New) Màn hình Database.

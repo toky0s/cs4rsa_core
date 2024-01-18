@@ -2,7 +2,7 @@
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
-namespace Cs4rsa.UI.ScheduleTable.Interfaces
+namespace Cs4rsa.Service.Conflict.Interfaces
 {
     /// <summary>
     /// Triển khai ConflictModel hiển thị các ConflictPlace hoặc ConflictTime

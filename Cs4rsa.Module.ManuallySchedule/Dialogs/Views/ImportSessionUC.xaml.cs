@@ -25,7 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
         /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ((ImportSessionViewModel)DataContext).OnCopyRegisterCode(((UserSubject)((Button)sender).DataContext).RegisterCode);
+            ((ImportSessionUCViewModel)DataContext).OnCopyRegisterCode(((UserSubject)((Button)sender).DataContext).RegisterCode);
         }
 
         /// <summary>
@@ -33,14 +33,14 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
         /// </summary>
         private void ShareString_GotFocus(object sender, RoutedEventArgs e)
         {
-            ((ImportSessionViewModel)DataContext).LoadShareString(ShareStringTextBox.Text);
-            ((ImportSessionViewModel)DataContext).SelectedScheduleSession = null;
+            ((ImportSessionUCViewModel)DataContext).LoadShareString(ShareStringTextBox.Text);
+            ((ImportSessionUCViewModel)DataContext).SelectedScheduleSession = null;
         }
 
         private void ShareString_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ((ImportSessionViewModel)DataContext).LoadShareString(ShareStringTextBox.Text);
-            ((ImportSessionViewModel)DataContext).SelectedScheduleSession = null;
+            ((ImportSessionUCViewModel)DataContext).LoadShareString(ShareStringTextBox.Text);
+            ((ImportSessionUCViewModel)DataContext).SelectedScheduleSession = null;
         }
 
         private void TgBtn_IsUseCache_Loaded(object sender, RoutedEventArgs e)

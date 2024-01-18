@@ -21,30 +21,29 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public readonly UserSubject UserSubject;
 
-        public TeacherModel[] _teachers;
-        public TeacherModel[] Teachers { get => _teachers; }
-        public List<string> TempTeachers => Subject.TempTeachers;
-        public List<ClassGroupModel> ClassGroupModels { get; private set; }
-        public string SubjectName { get; private set; }
-        public string SubjectCode { get; private set; }
-        public string CourseId { get; private set; }
-        public string StudyUnitType => Subject.StudyUnitType;
-        public string StudyType => Subject.StudyType;
-        public string Semester => Subject.Semester;
-        public string Desciption => Subject.Description;
+        public TeacherModel[] Teachers { get; set; }
+        public List<string> TempTeachers { get; set; }
+        public List<ClassGroupModel> ClassGroupModels { get; set; }
+        public string SubjectName { get; set; }
+        public string SubjectCode { get; set; }
+        public string CourseId { get; set; }
+        public string StudyUnitType { get; set; }
+        public string StudyType { get; set; }
+        public string Semester { get; set; }
+        public string Desciption { get; set; }
 
-        private string _prerequisiteSubjectAsString;
-        public string PrerequisiteSubjectAsString
+        private string _prerequisiteSubjects;
+        public string PrerequisiteSubjects
         {
-            get { return _prerequisiteSubjectAsString; }
-            set { SetProperty(ref _prerequisiteSubjectAsString, value); }
+            get { return _prerequisiteSubjects; }
+            set { SetProperty(ref _prerequisiteSubjects, value); }
         }
 
-        private string _parallelSubjectAsString;
-        public string ParallelSubjectAsString
+        private string _parallelSubjects;
+        public string ParallelSubjects
         {
-            get { return _parallelSubjectAsString; }
-            set { SetProperty(ref _parallelSubjectAsString, value); }
+            get { return _parallelSubjects; }
+            set { SetProperty(ref _parallelSubjects, value); }
         }
 
         private bool _isDownloading;
@@ -102,14 +101,18 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             SubjectCode = subject.SubjectCode;
             CourseId = subject.CourseId;
             StudyUnit = subject.StudyUnit;
-            PrerequisiteSubjectAsString = GetMustStudySubjects();
-            ParallelSubjectAsString = GetParallelSubjects();
+            PrerequisiteSubjects = GetMustStudySubjects();
+            ParallelSubjects = GetParallelSubjects();
             IsSpecialSubject = Subject.IsSpecialSubject();
             ClassGroupModels = Subject.ClassGroups
                 .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
                 .ToList();
-
-            _teachers = teacherModels;
+            Teachers = teacherModels;
+            TempTeachers = subject.TempTeachers;
+            StudyUnitType = subject.StudyUnitType;
+            StudyType = subject.StudyType;
+            Semester = subject.Semester;
+            Desciption = subject.Description;
         }
 
         /// <summary>
@@ -172,16 +175,24 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             {
                 throw new Exception("Can not assign SubjectModel because this instance is not a pseudo subject model.");
             }
-            Subject = subjectModel.Subject;
-            StudyUnit = subjectModel.Subject.StudyUnit;
-            IsSpecialSubject = subjectModel.Subject.IsSpecialSubject();
-            ClassGroupModels = subjectModel.Subject.ClassGroups
-                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
-                .ToList();
 
             IsDownloading = false;
             IsError = false;
             ErrorMessage = null;
+
+            Subject = subjectModel.Subject;
+            StudyUnit = subjectModel.Subject.StudyUnit;
+            IsSpecialSubject = subjectModel.IsSpecialSubject;
+            ClassGroupModels = subjectModel.ClassGroupModels;
+            Teachers = subjectModel.Teachers;
+            StudyUnit = subjectModel.StudyUnit;
+            PrerequisiteSubjects = subjectModel.PrerequisiteSubjects;
+            ParallelSubjects = subjectModel.ParallelSubjects;
+            TempTeachers = subjectModel.TempTeachers;
+            StudyUnitType = subjectModel.StudyUnitType;
+            StudyType = subjectModel.StudyType;
+            Semester = subjectModel.Semester;
+            Desciption = subjectModel.Desciption;
         }
 
         public string GetMustStudySubjects()

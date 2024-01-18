@@ -1,7 +1,8 @@
 ﻿using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
-using Cs4rsa.UI.ScheduleTable.Interfaces;
+
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;

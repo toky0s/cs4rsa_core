@@ -77,8 +77,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void Btn_GotoCourse_Click(object sender, RoutedEventArgs e)
         {
-            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
-            Vm.GotoCourseCommand.Execute(subjectModel);
+
         }
 
         private void Btn_Details_Click(object sender, RoutedEventArgs e)

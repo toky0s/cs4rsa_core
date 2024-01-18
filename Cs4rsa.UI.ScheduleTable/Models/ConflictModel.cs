@@ -1,8 +1,9 @@
 ﻿using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.DataTypes.Enums;
+using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
-using Cs4rsa.Services.SubjectCrawlerSvc.Utils;
+using Cs4rsa.Service.SubjectCrawler.Utils;
 using Cs4rsa.UI.ScheduleTable.Interfaces;
 
 using System;
@@ -46,7 +47,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
-                string day = item.Key.ToDayOfWeekText();
+                string day = item.Key.ToCs4rsaVietnamese();
                 List<string> times = new List<string>();
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {
@@ -67,7 +68,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
             {
-                string day = item.Key.ToDayOfWeekText();
+                string day = item.Key.ToCs4rsaVietnamese();
                 List<string> times = new List<string>();
                 foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
                 {

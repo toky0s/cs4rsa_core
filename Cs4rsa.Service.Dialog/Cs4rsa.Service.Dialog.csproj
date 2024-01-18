@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="DialogService.cs" />
     <Compile Include="Events\CloseDialogEvent.cs" />
+    <Compile Include="Events\OpenDialogEvent.cs" />
     <Compile Include="Interfaces\IDialog.cs" />
     <Compile Include="Interfaces\IDialogService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

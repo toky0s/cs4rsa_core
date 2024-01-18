@@ -28,9 +28,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using Prism.Services.Dialogs;
 using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.Dialog;
+using Prism.Mvvm;
+using System.Reflection;
 
 namespace Cs4rsa.App
 {
@@ -46,7 +47,7 @@ namespace Cs4rsa.App
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Khỏi tạo xong");
+            
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -83,8 +84,10 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<DisciplineCrawler>();
             
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            containerRegistry.RegisterSingleton<IDialogService, DialogService>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();
+            containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
         }
 
         protected override Window CreateShell()
@@ -125,6 +128,20 @@ namespace Cs4rsa.App
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<ManuallyScheduleModule>();
+        }
+
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) =>
+            {
+                var viewName = viewType.FullName.Replace(".Views.", ".ViewModels.");
+                var viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
+                var viewModelName = $"{viewName}ViewModel, {viewAssemblyName}";
+                return Type.GetType(viewModelName);
+            });
         }
     }
 }

@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Cs4rsa.Service.SubjectCrawler.Utils;
 
-namespace Cs4rsa.WPF.Converter
+namespace Cs4rsa.Module.ManuallySchedule.Converters
 {
-    public class DayCvt : IValueConverter
+    public class EmptySeatCheckerConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            DayOfWeek dayOfWeek = (DayOfWeek)value;
-            return dayOfWeek.ToCs4rsaVietnamese();
+            int emptySeat = (int)value;
+            int compareToValue = int.Parse((string)parameter);
+            return emptySeat <= compareToValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

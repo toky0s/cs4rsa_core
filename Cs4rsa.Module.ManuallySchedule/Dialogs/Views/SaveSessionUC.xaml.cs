@@ -21,10 +21,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
         /// </summary>
         private void TxtName_KeyDown(object sender, KeyEventArgs e)
         {
-            ICommand saveCommand = (DataContext as SaveSessionViewModel).SaveCommand;
+            ICommand saveCommand = ((SaveSessionUCViewModel)DataContext).SaveCommand;
             if (e.Key == Key.Enter && saveCommand.CanExecute(this))
             {
-                (DataContext as SaveSessionViewModel).SaveCommand.Execute();
+                ((SaveSessionUCViewModel)DataContext).SaveCommand.Execute();
             }
         }
     }

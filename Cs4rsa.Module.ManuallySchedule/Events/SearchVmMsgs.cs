@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Cs4rsa.Module.ManuallySchedule.Events.Values;
+
 using Cs4rsa.Module.ManuallySchedule.Models;
+
 using Prism.Events;
 
 namespace Cs4rsa.Module.ManuallySchedule.Events

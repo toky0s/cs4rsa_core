@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\BasicDataConverter.cs" />
     <Compile Include="Crawlers\CourseHtmlGetter.cs" />
     <Compile Include="Crawlers\Interfaces\ICourseHtmlGetter.cs" />
     <Compile Include="Crawlers\Interfaces\IPreParSubjectCrawler.cs" />
@@ -82,9 +81,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
+    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Infrastructure.Common.csproj">
       <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
-      <Name>Cs4rsa.Common</Name>
+      <Name>Cs4rsa.Infrastructure.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
       <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>

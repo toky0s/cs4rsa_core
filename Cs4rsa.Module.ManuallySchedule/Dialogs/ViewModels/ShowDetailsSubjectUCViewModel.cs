@@ -4,7 +4,7 @@ using Prism.Mvvm;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public class ShowDetailsSubjectViewModel : BindableBase
+    public class ShowDetailsSubjectUCViewModel : BindableBase
     {
         private SubjectModel _subjectModel;
         public SubjectModel SubjectModel
@@ -13,7 +13,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             set { SetProperty(ref _subjectModel, value); }
         }
 
-        public ShowDetailsSubjectViewModel()
+        public ShowDetailsSubjectUCViewModel()
         {
 
         }

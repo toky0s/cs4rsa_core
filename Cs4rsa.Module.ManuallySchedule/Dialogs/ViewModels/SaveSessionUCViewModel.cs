@@ -18,7 +18,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
     /// <summary>
     /// Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
     /// </summary>
-    public class SaveSessionViewModel : BindableBase
+    public class SaveSessionUCViewModel : BindableBase
     {
         private string _name;
         public string Name
@@ -35,7 +35,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         private readonly ShareString _shareString;
         private readonly IDialogService _dialogService;
 
-        public SaveSessionViewModel(
+        public SaveSessionUCViewModel(
             IUnitOfWork unitOfWork,
             ISnackbarMessageQueue snackbarMessageQueue,
             IDialogService dialogService,
@@ -46,6 +46,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             _shareString = shareString;
             _dialogService = dialogService;
             _name = string.Empty;
+
+            var hs = snackbarMessageQueue.GetHashCode();
 
             SaveCommand = new DelegateCommand(Save, () => _name.Length > 0).ObservesProperty(() => Name);
         }
@@ -69,14 +71,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     RegisterCode = us.RegisterCode
                 }).ToList();
 
-            var setting = _unitOfWork.Settings.GetSetting();
-
             var session = new UserSchedule()
             {
                 Name = Name.Trim(),
                 SaveDate = DateTime.Now,
-                SemesterValue = setting.SemesterValue,
-                YearValue = setting.YearValue,
+                SemesterValue = _unitOfWork.Settings.GetByKey(Setting.SemesterValue),
+                YearValue = _unitOfWork.Settings.GetByKey(Setting.YearValue),
                 SessionDetails = sessionDetails
             };
 

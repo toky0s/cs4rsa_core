@@ -67,14 +67,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
     <Compile Include="Converters\EmptyStringPlaceholderConverter.cs" />
     <Compile Include="Dialogs\Models\ClassGroupResult.cs" />
     <Compile Include="Dialogs\Models\UserSubject.cs" />
-    <Compile Include="Dialogs\ViewModels\ImportSessionViewModel.cs" />
-    <Compile Include="Dialogs\ViewModels\SaveSessionViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ImportSessionUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShareStringViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
-    <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
     <Compile Include="Dialogs\Views\ImportSessionUC.xaml.cs">
       <DependentUpon>ImportSessionUC.xaml</DependentUpon>
@@ -102,7 +103,7 @@
     <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
     <Compile Include="Events\SolveConflictVmMsgs.cs" />
     <Compile Include="Events\UpdateVmMsgs.cs" />
-    <Compile Include="Events\Values\SearchValues.cs" />
+    <Compile Include="Models\SearchValues.cs" />
     <Compile Include="Interfaces\IPreParSubjectCrawler.cs" />
     <Compile Include="ManuallyScheduleModule.cs" />
     <Compile Include="Models\ClassGroupModel.cs" />
@@ -196,17 +197,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
+    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Infrastructure.Common.csproj">
       <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
-      <Name>Cs4rsa.Common</Name>
+      <Name>Cs4rsa.Infrastructure.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Database.csproj">
+    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Infrastructure.Database.csproj">
       <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
-      <Name>Cs4rsa.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Event\Cs4rsa.Event.csproj">
-      <Project>{1d99c751-5266-45ee-8688-ac61378f6ccc}</Project>
-      <Name>Cs4rsa.Event</Name>
+      <Name>Cs4rsa.Infrastructure.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
       <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>
@@ -237,6 +234,7 @@
       <Name>Cs4rsa.WPF.Converter</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

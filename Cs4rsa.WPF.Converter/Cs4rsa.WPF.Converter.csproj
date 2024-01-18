@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base64ImageConverter.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="ConflictModelConverter.cs" />
     <Compile Include="ConflictTypeConverter.cs" />
     <Compile Include="DayCvt.cs" />
@@ -71,10 +70,6 @@
     <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
       <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
       <Name>Cs4rsa.Service.TeacherCrawler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.UI.ScheduleTable\Cs4rsa.UI.ScheduleTable.csproj">
-      <Project>{E4D5B2AB-45CE-46DC-A23E-0761EEDE55AA}</Project>
-      <Name>Cs4rsa.UI.ScheduleTable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

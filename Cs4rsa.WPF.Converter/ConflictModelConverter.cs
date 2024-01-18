@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Cs4rsa.UI.ScheduleTable.Interfaces;
+
+using Cs4rsa.Service.Conflict.Interfaces;
 
 namespace Cs4rsa.WPF.Converter
 {

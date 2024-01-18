@@ -1,10 +1,8 @@
-﻿using Cs4rsa.Module.ManuallySchedule.Models;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
-
-namespace Cs4rsa.Module.ManuallySchedule.Events.Values
+namespace Cs4rsa.Module.ManuallySchedule.Models
 {
-    internal sealed class SearchValues
+    public class SearchValues
     {
         internal class UndoDelValue
         {

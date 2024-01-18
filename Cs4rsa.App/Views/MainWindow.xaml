@@ -24,33 +24,33 @@
     <materialDesign:DialogHost
         x:Name="DialogHost"
         CloseOnClickAway="{Binding IsCloseOnClickAway}"
-        DialogContent="{Binding DialogUC}"
+        DialogContent="{Binding Dialog}"
         IsOpen="{Binding IsOpen}">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ItemsControl
-                x:Name="TopMenuRegion"
-                Grid.Row="0"
-                prism:RegionManager.RegionName="{x:Static info:RegionInfo.TopMenu}" />
-            <materialDesign:Transitioner
-                x:Name="CredizTransitioner"
-                Grid.Row="1"
-                SelectedIndex="{Binding ScreenIdx}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <ItemsControl
-                    x:Name="HomeRegion"
+                    x:Name="TopMenuRegion"
                     Grid.Row="0"
-                    prism:RegionManager.RegionName="{x:Static info:RegionInfo.Home}" />
-                <ItemsControl
-                    x:Name="ManualRegion"
-                    Grid.Row="0"
-                    prism:RegionManager.RegionName="{x:Static info:RegionInfo.Manual}" />
-            </materialDesign:Transitioner>
+                    prism:RegionManager.RegionName="{x:Static info:RegionInfo.TopMenu}" />
+                <materialDesign:Transitioner
+                    x:Name="CredizTransitioner"
+                    Grid.Row="1"
+                    SelectedIndex="{Binding ScreenIdx}">
+                    <ItemsControl
+                        x:Name="HomeRegion"
+                        Grid.Row="0"
+                        prism:RegionManager.RegionName="{x:Static info:RegionInfo.Home}" />
+                    <ItemsControl
+                        x:Name="ManualRegion"
+                        Grid.Row="0"
+                        prism:RegionManager.RegionName="{x:Static info:RegionInfo.Manual}" />
+                </materialDesign:Transitioner>
+            </Grid>
             <materialDesign:Snackbar
-                Grid.Row="2"
                 HorizontalAlignment="Center"
                 ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
                 MessageQueue="{Binding SnackBarMessageQueue}">

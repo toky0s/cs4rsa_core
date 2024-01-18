@@ -60,14 +60,14 @@ namespace Cs4rsa.Database.Implements
         public List<UserSchedule> GetAll()
         {
             return _rawSql.ExecReader(
-                $"SELECT * FROM UserSchedules"
-                , record => new UserSchedule()
+                $"SELECT * FROM UserSchedules",
+                record => new UserSchedule()
                 {
-                      UserScheduleId = record.GetInt32(0)
-                    , Name = record.GetString(1)
-                    , SaveDate = DateTime.Parse(record.GetString(2))
-                    , SemesterValue = record.GetString(3)
-                    , YearValue = record.GetString(4)
+                    UserScheduleId = record.GetInt32(0),
+                    Name = record.GetString(1),
+                    SaveDate = DateTime.Parse(record.GetString(2)),
+                    SemesterValue = record.GetString(3),
+                    YearValue = record.GetString(4)
                 }
             );
         }

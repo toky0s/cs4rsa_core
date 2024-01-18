@@ -156,13 +156,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Common.csproj">
+    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Infrastructure.Common.csproj">
       <Project>{B090DEC9-515E-47D1-8EEA-B47503CA635F}</Project>
-      <Name>Cs4rsa.Common</Name>
+      <Name>Cs4rsa.Infrastructure.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Database.csproj">
+    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Infrastructure.Database.csproj">
       <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
-      <Name>Cs4rsa.Database</Name>
+      <Name>Cs4rsa.Infrastructure.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure\Cs4rsa.Infrastructure.csproj">
+      <Project>{f5ef9a32-bae8-4b0e-9e6d-b2ac0d0eafaf}</Project>
+      <Name>Cs4rsa.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Module.ManuallySchedule\Cs4rsa.Module.ManuallySchedule.csproj">
       <Project>{15E1E43A-7866-4E85-9DDB-F7A860F31E0E}</Project>

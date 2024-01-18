@@ -5,7 +5,7 @@ using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 namespace Cs4rsa.WPF.Converter
 {
-    class PhaseCvt : IValueConverter
+    public class PhaseCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

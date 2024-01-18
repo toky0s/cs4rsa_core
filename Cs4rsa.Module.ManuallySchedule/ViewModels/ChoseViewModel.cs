@@ -241,7 +241,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void OpenSaveDialog()
         {
             var saveSessionUc = new SaveSessionUC();
-            var vm = (SaveSessionViewModel)saveSessionUc.DataContext;
+            var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
             vm.ClassGroupModels = ClassGroupModels;
             _dialogService.OpenDialog(saveSessionUc);
         }

@@ -1,4 +1,7 @@
-﻿using Cs4rsa.Service.Dialog.Interfaces;
+﻿using Cs4rsa.Service.Dialog.Events;
+using Cs4rsa.Service.Dialog.Interfaces;
+
+using Prism.Events;
 
 using System;
 using System.Collections.Generic;
@@ -11,14 +14,20 @@ namespace Cs4rsa.Service.Dialog
 {
     public class DialogService : IDialogService
     {
-        public void CloseDialog()
+        private readonly IEventAggregator _eventAggregator;
+        public DialogService(IEventAggregator eventAggregator)
         {
-            throw new NotImplementedException();
+            _eventAggregator = eventAggregator;
         }
 
-        public void OpenDialog(UserControl userControl)
+        public void CloseDialog()
         {
-            throw new NotImplementedException();
+            _eventAggregator.GetEvent<CloseDialogEvent>().Publish();
+        }
+
+        public void OpenDialog(UserControl userControl, bool isCloseOnClickAway = true)
+        {
+            _eventAggregator.GetEvent<OpenDialogEvent>().Publish(Tuple.Create(userControl, isCloseOnClickAway));
         }
     }
 }

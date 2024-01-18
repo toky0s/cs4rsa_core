@@ -34,7 +34,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
     public sealed partial class SearchViewModel : BindableBase
     {
         #region Fields
-        private readonly ImportSessionUC _importSessionUc;
         private List<Discipline> _searchDisciplines;
         private List<Keyword> _searchKeywords;
         #endregion
@@ -45,13 +44,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
         public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
         public DelegateCommand DeleteAllCommand { get; set; }
-
-        /// <summary>
-        /// Command đi tới trang Course.
-        /// </summary>
-        public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
         public DelegateCommand<SubjectModel> DetailCommand { get; set; }
-        public DelegateCommand<Int32> GotoViewCommand { get; set; }
         #endregion
 
         #region Properties
@@ -174,10 +167,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ISnackbarMessageQueue snackbarMessageQueue
         )
         {
-            #region Fields
-            var showDetailsSubjectUc = new ShowDetailsSubjectUC();
-            _importSessionUc = new ImportSessionUC();
-            #endregion
+            var hc = eventAggregator.GetHashCode();
 
             #region Services
             _teacherCrawler = teacherCrawler;
@@ -190,7 +180,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Messengers
-            eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe((value) =>
+            _eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe((value) =>
             {
                 Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
@@ -211,7 +201,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //    ReloadDisciplineAndKeyWord();
             //});
 
-            eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(value =>
+            _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(value =>
             {
                 if (value is SchoolClassBlock schoolClassBlock)
                 {
@@ -255,19 +245,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             AddCommand = new DelegateCommand(OnAdd, () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
             ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
-            GotoCourseCommand = new DelegateCommand<SubjectModel>(OnGotoCourse);
-            //GotoViewCommand = new DelegateCommand<int>(idx => CrrScrIdx = idx);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
             {
-                ((ShowDetailsSubjectViewModel)showDetailsSubjectUc.DataContext).SubjectModel = subjectModel;
+                var showDetailsSubjectUc = new ShowDetailsSubjectUC();
+                ((ShowDetailsSubjectUCViewModel)showDetailsSubjectUc.DataContext).SubjectModel = subjectModel;
                 _dialogService.OpenDialog(showDetailsSubjectUc);
             });
             ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
             #endregion
 
             LoadDiscipline();
-            Application.Current.Dispatcher.Invoke(LoadSavedSchedules);
+            LoadSavedSchedules();
         }
 
         private void OnSltCombiChanged(CombinationModel value)
@@ -434,7 +423,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void OnGotoCourse(SubjectModel subjectModel)
         {
             var courseId = subjectModel.CourseId;
-            var semesterValue = _unitOfWork.Settings.GetSetting().SemesterValue;
+            var semesterValue = _unitOfWork.Settings.GetByKey(Setting.SemesterValue);
             var url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={courseId}&timespan={semesterValue}&t=s";
             _openInBrowser.Open(url);
         }
@@ -456,8 +445,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnOpenImportDialog()
         {
-            var vm = (ImportSessionViewModel)_importSessionUc.DataContext;
-            _dialogService.OpenDialog(_importSessionUc);
+            var importSessionUc = new ImportSessionUC();
+            var vm = (ImportSessionUCViewModel)importSessionUc.DataContext;
+            _dialogService.OpenDialog(importSessionUc);
             vm.LoadScheduleSession();
         }
 
@@ -568,23 +558,26 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Thêm một task tải Subject.
         /// </summary>
         /// <remarks>
-        /// Thực hiện tải Subject. Thông báo nếu Subject không tồn tại, ngược lại
-        /// thay thế pseudo Subject bằng Subject đã tải được. 
+        /// 1. Thực hiện tải Subject.
         /// <br></br>
-        /// Nếu không có Subject nào đang được tải, thực hiện select Subject 
-        /// đầu tiên trong danh sách. Thực hiện tính lại tổng Subject, tổng 
-        /// tín chỉ, số lượng môn học. Và trả về Subject Model đã tải được. 
+        /// 2. Thông báo nếu Subject không tồn tại, ngược lại thay thế Pseudo Subject bằng Subject đã tải được. 
         /// <br></br>
-        /// Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
+        /// 3. Nếu không có Subject nào đang được tải, thực hiện select Subject đầu tiên trong danh sách. 
+        /// <br></br>
+        /// 4. Thực hiện tính lại tổng Subject, tổng tín chỉ, số lượng môn học. Và trả về Subject Model đã tải được. 
+        /// <br></br>
+        /// 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
         /// </remarks>
         /// <param name="keyword">Keyword</param>
-        /// <returns>Task of SubjectModel</returns>
+        /// <returns>Task</returns>
         private async Task<SubjectModel> OnAddSubjectAsync(Keyword keyword)
         {
             try
             {
+                // 1. Thực hiện tải Subject. 
                 var subjectModel = await DownloadSubject(keyword, IsUseCache);
 
+                // 2. Thông báo nếu Subject không tồn tại, ngược lại thay thế Pseudo Subject bằng Subject đã tải được. 
                 if (subjectModel == null)
                 {
                     _snackbarMessageQueue.Enqueue($"Không tìm thấy môn {keyword.SubjectName} trong học kỳ này");
@@ -593,19 +586,21 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                 ReplacePseudoSubject(subjectModel);
 
-                if (!SubjectModels.Where(sm => sm.IsDownloading).Any())
+                // 3. Nếu không có Subject nào đang được tải, thực hiện select Subject đầu tiên trong danh sách. 
+                if (!SubjectModels.Any(sm => sm.IsDownloading))
                 {
                     SelectedSubjectModel = subjectModel;
                 }
 
+                // 4. Thực hiện tính lại tổng Subject, tổng tín chỉ, số lượng môn học. Và trả về Subject Model đã tải được. 
                 TotalSubject = SubjectModels.Count;
                 UpdateCreditTotal();
                 UpdateSubjectAmount();
-
                 return subjectModel;
             }
             catch (Exception e)
             {
+                // 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
                 AddErrorToPseudoSubject(e.Message, keyword.CourseId);
                 return null;
             }
@@ -654,7 +649,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             AddCommand.RaiseCanExecuteChanged();
 
             var teacherModels = await Task.WhenAll(subject.TeacherUrls.Select(url => _teacherCrawler.Crawl(url, keyword.CourseId)));
-            return new SubjectModel(subject, teacherModels, keyword.Color);
+
+            var distinctTeacherModels = teacherModels.Distinct().ToArray();
+            return new SubjectModel(subject, distinctTeacherModels, keyword.Color);
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)
@@ -790,19 +787,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         /// <summary>
-        /// Thay thế Pseudo Subject bằng Real Subject.
+        /// Thay thế Pseudo Subject bằng Subject được tải xuống.
         /// </summary>
         /// <param name="subjectModel">SubjectModel</param>
         private void ReplacePseudoSubject(SubjectModel subjectModel)
         {
-            for (var i = 0; i < SubjectModels.Count; i++)
-            {
-                if (SubjectModels[i].CourseId.Equals(subjectModel.CourseId))
-                {
-                    SubjectModels[i].AssignData(subjectModel);
-                    return;
-                }
-            }
+            var pseudoSubject = SubjectModels.First(sm => sm.CourseId.Equals(subjectModel.CourseId));
+            pseudoSubject.AssignData(subjectModel);
         }
 
         /// <summary>

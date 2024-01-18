@@ -9,7 +9,12 @@ namespace Cs4rsa.Service.Dialog.Interfaces
 {
     public interface IDialogService
     {
-        void OpenDialog(UserControl userControl);
+        /// <summary>
+        /// Mở một Dialog
+        /// </summary>
+        /// <param name="userControl">Dialog</param>
+        /// <param name="isCloseOnClickAway">Nếu True, cho phép đóng Dialog khi click ra ngoài. Ngược lại, không cho phép.</param>
+        void OpenDialog(UserControl userControl, bool isCloseOnClickAway = true);
         void CloseDialog();
     }
 }

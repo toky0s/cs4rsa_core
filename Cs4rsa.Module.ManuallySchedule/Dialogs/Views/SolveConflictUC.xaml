@@ -1,96 +1,96 @@
 ﻿<UserControl
-  x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.SolveConflictUC"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.SolveConflictUC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
-prism:ViewModelLocator.AutoWireViewModel="True"
-  Padding="10">
-  <StackPanel>
-    <TextBlock
-      Margin="0,0,0,16"
-      Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-      TextAlignment="Left">
-      Giải quyết xung đột
-    </TextBlock>
-    <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-      Xung đột này có thể được giải quyết
-      bằng cách bỏ chọn một trong hai lớp
-    </TextBlock>
-    <TextBlock
-      Grid.Row="1"
-      Margin="0,0,0,16"
-      HorizontalAlignment="Center"
-      Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-      <Run FontWeight="Bold" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
-      <Run Text="hoặc" />
-      <Run FontWeight="Bold" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
-      <Run Text="?" />
-    </TextBlock>
-    <Grid>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition />
-        <ColumnDefinition />
-      </Grid.ColumnDefinitions>
-      <md:Card
-        Grid.Column="0"
-        Margin="0,0,8,0"
-        Padding="5"
-        Style="{StaticResource MaterialDesignOutlinedCard}"
-        UniformCornerRadius="12">
+    Padding="10"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,16"
+            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            TextAlignment="Left">
+            Giải quyết xung đột
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
+            Xung đột này có thể được giải quyết
+            bằng cách bỏ chọn một trong hai lớp
+        </TextBlock>
+        <TextBlock
+            Grid.Row="1"
+            Margin="0,0,0,16"
+            HorizontalAlignment="Center"
+            Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
+            <Run FontWeight="Bold" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
+            <Run Text="hoặc" />
+            <Run FontWeight="Bold" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
+            <Run Text="?" />
+        </TextBlock>
         <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-          </Grid.ColumnDefinitions>
-          <Border
-            Grid.Column="0"
-            Width="10"
-            Margin="0,0,5,0"
-            Background="{Binding FColor}"
-            CornerRadius="4" />
-          <StackPanel Grid.Column="1">
-            <TextBlock Text="{Binding FirstSc.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
-          </StackPanel>
-          <Button
-            Grid.Column="2"
-            Command="{Binding RemoveCgFirstCmd}"
-            Content="{md:PackIcon Kind=Close}"
-            Style="{StaticResource MaterialDesignIconButton}"
-            ToolTip="Loại bỏ" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <md:Card
+                Grid.Column="0"
+                Margin="0,0,8,0"
+                Padding="5"
+                Style="{StaticResource MaterialDesignOutlinedCard}"
+                UniformCornerRadius="12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Grid.Column="0"
+                        Width="10"
+                        Margin="0,0,5,0"
+                        Background="{Binding FColor}"
+                        CornerRadius="4" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding FirstSc.SubjectName}" />
+                        <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding RemoveCgFirstCmd}"
+                        Content="{md:PackIcon Kind=Close}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Loại bỏ" />
+                </Grid>
+            </md:Card>
+            <md:Card
+                Grid.Column="1"
+                Padding="5"
+                Style="{StaticResource MaterialDesignOutlinedCard}"
+                UniformCornerRadius="12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Grid.Column="0"
+                        Width="10"
+                        Margin="0,0,5,0"
+                        Background="{Binding SColor}"
+                        CornerRadius="4" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding SecondSc.SubjectName}" />
+                        <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding RemoveCgSecondCmd}"
+                        Content="{md:PackIcon Kind=Close}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        ToolTip="Loại bỏ" />
+                </Grid>
+            </md:Card>
         </Grid>
-      </md:Card>
-      <md:Card
-        Grid.Column="1"
-        Padding="5"
-        Style="{StaticResource MaterialDesignOutlinedCard}"
-        UniformCornerRadius="12">
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-          </Grid.ColumnDefinitions>
-          <Border
-            Grid.Column="0"
-            Width="10"
-            Margin="0,0,5,0"
-            Background="{Binding SColor}"
-            CornerRadius="4" />
-          <StackPanel Grid.Column="1">
-            <TextBlock Text="{Binding SecondSc.SubjectName}" />
-            <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
-          </StackPanel>
-          <Button
-            Grid.Column="2"
-            Command="{Binding RemoveCgSecondCmd}"
-            Content="{md:PackIcon Kind=Close}"
-            Style="{StaticResource MaterialDesignIconButton}"
-            ToolTip="Loại bỏ" />
-        </Grid>
-      </md:Card>
-    </Grid>
-  </StackPanel>
+    </StackPanel>
 </UserControl>

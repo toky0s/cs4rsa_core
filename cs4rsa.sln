@@ -23,11 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamListExcelReader_Console
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.SubjectCrawler", "Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj", "{995CC365-28E3-4525-8B0A-960A4F894C15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Common", "Cs4rsa.Common\Cs4rsa.Common.csproj", "{B090DEC9-515E-47D1-8EEA-B47503CA635F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Infrastructure.Common", "Cs4rsa.Common\Cs4rsa.Infrastructure.Common.csproj", "{B090DEC9-515E-47D1-8EEA-B47503CA635F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_SubjectCrawler", "Test_SubjectCrawler\Test_SubjectCrawler.csproj", "{829E5867-6135-489B-8EC7-BE399329CFCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Database", "Cs4rsa.Database\Cs4rsa.Database.csproj", "{567F1543-C1D3-48AA-8221-2D6E16B4E09B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Infrastructure.Database", "Cs4rsa.Database\Cs4rsa.Infrastructure.Database.csproj", "{567F1543-C1D3-48AA-8221-2D6E16B4E09B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.TeacherCrawler", "Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj", "{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}"
 EndProject
@@ -49,9 +49,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.Dialog", "Cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.Conflict", "Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj", "{25F1347B-1717-4A4E-93AF-75BE80A5678A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Event", "Cs4rsa.Event\Cs4rsa.Event.csproj", "{1D99C751-5266-45EE-8688-AC61378F6CCC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.WPF.Converter", "Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj", "{90F0B45E-0A96-43C0-A59A-10F4D1331022}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Infrastructure", "Cs4rsa.Infrastructure\Cs4rsa.Infrastructure.csproj", "{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -467,26 +467,6 @@ Global
 		{25F1347B-1717-4A4E-93AF-75BE80A5678A}.Release|x64.Build.0 = Release|Any CPU
 		{25F1347B-1717-4A4E-93AF-75BE80A5678A}.Release|x86.ActiveCfg = Release|Any CPU
 		{25F1347B-1717-4A4E-93AF-75BE80A5678A}.Release|x86.Build.0 = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|ARM.Build.0 = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|x64.Build.0 = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Debug|x86.Build.0 = Debug|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|ARM.ActiveCfg = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|ARM.Build.0 = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|ARM64.Build.0 = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|x64.ActiveCfg = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|x64.Build.0 = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|x86.ActiveCfg = Release|Any CPU
-		{1D99C751-5266-45EE-8688-AC61378F6CCC}.Release|x86.Build.0 = Release|Any CPU
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -507,6 +487,26 @@ Global
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Release|x64.Build.0 = Release|Any CPU
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Release|x86.ActiveCfg = Release|Any CPU
 		{90F0B45E-0A96-43C0-A59A-10F4D1331022}.Release|x86.Build.0 = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Debug|x86.Build.0 = Debug|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|ARM.Build.0 = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|ARM64.Build.0 = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|x64.Build.0 = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|x86.ActiveCfg = Release|Any CPU
+		{F5EF9A32-BAE8-4B0E-9E6D-B2AC0D0EAFAF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

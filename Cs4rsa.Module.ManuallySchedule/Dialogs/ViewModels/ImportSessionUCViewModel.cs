@@ -21,7 +21,7 @@ using System.Windows;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public partial class ImportSessionViewModel : BindableBase
+    public class ImportSessionUCViewModel : BindableBase
     {
         #region Properties
         public ObservableCollection<UserSchedule> ScheduleSessions { get; set; }
@@ -84,7 +84,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ImportSessionViewModel(
+        public ImportSessionUCViewModel(
             IEventAggregator eventAggregator,
             IUnitOfWork unitOfWork, 
             ICourseCrawler courseCrawler, 

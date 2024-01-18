@@ -140,29 +140,28 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IDialogService dialogService,
             IEventAggregator eventAggregator)
         {
+            var hc = eventAggregator.GetHashCode();
+
             _openInBrowser = openInBrowser;
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
 
-            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
             {
                 ClassGroupModels.Clear();
                 SelectedSubject = null;
             });
 
-            eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(() =>
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(() =>
             {
                 ClassGroupModels.Clear();
                 TeacherCount = 0;
                 SelectedSubject = null;
             });
 
-            eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Subscribe(payload =>
-            {
-                SelectedSubjectChangedHandler(payload);
-            });
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Subscribe(SelectedSubjectChangedHandler);
 
-            eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(cgm =>
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(cgm =>
             {
                 SelectedClassGroup = null;
             });
@@ -174,7 +173,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //});
 
             // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
-            eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
             {
                 var classGroupModel = payload.ClassGroupModel;
                 var schoolClassName = payload.SelectedSchoolClassModel.SchoolClassName;
@@ -450,14 +449,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             Teachers.Clear();
             if (SelectedSubject != null && SelectedSubject.ClassGroupModels != null)
             {
-                #region Add ClassGroupModel
                 foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
-                #endregion
 
-                #region Add Teacher
                 var allTeacher = new TeacherModel(0, "TẤT CẢ");
                 Teachers.Add(allTeacher);
 
@@ -465,7 +461,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // Chống trùng lặp giảng viên
                 foreach (var teacher in SelectedSubject.Teachers)
                 {
-                    if (teacher != null && !Teachers.Where(t => t.TeacherId == teacher.TeacherId).Any())
+                    if (teacher != null && !Teachers.Any(t => t.TeacherId == teacher.TeacherId))
                     {
                         Teachers.Add(teacher);
                         tempTeachers.Remove(teacher.Name);
@@ -483,7 +479,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                 }
                 SelectedTeacher = Teachers[0];
-                #endregion
 
                 // Count teacher exclude ALL option
                 TeacherCount = Teachers.Count - 1;
