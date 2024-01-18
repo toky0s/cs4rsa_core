@@ -20,7 +20,6 @@ using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
@@ -154,11 +153,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly IDialogService _dialogService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly ITeacherCrawler _teacherCrawler;
         #endregion
 
         public SearchViewModel(
-            ITeacherCrawler teacherCrawler,
             IEventAggregator eventAggregator,
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
@@ -170,7 +167,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var hc = eventAggregator.GetHashCode();
 
             #region Services
-            _teacherCrawler = teacherCrawler;
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
@@ -393,23 +389,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnDeleteAll()
         {
-            #region Clone Subject Models
             var subjects = new List<SubjectModel>();
             foreach (var subjectModel in SubjectModels)
             {
                 var restoreSubject = subjectModel.DeepClone();
                 subjects.Add(restoreSubject);
             }
-            #endregion
 
-            #region Clone ClassGroup Models
             var classGroupModels = new List<ClassGroupModel>();
             //ChoseViewModel choseVm = GetViewModel<ChoseViewModel>();
             //foreach (ClassGroupModel classGroupModel in choseVm.ClassGroupModels)
             //{
             //    classGroupModels.Add(classGroupModel.DeepClone());
             //}
-            #endregion
 
             SubjectModels.Clear();
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
@@ -615,12 +607,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var subjectModel = await OnAddSubjectAsync(keyword);
             if (subjectModel == null) return;
-
             // Lấy ra ClassGroupModel có tên bằng với tên đã lưu.
             var classGroupModel = subjectModel
                 .ClassGroupModels
                 .First(cgm => cgm.Name.Equals(userSubject.ClassGroup));
-            Debug.Assert(classGroupModel != null);
             if (subjectModel.IsSpecialSubject)
             {
                 classGroupModel.PickSchoolClass(userSubject.SchoolClass);
@@ -645,13 +635,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 var semester = _unitOfWork.Settings.GetByKey("CurrentSemesterValue");
                 subject = await _subjectCrawler.Crawl(keyword.CourseId, semester);
             }
-            if (subject == null) return null;
-            AddCommand.RaiseCanExecuteChanged();
-
-            var teacherModels = await Task.WhenAll(subject.TeacherUrls.Select(url => _teacherCrawler.Crawl(url, keyword.CourseId)));
-
-            var distinctTeacherModels = teacherModels.Distinct().ToArray();
-            return new SubjectModel(subject, distinctTeacherModels, keyword.Color);
+            if (subject == null)
+            {
+                return null;
+            }
+            else
+            {
+                AddCommand.RaiseCanExecuteChanged();
+                var teacherModels = await Task.WhenAll(subject.TeacherUrls.Select(url => _teacherCrawler.Crawl(url, keyword.CourseId)));
+                var distinctTeacherModels = teacherModels.Distinct().ToArray();
+                return new SubjectModel(subject, distinctTeacherModels, keyword.Color);
+            }
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)

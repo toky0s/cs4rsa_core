@@ -16,6 +16,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         public Search()
         {
             InitializeComponent();
+            Vm = (SearchViewModel)DataContext;
         }
 
         public static bool IsKeyAChar(Key key)
@@ -84,11 +85,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         {
             var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.DetailCommand.Execute(subjectModel);
-        }
-
-        public void LoadData()
-        {
-            Vm = (SearchViewModel)DataContext;
         }
     }
 }

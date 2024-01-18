@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {

@@ -89,20 +89,20 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _unitOfWork = unitOfWork;
 
             #region Messengers
-            eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
             {
                 DelSubjectMsgHandler(payload);
             });
 
-            eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
 
-            eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
             {
-                eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
+                _eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
                 AddClassGroupModel(payload);
             });
 
-            eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
@@ -110,7 +110,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 });
             });
 
-            eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
             {
                 _dialogService.CloseDialog();
                 RemoveChoosedClassMsgHandler(payload);
@@ -124,7 +124,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //});
 
             // Click vào block thì đồng thời select class group model tương ứng.
-            eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
             {
                 if (payload.GetType() == typeof(SchoolClassBlock))
                 {

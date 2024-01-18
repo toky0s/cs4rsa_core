@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS "Students" (
 );
 DROP TABLE IF EXISTS "Teachers";
 CREATE TABLE IF NOT EXISTS "Teachers" (
-	"TeacherId"	INTEGER NOT NULL,
+	"TeacherId"	TEXT NOT NULL,
 	"Name"	TEXT,
 	"Sex"	TEXT,
 	"Place"	TEXT,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "Teachers" (
 	"TeachedSubjects"	TEXT,
 	"Path"	TEXT,
 	"Url"	TEXT,
-	CONSTRAINT "PK_Teachers" PRIMARY KEY("TeacherId" AUTOINCREMENT)
+	CONSTRAINT "PK_Teachers" PRIMARY KEY("TeacherId")
 );
 DROP TABLE IF EXISTS "UserSchedules";
 CREATE TABLE IF NOT EXISTS "UserSchedules" (

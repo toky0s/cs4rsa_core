@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Cs4rsa.Service.SubjectCrawler.Utils;
-using Cs4rsa.Service.TeacherCrawler.Models;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
@@ -15,7 +14,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public readonly string Name;
         public readonly string SubjectCode;
         public string SubjectName { get; }
-
+        public List<ClassTeacher> ClassTeachers { get; set; }
         public List<string> RegisterCodes
         {
             get
@@ -51,6 +50,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         {
             _schoolClasses.AddRange(schoolClasses);
             GetRegisterCode();
+            ClassTeachers = SchoolClasses.SelectMany(sc => sc.ClassTeachers).ToList();
         }
 
         /// <summary>
@@ -183,17 +183,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 }
             }
             return phases.Count == 2 ? Phase.All : phases[0];
-        }
-
-        public IEnumerable<TeacherModel> GetTeachers()
-        {
-            foreach (SchoolClass schoolClass in _schoolClasses)
-            {
-                foreach (TeacherModel teacher in schoolClass.Teachers)
-                {
-                    yield return teacher;
-                }
-            }
         }
 
         public IEnumerable<Place> GetPlaces()

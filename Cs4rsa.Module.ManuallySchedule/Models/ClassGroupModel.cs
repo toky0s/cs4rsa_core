@@ -1,6 +1,5 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
-using Cs4rsa.Service.TeacherCrawler.Models;
 
 using System;
 using System.Collections.Generic;
@@ -26,9 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
         public List<SchoolClassModel> CurrentSchoolClassModels { get; }
-
         public readonly IEnumerable<SchoolClassModel> NormalSchoolClassModels;
-
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
         public string Name { get; }
@@ -38,12 +35,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
         public Phase Phase => ClassGroup.GetPhase();
-
         public Schedule Schedule { get; private set; }
-
         public string Color { get; }
         public SchoolClassModel CompulsoryClass { get; }
         public SchoolClassModel CodeSchoolClass { get; }
+        public List<ClassTeacher> ClassTeachers { get; set; }
 
         /// <summary>
         /// Với trường hợp Special SchoolClass, người dùng sẽ phải chọn thêm một SchoolClass.
@@ -93,11 +89,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             HaveSchedule = IsHaveSchedule();
             Color = color;
             IsBelongSpecialSubject = isBelongSpecialSubject;
-
             NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, Color));
 
             if (classGroup.SchoolClasses.Count > 0)
             {
+                ClassTeachers = classGroup.ClassTeachers;
                 Schedule = classGroup.GetSchedule();
                 CurrentSchoolClassModels = new List<SchoolClassModel>();
 
@@ -140,11 +136,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
                 .Distinct()
                 .Count() >= 2;
-        }
-
-        public IEnumerable<TeacherModel> GetTeacherModels()
-        {
-            return ClassGroup.GetTeachers();
         }
 
         /// <summary>

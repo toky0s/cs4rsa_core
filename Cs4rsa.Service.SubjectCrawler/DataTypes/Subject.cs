@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Web;
 
 using Cs4rsa.Common;
 using Cs4rsa.Service.SubjectCrawler.Utils;
@@ -19,6 +19,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         private readonly string _rawSoup;
         
         public List<string> TempTeachers { get; set; }
+        public bool IsSpecialSubject { get; set; }
         public List<string> TeacherUrls { get; private set; }
         public List<ClassGroup> ClassGroups { get; }
 
@@ -71,6 +72,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             CourseId = courseId;
             
             GetClassGroups();
+            IsSpecialSubject = GetIsSpecialSubject();
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// được xem là một Special Subject.
         /// </summary>
         /// <returns></returns>
-        public bool IsSpecialSubject()
+        private bool GetIsSpecialSubject()
         {
             return ClassGroups
                 .Select(classGroup => classGroup
@@ -107,8 +109,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         /// <summary>
         /// Lấy ra các ClassGroup và thêm chúng vào danh sách chứa
-        /// ClassGroup của đối tượng này bằng cách match các tên 
-        /// với các SchoolClass nó tên giống.
+        /// ClassGroup bằng cách match các tên với các SchoolClass có tên giống.
         /// </summary>
         private void GetClassGroups()
         {
@@ -161,16 +162,11 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
             var urlToSubjectDetailPage = GetSubjectDetailPageUrl(aTag);
 
-            #region Teacher Parser
             /* 
              * ACC 448 - Thực Tập Tốt Nghiệp, cái môn củ chuối này nó không có
              * tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
              * tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
              * Ngày Mùng 5 Tết 2022 
-             * 
-             * Trong tình trạng mạng yếu, việc cào thêm dữ liệu của giảng viên là
-             * không ưu tiên, hãy set cờ withTeacher về false. Hai list teacher
-             * và tmpTeacher sẽ về rỗng.
              * 
              * Thông tin của Teacher sẽ ưu tiên lấy từ DB ra. Các môn đã có cache
              * hầu hết sẽ có thông tin giảng viên đi kèm.
@@ -184,17 +180,28 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
              *  XinTA - Ngày 19/07/2023 - Project CWEBIZ - Integrate
              *  XinTA - Ngày 16/12/2023 - Migrate
              */
+            string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
+            TeacherUrls.Add(teacherUrl);
+
+            var classTeachers = new List<ClassTeacher>();
+
             var tempTeachers = new List<string>();
             var teacherName = GetTeacherName(trTagClassLop);
+            
             // 1. Add tmp teachers
             if (!string.IsNullOrEmpty(teacherName))
             {
                 tempTeachers.Add(teacherName);
-            }
 
-            string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
-            TeacherUrls.Add(teacherUrl);
-            #endregion
+                var teacherUri = new Uri(teacherUrl);
+                var instructionId = HttpUtility.ParseQueryString(teacherUri.Query).Get("intructorid");
+                var classTeacher = new ClassTeacher()
+                {
+                    Name = teacherName,
+                    IntructorId = instructionId
+                };
+                classTeachers.Add(classTeacher);
+            }
 
             var schoolClassName = aTag.InnerText.Trim();
             var registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
@@ -235,7 +242,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 .Distinct()
                 .Select(BasicDataConverter.ToPlace);
 
-            #region MetaData
             // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
             var dayOfWeeks = schedule.GetSchoolDays().ToList();
             var metaCount = dayOfWeeks.Count;
@@ -253,16 +259,16 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 var dayPlacePair = new DayRoomPlace(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
                 metaData.AddDayTimePair(dayOfWeeks[i], dayPlacePair);
             }
-            #endregion
 
             var registrationStatus = tdTags[10].InnerText.Trim();
             var implementationStatus = tdTags[11].InnerText.Trim();
 
-            var schoolClass = new SchoolClass(schoolClassName, registerCode, studyType, emptySeat,
-                                        registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                                        rooms, places, tempTeachers,
-                                        registrationStatus, implementationStatus,
-                                        urlToSubjectDetailPage, metaData, SubjectCode);
+            var schoolClass = new SchoolClass(
+                schoolClassName, registerCode, studyType, emptySeat,
+                registrationTermEnd, registrationTermStart, studyWeek, schedule,
+                rooms, places, tempTeachers, classTeachers,
+                registrationStatus, implementationStatus,
+                urlToSubjectDetailPage, metaData, SubjectCode);
             return schoolClass;
         }
 
@@ -292,6 +298,28 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             TempTeachers.Add(teacherName);
             TempTeachers = TempTeachers.Distinct().ToList();
             return teacherName;
+        }
+
+        /// <summary>
+        /// Trả về teacherModel Name của một school class. Đồng thời thêm teacherModel Name này vào
+        /// temp teachers nhằm đảm bảo không thất thoát các teacherModel không có detail page.
+        /// Cải thiện độ chính xác của bộ lọc teacherModel.
+        /// </summary>
+        /// <param name="trTagClassLop">HtmlNode với giá trị class="lop".</param>
+        /// <returns>Tên giảng viên</returns>
+        private ClassTeacher GetClassTeacher (HtmlNode trTagClassLop)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml(trTagClassLop.InnerHtml);
+            var teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
+            var slices = teacherTdNode.InnerText.SplitAndRemoveAllSpace();
+            var teacherName = string.Join(" ", slices);
+            ClassTeacher classTeacher = new ClassTeacher()
+            {
+                Name = teacherName,
+            };
+
+            return classTeacher;
         }
 
         private IEnumerable<HtmlNode> GetTrTagsWithClassLop()

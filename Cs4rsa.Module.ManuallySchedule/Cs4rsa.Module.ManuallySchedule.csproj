@@ -221,10 +221,6 @@
       <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
       <Name>Cs4rsa.Service.SubjectCrawler</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
-      <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
-      <Name>Cs4rsa.Service.TeacherCrawler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.UI.ScheduleTable\Cs4rsa.UI.ScheduleTable.csproj">
       <Project>{e4d5b2ab-45ce-46dc-a23e-0761eede55aa}</Project>
       <Name>Cs4rsa.UI.ScheduleTable</Name>

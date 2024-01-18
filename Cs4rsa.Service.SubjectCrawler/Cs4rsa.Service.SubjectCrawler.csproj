@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +53,7 @@
     <Compile Include="Crawlers\ScheduleParser.cs" />
     <Compile Include="Crawlers\SubjectCrawler.cs" />
     <Compile Include="DataTypes\ClassGroup.cs" />
+    <Compile Include="DataTypes\ClassTeacher.cs" />
     <Compile Include="DataTypes\Cs4rsaMetaData.cs" />
     <Compile Include="DataTypes\DayPlaceMetaData.cs" />
     <Compile Include="DataTypes\DayRoomPlace.cs" />

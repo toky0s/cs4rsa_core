@@ -4,8 +4,6 @@ using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Service.SubjectCrawler.Crawlers;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
-using Cs4rsa.Service.TeacherCrawler.Crawlers;
-using Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces;
 
 using Prism.Ioc;
 using Prism.Modularity;
@@ -24,7 +22,6 @@ namespace Cs4rsa.Module.ManuallySchedule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<ShareString>();
-            containerRegistry.RegisterSingleton<ITeacherCrawler, TeacherCrawler>();
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();

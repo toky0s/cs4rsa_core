@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
-using Cs4rsa.Service.TeacherCrawler.Models;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
@@ -28,20 +27,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public Schedule Schedule { get; set; }
         public IEnumerable<string> Rooms { get; set; }
         public StudyWeek StudyWeek { get; set; }
-
-        /// <summary>
-        /// Tôi thấy mỗi SchoolClass chỉ có một Teacher, tại sao
-        /// lại thiết kế một Tập hợp Teacher cho SchoolClass.
-        /// Theo đa số, SchoolClass chỉ do duy nhất một teacher
-        /// đảm nhiệm, nhưng trong một số trường hợp đặc biệt
-        /// một SchoolClass sẽ được tách với nhiều teacher đảm nhiệm
-        /// và chúng khác nhau ở thứ học trong tuần hoặc chả khác
-        /// nhau gì hết.
-        /// 
-        /// Tương ứng với TempTeachers.
-        /// </summary>
-        public IEnumerable<TeacherModel> Teachers { get; set; }
         public List<string> TempTeachers { get; set; }
+        public List<ClassTeacher> ClassTeachers { get; set; }
         public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
@@ -60,6 +47,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             IEnumerable<string> rooms,
             IEnumerable<Place> places,
             List<string> tempTeachers,
+            List<ClassTeacher> classTeachers,
             string registrationStatus,
             string implementationStatus,
             string url,
@@ -78,6 +66,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             Rooms = rooms;
             Places = places;
             TempTeachers = tempTeachers;
+            ClassTeachers = classTeachers;
             RegistrationStatus = registrationStatus;
             ImplementationStatus = implementationStatus;
             Url = url;
@@ -134,13 +123,13 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 foreach (StudyTime studyTime in studyTimes)
                 {
                     SchoolClassUnit schoolClassUnit = new SchoolClassUnit(
-                          this
-                        , dayOfWeek
-                        , studyTime.Start
-                        , studyTime.End
-                        , DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room
-                        , StudyWeek
-                          , SchoolClassName
+                        this, 
+                        dayOfWeek, 
+                        studyTime.Start, 
+                        studyTime.End, 
+                        DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room, 
+                        StudyWeek, 
+                        SchoolClassName
                     );
                     yield return schoolClassUnit;
                 }

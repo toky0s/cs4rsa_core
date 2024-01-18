@@ -1,6 +1,5 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.Service.TeacherCrawler.Models;
 
 using Prism.Mvvm;
 
@@ -21,7 +20,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public readonly UserSubject UserSubject;
 
-        public TeacherModel[] Teachers { get; set; }
+        public ClassTeacher[] ClassTeachers { get; set; }
         public List<string> TempTeachers { get; set; }
         public List<ClassGroupModel> ClassGroupModels { get; set; }
         public string SubjectName { get; set; }
@@ -92,7 +91,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public SubjectModel(
             Subject subject, 
-            TeacherModel[] teacherModels, 
+            ClassTeacher[] classTeachers, 
             string color)
         {
             Color = color;
@@ -103,11 +102,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             StudyUnit = subject.StudyUnit;
             PrerequisiteSubjects = GetMustStudySubjects();
             ParallelSubjects = GetParallelSubjects();
-            IsSpecialSubject = Subject.IsSpecialSubject();
-            ClassGroupModels = Subject.ClassGroups
-                .Select(item => new ClassGroupModel(item, IsSpecialSubject, Color))
-                .ToList();
-            Teachers = teacherModels;
+            IsSpecialSubject = Subject.IsSpecialSubject;
+            ClassGroupModels = Subject.ClassGroups.Select(item => new ClassGroupModel(item, IsSpecialSubject, Color)).ToList();
+            ClassTeachers = classTeachers;
             TempTeachers = subject.TempTeachers;
             StudyUnitType = subject.StudyUnitType;
             StudyType = subject.StudyType;
@@ -184,7 +181,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             StudyUnit = subjectModel.Subject.StudyUnit;
             IsSpecialSubject = subjectModel.IsSpecialSubject;
             ClassGroupModels = subjectModel.ClassGroupModels;
-            Teachers = subjectModel.Teachers;
+            ClassTeachers = subjectModel.ClassTeachers;
             StudyUnit = subjectModel.StudyUnit;
             PrerequisiteSubjects = subjectModel.PrerequisiteSubjects;
             ParallelSubjects = subjectModel.ParallelSubjects;

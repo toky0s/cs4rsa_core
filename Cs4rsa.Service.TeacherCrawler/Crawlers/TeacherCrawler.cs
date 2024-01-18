@@ -45,7 +45,7 @@ namespace Cs4rsa.Service.TeacherCrawler.Crawlers
             
             var teacherModel = new TeacherModel
             {
-                TeacherId = int.Parse(id),
+                TeacherId = id,
                 Name = name,
                 Sex = sex,
                 Place = place,

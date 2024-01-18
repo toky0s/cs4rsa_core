@@ -81,7 +81,7 @@ namespace Cs4rsa.Database.Implements
                 }
                 , r => new Teacher
                 {
-                      TeacherId= r.GetInt32(0)
+                      TeacherId= r.GetString(0)
                     , Name= r.GetString(1)
                     , Sex= r.GetString(2)
                     , Place= r.GetString(3)
@@ -114,7 +114,7 @@ namespace Cs4rsa.Database.Implements
                 }
                 , r => new Teacher
                 {
-                      TeacherId= r.GetInt32(0)
+                      TeacherId= r.GetString(0)
                     , Name= r.GetString(1)
                     , Sex= r.GetString(2)
                     , Place= r.GetString(3)
@@ -148,7 +148,7 @@ namespace Cs4rsa.Database.Implements
                 }
                 , r => new Teacher
                 {
-                      TeacherId= r.GetInt32(0)
+                      TeacherId= r.GetString(0)
                     , Name= r.GetString(1)
                     , Sex= r.GetString(2)
                     , Place= r.GetString(3)
@@ -182,7 +182,7 @@ namespace Cs4rsa.Database.Implements
                 }
                 , r => new Teacher
                 {
-                      TeacherId= r.GetInt32(0)
+                      TeacherId= r.GetString(0)
                     , Name= r.GetString(1)
                     , Sex= r.GetString(2)
                     , Place= r.GetString(3)
@@ -252,7 +252,7 @@ namespace Cs4rsa.Database.Implements
                 sb.ToString()
                 , r => new Teacher
                 {
-                      TeacherId= r.GetInt32(0)
+                      TeacherId= r.GetString(0)
                     , Name= r.GetString(1)
                     , Sex= r.GetString(2)
                     , Place= r.GetString(3)

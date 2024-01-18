@@ -1,6 +1,5 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
-using Cs4rsa.Service.TeacherCrawler.Models;
 using Cs4rsa.UI.ScheduleTable.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
@@ -28,7 +27,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public IEnumerable<string> Rooms { get; set; }
         public IEnumerable<string> TempTeachers { get; set; }
         public IEnumerable<Place> Places { get; set; }
-        public IEnumerable<TeacherModel> Teachers { get; set; }
 
         /// <summary>
         /// Trả về <see cref="SchoolClass.CurrentPhase"/> của lần
@@ -50,7 +48,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             SubjectCode           = schoolClass.SubjectCode;
             Rooms                 = schoolClass.Rooms;
             Places                = schoolClass.Places;
-            Teachers              = schoolClass.Teachers;
             TempTeachers          = schoolClass.TempTeachers;
             RegistrationStatus    = schoolClass.RegistrationStatus;
             ImplementationStatus  = schoolClass.ImplementationStatus;
