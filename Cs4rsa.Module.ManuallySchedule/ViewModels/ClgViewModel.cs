@@ -10,7 +10,6 @@ using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Dialog.Interfaces;
-using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Prism.Commands;
 using Prism.Events;
@@ -21,11 +20,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
     /// <summary>
     /// Class group View Model
     /// </summary>
-    public sealed partial class ClgViewModel : BindableBase
+    public class ClgViewModel : BindableBase
     {
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
-        public ObservableCollection<ClassTeacher> Teachers { get; set; }
+        public ObservableCollection<string> TeacherNames { get; set; }
 
         private readonly ICollectionView _classGroupModelsView;
 
@@ -43,11 +42,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             set { SetProperty(ref _teacherCount, value); }
         }
 
-        private ClassTeacher _selectedTeacher;
-        public ClassTeacher SelectedTeacher
+        private string _selectedTeacherName;
+        public string SelectedTeacherName
         {
-            get { return _selectedTeacher; }
-            set { SetProperty(ref _selectedTeacher, value); OnFilter(); }
+            get { return _selectedTeacherName; }
+            set { SetProperty(ref _selectedTeacherName, value); OnFilter(); }
         }
 
         private SubjectModel _selectedSubject;
@@ -55,6 +54,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             get { return _selectedSubject; }
             set { SetProperty(ref _selectedSubject, value); }
+        }
+
+        private bool _anyTeacherName;
+        public bool AnyTeacherName
+        {
+            get { return _anyTeacherName; }
+            set { SetProperty(ref _anyTeacherName, value); }
         }
         #endregion
 
@@ -186,7 +192,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _classGroupModelsView.Filter = ClassGroupFilter;
 
             TeacherCount = 0;
-            Teachers = new ObservableCollection<ClassTeacher>();
+            AnyTeacherName = true;
+            TeacherNames = new ObservableCollection<string>();
             GotoCourseCommand = new DelegateCommand(OnGotoCourse);
             ShowDetailsSchoolClassesCommand = new DelegateCommand(OnShowDetailsSchoolClasses);
             FilterCommand = new DelegateCommand(OnFilter);
@@ -305,9 +312,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private bool CheckTeacher(ClassGroupModel classGroupModel)
         {
-            if (SelectedTeacher == null || string.IsNullOrWhiteSpace(SelectedTeacher.IntructorId)) return true;
-            return classGroupModel.ClassTeachers.Any(ct => ct.IntructorId == SelectedTeacher.IntructorId)
-                || classGroupModel.TempTeacher.Contains(SelectedTeacher.Name);
+            return SelectedTeacherName == "TẤT CẢ" 
+                || classGroupModel.TeacherNames.Contains(SelectedTeacherName);
         }
 
         private bool CheckDayOfWeek(ClassGroupModel classGroupModel)
@@ -444,44 +450,32 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void SelectedSubjectChangedHandler(SubjectModel subjectModel)
         {
+            AnyTeacherName = subjectModel.TeacherNames.Count > 0;
             SelectedSubject = subjectModel;
             ClassGroupModels.Clear();
-            Teachers.Clear();
-            if (SelectedSubject != null && SelectedSubject.ClassGroupModels != null)
+            TeacherNames.Clear();
+
+            if (SelectedSubject != null 
+                && SelectedSubject.ClassGroupModels != null)
             {
                 foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
                 {
                     ClassGroupModels.Add(classGroupModel);
                 }
 
-                var allTeacher = ClassTeacher.Create();
-                Teachers.Add(allTeacher);
-
-                var tempTeachers = SelectedSubject.TempTeachers;
-                // Chống trùng lặp giảng viên
-                foreach (var teacher in SelectedSubject.ClassTeachers)
+                TeacherNames.Add("TẤT CẢ");
+                foreach (var teacherName in SelectedSubject.TeacherNames)
                 {
-                    if (teacher != null && !Teachers.Any(t => t.IntructorId == teacher.IntructorId))
+                    if (teacherName != null && !TeacherNames.Contains(teacherName))
                     {
-                        Teachers.Add(teacher);
-                        tempTeachers.Remove(teacher.Name);
+                        TeacherNames.Add(teacherName);
                     }
                 }
 
-                // Giảng viên còn sót lại trong danh sách temp
-                // mà không có detail page được xem là giảng viên thỉnh giảng
-                if (tempTeachers.Count > 0)
-                {
-                    for (var i = 0; i < tempTeachers.Count; i++)
-                    {
-                        var guestLecturer = ClassTeacher.Create(tempTeachers[i]);
-                        Teachers.Add(guestLecturer);
-                    }
-                }
-                SelectedTeacher = Teachers[0];
+                SelectedTeacherName = TeacherNames[0];
 
                 // Count teacher exclude ALL option
-                TeacherCount = Teachers.Count - 1;
+                TeacherCount = TeacherNames.Count - 1;
                 _classGroupModelsView.Refresh();
             }
         }

@@ -27,8 +27,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public Schedule Schedule { get; set; }
         public IEnumerable<string> Rooms { get; set; }
         public StudyWeek StudyWeek { get; set; }
-        public List<string> TempTeachers { get; set; }
-        public List<ClassTeacher> ClassTeachers { get; set; }
+        public List<string> TeacherNames { get; set; }
         public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
@@ -46,8 +45,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             Schedule schedule,
             IEnumerable<string> rooms,
             IEnumerable<Place> places,
-            List<string> tempTeachers,
-            List<ClassTeacher> classTeachers,
+            List<string> teacherNames,
             string registrationStatus,
             string implementationStatus,
             string url,
@@ -65,8 +63,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             Schedule = schedule;
             Rooms = rooms;
             Places = places;
-            TempTeachers = tempTeachers;
-            ClassTeachers = classTeachers;
+            TeacherNames = teacherNames;
             RegistrationStatus = registrationStatus;
             ImplementationStatus = implementationStatus;
             Url = url;

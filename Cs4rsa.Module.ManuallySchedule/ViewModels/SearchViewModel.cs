@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -124,20 +123,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private int _totalSubject;
-        public int TotalSubject
-        {
-            get { return _totalSubject; }
-            set { SetProperty(ref _totalSubject, value); }
-        }
-
-        private int _totalCredits;
-        public int TotalCredits
-        {
-            get { return _totalCredits; }
-            set { SetProperty(ref _totalCredits, value); }
-        }
-
         private bool _isUseCache;
         public bool IsUseCache
         {
@@ -238,7 +223,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Commands
-            AddCommand = new DelegateCommand(OnAdd, () => !IsAlreadyDownloaded(SelectedKeyword));
+            AddCommand = new DelegateCommand(async () => await OnAdd(), () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
             ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
@@ -405,8 +390,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             SubjectModels.Clear();
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
             AddCommand.RaiseCanExecuteChanged();
             var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjects, classGroupModels);
             _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", AddSubjectWithCgm, actionData);
@@ -522,8 +505,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjectModels, classGroupModels);
             SubjectModels.Remove(sm);
             _snackbarMessageQueue.Enqueue($"Đã xoá môn {sm.SubjectName}", "HOÀN TÁC", AddSubjectWithCgm, actionData);
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
             AddCommand.RaiseCanExecuteChanged();
         }
 
@@ -540,7 +521,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedKeyword = DisciplineKeywordModels[0];
         }
 
-        private async void OnAdd()
+        private async Task OnAdd()
         {
             InsertPseudoSubject(SelectedKeyword);
             await OnAddSubjectAsync(SelectedKeyword);
@@ -584,10 +565,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     SelectedSubjectModel = subjectModel;
                 }
 
-                // 4. Thực hiện tính lại tổng Subject, tổng tín chỉ, số lượng môn học. Và trả về Subject Model đã tải được. 
-                TotalSubject = SubjectModels.Count;
-                UpdateCreditTotal();
-                UpdateSubjectAmount();
+                // 4. Trả về Subject Model đã tải được. 
                 return subjectModel;
             }
             catch (Exception e)
@@ -595,6 +573,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
                 AddErrorToPseudoSubject(e.Message, keyword.CourseId);
                 return null;
+            }
+            finally
+            {
+                AddCommand.RaiseCanExecuteChanged();
+                DeleteAllCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -641,10 +624,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             else
             {
-                AddCommand.RaiseCanExecuteChanged();
-                var teacherModels = await Task.WhenAll(subject.TeacherUrls.Select(url => _teacherCrawler.Crawl(url, keyword.CourseId)));
-                var distinctTeacherModels = teacherModels.Distinct().ToArray();
-                return new SubjectModel(subject, distinctTeacherModels, keyword.Color);
+                return new SubjectModel(subject, keyword.Color);
             }
         }
 
@@ -691,27 +671,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         /// <summary>
-        /// Cập nhật tổng số môn học.
-        /// </summary>
-        private void UpdateSubjectAmount()
-        {
-            DeleteAllCommand.RaiseCanExecuteChanged();
-            TotalSubject = SubjectModels.Count;
-        }
-
-        /// <summary>
-        /// Cập nhật tổng số tín chỉ
-        /// </summary>
-        private void UpdateCreditTotal()
-        {
-            TotalCredits = 0;
-            foreach (var subject in SubjectModels)
-            {
-                TotalCredits += subject.StudyUnit;
-            }
-        }
-
-        /// <summary>
         /// Kiếm tra xem rằng một Subject đã có 
         /// sẵn trong danh sách đã tải xuống hay chưa.
         /// </summary>
@@ -744,10 +703,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 SubjectModels.Add(subject);
             }
-            TotalSubject = SubjectModels.Count;
             AddCommand.RaiseCanExecuteChanged();
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
+            DeleteAllCommand.RaiseCanExecuteChanged();
             foreach (var classGroupModel in combinationModel.ClassGroupModels)
             {
                 _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
@@ -769,10 +726,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             SelectedSubjectModel = actionData.Item1.First();
 
-            TotalSubject = SubjectModels.Count;
             AddCommand.RaiseCanExecuteChanged();
-            UpdateCreditTotal();
-            UpdateSubjectAmount();
+            DeleteAllCommand.RaiseCanExecuteChanged();
 
             if (actionData.Item2 != null)
             {

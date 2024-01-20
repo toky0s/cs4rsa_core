@@ -31,7 +31,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public string Name { get; }
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }
-        public IEnumerable<string> TempTeacher { get; }
+        public IEnumerable<string> TeacherNames { get; }
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
         public Phase Phase => ClassGroup.GetPhase();
@@ -39,7 +39,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public string Color { get; }
         public SchoolClassModel CompulsoryClass { get; }
         public SchoolClassModel CodeSchoolClass { get; }
-        public List<ClassTeacher> ClassTeachers { get; set; }
 
         /// <summary>
         /// Với trường hợp Special SchoolClass, người dùng sẽ phải chọn thêm một SchoolClass.
@@ -93,13 +92,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
             if (classGroup.SchoolClasses.Count > 0)
             {
-                ClassTeachers = classGroup.ClassTeachers;
                 Schedule = classGroup.GetSchedule();
                 CurrentSchoolClassModels = new List<SchoolClassModel>();
 
                 Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
                 EmptySeat = classGroup.GetEmptySeat();
-                TempTeacher = classGroup.GetTempTeachers();
+                TeacherNames = classGroup.GetTempTeachers();
                 classGroup.GetImplementType();
                 classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
@@ -118,10 +116,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 {
                     var schoolClass = classGroup.SchoolClasses
                         .FirstOrDefault(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName));
-                    if (schoolClass == null) return;
-                    CodeSchoolClass = new SchoolClassModel(schoolClass, color);
-                    CurrentSchoolClassModels.Add(CompulsoryClass);
-                    CurrentSchoolClassModels.Add(CodeSchoolClass);
+                    if (schoolClass != null)
+                    {
+                        CodeSchoolClass = new SchoolClassModel(schoolClass, color);
+                        CurrentSchoolClassModels.Add(CompulsoryClass);
+                        CurrentSchoolClassModels.Add(CodeSchoolClass);
+                    }
                 }
             }
         }

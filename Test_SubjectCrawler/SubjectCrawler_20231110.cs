@@ -232,7 +232,7 @@ namespace Test_SubjectCrawler
                 .First(clg => clg.Name == "CS 211 CIS")
                 .SchoolClasses
                 .First(sc => sc.SchoolClassName == "CS 211 CIS1")
-                .TempTeachers
+                .TeacherNames
                 .Count;
             Assert.AreEqual(2,tempTeachersCount); 
         }

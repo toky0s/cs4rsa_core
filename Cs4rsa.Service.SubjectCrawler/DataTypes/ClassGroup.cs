@@ -14,7 +14,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public readonly string Name;
         public readonly string SubjectCode;
         public string SubjectName { get; }
-        public List<ClassTeacher> ClassTeachers { get; set; }
         public List<string> RegisterCodes
         {
             get
@@ -50,7 +49,16 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         {
             _schoolClasses.AddRange(schoolClasses);
             GetRegisterCode();
-            ClassTeachers = SchoolClasses.SelectMany(sc => sc.ClassTeachers).ToList();
+        }
+
+        public void AddSchoolClass(SchoolClass schoolClass)
+        {
+            _schoolClasses.Add(schoolClass);
+        }
+
+        public void AddRegisterCodes(IEnumerable<string> registerCodes)
+        {
+            _registerCodes.AddRange(registerCodes);
         }
 
         /// <summary>
@@ -69,7 +77,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 var schoolClassesWithName = GetSchoolClassesWithName(schoolClassName);
                 // List<TeacherModel> teachers = GetTeachersOfSchoolClasses(schoolClassesWithName);
                 // schoolClassesWithName[0].Teachers = teachers;
-                schoolClassesWithName[0].TempTeachers = GetTempTeachersOfSchoolClasses(schoolClassesWithName).ToList();
+                schoolClassesWithName[0].TeacherNames = GetTempTeachersOfSchoolClasses(schoolClassesWithName).ToList();
                 schoolClassesWithName[0].SubjectName = SubjectName;
                 newSchoolClasses.Add(schoolClassesWithName[0]);
             }
@@ -87,7 +95,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         private static IEnumerable<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
         {
             return schoolClasses
-                .SelectMany(schoolClass => schoolClass.TempTeachers);
+                .SelectMany(schoolClass => schoolClass.TeacherNames);
         }
 
         /// <summary>
@@ -163,12 +171,14 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         public IEnumerable<string> GetTempTeachers()
         {
-            var tempTeachers = new List<string>();
-            foreach (var schoolClass in _schoolClasses)
-            {
-                tempTeachers.AddRange(schoolClass.TempTeachers);
-            }
-            return tempTeachers;
+            //var tempTeachers = new List<string>();
+            //foreach (var schoolClass in _schoolClasses)
+            //{
+            //    tempTeachers.AddRange(schoolClass.TeacherNames);
+            //}
+            //return tempTeachers;
+
+            return _schoolClasses.SelectMany(sc => sc.TeacherNames);
         }
 
         public Phase GetPhase()

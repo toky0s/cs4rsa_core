@@ -19,9 +19,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         }
 
         public readonly UserSubject UserSubject;
-
-        public ClassTeacher[] ClassTeachers { get; set; }
-        public List<string> TempTeachers { get; set; }
+        public List<string> TeacherNames { get; set; }
         public List<ClassGroupModel> ClassGroupModels { get; set; }
         public string SubjectName { get; set; }
         public string SubjectCode { get; set; }
@@ -89,10 +87,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public SubjectModel() { }
 
-        public SubjectModel(
-            Subject subject, 
-            ClassTeacher[] classTeachers, 
-            string color)
+        public SubjectModel(Subject subject, string color)
         {
             Color = color;
             Subject = subject;
@@ -104,8 +99,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             ParallelSubjects = GetParallelSubjects();
             IsSpecialSubject = Subject.IsSpecialSubject;
             ClassGroupModels = Subject.ClassGroups.Select(item => new ClassGroupModel(item, IsSpecialSubject, Color)).ToList();
-            ClassTeachers = classTeachers;
-            TempTeachers = subject.TempTeachers;
+            TeacherNames = subject.TeacherNames;
             StudyUnitType = subject.StudyUnitType;
             StudyType = subject.StudyType;
             Semester = subject.Semester;
@@ -181,11 +175,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             StudyUnit = subjectModel.Subject.StudyUnit;
             IsSpecialSubject = subjectModel.IsSpecialSubject;
             ClassGroupModels = subjectModel.ClassGroupModels;
-            ClassTeachers = subjectModel.ClassTeachers;
             StudyUnit = subjectModel.StudyUnit;
             PrerequisiteSubjects = subjectModel.PrerequisiteSubjects;
             ParallelSubjects = subjectModel.ParallelSubjects;
-            TempTeachers = subjectModel.TempTeachers;
+            TeacherNames = subjectModel.TeacherNames;
             StudyUnitType = subjectModel.StudyUnitType;
             StudyType = subjectModel.StudyType;
             Semester = subjectModel.Semester;

@@ -232,52 +232,10 @@
                                 <ComboBox
                                     x:Name="ComboxBox_Teachers"
                                     Grid.Column="0"
-                                    DisplayMemberPath="Name"
-                                    ItemsSource="{Binding Teachers}"
-                                    SelectedItem="{Binding SelectedTeacher}">
-                                    <ComboBox.ToolTip>
-                                        <ToolTip Placement="Right">
-                                            <ToolTip.Style>
-                                                <Style BasedOn="{StaticResource MaterialDesignToolTip}" TargetType="ToolTip">
-                                                    <Setter Property="Content">
-                                                        <Setter.Value>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="Auto" />
-                                                                    <ColumnDefinition />
-                                                                </Grid.ColumnDefinitions>
-                                                                <Image
-                                                                    Grid.Column="0"
-                                                                    Height="111"
-                                                                    Margin="0,0,7,0"
-                                                                    Source="{Binding Path=SelectedTeacher.Path}" />
-                                                                <StackPanel Grid.Column="1">
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Name, StringFormat=Tên: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Sex, StringFormat=Giới tính: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Place, StringFormat=Nơi sinh: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Degree, StringFormat=Học hàm\\học vị: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.WorkUnit, StringFormat=Đơn vị: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Position, StringFormat=Chức vụ: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Subject, StringFormat=Bộ môn: {0}}" />
-                                                                    <TextBlock Text="{Binding SelectedTeacher.Form, StringFormat=Hình thức: {0}}" />
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding SelectedTeacher.Name}" Value="TẤT CẢ">
-                                                            <Setter Property="Content">
-                                                                <Setter.Value>
-                                                                    <TextBlock>TẤT CẢ</TextBlock>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ToolTip.Style>
-                                        </ToolTip>
-                                    </ComboBox.ToolTip>
-                                </ComboBox>
+                                    ItemsSource="{Binding TeacherNames}"
+                                    SelectedItem="{Binding SelectedTeacherName}"
+                                    Visibility="{Binding AnyTeacherName, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBlock Text="TÊN GIẢNG VIÊN KHÔNG TỒN TẠI" Visibility="{Binding AnyTeacherName, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
                             </StackPanel>
                         </GroupBox>
                     </Grid>

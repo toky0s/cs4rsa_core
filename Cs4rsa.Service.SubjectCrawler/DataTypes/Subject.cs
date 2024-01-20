@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 
 using Cs4rsa.Common;
 using Cs4rsa.Service.SubjectCrawler.Utils;
@@ -12,27 +11,22 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
     public class Subject
     {
-        private readonly string _studyUnit;
-        private readonly string _studyUnitType;
-        private readonly string _studyType;
-        private readonly string _semester;
         private readonly string _rawSoup;
-        
-        public List<string> TempTeachers { get; set; }
-        public bool IsSpecialSubject { get; set; }
-        public List<string> TeacherUrls { get; private set; }
+        public List<string> TeacherUrls { get; }
+        public List<string> TeacherNames { get; }
         public List<ClassGroup> ClassGroups { get; }
+        public bool IsSpecialSubject { get; }
 
         public string Name { get; }
         public string SubjectCode { get; }
-        public int StudyUnit => int.Parse(_studyUnit);
-        public string StudyUnitType => _studyUnitType;
-        public string StudyType => _studyType;
-        public string Semester => _semester;
+        public int StudyUnit { get; }
+        public string StudyUnitType { get; }
+        public string StudyType { get; }
+        public string Semester { get; }
         public IEnumerable<string> MustStudySubject { get; }
         public IEnumerable<string> ParallelSubject { get; }
         public string Description { get; }
-        public readonly string CourseId;
+        public string CourseId { get; }
 
         /// <summary>
         /// Khởi tạo một Subject thông qua một Async Factory method.
@@ -54,25 +48,28 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, string courseId)
         {
-            _studyUnit = studyUnit;
-            _studyUnitType = studyUnitType;
-            _studyType = studyType;
-            _semester = semester;
-            _rawSoup = rawSoup;
-            
-            TempTeachers = new List<string>();
-            ClassGroups = new List<ClassGroup>();
+            TeacherNames = new List<string>();
             TeacherUrls = new List<string>();
+            ClassGroups = new List<ClassGroup>();
 
+            _rawSoup = rawSoup;
+
+            StudyUnitType = studyUnitType;
+            StudyType = studyType;
+            Semester = semester;
+            
             Name = name;
-            SubjectCode = subjectCode;
-            MustStudySubject = SubjectSplit(mustStudySubject);
-            ParallelSubject = SubjectSplit(parallelSubject);
+            SubjectCode = subjectCode; 
             Description = description;
             CourseId = courseId;
-            
-            GetClassGroups();
+            StudyUnit = int.Parse(studyUnit);
+
+            MustStudySubject = SubjectSplit(mustStudySubject);
+            ParallelSubject = SubjectSplit(parallelSubject);
             IsSpecialSubject = GetIsSpecialSubject();
+
+            //GetClassGroups();
+            GetClassGroups_Optimize();
         }
 
         /// <summary>
@@ -108,13 +105,15 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         }
 
         /// <summary>
-        /// Lấy ra các ClassGroup và thêm chúng vào danh sách chứa
-        /// ClassGroup bằng cách match các tên với các SchoolClass có tên giống.
+        /// 1. Lấy ra các ClassGroup và thêm chúng vào danh sách chứa ClassGroup 
+        /// bằng cách match các tên với các SchoolClass có tên giống.
+        /// 2. Get ClassTeachers
         /// </summary>
         private void GetClassGroups()
         {
-            var schoolClasses = GetSchoolClasses().ToList();
-            foreach (var classGroupName in GetClassGroupNames())
+            var schoolClasses = GetSchoolClasses();
+            var classGroupNames = GetClassGroupNames();
+            foreach (var classGroupName in classGroupNames)
             {
                 var pattern = $@"^({classGroupName})[0-9]*$";
                 var regexName = new Regex(pattern);
@@ -127,8 +126,65 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                     });
 
                 var classGroup = new ClassGroup(classGroupName, SubjectCode, Name);
+                // Mất hơn 1s thực thi, cần tối ưu chỗ này.
                 classGroup.AddRangeSchoolClass(schoolClassesByName);
                 ClassGroups.Add(classGroup);
+            }
+        }
+        
+        private void GetClassGroups_Optimize()
+        {
+            // 1. Get trTags
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(_rawSoup);
+
+            if (htmlDocument.DocumentNode.Descendants("table").Count() < 4)
+            {
+                throw new IndexOutOfRangeException("Không tồn tại bảng lịch");
+            }
+
+            var tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
+            var bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
+            var trTags = bodyCalendar.Descendants("tr");
+
+            // 2. Get hit trTags
+            var hitNodes = trTags.Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit").ToArray();
+
+            // 3. Get class group names
+            var classGroupNames = trTags
+                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop")
+                .Select(node => node.InnerText.Trim())
+                .ToArray();
+
+            var currClassGroupNameIdx = 0;
+            var currSchoolClassIdx = 0;
+            var registerCodes = new List<string>();
+            while(currClassGroupNameIdx < classGroupNames.Length)
+            {
+                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
+                while(currSchoolClassIdx < hitNodes.Length)
+                {
+                    var schoolClass = GetSchoolClass(hitNodes[currSchoolClassIdx]);
+                    if (schoolClass.SchoolClassName.StartsWith(classGroupNames[currClassGroupNameIdx]))
+                    {
+                        schoolClass.ClassGroupName = classGroupNames[currClassGroupNameIdx];
+                        if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode) 
+                            && !registerCodes.Contains(schoolClass.RegisterCode))
+                        {
+                            registerCodes.Add(schoolClass.RegisterCode);
+                        }
+                        classGroup.AddSchoolClass(schoolClass);
+                        currSchoolClassIdx++;
+                    }
+                    else
+                    {
+                        classGroup.AddRegisterCodes(registerCodes);
+                        registerCodes.Clear();
+                        break;
+                    }
+                }
+                ClassGroups.Add(classGroup);
+                currClassGroupNameIdx++;
             }
         }
 
@@ -183,24 +239,13 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
             TeacherUrls.Add(teacherUrl);
 
-            var classTeachers = new List<ClassTeacher>();
-
-            var tempTeachers = new List<string>();
+            var teacherNames = new List<string>();
             var teacherName = GetTeacherName(trTagClassLop);
             
-            // 1. Add tmp teachers
+            // 1. Add teacher name
             if (!string.IsNullOrEmpty(teacherName))
             {
-                tempTeachers.Add(teacherName);
-
-                var teacherUri = new Uri(teacherUrl);
-                var instructionId = HttpUtility.ParseQueryString(teacherUri.Query).Get("intructorid");
-                var classTeacher = new ClassTeacher()
-                {
-                    Name = teacherName,
-                    IntructorId = instructionId
-                };
-                classTeachers.Add(classTeacher);
+                teacherNames.Add(teacherName);
             }
 
             var schoolClassName = aTag.InnerText.Trim();
@@ -266,7 +311,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var schoolClass = new SchoolClass(
                 schoolClassName, registerCode, studyType, emptySeat,
                 registrationTermEnd, registrationTermStart, studyWeek, schedule,
-                rooms, places, tempTeachers, classTeachers,
+                rooms, places, teacherNames,
                 registrationStatus, implementationStatus,
                 urlToSubjectDetailPage, metaData, SubjectCode);
             return schoolClass;
@@ -294,32 +339,18 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
             var slices = teacherTdNode.InnerText.SplitAndRemoveAllSpace();
             var teacherName = string.Join(" ", slices);
-            if (string.IsNullOrWhiteSpace(teacherName)) return teacherName;
-            TempTeachers.Add(teacherName);
-            TempTeachers = TempTeachers.Distinct().ToList();
-            return teacherName;
-        }
 
-        /// <summary>
-        /// Trả về teacherModel Name của một school class. Đồng thời thêm teacherModel Name này vào
-        /// temp teachers nhằm đảm bảo không thất thoát các teacherModel không có detail page.
-        /// Cải thiện độ chính xác của bộ lọc teacherModel.
-        /// </summary>
-        /// <param name="trTagClassLop">HtmlNode với giá trị class="lop".</param>
-        /// <returns>Tên giảng viên</returns>
-        private ClassTeacher GetClassTeacher (HtmlNode trTagClassLop)
-        {
-            var doc = new HtmlDocument();
-            doc.LoadHtml(trTagClassLop.InnerHtml);
-            var teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
-            var slices = teacherTdNode.InnerText.SplitAndRemoveAllSpace();
-            var teacherName = string.Join(" ", slices);
-            ClassTeacher classTeacher = new ClassTeacher()
+            if (string.IsNullOrWhiteSpace(teacherName))
             {
-                Name = teacherName,
-            };
+                return string.Empty;
+            }
 
-            return classTeacher;
+            if (!TeacherNames.Contains(teacherName))
+            {
+                TeacherNames.Add(teacherName);
+            }
+
+            return teacherName;
         }
 
         private IEnumerable<HtmlNode> GetTrTagsWithClassLop()
@@ -335,12 +366,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException">Xảy ra khi cào thông tin môn học mà môn học đó chỉ có thông tin
-        /// mô tả chứ không chứa thông tin lịch học.</exception>
         private IEnumerable<HtmlNode> GetListTrTagInCalendar()
         {
             var htmlDocument = new HtmlDocument();

@@ -48,7 +48,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             SubjectCode           = schoolClass.SubjectCode;
             Rooms                 = schoolClass.Rooms;
             Places                = schoolClass.Places;
-            TempTeachers          = schoolClass.TempTeachers;
+            TempTeachers          = schoolClass.TeacherNames;
             RegistrationStatus    = schoolClass.RegistrationStatus;
             ImplementationStatus  = schoolClass.ImplementationStatus;
             DayPlaceMetaData      = schoolClass.DayPlaceMetaData; 
