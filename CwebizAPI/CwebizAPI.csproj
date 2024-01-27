@@ -15,7 +15,7 @@
         <PackageReference Include="Algolia.Search" Version="6.14.0" />
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="EntityFramework" Version="6.4.4" />
-        <PackageReference Include="HtmlAgilityPack" Version="1.11.52" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.57" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.18" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
           <PrivateAssets>all</PrivateAssets>
@@ -26,7 +26,7 @@
         <PackageReference Include="Quartz.AspNetCore" Version="3.6.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>

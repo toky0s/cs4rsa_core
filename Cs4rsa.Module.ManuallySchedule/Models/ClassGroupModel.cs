@@ -31,7 +31,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public string Name { get; }
         public bool HaveSchedule { get; }
         public ObservableCollection<Place> Places { get; }
-        public IEnumerable<string> TeacherNames { get; }
+        public string[] TeacherNames { get; }
         public string SubjectCode { get; }
         public List<string> RegisterCodes { get; }
         public Phase Phase => ClassGroup.GetPhase();

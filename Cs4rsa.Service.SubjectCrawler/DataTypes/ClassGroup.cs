@@ -169,16 +169,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             return schedule;
         }
 
-        public IEnumerable<string> GetTempTeachers()
+        public string[] GetTempTeachers()
         {
-            //var tempTeachers = new List<string>();
-            //foreach (var schoolClass in _schoolClasses)
-            //{
-            //    tempTeachers.AddRange(schoolClass.TeacherNames);
-            //}
-            //return tempTeachers;
-
-            return _schoolClasses.SelectMany(sc => sc.TeacherNames);
+            return _schoolClasses.SelectMany(sc => sc.TeacherNames).ToArray();
         }
 
         public Phase GetPhase()

@@ -608,24 +608,27 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private async Task<SubjectModel> DownloadSubject(Keyword keyword, bool isUseCache)
         {
-            Subject subject;
-            if (isUseCache && keyword.Cache != null)
+            return await Task.Run(async () =>
             {
-                subject = await _subjectCrawler.Crawl(keyword.Cache);
-            }
-            else
-            {
-                var semester = _unitOfWork.Settings.GetByKey("CurrentSemesterValue");
-                subject = await _subjectCrawler.Crawl(keyword.CourseId, semester);
-            }
-            if (subject == null)
-            {
-                return null;
-            }
-            else
-            {
-                return new SubjectModel(subject, keyword.Color);
-            }
+                Subject subject;
+                if (isUseCache && keyword.Cache != null)
+                {
+                    subject = await _subjectCrawler.Crawl(keyword.Cache);
+                }
+                else
+                {
+                    var semester = _unitOfWork.Settings.GetByKey("CurrentSemesterValue");
+                    subject = await _subjectCrawler.Crawl(keyword.CourseId, semester);
+                }
+                if (subject == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new SubjectModel(subject, keyword.Color);
+                }
+            });
         }
 
         public async void OnAddSubjectFromUriAsync(Uri uri)

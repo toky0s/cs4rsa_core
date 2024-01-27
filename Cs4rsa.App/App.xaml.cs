@@ -45,6 +45,18 @@ namespace Cs4rsa.App
             base.OnStartup(e);
         }
 
+        public static Rules DefaultRules => Rules.Default.WithConcreteTypeDynamicRegistrations(reuse: Reuse.Transient)
+                                                        .With(Made.Of(FactoryMethod.ConstructorWithResolvableArguments))
+                                                        .WithFuncAndLazyWithoutRegistration()
+                                                        .WithTrackingDisposableTransients()
+                                                        //.WithoutFastExpressionCompiler()
+                                                        .WithFactorySelector(Rules.SelectLastRegisteredFactory());
+
+        protected override Rules CreateContainerRules()
+        {
+            return DefaultRules;
+        }
+
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             
