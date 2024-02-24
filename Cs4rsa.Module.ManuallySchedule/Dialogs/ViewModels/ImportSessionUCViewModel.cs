@@ -3,7 +3,6 @@ using Cs4rsa.Database.Models;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Utils;
-using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
 using Cs4rsa.Service.Dialog.Events;
 
@@ -14,7 +13,6 @@ using Prism.Events;
 using Prism.Mvvm;
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;

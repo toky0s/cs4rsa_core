@@ -11,6 +11,7 @@
         <baseConverter:PhaseCvt x:Key="PhaseCvt" />
         <baseConverter:DayCvt x:Key="DayCvt" />
         <baseConverter:PlaceCvt x:Key="PlaceCvt" />
+        <baseConverter:GetTeacherNameConverter x:Key="TeacherCvt" />
         <Style x:Key="ToolTip_TimeBlock" TargetType="ToolTip">
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="HasDropShadow" Value="True" />
@@ -107,7 +108,7 @@
                                     Grid.Column="0"
                                     Margin="0,0,5,0"
                                     Kind="PeopleOutline" />
-                                <TextBlock Grid.Column="1" Text="{Binding SchoolClassUnit.Teachers, Converter={StaticResource TeacherCvt}, ConverterParameter=Không thể xác định}" />
+                                <TextBlock Grid.Column="1" Text="{Binding SchoolClassUnit.Teachers, ConverterParameter=Không thể xác định}" />
                             </Grid>
                         </StackPanel>
                     </Border>

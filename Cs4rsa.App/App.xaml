@@ -1,174 +1,174 @@
-﻿<prism:PrismApplication x:Class="Cs4rsa.App.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Cs4rsa.App"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:prism="http://prismlibrary.com/">
-  <Application.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <materialDesign:BundledTheme
-        BaseTheme="Light"
-        PrimaryColor="Cyan"
-        SecondaryColor="Lime" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Badged.xaml" />
+﻿<prism:PrismApplication
+    x:Class="Cs4rsa.App.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Cs4rsa.App"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/">
+    <Application.Resources>
         <ResourceDictionary>
-          <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Cyan.xaml" />
-          </ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme
+                    BaseTheme="Light"
+                    PrimaryColor="Cyan"
+                    SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Badged.xaml" />
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Cyan.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
 
-          <SolidColorBrush x:Key="CredizPrimaryHueLightX2Brush" Color="{StaticResource Primary50}" />
-          <SolidColorBrush x:Key="CredizDarkForegroundBrush" Color="{StaticResource Primary900}" />
+                    <SolidColorBrush x:Key="CredizPrimaryHueLightX2Brush" Color="{StaticResource Primary50}" />
+                    <SolidColorBrush x:Key="CredizDarkForegroundBrush" Color="{StaticResource Primary900}" />
 
-          <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary500}" />
-          <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary700Foreground}" />
-          <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary800}" />
-          <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary700Foreground}" />
-          <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary900}" />
-          <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}" />
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary500}" />
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary700Foreground}" />
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary800}" />
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary700Foreground}" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary900}" />
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary700Foreground}" />
 
-          <SolidColorBrush x:Key="Grey400" Color="#BDBDBD" />
-          <SolidColorBrush x:Key="Grey300" Color="#E0E0E0" />
-          <SolidColorBrush x:Key="Grey200" Color="#EEEEEE" />
-          <SolidColorBrush x:Key="Grey100" Color="#F5F5F5" />
+                    <SolidColorBrush x:Key="Grey400" Color="#BDBDBD" />
+                    <SolidColorBrush x:Key="Grey300" Color="#E0E0E0" />
+                    <SolidColorBrush x:Key="Grey200" Color="#EEEEEE" />
+                    <SolidColorBrush x:Key="Grey100" Color="#F5F5F5" />
 
-          <SolidColorBrush x:Key="OnlineBlockBackground" Color="#c0ffc0" />
-          <SolidColorBrush x:Key="OfflineBlockBackground" Color="#ffeaa7" />
-          <SolidColorBrush x:Key="OfflineBlockBorderBackground" Color="#ffbe76" />
+                    <SolidColorBrush x:Key="OnlineBlockBackground" Color="#c0ffc0" />
+                    <SolidColorBrush x:Key="OfflineBlockBackground" Color="#ffeaa7" />
+                    <SolidColorBrush x:Key="OfflineBlockBorderBackground" Color="#ffbe76" />
 
-          <Style x:Key="CredizFilledCard" TargetType="{x:Type materialDesign:Card}">
-            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="UniformCornerRadius" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource CredizDarkForegroundBrush}" />
-            <Setter Property="Background" Value="{StaticResource CredizPrimaryHueLightX2Brush}" />
-          </Style>
+                    <Style x:Key="CredizFilledCard" TargetType="{x:Type materialDesign:Card}">
+                        <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
+                        <Setter Property="Padding" Value="10" />
+                        <Setter Property="UniformCornerRadius" Value="12" />
+                        <Setter Property="Foreground" Value="{StaticResource CredizDarkForegroundBrush}" />
+                        <Setter Property="Background" Value="{StaticResource CredizPrimaryHueLightX2Brush}" />
+                    </Style>
 
-          <Style
-          x:Key="CredizFilledButton"
-          BasedOn="{StaticResource MaterialDesignFlatButton}"
-          TargetType="{x:Type Button}">
-            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
-            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="20" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Padding" Value="24,12,24,12" />
-          </Style>
+                    <Style
+                        x:Key="CredizFilledButton"
+                        BasedOn="{StaticResource MaterialDesignFlatButton}"
+                        TargetType="{x:Type Button}">
+                        <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0" />
+                        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="20" />
+                        <Setter Property="Height" Value="40" />
+                        <Setter Property="Padding" Value="24,12,24,12" />
+                    </Style>
 
-            <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" 
-            TargetType="{x:Type materialDesign:SnackbarMessage}">
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-            </Style>
-            <Style
-            x:Key="Style_Cs4rsa_SnackbarActionButton"
-            BasedOn="{StaticResource MaterialDesignSnackbarActionButton}"
-            TargetType="Button">
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}" />
-            </Style>
+                    <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="{x:Type materialDesign:SnackbarMessage}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                    <Style
+                        x:Key="Style_Cs4rsa_SnackbarActionButton"
+                        BasedOn="{StaticResource MaterialDesignSnackbarActionButton}"
+                        TargetType="Button">
+                        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}" />
+                    </Style>
 
                     <!--  CredizDataGrid  -->
-          <Style
-          x:Key="CredizDataGrid"
-          BasedOn="{StaticResource MaterialDesignDataGrid}"
-          TargetType="{x:Type DataGrid}">
-            <Setter Property="RowHeaderWidth" Value="0" />
-            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
-            <Setter Property="Template">
-              <Setter.Value>
-                <ControlTemplate TargetType="{x:Type DataGrid}">
-                  <Border
-                  Padding="10"
-                  Background="{TemplateBinding Background}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}"
-                  CornerRadius="12"
-                  SnapsToDevicePixels="True">
-                    <ScrollViewer x:Name="DG_ScrollViewer" Focusable="false">
-                      <ScrollViewer.Template>
-                        <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                          <Grid>
-                            <Grid.ColumnDefinitions>
-                              <ColumnDefinition Width="Auto" />
-                              <ColumnDefinition Width="*" />
-                              <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                              <RowDefinition Height="Auto" />
-                              <RowDefinition Height="Auto" />
-                              <RowDefinition Height="*" />
-                              <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Button
-                            Grid.Row="1"
-                            Width="{Binding CellsPanelHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                            Command="{x:Static DataGrid.SelectAllCommand}"
-                            Focusable="false"
-                            Style="{DynamicResource {ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle,
-                                                                          TypeInTargetAssembly={x:Type DataGrid}}}"
-                            Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.All}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            <DataGridColumnHeadersPresenter
-                            x:Name="PART_ColumnHeadersPresenter"
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Column}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            <ScrollContentPresenter
-                            x:Name="PART_ScrollContentPresenter"
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            CanContentScroll="{TemplateBinding CanContentScroll}" />
-                            <ScrollBar
-                            x:Name="PART_VerticalScrollBar"
-                            Grid.Row="2"
-                            Grid.Column="2"
-                            Maximum="{TemplateBinding ScrollableHeight}"
-                            Orientation="Vertical"
-                            ViewportSize="{TemplateBinding ViewportHeight}"
-                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                            Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <Grid Grid.Row="3" Grid.Column="1">
-                              <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{Binding NonFrozenColumnsViewportHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                                <ColumnDefinition Width="*" />
-                              </Grid.ColumnDefinitions>
-                              <ScrollBar
-                              x:Name="PART_HorizontalScrollBar"
-                              Grid.Column="1"
-                              Maximum="{TemplateBinding ScrollableWidth}"
-                              Orientation="Horizontal"
-                              ViewportSize="{TemplateBinding ViewportWidth}"
-                              Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                              Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
-                            </Grid>
-                          </Grid>
-                        </ControlTemplate>
-                      </ScrollViewer.Template>
-                      <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </ScrollViewer>
-                  </Border>
-                </ControlTemplate>
-              </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-              <MultiTrigger>
-                <MultiTrigger.Conditions>
-                  <Condition Property="IsGrouping" Value="true" />
-                  <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
-                </MultiTrigger.Conditions>
-                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
-              </MultiTrigger>
-            </Style.Triggers>
-          </Style>
-        </ResourceDictionary>
-        <!--<ResourceDictionary Source="Controls/Scrollbar.xaml" />
+                    <Style
+                        x:Key="CredizDataGrid"
+                        BasedOn="{StaticResource MaterialDesignDataGrid}"
+                        TargetType="{x:Type DataGrid}">
+                        <Setter Property="RowHeaderWidth" Value="0" />
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type DataGrid}">
+                                    <Border
+                                        Padding="10"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="12"
+                                        SnapsToDevicePixels="True">
+                                        <ScrollViewer x:Name="DG_ScrollViewer" Focusable="false">
+                                            <ScrollViewer.Template>
+                                                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Button
+                                                            Grid.Row="1"
+                                                            Width="{Binding CellsPanelHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                            Command="{x:Static DataGrid.SelectAllCommand}"
+                                                            Focusable="false"
+                                                            Style="{DynamicResource {ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle,
+                                                                                                          TypeInTargetAssembly={x:Type DataGrid}}}"
+                                                            Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.All}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                        <DataGridColumnHeadersPresenter
+                                                            x:Name="PART_ColumnHeadersPresenter"
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Column}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                        <ScrollContentPresenter
+                                                            x:Name="PART_ScrollContentPresenter"
+                                                            Grid.Row="2"
+                                                            Grid.ColumnSpan="2"
+                                                            CanContentScroll="{TemplateBinding CanContentScroll}" />
+                                                        <ScrollBar
+                                                            x:Name="PART_VerticalScrollBar"
+                                                            Grid.Row="2"
+                                                            Grid.Column="2"
+                                                            Maximum="{TemplateBinding ScrollableHeight}"
+                                                            Orientation="Vertical"
+                                                            ViewportSize="{TemplateBinding ViewportHeight}"
+                                                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                                            Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                                        <Grid Grid.Row="3" Grid.Column="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="{Binding NonFrozenColumnsViewportHorizontalOffset, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <ScrollBar
+                                                                x:Name="PART_HorizontalScrollBar"
+                                                                Grid.Column="1"
+                                                                Maximum="{TemplateBinding ScrollableWidth}"
+                                                                Orientation="Horizontal"
+                                                                ViewportSize="{TemplateBinding ViewportWidth}"
+                                                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                                Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                                        </Grid>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </ScrollViewer.Template>
+                                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsGrouping" Value="true" />
+                                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+                <!--<ResourceDictionary Source="Controls/Scrollbar.xaml" />
         <ResourceDictionary Source="Styles/ToolTip_TimeBlock.xaml" />-->
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Application.Resources>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </prism:PrismApplication>

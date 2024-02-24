@@ -1,6 +1,4 @@
-﻿using Cs4rsa.Module.ManuallySchedule.Models;
-
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Cs4rsa.Module.ManuallySchedule.ViewModels;
 
 namespace Cs4rsa.Module.ManuallySchedule.Views

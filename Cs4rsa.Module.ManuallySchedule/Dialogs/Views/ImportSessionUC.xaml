@@ -8,14 +8,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:validation="clr-namespace:Cs4rsa.Module.ManuallySchedule.Validations"
-    Width="600"
+    Width="800"
     Height="500"
     Padding="10,10,10,15"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceHolderConverter" />
-        <validation:ShareStringRule x:Key="shareStringRule" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>

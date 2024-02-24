@@ -70,6 +70,8 @@
     <Compile Include="Converters\EmptySeatCheckerConverter.cs" />
     <Compile Include="Converters\EmptyStringPlaceholderConverter.cs" />
     <Compile Include="Dialogs\Models\ClassGroupResult.cs" />
+    <Compile Include="Dialogs\Models\ScheduleBagItemModel.cs" />
+    <Compile Include="Dialogs\Models\ScheduleBagModel.cs" />
     <Compile Include="Dialogs\Models\UserSubject.cs" />
     <Compile Include="Dialogs\ViewModels\ImportSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
@@ -82,6 +84,9 @@
     </Compile>
     <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">
       <DependentUpon>SaveSessionUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ScheduleBag.xaml.cs">
+      <DependentUpon>ScheduleBag.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Views\ShareStringUC.xaml.cs">
       <DependentUpon>ShareStringUC.xaml</DependentUpon>
@@ -120,6 +125,7 @@
     <Compile Include="ViewModels\ChoseViewModel.cs" />
     <Compile Include="ViewModels\ClgViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ScheduleBagViewModel.cs" />
     <Compile Include="ViewModels\SchedulerViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ViewAViewModel.cs" />
@@ -153,6 +159,10 @@
     <Page Include="Dialogs\Views\SaveSessionUC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ScheduleBag.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Views\ShareStringUC.xaml">
       <Generator>MSBuild:Compile</Generator>

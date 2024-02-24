@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -87,6 +88,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             _unitOfWork = unitOfWork;
+
+            Debug.WriteLine("ChoseViewModel " + _eventAggregator.GetHashCode());
 
             #region Messengers
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>

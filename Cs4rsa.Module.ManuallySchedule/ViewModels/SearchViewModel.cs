@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -29,7 +30,7 @@ using Prism.Mvvm;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
-    public sealed partial class SearchViewModel : BindableBase
+    public class SearchViewModel : BindableBase
     {
         #region Fields
         private List<Discipline> _searchDisciplines;
@@ -106,8 +107,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _selectedSubjectModel; }
             set 
             { 
-                SetProperty(ref _selectedSubjectModel, value); 
-                OnSelectedSubjectModelChanged(value); 
+                if (value != null && !value.IsDownloading && !value.IsError)
+                {
+                    SetProperty(ref _selectedSubjectModel, value);
+                    OnSelectedSubjectModelChanged(value);
+                }
             }
         }
 
@@ -149,8 +153,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ISnackbarMessageQueue snackbarMessageQueue
         )
         {
-            var hc = eventAggregator.GetHashCode();
-
             #region Services
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
@@ -161,13 +163,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Messengers
-            _eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe((value) =>
-            {
-                Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    await HandleImportSubjects(value);
-                });
-            });
+            _eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe(HandlerExitImportSubjectMsg);
 
             //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             //{
@@ -225,7 +221,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #region Commands
             AddCommand = new DelegateCommand(async () => await OnAdd(), () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
-            ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
+            //ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
+            ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
             {
@@ -238,6 +235,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             LoadDiscipline();
             LoadSavedSchedules();
+        }
+
+        private void HandlerExitImportSubjectMsg(IEnumerable<UserSubject> payload)
+        {
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await HandleImportSubjects(payload);
+            });
         }
 
         private void OnSltCombiChanged(CombinationModel value)
@@ -374,6 +379,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnDeleteAll()
         {
+            SubjectModels.Clear();
+            AddCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
+            Debug.WriteLine("Search " + _eventAggregator.GetHashCode());
+
             var subjects = new List<SubjectModel>();
             foreach (var subjectModel in SubjectModels)
             {
@@ -387,10 +397,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //{
             //    classGroupModels.Add(classGroupModel.DeepClone());
             //}
-
-            SubjectModels.Clear();
-            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
-            AddCommand.RaiseCanExecuteChanged();
             var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjects, classGroupModels);
             _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", AddSubjectWithCgm, actionData);
         }
@@ -424,6 +430,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var vm = (ImportSessionUCViewModel)importSessionUc.DataContext;
             _dialogService.OpenDialog(importSessionUc);
             vm.LoadScheduleSession();
+        }
+
+        private async void OpenScheduleBagDialog()
+        {
+            var scheduleBag = new ScheduleBag();
+            var vm = (ScheduleBagViewModel)scheduleBag.DataContext;
+            _dialogService.OpenDialog(scheduleBag);
+            await vm.LoadScheduleSession();
         }
 
         private async Task HandleImportSubjects(IEnumerable<UserSubject> userSubjects)

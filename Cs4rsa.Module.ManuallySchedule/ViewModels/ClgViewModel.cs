@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Data;
 using Cs4rsa.Common.Interfaces;
@@ -146,11 +147,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IDialogService dialogService,
             IEventAggregator eventAggregator)
         {
-            var hc = eventAggregator.GetHashCode();
+            
 
             _openInBrowser = openInBrowser;
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
+
+            Debug.WriteLine("ClgViewModel " + _eventAggregator.GetHashCode());
 
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
             {
@@ -158,12 +161,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 SelectedSubject = null;
             });
 
-            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(() =>
-            {
-                ClassGroupModels.Clear();
-                TeacherCount = 0;
-                SelectedSubject = null;
-            });
+            //_eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(n =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    TeacherCount = 0;
+            //    SelectedSubject = null;
+            //});
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(HandlerDelAllSubjectMsg);
 
             _eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Subscribe(SelectedSubjectChangedHandler);
 
@@ -200,6 +205,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
 
             InitFilter();
+        }
+
+        private void HandlerDelAllSubjectMsg()
+        {
+            ClassGroupModels.Clear();
+            TeacherCount = 0;
+            SelectedSubject = null;
         }
 
         private void OnSelectedClassGroupChanged(ClassGroupModel value)
@@ -312,8 +324,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private bool CheckTeacher(ClassGroupModel classGroupModel)
         {
-            return SelectedTeacherName == "TẤT CẢ" 
+            try
+            {
+                return SelectedTeacherName == "TẤT CẢ"
                 || classGroupModel.TeacherNames.Contains(SelectedTeacherName);
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         private bool CheckDayOfWeek(ClassGroupModel classGroupModel)

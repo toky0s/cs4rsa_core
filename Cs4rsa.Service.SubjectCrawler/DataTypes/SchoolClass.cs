@@ -126,7 +126,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                         studyTime.End, 
                         DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room, 
                         StudyWeek, 
-                        SchoolClassName
+                        SchoolClassName,
+                        string.Join(", ", TeacherNames)
                     );
                     yield return schoolClassUnit;
                 }
