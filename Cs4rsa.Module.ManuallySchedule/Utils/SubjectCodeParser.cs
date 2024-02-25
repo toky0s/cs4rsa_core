@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Common;
+﻿using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System.Collections.Generic;

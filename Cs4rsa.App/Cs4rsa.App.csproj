@@ -216,6 +216,10 @@
       <Project>{14541ac5-7358-4b89-a188-1bbb66bce24b}</Project>
       <Name>Cs4rsa.Service.DisciplineCrawler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
+      <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
+      <Name>Cs4rsa.WPF.Converter</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\avatar.png" />

@@ -1,4 +1,7 @@
-﻿using Prism.Mvvm;
+﻿using Cs4rsa.Module.ManuallySchedule.Utils;
+
+using Prism.Commands;
+using Prism.Mvvm;
 
 using System;
 using System.Collections.Generic;

@@ -2,31 +2,53 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.ScheduleBag"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     Width="800"
-    Height="500"
+    Height="600"
     Padding="10"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
+        <Style BasedOn="{StaticResource MaterialDesignListView}" TargetType="{x:Type ListView}">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style BasedOn="{StaticResource MaterialDesignGridViewItem}" TargetType="ListViewItem">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            Margin="0,0,0,20"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-            Text="Danh sách bộ lịch" />
+        <StackPanel x:Name="ScheduleBagHeader" Grid.Row="0">
+            <TextBlock
+                x:Name="ScheduleBagTitle"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                Text="Danh sách bộ lịch" />
+            <TextBlock
+                x:Name="ScheduleBagDescription"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                Text="Tất cả các bộ lịch với năm và học kỳ hợp lệ sẽ được hiển thị dưới đây" />
+        </StackPanel>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
-            <ItemsControl Padding="0,0,10,0" ItemsSource="{Binding ScheduleBagModels}">
+        <ScrollViewer
+            Grid.Row="1"
+            Margin="0,0,0,10"
+            VerticalScrollBarVisibility="Visible">
+            <ItemsControl
+                Name="ScheduleBagContainer"
+                Padding="0,0,10,0"
+                ItemsSource="{Binding ScheduleBagModels}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical" />
@@ -45,60 +67,83 @@
                                 <Expander
                                     Name="ScheduleBagItem"
                                     Grid.Column="0"
-                                    Expanded="ScheduleBagItem_Expanded"
                                     Style="{StaticResource MaterialDesignExpander}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Expanded">
+                                            <i:InvokeCommandAction Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.GetDetailsCommand}" CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                     <Expander.Header>
                                         <Border>
                                             <Grid VerticalAlignment="Center">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock
+                                                    Grid.Row="0"
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding Name}" />
+                                                    Text="{Binding Name, StringFormat=Tên bộ lịch: {0}}" />
                                                 <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding SaveDate, StringFormat=Ngày lưu: {0}}" />
+                                                <TextBlock
+                                                    Grid.Row="0"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding SaveDate}" />
+                                                    Text="{Binding YearValue, StringFormat=Mã năm học: {0}}" />
                                                 <TextBlock
-                                                    Grid.Column="2"
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding SemesterValue}" />
-                                                <TextBlock
-                                                    Grid.Column="3"
-                                                    VerticalAlignment="Center"
-                                                    Text="{Binding YearValue}" />
+                                                    Text="{Binding SemesterValue, StringFormat=Mã học kỳ: {0}}" />
                                                 <Button
-                                                    Grid.Column="4"
+                                                    Name="RunImport"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Grid.Column="2"
+                                                    Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.ImportCommand}"
+                                                    CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
                                                     Content="{md:PackIcon Kind=PlayArrow}"
                                                     Style="{StaticResource MaterialDesignIconButton}" />
                                                 <Button
-                                                    Grid.Column="5"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Grid.Column="3"
+                                                    Content="{md:PackIcon Kind=Clipboard}"
+                                                    Style="{StaticResource MaterialDesignIconButton}" />
+                                                <Button
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Grid.Column="4"
                                                     Content="{md:PackIcon Kind=Delete}"
                                                     Style="{StaticResource MaterialDesignIconButton}" />
                                             </Grid>
                                         </Border>
                                     </Expander.Header>
-                                    <ListView ItemsSource="{Binding ScheduleBagItemModels}">
+                                    <ListView x:Name="SubjectList" ItemsSource="{Binding ScheduleBagItemModels}">
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn DisplayMemberBinding="{Binding ScheduleDetailId}" Header="ID" />
-                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectCode}" Header="Tên môn" />
-                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Mã môn" />
+                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectCode}" Header="Mã môn" />
+                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
                                                 <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
-                                                <GridViewColumn Width="150">
+                                                <GridViewColumn>
                                                     <GridViewColumnHeader>
-                                                        <TextBlock HorizontalAlignment="Center" Text="Sao chép" />
+                                                        <TextBlock Text="Sao chép" />
                                                     </GridViewColumnHeader>
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <Button Style="{StaticResource MaterialDesignSnackbarActionButton}">
+                                                            <Button HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignIconButton}">
                                                                 <md:PackIcon Kind="Clipboard" />
                                                             </Button>
                                                         </DataTemplate>
@@ -114,5 +159,32 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Separator Grid.Row="0" Margin="0,0,0,20" />
+            <StackPanel Grid.Row="1">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Mã bộ lịch" />
+                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Nhập mã bộ lịch được chia sẻ vào ô văn bản bên dưới" />
+            </StackPanel>
+            <TextBox
+                Name="ScheduleBagCode"
+                Grid.Row="2"
+                Margin="0,0,0,10"
+                md:HintAssist.Hint="Mã bộ lịch"
+                md:TextFieldAssist.HasClearButton="True"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+            <StackPanel
+                Grid.Row="3"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button Content="LƯU VÀ SỬ DỤNG" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

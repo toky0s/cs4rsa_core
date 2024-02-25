@@ -11,17 +11,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
     /// </summary>
     public partial class ScheduleBag : UserControl
     {
-        private ScheduleBagViewModel _dataContext;
         public ScheduleBag()
         {
             InitializeComponent();
-            _dataContext = (ScheduleBagViewModel)DataContext;
-        }
-
-        private void ScheduleBagItem_Expanded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ScheduleBagModel scheduleBagModel = (ScheduleBagModel)((Expander)sender).DataContext;
-            _dataContext.GetScheduleDetails(scheduleBagModel);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Cs4rsa.Common;
+using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using HtmlAgilityPack;

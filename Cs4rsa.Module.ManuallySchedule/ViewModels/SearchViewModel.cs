@@ -11,6 +11,7 @@ using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Database.Models;
+using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Messages.Publishers.UIs;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
@@ -163,7 +164,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Messengers
-            _eventAggregator.GetEvent<ImportSessionVmMsgs.ExitImportSubjectMsg>().Subscribe(HandlerExitImportSubjectMsg);
+            _eventAggregator.GetEvent<ExitImportSubjectMsg>().Subscribe(async (payload) => await HandleImportSubjects(payload));
 
             //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             //{
@@ -235,14 +236,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             LoadDiscipline();
             LoadSavedSchedules();
-        }
-
-        private void HandlerExitImportSubjectMsg(IEnumerable<UserSubject> payload)
-        {
-            Application.Current.Dispatcher.InvokeAsync(async () =>
-            {
-                await HandleImportSubjects(payload);
-            });
         }
 
         private void OnSltCombiChanged(CombinationModel value)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Cs4rsa.Common;
+using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 namespace Cs4rsa.Service.SubjectCrawler.Utils

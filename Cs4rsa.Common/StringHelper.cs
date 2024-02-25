@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Cs4rsa.Common
+namespace Cs4rsa.Infrastructure.Common
 {
     /// <summary>
     /// Lớp tiện ích cho string.

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Models
 {
-    public class ScheduleBagModel: BindableBase
+    public class ScheduleBagModel
     {
         public int UserScheduleId { get; set; }
         public string Name { get; set; }

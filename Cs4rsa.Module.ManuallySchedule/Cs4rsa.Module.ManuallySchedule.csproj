@@ -103,7 +103,6 @@
     <Compile Include="Events\ChoosedVmMsgs.cs" />
     <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
     <Compile Include="Events\ExitImportSubjectMsg.cs" />
-    <Compile Include="Events\ImportSessionVmMsgs.cs" />
     <Compile Include="Events\SearchVmMsgs.cs" />
     <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
     <Compile Include="Events\SolveConflictVmMsgs.cs" />

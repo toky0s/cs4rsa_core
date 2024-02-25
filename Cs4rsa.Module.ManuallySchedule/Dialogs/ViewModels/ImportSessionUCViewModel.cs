@@ -187,7 +187,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         private void OnImport()
         {
             _eventAggregator.GetEvent<CloseDialogEvent>().Publish();
-            _eventAggregator.GetEvent<ExitImportSubjectMsg>().Publish(UserSubjects);
+            _eventAggregator.GetEvent<ExitImportSubjectMsg>().Publish(UserSubjects.ToArray());
         }
 
         private void OnDelete()

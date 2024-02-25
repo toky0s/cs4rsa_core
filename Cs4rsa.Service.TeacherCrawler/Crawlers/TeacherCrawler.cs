@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Cs4rsa.Common;
+using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.TeacherCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.TeacherCrawler.Models;
 using HtmlAgilityPack;
