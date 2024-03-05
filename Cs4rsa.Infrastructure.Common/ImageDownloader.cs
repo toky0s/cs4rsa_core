@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Cs4rsa.Common
+namespace Cs4rsa.Infrastructure.Common
 {
     public abstract class ImageDownloader
     {

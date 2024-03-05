@@ -85,46 +85,73 @@
                 LostFocus="SearchingTextBox_LostFocus"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
-            <Popup x:Name="Popup_Recommend" AllowsTransparency="True">
+            <Popup
+                x:Name="Popup_Recommend"
+                AllowsTransparency="True"
+                PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=1}}">
                 <Border
                     Background="{DynamicResource MaterialDesignPaper}"
                     BorderBrush="{StaticResource PrimaryHueMidBrush}"
                     BorderThickness="2.5"
                     CornerRadius="5">
-                    <ListBox
-                        x:Name="ListView_Search"
-                        MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
-                        MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
-                        ItemsSource="{Binding FullMatchSearchingKeywords}"
-                        SelectedItem="{Binding SearchingKeyword}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="25" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border
-                                        Grid.Column="0"
-                                        Width="20"
-                                        HorizontalAlignment="Left"
-                                        Background="{Binding Keyword.Color}"
-                                        CornerRadius="4" />
-                                    <StackPanel Grid.Column="1" Orientation="Vertical">
-                                        <TextBlock
-                                            Margin="5,10,0,0"
-                                            Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                            Text="{Binding Keyword.SubjectName, Mode=OneWay}"
-                                            TextWrapping="WrapWithOverflow" />
-                                        <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
-                                            <Run Text="{Binding Discipline.Name}" />
-                                            <Run Text="{Binding Keyword.Keyword1}" />
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <StackPanel>
+                        <ListBox
+                            x:Name="ListView_Search"
+                            MinWidth="{Binding ElementName=SearchingTextBox, Path=ActualWidth}"
+                            MaxHeight="{Binding ElementName=DownloadSubjects, Path=ActualHeight}"
+                            ItemsSource="{Binding FullMatchSearchingKeywords}"
+                            SelectedItem="{Binding SearchingKeyword}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="25" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border
+                                            Grid.Column="0"
+                                            Width="20"
+                                            HorizontalAlignment="Left"
+                                            Background="{Binding Keyword.Color}"
+                                            CornerRadius="4" />
+                                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                                            <TextBlock
+                                                Margin="5,10,0,0"
+                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                Text="{Binding Keyword.SubjectName, Mode=OneWay}"
+                                                TextWrapping="WrapWithOverflow" />
+                                            <TextBlock Margin="5,0,0,0" Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                                                <Run Text="{Binding Discipline.Name}" />
+                                                <Run Text="{Binding Keyword.Keyword1}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <md:Card Padding="10">
+                            <md:Card.Style>
+                                <Style TargetType="md:Card">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FullMatchSearchingKeywords.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </md:Card.Style>
+                            <StackPanel>
+                                <Image
+                                    Height="120"
+                                    Margin="0,0,0,10"
+                                    Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/emptybox.png" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    Text="Không tìm thấy kết quả" />
+                            </StackPanel>
+                        </md:Card>
+                    </StackPanel>
                 </Border>
             </Popup>
         </StackPanel>

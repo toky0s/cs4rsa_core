@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
+using System.Windows.Threading;
 
 using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
@@ -106,8 +108,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public SubjectModel SelectedSubjectModel
         {
             get { return _selectedSubjectModel; }
-            set 
-            { 
+            set
+            {
                 if (value != null && !value.IsDownloading && !value.IsError)
                 {
                     SetProperty(ref _selectedSubjectModel, value);
@@ -116,6 +118,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
+        private CancellationTokenSource _timeout;
+
         private string _searchText;
         public string SearchText
         {
@@ -123,8 +127,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             set
             {
                 SetProperty(ref _searchText, value);
-                if (value.Trim().Length == 0) return;
-                LoadSearchItemSource(value);
+                if (_timeout != null && !_timeout.IsCancellationRequested)
+                {
+                    _timeout.Cancel();
+                    _timeout = null;
+                }
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _timeout = JSFunctionality.SetTimeout(() =>
+                    {
+                        Application.Current.Dispatcher.Invoke(() => LoadSearchItemSource(value));
+                    }, 500);
+                }
             }
         }
 
@@ -336,11 +350,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void LoadSearchItemSource(string text)
         {
+            const int Maximum = 5;
+            text = text.Trim();
+
             FullMatchSearchingKeywords.Clear();
             var keywords = _searchKeywords
                 .Where(k => StringHelper.ReplaceVietnamese(k.SubjectName).ToLower().Contains(StringHelper.ReplaceVietnamese(text).ToLower())
                          || StringHelper.ReplaceVietnamese(k.Discipline.Name + k.Keyword1).ToLower().Contains(StringHelper.ReplaceVietnamese(text.Replace(" ", string.Empty)).ToLower())
-                ).Take(10);
+                ).Take(Maximum).AsParallel();
             foreach (var kw in keywords)
             {
                 var fullMatch = new FullMatchSearchingKeyword()
@@ -350,24 +367,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 };
                 FullMatchSearchingKeywords.Add(fullMatch);
             }
-
-            if (FullMatchSearchingKeywords.Count > 0) return;
-            var keyword = new Keyword()
-            {
-                CourseId = "000000",
-                SubjectName = "Không tìm thấy tên môn này",
-                Color = "#ffffff"
-            };
-            var discipline = new Discipline()
-            {
-                Name = "Không tìm thấy mã môn này"
-            };
-            var fullMatchSearchingKeyword = new FullMatchSearchingKeyword()
-            {
-                Keyword = keyword,
-                Discipline = discipline
-            };
-            FullMatchSearchingKeywords.Add(fullMatchSearchingKeyword);
         }
 
         private void OnDeleteAll()

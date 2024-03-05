@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS "UserSchedules" (
 	"SaveDate"	TEXT NOT NULL,
 	"SemesterValue"	TEXT,
 	"YearValue"	TEXT,
+	"Semester"	TEXT,
+	"Year"	TEXT,
 	CONSTRAINT "PK_UserSchedules" PRIMARY KEY("UserScheduleId" AUTOINCREMENT)
 );
 DROP TABLE IF EXISTS "DbProgramSubjects";

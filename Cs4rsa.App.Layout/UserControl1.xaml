@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Cs4rsa.App.Layout.UserControl1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cs4rsa.App.Layout"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <md:DialogHost
+        x:Name="DialogHost"
+        CloseOnClickAway="{Binding IsCloseOnClickAway}"
+        DialogContent="{Binding Dialog}"
+        IsOpen="{Binding IsOpen}">
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ItemsControl
+                    x:Name="TopMenuRegion"
+                    Grid.Row="0"
+                    prism:RegionManager.RegionName="{x:Static info:RegionInfo.TopMenu}" />
+                <materialDesign:Transitioner
+                    x:Name="CredizTransitioner"
+                    Grid.Row="1"
+                    SelectedIndex="{Binding ScreenIdx}">
+                    <ItemsControl
+                        x:Name="HomeRegion"
+                        Grid.Row="0"
+                        prism:RegionManager.RegionName="{x:Static info:RegionInfo.Home}" />
+                    <ItemsControl
+                        x:Name="ManualRegion"
+                        Grid.Row="0"
+                        prism:RegionManager.RegionName="{x:Static info:RegionInfo.Manual}" />
+                </materialDesign:Transitioner>
+            </Grid>
+            <materialDesign:Snackbar
+                HorizontalAlignment="Center"
+                ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
+                MessageQueue="{Binding SnackBarMessageQueue}">
+                <materialDesign:SnackbarMessage HorizontalContentAlignment="Center" />
+            </materialDesign:Snackbar>
+        </Grid>
+    </md:DialogHost>
+</UserControl>

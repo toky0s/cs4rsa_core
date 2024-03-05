@@ -101,12 +101,12 @@
                                                     Grid.Row="0"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding YearValue, StringFormat=Mã năm học: {0}}" />
+                                                    Text="{Binding Year}" />
                                                 <TextBlock
                                                     Grid.Row="1"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding SemesterValue, StringFormat=Mã học kỳ: {0}}" />
+                                                    Text="{Binding Semester}" />
                                                 <Button
                                                     Name="RunImport"
                                                     Grid.Row="0"
@@ -117,9 +117,12 @@
                                                     Content="{md:PackIcon Kind=PlayArrow}"
                                                     Style="{StaticResource MaterialDesignIconButton}" />
                                                 <Button
+                                                    Name="CopyCode"
                                                     Grid.Row="0"
                                                     Grid.RowSpan="2"
                                                     Grid.Column="3"
+                                                    Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.CopyCodeCommand}"
+                                                    CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
                                                     Content="{md:PackIcon Kind=Clipboard}"
                                                     Style="{StaticResource MaterialDesignIconButton}" />
                                                 <Button

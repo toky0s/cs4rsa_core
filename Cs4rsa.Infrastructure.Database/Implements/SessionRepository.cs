@@ -15,8 +15,16 @@ namespace Cs4rsa.Database.Implements
         {
             _rawSql = rawSql;
         }
+
+        /// <summary>
+        /// Thêm bộ lịch đã sắp xếp vào cơ sở dữ liệu
+        /// </summary>
+        /// <param name="userSchedule">Thông tin bộ lịch</param>
         public void Add(UserSchedule userSchedule)
         {
+            var semester = _rawSql.ExecScalar("SELECT Value FROM Settings WHERE Key = 'CurrentSemesterInfo'", "Chưa thể xác định");
+            var year = _rawSql.ExecScalar("SELECT Value FROM Settings WHERE Key = 'CurrentYearInfo'", "Chưa thể xác định");
+
             var userScheduleId = _rawSql.ExecScalar("SELECT COUNT(*) + 1 FROM UserSchedules", 0L);
             var sessionDetailId = _rawSql.ExecScalar("SELECT COUNT(*) + 1 FROM ScheduleDetails", 0L);
             var sb = new StringBuilder()
@@ -27,6 +35,8 @@ namespace Cs4rsa.Database.Implements
                 .AppendLine(", @SaveDate")
                 .AppendLine(", @SemesterValue")
                 .AppendLine(", @YearValue")
+                .AppendLine(", @Semester") // Thông tin học kỳ
+                .AppendLine(", @Year") // Thông tin năm học
                 .AppendLine(");")
                 .AppendLine("INSERT INTO ScheduleDetails VALUES");
             foreach (var sd in userSchedule.SessionDetails)
@@ -52,6 +62,8 @@ namespace Cs4rsa.Database.Implements
                 { "@SaveDate", userSchedule.SaveDate},
                 { "@SemesterValue", userSchedule.SemesterValue},
                 { "@YearValue", userSchedule.YearValue},
+                { "@Semester", semester},
+                { "@Year", year},
             };
 
             _rawSql.ExecNonQuery(sb.ToString(), param);
@@ -67,7 +79,9 @@ namespace Cs4rsa.Database.Implements
                     Name = record.GetString(1),
                     SaveDate = DateTime.Parse(record.GetString(2)),
                     SemesterValue = record.GetString(3),
-                    YearValue = record.GetString(4)
+                    YearValue = record.GetString(4),
+                    Semester = record.GetString(5),
+                    Year = record.GetString(6)
                 }
             );
         }

@@ -11,7 +11,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 {
     public partial class Search: UserControl
     {
-        private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space };
+        private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space, Key.LeftCtrl, Key.RightCtrl };
         private SearchViewModel Vm;
         public Search()
         {
@@ -29,18 +29,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
             return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9);
         }
 
-        private static bool IsUserAllowedKey(Key key)
-        {
-            return _userAllowedKeys.Contains(key);
-        }
-
         private void SearchingTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            Popup_Recommend.IsOpen = (IsKeyAChar(e.Key) || IsKeyADigit(e.Key) || IsUserAllowedKey(e.Key))
-                && e.Key != Key.Escape;
             if (e.Key == Key.Escape)
             {
+                Popup_Recommend.IsOpen = false;
                 Keyboard.ClearFocus();
+            }
+            else
+            {
+                Popup_Recommend.IsOpen = true;
             }
         }
 

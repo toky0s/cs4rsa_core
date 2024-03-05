@@ -76,10 +76,10 @@ namespace Cs4rsa.App.ViewModels
                 IsCloseOnClickAway = payload.Item2;
             });
 
-            //_eventAggregator.GetEvent<SnackbarMsgEvent>().Subscribe(msg => 
-            //{
-            //    SnackBarMessageQueue.Enqueue(msg);
-            //});
+            _eventAggregator.GetEvent<SnackbarMsgEvent>().Subscribe(msg =>
+            {
+                SnackBarMessageQueue.Enqueue(msg);
+            });
         }
     }
 }

@@ -206,13 +206,17 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cs4rsa.Common\Cs4rsa.Infrastructure.Common.csproj">
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Common\Cs4rsa.Infrastructure.Common.csproj">
       <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
       <Name>Cs4rsa.Infrastructure.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Database\Cs4rsa.Infrastructure.Database.csproj">
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Database\Cs4rsa.Infrastructure.Database.csproj">
       <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
       <Name>Cs4rsa.Infrastructure.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Events\Cs4rsa.Infrastructure.Events.csproj">
+      <Project>{f5ef9a32-bae8-4b0e-9e6d-b2ac0d0eafaf}</Project>
+      <Name>Cs4rsa.Infrastructure.Events</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
       <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>
@@ -239,7 +243,11 @@
       <Name>Cs4rsa.WPF.Converter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\emptybox.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,8 +1,4 @@
-﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
-using Cs4rsa.Database.Models;
-
-using System.Windows.Controls;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
+﻿using System.Windows.Controls;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
 {

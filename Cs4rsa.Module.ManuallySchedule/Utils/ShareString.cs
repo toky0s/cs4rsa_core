@@ -35,6 +35,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
             }
 
             var userSubjects = ConvertToUserSubjects(classGroupModels);
+            return GetShareString(userSubjects);
+        }
+
+        public string GetShareString(IEnumerable<UserSubject> userSubjects)
+        {
             var json = JsonConvert.SerializeObject(userSubjects);
             return StringHelper.EncodeTo64(json);
         }
