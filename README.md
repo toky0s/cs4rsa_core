@@ -66,7 +66,7 @@ Version 1.1.2
 -   |
 -   V
 - Modules: Tầng nghiệp vụ.
--   |
+-   |    - Shared Modules: Triển khai các abstract class cho các tác vụ như hiển thị Dialog trong một Dialog.
 -   V
 - Converters: Tầng này cung cấp tất cả các tiện ích converter, consume một số model từ tầng service và các chức năng từ tầng Infrastructure.
 -   |

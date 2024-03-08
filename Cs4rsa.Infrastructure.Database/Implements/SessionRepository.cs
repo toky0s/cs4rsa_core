@@ -113,10 +113,23 @@ namespace Cs4rsa.Database.Implements
                 .AppendLine("DELETE FROM UserSchedules")
                 .AppendLine("WHERE UserScheduleId = @UserScheduleId");
             return _rawSql.ExecNonQuery(
-                sb.ToString()
-            , new Dictionary<string, object>()
+                sb.ToString(),
+                new Dictionary<string, object>()
                 {
                     { "@UserScheduleId", userSchedule.UserScheduleId }
+                });
+        }
+
+        public int Remove(int userScheduleId)
+        {
+            var sb = new StringBuilder()
+                .AppendLine("DELETE FROM UserSchedules")
+                .AppendLine("WHERE UserScheduleId = @UserScheduleId");
+            return _rawSql.ExecNonQuery(
+                sb.ToString(),
+                new Dictionary<string, object>()
+                {
+                    { "@UserScheduleId", userScheduleId }
                 });
         }
     }

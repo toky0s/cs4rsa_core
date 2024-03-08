@@ -100,6 +100,9 @@
     <Compile Include="Dialogs\Views\SolveConflictUC.xaml.cs">
       <DependentUpon>SolveConflictUC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Views\YesNoUc.xaml.cs">
+      <DependentUpon>YesNoUc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Events\ChoosedVmMsgs.cs" />
     <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
     <Compile Include="Events\ExitImportSubjectMsg.cs" />
@@ -180,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\Views\YesNoUc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Chose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -217,6 +224,10 @@
     <ProjectReference Include="..\Cs4rsa.Infrastructure.Events\Cs4rsa.Infrastructure.Events.csproj">
       <Project>{f5ef9a32-bae8-4b0e-9e6d-b2ac0d0eafaf}</Project>
       <Name>Cs4rsa.Infrastructure.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Module.Shared\Cs4rsa.Module.Shared.csproj">
+      <Project>{877566d3-74d6-467c-b0fd-5dc9fcd29e12}</Project>
+      <Name>Cs4rsa.Module.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
       <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>

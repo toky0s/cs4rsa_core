@@ -13,10 +13,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Cs4rsa.Module.Shared;
+using System;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using System.Web.UI;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public class ScheduleBagViewModel : BindableBase
+    public class ScheduleBagViewModel : ShowDialogViewModelAbstract
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IUnitOfWork _unitOfWork;
@@ -25,6 +29,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public ObservableCollection<ScheduleBagModel> ScheduleBagModels { get; set; }
         public DelegateCommand<ScheduleBagModel> ImportCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> CopyCodeCommand { get; set; }
+        public DelegateCommand<ScheduleBagModel> DeleteCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> GetDetailsCommand { get; set; }
         public ScheduleBagViewModel(IEventAggregator eventAggregator, IUnitOfWork unitOfWork, ShareString shareStringSvc)
         {
@@ -35,6 +40,33 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             ImportCommand = new DelegateCommand<ScheduleBagModel>(ExecuteImportCommand);
             CopyCodeCommand = new DelegateCommand<ScheduleBagModel>(ExecuteCopyCodeCommand);
             GetDetailsCommand = new DelegateCommand<ScheduleBagModel>(ExecuteGetDetailsCommand);
+            DeleteCommand = new DelegateCommand<ScheduleBagModel>(ExecuteDeleteCommand);
+        }
+
+        private void ExecuteDeleteCommand(ScheduleBagModel model)
+        {
+            YesNoUc dialog = new YesNoUc(
+                caption: "Bạn có chắc muốn xoá?",
+                description: "Bộ lịch đã xoá không thể hoàn tác.",
+                leftBtnContent: "CHẮC",
+                rightBtnContent: "KHÔNG"
+            )
+            {
+                LeftAction = () => DoDelete(model),
+                RightAction = () => { IsOpen = false; }
+            };
+
+            Dialog = dialog;
+            IsCloseOnClickAway = true;
+            IsOpen = true;
+        }
+
+        private void DoDelete(ScheduleBagModel model)
+        {
+            IsOpen = false;
+            _unitOfWork.UserSchedules.Remove(model.UserScheduleId);
+            var idx = ScheduleBagModels.IndexOf(model);
+            ScheduleBagModels.RemoveAt(idx);
         }
 
         private void ExecuteImportCommand(ScheduleBagModel payload)

@@ -7,6 +7,7 @@ namespace Cs4rsa.Database.Interfaces
     {
         List<ScheduleDetail> GetSessionDetails(int sessionId);
         int Remove(UserSchedule userSchedule);
+        int Remove(int userScheduleId);
         void Add(UserSchedule userSchedule);
         List<UserSchedule> GetAll();
     }
