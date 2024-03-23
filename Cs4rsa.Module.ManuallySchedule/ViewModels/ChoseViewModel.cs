@@ -31,8 +31,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
     public class ChoseViewModel : BindableBase
     {
         #region Properties
-        private string _shareString;
-
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
 
         private ClassGroupModel _selectedClassGroupModel;
@@ -88,8 +86,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             _unitOfWork = unitOfWork;
-
-            Debug.WriteLine("ChoseViewModel " + _eventAggregator.GetHashCode());
 
             #region Messengers
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
@@ -251,10 +247,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnOpenShareStringWindow()
         {
-            var shareStringUc = new ShareStringUC();
-            var vm = shareStringUc.DataContext as ShareStringViewModel;
-            UpdateShareString();
-            vm.ShareString = _shareString;
+            var shareStringUc = new ShareStringUC(); // TODO: Chưa set view model
+            var vm = shareStringUc.DataContext as ShareStringUCViewModel;
+            vm.ShareString = _shareStringGenerator.GetShareString(ClassGroupModels); ;
             _dialogService.OpenDialog(shareStringUc);
         }
 
@@ -401,7 +396,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void UpdateShareString()
         {
-            _shareString = _shareStringGenerator.GetShareString(ClassGroupModels);
+            
         }
 
         private void UpdateConflicts()

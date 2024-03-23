@@ -62,7 +62,8 @@ namespace Cs4rsa.Database.DataProviders
                     AddParams(cmd, sqlParams);
                     var result = cmd.ExecuteScalar();
                     if (result == null) return defaultValueIfNull;
-                    return (T)result;
+                    return (T)Convert.ChangeType(result, typeof(T));
+                    //return (T)result;
                 }
             }
         }
@@ -126,6 +127,51 @@ namespace Cs4rsa.Database.DataProviders
             }
         }
 
+        public void ExecReader(string sql, IDictionary<string, object> sqlParams, Action<SQLiteDataReader> record)
+        {
+            using (var connection = new SQLiteConnection(CnnStr))
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    AddParams(cmd, sqlParams);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                record(reader);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ExecReader(string sql, Action<SQLiteDataReader> record)
+        {
+            using (var connection = new SQLiteConnection(CnnStr))
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                record(reader);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Thực thi câu lệnh DML.
         /// </summary>
@@ -154,7 +200,7 @@ namespace Cs4rsa.Database.DataProviders
                     cmd.CommandText = sql;
                     AddParams(cmd, sqlParams);
                     var result = cmd.ExecuteNonQuery();
-                    return result;    
+                    return result;
                 }
             }
         }
@@ -233,12 +279,12 @@ namespace Cs4rsa.Database.DataProviders
                     var columnTable = cnn.GetSchema("Columns");
 
                     var columnNames = (
-                        from DataRow dataRow in columnTable.Rows 
-                        where dataRow["TABLE_NAME"].Equals(typeof(T).Name + "s") 
+                        from DataRow dataRow in columnTable.Rows
+                        where dataRow["TABLE_NAME"].Equals(typeof(T).Name + "s")
                         select dataRow["COLUMN_NAME"].ToString()
                     ).ToList();
                     TableColumnNames.Add(tableName, columnNames);
-                    sb.AppendLine(string.Join("\n, ", columnNames));    
+                    sb.AppendLine(string.Join("\n, ", columnNames));
                 }
             }
             return sb;
@@ -253,9 +299,10 @@ namespace Cs4rsa.Database.DataProviders
         /// </remarks>
         /// <param name="sb">StringBuilder</param>
         /// <returns>StringBuilder</returns>
-        public static void RemoveLastCharAfterAppendLine(this StringBuilder sb)
+        public static StringBuilder RemoveLastCharAfterAppendLine(this StringBuilder sb)
         {
             sb.Length -= 3;
+            return sb;
         }
     }
     #endregion

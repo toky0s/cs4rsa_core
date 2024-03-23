@@ -24,10 +24,9 @@ namespace Cs4rsa.Database.Implements
         {
             var semester = _rawSql.ExecScalar("SELECT Value FROM Settings WHERE Key = 'CurrentSemesterInfo'", "Chưa thể xác định");
             var year = _rawSql.ExecScalar("SELECT Value FROM Settings WHERE Key = 'CurrentYearInfo'", "Chưa thể xác định");
-
-            var userScheduleId = _rawSql.ExecScalar("SELECT COUNT(*) + 1 FROM UserSchedules", 0L);
-            var sessionDetailId = _rawSql.ExecScalar("SELECT COUNT(*) + 1 FROM ScheduleDetails", 0L);
+            var latestUserScheduleId = _rawSql.ExecScalar("SELECT UserScheduleId FROM UserSchedules ORDER BY UserScheduleId DESC LIMIT 1", 1);
             var sb = new StringBuilder()
+                .BeginTransaction()
                 .AppendLine("INSERT INTO UserSchedules VALUES")
                 .AppendLine("(")
                 .AppendLine("  @UserScheduleId")
@@ -39,25 +38,36 @@ namespace Cs4rsa.Database.Implements
                 .AppendLine(", @Year") // Thông tin năm học
                 .AppendLine(");")
                 .AppendLine("INSERT INTO ScheduleDetails VALUES");
-            foreach (var sd in userSchedule.SessionDetails)
+            ScheduleDetail sd;
+            for (int i = 0; i < userSchedule.SessionDetails.Count; i++)
             {
+                sd = userSchedule.SessionDetails[i];
                 sb
                     .Append('(')
-                    .Append(sessionDetailId).Append(", ")
+                    .Append("NULL").Append(", ")
                     .Append('\'').Append(sd.SubjectCode).Append('\'').Append(", ")
                     .Append('\'').Append(sd.SubjectName).Append('\'').Append(", ")
                     .Append('\'').Append(sd.ClassGroup).Append('\'').Append(", ")
                     .Append('\'').Append(sd.RegisterCode).Append('\'').Append(", ")
                     .Append('\'').Append(sd.SelectedSchoolClass).Append('\'').Append(", ")
-                    .Append(userScheduleId)
-                    .AppendLine("),");
-                sessionDetailId++;
-            }
-            sb.RemoveLastCharAfterAppendLine();
+                    .Append("@UserScheduleId")
+                    .AppendLine(")");
 
-            var param = new Dictionary<string, object>()
+                // If is not last
+                if (i != userSchedule.SessionDetails.Count - 1)
+                {
+                    sb.Append(", ");
+                }
+                else
+                {
+                    sb.Append(";");
+                }
+            }
+            sb.CommitTransaction();
+
+            var @params = new Dictionary<string, object>()
             {
-                { "@UserScheduleId", userScheduleId},
+                { "@UserScheduleId", latestUserScheduleId + 1},
                 { "@Name", userSchedule.Name},
                 { "@SaveDate", userSchedule.SaveDate},
                 { "@SemesterValue", userSchedule.SemesterValue},
@@ -66,7 +76,7 @@ namespace Cs4rsa.Database.Implements
                 { "@Year", year},
             };
 
-            _rawSql.ExecNonQuery(sb.ToString(), param);
+            _rawSql.ExecNonQuery(sb.ToString(), @params);
         }
 
         public List<UserSchedule> GetAll()
@@ -103,28 +113,19 @@ namespace Cs4rsa.Database.Implements
             );
         }
 
-        public int Remove(UserSchedule userSchedule)
-        {
-            if (userSchedule == null)
-            {
-                throw new NullReferenceException("UserSchedule was null");
-            }
-            var sb = new StringBuilder()
-                .AppendLine("DELETE FROM UserSchedules")
-                .AppendLine("WHERE UserScheduleId = @UserScheduleId");
-            return _rawSql.ExecNonQuery(
-                sb.ToString(),
-                new Dictionary<string, object>()
-                {
-                    { "@UserScheduleId", userSchedule.UserScheduleId }
-                });
-        }
-
         public int Remove(int userScheduleId)
         {
             var sb = new StringBuilder()
+                .BeginTransaction()
+                .PragmaForeignKeysOn()
+                .AppendLine("DELETE FROM ScheduleDetails")
+                .AppendLine("WHERE ScheduleDetails.ScheduleDetailId IN")
+                .AppendLine("   (SELECT ScheduleDetails.ScheduleDetailId")
+                .AppendLine("   FROM ScheduleDetails")
+                .AppendLine("   WHERE ScheduleDetails.UserScheduleId = @UserScheduleId);")
                 .AppendLine("DELETE FROM UserSchedules")
-                .AppendLine("WHERE UserScheduleId = @UserScheduleId");
+                .AppendLine("WHERE UserScheduleId = @UserScheduleId;")
+                .CommitTransaction();
             return _rawSql.ExecNonQuery(
                 sb.ToString(),
                 new Dictionary<string, object>()

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Models
 {
-    public class ScheduleBagItemModel: BindableBase
+    public class ScheduleBagItemModel
     {
         public int ScheduleDetailId { get; set; }
         public string SubjectCode { get; set; }

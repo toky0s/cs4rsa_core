@@ -6,7 +6,7 @@ using Prism.Mvvm;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public class ShareStringViewModel : BindableBase
+    public class ShareStringUCViewModel : BindableBase
     {
         private const string DefaultShareString = "Không có Share String nào ở đây cả.";
 
@@ -28,7 +28,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         #endregion
 
-        public ShareStringViewModel(
+        public ShareStringUCViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             IDialogService dialogService
         )

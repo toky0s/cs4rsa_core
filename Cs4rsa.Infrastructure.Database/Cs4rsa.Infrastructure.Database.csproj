@@ -92,6 +92,7 @@
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\UserSchedule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqliteExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataProviders\cs4rsa.db.sql">

@@ -2,6 +2,7 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.ScheduleBag"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
@@ -9,6 +10,7 @@
     Height="600"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
+        <cvt:IsZeroCvt x:Key="IsZeroCvt" />
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
@@ -27,185 +29,318 @@
         CloseOnClickAway="{Binding IsCloseOnClickAway}"
         DialogContent="{Binding Dialog}"
         IsOpen="{Binding IsOpen}">
-        <Border Padding="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <Border Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <StackPanel x:Name="ScheduleBagHeader" Grid.Row="0">
-                    <TextBlock
-                        x:Name="ScheduleBagTitle"
-                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                        Text="Danh sách bộ lịch" />
-                    <TextBlock
-                        x:Name="ScheduleBagDescription"
-                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                        Text="Tất cả các bộ lịch với năm và học kỳ hợp lệ sẽ được hiển thị dưới đây" />
-                </StackPanel>
+                        <StackPanel Name="ScheduleBagHeader" Grid.Row="0">
+                            <TextBlock
+                                x:Name="ScheduleBagTitle"
+                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                Text="Danh sách bộ lịch" />
+                            <TextBlock
+                                x:Name="ScheduleBagDescription"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                Text="Tất cả các bộ lịch với năm và học kỳ hợp lệ sẽ được hiển thị dưới đây" />
+                        </StackPanel>
 
-                <ScrollViewer
-                    Grid.Row="1"
-                    Margin="0,0,0,10"
-                    VerticalScrollBarVisibility="Visible">
-                    <ItemsControl
-                        Name="ScheduleBagContainer"
-                        Padding="0,0,10,0"
-                        ItemsSource="{Binding ScheduleBagModels}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <md:Card
-                                        Margin="0,0,0,10"
-                                        md:ElevationAssist.Elevation="Dp0"
-                                        Style="{StaticResource MaterialDesignOutlinedCard}">
-                                        <Expander
-                                            Name="ScheduleBagItem"
-                                            Grid.Column="0"
-                                            Style="{StaticResource MaterialDesignExpander}">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="Expanded">
-                                                    <i:InvokeCommandAction Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.GetDetailsCommand}" CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}" />
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                            <Expander.Header>
-                                                <Border>
-                                                    <Grid VerticalAlignment="Center">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition />
-                                                            <RowDefinition />
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock
-                                                            Grid.Row="0"
-                                                            Grid.Column="0"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding Name, StringFormat=Tên bộ lịch: {0}}" />
-                                                        <TextBlock
-                                                            Grid.Row="1"
-                                                            Grid.Column="0"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding SaveDate, StringFormat=Ngày lưu: {0}}" />
-                                                        <TextBlock
-                                                            Grid.Row="0"
-                                                            Grid.Column="1"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding Year}" />
-                                                        <TextBlock
-                                                            Grid.Row="1"
-                                                            Grid.Column="1"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding Semester}" />
-                                                        <Button
-                                                            Name="RunImport"
-                                                            Grid.Row="0"
-                                                            Grid.RowSpan="2"
-                                                            Grid.Column="2"
-                                                            Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.ImportCommand}"
-                                                            CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
-                                                            Content="{md:PackIcon Kind=PlayArrow}"
-                                                            Style="{StaticResource MaterialDesignIconButton}" />
-                                                        <Button
-                                                            Name="CopyCode"
-                                                            Grid.Row="0"
-                                                            Grid.RowSpan="2"
-                                                            Grid.Column="3"
-                                                            Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.CopyCodeCommand}"
-                                                            CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
-                                                            Content="{md:PackIcon Kind=ClipboardOutline}"
-                                                            ToolTip="Sao chép">
-                                                            <Button.Style>
-                                                                <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
-                                                                    <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
-                                                                </Style>
-                                                            </Button.Style>
-                                                        </Button>
-                                                        <Button
-                                                            Name="Delete"
-                                                            Grid.Row="0"
-                                                            Grid.RowSpan="2"
-                                                            Grid.Column="4"
-                                                            Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.DeleteCommand}"
-                                                            CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
-                                                            Content="{md:PackIcon Kind=DeleteOutline}"
-                                                            Style="{StaticResource MaterialDesignIconButton}" />
-                                                    </Grid>
-                                                </Border>
-                                            </Expander.Header>
-                                            <ListView x:Name="SubjectList" ItemsSource="{Binding ScheduleBagItemModels}">
-                                                <ListView.View>
-                                                    <GridView>
-                                                        <GridViewColumn DisplayMemberBinding="{Binding SubjectCode}" Header="Mã môn" />
-                                                        <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
-                                                        <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
-                                                        <GridViewColumn>
-                                                            <GridViewColumnHeader>
-                                                                <TextBlock Text="Sao chép" />
-                                                            </GridViewColumnHeader>
-                                                            <GridViewColumn.CellTemplate>
-                                                                <DataTemplate>
-                                                                    <Button HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignIconButton}">
-                                                                        <md:PackIcon Kind="Clipboard" />
-                                                                    </Button>
-                                                                </DataTemplate>
-                                                            </GridViewColumn.CellTemplate>
-                                                        </GridViewColumn>
-                                                    </GridView>
-                                                </ListView.View>
-                                            </ListView>
-                                        </Expander>
-                                    </md:Card>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                        <ScrollViewer
+                            Grid.Row="1"
+                            Height="280"
+                            Margin="0,0,0,10"
+                            VerticalScrollBarVisibility="Visible">
+                            <ScrollViewer.Style>
+                                <Style TargetType="ScrollViewer">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ScheduleBagModels.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ScrollViewer.Style>
+                            <ItemsControl
+                                Name="ScheduleBagContainer"
+                                Padding="0,0,10,0"
+                                ItemsSource="{Binding ScheduleBagModels}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <md:Card
+                                                Margin="0,0,0,10"
+                                                md:ElevationAssist.Elevation="Dp0"
+                                                Style="{StaticResource MaterialDesignOutlinedCard}">
+                                                <Expander
+                                                    Name="ScheduleBagItem"
+                                                    Grid.Column="0"
+                                                    Style="{StaticResource MaterialDesignExpander}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="Expanded">
+                                                            <i:InvokeCommandAction Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.GetDetailsCommand}" CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}" />
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                    <Expander.Header>
+                                                        <Border>
+                                                            <Grid VerticalAlignment="Center">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition />
+                                                                    <RowDefinition />
+                                                                </Grid.RowDefinitions>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="0"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding Name, StringFormat=Tên bộ lịch: {0}}" />
+                                                                <TextBlock
+                                                                    Grid.Row="1"
+                                                                    Grid.Column="0"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding SaveDate, StringFormat=Ngày lưu: {0}}" />
+                                                                <TextBlock
+                                                                    Grid.Row="0"
+                                                                    Grid.Column="1"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding Year}" />
+                                                                <TextBlock
+                                                                    Grid.Row="1"
+                                                                    Grid.Column="1"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding Semester}" />
+                                                                <Button
+                                                                    Name="RunImport"
+                                                                    Grid.Row="0"
+                                                                    Grid.RowSpan="2"
+                                                                    Grid.Column="2"
+                                                                    Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.ImportCommand}"
+                                                                    CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
+                                                                    Content="{md:PackIcon Kind=PlayArrow}"
+                                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                                    ToolTip="Nạp"
+                                                                    ToolTipService.InitialShowDelay="0" />
+                                                                <Button
+                                                                    Name="CopyCode"
+                                                                    Grid.Row="0"
+                                                                    Grid.RowSpan="2"
+                                                                    Grid.Column="3"
+                                                                    Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.CopyCodeCommand}"
+                                                                    CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
+                                                                    Content="{md:PackIcon Kind=ClipboardOutline}"
+                                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                                    ToolTip="Sao chép"
+                                                                    ToolTipService.InitialShowDelay="0" />
+                                                                <Button
+                                                                    Name="Delete"
+                                                                    Grid.Row="0"
+                                                                    Grid.RowSpan="2"
+                                                                    Grid.Column="4"
+                                                                    Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.DeleteCommand}"
+                                                                    CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
+                                                                    Content="{md:PackIcon Kind=DeleteOutline}"
+                                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                                    ToolTip="Xoá"
+                                                                    ToolTipService.InitialShowDelay="0" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </Expander.Header>
+                                                    <ListView x:Name="SubjectList" ItemsSource="{Binding ScheduleBagItemModels}">
+                                                        <ListView.View>
+                                                            <GridView>
+                                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectCode}" Header="Mã môn" />
+                                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
+                                                                <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
+                                                                <GridViewColumn>
+                                                                    <GridViewColumnHeader>
+                                                                        <TextBlock Text="Sao chép" />
+                                                                    </GridViewColumnHeader>
+                                                                    <GridViewColumn.CellTemplate>
+                                                                        <DataTemplate>
+                                                                            <Button
+                                                                                HorizontalContentAlignment="Center"
+                                                                                Style="{StaticResource MaterialDesignIconButton}"
+                                                                                ToolTip="Sao chép"
+                                                                                ToolTipService.InitialShowDelay="0">
+                                                                                <md:PackIcon Kind="ClipboardOutline" />
+                                                                            </Button>
+                                                                        </DataTemplate>
+                                                                    </GridViewColumn.CellTemplate>
+                                                                </GridViewColumn>
+                                                            </GridView>
+                                                        </ListView.View>
+                                                    </ListView>
+                                                </Expander>
+                                            </md:Card>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <!--  Trong trường hợp không có data => show image rỗng  -->
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ScheduleBagModels.Count, Converter={StaticResource IsZeroCvt}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Image
+                                Height="210"
+                                Margin="0,0,0,10"
+                                Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/emptybox.png" />
+                            <TextBlock
+                                Foreground="{StaticResource Grey400}"
+                                Text="Không có bộ lịch nào ở đây cả"
+                                TextAlignment="Center" />
+                        </StackPanel>
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Separator Grid.Row="0" Margin="0,0,0,20" />
+                            <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Mã bộ lịch" />
+                                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Nhập mã bộ lịch được chia sẻ vào ô văn bản bên dưới" />
+                            </StackPanel>
+                            <TextBox
+                                Name="ScheduleBagCode"
+                                Grid.Row="2"
+                                Margin="0,0,0,10"
+                                md:HintAssist.Hint="Mã bộ lịch"
+                                md:TextFieldAssist.HasClearButton="True"
+                                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                Text="{Binding ScheduleBagCode, UpdateSourceTrigger=PropertyChanged}" />
+                            <md:Card
+                                Grid.Row="3"
+                                Margin="0,0,0,10"
+                                md:ElevationAssist.Elevation="Dp0">
+                                <md:Card.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignOutlinedCard}" TargetType="md:Card">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCodeValid}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </md:Card.Style>
+                                <Expander
+                                    Name="EnterdScheduleBagItem"
+                                    Grid.Column="0"
+                                    Style="{StaticResource MaterialDesignExpander}">
+                                    <Expander.Header>
+                                        <Border>
+                                            <Grid VerticalAlignment="Center">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Grid.ColumnSpan="2"
+                                                    Margin="0,0,10,10"
+                                                    VerticalAlignment="Center"
+                                                    md:HintAssist.Hint="Tên bộ lịch"
+                                                    md:TextFieldAssist.HasClearButton="True"
+                                                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                                    Text="{Binding EnteredScheduleBagModel.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding EnteredScheduleBagModel.Year}" />
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding EnteredScheduleBagModel.Semester}" />
+                                            </Grid>
+                                        </Border>
+                                    </Expander.Header>
+                                    <ListView x:Name="SubjectList" ItemsSource="{Binding EnteredScheduleBagModel.ScheduleBagItemModels}">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectCode}" Header="Mã môn" />
+                                                <GridViewColumn DisplayMemberBinding="{Binding SubjectName}" Header="Tên môn" />
+                                                <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Expander>
+                            </md:Card>
+                            <TextBlock
+                                Grid.Row="3"
+                                Foreground="Red"
+                                Text="Nội dung không hợp lệ">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignHelperTextBlock}" TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCodeValid}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <StackPanel
+                                Grid.Row="4"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCodeValid}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
 
-                <Grid Grid.Row="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Separator Grid.Row="0" Margin="0,0,0,20" />
-                    <StackPanel Grid.Row="1">
-                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Mã bộ lịch" />
-                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Nhập mã bộ lịch được chia sẻ vào ô văn bản bên dưới" />
-                    </StackPanel>
-                    <TextBox
-                        Name="ScheduleBagCode"
-                        Grid.Row="2"
-                        Margin="0,0,0,10"
-                        md:HintAssist.Hint="Mã bộ lịch"
-                        md:TextFieldAssist.HasClearButton="True"
-                        Style="{StaticResource MaterialDesignOutlinedTextBox}" />
-                    <StackPanel
-                        Grid.Row="3"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                        <Button Content="LƯU VÀ SỬ DỤNG" />
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </Border>
-
+                                <Button Command="{Binding SaveAndLoadCommand}" Content="LƯU VÀ SỬ DỤNG" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+            <md:Snackbar
+                HorizontalAlignment="Center"
+                ActionButtonStyle="{StaticResource ResourceKey=Style_Cs4rsa_SnackbarActionButton}"
+                MessageQueue="{Binding SnackBarMessageQueue}">
+                <md:SnackbarMessage HorizontalContentAlignment="Center" />
+            </md:Snackbar>
+        </Grid>
     </md:DialogHost>
-
 </UserControl>

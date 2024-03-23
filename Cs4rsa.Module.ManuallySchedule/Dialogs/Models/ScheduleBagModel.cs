@@ -9,10 +9,15 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Models
 {
-    public class ScheduleBagModel
+    public class ScheduleBagModel : BindableBase
     {
         public int UserScheduleId { get; set; }
-        public string Name { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
         public DateTime SaveDate { get; set; }
         public string SemesterValue { get; set; }
         public string YearValue { get; set; }

@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using MaterialDesignThemes.Wpf;
+
+using Prism.Mvvm;
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,8 @@ namespace Cs4rsa.Module.Shared
     /// </summary>
     public abstract class ShowDialogViewModelAbstract: BindableBase
     {
+        public ISnackbarMessageQueue SnackBarMessageQueue { get; set; }
+
         private object _dialog;
 
         /// <summary>
@@ -45,6 +49,11 @@ namespace Cs4rsa.Module.Shared
         {
             get { return _isOpen; }
             set { SetProperty(ref _isOpen, value); }
+        }
+
+        protected ShowDialogViewModelAbstract()
+        {
+            SnackBarMessageQueue = new SnackbarMessageQueue();
         }
     }
 }

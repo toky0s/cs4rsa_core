@@ -54,6 +54,7 @@
     <Compile Include="GetTeacherNameConverter.cs" />
     <Compile Include="IsNotNullConverter.cs" />
     <Compile Include="IsTypeOfCvt.cs" />
+    <Compile Include="IsZeroCvt.cs" />
     <Compile Include="PhaseCvt.cs" />
     <Compile Include="PlaceCvt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -74,15 +74,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
             Vm.DeleteCommand.Execute(subjectModel);
         }
 
-        private void Btn_GotoCourse_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void Btn_Details_Click(object sender, RoutedEventArgs e)
         {
             var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.DetailCommand.Execute(subjectModel);
+        }
+
+        private void OpenInCourse_Click(object sender, RoutedEventArgs e)
+        {
+            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            Vm.GotoCourseCommand.Execute(subjectModel);
         }
     }
 }

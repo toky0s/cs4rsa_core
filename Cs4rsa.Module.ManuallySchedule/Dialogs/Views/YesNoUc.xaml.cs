@@ -38,12 +38,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
             Do.Content = leftBtnContent;
         }
 
-        private void Cancel_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void RightButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             RightAction?.Invoke();
         }
 
-        private void Do_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void LeftButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             LeftAction?.Invoke();
         }

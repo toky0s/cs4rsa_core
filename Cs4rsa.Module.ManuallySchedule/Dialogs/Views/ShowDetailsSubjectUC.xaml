@@ -93,13 +93,13 @@
                 Grid.Row="5"
                 Grid.Column="1"
                 Foreground="Green"
-                Text="{Binding SubjectModel.PrerequisiteSubjectAsString, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Tiên quyết)}" />
+                Text="{Binding SubjectModel.PrerequisiteSubjects, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Tiên quyết)}" />
             <TextBlock Grid.Row="6" Grid.Column="0">Môn học song hành:</TextBlock>
             <TextBlock
                 Grid.Row="6"
                 Grid.Column="1"
                 Foreground="Green"
-                Text="{Binding SubjectModel.ParallelSubjectAsString, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Song hành)}" />
+                Text="{Binding SubjectModel.ParallelSubjects, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=(Không có Môn học Song hành)}" />
             <TextBlock Grid.Row="7" Grid.Column="0">Mô tả môn học:</TextBlock>
             <TextBlock
                 Grid.Row="7"

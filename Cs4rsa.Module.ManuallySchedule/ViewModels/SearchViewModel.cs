@@ -11,6 +11,7 @@ using System.Windows.Threading;
 
 using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Database;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Database.Models;
 using Cs4rsa.Infrastructure.Common;
@@ -45,6 +46,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand ImportDialogCommand { get; set; }
         public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
         public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
+        public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
         public DelegateCommand DeleteAllCommand { get; set; }
         public DelegateCommand<SubjectModel> DetailCommand { get; set; }
         #endregion
@@ -239,6 +241,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
+            GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
             {
                 var showDetailsSubjectUc = new ShowDetailsSubjectUC();
@@ -250,6 +253,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             LoadDiscipline();
             LoadSavedSchedules();
+        }
+
+        private void ExecuteGotoCourseCommand(SubjectModel model)
+        {
+            string semesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
+            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={model.CourseId}&timespan={semesterValue}&t=s";
+            _openInBrowser.Open(url);
         }
 
         private void OnSltCombiChanged(CombinationModel value)

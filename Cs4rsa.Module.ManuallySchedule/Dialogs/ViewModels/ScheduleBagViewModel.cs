@@ -3,20 +3,19 @@ using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Service.Dialog.Events;
-using Cs4rsa.Infrastructure.Events;
 
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Cs4rsa.Module.Shared;
-using System;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
-using System.Web.UI;
+using Newtonsoft.Json;
+using Cs4rsa.Infrastructure.Common;
+using System;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
@@ -26,12 +25,41 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         private readonly IUnitOfWork _unitOfWork;
         private readonly ShareString _shareString;
 
+        private string _scheduleBagCode;
+        public string ScheduleBagCode
+        {
+            get { return _scheduleBagCode; }
+            set 
+            { 
+                SetProperty(ref _scheduleBagCode, value);
+                ValidateCode(_scheduleBagCode);
+            }
+        }
+
+        private bool _isCodeValid;
+        public bool IsCodeValid
+        {
+            get { return _isCodeValid; }
+            set { SetProperty(ref _isCodeValid, value); }
+        }
+
+        private ScheduleBagModel _enteredScheduleBagModel;
+        public ScheduleBagModel EnteredScheduleBagModel
+        {
+            get { return _enteredScheduleBagModel; }
+            set { SetProperty(ref _enteredScheduleBagModel, value); }
+        }
+
         public ObservableCollection<ScheduleBagModel> ScheduleBagModels { get; set; }
         public DelegateCommand<ScheduleBagModel> ImportCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> CopyCodeCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> DeleteCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> GetDetailsCommand { get; set; }
-        public ScheduleBagViewModel(IEventAggregator eventAggregator, IUnitOfWork unitOfWork, ShareString shareStringSvc)
+        public DelegateCommand SaveAndLoadCommand { get; set; }
+        public ScheduleBagViewModel(
+            IEventAggregator eventAggregator, 
+            IUnitOfWork unitOfWork, 
+            ShareString shareStringSvc)
         {
             _eventAggregator = eventAggregator;
             _unitOfWork = unitOfWork;
@@ -41,6 +69,22 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             CopyCodeCommand = new DelegateCommand<ScheduleBagModel>(ExecuteCopyCodeCommand);
             GetDetailsCommand = new DelegateCommand<ScheduleBagModel>(ExecuteGetDetailsCommand);
             DeleteCommand = new DelegateCommand<ScheduleBagModel>(ExecuteDeleteCommand);
+            SaveAndLoadCommand = new DelegateCommand(ExecuteSaveAndLoadCommand, CanExecuteSaveAndLoadCommand);
+        }
+
+        private void EnteredScheduleBagModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            SaveAndLoadCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool CanExecuteSaveAndLoadCommand()
+        {
+            return IsCodeValid && !string.IsNullOrWhiteSpace(EnteredScheduleBagModel.Name);
+        }
+
+        private void ExecuteSaveAndLoadCommand()
+        {
+            
         }
 
         private void ExecuteDeleteCommand(ScheduleBagModel model)
@@ -152,22 +196,52 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     scheduleBagModel.ScheduleBagItemModels.AddRange(scheduleBagItemModels);
                 }
 
-                var userSubjects = scheduleBagModel.ScheduleBagItemModels.Select(sbi => new UserSubject()
-                {
-                    SubjectName = sbi.SubjectName,
-                    ClassGroup = sbi.ClassGroup,
-                    RegisterCode = sbi.RegisterCode,
-                    SchoolClass = sbi.SelectedSchoolClass,
-                    SubjectCode = sbi.SubjectCode
-                });
-                string shareString = _shareString.GetShareString(userSubjects);
+                //var userSubjects = scheduleBagModel.ScheduleBagItemModels.Select(sbi => new UserSubject()
+                //{
+                //    SubjectName = sbi.SubjectName,
+                //    ClassGroup = sbi.ClassGroup,
+                //    RegisterCode = sbi.RegisterCode,
+                //    SchoolClass = sbi.SelectedSchoolClass,
+                //    SubjectCode = sbi.SubjectCode
+                //});
+                //string shareString = _shareString.GetShareString(userSubjects);
 
-                Clipboard.SetText(shareString);
-                _eventAggregator.GetEvent<SnackbarMsgEvent>().Publish("Sao chép thành công");
+                var json = JsonConvert.SerializeObject(scheduleBagModel);
+                var encodeTo64Json = StringHelper.EncodeTo64(json);
+
+                Clipboard.SetText(encodeTo64Json);
+                SnackBarMessageQueue.Enqueue("Sao chép thành công");
             }
             catch
             {
-                _eventAggregator.GetEvent<SnackbarMsgEvent>().Publish("Sao chép không thành công");
+                SnackBarMessageQueue.Enqueue("Sao chép không thành công");
+            }
+        }
+
+        private void ValidateCode(string scheduleBagCode)
+        {
+            if (EnteredScheduleBagModel is object)
+            {
+                EnteredScheduleBagModel.PropertyChanged -= EnteredScheduleBagModel_PropertyChanged;
+            }
+
+            if (string.IsNullOrWhiteSpace(scheduleBagCode))
+            {
+                IsCodeValid = false;
+            }
+            else
+            {
+                try
+                {
+                    var json = StringHelper.DecodeFrom64(scheduleBagCode);
+                    EnteredScheduleBagModel = JsonConvert.DeserializeObject<ScheduleBagModel>(json);
+                    EnteredScheduleBagModel.PropertyChanged += EnteredScheduleBagModel_PropertyChanged;
+                    IsCodeValid = true;
+                }
+                catch
+                {
+                    IsCodeValid = false;
+                }
             }
         }
     }

@@ -190,7 +190,7 @@
 
         <!--  Danh sách chứa các môn đang và đã được tải  -->
         <ListBox
-            x:Name="DownloadSubjects"
+            Name="DownloadSubjects"
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
@@ -201,37 +201,6 @@
             ItemsSource="{Binding SubjectModels}"
             ScrollViewer.CanContentScroll="False"
             SelectedItem="{Binding SelectedSubjectModel}">
-            <ListBox.Resources>
-                <ContextMenu x:Key="SubjectContextMenu" IsEnabled="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}">
-                    <ContextMenu.Style>
-                        <Style BasedOn="{StaticResource MaterialDesignContextMenu}" TargetType="ContextMenu">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsDownloading}" Value="False" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContextMenu.Style>
-                    <MenuItem
-                        Click="Btn_Details_Click"
-                        Header="Chi tiết"
-                        Icon="{md:PackIcon Kind=FormatListBulletedSquare}"
-                        Visibility="{Binding Subject, Converter={StaticResource NullableToVisibilityConverter}}" />
-                    <MenuItem
-                        Click="Btn_GotoCourse_Click"
-                        Header="Mở trong Course"
-                        Icon="{md:PackIcon Kind=OpenInNew}" />
-                    <Separator />
-                    <MenuItem
-                        Click="Btn_Delete_Click"
-                        Header="Xoá"
-                        Icon="{md:PackIcon Kind=DeleteOutline}" />
-                </ContextMenu>
-            </ListBox.Resources>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <md:TransitioningContent>
@@ -239,74 +208,108 @@
                             <md:TransitionEffect Kind="FadeIn" />
                             <md:TransitionEffect Kind="SlideInFromTop" />
                         </md:TransitioningContent.OpeningEffects>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="25" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
-                                <Border
-                                    Grid.Column="0"
-                                    Width="20"
-                                    HorizontalAlignment="Left"
-                                    Background="{Binding Color}"
-                                    CornerRadius="4" />
-                                <StackPanel Grid.Column="1" Orientation="Vertical">
-                                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" TextWrapping="WrapWithOverflow">
-                                        <Run Text="{Binding SubjectName, Mode=OneWay}" />
-                                        <Run>
-                                            <Run.Style>
-                                                <Style TargetType="Run">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
-                                                            <Setter Property="Text" Value="*" />
-                                                            <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Run.Style>
-                                        </Run>
-                                    </TextBlock>
-                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding SubjectCode}" />
-                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
-                                    <TextBlock
-                                        Style="{StaticResource MaterialDesignHelperTextBlock}"
-                                        Text="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
-                                        ToolTip="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                        <Border Name="SubjectItem">
+                            <Border.ContextMenu>
+                                <ContextMenu Name="SubjectContextMenu" IsEnabled="{Binding IsDownloading, Converter={StaticResource InvertBooleanConverter}}">
+                                    <ContextMenu.Style>
+                                        <Style BasedOn="{StaticResource MaterialDesignContextMenu}" TargetType="ContextMenu">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsDownloading}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContextMenu.Style>
+                                    <MenuItem
+                                        Click="Btn_Details_Click"
+                                        Header="Chi tiết"
+                                        Icon="{md:PackIcon Kind=FormatListBulletedSquare}"
+                                        Visibility="{Binding Subject, Converter={StaticResource NullableToVisibilityConverter}}" />
+                                    <MenuItem
+                                        Name="OpenInCourse"
+                                        Click="OpenInCourse_Click"
+                                        Header="Mở trong Course"
+                                        Icon="{md:PackIcon Kind=OpenInNew}" />
+                                    <Separator />
+                                    <MenuItem
+                                        Click="Btn_Delete_Click"
+                                        Header="Xoá"
+                                        Icon="{md:PackIcon Kind=DeleteOutline}" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="0,0,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Grid.Column="0"
+                                        Width="20"
+                                        HorizontalAlignment="Left"
+                                        Background="{Binding Color}"
+                                        CornerRadius="4" />
+                                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" TextWrapping="WrapWithOverflow">
+                                            <Run Text="{Binding SubjectName, Mode=OneWay}" />
+                                            <Run>
+                                                <Run.Style>
+                                                    <Style TargetType="Run">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsSpecialSubject}" Value="True">
+                                                                <Setter Property="Text" Value="*" />
+                                                                <Setter Property="ToolTip" Value="Đây là một môn có nhiều mã" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Run.Style>
+                                            </Run>
+                                        </TextBlock>
+                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding SubjectCode}" />
+                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{Binding StudyUnit, StringFormat=Số tín chỉ: {0} Tín chỉ}" />
+                                        <TextBlock
+                                            Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                            Text="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                                            ToolTip="{Binding ErrorMessage, StringFormat=Lỗi: {0}}"
+                                            Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </StackPanel>
+
+                                    <!--  Nút tải lại trong trường hợp thất bại  -->
+                                    <Button
+                                        x:Name="BtnReDonwload"
+                                        Grid.Column="2"
+                                        Click="BtnReDonwload_Click"
+                                        Content="{md:PackIcon Kind=Reload}"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="Tải lại môn này"
                                         Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                </StackPanel>
+                                </Grid>
 
-                                <!--  Nút tải lại trong trường hợp thất bại  -->
-                                <Button
-                                    x:Name="BtnReDonwload"
-                                    Grid.Column="2"
-                                    Click="BtnReDonwload_Click"
-                                    Content="{md:PackIcon Kind=Reload}"
-                                    Style="{StaticResource MaterialDesignIconButton}"
-                                    ToolTip="Tải lại môn này"
-                                    Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <!--  Hiển thị Loading  -->
+                                <ProgressBar
+                                    Grid.Row="1"
+                                    md:TransitionAssist.DisableTransitions="True"
+                                    IsIndeterminate="True"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </Grid>
-
-                            <!--  Hiển thị Loading  -->
-                            <ProgressBar
-                                Grid.Row="1"
-                                md:TransitionAssist.DisableTransitions="True"
-                                IsIndeterminate="True"
-                                Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        </Grid>
+                        </Border>
                     </md:TransitioningContent>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
+            <!--<ListBox.ItemContainerStyle>
                 <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListBoxItem">
                     <Setter Property="ContextMenu" Value="{StaticResource SubjectContextMenu}" />
                 </Style>
-            </ListBox.ItemContainerStyle>
+            </ListBox.ItemContainerStyle>-->
         </ListBox>
         <Grid
             Grid.Row="4"

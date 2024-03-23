@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Interfaces;
-using Cs4rsa.Database.Models;
 
 namespace Cs4rsa.Database.Implements
 {
@@ -99,6 +95,16 @@ namespace Cs4rsa.Database.Implements
                 const string updateStSql = "UPDATE Settings SET Value = @idx WHERE Key = @key";
                 _rawSql.ExecNonQuery(updateStSql, param);
             }
+        }
+
+        public IDictionary<string, string> GetSettings()
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string>();
+            _rawSql.ExecReader("SELECT * FROM Settings", reader =>
+            {
+                settings.Add(reader.GetString(0), reader.GetString(1));
+            });
+            return settings;
         }
     }
 }

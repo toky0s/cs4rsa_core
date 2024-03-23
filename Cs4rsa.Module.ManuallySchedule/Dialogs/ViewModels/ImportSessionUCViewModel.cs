@@ -201,7 +201,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             );
             if (result == MessageBoxResult.Yes)
             {
-                var removeResult = _unitOfWork.UserSchedules.Remove(SelectedScheduleSession);
+                var removeResult = _unitOfWork.UserSchedules.Remove(SelectedScheduleSession.UserScheduleId);
                 if (removeResult == 1)
                 {
                     Reload();

@@ -29,13 +29,13 @@
                 Orientation="Horizontal">
                 <Button
                     Name="Do"
-                    Click="Do_Click"
-                    Content="Confirm"
+                    Click="LeftButton_Click"
+                    Content="Left Action"
                     Style="{StaticResource MaterialDesignFlatButton}" />
                 <Button
                     Name="Cancel"
-                    Click="Cancel_Click"
-                    Content="Cancel"
+                    Click="RightButton_Click"
+                    Content="Right Action"
                     Style="{StaticResource MaterialDesignFlatButton}" />
             </StackPanel>
         </Grid>

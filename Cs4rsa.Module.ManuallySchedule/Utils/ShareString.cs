@@ -1,4 +1,4 @@
-﻿using Cs4rsa.Common;
+﻿using Cs4rsa.Database;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
@@ -6,7 +6,9 @@ using Cs4rsa.Module.ManuallySchedule.Models;
 
 using Newtonsoft.Json;
 
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Cs4rsa.Module.ManuallySchedule.Utils
@@ -27,20 +29,30 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
         {
             _unitOfWork = unitOfWork;
         }
+
         public string GetShareString(IEnumerable<ClassGroupModel> classGroupModels)
         {
-            if (!classGroupModels.Any())
+            if (classGroupModels == null || !classGroupModels.Any())
             {
                 return string.Empty;
             }
 
-            var userSubjects = ConvertToUserSubjects(classGroupModels);
-            return GetShareString(userSubjects);
+            //var userSubjects = ConvertToUserSubjects(classGroupModels);
+            //return GetShareString(userSubjects);
+
+            var scheduleBagModel = ToScheduleBagModel(classGroupModels);
+            return GetShareString(scheduleBagModel);
         }
 
         public string GetShareString(IEnumerable<UserSubject> userSubjects)
         {
             var json = JsonConvert.SerializeObject(userSubjects);
+            return StringHelper.EncodeTo64(json);
+        }
+
+        public string GetShareString(ScheduleBagModel scheduleBagModel)
+        {
+            var json = JsonConvert.SerializeObject(scheduleBagModel);
             return StringHelper.EncodeTo64(json);
         }
 
@@ -55,6 +67,55 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
             {
                 return null;
             }
+        }
+
+        public ScheduleBagModel ToScheduleBagModel(IEnumerable<ClassGroupModel> classGroupModels)
+        {
+            var settings = _unitOfWork.Settings.GetSettings();
+            ScheduleBagModel scheduleBagModel = new ScheduleBagModel()
+            {
+                Year = settings[DbConsts.StCurrentYearInfo],
+                Semester = settings[DbConsts.StCurrentSemesterInfo],
+                YearValue = settings[DbConsts.StCurrentYearValue],
+                SemesterValue = settings[DbConsts.StCurrentSemesterValue],
+                SaveDate = DateTime.Now,
+                UserScheduleId = 0,
+                // Name from user input
+                ScheduleBagItemModels = new ObservableCollection<ScheduleBagItemModel>()
+            };
+
+            var scheduleBagItems = classGroupModels.Select(cgm =>
+            {
+                ScheduleBagItemModel scheduleBagItemModel = new ScheduleBagItemModel()
+                {
+                    ClassGroup = cgm.Name,
+                    SubjectCode = cgm.SubjectCode,
+                    ScheduleDetailId = 0, // Create New
+                    SubjectName = cgm.ClassGroup.SubjectName
+                };
+
+                if (cgm.IsSpecialClassGroup)
+                {
+                    scheduleBagItemModel.SelectedSchoolClass = cgm.UserSelectedSchoolClass.SchoolClassName;
+                    scheduleBagItemModel.RegisterCode = string.IsNullOrEmpty(cgm.UserSelectedSchoolClass.RegisterCode)
+                                 ? string.Empty
+                                 : cgm.UserSelectedSchoolClass.RegisterCode;
+                }
+                else
+                {
+                    scheduleBagItemModel.SelectedSchoolClass = cgm.CodeSchoolClass.SchoolClassName;
+                    scheduleBagItemModel.RegisterCode = string.IsNullOrEmpty(cgm.CompulsoryClass.RegisterCode)
+                                 ? string.IsNullOrEmpty(cgm.CodeSchoolClass.RegisterCode)
+                                     ? string.Empty // (3) if not null
+                                     : cgm.CodeSchoolClass.RegisterCode // (2) if not null
+                                 : cgm.CompulsoryClass.RegisterCode; // (1) if not null
+                }
+
+                return scheduleBagItemModel;
+            });
+
+            scheduleBagModel.ScheduleBagItemModels.AddRange(scheduleBagItems);
+            return scheduleBagModel;
         }
 
         public IEnumerable<UserSubject> ConvertToUserSubjects(IEnumerable<ClassGroupModel> classGroupModels)
@@ -75,16 +136,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
                 {
                     selectedSchoolClassName = classGroupModel.CodeSchoolClass.SchoolClassName;
                     registerCode = string.IsNullOrEmpty(classGroupModel.CompulsoryClass.RegisterCode)
-                       ? string.IsNullOrEmpty(classGroupModel.CodeSchoolClass.RegisterCode)
-                           ? string.Empty
-                           : classGroupModel.CodeSchoolClass.RegisterCode
-                       : classGroupModel.CompulsoryClass.RegisterCode;
+                                 ? string.IsNullOrEmpty(classGroupModel.CodeSchoolClass.RegisterCode)
+                                     ? string.Empty // (3) if not null
+                                     : classGroupModel.CodeSchoolClass.RegisterCode // (2) if not null
+                                 : classGroupModel.CompulsoryClass.RegisterCode; // (1) if not null
                 }
 
                 var userSubject = new UserSubject()
                 {
                     SubjectCode = classGroupModel.SubjectCode,
-                    SubjectName = _unitOfWork.Keywords.GetKeywordBySubjectCode(classGroupModel.SubjectCode).SubjectName,
+                    SubjectName = classGroupModel.ClassGroup.SubjectName,
                     ClassGroup = classGroupModel.ClassGroup.Name,
                     SchoolClass = selectedSchoolClassName,
                     RegisterCode = registerCode

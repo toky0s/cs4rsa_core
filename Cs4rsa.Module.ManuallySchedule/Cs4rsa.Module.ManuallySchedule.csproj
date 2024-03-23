@@ -75,7 +75,7 @@
     <Compile Include="Dialogs\Models\UserSubject.cs" />
     <Compile Include="Dialogs\ViewModels\ImportSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
-    <Compile Include="Dialogs\ViewModels\ShareStringViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
