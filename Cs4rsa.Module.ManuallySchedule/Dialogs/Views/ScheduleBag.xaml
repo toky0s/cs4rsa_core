@@ -35,7 +35,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="380" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
@@ -52,7 +52,6 @@
 
                         <ScrollViewer
                             Grid.Row="1"
-                            Height="280"
                             Margin="0,0,0,10"
                             VerticalScrollBarVisibility="Visible">
                             <ScrollViewer.Style>
@@ -105,6 +104,7 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock
                                                                     Grid.Row="0"
@@ -126,22 +126,52 @@
                                                                     Grid.Column="1"
                                                                     VerticalAlignment="Center"
                                                                     Text="{Binding Semester}" />
+
+                                                                <Button
+                                                                    Grid.Row="0"
+                                                                    Grid.RowSpan="2"
+                                                                    Grid.Column="2"
+                                                                    Content="{md:PackIcon Kind=WarningCircle}"
+                                                                    ToolTip="Bộ lịch này đã cũ và không thể sử dụng được nữa"
+                                                                    ToolTipService.InitialShowDelay="0">
+                                                                    <Button.Style>
+                                                                        <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
+                                                                            <Setter Property="Visibility" Value="Hidden" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsExpired}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+
                                                                 <Button
                                                                     Name="RunImport"
                                                                     Grid.Row="0"
                                                                     Grid.RowSpan="2"
-                                                                    Grid.Column="2"
+                                                                    Grid.Column="3"
                                                                     Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.ImportCommand}"
                                                                     CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
                                                                     Content="{md:PackIcon Kind=PlayArrow}"
-                                                                    Style="{StaticResource MaterialDesignIconButton}"
                                                                     ToolTip="Nạp"
-                                                                    ToolTipService.InitialShowDelay="0" />
+                                                                    ToolTipService.InitialShowDelay="0">
+                                                                    <Button.Style>
+                                                                        <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="Button">
+                                                                            <Setter Property="IsEnabled" Value="True" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsExpired}" Value="True">
+                                                                                    <Setter Property="IsEnabled" Value="False" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
                                                                 <Button
                                                                     Name="CopyCode"
                                                                     Grid.Row="0"
                                                                     Grid.RowSpan="2"
-                                                                    Grid.Column="3"
+                                                                    Grid.Column="4"
                                                                     Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.CopyCodeCommand}"
                                                                     CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
                                                                     Content="{md:PackIcon Kind=ClipboardOutline}"
@@ -152,7 +182,7 @@
                                                                     Name="Delete"
                                                                     Grid.Row="0"
                                                                     Grid.RowSpan="2"
-                                                                    Grid.Column="4"
+                                                                    Grid.Column="5"
                                                                     Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.DeleteCommand}"
                                                                     CommandParameter="{Binding ElementName=ScheduleBagItem, Path=DataContext}"
                                                                     Content="{md:PackIcon Kind=DeleteOutline}"
@@ -269,22 +299,59 @@
                                                     Grid.Row="0"
                                                     Grid.Column="0"
                                                     Grid.ColumnSpan="2"
-                                                    Margin="0,0,10,10"
+                                                    Margin="0,0,0,10"
                                                     VerticalAlignment="Center"
                                                     md:HintAssist.Hint="Tên bộ lịch"
                                                     md:TextFieldAssist.HasClearButton="True"
                                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                                     Text="{Binding EnteredScheduleBagModel.Name, UpdateSourceTrigger=PropertyChanged}" />
-                                                <TextBlock
+                                                <StackPanel
                                                     Grid.Row="1"
                                                     Grid.Column="0"
-                                                    VerticalAlignment="Center"
-                                                    Text="{Binding EnteredScheduleBagModel.Year}" />
-                                                <TextBlock
+                                                    Orientation="Horizontal">
+                                                    <TextBlock
+                                                        Name="EnteredSchedule_Semester"
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding EnteredScheduleBagModel.Semester}" />
+                                                    <TextBlock
+                                                        Name="EnteredSchedule_Year"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding EnteredScheduleBagModel.Year}" />
+
+                                                </StackPanel>
+
+                                                <!--  Thông báo hết hạn  -->
+                                                <StackPanel
                                                     Grid.Row="1"
                                                     Grid.Column="1"
+                                                    HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
-                                                    Text="{Binding EnteredScheduleBagModel.Semester}" />
+                                                    Orientation="Horizontal">
+                                                    <StackPanel.Style>
+                                                        <Style TargetType="StackPanel">
+                                                            <Setter Property="Visibility" Value="Hidden" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding EnteredScheduleBagModel.IsExpired}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </StackPanel.Style>
+                                                    <md:PackIcon
+                                                        Margin="0,0,2,0"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{StaticResource PrimaryHueMidBrush}"
+                                                        Kind="WarningCircle" />
+                                                    <TextBlock
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center"
+                                                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                        Text="Bộ lịch đã cũ và không thể sử dụng trong học kỳ này" />
+                                                </StackPanel>
+
                                             </Grid>
                                         </Border>
                                     </Expander.Header>

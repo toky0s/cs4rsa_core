@@ -1,7 +1,6 @@
 ﻿using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Events;
-using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Service.Dialog.Events;
 
 using Prism.Commands;
@@ -16,6 +15,9 @@ using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Newtonsoft.Json;
 using Cs4rsa.Infrastructure.Common;
 using System;
+using Cs4rsa.Database.Models;
+using System.Collections.Generic;
+using Cs4rsa.Database;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
@@ -23,7 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ShareString _shareString;
+        private readonly string _currSemesterValue;
 
         private string _scheduleBagCode;
         public string ScheduleBagCode
@@ -56,14 +58,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public DelegateCommand<ScheduleBagModel> DeleteCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> GetDetailsCommand { get; set; }
         public DelegateCommand SaveAndLoadCommand { get; set; }
-        public ScheduleBagViewModel(
-            IEventAggregator eventAggregator, 
-            IUnitOfWork unitOfWork, 
-            ShareString shareStringSvc)
+        public ScheduleBagViewModel(IEventAggregator eventAggregator, IUnitOfWork unitOfWork)
         {
             _eventAggregator = eventAggregator;
             _unitOfWork = unitOfWork;
-            _shareString = shareStringSvc;
+            _currSemesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
             ScheduleBagModels = new ObservableCollection<ScheduleBagModel>();
             ImportCommand = new DelegateCommand<ScheduleBagModel>(ExecuteImportCommand);
             CopyCodeCommand = new DelegateCommand<ScheduleBagModel>(ExecuteCopyCodeCommand);
@@ -79,12 +78,52 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         private bool CanExecuteSaveAndLoadCommand()
         {
-            return IsCodeValid && !string.IsNullOrWhiteSpace(EnteredScheduleBagModel.Name);
+            return IsCodeValid // 1. Mã hợp lệ
+                && !string.IsNullOrWhiteSpace(EnteredScheduleBagModel.Name) // 2. Tên không được để trống
+                && !EnteredScheduleBagModel.IsExpired; // 3. Chưa hết hạn
         }
 
         private void ExecuteSaveAndLoadCommand()
         {
-            
+            // 1. Convert ScheduleBagModel thành UserSchedule
+            UserSchedule userSchedule = new UserSchedule()
+            {
+                Name = EnteredScheduleBagModel.Name,
+                SaveDate = DateTime.Now,
+                Semester = EnteredScheduleBagModel.Semester,
+                SemesterValue = EnteredScheduleBagModel.SemesterValue,
+                Year = EnteredScheduleBagModel.Year,
+                YearValue = EnteredScheduleBagModel.YearValue,
+                SessionDetails = new List<ScheduleDetail>()
+            };
+
+            var scheduleDetails = EnteredScheduleBagModel.ScheduleBagItemModels.Select(sbi => new ScheduleDetail()
+            {
+                ClassGroup = sbi.ClassGroup,
+                RegisterCode = sbi.RegisterCode,
+                SelectedSchoolClass = sbi.SelectedSchoolClass,
+                SubjectCode = sbi.SubjectCode,
+                SubjectName = sbi.SubjectName
+            });
+
+            userSchedule.SessionDetails.AddRange(scheduleDetails);
+
+            // 2. Lưu vào DB
+            _unitOfWork.UserSchedules.Add(userSchedule);
+
+            // 3. Convert thành UserSubjects
+            var userSubjects = EnteredScheduleBagModel.ScheduleBagItemModels.Select(sbi => new UserSubject()
+            {
+                SubjectName = sbi.SubjectName,
+                ClassGroup = sbi.ClassGroup,
+                RegisterCode = sbi.RegisterCode,
+                SchoolClass = sbi.SelectedSchoolClass,
+                SubjectCode = sbi.SubjectCode
+            });
+
+            // 4. Đóng dialog và load lên màn hình
+            _eventAggregator.GetEvent<CloseDialogEvent>().Publish();
+            _eventAggregator.GetEvent<ExitImportSubjectMsg>().Publish(userSubjects);
         }
 
         private void ExecuteDeleteCommand(ScheduleBagModel model)
@@ -152,6 +191,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     Year = us.Year,
                     Semester = us.Semester,
                     UserScheduleId = us.UserScheduleId,
+                    IsExpired = !us.SemesterValue.Equals(_currSemesterValue)
                 });
             ScheduleBagModels.AddRange(items);
         }
@@ -196,16 +236,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     scheduleBagModel.ScheduleBagItemModels.AddRange(scheduleBagItemModels);
                 }
 
-                //var userSubjects = scheduleBagModel.ScheduleBagItemModels.Select(sbi => new UserSubject()
-                //{
-                //    SubjectName = sbi.SubjectName,
-                //    ClassGroup = sbi.ClassGroup,
-                //    RegisterCode = sbi.RegisterCode,
-                //    SchoolClass = sbi.SelectedSchoolClass,
-                //    SubjectCode = sbi.SubjectCode
-                //});
-                //string shareString = _shareString.GetShareString(userSubjects);
-
                 var json = JsonConvert.SerializeObject(scheduleBagModel);
                 var encodeTo64Json = StringHelper.EncodeTo64(json);
 
@@ -235,7 +265,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                 {
                     var json = StringHelper.DecodeFrom64(scheduleBagCode);
                     EnteredScheduleBagModel = JsonConvert.DeserializeObject<ScheduleBagModel>(json);
+                    // Kiểm tra hết hạn
+                    EnteredScheduleBagModel.IsExpired = !EnteredScheduleBagModel.Semester.Equals(_currSemesterValue);
                     EnteredScheduleBagModel.PropertyChanged += EnteredScheduleBagModel_PropertyChanged;
+                    SaveAndLoadCommand.RaiseCanExecuteChanged();
                     IsCodeValid = true;
                 }
                 catch
