@@ -19,8 +19,10 @@
                 Chia sẻ
             </TextBlock>
             <TextBlock
+                Name="Description"
                 Margin="0,0,0,5"
                 Foreground="{StaticResource Grey400}"
+                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                 TextAlignment="Justify"
                 TextWrapping="Wrap">
                 Chia sẻ ShareString này cho bạn bè của

@@ -112,10 +112,11 @@
                                                                     VerticalAlignment="Center"
                                                                     Text="{Binding Name, StringFormat=Tên bộ lịch: {0}}" />
                                                                 <TextBlock
+                                                                    Name="SaveDate"
                                                                     Grid.Row="1"
                                                                     Grid.Column="0"
                                                                     VerticalAlignment="Center"
-                                                                    Text="{Binding SaveDate, StringFormat=Ngày lưu: {0}}" />
+                                                                    Text="{Binding SaveDate, StringFormat='Ngày lưu: {0: dd/MM/yyyy}'}" />
                                                                 <TextBlock
                                                                     Grid.Row="0"
                                                                     Grid.Column="1"

@@ -82,7 +82,7 @@ namespace Cs4rsa.Database.Implements
         public List<UserSchedule> GetAll()
         {
             return _rawSql.ExecReader(
-                $"SELECT * FROM UserSchedules",
+                "SELECT * FROM UserSchedules ORDER BY UserScheduleId DESC",
                 record => new UserSchedule()
                 {
                     UserScheduleId = record.GetInt32(0),

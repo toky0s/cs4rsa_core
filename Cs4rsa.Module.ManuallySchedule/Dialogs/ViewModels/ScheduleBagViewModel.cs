@@ -266,7 +266,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     var json = StringHelper.DecodeFrom64(scheduleBagCode);
                     EnteredScheduleBagModel = JsonConvert.DeserializeObject<ScheduleBagModel>(json);
                     // Kiểm tra hết hạn
-                    EnteredScheduleBagModel.IsExpired = !EnteredScheduleBagModel.Semester.Equals(_currSemesterValue);
+                    EnteredScheduleBagModel.IsExpired = !EnteredScheduleBagModel.SemesterValue.Equals(_currSemesterValue);
                     EnteredScheduleBagModel.PropertyChanged += EnteredScheduleBagModel_PropertyChanged;
                     SaveAndLoadCommand.RaiseCanExecuteChanged();
                     IsCodeValid = true;

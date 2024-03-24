@@ -147,13 +147,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IDialogService dialogService,
             IEventAggregator eventAggregator)
         {
-            
-
             _openInBrowser = openInBrowser;
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
-
-            Debug.WriteLine("ClgViewModel " + _eventAggregator.GetHashCode());
 
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
             {
