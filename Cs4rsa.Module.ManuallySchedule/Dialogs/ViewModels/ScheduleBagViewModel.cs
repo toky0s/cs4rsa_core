@@ -55,6 +55,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public ObservableCollection<ScheduleBagModel> ScheduleBagModels { get; set; }
         public DelegateCommand<ScheduleBagModel> ImportCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> CopyCodeCommand { get; set; }
+        public DelegateCommand<ScheduleBagItemModel> CopyRegisterCodeCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> DeleteCommand { get; set; }
         public DelegateCommand<ScheduleBagModel> GetDetailsCommand { get; set; }
         public DelegateCommand SaveAndLoadCommand { get; set; }
@@ -69,6 +70,17 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             GetDetailsCommand = new DelegateCommand<ScheduleBagModel>(ExecuteGetDetailsCommand);
             DeleteCommand = new DelegateCommand<ScheduleBagModel>(ExecuteDeleteCommand);
             SaveAndLoadCommand = new DelegateCommand(ExecuteSaveAndLoadCommand, CanExecuteSaveAndLoadCommand);
+            CopyRegisterCodeCommand = new DelegateCommand<ScheduleBagItemModel>(ExecuteCopyRegisterCodeCommand);
+        }
+
+        /// <summary>
+        /// Sao chép mã đăng ký của một môn học đã lưu
+        /// </summary>
+        /// <param name="payload">ScheduleBagItemModel</param>
+        private void ExecuteCopyRegisterCodeCommand(ScheduleBagItemModel payload)
+        {
+            Clipboard.SetText(payload.RegisterCode);
+            SnackBarMessageQueue.Enqueue("Sao chép thành công");
         }
 
         private void EnteredScheduleBagModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

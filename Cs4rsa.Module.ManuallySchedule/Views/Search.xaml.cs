@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,22 +10,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 {
     public partial class Search: UserControl
     {
-        private static readonly Key[] _userAllowedKeys = { Key.OemMinus, Key.Back, Key.Space, Key.LeftCtrl, Key.RightCtrl };
-        private SearchViewModel Vm;
+        private readonly SearchViewModel Vm;
         public Search()
         {
             InitializeComponent();
             Vm = (SearchViewModel)DataContext;
-        }
-
-        public static bool IsKeyAChar(Key key)
-        {
-            return key >= Key.A && key <= Key.Z;
-        }
-
-        public static bool IsKeyADigit(Key key)
-        {
-            return (key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9);
         }
 
         private void SearchingTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -84,6 +72,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         {
             var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
             Vm.GotoCourseCommand.Execute(subjectModel);
+        }
+
+        private void CopyError_Click(object sender, RoutedEventArgs e)
+        {
+            var subjectModel = (SubjectModel)((MenuItem)sender).DataContext;
+            Clipboard.SetText(subjectModel.ErrorMessage);
         }
     }
 }

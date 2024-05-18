@@ -111,10 +111,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
             });
 
-            eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(payload =>
-            {
-                CleanDays();
-            });
+            eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
 
             eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddClassGroup);
 

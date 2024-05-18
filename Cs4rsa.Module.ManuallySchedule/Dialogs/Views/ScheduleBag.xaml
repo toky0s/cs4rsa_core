@@ -129,10 +129,12 @@
                                                                     Text="{Binding Semester}" />
 
                                                                 <Button
+                                                                    Name="Warning"
                                                                     Grid.Row="0"
                                                                     Grid.RowSpan="2"
                                                                     Grid.Column="2"
                                                                     Content="{md:PackIcon Kind=WarningCircle}"
+                                                                    Foreground="#FF8800"
                                                                     ToolTip="Bộ lịch này đã cũ và không thể sử dụng được nữa"
                                                                     ToolTipService.InitialShowDelay="0">
                                                                     <Button.Style>
@@ -207,6 +209,8 @@
                                                                         <DataTemplate>
                                                                             <Button
                                                                                 HorizontalContentAlignment="Center"
+                                                                                Command="{Binding ElementName=ScheduleBagContainer, Path=DataContext.CopyRegisterCodeCommand}"
+                                                                                CommandParameter="{Binding}"
                                                                                 Style="{StaticResource MaterialDesignIconButton}"
                                                                                 ToolTip="Sao chép"
                                                                                 ToolTipService.InitialShowDelay="0">
@@ -344,7 +348,7 @@
                                                     <md:PackIcon
                                                         Margin="0,0,2,0"
                                                         VerticalAlignment="Center"
-                                                        Foreground="{StaticResource PrimaryHueMidBrush}"
+                                                        Foreground="#FF8800"
                                                         Kind="WarningCircle" />
                                                     <TextBlock
                                                         HorizontalAlignment="Right"

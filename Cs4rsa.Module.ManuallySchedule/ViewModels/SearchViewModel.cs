@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
-using System.Windows.Threading;
 
 using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
@@ -27,6 +26,8 @@ using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
+
+using Newtonsoft.Json;
 
 using Prism.Commands;
 using Prism.Events;
@@ -134,13 +135,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     _timeout.Cancel();
                     _timeout = null;
                 }
-                if (!string.IsNullOrWhiteSpace(value))
+                _timeout = JSFunctionality.SetTimeout(() =>
                 {
-                    _timeout = JSFunctionality.SetTimeout(() =>
-                    {
-                        Application.Current.Dispatcher.Invoke(() => LoadSearchItemSource(value));
-                    }, 500);
-                }
+                    Application.Current.Dispatcher.Invoke(() => LoadSearchItemSource(value));
+                }, 500);
             }
         }
 
@@ -238,7 +236,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #region Commands
             AddCommand = new DelegateCommand(async () => await OnAdd(), () => !IsAlreadyDownloaded(SelectedKeyword));
             DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
-            //ImportDialogCommand = new DelegateCommand(OnOpenImportDialog);
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
@@ -365,9 +362,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             FullMatchSearchingKeywords.Clear();
             var keywords = _searchKeywords
-                .Where(k => StringHelper.ReplaceVietnamese(k.SubjectName).ToLower().Contains(StringHelper.ReplaceVietnamese(text).ToLower())
-                         || StringHelper.ReplaceVietnamese(k.Discipline.Name + k.Keyword1).ToLower().Contains(StringHelper.ReplaceVietnamese(text.Replace(" ", string.Empty)).ToLower())
-                ).Take(Maximum).AsParallel();
+                .Where(k =>
+                       StringHelper.ReplaceVietnamese(k.SubjectName).ToLower()
+                        .Contains(StringHelper.ReplaceVietnamese(text).ToLower())
+                    || StringHelper.ReplaceVietnamese(k.Discipline.Name + k.Keyword1).ToLower()
+                        .Contains(StringHelper.ReplaceVietnamese(text.Replace(" ", string.Empty)).ToLower())
+                )
+                .Take(Maximum)
+                .AsParallel();
             foreach (var kw in keywords)
             {
                 var fullMatch = new FullMatchSearchingKeyword()
@@ -381,10 +383,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnDeleteAll()
         {
-            SubjectModels.Clear();
-            AddCommand.RaiseCanExecuteChanged();
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
-            Debug.WriteLine("Search " + _eventAggregator.GetHashCode());
 
             var subjects = new List<SubjectModel>();
             foreach (var subjectModel in SubjectModels)
@@ -392,6 +391,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 var restoreSubject = subjectModel.DeepClone();
                 subjects.Add(restoreSubject);
             }
+            
+            SubjectModels.Clear();
+            AddCommand.RaiseCanExecuteChanged();
 
             var classGroupModels = new List<ClassGroupModel>();
             //ChoseViewModel choseVm = GetViewModel<ChoseViewModel>();
@@ -399,7 +401,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //{
             //    classGroupModels.Add(classGroupModel.DeepClone());
             //}
-            var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjects, classGroupModels);
+            var actionData = new Tuple<List<SubjectModel>, List<ClassGroupModel>>(subjects, classGroupModels);
             _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", AddSubjectWithCgm, actionData);
         }
 
@@ -424,14 +426,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             SelectedDiscipline = Disciplines[0];
             LoadKeywordByDiscipline(SelectedDiscipline);
-        }
-
-        private void OnOpenImportDialog()
-        {
-            var importSessionUc = new ImportSessionUC();
-            var vm = (ImportSessionUCViewModel)importSessionUc.DataContext;
-            _dialogService.OpenDialog(importSessionUc);
-            vm.LoadScheduleSession();
         }
 
         private async void OpenScheduleBagDialog()
@@ -498,7 +492,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="sm">SubjectModel.</param>
         private void OnDelete(SubjectModel sm)
         {
-            IEnumerable<ClassGroupModel> classGroupModels = new List<ClassGroupModel>();
+            var classGroupModels = new List<ClassGroupModel>();
 
             // Get ClassGroupModel hiện được chọn trong ChoseViewModel
             // sau đó clone một bản để có thể Undo.
@@ -518,7 +512,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var subjectModel = sm.DeepClone();
 
             var subjectModels = new List<SubjectModel>() { subjectModel };
-            var actionData = new Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>>(subjectModels, classGroupModels);
+            var actionData = new Tuple<List<SubjectModel>, List<ClassGroupModel>>(subjectModels, classGroupModels);
             SubjectModels.Remove(sm);
             _snackbarMessageQueue.Enqueue($"Đã xoá môn {sm.SubjectName}", "HOÀN TÁC", AddSubjectWithCgm, actionData);
             AddCommand.RaiseCanExecuteChanged();
@@ -627,16 +621,23 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             return await Task.Run(async () =>
             {
                 Subject subject;
-                if (isUseCache && keyword.Cache != null)
+                // 1. Sử dụng cache và có sẵn cache trong DB.
+                if (isUseCache && !string.IsNullOrWhiteSpace(keyword.Cache))
                 {
-                    subject = await _subjectCrawler.Crawl(keyword.Cache);
+                    subject = _subjectCrawler.CrawlFromCache(keyword.Cache, keyword.CourseId);
                 }
+                // 2. Không sử dụng cache
                 else
                 {
-                    var semester = _unitOfWork.Settings.GetByKey("CurrentSemesterValue");
-                    subject = await _subjectCrawler.Crawl(keyword.CourseId, semester);
+                    string cache;
+                    var semester = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
+                    (subject, cache) = await _subjectCrawler.Crawl(keyword.CourseId, semester);
+                    // 2.2. Cập nhật lại cache
+                    _unitOfWork.Keywords.UpdateCacheByKeywordId(keyword.KeywordId, cache);
+                    // 2.3. Cập nhật lên local
+                    keyword.Cache = cache;
                 }
-                if (subject == null)
+                if (subject is null)
                 {
                     return null;
                 }
@@ -731,23 +732,34 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         /// <summary>
-        /// Được sử dụng cùng thao tác sau khi Xoá (tất cả).
+        /// Hoàn tác sau khi xoá
         /// </summary>
-        private void AddSubjectWithCgm(Tuple<IEnumerable<SubjectModel>, IEnumerable<ClassGroupModel>> actionData)
+        private void AddSubjectWithCgm(Tuple<List<SubjectModel>, List<ClassGroupModel>> actionData)
         {
-            var subjectModels = actionData.Item1;
-            var classes = actionData.Item2;
+            var (subjectModels, classes) = actionData;
 
-            foreach (var subjectModel in subjectModels)
+            /* 1. Loại bỏ subject trùng lặp 
+             * Trong trường hợp người dùng xoá môn học, sau đó thêm lại môn học đó
+             * sau đó nhấn vào nút Hoàn tác.
+             */
+            SubjectComparer subjectComparer = new SubjectComparer();
+            for (int i = 0; i < SubjectModels.Count; i++)
             {
-                SubjectModels.Add(subjectModel);
+                foreach (var subject in subjectModels)
+                {
+                    if (subjectComparer.Equals(SubjectModels[i], subject))
+                    {
+                        SubjectModels.RemoveAt(i);
+                    }
+                }
             }
 
-            SelectedSubjectModel = actionData.Item1.First();
+            SubjectModels.AddRange(subjectModels);
+            SelectedSubjectModel = subjectModels.First();
 
             AddCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
-
+            
             if (actionData.Item2 != null)
             {
                 _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Publish(classes);
@@ -765,7 +777,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         /// <summary>
-        /// Thêm Msg lỗi khi quá trình tải Subject bị lỗi.
+        /// Thêm message lỗi khi quá trình tải Subject bị lỗi.
         /// </summary>
         /// <param name="errMsg">Error Message</param>
         /// <param name="courseId">Course ID</param>

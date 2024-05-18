@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Cs4rsa.Common;
 using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
@@ -21,14 +20,37 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             _courseHtmlGetter = courseHtmlGetter;
         }
         
-        public async Task<Subject> Crawl(string courseId, string semesterId)
+        public async Task<(Subject, string)> Crawl(string courseId, string semesterId)
         {
             var htmlDocument = await _courseHtmlGetter.GetHtmlDocument(courseId, semesterId);
+            return (InternalCrawl(htmlDocument, courseId), htmlDocument.DocumentNode.InnerHtml);
+        }
+
+        /// <summary>
+        /// Kiểm tra môn học có tồn tại hay không.
+        /// </summary>
+        /// <param name="htmlDocument">HtmlDocument</param>
+        /// <returns>True nếu tồn tại, ngược lại trả về False.</returns>
+        private static bool IsSubjectExists(HtmlDocument htmlDocument)
+        {
+            var tables = htmlDocument.DocumentNode.Descendants("table");
+            return tables.Any();
+        }
+
+        public Subject CrawlFromCache(string cache, string courseId)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(cache);
+            return InternalCrawl(htmlDocument, courseId);
+        }
+
+        private Subject InternalCrawl(HtmlDocument htmlDocument, string courseId)
+        {
             if (!IsSubjectExists(htmlDocument)) return null;
 
             var table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
             var trTags = table.Descendants("tr").ToArray();
-            
+
             var name = htmlDocument.DocumentNode
                 .SelectSingleNode("//div[1]/table/tr/td/span").InnerText.SuperCleanString();
             var subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
@@ -53,23 +75,8 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
                 parallelSubject,
                 description,
                 rawSoup,
-                courseId);
-        }
-
-        /// <summary>
-        /// Kiểm tra môn học có tồn tại hay không.
-        /// </summary>
-        /// <param name="htmlDocument">HtmlDocument</param>
-        /// <returns>True nếu tồn tại, ngược lại trả về False.</returns>
-        private static bool IsSubjectExists(HtmlDocument htmlDocument)
-        {
-            var tables = htmlDocument.DocumentNode.Descendants("table");
-            return tables.Any();
-        }
-
-        public Task<Subject> Crawl(string cache)
-        {
-            throw new System.NotImplementedException();
+                courseId
+            );
         }
     }
 }

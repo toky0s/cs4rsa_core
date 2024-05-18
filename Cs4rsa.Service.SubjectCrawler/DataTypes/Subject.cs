@@ -68,7 +68,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             ParallelSubject = SubjectSplit(parallelSubject);
             IsSpecialSubject = GetIsSpecialSubject();
 
-            //GetClassGroups();
             GetClassGroups_Optimize();
         }
 
@@ -88,50 +87,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 .Any(registerCodeCount => registerCodeCount > 1);
         }
 
-        private IEnumerable<string> GetClassGroupNames()
-        {
-            try
-            {
-                var trTags = GetListTrTagInCalendar();
-                var classGroupTrTags = trTags
-                    .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop");
-                var classGroupNames = classGroupTrTags.Select(node => node.InnerText.Trim());
-                return classGroupNames;
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
-
-        /// <summary>
-        /// 1. Lấy ra các ClassGroup và thêm chúng vào danh sách chứa ClassGroup 
-        /// bằng cách match các tên với các SchoolClass có tên giống.
-        /// 2. Get ClassTeachers
-        /// </summary>
-        private void GetClassGroups()
-        {
-            var schoolClasses = GetSchoolClasses();
-            var classGroupNames = GetClassGroupNames();
-            foreach (var classGroupName in classGroupNames)
-            {
-                var pattern = $@"^({classGroupName})[0-9]*$";
-                var regexName = new Regex(pattern);
-                var schoolClassesByName = schoolClasses
-                    .Where(sc => regexName.IsMatch(sc.SchoolClassName))
-                    .Select(sc =>
-                    {
-                        sc.ClassGroupName = classGroupName;
-                        return sc;
-                    });
-
-                var classGroup = new ClassGroup(classGroupName, SubjectCode, Name);
-                // Mất hơn 1s thực thi, cần tối ưu chỗ này.
-                classGroup.AddRangeSchoolClass(schoolClassesByName);
-                ClassGroups.Add(classGroup);
-            }
-        }
-        
         private void GetClassGroups_Optimize()
         {
             // 1. Get trTags
@@ -186,11 +141,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 ClassGroups.Add(classGroup);
                 currClassGroupNameIdx++;
             }
-        }
-
-        private IEnumerable<SchoolClass> GetSchoolClasses()
-        {
-            return GetTrTagsWithClassLop().Select(GetSchoolClass);
         }
 
         /// <summary>
@@ -351,35 +301,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             }
 
             return teacherName;
-        }
-
-        private IEnumerable<HtmlNode> GetTrTagsWithClassLop()
-        {
-            try
-            {
-                var trTags = GetListTrTagInCalendar();
-                return trTags.Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return Enumerable.Empty<HtmlNode>();
-            }
-        }
-
-        private IEnumerable<HtmlNode> GetListTrTagInCalendar()
-        {
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(_rawSoup);
-
-            if (htmlDocument.DocumentNode.Descendants("table").Count() < 4)
-            {
-                throw new IndexOutOfRangeException("Không tồn tại bảng lịch");
-            }
-            
-            var tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
-            var bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
-            var trTags = bodyCalendar.Descendants("tr");
-            return trTags;
         }
 
         private static string GetSubjectDetailPageUrl(HtmlNode aTag)

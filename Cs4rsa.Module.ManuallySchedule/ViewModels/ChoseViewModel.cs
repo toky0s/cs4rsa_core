@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -28,8 +27,13 @@ using static Cs4rsa.Module.ManuallySchedule.Events.ChoosedVmMsgs;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
+    /// <summary>
+    /// ViewModel 3
+    /// </summary>
     public class ChoseViewModel : BindableBase
     {
+        private readonly List<ClassGroupModel> _undoClassGroupModels;
+
         #region Properties
         public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
 
@@ -86,6 +90,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             _unitOfWork = unitOfWork;
+            _undoClassGroupModels = new List<ClassGroupModel>();
 
             #region Messengers
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
@@ -186,31 +191,32 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void OnDeleteAll()
         {
-            var actionData = new List<ClassGroupModel>();
+            // 1. Reset undo data
+            _undoClassGroupModels.Clear();
             foreach (var classGroupModel in ClassGroupModels)
             {
-                actionData.Add(classGroupModel.DeepClone());
+                _undoClassGroupModels.Add(classGroupModel.DeepClone());
             }
 
             ClassGroupModels.Clear();
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
-            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish(DBNull.Value);
-            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore, actionData);
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish();
+            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore);
         }
 
         /// <summary>
         /// Hoàn tác
         /// </summary>
         /// <param name="classGroupModels">Danh sách lớp hoàn tác</param>
-        private void OnRestore(IEnumerable<ClassGroupModel> classGroupModels)
+        private void OnRestore()
         {
-            foreach (var classGroupModel in classGroupModels)
+            foreach (var classGroupModel in _undoClassGroupModels)
             {
                 AddClassGroupModel(classGroupModel);
             }
-            var payload = Tuple.Create(classGroupModels, ConflictModels, PlaceConflictFinderModels);
+            var payload = Tuple.Create(_undoClassGroupModels, ConflictModels, PlaceConflictFinderModels);
             _eventAggregator.GetEvent<UndoDelAllMsg>().Publish(payload);
         }
 
@@ -476,14 +482,23 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <summary>
         /// Xử lý sự kiện xoá toàn bộ môn học
         /// </summary>
-        /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
         private void DelAllSubjectMsgHandler()
         {
+            // 1. Reset undo data
+            _undoClassGroupModels.Clear();
+            foreach (var classGroupModel in ClassGroupModels)
+            {
+                _undoClassGroupModels.Add(classGroupModel.DeepClone());
+            }
+
+            // 2. Xoá hết class group model đã chọn
             ClassGroupModels.Clear();
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
-            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish(DBNull.Value);
+
+            // 3. Xoá bộ lịch
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish();
         }
         #endregion
     }

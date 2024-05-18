@@ -35,6 +35,9 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.57.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.57\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -82,6 +85,10 @@
     <ProjectReference Include="..\Cs4rsa.Infrastructure.Common\Cs4rsa.Infrastructure.Common.csproj">
       <Project>{B090DEC9-515E-47D1-8EEA-B47503CA635F}</Project>
       <Name>Cs4rsa.Infrastructure.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Database\Cs4rsa.Infrastructure.Database.csproj">
+      <Project>{567F1543-C1D3-48AA-8221-2D6E16B4E09B}</Project>
+      <Name>Cs4rsa.Infrastructure.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
       <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>

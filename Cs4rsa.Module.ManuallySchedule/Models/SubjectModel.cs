@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {
-    public partial class SubjectModel : BindableBase
+    public class SubjectModel : BindableBase
     {
         private Subject _subject;
         public Subject Subject
@@ -201,6 +201,42 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 return string.Join(", ", Subject.ParallelSubject);
             }
             return "Không có môn song hành";
+        }
+    }
+
+    public class SubjectComparer : IEqualityComparer<SubjectModel>
+    {
+        public bool Equals(SubjectModel x, SubjectModel y)
+        {
+            //If both object refernces are equal then return true
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            //If one of the object refernce is null then return false
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
+            return x.SubjectName == y.SubjectName 
+                && x.SubjectCode == y.SubjectCode 
+                && x.CourseId == y.CourseId;
+        }
+
+        public int GetHashCode(SubjectModel obj)
+        {
+            //If obj is null then return 0
+            if (obj is null)
+            {
+                return 0;
+            }
+
+            int subjectNameHashCode = obj.SubjectName == null ? 0 : obj.SubjectName.GetHashCode();
+            int subjectCodeHashCode = obj.SubjectCode == null ? 0 : obj.SubjectCode.GetHashCode();
+            int courseIdHashCode = obj.CourseId == null ? 0 : obj.CourseId.GetHashCode();
+            return subjectNameHashCode ^ subjectCodeHashCode ^ courseIdHashCode;
         }
     }
 }

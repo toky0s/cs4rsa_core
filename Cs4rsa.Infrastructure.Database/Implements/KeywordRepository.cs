@@ -187,9 +187,11 @@ namespace Cs4rsa.Database.Implements
             );
         }
 
-        public int UpdateCacheByKeywordID(int keywordId, string cache)
+        public int UpdateCacheByKeywordId(int keywordId, string cache)
         {
-            return _rawSql.ExecNonQuery(
+            try
+            {
+                return _rawSql.ExecNonQuery(
                 "UPDATE Keywords SET Cache = @cache WHERE KeywordId = @keywordID"
                 , new Dictionary<string, object>
                 {
@@ -197,6 +199,11 @@ namespace Cs4rsa.Database.Implements
                     {"@keywordID", keywordId },
                 }
             );
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public int Insert(Keyword keyword)

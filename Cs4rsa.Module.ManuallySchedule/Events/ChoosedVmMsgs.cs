@@ -31,15 +31,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Events
         internal sealed class DelClassGroupChoiceMsg : PubSubEvent<ClassGroupModel> { }
 
         /// <summary>
-        /// Delete All Class Group Choice Message
-        /// 
-        /// Xoá tất cả Class Group đã chọn.
+        /// Xoá tất cả Class Group đang hiển thị trên lịch
         /// </summary>
-        internal sealed class DelAllClassGroupChoiceMsg : PubSubEvent<DBNull> { }
+        internal sealed class DelAllClassGroupChoiceMsg : PubSubEvent { }
 
         internal sealed class UndoDelAllMsg : PubSubEvent<
             Tuple<
-                IEnumerable<ClassGroupModel>, 
+                List<ClassGroupModel>, 
                 ObservableCollection<ConflictModel>, 
                 ObservableCollection<PlaceConflictFinderModel>
             >> { }

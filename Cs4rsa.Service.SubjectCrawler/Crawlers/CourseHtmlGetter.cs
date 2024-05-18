@@ -8,8 +8,8 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
     {
         public async Task<HtmlDocument> GetHtmlDocument(string courseId, string semesterId)
         {
-            var htmlWeb = new HtmlWeb();
             var url = $"http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid={courseId}&semesterid={semesterId}&timespan={semesterId}";
+            var htmlWeb = new HtmlWeb();
             return await htmlWeb.LoadFromWebAsync(url);
         }
     }

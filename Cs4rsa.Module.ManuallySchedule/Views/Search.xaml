@@ -234,6 +234,12 @@
                                         Click="OpenInCourse_Click"
                                         Header="Mở trong Course"
                                         Icon="{md:PackIcon Kind=OpenInNew}" />
+                                    <MenuItem
+                                        Name="CopyError"
+                                        Click="CopyError_Click"
+                                        Header="Sao chép lỗi"
+                                        Icon="{md:PackIcon Kind=ContentCopy}"
+                                        Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                     <Separator />
                                     <MenuItem
                                         Click="Btn_Delete_Click"

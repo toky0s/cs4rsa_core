@@ -5,7 +5,13 @@ namespace Cs4rsa.Database.Interfaces
 {
     public interface IKeywordRepository
     {
-        int UpdateCacheByKeywordID(int keywordID, string cache);
+        /// <summary>
+        /// Cập nhật lại HTML Cache
+        /// </summary>
+        /// <param name="keywordId">Keyword Id</param>
+        /// <param name="htmlCache">HTML</param>
+        /// <returns>Số lượng record đã cập nhật. Nếu trả về 1 cập nhật thành công, ngược lại trả về 0.</returns>
+        int UpdateCacheByKeywordId(int keywordId, string htmlCache);
         Keyword GetKeyword(string discipline, string keyword1);
 
         /// <summary>
