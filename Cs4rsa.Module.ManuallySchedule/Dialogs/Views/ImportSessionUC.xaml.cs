@@ -1,11 +1,8 @@
-﻿using System.ComponentModel;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
+﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
 
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using Cs4rsa.Module.ManuallySchedule.ViewModels;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
 {

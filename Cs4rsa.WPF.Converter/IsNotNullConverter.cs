@@ -8,7 +8,7 @@ namespace Cs4rsa.WPF.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return !ReferenceEquals(value, null);
+            return value is object;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
