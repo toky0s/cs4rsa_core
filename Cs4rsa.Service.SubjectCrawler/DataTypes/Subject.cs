@@ -119,6 +119,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
                 while(currSchoolClassIdx < hitNodes.Length)
                 {
+                    // TODO: Performance issue
                     var schoolClass = GetSchoolClass(hitNodes[currSchoolClassIdx]);
                     if (schoolClass.SchoolClassName.StartsWith(classGroupNames[currClassGroupNameIdx]))
                     {
@@ -186,6 +187,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
              *  XinTA - Ngày 19/07/2023 - Project CWEBIZ - Integrate
              *  XinTA - Ngày 16/12/2023 - Migrate
              */
+
+            // TODO: Performance issue
             string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
             TeacherUrls.Add(teacherUrl);
 

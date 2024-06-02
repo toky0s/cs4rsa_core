@@ -266,6 +266,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     Week1[dayIndex].Add(timeBlock);
                     Week2[dayIndex].Add(timeBlock);
                 }
+                // Phase.Summer
+                else
+                {
+                    Week2[dayIndex].Add(timeBlock);
+                }
             }
         }
 

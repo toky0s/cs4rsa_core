@@ -197,9 +197,9 @@
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="0,0,5,0" Kind="ClockTimeEightOutline" />
                         <TextBlock>
-                            <Run Text="{Binding FirstSchoolClass.SchoolClass.ClassGroupName, Mode=OneWay}" />
+                            <Run Text="{Binding LessonA.ClassGroupName, Mode=OneWay}" />
                             <Run Text=" - " />
-                            <Run Text="{Binding SecondSchoolClass.SchoolClass.ClassGroupName, Mode=OneWay}" />
+                            <Run Text="{Binding LessonB.ClassGroupName, Mode=OneWay}" />
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
@@ -230,9 +230,9 @@
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="0,0,5,0" Kind="MapMarkerOutline" />
                         <TextBlock>
-                            <Run Text="{Binding FirstSchoolClass.SchoolClass.ClassGroupName, Mode=OneWay}" />
+                            <Run Text="{Binding LessonA.ClassGroupName, Mode=OneWay}" />
                             <Run Text=" - " />
-                            <Run Text="{Binding SecondSchoolClass.SchoolClass.ClassGroupName, Mode=OneWay}" />
+                            <Run Text="{Binding LessonB.ClassGroupName, Mode=OneWay}" />
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>

@@ -21,7 +21,7 @@ namespace Cs4rsa.UI.ScheduleTable.Interfaces
         /// Trả về một danh sách khối thời gian sẽ được vẽ trên bảng mô phỏng.
         /// </summary>
         /// <returns><see cref="IEnumerable{TimeBlock}"/></returns>
-        IEnumerable<TimeBlock> GetBlocks();
+        TimeBlock[] GetBlocks();
 
         /// <summary>
         /// Implement phương thức này để xác định khối thời gian sẽ thuộc giai đoạn nào.

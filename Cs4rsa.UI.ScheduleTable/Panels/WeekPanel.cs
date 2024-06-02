@@ -10,25 +10,36 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
     /// </summary>
     public class WeekPanel : Panel
     {
-        private double _xPosition;
         protected override Size MeasureOverride(Size availableSize)
         {
-            availableSize.Width /= 7;
-            _xPosition = availableSize.Width;
-            foreach (ContentPresenter child in Children)
+            // Measure each child with available size
+            foreach (UIElement child in InternalChildren)
             {
                 child.Measure(availableSize);
             }
-            return availableSize;
+
+            // Return the desired size of the panel (can be modified based on your requirements)
+            return new Size(availableSize.Width, availableSize.Height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double w = finalSize.Width / 7;
-            for (int i = 0; i < Children.Count; i++)
+            double childWidth = finalSize.Width / 7; // Divide the total width by 7 for 7 children
+            double childHeight = finalSize.Height; // Use the full height
+
+            for (int i = 0; i < InternalChildren.Count; i++)
             {
-                Children[i].Arrange(new Rect(_xPosition * i, 0, w, finalSize.Height));
+                UIElement child = InternalChildren[i];
+                if (child != null)
+                {
+                    double x = i * childWidth;
+                    double y = 0;
+                    Rect rect = new Rect(x, y, childWidth, childHeight);
+                    child.Arrange(rect);
+                }
             }
+
+            // Return the final arranged size
             return finalSize;
         }
     }

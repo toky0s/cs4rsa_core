@@ -8,7 +8,6 @@ using Cs4rsa.Module.ManuallySchedule;
 using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
 using Cs4rsa.Service.DisciplineCrawler;
-using Cs4rsa.Module.ManuallySchedule.Utils;
 using DryIoc;
 
 using MaterialDesignThemes.Wpf;
@@ -16,18 +15,13 @@ using MaterialDesignThemes.Wpf;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.Dialog;
 using Prism.Mvvm;
@@ -104,11 +98,6 @@ namespace Cs4rsa.App
 
         protected override Window CreateShell()
         {
-            //BackgroundWorker backgroundWorker = new BackgroundWorker();
-            //backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            //backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            //backgroundWorker.RunWorkerAsync();
-
             RawSql rawSql = Container.Resolve<RawSql>();
             IUnitOfWork unitOfWork = Container.Resolve<IUnitOfWork>();
             DisciplineCrawler disciplineCrawler = Container.Resolve<DisciplineCrawler>();

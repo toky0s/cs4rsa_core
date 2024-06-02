@@ -25,7 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
         public List<SchoolClassModel> CurrentSchoolClassModels { get; }
-        public readonly IEnumerable<SchoolClassModel> NormalSchoolClassModels;
+        public SchoolClassModel[] NormalSchoolClassModels;
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
         public string Name { get; }
@@ -88,7 +88,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             HaveSchedule = IsHaveSchedule();
             Color = color;
             IsBelongSpecialSubject = isBelongSpecialSubject;
-            NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, Color));
+            NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, Color)).ToArray();
 
             if (classGroup.SchoolClasses.Count > 0)
             {

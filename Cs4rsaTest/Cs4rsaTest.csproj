@@ -17,8 +17,4 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\cs4rsa_core\Cs4rsa.csproj" />
-  </ItemGroup>
-
 </Project>

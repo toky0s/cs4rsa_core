@@ -12,6 +12,9 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            double height = availableSize.Height;
+            double width = availableSize.Width / 7;
+
             _unitHeight = availableSize.Height / Utils.Utils.TimeLines.Length;
             _startPoint = _unitHeight / 2;
             foreach (ContentPresenter child in Children)
@@ -23,17 +26,7 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
                 child.Measure(availableSize);
             }
 
-            if (availableSize.Height == double.PositiveInfinity)
-            {
-                availableSize.Height = double.MaxValue;
-            }
-
-            if (availableSize.Width == double.PositiveInfinity)
-            {
-                availableSize.Width = double.MaxValue;
-            }
-
-            return availableSize;
+            return new Size(width, height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)

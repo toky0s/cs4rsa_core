@@ -8,11 +8,13 @@ using Cs4rsa.UI.ScheduleTable.Interfaces;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cs4rsa.UI.ScheduleTable.Models
 {
     public class ConflictModel : IConflictModel, IScheduleTableItem
     {
+        const string Background = "#e74c3c";
         private Lesson _lessonA;
         private Lesson _lessonB;
         private ConflictTime _conflictTime;
@@ -101,26 +103,20 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return Phase.All;
         }
 
-        public IEnumerable<TimeBlock> GetBlocks()
+        public TimeBlock[] GetBlocks()
         {
-            const string background = "#e74c3c";
-            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
-            {
-                foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
-                {
-                    CfBlock timeBlock = new CfBlock(
-                        studyTimeIntersect,
+            return ConflictTime.ConflictTimes
+                .SelectMany(item => item.Value
+                    .Select(sti => new CfBlock(
+                        sti,
                         GetId(),
-                        background,
+                        Background,
                         _lessonA.SchoolClassName + " x " + _lessonB.SchoolClassName,
                         item.Key,
                         ScheduleTableItemType.TimeConflict,
                         _lessonA,
                         _lessonB
-                    );
-                    yield return timeBlock;
-                }
-            }
+                ))).ToArray();
         }
 
         public string GetId()

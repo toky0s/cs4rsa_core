@@ -8,6 +8,7 @@ using Cs4rsa.UI.ScheduleTable.Interfaces;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cs4rsa.UI.ScheduleTable.Models
 {
@@ -16,6 +17,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
     /// </summary>
     public class PlaceConflictFinderModel : IConflictModel, IScheduleTableItem
     {
+        const string Background = "#f1f2f6";
         public ConflictPlace ConflictPlace { get; set; }
         public Lesson LessonA { get; set; }
         public Lesson LessonB { get; set; }
@@ -66,28 +68,21 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return Phase.All;
         }
 
-        public IEnumerable<TimeBlock> GetBlocks()
+        public TimeBlock[] GetBlocks()
         {
-            const string BACKGROUND = "#f1f2f6";
-            foreach (var item in ConflictPlace.PlaceAdjacents)
-            {
-                foreach (PlaceAdjacent placeAdjacent in item.Value)
-                {
-                    var timeBlock = new PlaceCfBlock
-                    (
-                        placeAdjacent
-                        , GetId()
-                        , BACKGROUND
-                        , LessonA.SchoolClassName + " x " + LessonB.SchoolClassName
-                        , item.Key
-                        , placeAdjacent.Start
-                        , placeAdjacent.End
-                        , ScheduleTableItemType.PlaceConflict
-                    );
-
-                    yield return timeBlock;
-                }
-            }
+            return ConflictPlace.PlaceAdjacents
+                .SelectMany(pa => pa.Value
+                    .Select(item => new PlaceCfBlock(
+                        item, 
+                        GetId(), 
+                        Background, 
+                        LessonA.SchoolClassName + " x " + LessonB.SchoolClassName, 
+                        pa.Key, 
+                        item.Start, 
+                        item.End, 
+                        ScheduleTableItemType.PlaceConflict
+                    ))
+                ).ToArray();
         }
 
         private static string GetTimeBlockDescription(PlaceAdjacent placeAdjacent)

@@ -4,6 +4,7 @@ using Cs4rsa.UI.ScheduleTable.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {
@@ -56,23 +57,18 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             Color                 = color;
         }
 
-        public IEnumerable<TimeBlock> GetBlocks()
+        public TimeBlock[] GetBlocks()
         {
-            foreach (var item in SchoolClass.GetSchoolClassUnits())
-            {
-                var timeBlock = new SchoolClassBlock
+            return SchoolClass.GetSchoolClassUnits().Select(unit => new SchoolClassBlock
                 (
-                    item,
+                    unit,
                     GetId(),
                     Color,
                     content: SchoolClassName,
-                    item.DayOfWeek,
+                    unit.DayOfWeek,
                     ScheduleTableItemType.SchoolClass,
                     Phase
-                );
-
-                yield return timeBlock;
-            }
+                )).ToArray();
         }
 
         public Phase GetPhase() => SchoolClass.GetPhase();

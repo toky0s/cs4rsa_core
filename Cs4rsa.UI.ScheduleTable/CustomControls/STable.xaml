@@ -89,8 +89,7 @@
                 x:Name="STable_ScrollViewer"
                 Grid.Row="1"
                 Grid.Column="0"
-                Grid.ColumnSpan="3"
-                ScrollChanged="STable_ScrollViewer_ScrollChanged">
+                Grid.ColumnSpan="3">
                 <Grid Height="400">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="28" />
@@ -184,7 +183,7 @@
             </ScrollViewer>
 
             <!--  Render BtnGoto  -->
-            <Button
+            <!--<Button
                 x:Name="STable_BtnGoto"
                 Grid.Row="1"
                 Grid.Column="2"
@@ -196,7 +195,7 @@
                     Width="20"
                     Height="20"
                     Kind="ArrowDown" />
-            </Button>
+            </Button>-->
         </Grid>
     </Border>
 </UserControl>
