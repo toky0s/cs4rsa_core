@@ -1,5 +1,4 @@
 ﻿using Cs4rsa.Common;
-using Cs4rsa.Messages.Publishers;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
@@ -13,11 +12,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Database;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
     public class SchedulerViewModel : BindableBase
     {
+        private bool isSummerSemester;
+        public bool IsSummerSemester
+        {
+            get { return isSummerSemester; }
+            set { SetProperty(ref isSummerSemester, value); }
+        }
+
         private readonly List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
 
         #region Properties
@@ -44,9 +52,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         private IEventAggregator _eventAggregator;
-        public SchedulerViewModel(IEventAggregator eventAggregator)
+        private readonly IUnitOfWork _unitOfWork;
+        public SchedulerViewModel(IEventAggregator eventAggregator, IUnitOfWork unitOfWork)
         {
             _eventAggregator = eventAggregator;
+            _unitOfWork = unitOfWork;
 
             eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
@@ -119,6 +129,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //{
             //    CleanDays();
             //});
+
+            IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
 
             #region Weeks and Timelines
             Phase1_Monday = new ObservableCollection<TimeBlock>();

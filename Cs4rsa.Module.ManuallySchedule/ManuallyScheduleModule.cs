@@ -1,5 +1,7 @@
 ﻿using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Database.Implements;
+using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Service.SubjectCrawler.Crawlers;
@@ -25,6 +27,7 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
+            containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
         }
     }
 }

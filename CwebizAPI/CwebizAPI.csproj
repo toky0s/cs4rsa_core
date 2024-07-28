@@ -1,11 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>default</LangVersion>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Exceptions\**" />
+      <Compile Remove="Scripts\**" />
+      <Content Remove="Exceptions\**" />
+      <Content Remove="Scripts\**" />
+      <EmbeddedResource Remove="Exceptions\**" />
+      <EmbeddedResource Remove="Scripts\**" />
+      <None Remove="Exceptions\**" />
+      <None Remove="Scripts\**" />
+    </ItemGroup>
 
     <ItemGroup>
       <None Remove="Db\Migrations\Cwebiz_v001.sql" />
@@ -31,11 +42,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\CwebizAPI.Share\CwebizAPI.Share.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Exceptions\" />
-      <Folder Include="Scripts\" />
     </ItemGroup>
 
     <ItemGroup>

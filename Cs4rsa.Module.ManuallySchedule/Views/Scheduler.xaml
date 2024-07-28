@@ -6,34 +6,56 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
     Height="{Binding ElementName=Scheduler, Path=ActualHeight}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:SchedulerViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
     mc:Ignorable="d">
     <UserControl.Resources />
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition />
-            <RowDefinition Height="auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Style="{StaticResource MaterialDesignTextBlock}"
-            Text="Giai đoạn 1 (hoặc học kỳ Hè)" />
-        <customControls:STable
-            Grid.Row="1"
-            ItemsSource="{Binding Timelines}"
-            Week="{Binding Week1}" />
-        <TextBlock
-            Grid.Row="2"
-            Style="{StaticResource MaterialDesignTextBlock}"
-            Text="Giai đoạn 2" />
-        <customControls:STable
-            Grid.Row="3"
-            ItemsSource="{Binding Timelines}"
-            Week="{Binding Week2}" />
+        <Border Visibility="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Style="{StaticResource MaterialDesignTextBlock}"
+                    Text="Giai đoạn 1 (hoặc học kỳ Hè)" />
+                <customControls:STable
+                    Grid.Row="1"
+                    ItemsSource="{Binding Timelines}"
+                    Week="{Binding Week1}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Style="{StaticResource MaterialDesignTextBlock}"
+                    Text="Giai đoạn 2" />
+                <customControls:STable
+                    Grid.Row="3"
+                    ItemsSource="{Binding Timelines}"
+                    Week="{Binding Week2}" />
+            </Grid>
+        </Border>
+        <Border Visibility="Visible">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Style="{StaticResource MaterialDesignTextBlock}"
+                    Text="Học kỳ Hè" />
+                <customControls:STable
+                    Grid.Row="1"
+                    ItemsSource="{Binding Timelines}"
+                    Week="{Binding Week2}" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

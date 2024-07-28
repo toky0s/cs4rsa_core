@@ -57,6 +57,7 @@
     <Compile Include="IsTypeOfCvt.cs" />
     <Compile Include="IsZeroCvt.cs" />
     <Compile Include="PhaseCvt.cs" />
+    <Compile Include="BooleanToVisibility.cs" />
     <Compile Include="PlaceCvt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace Cs4rsa.Module.ManuallySchedule.Views
+﻿using System.Windows;
+
+namespace Cs4rsa.Module.ManuallySchedule.Views
 {
     public partial class Scheduler
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,8 +25,6 @@ using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
-
-using Newtonsoft.Json;
 
 using Prism.Commands;
 using Prism.Events;

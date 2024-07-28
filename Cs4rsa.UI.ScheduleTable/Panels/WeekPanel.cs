@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Cs4rsa.UI.ScheduleTable.Panels
@@ -12,14 +13,28 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
     {
         protected override Size MeasureOverride(Size availableSize)
         {
-            // Measure each child with available size
+            double totalWidth = 0;
+            double totalHeight = 0;
+
             foreach (UIElement child in InternalChildren)
             {
+                // Measure each child with available size
                 child.Measure(availableSize);
+
+                // Get the desired size of the child
+                Size desiredSize = child.DesiredSize;
+
+                // Accumulate the total width and height
+                totalWidth += desiredSize.Width;
+                totalHeight = Math.Max(totalHeight, desiredSize.Height);
             }
 
-            // Return the desired size of the panel (can be modified based on your requirements)
-            return new Size(availableSize.Width, availableSize.Height);
+            // Ensure that the returned size is not infinite
+            totalWidth = double.IsPositiveInfinity(totalWidth) ? availableSize.Width : totalWidth;
+            totalHeight = double.IsPositiveInfinity(totalHeight) ? availableSize.Height : totalHeight;
+
+            // Return the total desired size
+            return new Size(totalWidth, totalHeight);
         }
 
         protected override Size ArrangeOverride(Size finalSize)

@@ -248,6 +248,10 @@
       <Project>{e4d5b2ab-45ce-46dc-a23e-0761eede55aa}</Project>
       <Name>Cs4rsa.UI.ScheduleTable</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.Theme\Cs4rsa.UI.Theme.csproj">
+      <Project>{7c499393-b182-4124-9bb9-1d1df3b4767d}</Project>
+      <Name>Cs4rsa.UI.Theme</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
       <Name>Cs4rsa.WPF.Converter</Name>

@@ -6,10 +6,15 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:panels="clr-namespace:Cs4rsa.UI.ScheduleTable.Panels">
     <UserControl.Resources>
-        <Style x:Key="TextBlock_Day" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="10" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="TextBlock_Day" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="10" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Border
         Grid.Row="4"
