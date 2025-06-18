@@ -20,7 +20,8 @@ namespace Cs4rsa.Service.DisciplineCrawler
             sbCourse.AppendLine("   new_course_id INT;");
             sbCourse.AppendLine("   count_course_by_semestervalue INT;");
             sbCourse.AppendLine("   found_course_id INT;");
-            sbCourse.Append("   semester_value TEXT := '").Append(semesterValue).AppendLine("';");
+            sbCourse.AppendLine("   current_discipline_id INT;");
+            sbCourse.Append("       semester_value TEXT := '").Append(semesterValue).AppendLine("';");
             sbCourse.AppendLine("BEGIN");
             #endregion
 
@@ -73,18 +74,15 @@ namespace Cs4rsa.Service.DisciplineCrawler
             sbKeyword.AppendLine("INSERT INTO keyword(id, keyword1, courseid, subjectname, color, html, disciplineid)");
             sbKeyword.AppendLine("VALUES");
 
-            var disciplineCount = disciplines.Count;
-            var kwId = currentKeywordId;
-            
             for (var i = 0; i < disciplines.Count; i++)
             {
-                disciplineCount++;
-                sbDiscipline.AppendLine($"({disciplineCount}, '{disciplines[i].Name}', new_course_id),");
+                currentDisciplineId++;
+                sbDiscipline.AppendLine($"({currentDisciplineId}, '{disciplines[i].Name}', new_course_id),");
                 foreach (var keyword in disciplines[i].Keywords)
                 {
                     var color = ColorGenerator.GenerateColor();
-                    kwId++;
-                    sbKeyword.AppendLine($"({kwId}, '{keyword.Keyword1}', {keyword.CourseId}, '{keyword.SubjectName}', '{color}', NULL, {disciplineCount}),");
+                    currentKeywordId++;
+                    sbKeyword.AppendLine($"({currentKeywordId}, '{keyword.Keyword1}', {keyword.CourseId}, '{keyword.SubjectName}', '{color}', NULL, {currentDisciplineId}),");
                 }
             }
             #endregion
@@ -98,11 +96,10 @@ namespace Cs4rsa.Service.DisciplineCrawler
 
             #region END
             sbKeyword.AppendLine("END $$;");
-            #endregion
-
             return sbCourse.ToString() + 
                 "\n" + sbDiscipline.ToString() + 
                 "\n" + sbKeyword.ToString();
+            #endregion
         }
 
         private static void RemoveLastCharAfterAppendLine(StringBuilder sb)

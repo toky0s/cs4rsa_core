@@ -91,10 +91,6 @@
       <Project>{567F1543-C1D3-48AA-8221-2D6E16B4E09B}</Project>
       <Name>Cs4rsa.Infrastructure.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.Service.TeacherCrawler\Cs4rsa.Service.TeacherCrawler.csproj">
-      <Project>{F16F72D3-A7FF-4B79-9E09-39FA6F1A31C9}</Project>
-      <Name>Cs4rsa.Service.TeacherCrawler</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
