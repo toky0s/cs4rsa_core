@@ -23,18 +23,12 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Style="{StaticResource MaterialDesignTextBlock}"
-                    Text="Giai đoạn 1 (hoặc học kỳ Hè)" />
+                <TextBlock Grid.Row="0" Text="Giai đoạn 1 (hoặc học kỳ Hè)" />
                 <customControls:STable
                     Grid.Row="1"
                     ItemsSource="{Binding Timelines}"
                     Week="{Binding Week1}" />
-                <TextBlock
-                    Grid.Row="2"
-                    Style="{StaticResource MaterialDesignTextBlock}"
-                    Text="Giai đoạn 2" />
+                <TextBlock Grid.Row="2" Text="Giai đoạn 2" />
                 <customControls:STable
                     Grid.Row="3"
                     ItemsSource="{Binding Timelines}"
@@ -47,10 +41,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Style="{StaticResource MaterialDesignTextBlock}"
-                    Text="Học kỳ Hè" />
+                <TextBlock Grid.Row="0" Text="Học kỳ Hè" />
                 <customControls:STable
                     Grid.Row="1"
                     ItemsSource="{Binding Timelines}"

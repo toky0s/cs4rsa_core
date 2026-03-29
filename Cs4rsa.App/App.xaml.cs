@@ -5,9 +5,15 @@ using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule;
+using Cs4rsa.Module.ManuallySchedule.ViewModels;
 using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
+using Cs4rsa.Service.Dialog;
+using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.DisciplineCrawler;
+using Cs4rsa.Service.SubjectCrawler.Crawlers;
+using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
+
 using DryIoc;
 
 using MaterialDesignThemes.Wpf;
@@ -15,17 +21,15 @@ using MaterialDesignThemes.Wpf;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Mvvm;
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
-using System.Windows;
-using Cs4rsa.Service.Dialog.Interfaces;
-using Cs4rsa.Service.Dialog;
-using Prism.Mvvm;
 using System.Reflection;
+using System.Windows;
 
 namespace Cs4rsa.App
 {
@@ -90,6 +94,7 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<DisciplineCrawler>();
             
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<IDialogService, DialogService>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();

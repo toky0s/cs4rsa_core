@@ -146,7 +146,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RegionInfo.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Home.xaml.cs">
@@ -205,6 +204,10 @@
       <Project>{15E1E43A-7866-4E85-9DDB-F7A860F31E0E}</Project>
       <Name>Cs4rsa.Module.ManuallySchedule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Module.Shared\Cs4rsa.Module.Shared.csproj">
+      <Project>{877566d3-74d6-467c-b0fd-5dc9fcd29e12}</Project>
+      <Name>Cs4rsa.Module.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
       <Project>{82462320-ee93-4afa-bcb0-b32c8cc81ab4}</Project>
       <Name>Cs4rsa.Service.CourseCrawler</Name>
@@ -216,6 +219,14 @@
     <ProjectReference Include="..\Cs4rsa.Service.DisciplineCrawler\Cs4rsa.Service.DisciplineCrawler.csproj">
       <Project>{14541ac5-7358-4b89-a188-1bbb66bce24b}</Project>
       <Name>Cs4rsa.Service.DisciplineCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
+      <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
+      <Name>Cs4rsa.Service.SubjectCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.Helper\Cs4rsa.UI.Helper.csproj">
+      <Project>{b835edaf-a21e-427d-bc57-c42851cc9320}</Project>
+      <Name>Cs4rsa.UI.Helper</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>

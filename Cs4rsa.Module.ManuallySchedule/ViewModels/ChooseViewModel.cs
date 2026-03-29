@@ -30,7 +30,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
     /// <summary>
     /// ViewModel 3
     /// </summary>
-    public class ChoseViewModel : BindableBase
+    public class ChooseViewModel : BindableBase
     {
         private readonly List<ClassGroupModel> _undoClassGroupModels;
 
@@ -77,7 +77,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly IDialogService _dialogService;
         #endregion
 
-        public ChoseViewModel(
+        public ChooseViewModel(
             ISnackbarMessageQueue snackbarMessageQueue,
             IUnitOfWork unitOfWork,
             IEventAggregator eventAggregator,

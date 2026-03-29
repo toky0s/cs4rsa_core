@@ -60,6 +60,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegionInfo.cs" />
     <Compile Include="ShowDialogViewModelAbstract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

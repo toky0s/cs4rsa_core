@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -66,6 +66,9 @@
     <Compile Include="CustomControls\STable.xaml.cs">
       <DependentUpon>STable.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\ScheduleView.xaml.cs">
+      <DependentUpon>ScheduleView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Events\ScheduleBlockMsgs.cs" />
     <Compile Include="Interfaces\IScheduleTableItem.cs" />
     <Compile Include="Models\CfBlock.cs" />
@@ -85,6 +88,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomControls\STable.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControls\ScheduleView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -137,10 +144,6 @@
     <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
       <Project>{995CC365-28E3-4525-8B0A-960A4F894C15}</Project>
       <Name>Cs4rsa.Service.SubjectCrawler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cs4rsa.UI.Theme\Cs4rsa.UI.Theme.csproj">
-      <Project>{7c499393-b182-4124-9bb9-1d1df3b4767d}</Project>
-      <Name>Cs4rsa.UI.Theme</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>

@@ -14,7 +14,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void Btn_SolveConflict_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ((ChoseViewModel)DataContext).SolveConflictCommand.Execute();
+            ((ChooseViewModel)DataContext).SolveConflictCommand.Execute();
         }
 
         private void Listbox_Choiced_SelectionChanged(object sender, SelectionChangedEventArgs e)

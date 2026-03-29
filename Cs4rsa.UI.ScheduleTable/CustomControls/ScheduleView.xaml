@@ -1,0 +1,207 @@
+<UserControl
+    x:Class="Cs4rsa.UI.ScheduleTable.CustomControls.ScheduleView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:panels="clr-namespace:Cs4rsa.UI.ScheduleTable.Panels"
+    x:Name="root"
+    UseLayoutRounding="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="ScheduleView_GridLineBrush" Color="#E0E0E0" />
+        <Style x:Key="ScheduleView_TextBlock_Day" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        </Style>
+        <Style x:Key="ScheduleView_ScrollNavButton" TargetType="Button">
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="#F5F5F5" />
+            <Setter Property="BorderBrush" Value="#E0E0E0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="18"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#EEEEEE" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#E0E0E0" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="ScheduleView_DefaultBlockTemplate">
+            <local:ScheduleBlock
+                BlockColor="{Binding Background}"
+                BlockName="{Binding Content}"
+                ScheduleTableItemType="{Binding ScheduleTableItemType}"
+                TimeBlock="{Binding}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Border
+        Padding="{Binding Padding, ElementName=root}"
+        Background="{Binding Background, ElementName=root}"
+        BorderBrush="{Binding BorderBrush, ElementName=root}"
+        BorderThickness="{Binding BorderThickness, ElementName=root}"
+        CornerRadius="12"
+        SnapsToDevicePixels="True">
+        <!--
+            Hàng thứ (Row 0) nằm NGOÀI ScrollViewer → cố định khi cuộn dọc.
+            Phần mốc giờ + lưới tuần (Row 1) cuộn trong ScrollViewer.
+        -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="48" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28" />
+                <ColumnDefinition Width="*" MinWidth="120" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Ô góc (cột mốc giờ) — căn với cột timeline bên dưới  -->
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                Padding="0,0,0,5"
+                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
+                BorderThickness="0,0,0.5,0.5"
+                SnapsToDevicePixels="True" />
+
+            <!--  Hàng thứ: kẻ dọc giữa các thứ  -->
+            <Border
+                Grid.Row="0"
+                Grid.Column="1"
+                Padding="0,0,0,5"
+                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
+                BorderThickness="0,0,0,0.5"
+                SnapsToDevicePixels="True">
+                <ItemsControl ItemsSource="{Binding DayHeaders, ElementName=root}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="7" Rows="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
+                                BorderThickness="0,0,0.5,0"
+                                SnapsToDevicePixels="True">
+                                <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="{Binding}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+
+            <ScrollViewer
+                x:Name="PART_ScrollViewer"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <Grid Height="{Binding ScheduleBodyHeight, ElementName=root}" MinHeight="{Binding ScheduleBodyMinHeight, ElementName=root}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!--  Timeline: kẻ ngang full width (mốc giờ + vùng lưới)  -->
+                    <ItemsControl
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding ItemsSource, ElementName=root}"
+                        SnapsToDevicePixels="True">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <panels:TimeLinePanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
+                                    BorderThickness="0,0,0,1"
+                                    SnapsToDevicePixels="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Margin="0,0,2,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="10"
+                                            Text="{Binding}"
+                                            TextOptions.TextFormattingMode="Display" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Border
+                        Grid.Column="1"
+                        BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
+                        BorderThickness="0.5"
+                        CornerRadius="12"
+                        SnapsToDevicePixels="True">
+                        <ItemsControl Name="IC_WeekPanelContainer" ItemsSource="{Binding Week, ElementName=root}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <panels:WeekPanel
+                                        Height="{Binding ElementName=IC_WeekPanelContainer, Path=Height}"
+                                        GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
+                                        ShowGridLines="True" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border SnapsToDevicePixels="True">
+                                        <ItemsControl ItemsSource="{Binding}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <panels:DayPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding}" ContentTemplate="{Binding BlockItemTemplate, ElementName=root, TargetNullValue={StaticResource ScheduleView_DefaultBlockTemplate}}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

@@ -17,4 +17,9 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Database\Cs4rsa.Infrastructure.Database.csproj" />
+    <ProjectReference Include="..\Cs4rsa.Service.Notification\Cs4rsa.Service.Notification.csproj" />
+  </ItemGroup>
+
 </Project>

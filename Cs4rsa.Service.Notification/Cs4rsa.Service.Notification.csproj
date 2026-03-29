@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>Cs4rsa.Service.Notification</RootNamespace>
+    <AssemblyName>Cs4rsa.Service.Notification</AssemblyName>
+    <!-- Use the existing AssemblyInfo if it was not deleted -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Database\Cs4rsa.Infrastructure.Database.csproj" />
+  </ItemGroup>
+</Project>
