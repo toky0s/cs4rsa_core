@@ -2,9 +2,6 @@
 <img src="https://raw.githubusercontent.com/toky0s/cs4rsa_core/main/cs4rsa_core/Images/background.png"></img>
 </p>
 
-## Download
-[For Windows 10](https://github.com/toky0s/cs4rsa_core/releases)
-
 ## Main features
 Version 3.0.1
 - 🆕 (New) Database screen.
