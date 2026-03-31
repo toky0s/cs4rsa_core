@@ -233,7 +233,18 @@
             <Border Grid.Row="2">
                 <TabControl>
                     <TabItem Header="Selected classes">
-                        <ContentControl prism:RegionManager.RegionName="{x:Static shared:RegionInfo.Manual_Choose}" />
+                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedClassGroupModels}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Subject code" />
+                                <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
+                                <DataGridTextColumn Binding="{Binding ClassGroup.}" Header="Descriptioin" />
+                                <DataGridCheckBoxColumn
+                                    Binding="{Binding IsSpecialClassGroup}"
+                                    Header="Has multiple register code"
+                                    IsReadOnly="True" />
+                                <!--<DataGridCheckBoxColumn Binding="{Binding IsActive}" Header="Active" />-->
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </TabItem>
                     <TabItem Header="Warning" />
                 </TabControl>

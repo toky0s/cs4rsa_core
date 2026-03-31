@@ -17,8 +17,6 @@
         public string[] TaughtSubjects { get; set; }
         public string Url { get; set; }
 
-        private static int _visitingLecturerIndex = 0;
-
         public TeacherModel()
         {
             
@@ -28,25 +26,6 @@
         {
             TeacherId = teacherId;
             Name = name;
-        }
-        
-        /// <summary>
-        /// Tạo một giảng viên đại diện cho Tất cả
-        /// </summary>
-        /// <returns></returns>
-        public static TeacherModel CreateAsAll()
-        {
-            return new TeacherModel(string.Empty, "TẤT CẢ");
-        }
-
-        /// <summary>
-        /// Tạo một giảng viên đại diện cho giảng viên thỉnh giảng
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static TeacherModel CreateAsVisitingLecturer(string name)
-        {
-            return new TeacherModel((_visitingLecturerIndex++).ToString(), name);
         }
     }
 }

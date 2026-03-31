@@ -35,7 +35,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly List<ClassGroupModel> _undoClassGroupModels;
 
         #region Properties
-        public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
+        public ObservableCollection<ClassGroupModel> SelectedClassGroupModels { get; set; }
 
         private ClassGroupModel _selectedClassGroupModel;
         public ClassGroupModel SelectedClassGroupModel
@@ -133,7 +133,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 if (payload.GetType() == typeof(SchoolClassBlock))
                 {
                     var schoolClassBlock = (SchoolClassBlock)payload;
-                    var result = ClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
+                    var result = SelectedClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
                     if (result != null)
                     {
                         SelectedClassGroupModel = result;
@@ -146,16 +146,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             });
             #endregion
 
-            SaveCommand = new DelegateCommand(OpenSaveDialog, () => ClassGroupModels.Count > 0);
+            SaveCommand = new DelegateCommand(OpenSaveDialog, () => SelectedClassGroupModels.Count > 0);
             DeleteCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
-            DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => ClassGroupModels.Count > 0);
+            DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SelectedClassGroupModels.Count > 0);
             CopyCodeCommand = new DelegateCommand(OnCopyCode);
             SolveConflictCommand = new DelegateCommand(OnSolve);
             OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
             ConflictModels = new ObservableCollection<ConflictModel>();
-            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
+            SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
         }
 
         /// <summary>
@@ -193,12 +193,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             // 1. Reset undo data
             _undoClassGroupModels.Clear();
-            foreach (var classGroupModel in ClassGroupModels)
+            foreach (var classGroupModel in SelectedClassGroupModels)
             {
                 _undoClassGroupModels.Add(classGroupModel.DeepClone());
             }
 
-            ClassGroupModels.Clear();
+            SelectedClassGroupModels.Clear();
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
@@ -225,7 +225,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var actionData = _selectedClassGroupModel.DeepClone();
             _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(_selectedClassGroupModel);
 
-            ClassGroupModels.Remove(_selectedClassGroupModel);
+            SelectedClassGroupModels.Remove(_selectedClassGroupModel);
             _snackbarMessageQueue.Enqueue(
                 $"Đã xoá lớp {_selectedClassGroupModel.Name}",
                 "HOÀN TÁC",
@@ -247,7 +247,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var saveSessionUc = new SaveSessionUC();
             var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
-            vm.ClassGroupModels = ClassGroupModels;
+            vm.ClassGroupModels = SelectedClassGroupModels;
             _dialogService.OpenDialog(saveSessionUc);
         }
 
@@ -255,7 +255,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var shareStringUc = new ShareStringUC(); // TODO: Chưa set view model
             var vm = shareStringUc.DataContext as ShareStringUCViewModel;
-            vm.ShareString = _shareStringGenerator.GetShareString(ClassGroupModels); ;
+            vm.ShareString = _shareStringGenerator.GetShareString(SelectedClassGroupModels); ;
             _dialogService.OpenDialog(shareStringUc);
         }
 
@@ -268,9 +268,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// bằng với ClassGroupModel được truyền vào nếu không trả về -1.</returns>
         private int IsReallyHaveAnotherVersionInChoicedList(ClassGroupModel classGroupModel)
         {
-            for (var i = 0; i < ClassGroupModels.Count; ++i)
+            for (var i = 0; i < SelectedClassGroupModels.Count; ++i)
             {
-                if (ClassGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
+                if (SelectedClassGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
                 {
                     return i;
                 }
@@ -380,9 +380,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 var classGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
                 if (classGroupModelIndex != -1)
-                    ClassGroupModels[classGroupModelIndex] = classGroupModel;
+                    SelectedClassGroupModels[classGroupModelIndex] = classGroupModel;
                 else
-                    ClassGroupModels.Add(classGroupModel);
+                    SelectedClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
@@ -393,7 +393,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             foreach (var classGroupModel in classGroupModels)
             {
-                ClassGroupModels.Add(classGroupModel);
+                SelectedClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
@@ -408,7 +408,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void UpdateConflicts()
         {
             var schoolClasses = new List<SchoolClassModel>();
-            foreach (var classGroupModel in ClassGroupModels)
+            foreach (var classGroupModel in SelectedClassGroupModels)
             {
                 if (classGroupModel.IsSpecialClassGroup)
                 {
@@ -437,13 +437,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 return;
             }
             ClassGroupModel actionData;
-            for (var i = 0; i < ClassGroupModels.Count; i++)
+            for (var i = 0; i < SelectedClassGroupModels.Count; i++)
             {
-                if (ClassGroupModels[i].Name == className)
+                if (SelectedClassGroupModels[i].Name == className)
                 {
-                    actionData = ClassGroupModels[i].DeepClone();
-                    _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(ClassGroupModels[i]);
-                    ClassGroupModels.RemoveAt(i);
+                    actionData = SelectedClassGroupModels[i].DeepClone();
+                    _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(SelectedClassGroupModels[i]);
+                    SelectedClassGroupModels.RemoveAt(i);
                     _snackbarMessageQueue.Enqueue(
                         $"Đã xoá {className}",
                         "HOÀN TÁC",
@@ -466,11 +466,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
         private void DelSubjectMsgHandler(SubjectModel subjectModel)
         {
-            foreach (var classGroupModel in ClassGroupModels)
+            foreach (var classGroupModel in SelectedClassGroupModels)
             {
                 if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
                 {
-                    ClassGroupModels.Remove(classGroupModel);
+                    SelectedClassGroupModels.Remove(classGroupModel);
                     break;
                 }
             }
@@ -486,13 +486,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             // 1. Reset undo data
             _undoClassGroupModels.Clear();
-            foreach (var classGroupModel in ClassGroupModels)
+            foreach (var classGroupModel in SelectedClassGroupModels)
             {
                 _undoClassGroupModels.Add(classGroupModel.DeepClone());
             }
 
             // 2. Xoá hết class group model đã chọn
-            ClassGroupModels.Clear();
+            SelectedClassGroupModels.Clear();
             UpdateConflicts();
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();

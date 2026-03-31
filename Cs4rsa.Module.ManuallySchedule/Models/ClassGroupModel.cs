@@ -59,7 +59,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// Với môn ART 161 (Special Subject) solution hiện tại là check xem đâu là Compulsory Class
         /// của một ClassGroup và check xem class group nào có nhiều hơn 1 mã đăng ký.
         /// </summary>
-        public bool IsBelongSpecialSubject { get; }
+        public bool IsBelongSpecialSubject { get; set; }
 
         /// <summary>
         /// 27/08/2022 A Xin
@@ -69,7 +69,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// 
         /// Nên thuộc tính này sẽ ảnh hưởng tới việc render trên mô phỏng.
         /// </summary>
-        public bool IsSpecialClassGroup { get; }
+        public bool IsSpecialClassGroup { get; set; }
 
         /// <summary>
         /// Dùng để Deep Clone, CẤM XOÁ
@@ -101,9 +101,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 classGroup.GetImplementType();
                 classGroup.GetRegistrationType();
                 RegisterCodes = classGroup.RegisterCodes;
-                ClassSuffix = GetClassSuffix();
+                ClassSuffix = Name.Substring(ClassGroup.SubjectCode.Length + 1);
                 CompulsoryClass = GetCompulsoryClass();
-                IsSpecialClassGroup = EvaluateIsSpecialClassGroup(classGroup.SchoolClasses);
+                IsSpecialClassGroup = classGroup.SchoolClasses
+                    .Where(sc => sc.SchoolClassName != ClassGroup.Name)
+                    .Distinct()
+                    .Count() >= 2;
 
                 // ClassGroup thường với duy nhất một SchoolClass
                 if (classGroup.SchoolClasses.Count == 1)
@@ -126,17 +129,17 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             }
         }
 
-        private string GetClassSuffix()
-        {
-            return Name.Substring(ClassGroup.SubjectCode.Length + 1);
-        }
+        //private string GetClassSuffix()
+        //{
+        //    return 
+        //}
 
-        private bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
-        {
-            return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
-                .Distinct()
-                .Count() >= 2;
-        }
+        //private bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
+        //{
+        //    return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
+        //        .Distinct()
+        //        .Count() >= 2;
+        //}
 
         /// <summary>
         /// Kiểm tra xem nhóm lớp này có Lịch hay không. Đôi khi sau giai đoạn đăng ký tín

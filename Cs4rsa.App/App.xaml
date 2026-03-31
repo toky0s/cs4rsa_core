@@ -4,24 +4,4 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Cs4rsa.App"
     xmlns:prism="http://prismlibrary.com/">
-    <Application.Resources>
-        <ResourceDictionary>
-            <!--  Primary Colors  -->
-            <SolidColorBrush x:Key="PrimaryBrush" Color="#2F5597" />
-            <SolidColorBrush x:Key="SecondaryBrush" Color="#4A86E8" />
-            <SolidColorBrush x:Key="AccentBrush" Color="#E69138" />
-
-            <!--  Neutral Colors  -->
-            <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5" />
-            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
-
-            <!--  Text Colors  -->
-            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#212121" />
-            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#616161" />
-
-            <!--  Status Colors  -->
-            <SolidColorBrush x:Key="ErrorBrush" Color="#D32F2F" />
-            <SolidColorBrush x:Key="SuccessBrush" Color="#388E3C" />
-        </ResourceDictionary>
-    </Application.Resources>
 </prism:PrismApplication>

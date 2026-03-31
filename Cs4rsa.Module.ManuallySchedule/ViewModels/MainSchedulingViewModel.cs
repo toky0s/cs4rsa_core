@@ -10,6 +10,8 @@ using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Service.Conflict.DataTypes;
+using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
@@ -32,6 +34,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Data;
+
+using static Cs4rsa.Module.ManuallySchedule.Events.ChoosedVmMsgs;
 
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
@@ -253,6 +257,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             LoadSavedSchedules();
 
             InitClgViewModel();
+            InitChooseViewModel();
         }
 
         private void ExecuteGotoCourseCommand(SubjectModel model)
@@ -975,6 +980,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedSubject = null;
         }
 
+        /// <summary>
+        /// Xử lý sự kiện chọn một ClassGroupModel
+        /// </summary>
+        /// <param name="value"></param>
         private void OnSelectedClassGroupChanged(ClassGroupModel value)
         {
             if (value != null)
@@ -1261,6 +1270,474 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 _classGroupModelsView.Refresh();
             }
         }
+        #endregion
+
+
+        #region Choose view model
+        private readonly List<ClassGroupModel> _undoClassGroupModels = new List<ClassGroupModel>();
+
+        #region Properties
+        /// <summary>
+        /// Danh sách các ClassGroupModel đã chọn để hiển thị ở phần Lịch đã chọn.
+        /// </summary>
+        public ObservableCollection<ClassGroupModel> SelectedClassGroupModels { get; set; }
+
+        private ClassGroupModel _selectedClassGroupModel;
+        public ClassGroupModel SelectedClassGroupModel
+        {
+            get => _selectedClassGroupModel;
+            set
+            {
+                SetProperty(ref _selectedClassGroupModel, value);
+                DeleteChooseCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public ObservableCollection<ConflictModel> ConflictModels { get; set; }
+
+        private ConflictModel _selectedConflictModel;
+        public ConflictModel SelectedConflictModel
+        {
+            get { return _selectedConflictModel; }
+            set { SetProperty(ref _selectedConflictModel, value); }
+        }
+
+        public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
+        #endregion
+
+        #region Commands
+        public DelegateCommand OpenShareStringWindowCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand DeleteChooseCommand { get; set; }
+        public DelegateCommand DeleteAllChooseCommand { get; set; }
+        public DelegateCommand CopyCodeCommand { get; set; }
+        public DelegateCommand SolveConflictCommand { get; set; }
+        #endregion
+
+        #region DI
+        //private readonly ShareString _shareStringGenerator;
+        #endregion
+
+        private void InitChooseViewModel(
+            //ISnackbarMessageQueue snackbarMessageQueue,
+            //IUnitOfWork unitOfWork,
+            //IEventAggregator eventAggregator,
+            //IDialogService dialogService,
+            //ShareString shareString
+        )
+        {
+            //_shareStringGenerator = shareString;
+
+            #region Messengers
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
+            {
+                DelSubjectMsgHandler(payload);
+            });
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
+
+            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
+            {
+                _eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
+                AddClassGroupModel(payload);
+            });
+
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    AddClassGroupModelsAndReload(payload);
+                });
+            });
+
+            _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
+            {
+                _dialogService.CloseDialog();
+                RemoveChoosedClassMsgHandler(payload);
+            });
+
+            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    ConflictModels.Clear();
+            //    PlaceConflictFinderModels.Clear();
+            //});
+
+            // Click vào block thì đồng thời select class group model tương ứng.
+            _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
+            {
+                if (payload.GetType() == typeof(SchoolClassBlock))
+                {
+                    var schoolClassBlock = (SchoolClassBlock)payload;
+                    var result = SelectedClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
+                    if (result != null)
+                    {
+                        SelectedClassGroupModel = result;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            });
+            #endregion
+
+            SaveCommand = new DelegateCommand(OpenSaveDialog, () => SelectedClassGroupModels.Count > 0);
+            DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
+            DeleteAllChooseCommand = new DelegateCommand(OnDeleteAllChoose, () => SelectedClassGroupModels.Count > 0);
+            CopyCodeCommand = new DelegateCommand(OnCopyCode);
+            SolveConflictCommand = new DelegateCommand(OnSolve);
+            OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
+
+            PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+            ConflictModels = new ObservableCollection<ConflictModel>();
+            SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
+        }
+
+        /// <summary>
+        /// Giải quyết xung đột
+        /// </summary>
+        private void OnSolve()
+        {
+            var solveConflictUc = new SolveConflictUC();
+            var vm = new SolveConflictViewModel(SelectedConflictModel, _unitOfWork, _eventAggregator);
+            solveConflictUc.DataContext = vm;
+            _dialogService.OpenDialog(solveConflictUc);
+        }
+
+        /// <summary>
+        /// Sao chép mã môn
+        /// </summary>
+        private void OnCopyCode()
+        {
+            if (SelectedClassGroupModel.RegisterCodes.Count > 0)
+            {
+                var registerCode = SelectedClassGroupModel.RegisterCodes[0];
+                Clipboard.SetData(DataFormats.Text, registerCode);
+                _snackbarMessageQueue.Enqueue($"Sao chép thành công {registerCode}");
+            }
+            else
+            {
+                _snackbarMessageQueue.Enqueue("Lớp này không có mã đăng ký");
+            }
+        }
+
+        /// <summary>
+        /// Xoá tất cả
+        /// </summary>
+        private void OnDeleteAllChoose()
+        {
+            // 1. Reset undo data
+            _undoClassGroupModels.Clear();
+            foreach (var classGroupModel in SelectedClassGroupModels)
+            {
+                _undoClassGroupModels.Add(classGroupModel.DeepClone());
+            }
+
+            SelectedClassGroupModels.Clear();
+            UpdateConflicts();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish();
+            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore);
+        }
+
+        /// <summary>
+        /// Hoàn tác
+        /// </summary>
+        /// <param name="classGroupModels">Danh sách lớp hoàn tác</param>
+        private void OnRestore()
+        {
+            foreach (var classGroupModel in _undoClassGroupModels)
+            {
+                AddClassGroupModel(classGroupModel);
+            }
+            var payload = Tuple.Create(_undoClassGroupModels, ConflictModels, PlaceConflictFinderModels);
+            _eventAggregator.GetEvent<UndoDelAllMsg>().Publish(payload);
+        }
+
+        private void OnDelete()
+        {
+            var actionData = _selectedClassGroupModel.DeepClone();
+            _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(_selectedClassGroupModel);
+
+            SelectedClassGroupModels.Remove(_selectedClassGroupModel);
+            _snackbarMessageQueue.Enqueue(
+                $"Đã xoá lớp {_selectedClassGroupModel.Name}",
+                "HOÀN TÁC",
+                (obj) => AddClassGroupModel(actionData),
+                actionData
+            );
+
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+            DeleteChooseCommand.RaiseCanExecuteChanged();
+            UpdateConflicts();
+        }
+
+        /// <summary>
+        /// Mở Dialog lưu session
+        /// </summary>
+        /// <returns>Task</returns>
+        private void OpenSaveDialog()
+        {
+            var saveSessionUc = new SaveSessionUC();
+            var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
+            vm.ClassGroupModels = SelectedClassGroupModels;
+            _dialogService.OpenDialog(saveSessionUc);
+        }
+
+        private void OnOpenShareStringWindow()
+        {
+            //var shareStringUc = new ShareStringUC(); // TODO: Chưa set view model
+            //var vm = shareStringUc.DataContext as ShareStringUCViewModel;
+            //vm.ShareString = _shareStringGenerator.GetShareString(SelectedClassGroupModels); ;
+            //_dialogService.OpenDialog(shareStringUc);
+        }
+
+        /// <summary>
+        /// Kiểm tra xem một Class Group Model nào đó có tồn tại một
+        /// phiên bản cùng Subject ClassGroupName nhưng khác tên khác không.
+        /// </summary>
+        /// <param name="classGroupModel">Một Class Group Model.</param>
+        /// <returns>Trả về index của ClassGroupModel nếu nó có SubjectCode
+        /// bằng với ClassGroupModel được truyền vào nếu không trả về -1.</returns>
+        private int IsReallyHaveAnotherVersionInChoicedList(ClassGroupModel classGroupModel)
+        {
+            for (var i = 0; i < SelectedClassGroupModels.Count; ++i)
+            {
+                if (SelectedClassGroupModels[i].SubjectCode.Equals(classGroupModel.SubjectCode))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
+        /// trong Collection để phát hiện các Conflict Time.
+        /// </summary>
+        private void UpdateConflictModelCollection(List<SchoolClassModel> schoolClassModels)
+        {
+            ConflictModels.Clear();
+            for (var i = 0; i < schoolClassModels.Count; ++i)
+            {
+                for (var k = i + 1; k < schoolClassModels.Count; ++k)
+                {
+                    if (schoolClassModels[i].SchoolClass.ClassGroupName
+                        .Equals(schoolClassModels[k].SchoolClass.ClassGroupName))
+                    {
+                        continue;
+                    }
+
+                    var lessonA = new Lesson(
+                            schoolClassModels[i].StudyWeek,
+                            schoolClassModels[i].Schedule,
+                            schoolClassModels[i].DayPlaceMetaData,
+                            schoolClassModels[i].SchoolClass.GetMetaDataMap(),
+                            schoolClassModels[i].Phase,
+                            schoolClassModels[i].SchoolClassName,
+                            schoolClassModels[i].SchoolClass.ClassGroupName,
+                            schoolClassModels[i].SubjectCode
+                    );
+
+                    var lessonB = new Lesson(
+                            schoolClassModels[k].StudyWeek,
+                            schoolClassModels[k].Schedule,
+                            schoolClassModels[k].DayPlaceMetaData,
+                            schoolClassModels[k].SchoolClass.GetMetaDataMap(),
+                            schoolClassModels[k].Phase,
+                            schoolClassModels[k].SchoolClassName,
+                            schoolClassModels[k].SchoolClass.ClassGroupName,
+                            schoolClassModels[k].SubjectCode
+                    );
+
+                    var conflict = new Conflict(lessonA, lessonB);
+                    var conflictTime = conflict.GetConflictTime();
+                    if (conflictTime != null)
+                    {
+                        var conflictModel = new ConflictModel(conflict);
+                        ConflictModels.Add(conflictModel);
+                    }
+                }
+            }
+            _eventAggregator.GetEvent<ConflictCollChangedMsg>().Publish(ConflictModels);
+        }
+
+        /// <summary>
+        /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
+        /// trong Collection để phát hiện các Conflict Place.
+        /// </summary>
+        private void UpdatePlaceConflictCollection(List<SchoolClassModel> schoolClassModels)
+        {
+            PlaceConflictFinderModels.Clear();
+            for (var i = 0; i < schoolClassModels.Count; ++i)
+            {
+                for (var k = i + 1; k < schoolClassModels.Count; ++k)
+                {
+                    var lessonA = new Lesson(
+                        schoolClassModels[i].StudyWeek,
+                        schoolClassModels[i].Schedule,
+                        schoolClassModels[i].DayPlaceMetaData,
+                        schoolClassModels[i].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[i].Phase,
+                        schoolClassModels[i].SchoolClassName,
+                        schoolClassModels[i].SchoolClass.ClassGroupName,
+                        schoolClassModels[i].SubjectCode
+                    );
+
+                    var lessonB = new Lesson(
+                        schoolClassModels[k].StudyWeek,
+                        schoolClassModels[k].Schedule,
+                        schoolClassModels[k].DayPlaceMetaData,
+                        schoolClassModels[k].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[k].Phase,
+                        schoolClassModels[k].SchoolClassName,
+                        schoolClassModels[k].SchoolClass.ClassGroupName,
+                        schoolClassModels[k].SubjectCode
+                    );
+
+                    var placeConflict = new PlaceConflictFinder(lessonA, lessonB);
+                    var conflictPlace = placeConflict.GetPlaceConflict();
+                    if (conflictPlace != null)
+                    {
+                        var placeConflictModel = new PlaceConflictFinderModel(placeConflict);
+                        PlaceConflictFinderModels.Add(placeConflictModel);
+                    }
+                }
+            }
+            _eventAggregator.GetEvent<PlaceConflictCollChangedMsg>().Publish(PlaceConflictFinderModels);
+        }
+
+        private void AddClassGroupModel(ClassGroupModel classGroupModel)
+        {
+            if (classGroupModel != null)
+            {
+                var classGroupModelIndex = IsReallyHaveAnotherVersionInChoicedList(classGroupModel);
+                if (classGroupModelIndex != -1)
+                    SelectedClassGroupModels[classGroupModelIndex] = classGroupModel;
+                else
+                    SelectedClassGroupModels.Add(classGroupModel);
+            }
+            UpdateConflicts();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+        }
+
+        private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
+        {
+            foreach (var classGroupModel in classGroupModels)
+            {
+                SelectedClassGroupModels.Add(classGroupModel);
+            }
+            UpdateConflicts();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+        }
+
+        private void UpdateShareString()
+        {
+
+        }
+
+        private void UpdateConflicts()
+        {
+            var schoolClasses = new List<SchoolClassModel>();
+            foreach (var classGroupModel in SelectedClassGroupModels)
+            {
+                if (classGroupModel.IsSpecialClassGroup)
+                {
+                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels);
+                }
+                else
+                {
+                    schoolClasses.AddRange(classGroupModel.CurrentSchoolClassModels);
+                    //schoolClassModels.AddRange(classGroupModel.ClassGroup.SchoolClasses);
+                }
+            }
+            UpdateConflictModelCollection(schoolClasses);
+            UpdatePlaceConflictCollection(schoolClasses);
+        }
+
+        #region Handlers | Xử lý các message được gửi đến
+
+        /// <summary>
+        /// Xử lý Remove Choiced Class Message
+        /// </summary>
+        private void RemoveChoosedClassMsgHandler(string className)
+        {
+            if (className == string.Empty || className == null)
+            {
+                _snackbarMessageQueue.Enqueue("Tên lớp cần bỏ chọn không hợp lệ");
+                return;
+            }
+            ClassGroupModel actionData;
+            for (var i = 0; i < SelectedClassGroupModels.Count; i++)
+            {
+                if (SelectedClassGroupModels[i].Name == className)
+                {
+                    actionData = SelectedClassGroupModels[i].DeepClone();
+                    _eventAggregator.GetEvent<DelClassGroupChoiceMsg>().Publish(SelectedClassGroupModels[i]);
+                    SelectedClassGroupModels.RemoveAt(i);
+                    _snackbarMessageQueue.Enqueue(
+                        $"Đã xoá {className}",
+                        "HOÀN TÁC",
+                        obj => AddClassGroupModel(actionData),
+                        actionData
+                    );
+
+                    SaveCommand.RaiseCanExecuteChanged();
+                    DeleteAllChooseCommand.RaiseCanExecuteChanged();
+                    DeleteChooseCommand.RaiseCanExecuteChanged();
+                    UpdateConflicts();
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Xử lý sự kiện xoá môn học
+        /// </summary>
+        /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
+        private void DelSubjectMsgHandler(SubjectModel subjectModel)
+        {
+            foreach (var classGroupModel in SelectedClassGroupModels)
+            {
+                if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
+                {
+                    SelectedClassGroupModels.Remove(classGroupModel);
+                    break;
+                }
+            }
+            UpdateConflicts();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+        }
+
+        /// <summary>
+        /// Xử lý sự kiện xoá toàn bộ môn học
+        /// </summary>
+        private void DelAllSubjectMsgHandler()
+        {
+            // 1. Reset undo data
+            _undoClassGroupModels.Clear();
+            foreach (var classGroupModel in SelectedClassGroupModels)
+            {
+                _undoClassGroupModels.Add(classGroupModel.DeepClone());
+            }
+
+            // 2. Xoá hết class group model đã chọn
+            SelectedClassGroupModels.Clear();
+            UpdateConflicts();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
+
+            // 3. Xoá bộ lịch
+            _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish();
+        }
+        #endregion
+
         #endregion
     }
 }

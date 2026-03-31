@@ -116,7 +116,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var registerCodes = new List<string>();
             while(currClassGroupNameIdx < classGroupNames.Length)
             {
-                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
+                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name, Description);
                 while(currSchoolClassIdx < hitNodes.Length)
                 {
                     // TODO: Performance issue
