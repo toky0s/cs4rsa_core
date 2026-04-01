@@ -20,6 +20,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <cvt:StringListJoinConverter x:Key="JoinString" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -114,32 +115,55 @@
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
-                                <ListBox ItemsSource="{Binding SubjectModels}" SelectedItem="{Binding SelectedSubjectModel}">
+                                <ListBox
+                                    HorizontalContentAlignment="Stretch"
+                                    ItemsSource="{Binding SubjectModels}"
+                                    SelectedItem="{Binding SelectedSubjectModel}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Border>
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
-                                                    <Border Grid.Row="0">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Ellipse
-                                                                Width="8"
-                                                                Height="8"
-                                                                Margin="0,0,4,0"
-                                                                Fill="{Binding Color}" />
-                                                            <TextBlock FontSize="10" Text="{Binding SubjectCode}" />
-                                                        </StackPanel>
-                                                    </Border>
-                                                    <Border Grid.Row="1">
-                                                        <Grid>
-                                                            <TextBlock Text="{Binding SubjectName}" />
-                                                        </Grid>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Border Grid.Row="0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Ellipse
+                                                                    Width="8"
+                                                                    Height="8"
+                                                                    Margin="0,0,4,0"
+                                                                    Fill="{Binding Color}" />
+                                                                <TextBlock FontSize="10" Text="{Binding SubjectCode}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Grid.Row="1">
+                                                            <Grid>
+                                                                <TextBlock Text="{Binding SubjectName}" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                </Border>
+                                                <Border Grid.Column="1">
+                                                    <Button
+                                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource IconButtonStyle}"
+                                                        ToolTip="Delete">
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            FontFamily="Segoe MDL2 Assets"
+                                                            FontSize="16"
+                                                            Text="" />
+                                                    </Button>
+                                                </Border>
+                                            </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
@@ -233,18 +257,44 @@
             <Border Grid.Row="2">
                 <TabControl>
                     <TabItem Header="Selected classes">
-                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedClassGroupModels}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Subject code" />
-                                <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
-                                <DataGridTextColumn Binding="{Binding ClassGroup.}" Header="Descriptioin" />
-                                <DataGridCheckBoxColumn
-                                    Binding="{Binding IsSpecialClassGroup}"
-                                    Header="Has multiple register code"
-                                    IsReadOnly="True" />
-                                <!--<DataGridCheckBoxColumn Binding="{Binding IsActive}" Header="Active" />-->
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <DataGrid
+                                Grid.Row="0"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False"
+                                ItemsSource="{Binding SelectedClassGroupModels}">
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn />
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Color" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Rectangle Fill="{Binding Color}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Binding="{Binding Name}" Header="Subject code" />
+                                    <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
+                                    <DataGridTextColumn
+                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=','}"
+                                        Header="Register codes"
+                                        IsReadOnly="True" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Border Grid.Row="1">
+                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button Command="{Binding DeleteAllChooseCommand}" Content="Delete all" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Warning" />
                 </TabControl>

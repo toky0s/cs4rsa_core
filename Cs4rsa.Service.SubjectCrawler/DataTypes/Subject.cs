@@ -23,8 +23,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public string StudyUnitType { get; }
         public string StudyType { get; }
         public string Semester { get; }
-        public IEnumerable<string> MustStudySubject { get; }
-        public IEnumerable<string> ParallelSubject { get; }
+        public List<string> MustStudySubject { get; }
+        public List<string> ParallelSubject { get; }
         public string Description { get; }
         public string CourseId { get; }
 
@@ -116,7 +116,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var registerCodes = new List<string>();
             while(currClassGroupNameIdx < classGroupNames.Length)
             {
-                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name, Description);
+                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
                 while(currSchoolClassIdx < hitNodes.Length)
                 {
                     // TODO: Performance issue
@@ -315,20 +315,22 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// Tách mã môn từ một chuỗi.
         /// </summary>
         /// <returns>Mã môn (ví dụ CS 414)</returns>
-        private static IEnumerable<string> SubjectSplit(string text)
+        private static List<string> SubjectSplit(string text)
         {
+            var result = new List<string>();
             if (text.Equals("(Không có Môn học Tiên quyết)") ||
                 text.Equals("(Không có Môn học Song hành)", StringComparison.Ordinal))
             {
-                yield break;
+                return result;
             }
 
             var regex = new Regex(@"(?<=\()(.*?)(?=\))");
             var matchSubject = regex.Matches(text);
             for (var i = 0; i < matchSubject.Count; ++i)
             {
-                yield return matchSubject[i].Value;
+                result.Add(matchSubject[i].Value);
             }
+            return result;
         }
     }
 }

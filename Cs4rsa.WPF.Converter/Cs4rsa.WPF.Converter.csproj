@@ -60,6 +60,7 @@
     <Compile Include="BooleanToVisibility.cs" />
     <Compile Include="PlaceCvt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringListJoinConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">

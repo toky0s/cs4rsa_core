@@ -13,7 +13,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         public readonly string Name;
         public readonly string SubjectCode;
-        public readonly string Description;
         public string SubjectName { get; }
         public List<string> RegisterCodes
         {
@@ -36,7 +35,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             }
         }
 
-        public ClassGroup(string name, string subjectCode, string subjectName, string description)
+        public ClassGroup(string name, string subjectCode, string subjectName)
         {
             _schoolClasses = new List<SchoolClass>();
             _registerCodes = new List<string>();
@@ -44,8 +43,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             Name = name;
             SubjectCode = subjectCode;
             SubjectName = subjectName;
-            // axin - 31 Mar 2026 - Thêm description phân bổ cho tất cả các class group.
-            Description = description;
         }
 
         public void AddRangeSchoolClass(IEnumerable<SchoolClass> schoolClasses)

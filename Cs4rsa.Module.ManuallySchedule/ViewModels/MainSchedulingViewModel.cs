@@ -1318,16 +1318,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         //private readonly ShareString _shareStringGenerator;
         #endregion
 
-        private void InitChooseViewModel(
-            //ISnackbarMessageQueue snackbarMessageQueue,
-            //IUnitOfWork unitOfWork,
-            //IEventAggregator eventAggregator,
-            //IDialogService dialogService,
-            //ShareString shareString
-        )
+        private void InitChooseViewModel()
         {
-            //_shareStringGenerator = shareString;
-
             #region Messengers
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
             {
