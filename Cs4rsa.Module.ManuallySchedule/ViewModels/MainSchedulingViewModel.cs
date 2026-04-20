@@ -11,15 +11,18 @@ using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Conflict.DataTypes;
+using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Models;
+using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.ScheduleTable.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
-
+using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -162,6 +165,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly IDialogService _dialogService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly ILogger<MainSchedulingViewModel> _logger;
         #endregion
 
         public MainSchedulingViewModel(
@@ -170,7 +174,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
             IDialogService dialogService,
-            ISnackbarMessageQueue snackbarMessageQueue
+            ISnackbarMessageQueue snackbarMessageQueue,
+            ILogger<MainSchedulingViewModel> logger
         )
         {
             #region Services
@@ -180,6 +185,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _snackbarMessageQueue = snackbarMessageQueue;
             _dialogService = dialogService;
             _eventAggregator = eventAggregator;
+            _logger = logger;
             #endregion
 
             #region Messengers
@@ -258,6 +264,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             InitClgViewModel();
             InitChooseViewModel();
+            InitSchedulerViewModel();
         }
 
         private void ExecuteGotoCourseCommand(SubjectModel model)
@@ -391,6 +398,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnDeleteAll()
         {
+            _logger.LogInformation("User click on Delete All button");
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Publish();
 
             var subjects = new List<SubjectModel>();
@@ -409,6 +417,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //{
             //    classGroupModels.Add(classGroupModel.DeepClone());
             //}
+            SelectedClassGroup = null;
             var actionData = new Tuple<List<SubjectModel>, List<ClassGroupModel>>(subjects, classGroupModels);
             _snackbarMessageQueue.Enqueue("Đã xoá hết", "HOÀN TÁC", AddSubjectWithCgm, actionData);
         }
@@ -990,11 +999,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 if (value.IsBelongSpecialSubject)
                 {
+                    // TODO: Haven't test yet, need to test before publish.
                     OnShowDetailsSchoolClasses();
                 }
                 else
                 {
                     _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(value);
+                    _eventAggregator.GetEvent<ChoosedVmMsgs.ClassGroupAddedMsg>().Publish(value);
+                    AddClassGroupModel(value);
+                    RemoveScheduleItem(value.SubjectCode);
+                    AddClassGroup(value);
+                    _logger.LogInformation("Add block to schedule with class group {classGroupName}", value.Name);
                 }
             }
         }
@@ -1314,10 +1329,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand SolveConflictCommand { get; set; }
         #endregion
 
-        #region DI
-        //private readonly ShareString _shareStringGenerator;
-        #endregion
-
         private void InitChooseViewModel()
         {
             #region Messengers
@@ -1327,13 +1338,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             });
 
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
-
-            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
-            {
-                _eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
-                AddClassGroupModel(payload);
-            });
-
             _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
                 Application.Current.Dispatcher.InvokeAsync(() =>
@@ -1730,6 +1734,308 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
+        #endregion
+
+        #region Scheduler View Model
+        private bool isSummerSemester;
+        public bool IsSummerSemester
+        {
+            get { return isSummerSemester; }
+            set { SetProperty(ref isSummerSemester, value); }
+        }
+
+        private List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
+
+        #region Properties
+        public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Wednesday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Thursday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Friday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Saturday { get; set; }
+        public ObservableCollection<TimeBlock> Phase1_Sunday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Monday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Tuesday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Wednesday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Thursday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Friday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Saturday { get; set; }
+        public ObservableCollection<TimeBlock> Phase2_Sunday { get; set; }
+
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week1 { get; set; }
+        public ObservableCollection<ObservableCollection<TimeBlock>> Week2 { get; set; }
+
+        public ObservableCollection<string> Timelines { get; set; }
+
+        #endregion
+
+        public void InitSchedulerViewModel()
+        {
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
+            {
+                foreach (var c in payload)
+                {
+                    RemoveScheduleItem(c.SubjectCode);
+                    AddClassGroup(c);
+                }
+            });
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(CleanDays);
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
+            {
+                RemoveScheduleItem(payload.SubjectCode);
+                AddClassGroup(payload);
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelAllMsg>().Subscribe(payload =>
+            {
+                var classGroupModels = payload.Item1;
+                var conflictModels = payload.Item2;
+                var placeConflicts = payload.Item3;
+
+                foreach (var cgm in classGroupModels)
+                {
+                    AddClassGroup(cgm);
+                }
+                foreach (var conflictModel in conflictModels)
+                {
+                    AddScheduleItem(conflictModel);
+                }
+                foreach (var placeConflict in placeConflicts)
+                {
+                    AddScheduleItem(placeConflict);
+                }
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.ConflictCollChangedMsg>().Subscribe(payload =>
+            {
+                var conflictIds = payload.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Time);
+                AddNewConflicts(payload);
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.PlaceConflictCollChangedMsg>().Subscribe(payload =>
+            {
+                var conflictIds = payload.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Place);
+                AddNewConflicts(payload);
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(payload =>
+            {
+                foreach (var scm in payload.CurrentSchoolClassModels)
+                {
+                    RemoveScheduleItem(scm.SubjectCode);
+                }
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddClassGroup);
+
+            IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
+
+            #region Weeks and Timelines
+            Phase1_Monday = new ObservableCollection<TimeBlock>();
+            Phase1_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase1_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase1_Thursday = new ObservableCollection<TimeBlock>();
+            Phase1_Friday = new ObservableCollection<TimeBlock>();
+            Phase1_Saturday = new ObservableCollection<TimeBlock>();
+            Phase1_Sunday = new ObservableCollection<TimeBlock>();
+
+            Phase2_Monday = new ObservableCollection<TimeBlock>();
+            Phase2_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase2_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase2_Thursday = new ObservableCollection<TimeBlock>();
+            Phase2_Friday = new ObservableCollection<TimeBlock>();
+            Phase2_Saturday = new ObservableCollection<TimeBlock>();
+            Phase2_Sunday = new ObservableCollection<TimeBlock>();
+
+            Week1 = new ObservableCollection<ObservableCollection<TimeBlock>>()
+            {
+                Phase1_Monday,
+                Phase1_Tuesday,
+                Phase1_Wednesday,
+                Phase1_Thursday,
+                Phase1_Friday,
+                Phase1_Saturday,
+                Phase1_Sunday
+            };
+
+            Week2 = new ObservableCollection<ObservableCollection<TimeBlock>>()
+            {
+                Phase2_Monday,
+                Phase2_Tuesday,
+                Phase2_Wednesday,
+                Phase2_Thursday,
+                Phase2_Friday,
+                Phase2_Saturday,
+                Phase2_Sunday
+            };
+
+            _schedules = new List<ObservableCollection<ObservableCollection<TimeBlock>>>() { Week1, Week2 };
+
+            Timelines = new ObservableCollection<string>();
+            foreach (var timeline in Cs4rsa.UI.ScheduleTable.Utils.Utils.TimeLines)
+            {
+                Timelines.Add(timeline);
+            }
+            #endregion
+        }
+
+        private void AddNewConflicts(IEnumerable<IScheduleTableItem> scheduleTableItems)
+        {
+            scheduleTableItems = scheduleTableItems.Where(sti => !Exists(sti));
+            foreach (var sti in scheduleTableItems)
+            {
+                AddScheduleItem(sti);
+            }
+        }
+
+        private bool Exists(IScheduleTableItem item)
+        {
+            foreach (var week in _schedules)
+            {
+                foreach (var day in week)
+                {
+                    foreach (var timeBlock in day)
+                    {
+                        if (timeBlock.Id == item.GetId()) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Loại bỏ ScheduleItem khỏi mô phỏng.
+        /// 
+        /// </summary>
+        /// <param name="id">
+        /// ID với SchoolClassModel sẽ là Subject Code của nó.
+        /// ID của các Conflict sẽ là sự kết hợp giữa hai tên SchoolClassModel.
+        /// </param>
+        private void RemoveScheduleItem(string id)
+        {
+            foreach (var week in _schedules)
+            {
+                foreach (var day in week)
+                {
+                    var currentIndex = 0;
+                    while (currentIndex < day.Count)
+                    {
+                        if (id == day[currentIndex].Id)
+                        {
+                            day.RemoveAt(currentIndex);
+                            continue;
+                        }
+                        currentIndex++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thay thế ClassGroupModel cũ trong bộ mô phỏng (nếu có)
+        /// bằng ClassGroupModel mới được thêm.
+        /// </summary>
+        /// <param name="classGroupModel">ClassGroupModel</param>
+        private void AddClassGroup(ClassGroupModel classGroupModel)
+        {
+            IEnumerable<SchoolClassModel> schoolClassModels;
+            if (classGroupModel.IsSpecialClassGroup)
+            {
+                schoolClassModels = classGroupModel.CurrentSchoolClassModels;
+            }
+            else
+            {
+                schoolClassModels = classGroupModel.NormalSchoolClassModels;
+            }
+
+            foreach (var schoolClassModel in schoolClassModels)
+            {
+                AddScheduleItem(schoolClassModel);
+            }
+        }
+
+        /// <summary>
+        /// IMPORTANT!!!
+        /// 
+        /// Vẽ một <see cref="IScheduleTableItem"/> lên mô phỏng.
+        /// </summary>
+        /// <param name="scheduleItem">IScheduleTableItem</param>
+        private void AddScheduleItem(IScheduleTableItem scheduleItem)
+        {
+            var timeBlocks = scheduleItem.GetBlocks();
+            var phase = scheduleItem.GetPhase();
+            foreach (var timeBlock in timeBlocks)
+            {
+                var dayIndex = timeBlock.DayOfWeek.ToIndex();
+                if (phase == Phase.First || phase == Phase.Second)
+                {
+                    var week = phase == Phase.First ? Week1 : Week2;
+                    week[dayIndex].Add(timeBlock);
+                }
+                else if (phase == Phase.All)
+                {
+                    Week1[dayIndex].Add(timeBlock);
+                    Week2[dayIndex].Add(timeBlock);
+                }
+                // Phase.Summer
+                else
+                {
+                    Week2[dayIndex].Add(timeBlock);
+                }
+            }
+        }
+
+        private void CleanDays()
+        {
+            Phase1_Monday.Clear();
+            Phase1_Tuesday.Clear();
+            Phase1_Wednesday.Clear();
+            Phase1_Thursday.Clear();
+            Phase1_Friday.Clear();
+            Phase1_Saturday.Clear();
+            Phase1_Sunday.Clear();
+
+            Phase2_Monday.Clear();
+            Phase2_Tuesday.Clear();
+            Phase2_Wednesday.Clear();
+            Phase2_Thursday.Clear();
+            Phase2_Friday.Clear();
+            Phase2_Saturday.Clear();
+            Phase2_Sunday.Clear();
+        }
+
+        private void RemoveConflictNotInContains(IEnumerable<string> conflictIds, ConflictType conflictType)
+        {
+            foreach (var week in _schedules)
+            {
+                foreach (var day in week)
+                {
+                    var currentIndex = 0;
+                    while (currentIndex < day.Count)
+                    {
+                        if (!conflictIds.Contains(day[currentIndex].Id)
+                            && (day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.TimeConflict
+                            || day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.PlaceConflict)
+                            && day[currentIndex].Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc"))
+                        {
+                            day.RemoveAt(currentIndex);
+                            continue;
+                        }
+                        currentIndex++;
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

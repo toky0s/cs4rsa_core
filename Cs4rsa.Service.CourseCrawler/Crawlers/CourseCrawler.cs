@@ -2,6 +2,7 @@
 using System.Linq;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 namespace Cs4rsa.Service.CourseCrawler.Crawlers
 {
@@ -11,12 +12,18 @@ namespace Cs4rsa.Service.CourseCrawler.Crawlers
     public class CourseCrawler : ICourseCrawler
     {
         private readonly ISemesterHtmlGetter _semesterHtmlGetter;
+        private readonly ILogger<CourseCrawler> _logger;
         private static bool _getYearAtFirst;
 
-        public CourseCrawler(ISemesterHtmlGetter semesterHtmlGetter)
+        public CourseCrawler(
+            ISemesterHtmlGetter semesterHtmlGetter,
+            ILogger<CourseCrawler> logger
+        )
         {
+            _logger = logger;
             _semesterHtmlGetter = semesterHtmlGetter;
             _getYearAtFirst = false;
+            _logger.LogInformation("CourseCrawler initialized.");
         }
 
         /// <summary>
@@ -40,9 +47,7 @@ namespace Cs4rsa.Service.CourseCrawler.Crawlers
             semesterInfo = GetCurrentInfo(document, false);
         }
 
-        private static string GetCurrentValue(
-            HtmlDocument document
-            , bool getYear)
+        private static string GetCurrentValue(HtmlDocument document, bool getYear)
         {
             var optionElements = document
                 .DocumentNode
@@ -56,10 +61,9 @@ namespace Cs4rsa.Service.CourseCrawler.Crawlers
             return optionElements.Last().Attributes["value"].Value;
         }
 
-        private static string GetCurrentInfo(
-            HtmlDocument document
-            , bool getYear)
+        private string GetCurrentInfo(HtmlDocument document, bool getYear)
         {
+            _logger.LogInformation("Getting current info for {InfoType}", getYear ? "year" : "semester");
             var optionElements = document
                 .DocumentNode
                 .Descendants()

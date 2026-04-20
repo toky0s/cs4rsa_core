@@ -125,11 +125,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddClassGroup);
 
-            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
-            //{
-            //    CleanDays();
-            //});
-
             IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
 
             #region Weeks and Timelines
@@ -140,6 +135,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             Phase1_Friday = new ObservableCollection<TimeBlock>();
             Phase1_Saturday = new ObservableCollection<TimeBlock>();
             Phase1_Sunday = new ObservableCollection<TimeBlock>();
+
             Phase2_Monday = new ObservableCollection<TimeBlock>();
             Phase2_Tuesday = new ObservableCollection<TimeBlock>();
             Phase2_Wednesday = new ObservableCollection<TimeBlock>();

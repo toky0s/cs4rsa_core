@@ -238,11 +238,17 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Expander Grid.Row="0" Header="Học kỳ 1">
-                                    <schedule:ScheduleView />
+                                <Expander
+                                    Grid.Row="0"
+                                    Header="Học kỳ 1"
+                                    IsExpanded="True">
+                                    <schedule:ScheduleView Week="{Binding Week1}" />
                                 </Expander>
-                                <Expander Grid.Row="1" Header="Học kỳ 2">
-                                    <schedule:ScheduleView />
+                                <Expander
+                                    Grid.Row="1"
+                                    Header="Học kỳ 2"
+                                    IsExpanded="True">
+                                    <schedule:ScheduleView Week="{Binding Week2}" />
                                 </Expander>
                             </Grid>
                         </ScrollViewer>
@@ -284,14 +290,18 @@
                                     <DataGridTextColumn Binding="{Binding Name}" Header="Subject code" />
                                     <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
                                     <DataGridTextColumn
-                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=','}"
+                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-'}"
                                         Header="Register codes"
                                         IsReadOnly="True" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Border Grid.Row="1">
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <StackPanel
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
                                     <Button Command="{Binding DeleteAllChooseCommand}" Content="Delete all" />
+                                    <Button Command="{Binding SaveCommand}" Content="Save" />
                                 </StackPanel>
                             </Border>
                         </Grid>

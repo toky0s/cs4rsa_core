@@ -12,13 +12,6 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
     /// </summary>
     public partial class ScheduleView : UserControl
     {
-        private const string GlyphScrollDown = "\u25BC";
-        private const string GlyphScrollUp = "\u25B2";
-
-        private bool _isNavigateByClick;
-        private bool _scrollDownIntent = true;
-        private double _previousVerticalOffset;
-
         public ScheduleView()
         {
             InitializeComponent();

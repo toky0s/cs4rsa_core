@@ -18,14 +18,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToolTip">
-                        <md:Card
+                        <Border
                             Name="Border"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}"
-                            BorderThickness="1"
-                            Style="{StaticResource MaterialDesignOutlinedCard}">
+                            Background="White"
+                            BorderBrush="Black"
+                            BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </md:Card>
+                        </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="HasDropShadow" Value="true">
                                 <Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true" />
@@ -53,10 +54,7 @@
                                 Grid.Row="0"
                                 Margin="0,0,0,20"
                                 Text="{Binding Phase, Converter={StaticResource PhaseCvt}}" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                                TextWrapping="WrapWithOverflow">
+                            <TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0}:  {1}">
                                         <Binding Path="SchoolClassUnit.ClassName" />
@@ -64,7 +62,7 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <TextBlock Grid.Row="2" Style="{StaticResource MaterialDesignCaptionTextBlock}">
+                            <TextBlock Grid.Row="2">
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0} {1:HH:mm} đến {2:HH:mm} ">
                                         <Binding Converter="{StaticResource DayCvt}" Path="DayOfWeek" />

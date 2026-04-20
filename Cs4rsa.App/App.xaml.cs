@@ -5,7 +5,7 @@ using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule;
-using Cs4rsa.Module.ManuallySchedule.ViewModels;
+
 using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
 using Cs4rsa.Service.Dialog;
@@ -17,7 +17,7 @@ using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using DryIoc;
 
 using MaterialDesignThemes.Wpf;
-
+using Microsoft.Extensions.Logging;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -30,6 +30,8 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Cs4rsa.App
 {
@@ -47,7 +49,6 @@ namespace Cs4rsa.App
                                                         .With(Made.Of(FactoryMethod.ConstructorWithResolvableArguments))
                                                         .WithFuncAndLazyWithoutRegistration()
                                                         .WithTrackingDisposableTransients()
-                                                        //.WithoutFastExpressionCompiler()
                                                         .WithFactorySelector(Rules.SelectLastRegisteredFactory());
 
         protected override Rules CreateContainerRules()
@@ -87,6 +88,29 @@ namespace Cs4rsa.App
         {
             string cnnStr = ConfigurationManager.AppSettings["cnnStr"];
             containerRegistry.Register<RawSql>(provider => new RawSql(cnnStr));
+
+            // Register logging
+            const string LogFolderPath = "logs";
+            if (!Directory.Exists(LogFolderPath))
+            {
+                Directory.CreateDirectory(LogFolderPath);
+            }
+            var logFileName = $"{LogFolderPath}/log-{DateTime.Now:yyyyMMdd-HHmmss}.txt";
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File(logFileName)
+                .CreateLogger();
+
+            // Hook vào Microsoft ILogger
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddSerilog();
+            });
+
+            containerRegistry.RegisterInstance<ILoggerFactory>(loggerFactory);
+            containerRegistry.Register(typeof(ILogger<>), typeof(Logger<>));
 
             containerRegistry.RegisterSingleton<ISemesterHtmlGetter, SemesterHtmlGetter>();
             containerRegistry.RegisterSingleton<IDisciplineHtmlGetter, DisciplineHtmlGetter>();
