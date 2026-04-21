@@ -11,8 +11,9 @@ namespace Cs4rsa.WPF.Converter
         // Convert: nối list chuỗi thành một chuỗi duy nhất
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is IEnumerable<string> list))
-                return string.Empty;
+            IEnumerable<string> list = value as IEnumerable<string>;
+            if (list == null || !list.Any())
+                return null;
 
             // Nếu có tham số, dùng làm separator, mặc định là ", "
             string separator = parameter as string ?? ", ";

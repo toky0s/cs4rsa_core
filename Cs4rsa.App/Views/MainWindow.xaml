@@ -15,7 +15,7 @@
     TextElement.FontWeight="Regular"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
-    WindowStartupLocation="CenterOwner"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <DockPanel>
         <!--  Toolbar đặt ở trên cùng  -->
@@ -48,14 +48,9 @@
                 VerticalAlignment="Stretch" />
             <Border Grid.Column="2">
                 <TabControl>
-                    <TabItem Header="Notifications">
-                        
-                    </TabItem>
+                    <TabItem Header="Notifications" />
                 </TabControl>
             </Border>
         </Grid>
-
-
     </DockPanel>
-
 </Window>

@@ -121,6 +121,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _selectedSubjectModel; }
             set
             {
+                if (value == null)
+                {
+                    SetProperty(ref _selectedSubjectModel, null);
+                    return;
+                }
+
                 if (value != null && !value.IsDownloading && !value.IsError)
                 {
                     SetProperty(ref _selectedSubjectModel, value);
@@ -531,6 +537,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var subjectModels = new List<SubjectModel>() { subjectModel };
             var actionData = new Tuple<List<SubjectModel>, List<ClassGroupModel>>(subjectModels, classGroupModels);
             SubjectModels.Remove(sm);
+            SelectedSubjectModel = null;
             _snackbarMessageQueue.Enqueue($"Đã xoá môn {sm.SubjectName}", "HOÀN TÁC", AddSubjectWithCgm, actionData);
             AddCommand.RaiseCanExecuteChanged();
         }

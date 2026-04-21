@@ -13,12 +13,15 @@
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
+    Name="root"
     d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
+
         <ResourceDictionary>
+            <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
             <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
             <cvt:StringListJoinConverter x:Key="JoinString" />
             <ResourceDictionary.MergedDictionaries>
@@ -26,7 +29,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
 
     <Grid>
         <Grid.RowDefinitions>
@@ -119,9 +121,43 @@
                                     HorizontalContentAlignment="Stretch"
                                     ItemsSource="{Binding SubjectModels}"
                                     SelectedItem="{Binding SelectedSubjectModel}">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                        <ContextMenu.Style>
+                                                            <Style TargetType="ContextMenu">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding IsDownloading}" Value="False" />
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </MultiDataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ContextMenu.Style>
+                                                        <MenuItem
+                                                            Command="{Binding Data.GotoCourseCommand, Source={StaticResource Proxy}}"
+                                                            CommandParameter="{Binding}"
+                                                            Header="Open link" />
+                                                        <MenuItem Command="{Binding EditCommand}" Header="Copy error" />
+                                                        <MenuItem
+                                                            Command="{Binding Data.DeleteCommand, Source={StaticResource Proxy}}"
+                                                            CommandParameter="{Binding}"
+                                                            Header="Delete" />
+                                                        <MenuItem Command="{Binding DataContext.DetailsCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Header="Details" />
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
+
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
@@ -181,7 +217,17 @@
                 VerticalAlignment="Center"
                 Background="White" />
             <TabControl Grid.Row="2">
-                <TabItem Visibility="{Binding SelectedSubjectModel, Converter={StaticResource BoolToVis}}">
+                <TabItem>
+                    <TabItem.Style>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedSubjectModel}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TabItem.Style>
                     <TabItem.Header>
                         <Border>
                             <StackPanel Orientation="Horizontal">
@@ -264,7 +310,6 @@
                 <TabControl>
                     <TabItem Header="Selected classes">
                         <Grid>
-
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
@@ -286,11 +331,10 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-
                                     <DataGridTextColumn Binding="{Binding Name}" Header="Subject code" />
                                     <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
                                     <DataGridTextColumn
-                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-'}"
+                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-', TargetNullValue='-'}"
                                         Header="Register codes"
                                         IsReadOnly="True" />
                                 </DataGrid.Columns>
