@@ -31,7 +31,6 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using Serilog;
-using Microsoft.Extensions.Logging;
 
 namespace Cs4rsa.App
 {

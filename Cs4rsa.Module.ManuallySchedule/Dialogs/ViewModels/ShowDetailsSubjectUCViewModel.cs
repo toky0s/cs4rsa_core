@@ -1,10 +1,9 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Models;
-
-using Prism.Mvvm;
+using Cs4rsa.Service.Dialog;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public class ShowDetailsSubjectUCViewModel : BindableBase
+    public class ShowDetailsSubjectUCViewModel : DialogViewModelBase
     {
         private SubjectModel _subjectModel;
         public SubjectModel SubjectModel
@@ -13,7 +12,15 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             set { SetProperty(ref _subjectModel, value); }
         }
 
-        public ShowDetailsSubjectUCViewModel()
+        private string _url;
+
+        public string Url
+        {
+            get { return _url; }
+            set { SetProperty(ref _url, value); }
+        }
+
+        public ShowDetailsSubjectUCViewModel() : base("Show Subject Details")
         {
 
         }

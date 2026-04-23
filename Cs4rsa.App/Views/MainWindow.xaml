@@ -1,4 +1,4 @@
-﻿<Window
+﻿<views:MainWindowBase
     x:Class="Cs4rsa.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:Cs4rsa.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:views="clr-namespace:Cs4rsa.App.Views"
     Title="Xếp lịch"
     Width="1200"
     Height="741.641"
@@ -53,4 +54,4 @@
             </Border>
         </Grid>
     </DockPanel>
-</Window>
+</views:MainWindowBase>

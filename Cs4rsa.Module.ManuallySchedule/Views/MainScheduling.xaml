@@ -123,6 +123,11 @@
                                     SelectedItem="{Binding SelectedSubjectModel}">
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDownloading}" Value="True">
+                                                    <Setter Property="Cursor" Value="Wait" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
@@ -148,7 +153,10 @@
                                                             Command="{Binding Data.DeleteCommand, Source={StaticResource Proxy}}"
                                                             CommandParameter="{Binding}"
                                                             Header="Delete" />
-                                                        <MenuItem Command="{Binding DataContext.DetailsCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" Header="Details" />
+                                                        <MenuItem
+                                                            Command="{Binding Data.DetailCommand, Source={StaticResource Proxy}}"
+                                                            CommandParameter="{Binding}"
+                                                            Header="Details" />
                                                     </ContextMenu>
                                                 </Setter.Value>
                                             </Setter>
@@ -157,7 +165,6 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
-
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
@@ -185,20 +192,20 @@
                                                         </Border>
                                                     </Grid>
                                                 </Border>
-                                                <Border Grid.Column="1">
-                                                    <Button
-                                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                                        CommandParameter="{Binding}"
-                                                        Style="{StaticResource IconButtonStyle}"
-                                                        ToolTip="Delete">
-                                                        <TextBlock
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            FontFamily="Segoe MDL2 Assets"
-                                                            FontSize="16"
-                                                            Text="" />
-                                                    </Button>
-                                                </Border>
+                                                <Button
+                                                    Grid.Column="1"
+                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource IconButtonStyle}"
+                                                    ToolTip="Delete"
+                                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontSize="16"
+                                                        Text="" />
+                                                </Button>
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>

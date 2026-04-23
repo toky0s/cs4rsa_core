@@ -27,12 +27,13 @@ namespace Cs4rsa.App.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MainWindowBase
     {
-        public MainWindow(IRegionManager regionManager)
+        public MainWindow(IRegionManager regionManager, IEventAggregator eventAggregator)
+            : base(eventAggregator)
         {
-            InitializeComponent();
 
+            InitializeComponent();
             regionManager.RegisterViewWithRegion(RegionInfo.TopMenu, typeof(TopMenu));
             regionManager.RegisterViewWithRegion(RegionInfo.Home, typeof(Home));
         }

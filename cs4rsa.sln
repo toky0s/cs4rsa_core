@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2BB9055-57B8-4383-B9A7-C1F0A15696D2}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,7 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Module.Shared", "Cs4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.UI.Helper", "Cs4rsa.UI.Helper\Cs4rsa.UI.Helper.csproj", "{B835EDAF-A21E-427D-BC57-C42851CC9320}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.Notification", "Cs4rsa.Service.Notification\Cs4rsa.Service.Notification.csproj", "{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cs4rsa.Service.Notification", "Cs4rsa.Service.Notification\Cs4rsa.Service.Notification.csproj", "{92885A21-A852-4BFF-8A01-03DA6DE26949}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -465,26 +465,26 @@ Global
 		{B835EDAF-A21E-427D-BC57-C42851CC9320}.Release|x64.Build.0 = Release|Any CPU
 		{B835EDAF-A21E-427D-BC57-C42851CC9320}.Release|x86.ActiveCfg = Release|Any CPU
 		{B835EDAF-A21E-427D-BC57-C42851CC9320}.Release|x86.Build.0 = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|ARM.Build.0 = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|x64.Build.0 = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Debug|x86.Build.0 = Debug|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|ARM.ActiveCfg = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|ARM.Build.0 = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|ARM64.Build.0 = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|x64.ActiveCfg = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|x64.Build.0 = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|x86.ActiveCfg = Release|Any CPU
-		{CB92E7A1-B550-4B27-BDF0-29229B2DA5F2}.Release|x86.Build.0 = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|ARM.Build.0 = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|x64.Build.0 = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Debug|x86.Build.0 = Debug|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|ARM.ActiveCfg = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|ARM.Build.0 = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|ARM64.Build.0 = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|x64.ActiveCfg = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|x64.Build.0 = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|x86.ActiveCfg = Release|Any CPU
+		{92885A21-A852-4BFF-8A01-03DA6DE26949}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

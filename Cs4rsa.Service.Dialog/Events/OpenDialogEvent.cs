@@ -16,4 +16,8 @@ namespace Cs4rsa.Service.Dialog.Events
     public class OpenDialogEvent: PubSubEvent<Tuple<UserControl, bool>>
     {
     }
+
+    public class OpenDialogEvent_v2: PubSubEvent<UserControl>
+    {
+    }
 }

@@ -191,7 +191,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             {
                 return string.Join(", ", Subject.MustStudySubject);
             }
-            return "Không có môn tiên quyết";
+            return "Không có Môn học Tiên quyết";
         }
 
         public string GetParallelSubjects()
@@ -200,7 +200,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             {
                 return string.Join(", ", Subject.ParallelSubject);
             }
-            return "Không có môn song hành";
+            return "Không có Môn học Song hành";
         }
     }
 

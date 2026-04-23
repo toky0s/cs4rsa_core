@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DialogService.cs" />
+    <Compile Include="DialogViewModelBase.cs" />
     <Compile Include="Events\CloseDialogEvent.cs" />
     <Compile Include="Events\OpenDialogEvent.cs" />
     <Compile Include="Interfaces\IDialog.cs" />

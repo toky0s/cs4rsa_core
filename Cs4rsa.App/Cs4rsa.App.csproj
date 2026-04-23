@@ -204,6 +204,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.2\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -212,6 +215,7 @@
     </ApplicationDefinition>
     <Compile Include="Events\TopMenuEvents\ScreenChangedEvent.cs" />
     <Compile Include="ViewModels\TopMenuViewModel.cs" />
+    <Compile Include="Views\MainWindowBase.cs" />
     <Compile Include="Views\TopMenu.xaml.cs">
       <DependentUpon>TopMenu.xaml</DependentUpon>
     </Compile>

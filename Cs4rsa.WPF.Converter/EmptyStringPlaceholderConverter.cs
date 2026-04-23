@@ -14,6 +14,7 @@ namespace Cs4rsa.WPF.Converter
         {
             if (string.IsNullOrWhiteSpace((string)value))
             {
+                if (parameter is null) return string.Empty;
                 return (string)parameter;
             }
             return value;

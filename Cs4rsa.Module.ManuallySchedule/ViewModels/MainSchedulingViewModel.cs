@@ -51,13 +51,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Commands
+        
+        #region Context menu commands when user right-click on Subject in search box
+        public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
+        public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
+        public DelegateCommand<SubjectModel> DetailCommand { get; set; }
+        public DelegateCommand<SubjectModel> CopyErrorCommand { get; set; }
+
+        #endregion
+
         public DelegateCommand AddCommand { get; set; }
         public DelegateCommand ImportDialogCommand { get; set; }
         public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
-        public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
-        public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
         public DelegateCommand DeleteAllCommand { get; set; }
-        public DelegateCommand<SubjectModel> DetailCommand { get; set; }
         #endregion
 
         #region Properties
@@ -258,9 +264,21 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
             {
-                var showDetailsSubjectUc = new ShowDetailsSubjectUC();
-                ((ShowDetailsSubjectUCViewModel)showDetailsSubjectUc.DataContext).SubjectModel = subjectModel;
-                _dialogService.OpenDialog(showDetailsSubjectUc);
+                ShowDetailsSubjectUC showDetailsSubjectUc = new ShowDetailsSubjectUC();
+                ShowDetailsSubjectUCViewModel vm = (ShowDetailsSubjectUCViewModel)showDetailsSubjectUc.DataContext;
+                vm.SubjectModel = subjectModel;
+                string semesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
+                string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={subjectModel.CourseId}&timespan={semesterValue}&t=s";
+                vm.Url = url;
+                _dialogService.OpenDialog(showDetailsSubjectUc, vm);
+            });
+            CopyErrorCommand = new DelegateCommand<SubjectModel>(subjectModel =>
+            {
+                if (subjectModel.IsError)
+                {
+                    Clipboard.SetText(subjectModel.ErrorMessage);
+                    _snackbarMessageQueue.Enqueue("Đã sao chép lỗi vào clipboard");
+                }
             });
             ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
             #endregion

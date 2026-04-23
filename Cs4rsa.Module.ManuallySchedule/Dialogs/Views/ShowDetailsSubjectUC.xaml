@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;assembly=Cs4rsa.Module.ManuallySchedule"
     x:Name="DetailsSubjectUC"
     MaxWidth="500"
     Padding="10"
+    d:DataContext="{d:DesignInstance Type=vm:ShowDetailsSubjectUCViewModel,
+                                     IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -29,24 +31,24 @@
             Grid.ColumnSpan="2"
             Margin="0,0,0,10"
             Orientation="Vertical">
-            <TextBlock
-                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                Text="Thông tin môn học"
-                TextAlignment="Left" />
+            <TextBlock Text="Thông tin môn học" TextAlignment="Left" />
 
             <!--  Tên môn học  -->
-            <TextBlock
-                FontWeight="Bold"
-                Foreground="#587f0e"
-                Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0}:  {1}">
-                        <Binding Path="SubjectModel.SubjectCode" />
-                        <Binding Path="SubjectModel.SubjectName" />
-                    </MultiBinding>
-                </TextBlock.Text>
+            <TextBlock>
+                <Hyperlink
+                    FontWeight="Bold"
+                    NavigateUri="{Binding Url}"
+                    RequestNavigate="Hyperlink_RequestNavigate">
+                    <Run>
+                        <Run.Text>
+                            <MultiBinding StringFormat="{}{0}: {1}">
+                                <Binding Path="SubjectModel.SubjectCode" />
+                                <Binding Path="SubjectModel.SubjectName" />
+                            </MultiBinding>
+                        </Run.Text>
+                    </Run>
+                </Hyperlink>
             </TextBlock>
-
         </StackPanel>
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -104,7 +106,7 @@
             <TextBlock
                 Grid.Row="7"
                 Grid.Column="1"
-                Text="{Binding SubjectModel.Desciption, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=Không có giá trị}"
+                Text="{Binding SubjectModel.Desciption, Converter={StaticResource EmptyStringPlaceholderConverter}, ConverterParameter=-}"
                 TextAlignment="Justify"
                 TextWrapping="WrapWithOverflow" />
         </Grid>
