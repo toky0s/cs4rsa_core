@@ -20,6 +20,7 @@ namespace Cs4rsa.Service.CourseCrawler.Crawlers
             ILogger<CourseCrawler> logger
         )
         {
+            Console.WriteLine(typeof(HtmlDocument).Assembly.Location);
             _logger = logger;
             _semesterHtmlGetter = semesterHtmlGetter;
             _getYearAtFirst = false;

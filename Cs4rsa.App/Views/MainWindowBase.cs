@@ -14,6 +14,8 @@ namespace Cs4rsa.App.Views
 {
     public abstract class MainWindowBase : Window
     {
+
+
         private readonly IEventAggregator _eventAggregator;
         protected MainWindowBase(IEventAggregator eventAggregator)
         {

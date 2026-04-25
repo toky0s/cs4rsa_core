@@ -157,6 +157,7 @@
     <Compile Include="ViewModels\ClgViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleBagViewModel.cs" />
+    <Compile Include="ViewModels\NotificationItemViewModel.cs" />
     <Compile Include="ViewModels\SchedulerViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ViewAViewModel.cs" />
@@ -276,6 +277,10 @@
     <ProjectReference Include="..\Cs4rsa.Service.Dialog\Cs4rsa.Service.Dialog.csproj">
       <Project>{538dfb38-a978-441d-9351-7bd5535be39f}</Project>
       <Name>Cs4rsa.Service.Dialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Notification\Cs4rsa.Service.Notification.csproj">
+      <Project>{92885a21-a852-4bff-8a01-03da6de26949}</Project>
+      <Name>Cs4rsa.Service.Notification</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
       <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>

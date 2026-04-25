@@ -148,7 +148,7 @@
                                                             Command="{Binding Data.GotoCourseCommand, Source={StaticResource Proxy}}"
                                                             CommandParameter="{Binding}"
                                                             Header="Open link" />
-                                                        <MenuItem Command="{Binding EditCommand}" Header="Copy error" />
+                                                        <MenuItem Command="{Binding Data.CopyErrorCommand, Source={StaticResource Proxy}}" Header="Copy error" />
                                                         <MenuItem
                                                             Command="{Binding Data.DeleteCommand, Source={StaticResource Proxy}}"
                                                             CommandParameter="{Binding}"
@@ -284,7 +284,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0">
                 <TabControl>
-                    <TabItem Header="Lịch">
+                    <TabItem Header="Calendar">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <Grid>
                                 <Grid.RowDefinitions>

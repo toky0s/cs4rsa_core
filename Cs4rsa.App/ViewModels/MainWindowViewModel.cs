@@ -1,7 +1,8 @@
 ﻿using Cs4rsa.App.Events.TopMenuEvents;
 using Cs4rsa.Infrastructure.Events;
 using Cs4rsa.Service.Dialog.Events;
-
+using Cs4rsa.Service.Notification;
+using Cs4rsa.Service.Notification.Models;
 using MaterialDesignThemes.Wpf;
 
 using Prism.Events;
@@ -9,13 +10,14 @@ using Prism.Mvvm;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cs4rsa.App.ViewModels
 {
-    internal class MainWindowViewModel: BindableBase
+    public class MainWindowViewModel: BindableBase
     {
         private readonly IEventAggregator _eventAggregator;
 
@@ -54,11 +56,27 @@ namespace Cs4rsa.App.ViewModels
             set { SetProperty(ref _isOpen, value); }
         }
 
+
+        #region Notification Service Region
+        public ObservableCollection<Notification> NotificationItems { get; set; }
+        #endregion
+
         public MainWindowViewModel(
             IEventAggregator eventAggregator, 
             ISnackbarMessageQueue snackbarMessageQueue)
         {
+            NotificationItems = new ObservableCollection<Notification>();
             _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<NotificationEvent>().Subscribe(args => {
+                NotificationItems.Add(new Notification
+                {
+                    Title = args.Title,
+                    Content = args.Message,
+                    CreatedOn = args.CreatedOn,
+                    FromAction = args.FromAction,
+                });
+            });
+
             SnackBarMessageQueue = snackbarMessageQueue;
             var hs = snackbarMessageQueue.GetHashCode();
 

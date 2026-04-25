@@ -28,6 +28,7 @@ namespace Test_CourseCrawler
         [TestMethod]
         public void GivenUrl_WhenCrawlCourse_ThenGetInfo()
         {
+            Console.WriteLine(typeof(HtmlDocument).Assembly.Location);
             _mockSemesterHtmlGetter
                 .SetupSequence(semesterHtmlGetter => semesterHtmlGetter.GetHtmlDocument(It.IsAny<string>()))
                 .Returns(() =>

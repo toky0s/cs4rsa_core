@@ -15,6 +15,8 @@ using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.Service.Notification;
+using Cs4rsa.Service.Notification.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
@@ -26,7 +28,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -170,6 +172,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
+
         #region Services
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
@@ -178,6 +181,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
+        private readonly INotificationService _notificationService;
         #endregion
 
         public MainSchedulingViewModel(
@@ -187,7 +191,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IOpenInBrowser openInBrowser,
             IDialogService dialogService,
             ISnackbarMessageQueue snackbarMessageQueue,
-            ILogger<MainSchedulingViewModel> logger
+            ILogger<MainSchedulingViewModel> logger,
+            INotificationService notificationsService
         )
         {
             #region Services
@@ -198,9 +203,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _dialogService = dialogService;
             _eventAggregator = eventAggregator;
             _logger = logger;
+            _notificationService = notificationsService;
             #endregion
 
-            #region Messengers
+            #region Subscribe Events
+
+
             _eventAggregator.GetEvent<ExitImportSubjectMsg>().Subscribe(async (payload) => await HandleImportSubjects(payload));
 
             //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
@@ -252,6 +260,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             FullMatchSearchingKeywords = new ObservableCollection<FullMatchSearchingKeyword>();
             SavedSchedules = new ObservableCollection<UserSchedule>();
             ComModels = new ObservableCollection<CombinationModel>();
+            
             SearchText = string.Empty;
             IsUseCache = true;
             #endregion
@@ -533,31 +542,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="sm">SubjectModel.</param>
         private void OnDelete(SubjectModel sm)
         {
-            var classGroupModels = new List<ClassGroupModel>();
-
-            // Get ClassGroupModel hiện được chọn trong ChoseViewModel
-            // sau đó clone một bản để có thể Undo.
-            ClassGroupModel classGroupModel = null;
-
-            //classGroupModel = GetViewModel<ChoseViewModel>()
-            //    .ClassGroupModels
-            //    .FirstOrDefault(cgm => cgm.SubjectCode.Equals(sm.SubjectCode));
-
-            if (classGroupModel != null)
-            {
-                var classGroupModelClone = classGroupModel.DeepClone();
-                classGroupModels = new List<ClassGroupModel>() { classGroupModelClone };
-            }
-
             _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Publish(sm);
-            var subjectModel = sm.DeepClone();
-
-            var subjectModels = new List<SubjectModel>() { subjectModel };
-            var actionData = new Tuple<List<SubjectModel>, List<ClassGroupModel>>(subjectModels, classGroupModels);
             SubjectModels.Remove(sm);
             SelectedSubjectModel = null;
-            _snackbarMessageQueue.Enqueue($"Đã xoá môn {sm.SubjectName}", "HOÀN TÁC", AddSubjectWithCgm, actionData);
             AddCommand.RaiseCanExecuteChanged();
+            _notificationService.SendNotification("Notification", "Đã xoá môn " + sm.SubjectName, fromAction: "Delete subject from search box");
         }
 
         /// <summary>

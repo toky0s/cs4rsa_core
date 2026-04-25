@@ -5,6 +5,7 @@ using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Module.Shared;
+using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.SubjectCrawler.Crawlers;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 
@@ -20,13 +21,12 @@ namespace Cs4rsa.Module.ManuallySchedule
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion(RegionInfo.Manual, typeof(MainScheduling));
-
-
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<ShareString>();
+            containerRegistry.RegisterSingleton<INotificationService, NotificationService>();
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();

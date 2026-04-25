@@ -7,10 +7,14 @@
     xmlns:local="clr-namespace:Cs4rsa.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:uc="clr-namespace:Cs4rsa.Views.UserControls"
     xmlns:views="clr-namespace:Cs4rsa.App.Views"
+    xmlns:vm="clr-namespace:Cs4rsa.App.ViewModels"
     Title="Xếp lịch"
     Width="1200"
     Height="741.641"
+    d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel,
+                                     IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     TextElement.FontSize="13"
     TextElement.FontWeight="Regular"
@@ -49,7 +53,15 @@
                 VerticalAlignment="Stretch" />
             <Border Grid.Column="2">
                 <TabControl>
-                    <TabItem Header="Notifications" />
+                    <TabItem Header="Notifications">
+                        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding NotificationItems}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <uc:NotificationItem Notification="{Binding}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </TabItem>
                 </TabControl>
             </Border>
         </Grid>
