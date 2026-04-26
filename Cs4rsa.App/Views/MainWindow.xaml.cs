@@ -3,7 +3,7 @@ using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Module.Shared;
 
 using DryIoc;
-
+using Microsoft.Extensions.Logging;
 using Prism.Events;
 using Prism.Regions;
 
@@ -29,8 +29,8 @@ namespace Cs4rsa.App.Views
     /// </summary>
     public partial class MainWindow : MainWindowBase
     {
-        public MainWindow(IRegionManager regionManager, IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public MainWindow(IRegionManager regionManager, IEventAggregator eventAggregator, ILogger<MainWindow> logger)
+            : base(eventAggregator, logger)
         {
 
             InitializeComponent();

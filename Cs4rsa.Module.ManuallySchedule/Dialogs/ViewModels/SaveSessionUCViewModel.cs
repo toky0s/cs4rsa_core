@@ -2,9 +2,9 @@
 using Cs4rsa.Database.Models;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Service.Dialog;
 using Cs4rsa.Service.Dialog.Interfaces;
-
-using MaterialDesignThemes.Wpf;
+using Cs4rsa.Service.Notification;
 
 using Prism.Commands;
 using Prism.Mvvm;
@@ -18,7 +18,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
     /// <summary>
     /// Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
     /// </summary>
-    public class SaveSessionUCViewModel : BindableBase
+    public class SaveSessionUCViewModel : DialogViewModelBase
     {
         private string _name;
         public string Name
@@ -31,23 +31,21 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public DelegateCommand SaveCommand { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly ShareString _shareString;
         private readonly IDialogService _dialogService;
+        private readonly INotificationService _notificationService;
 
         public SaveSessionUCViewModel(
             IUnitOfWork unitOfWork,
-            ISnackbarMessageQueue snackbarMessageQueue,
             IDialogService dialogService,
-            ShareString shareString)
+            ShareString shareString,
+            INotificationService notificationService) : base("Save Schedule")
         {
             _unitOfWork = unitOfWork;
-            _snackbarMessageQueue = snackbarMessageQueue;
             _shareString = shareString;
             _dialogService = dialogService;
+            _notificationService = notificationService;
             _name = string.Empty;
-
-            var hs = snackbarMessageQueue.GetHashCode();
 
             SaveCommand = new DelegateCommand(Save, () => _name.Length > 0).ObservesProperty(() => Name);
         }
@@ -82,7 +80,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
             _unitOfWork.UserSchedules.Add(session);
             _dialogService.CloseDialog();
-            _snackbarMessageQueue.Enqueue($"Đã lưu phiên hiện tại với tên {Name}");
+            _notificationService.SendNotification("Lưu phiên thành công", $"Đã lưu phiên hiện tại với tên {Name}", "SaveScheduleAction");
         }
     }
 }

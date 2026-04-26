@@ -16,7 +16,7 @@ namespace Cs4rsa.Service.Dialog.Interfaces
         /// <param name="userControl">Dialog</param>
         /// <param name="isCloseOnClickAway">Nếu True, cho phép đóng Dialog khi click ra ngoài. Ngược lại, không cho phép.</param>
         void OpenDialog(UserControl userControl, bool isCloseOnClickAway=true);
-        void OpenDialog<View, ViewModel>(View userControl, ViewModel viewModel) where View : UserControl where ViewModel : class;
+        void OpenDialog(UserControl userControl);
         void CloseDialog();
     }
 }

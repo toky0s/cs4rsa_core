@@ -46,7 +46,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TabControl Grid.Row="0">
-                <TabItem Header="Tìm kiếm">
+                <TabItem Header="Search">
                     <Border>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -113,108 +113,119 @@
                             </Border>
                             <Border Grid.Row="1">
                                 <Grid>
-                                    <TextBox Height="20" uihelper:TextBoxHelper.Placeholder="Tìm kiếm môn học của bạn..." />
+                                    <TextBox Height="20" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
-                                <ListBox
-                                    HorizontalContentAlignment="Stretch"
-                                    ItemsSource="{Binding SubjectModels}"
-                                    SelectedItem="{Binding SelectedSubjectModel}">
-                                    <ListBox.ItemContainerStyle>
-                                        <Style TargetType="ListBoxItem">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDownloading}" Value="True">
-                                                    <Setter Property="Cursor" Value="Wait" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                            <Setter Property="ContextMenu">
-                                                <Setter.Value>
-                                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                                        <ContextMenu.Style>
-                                                            <Style TargetType="ContextMenu">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                <Style.Triggers>
-                                                                    <MultiDataTrigger>
-                                                                        <MultiDataTrigger.Conditions>
-                                                                            <Condition Binding="{Binding IsDownloading}" Value="False" />
-                                                                        </MultiDataTrigger.Conditions>
-                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                    </MultiDataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </ContextMenu.Style>
-                                                        <MenuItem
-                                                            Command="{Binding Data.GotoCourseCommand, Source={StaticResource Proxy}}"
-                                                            CommandParameter="{Binding}"
-                                                            Header="Open link" />
-                                                        <MenuItem Command="{Binding Data.CopyErrorCommand, Source={StaticResource Proxy}}" Header="Copy error" />
-                                                        <MenuItem
-                                                            Command="{Binding Data.DeleteCommand, Source={StaticResource Proxy}}"
-                                                            CommandParameter="{Binding}"
-                                                            Header="Delete" />
-                                                        <MenuItem
-                                                            Command="{Binding Data.DetailCommand, Source={StaticResource Proxy}}"
-                                                            CommandParameter="{Binding}"
-                                                            Header="Details" />
-                                                    </ContextMenu>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ListBox.ItemContainerStyle>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <Border Grid.Column="0">
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition />
-                                                            <RowDefinition />
-                                                        </Grid.RowDefinitions>
-                                                        <Border Grid.Row="0">
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <Ellipse
-                                                                    Width="8"
-                                                                    Height="8"
-                                                                    Margin="0,0,4,0"
-                                                                    Fill="{Binding Color}" />
-                                                                <TextBlock FontSize="10" Text="{Binding SubjectCode}" />
-                                                            </StackPanel>
-                                                        </Border>
-                                                        <Border Grid.Row="1">
-                                                            <Grid>
-                                                                <TextBlock Text="{Binding SubjectName}" />
-                                                            </Grid>
-                                                        </Border>
-                                                    </Grid>
-                                                </Border>
-                                                <Button
-                                                    Grid.Column="1"
-                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource IconButtonStyle}"
-                                                    ToolTip="Delete"
-                                                    Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
-                                                    <TextBlock
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        FontFamily="Segoe MDL2 Assets"
-                                                        FontSize="16"
-                                                        Text="" />
-                                                </Button>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <ListBox
+                                        Grid.Row="0"
+                                        HorizontalContentAlignment="Stretch"
+                                        ItemsSource="{Binding SubjectModels}"
+                                        SelectedItem="{Binding SelectedSubjectModel}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsDownloading}" Value="True">
+                                                        <Setter Property="Cursor" Value="Wait" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                                <Setter Property="ContextMenu">
+                                                    <Setter.Value>
+                                                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                            <ContextMenu.Style>
+                                                                <Style TargetType="ContextMenu">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                    <Style.Triggers>
+                                                                        <MultiDataTrigger>
+                                                                            <MultiDataTrigger.Conditions>
+                                                                                <Condition Binding="{Binding IsDownloading}" Value="False" />
+                                                                            </MultiDataTrigger.Conditions>
+                                                                            <Setter Property="Visibility" Value="Visible" />
+                                                                        </MultiDataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </ContextMenu.Style>
+                                                            <MenuItem
+                                                                Command="{Binding Data.GotoCourseCommand, Source={StaticResource Proxy}}"
+                                                                CommandParameter="{Binding}"
+                                                                Header="Open link" />
+                                                            <MenuItem Command="{Binding Data.CopyErrorCommand, Source={StaticResource Proxy}}" Header="Copy error" />
+                                                            <MenuItem
+                                                                Command="{Binding Data.DeleteCommand, Source={StaticResource Proxy}}"
+                                                                CommandParameter="{Binding}"
+                                                                Header="Delete" />
+                                                            <MenuItem
+                                                                Command="{Binding Data.DetailCommand, Source={StaticResource Proxy}}"
+                                                                CommandParameter="{Binding}"
+                                                                Header="Details" />
+                                                        </ContextMenu>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition />
+                                                                <RowDefinition />
+                                                            </Grid.RowDefinitions>
+                                                            <Border Grid.Row="0">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Ellipse
+                                                                        Width="8"
+                                                                        Height="8"
+                                                                        Margin="0,0,4,0"
+                                                                        Fill="{Binding Color}" />
+                                                                    <TextBlock FontSize="10" Text="{Binding SubjectCode}" />
+                                                                </StackPanel>
+                                                            </Border>
+                                                            <Border Grid.Row="1">
+                                                                <Grid>
+                                                                    <TextBlock Text="{Binding SubjectName}" />
+                                                                </Grid>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Border>
+                                                    <Button
+                                                        Grid.Column="1"
+                                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource IconButtonStyle}"
+                                                        ToolTip="Delete"
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            FontFamily="Segoe MDL2 Assets"
+                                                            FontSize="16"
+                                                            Text="" />
+                                                    </Button>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <StackPanel Grid.Row="1" HorizontalAlignment="Right">
+                                        <Button Command="{Binding DeleteAllCommand}" Content="Delete All" />
+                                    </StackPanel>
+                                </Grid>
                             </Border>
                         </Grid>
                     </Border>
                 </TabItem>
-                <TabItem Header="Security" />
+                <TabItem Header="Store" />
                 <TabItem Header="Details" />
             </TabControl>
             <GridSplitter
@@ -252,7 +263,15 @@
                     </TabItem.Header>
                     <Border>
                         <Grid>
-                            <ListBox ItemsSource="{Binding ClassGroupModels}" SelectedItem="{Binding SelectedClassGroup}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ListBox
+                                Grid.Row="0"
+                                ItemsSource="{Binding ClassGroupModels}"
+                                SelectedItem="{Binding SelectedClassGroup}"
+                                SelectionMode="Single">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border>
@@ -263,6 +282,9 @@
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Right">
+                                <!--<Button Command="{Binding DeleteAllChooseCommand}" Content="Delete All" />-->
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </TabItem>
@@ -351,7 +373,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                                    <Button Command="{Binding DeleteAllChooseCommand}" Content="Delete all" />
+                                    <Button Command="{Binding DeleteAllChooseCommand}" Content="Unselect All" />
                                     <Button Command="{Binding SaveCommand}" Content="Save" />
                                 </StackPanel>
                             </Border>

@@ -68,7 +68,7 @@ namespace Cs4rsa.App.ViewModels
             NotificationItems = new ObservableCollection<Notification>();
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<NotificationEvent>().Subscribe(args => {
-                NotificationItems.Add(new Notification
+                NotificationItems.Insert(0, new Notification
                 {
                     Title = args.Title,
                     Content = args.Message,

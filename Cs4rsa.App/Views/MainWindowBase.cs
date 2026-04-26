@@ -1,10 +1,12 @@
 ﻿using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Dialog;
 using Cs4rsa.Service.Dialog.Events;
+using Microsoft.Extensions.Logging;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,12 +16,19 @@ namespace Cs4rsa.App.Views
 {
     public abstract class MainWindowBase : Window
     {
-
-
         private readonly IEventAggregator _eventAggregator;
-        protected MainWindowBase(IEventAggregator eventAggregator)
+        private readonly ILogger<MainWindowBase> _logger;
+        private Window _dialog;
+        protected MainWindowBase(IEventAggregator eventAggregator, ILogger<MainWindowBase> logger)
         {
             _eventAggregator = eventAggregator;
+            _logger = logger;
+
+            _eventAggregator.GetEvent<CloseDialogEvent>().Subscribe(() =>
+            {
+                _dialog.Close();
+                _logger.LogInformation($"Close dialog {_dialog.Title}");
+            });
             _eventAggregator.GetEvent<OpenDialogEvent_v2>().Subscribe((view) =>
             {
                 // Create a dialog that is wrapped in a Window to show the UserControl as a dialog
@@ -34,6 +43,8 @@ namespace Cs4rsa.App.Views
                     ShowInTaskbar = false,
                     Title = (view.DataContext as DialogViewModelBase)?.DialogWindowName ?? "A Dialog"
                 };
+
+                _dialog = dialogWindow;
 #if DEBUG
                 // In debug mode, show the dialog as a non-modal window
                 // to allow easier debugging of the dialog's UI and interactions
@@ -43,6 +54,7 @@ namespace Cs4rsa.App.Views
                 // block interaction with the main window
                 dialogWindow.ShowDialog();           
 #endif
+                _logger.LogInformation($"Show dialog {dialogWindow.Title}");
             });
         }
     }

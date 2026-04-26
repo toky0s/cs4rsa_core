@@ -9,16 +9,16 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     public class ClassGroup
     {
         private readonly List<SchoolClass> _schoolClasses;
-        private readonly List<string> _registerCodes;
+        private readonly HashSet<string> _registerCodes;
 
         public readonly string Name;
         public readonly string SubjectCode;
         public string SubjectName { get; }
-        public List<string> RegisterCodes
+        public HashSet<string> RegisterCodes
         {
             get
             {
-                return _registerCodes;
+                return new HashSet<string>(_registerCodes);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public ClassGroup(string name, string subjectCode, string subjectName)
         {
             _schoolClasses = new List<SchoolClass>();
-            _registerCodes = new List<string>();
+            _registerCodes = new HashSet<string>();
             _mergedSchoolClasses = new List<SchoolClass>();
             Name = name;
             SubjectCode = subjectCode;
@@ -58,7 +58,13 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         public void AddRegisterCodes(IEnumerable<string> registerCodes)
         {
-            _registerCodes.AddRange(registerCodes);
+            foreach (var code in registerCodes)
+            {
+                if (!_registerCodes.Contains(code))
+                {
+                    _registerCodes.Add(code);
+                }
+            }
         }
 
         /// <summary>
@@ -96,16 +102,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         {
             return schoolClasses
                 .SelectMany(schoolClass => schoolClass.TeacherNames);
-        }
-
-        /// <summary>
-        /// Lấy ra danh sách tên riêng biệt của danh sách các SchoolClass được truyền vào.
-        /// </summary>
-        /// <param name="schoolClasses"></param>
-        /// <returns></returns>
-        private static IEnumerable<string> DistinctSchoolClassName(IEnumerable<SchoolClass> schoolClasses)
-        {
-            return schoolClasses.Select(item => item.ClassGroupName).Distinct();
         }
 
         private List<SchoolClass> GetSchoolClassesWithName(string schoolClassName)

@@ -57,9 +57,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             StudyUnitType = studyUnitType;
             StudyType = studyType;
             Semester = semester;
-            
+
             Name = name;
-            SubjectCode = subjectCode; 
+            SubjectCode = subjectCode;
             Description = description;
             CourseId = courseId;
             StudyUnit = int.Parse(studyUnit);
@@ -113,18 +113,18 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
             var currClassGroupNameIdx = 0;
             var currSchoolClassIdx = 0;
-            var registerCodes = new List<string>();
-            while(currClassGroupNameIdx < classGroupNames.Length)
+            while (currClassGroupNameIdx < classGroupNames.Length)
             {
+                var registerCodes = new HashSet<string>();
                 ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
-                while(currSchoolClassIdx < hitNodes.Length)
+                while (currSchoolClassIdx < hitNodes.Length)
                 {
                     // TODO: Performance issue
                     var schoolClass = GetSchoolClass(hitNodes[currSchoolClassIdx]);
                     if (schoolClass.SchoolClassName.StartsWith(classGroupNames[currClassGroupNameIdx]))
                     {
                         schoolClass.ClassGroupName = classGroupNames[currClassGroupNameIdx];
-                        if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode) 
+                        if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode)
                             && !registerCodes.Contains(schoolClass.RegisterCode))
                         {
                             registerCodes.Add(schoolClass.RegisterCode);
@@ -134,10 +134,10 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                     }
                     else
                     {
-                        classGroup.AddRegisterCodes(registerCodes);
                         registerCodes.Clear();
                         break;
                     }
+                    classGroup.AddRegisterCodes(registerCodes);
                 }
                 ClassGroups.Add(classGroup);
                 currClassGroupNameIdx++;
@@ -194,7 +194,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
             var teacherNames = new List<string>();
             var teacherName = GetTeacherName(trTagClassLop);
-            
+
             // 1. Add teacher name
             if (!string.IsNullOrEmpty(teacherName))
             {

@@ -6,8 +6,12 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;assembly=Cs4rsa.Module.ManuallySchedule"
     Width="333"
     Padding="7"
+    d:DataContext="{d:DesignInstance Type=vm:SaveSessionUCViewModel,
+                                     IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
@@ -16,24 +20,20 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Margin="0,0,0,5"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-            Text="Lưu bộ lịch" />
+        <Label Grid.Row="0" Target="{Binding ElementName=ScheduleNameTextBox}">
+            Schedule _Name:
+        </Label>
         <TextBox
+            Name="ScheduleNameTextBox"
             Grid.Row="1"
             Margin="0,0,0,5"
-            materialDesign:HintAssist.Hint="Tên bộ lịch của bạn"
-            materialDesign:TextFieldAssist.HasClearButton="True"
+            uihelper:TextBoxHelper.Placeholder="Enter schedule name..."
             KeyDown="TxtName_KeyDown"
-            Style="{StaticResource MaterialDesignOutlinedTextBox}"
             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
         <Button
             Grid.Row="2"
             HorizontalAlignment="Right"
             Command="{Binding SaveCommand}"
-            Content="LƯU"
-            Style="{StaticResource MaterialDesignFlatLightButton}" />
+            Content="Save" />
     </Grid>
 </UserControl>

@@ -73,11 +73,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
 
-            eventAggregator.GetEvent<ChoosedVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
-            {
-                RemoveScheduleItem(payload.SubjectCode);
-                AddClassGroup(payload);
-            });
+            //eventAggregator.GetEvent<ChoosedVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
+            //{
+            //    RemoveScheduleItem(payload.SubjectCode);
+            //    AddClassGroup(payload);
+            //});
 
             eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelAllMsg>().Subscribe(payload =>
             {

@@ -31,11 +31,8 @@ namespace Cs4rsa.Service.Dialog
             _eventAggregator.GetEvent<OpenDialogEvent>().Publish(Tuple.Create(userControl, isCloseOnClickAway));
         }
 
-        public void OpenDialog<View, ViewModel>(View userControl, ViewModel viewModel)
-            where View : UserControl
-            where ViewModel : class
+        public void OpenDialog(UserControl userControl)
         {
-            
             _eventAggregator.GetEvent<OpenDialogEvent_v2>().Publish(userControl);
         }
     }

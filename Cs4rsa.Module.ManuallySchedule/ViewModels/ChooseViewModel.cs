@@ -100,11 +100,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
 
-            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
-            {
-                _eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
-                AddClassGroupModel(payload);
-            });
+            //_eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Subscribe(payload =>
+            //{
+            //    _eventAggregator.GetEvent<ClassGroupAddedMsg>().Publish(payload);
+            //    AddClassGroupModel(payload);
+            //});
 
             _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
             {
@@ -176,7 +176,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (SelectedClassGroupModel.RegisterCodes.Count > 0)
             {
-                var registerCode = SelectedClassGroupModel.RegisterCodes[0];
+                var registerCode = SelectedClassGroupModel.RegisterCodes.First();
                 Clipboard.SetData(DataFormats.Text, registerCode);
                 _snackbarMessageQueue.Enqueue($"Sao chép thành công {registerCode}");
             }
