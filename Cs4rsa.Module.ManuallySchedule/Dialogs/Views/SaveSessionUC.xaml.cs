@@ -9,6 +9,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
         public SaveSessionUC()
         {
             InitializeComponent();
+            ScheduleNameTextBox.Focus();
         }
 
         public bool IsCloseOnClickAway()

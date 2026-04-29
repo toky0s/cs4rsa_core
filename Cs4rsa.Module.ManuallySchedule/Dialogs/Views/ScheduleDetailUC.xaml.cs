@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Cs4rsa.Module.ManuallySchedule.Views
+namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
 {
     /// <summary>
-    /// Interaction logic for ViewA.xaml
+    /// Interaction logic for ScheduleDetailUC.xaml
     /// </summary>
-    public partial class ViewA : UserControl
+    public partial class ScheduleDetailUC : UserControl
     {
-        public ViewA()
+        public ScheduleDetailUC()
         {
             InitializeComponent();
         }

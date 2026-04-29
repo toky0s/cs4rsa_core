@@ -24,10 +24,13 @@ using Cs4rsa.UI.ScheduleTable.Interfaces;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Extensions.Logging;
+
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,12 +55,25 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Commands
-        
+
         #region Context menu commands when user right-click on Subject in search box
         public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
         public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
         public DelegateCommand<SubjectModel> DetailCommand { get; set; }
         public DelegateCommand<SubjectModel> CopyErrorCommand { get; set; }
+        private DelegateCommand<UserSchedule> _loadUserScheduleCommand;
+        public DelegateCommand<UserSchedule> LoadUserScheduleCommand =>
+            _loadUserScheduleCommand ?? (_loadUserScheduleCommand = new DelegateCommand<UserSchedule>(ExecuteLoadUserScheduleCommand, CanExecuteLoadUserScheduleCommand));
+
+        void ExecuteLoadUserScheduleCommand(UserSchedule userSchedule)
+        {
+
+        }
+
+        bool CanExecuteLoadUserScheduleCommand(UserSchedule userSchedule)
+        {
+            return true;
+        }
 
         #endregion
 
@@ -85,6 +101,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Combination Models which was saved in the Store.
         /// </summary>
         public ObservableCollection<CombinationModel> ComModels { get; set; }
+        public ObservableCollection<UserSchedule> UserSchedules { get; set; }
 
         private CombinationModel _sltCombi;
         public CombinationModel SltCombi
@@ -176,8 +193,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _isUseCache; }
             set { SetProperty(ref _isUseCache, value); }
         }
-        #endregion
 
+        private int _searchBoxSelectedIndex;
+        public int SearchBoxSelectedIndex
+        {
+            get { return _searchBoxSelectedIndex; }
+            set
+            {
+                SetProperty(ref _searchBoxSelectedIndex, value);
+                LoadScheduleSession();
+            }
+        }
+        #endregion
 
         #region Services
         private readonly ISubjectCrawler _subjectCrawler;
@@ -189,6 +216,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ILogger<MainSchedulingViewModel> _logger;
         private readonly INotificationService _notificationService;
         #endregion
+        
+        public void LoadScheduleSession()
+        {
+            if (SearchBoxSelectedIndex == 1)
+            {
+                UserSchedules.Clear();
+                var sessions = _unitOfWork.UserSchedules.GetAll();
+                UserSchedules.AddRange(sessions);
+            }
+        }
 
         public MainSchedulingViewModel(
             IEventAggregator eventAggregator,
@@ -266,7 +303,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             FullMatchSearchingKeywords = new ObservableCollection<FullMatchSearchingKeyword>();
             SavedSchedules = new ObservableCollection<UserSchedule>();
             ComModels = new ObservableCollection<CombinationModel>();
-            
+            UserSchedules = new ObservableCollection<UserSchedule>();
+
             SearchText = string.Empty;
             IsUseCache = true;
             #endregion
@@ -443,7 +481,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             DelAllSubjectMsgHandler();
             CleanDays();
             SubjectModels.Clear();
-            
+
             SelectedClassGroup = null;
 
             DeleteAllCommand.RaiseCanExecuteChanged();
@@ -1314,9 +1352,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         #region Commands
         public DelegateCommand OpenShareStringWindowCommand { get; set; }
-        public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand DeleteChooseCommand { get; set; }
-        
+
         public DelegateCommand CopyCodeCommand { get; set; }
         public DelegateCommand SolveConflictCommand { get; set; }
         #endregion
@@ -1370,7 +1407,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             });
             #endregion
 
-            SaveCommand = new DelegateCommand(OpenSaveDialog, () => SelectedClassGroupModels.Count > 0);
             DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
             DeleteAllChooseCommand = new DelegateCommand(OnDeleteAllChoose, () => SelectedClassGroupModels.Count > 0);
             CopyCodeCommand = new DelegateCommand(OnCopyCode);
@@ -1424,7 +1460,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             SelectedClassGroupModels.Clear();
             UpdateConflicts();
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             CleanDays();
         }
@@ -1442,7 +1477,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 actionData
             );
 
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             DeleteChooseCommand.RaiseCanExecuteChanged();
             UpdateConflicts();
@@ -1594,7 +1628,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     SelectedClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
 
@@ -1605,7 +1638,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 SelectedClassGroupModels.Add(classGroupModel);
             }
             UpdateConflicts();
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
 
@@ -1660,7 +1692,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         actionData
                     );
 
-                    SaveCommand.RaiseCanExecuteChanged();
                     DeleteAllChooseCommand.RaiseCanExecuteChanged();
                     DeleteChooseCommand.RaiseCanExecuteChanged();
                     UpdateConflicts();
@@ -1684,7 +1715,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
             }
             UpdateConflicts();
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
 
@@ -1697,7 +1727,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             // 2. Xoá hết class group model đã chọn
             SelectedClassGroupModels.Clear();
             UpdateConflicts();
-            SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
 
             // 3. Xoá bộ lịch

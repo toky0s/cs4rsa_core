@@ -22,6 +22,7 @@
 
         <ResourceDictionary>
             <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
+            <cvt:GreaterThanZeroConverter x:Key="GreaterZero"></cvt:GreaterThanZeroConverter>
             <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
             <cvt:StringListJoinConverter x:Key="JoinString" />
             <ResourceDictionary.MergedDictionaries>
@@ -45,7 +46,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TabControl Grid.Row="0">
+            <TabControl Grid.Row="0" SelectedIndex="{Binding SearchBoxSelectedIndex}">
                 <TabItem Header="Search">
                     <Border>
                         <Grid>
@@ -225,7 +226,26 @@
                         </Grid>
                     </Border>
                 </TabItem>
-                <TabItem Header="Store" />
+                <TabItem Header="Store">
+                    <ListBox ItemsSource="{Binding UserSchedules}" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="13" FontWeight="DemiBold"></TextBlock>
+                                    <TextBlock Grid.Row="1" Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" FontSize="10"></TextBlock>
+                                    <StackPanel HorizontalAlignment="Right" Grid.Row="2">
+                                        <Button Click="LoadUserScheduleButton_Click" Content="Load..."></Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
                 <TabItem Header="Details" />
             </TabControl>
             <GridSplitter
@@ -374,7 +394,7 @@
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
                                     <Button Command="{Binding DeleteAllChooseCommand}" Content="Unselect All" />
-                                    <Button Command="{Binding SaveCommand}" Content="Save" />
+                                    <Button Content="Save" Click="SaveButton_Click" IsEnabled="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>

@@ -13,6 +13,7 @@ namespace Cs4rsa.Database.Models
     ///     YearValue       :Giá trị năm học
     ///     Semester        :Thông tin học kỳ
     ///     Year            :Thông tin năm học
+    ///     CreatedOn       :Ngày tạo (UTC)
     ///     
     /// Modified date:
     ///     20240203 - Thêm hai properties Semester và Year

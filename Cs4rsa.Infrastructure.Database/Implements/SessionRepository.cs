@@ -27,7 +27,7 @@ namespace Cs4rsa.Database.Implements
             var latestUserScheduleId = _rawSql.ExecScalar("SELECT UserScheduleId FROM UserSchedules ORDER BY UserScheduleId DESC LIMIT 1", 1);
             var sb = new StringBuilder()
                 .BeginTransaction()
-                .AppendLine("INSERT INTO UserSchedules VALUES")
+                .AppendLine("INSERT INTO UserSchedules(UserScheduleId,Name,SaveDate,SemesterValue,YearValue,Semester,Year) VALUES")
                 .AppendLine("(")
                 .AppendLine("  @UserScheduleId")
                 .AppendLine(", @Name")
@@ -82,7 +82,7 @@ namespace Cs4rsa.Database.Implements
         public List<UserSchedule> GetAll()
         {
             return _rawSql.ExecReader(
-                "SELECT * FROM UserSchedules ORDER BY UserScheduleId DESC",
+                "SELECT * FROM UserSchedules ORDER BY SaveDate DESC",
                 record => new UserSchedule()
                 {
                     UserScheduleId = record.GetInt32(0),

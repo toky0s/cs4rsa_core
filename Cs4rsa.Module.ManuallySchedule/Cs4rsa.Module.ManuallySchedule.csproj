@@ -105,6 +105,7 @@
     <Compile Include="Dialogs\Models\UserSubject.cs" />
     <Compile Include="Dialogs\ViewModels\ImportSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ScheduleDetailUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
@@ -117,6 +118,9 @@
     </Compile>
     <Compile Include="Dialogs\Views\ScheduleBag.xaml.cs">
       <DependentUpon>ScheduleBag.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ScheduleDetailUC.xaml.cs">
+      <DependentUpon>ScheduleDetailUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Views\ShareStringUC.xaml.cs">
       <DependentUpon>ShareStringUC.xaml</DependentUpon>
@@ -160,7 +164,6 @@
     <Compile Include="ViewModels\NotificationItemViewModel.cs" />
     <Compile Include="ViewModels\SchedulerViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
-    <Compile Include="ViewModels\ViewAViewModel.cs" />
     <Compile Include="Views\Choose.xaml.cs">
       <DependentUpon>Choose.xaml</DependentUpon>
     </Compile>
@@ -179,9 +182,6 @@
     <Compile Include="Views\Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewA.xaml.cs">
-      <DependentUpon>ViewA.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -196,6 +196,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\Views\ScheduleBag.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Views\ScheduleDetailUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,10 +245,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Search.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ViewA.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
