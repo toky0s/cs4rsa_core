@@ -58,6 +58,56 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #region Commands
 
         #region Context menu commands when user right-click on Subject in search box
+        private DelegateCommand<UserSchedule> _deleteUserScheduleCommand;
+        public DelegateCommand<UserSchedule> DeleteUserScheduleCommand =>
+            _deleteUserScheduleCommand ?? (_deleteUserScheduleCommand = new DelegateCommand<UserSchedule>(ExecuteDeleteUserScheduleCommand, CanExecuteDeleteUserScheduleCommand));
+
+        void ExecuteDeleteUserScheduleCommand(UserSchedule userSchedule)
+        {
+            var result = MessageBox.Show(
+                  $"Are you sure to delete the schedule {userSchedule.Name}?"
+                , "Notification"
+                , MessageBoxButton.YesNo
+                , MessageBoxImage.Question
+            );
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    var removeResult = _unitOfWork.UserSchedules.Remove(userSchedule.UserScheduleId);
+                    if (removeResult == 0)
+                    {
+                        _ = MessageBox.Show(
+                              $"Cannot find the schedule {userSchedule.Name} to delete"
+                            , "Notification"
+                            , MessageBoxButton.OK
+                            , MessageBoxImage.Error
+                        );
+                    }
+                    else
+                    {
+                        UserSchedules.Remove(userSchedule);
+                        _notificationService.SendNotification("Delete schedule", $"Schedule {userSchedule.Name} has been deleted", fromAction: "Delete user schedule");
+
+                    }
+                } 
+                catch (Exception ex)
+                {
+                    _ = MessageBox.Show(
+                          $"There is an issue while deleting the schedule: {ex.Message}"
+                        , "Notification"
+                        , MessageBoxButton.OK
+                        , MessageBoxImage.Error
+                    );
+                }
+            }
+        }
+
+        bool CanExecuteDeleteUserScheduleCommand(UserSchedule userSchedule)
+        {
+            return userSchedule.UserScheduleId != 0;
+        }
+
         public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
         public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
         private DelegateCommand<SubjectModel> _detailCommand;
@@ -94,7 +144,21 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 _dialogService.ShowDialog(nameof(ScheduleDetailUC), new DialogParameters()
                 {
                     {"UserSchedule", userSchedule }
-                }, r => { });
+                }, async r => {
+                    if (r.Result == ButtonResult.OK)
+                    {
+                        _logger.LogInformation("ScheduleDetailUC closed with OK");
+                        SearchBoxSelectedIndex = 0;
+                        var parameters = r.Parameters;
+                        var userSubjects = parameters.GetValue<ObservableCollection<UserSubject>>("UserSubjects");
+                        await HandleImportSubjects(userSubjects);
+                        // Go to Search tab
+                    }
+                    else
+                    {
+                        _logger.LogInformation("ScheduleDetailUC closed");
+                    }
+                });
             }
         }
 
@@ -305,9 +369,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             #region Subscribe Events
 
-
-            _eventAggregator.GetEvent<ExitImportSubjectMsg>().Subscribe(async (payload) => await HandleImportSubjects(payload));
-
             //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
             //{
             //    ImportSubjects(m.Value);
@@ -379,6 +440,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
             });
             ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
+            
             #endregion
 
             LoadDiscipline();

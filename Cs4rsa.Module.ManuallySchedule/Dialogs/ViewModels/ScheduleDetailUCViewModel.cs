@@ -74,7 +74,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         void ExecuteLoadCommand()
         {
             _logger.LogInformation("Load schedule detail for schedule {UserScheduleId} - {UserScheduleName}", UserSchedule.UserScheduleId, UserSchedule.Name);
-            RequestClose.Invoke(new DialogResult(ButtonResult.OK));
+            var parameters = new DialogParameters
+            {
+                { "UserSubjects", UserSubjects }
+            };
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
         }
 
         bool CanExecuteLoadCommand()

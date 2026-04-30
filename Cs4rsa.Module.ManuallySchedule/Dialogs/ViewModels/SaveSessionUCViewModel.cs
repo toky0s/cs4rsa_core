@@ -8,12 +8,12 @@ using Cs4rsa.Service.Notification;
 
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Services.Dialogs;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Prism.Services.Dialogs;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {

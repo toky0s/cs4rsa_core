@@ -18,7 +18,7 @@ namespace Cs4rsa.Database.Models
     /// Modified date:
     ///     20240203 - Thêm hai properties Semester và Year
     /// </summary>
-    public class UserSchedule
+    public class UserSchedule: IEquatable<UserSchedule>
     {
         public const string clm_UserScheduleId = "UserScheduleId";
         public const string clm_Name = "Name";
@@ -42,5 +42,10 @@ namespace Cs4rsa.Database.Models
         /// </summary>
         public string Year { get; set; }
         public List<ScheduleDetail> SessionDetails { get; set; }
+
+        public bool Equals(UserSchedule other)
+        {
+            return UserScheduleId == other.UserScheduleId;
+        }
     }
 }
