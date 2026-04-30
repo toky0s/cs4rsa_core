@@ -5,7 +5,9 @@ using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule;
-
+using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Service.CourseCrawler.Crawlers;
 using Cs4rsa.Service.CourseCrawler.Interfaces;
 using Cs4rsa.Service.Dialog;
@@ -17,11 +19,16 @@ using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using DryIoc;
 
 using MaterialDesignThemes.Wpf;
+
 using Microsoft.Extensions.Logging;
+
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
+
+using Serilog;
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +37,6 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows;
-using Serilog;
 
 namespace Cs4rsa.App
 {
@@ -108,7 +114,7 @@ namespace Cs4rsa.App
                 builder.AddSerilog();
             });
 
-            containerRegistry.RegisterInstance<ILoggerFactory>(loggerFactory);
+            containerRegistry.RegisterInstance(loggerFactory);
             containerRegistry.Register(typeof(ILogger<>), typeof(Logger<>));
 
             containerRegistry.RegisterSingleton<ISemesterHtmlGetter, SemesterHtmlGetter>();
@@ -118,10 +124,13 @@ namespace Cs4rsa.App
             
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
-            containerRegistry.RegisterSingleton<IDialogService, DialogService>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+            containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
+            containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();
+            containerRegistry.RegisterDialog<SaveSessionUC, SaveSessionUCViewModel>();
         }
 
         protected override Window CreateShell()
@@ -151,6 +160,8 @@ namespace Cs4rsa.App
              * Otherwise, you will end up with two window instances.
              */
             var w = Container.Resolve<MainWindow>();
+            // https://prismlibrary.github.io/docs/wpf/dialog-service.html
+
             return w;
         }
 

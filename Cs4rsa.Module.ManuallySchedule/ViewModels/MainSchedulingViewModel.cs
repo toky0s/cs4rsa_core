@@ -1,6 +1,7 @@
 ﻿using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
 using Cs4rsa.Database;
+using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Database.Models;
 using Cs4rsa.Infrastructure.Common;
@@ -14,7 +15,6 @@ using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.CourseCrawler.Crawlers;
-using Cs4rsa.Service.Dialog.Interfaces;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.Notification.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 using System;
 using System.Collections.Generic;
@@ -59,15 +60,42 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #region Context menu commands when user right-click on Subject in search box
         public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
         public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
-        public DelegateCommand<SubjectModel> DetailCommand { get; set; }
+        private DelegateCommand<SubjectModel> _detailCommand;
+        public DelegateCommand<SubjectModel> DetailCommand =>
+             _detailCommand ?? (_detailCommand = new DelegateCommand<SubjectModel>(ExecuteDetailCommand, CanExecuteDetailCommand));
+
+        private bool CanExecuteDetailCommand(SubjectModel model)
+        {
+            return true;
+        }
+
+        private void ExecuteDetailCommand(SubjectModel model)
+        {
+            string semesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
+            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={model.CourseId}&timespan={semesterValue}&t=s";
+            var dialogParameter = new DialogParameters
+            {
+                { "Url", url },
+                { "SubjectModel", model }
+            };
+            _dialogService.ShowDialog(nameof(ShowDetailsSubjectUC), dialogParameter, r => { _logger.LogInformation("ShowDetailsSubjectUC closed"); });
+        }
+
         public DelegateCommand<SubjectModel> CopyErrorCommand { get; set; }
+
         private DelegateCommand<UserSchedule> _loadUserScheduleCommand;
         public DelegateCommand<UserSchedule> LoadUserScheduleCommand =>
             _loadUserScheduleCommand ?? (_loadUserScheduleCommand = new DelegateCommand<UserSchedule>(ExecuteLoadUserScheduleCommand, CanExecuteLoadUserScheduleCommand));
 
         void ExecuteLoadUserScheduleCommand(UserSchedule userSchedule)
         {
-
+            if (userSchedule != null)
+            {
+                _dialogService.ShowDialog(nameof(ScheduleDetailUC), new DialogParameters()
+                {
+                    {"UserSchedule", userSchedule }
+                }, r => { });
+            }
         }
 
         bool CanExecuteLoadUserScheduleCommand(UserSchedule userSchedule)
@@ -88,6 +116,32 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Nút xoá tất cả các lớp đã chọn, không xoá môn đã chọn
         /// </summary>
         public DelegateCommand DeleteAllChooseCommand { get; set; }
+        private DelegateCommand _saveCommand;
+        public DelegateCommand SaveCommand =>
+            _saveCommand ?? (_saveCommand = new DelegateCommand(ExecuteSaveCommand, CanExecuteSaveCommand));
+
+        void ExecuteSaveCommand()
+        {
+            var saveSessionUc = new SaveSessionUC();
+            var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
+
+            IDialogParameters parameters = new DialogParameters
+            {
+                { "SelectedClassGroupModels", SelectedClassGroupModels }
+            };
+            _dialogService.ShowDialog(nameof(SaveSessionUC), parameters, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    _logger.LogInformation("Save schedule closed");
+                }
+            });
+        }
+
+        bool CanExecuteSaveCommand()
+        {
+            return SelectedClassGroupModels.Count > 0;
+        }
         #endregion
 
         #region Properties
@@ -211,12 +265,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
         private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        private readonly IDialogService _dialogService;
         private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
         private readonly INotificationService _notificationService;
+        private readonly IDialogService _dialogService;
         #endregion
-        
+
         public void LoadScheduleSession()
         {
             if (SearchBoxSelectedIndex == 1)
@@ -232,10 +286,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
-            IDialogService dialogService,
             ISnackbarMessageQueue snackbarMessageQueue,
             ILogger<MainSchedulingViewModel> logger,
-            INotificationService notificationsService
+            INotificationService notificationsService,
+            IDialogService dialogService
         )
         {
             #region Services
@@ -315,16 +369,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
-            DetailCommand = new DelegateCommand<SubjectModel>((SubjectModel subjectModel) =>
-            {
-                ShowDetailsSubjectUC showDetailsSubjectUc = new ShowDetailsSubjectUC();
-                ShowDetailsSubjectUCViewModel vm = (ShowDetailsSubjectUCViewModel)showDetailsSubjectUc.DataContext;
-                vm.SubjectModel = subjectModel;
-                string semesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
-                string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={subjectModel.CourseId}&timespan={semesterValue}&t=s";
-                vm.Url = url;
-                _dialogService.OpenDialog(showDetailsSubjectUc);
-            });
+            
             CopyErrorCommand = new DelegateCommand<SubjectModel>(subjectModel =>
             {
                 if (subjectModel.IsError)
@@ -340,8 +385,70 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             LoadSavedSchedules();
 
             InitClgViewModel();
-            InitChooseViewModel();
+            #region Messengers
+            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
+            {
+                DelSubjectMsgHandler(payload);
+            });
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
+            {
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    AddClassGroupModelsAndReload(payload);
+                });
+            });
+
+            _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
+            {
+                //_dialogService.CloseDialog();
+                RemoveChoosedClassMsgHandler(payload);
+            });
+
+            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    ConflictModels.Clear();
+            //    PlaceConflictFinderModels.Clear();
+            //});
+
+            // Click vào block thì đồng thời select class group model tương ứng.
+            _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
+            {
+                if (payload.GetType() == typeof(SchoolClassBlock))
+                {
+                    var schoolClassBlock = (SchoolClassBlock)payload;
+                    var result = SelectedClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
+                    if (result != null)
+                    {
+                        SelectedClassGroupModel = result;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            });
+            #endregion
+
+            DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
+            DeleteAllChooseCommand = new DelegateCommand(OnDeleteAllChoose, () => SelectedClassGroupModels.Count > 0);
+            CopyCodeCommand = new DelegateCommand(OnCopyCode);
+            SolveConflictCommand = new DelegateCommand(OnSolve);
+            OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
+
+            PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+            ConflictModels = new ObservableCollection<ConflictModel>();
+            SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
+            SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
+
             InitSchedulerViewModel();
+        }
+
+        private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SaveCommand.RaiseCanExecuteChanged();
         }
 
         private void ExecuteGotoCourseCommand(SubjectModel model)
@@ -497,8 +604,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var scheduleBag = new ScheduleBag();
             var vm = (ScheduleBagViewModel)scheduleBag.DataContext;
-            _dialogService.OpenDialog(scheduleBag);
-            await vm.LoadScheduleSession();
+            //_dialogService.OpenDialog(scheduleBag);
+            //await vm.LoadScheduleSession();
         }
 
         private async Task HandleImportSubjects(IEnumerable<UserSubject> userSubjects)
@@ -1273,7 +1380,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     vm.SchoolClassModels.Add(scm);
                 }
             }
-            _dialogService.OpenDialog(showDetailsSchoolClassesUC);
+            //_dialogService.OpenDialog(showDetailsSchoolClassesUC);
         }
 
         private void OnGotoCourse()
@@ -1360,62 +1467,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void InitChooseViewModel()
         {
-            #region Messengers
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
-            {
-                DelSubjectMsgHandler(payload);
-            });
-
-            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
-            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
-            {
-                Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    AddClassGroupModelsAndReload(payload);
-                });
-            });
-
-            _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(payload =>
-            {
-                _dialogService.CloseDialog();
-                RemoveChoosedClassMsgHandler(payload);
-            });
-
-            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
-            //{
-            //    ClassGroupModels.Clear();
-            //    ConflictModels.Clear();
-            //    PlaceConflictFinderModels.Clear();
-            //});
-
-            // Click vào block thì đồng thời select class group model tương ứng.
-            _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
-            {
-                if (payload.GetType() == typeof(SchoolClassBlock))
-                {
-                    var schoolClassBlock = (SchoolClassBlock)payload;
-                    var result = SelectedClassGroupModels.FirstOrDefault(cgm => cgm.ClassGroup.Name.Equals(schoolClassBlock.SchoolClassUnit.SchoolClass.ClassGroupName));
-                    if (result != null)
-                    {
-                        SelectedClassGroupModel = result;
-                    }
-                }
-                else
-                {
-                    return;
-                }
-            });
-            #endregion
-
-            DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
-            DeleteAllChooseCommand = new DelegateCommand(OnDeleteAllChoose, () => SelectedClassGroupModels.Count > 0);
-            CopyCodeCommand = new DelegateCommand(OnCopyCode);
-            SolveConflictCommand = new DelegateCommand(OnSolve);
-            OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
-
-            PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
-            ConflictModels = new ObservableCollection<ConflictModel>();
-            SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
+            
         }
 
         /// <summary>
@@ -1426,7 +1478,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var solveConflictUc = new SolveConflictUC();
             var vm = new SolveConflictViewModel(SelectedConflictModel, _unitOfWork, _eventAggregator);
             solveConflictUc.DataContext = vm;
-            _dialogService.OpenDialog(solveConflictUc);
+            //_dialogService.OpenDialog(solveConflictUc);
         }
 
         /// <summary>
@@ -1491,7 +1543,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var saveSessionUc = new SaveSessionUC();
             var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
             vm.ClassGroupModels = SelectedClassGroupModels;
-            _dialogService.OpenDialog(saveSessionUc);
+            //_dialogService.OpenDialog(saveSessionUc);
         }
 
         private void OnOpenShareStringWindow()

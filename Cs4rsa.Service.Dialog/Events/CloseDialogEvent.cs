@@ -13,4 +13,7 @@ namespace Cs4rsa.Service.Dialog.Events
     {
     }
 
+    public class CloseDialogEvent_v2 : PubSubEvent<object>
+    {
+    }
 }

@@ -85,13 +85,13 @@ namespace Cs4rsa.Database.Implements
                 "SELECT * FROM UserSchedules ORDER BY SaveDate DESC",
                 record => new UserSchedule()
                 {
-                    UserScheduleId = record.GetInt32(0),
-                    Name = record.GetString(1),
-                    SaveDate = DateTime.Parse(record.GetString(2)),
-                    SemesterValue = record.GetString(3),
-                    YearValue = record.GetString(4),
-                    Semester = record.GetString(5),
-                    Year = record.GetString(6)
+                    UserScheduleId = record.GetInt32(record.GetOrdinal(UserSchedule.clm_UserScheduleId)),
+                    Name = record.GetString(record.GetOrdinal(UserSchedule.clm_Name)),
+                    SaveDate = DateTime.Parse(record.GetString(record.GetOrdinal(UserSchedule.clm_SaveDate))),
+                    SemesterValue = record.GetString(record.GetOrdinal(UserSchedule.clm_SemesterValue)),
+                    YearValue = record.GetString(record.GetOrdinal(UserSchedule.clm_YearValue)),
+                    Semester = record.GetString(record.GetOrdinal(UserSchedule.clm_Semester)),
+                    Year = record.GetString(record.GetOrdinal(UserSchedule.clm_Year))
                 }
             );
         }

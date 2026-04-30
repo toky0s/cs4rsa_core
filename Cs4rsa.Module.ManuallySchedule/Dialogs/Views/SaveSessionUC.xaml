@@ -10,8 +10,7 @@
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;assembly=Cs4rsa.Module.ManuallySchedule"
     Width="333"
     Padding="7"
-    d:DataContext="{d:DesignInstance Type=vm:SaveSessionUCViewModel,
-                                     IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance Type=vm:SaveSessionUCViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>

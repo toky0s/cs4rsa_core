@@ -37,7 +37,7 @@
             <TextBlock>
                 <Hyperlink
                     FontWeight="Bold"
-                    NavigateUri="{Binding Url}"
+                    NavigateUri="{Binding Url, TargetNullValue='about:blank'}"
                     RequestNavigate="Hyperlink_RequestNavigate">
                     <Run>
                         <Run.Text>

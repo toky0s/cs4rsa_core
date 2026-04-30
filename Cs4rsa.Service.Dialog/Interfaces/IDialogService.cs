@@ -18,5 +18,6 @@ namespace Cs4rsa.Service.Dialog.Interfaces
         void OpenDialog(UserControl userControl, bool isCloseOnClickAway=true);
         void OpenDialog(UserControl userControl);
         void CloseDialog();
+        void CloseDialog(object parameter);
     }
 }

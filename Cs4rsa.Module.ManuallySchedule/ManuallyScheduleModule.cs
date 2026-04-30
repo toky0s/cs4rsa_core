@@ -3,6 +3,7 @@ using Cs4rsa.Common.Interfaces;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Module.ManuallySchedule.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Notification;

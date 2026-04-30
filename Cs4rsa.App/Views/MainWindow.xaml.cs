@@ -27,10 +27,9 @@ namespace Cs4rsa.App.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MainWindowBase
+    public partial class MainWindow : Window
     {
-        public MainWindow(IRegionManager regionManager, IEventAggregator eventAggregator, ILogger<MainWindow> logger)
-            : base(eventAggregator, logger)
+        public MainWindow(IRegionManager regionManager)
         {
 
             InitializeComponent();

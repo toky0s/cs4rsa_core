@@ -20,6 +20,14 @@ namespace Cs4rsa.Database.Models
     /// </summary>
     public class UserSchedule
     {
+        public const string clm_UserScheduleId = "UserScheduleId";
+        public const string clm_Name = "Name";
+        public const string clm_SaveDate = "SaveDate";
+        public const string clm_SemesterValue = "SemesterValue";
+        public const string clm_YearValue = "YearValue";
+        public const string clm_Semester = "Semester";
+        public const string clm_Year = "Year";
+
         public int UserScheduleId { get; set; }
         public string Name { get; set; }
         public DateTime SaveDate { get; set; }

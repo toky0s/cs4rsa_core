@@ -83,25 +83,6 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
                 new PropertyMetadata(null));
 
         /// <summary>
-        /// Vertical scroll position in pixels; two-way bindable for restoring or syncing scroll state.
-        /// </summary>
-        public double VerticalScrollOffset
-        {
-            get => (double)GetValue(VerticalScrollOffsetProperty);
-            set => SetValue(VerticalScrollOffsetProperty, value);
-        }
-
-        public static readonly DependencyProperty VerticalScrollOffsetProperty =
-            DependencyProperty.Register(
-                nameof(VerticalScrollOffset),
-                typeof(double),
-                typeof(ScheduleView),
-                new FrameworkPropertyMetadata(
-                    0d,
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnVerticalScrollOffsetChanged));
-
-        /// <summary>
         /// Total height of the schedule body (timeline + week columns). Default matches the classic fixed grid height.
         /// </summary>
         public double ScheduleBodyHeight
@@ -145,22 +126,5 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
                 typeof(bool),
                 typeof(ScheduleView),
                 new PropertyMetadata(true));
-
-        private bool _suppressScrollOffsetPush;
-
-        private static void OnVerticalScrollOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var view = (ScheduleView)d;
-            if (view._suppressScrollOffsetPush || view.PART_ScrollViewer == null)
-            {
-                return;
-            }
-
-            double v = (double)e.NewValue;
-            if (!double.IsNaN(v) && !double.IsInfinity(v))
-            {
-                view.PART_ScrollViewer.ScrollToVerticalOffset(v);
-            }
-        }
     }
 }

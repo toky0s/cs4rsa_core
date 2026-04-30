@@ -8,9 +8,11 @@ using Cs4rsa.Service.Notification;
 
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
@@ -18,7 +20,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
     /// <summary>
     /// Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
     /// </summary>
-    public class SaveSessionUCViewModel : DialogViewModelBase
+    public class SaveSessionUCViewModel : BindableBase, IDialogAware
     {
         private string _name;
         public string Name
@@ -30,20 +32,21 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
         public DelegateCommand SaveCommand { get; set; }
 
+        public string Title => "Save Schedule";
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly ShareString _shareString;
-        private readonly IDialogService _dialogService;
         private readonly INotificationService _notificationService;
+
+        public event Action<IDialogResult> RequestClose;
 
         public SaveSessionUCViewModel(
             IUnitOfWork unitOfWork,
-            IDialogService dialogService,
             ShareString shareString,
-            INotificationService notificationService) : base("Save Schedule")
+            INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _shareString = shareString;
-            _dialogService = dialogService;
             _notificationService = notificationService;
             _name = string.Empty;
 
@@ -79,8 +82,23 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             };
 
             _unitOfWork.UserSchedules.Add(session);
-            _dialogService.CloseDialog();
+            var dialogResult = new DialogResult(ButtonResult.OK);
+            RequestClose?.Invoke(dialogResult);
+        }
+
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
             _notificationService.SendNotification("Lưu phiên thành công", $"Đã lưu phiên hiện tại với tên {Name}", "SaveScheduleAction");
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            ClassGroupModels = parameters.GetValue<IEnumerable< ClassGroupModel>>("SelectedClassGroupModels");
         }
     }
 }

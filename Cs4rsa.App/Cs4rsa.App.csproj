@@ -266,7 +266,6 @@
     </ApplicationDefinition>
     <Compile Include="Events\TopMenuEvents\ScreenChangedEvent.cs" />
     <Compile Include="ViewModels\TopMenuViewModel.cs" />
-    <Compile Include="Views\MainWindowBase.cs" />
     <Compile Include="Views\TopMenu.xaml.cs">
       <DependentUpon>TopMenu.xaml</DependentUpon>
     </Compile>
@@ -321,6 +320,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="cs4rsa.db" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

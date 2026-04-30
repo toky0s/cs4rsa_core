@@ -239,7 +239,7 @@
                                 <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="13" FontWeight="DemiBold"></TextBlock>
                                     <TextBlock Grid.Row="1" Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" FontSize="10"></TextBlock>
                                     <StackPanel HorizontalAlignment="Right" Grid.Row="2">
-                                        <Button Click="LoadUserScheduleButton_Click" Content="Load..."></Button>
+                                        <Button Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}" CommandParameter="{Binding}" Content="Load..."></Button>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -394,7 +394,7 @@
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
                                     <Button Command="{Binding DeleteAllChooseCommand}" Content="Unselect All" />
-                                    <Button Content="Save" Click="SaveButton_Click" IsEnabled="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}"/>
+                                    <Button Content="Save" Command="{Binding SaveCommand}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>

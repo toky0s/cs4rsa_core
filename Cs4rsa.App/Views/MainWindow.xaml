@@ -1,4 +1,4 @@
-﻿<views:MainWindowBase
+﻿<Window
     x:Class="Cs4rsa.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,8 +13,7 @@
     Title="Xếp lịch"
     Width="1200"
     Height="741.641"
-    d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel,
-                                     IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     TextElement.FontSize="13"
     TextElement.FontWeight="Regular"
@@ -66,4 +65,4 @@
             </Border>
         </Grid>
     </DockPanel>
-</views:MainWindowBase>
+</Window>
