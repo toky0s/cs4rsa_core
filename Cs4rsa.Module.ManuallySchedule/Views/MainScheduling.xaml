@@ -14,8 +14,7 @@
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
     Name="root"
-    d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel,
-                                     IsDesignTimeCreatable=True}"
+    d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -248,7 +247,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </TabItem>
-                <TabItem Header="Details" />
+                <TabItem Header="Quick import" />
             </TabControl>
             <GridSplitter
                 Grid.Row="1"

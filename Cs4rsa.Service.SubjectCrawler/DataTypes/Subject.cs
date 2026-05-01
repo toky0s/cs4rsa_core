@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 
 using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.Utils;
+
 using HtmlAgilityPack;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
@@ -89,7 +90,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         private void GetClassGroups_Optimize()
         {
-            // 1. Get trTags
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(_rawSoup);
 
@@ -97,51 +97,94 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             {
                 throw new IndexOutOfRangeException("Không tồn tại bảng lịch");
             }
+            var trTags = htmlDocument.DocumentNode.SelectNodes("//table[@class='tb-calendar']/tbody/tr").ToArray();
+            LoopOptimize(trTags);
+        }
 
-            var tableTbCalendar = htmlDocument.DocumentNode.Descendants("table").ToArray()[3];
-            var bodyCalendar = tableTbCalendar.Descendants("tbody").ToArray()[0];
-            var trTags = bodyCalendar.Descendants("tr");
+        private void LoopOptimize(HtmlNode[] trTags)
+        {
+            ClassGroup classGroup = null;
+            string classGroupName = string.Empty;
+            var registerCodes = new HashSet<string>();
 
-            // 2. Get hit trTags
-            var hitNodes = trTags.Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "hit").ToArray();
+            int count = trTags.Length;
+            int index = 0;
 
-            // 3. Get class group names
-            var classGroupNames = trTags
-                .Where(node => node.SelectSingleNode("td").Attributes["class"].Value == "nhom-lop")
-                .Select(node => node.InnerText.Trim())
-                .ToArray();
-
-            var currClassGroupNameIdx = 0;
-            var currSchoolClassIdx = 0;
-            while (currClassGroupNameIdx < classGroupNames.Length)
+            while (index < count)
             {
-                var registerCodes = new HashSet<string>();
-                ClassGroup classGroup = new ClassGroup(classGroupNames[currClassGroupNameIdx], SubjectCode, Name);
-                while (currSchoolClassIdx < hitNodes.Length)
+                var currNode = trTags[index];
+                if (IsHeadingRow(currNode, out string outClassGroupName))
                 {
-                    // TODO: Performance issue
-                    var schoolClass = GetSchoolClass(hitNodes[currSchoolClassIdx]);
-                    if (schoolClass.SchoolClassName.StartsWith(classGroupNames[currClassGroupNameIdx]))
+                    if (!string.IsNullOrWhiteSpace(classGroupName) && !classGroupName.Equals(outClassGroupName))
                     {
-                        schoolClass.ClassGroupName = classGroupNames[currClassGroupNameIdx];
-                        if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode)
-                            && !registerCodes.Contains(schoolClass.RegisterCode))
-                        {
-                            registerCodes.Add(schoolClass.RegisterCode);
-                        }
-                        classGroup.AddSchoolClass(schoolClass);
-                        currSchoolClassIdx++;
-                    }
-                    else
-                    {
+                        ClassGroups.Add(classGroup);
                         registerCodes.Clear();
-                        break;
+                        classGroup = null;
                     }
+                    classGroupName = outClassGroupName;
+                    classGroup = new ClassGroup(classGroupName, SubjectCode, Name);
+                }
+                else if (IsSchoolClass(currNode))
+                {
+                    var schoolClass = GetSchoolClass(currNode);
+
+                    schoolClass.ClassGroupName = classGroupName;
+                    if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode)
+                        && !registerCodes.Contains(schoolClass.RegisterCode))
+                    {
+                        registerCodes.Add(schoolClass.RegisterCode);
+                    }
+                    classGroup.AddSchoolClass(schoolClass);
                     classGroup.AddRegisterCodes(registerCodes);
                 }
-                ClassGroups.Add(classGroup);
-                currClassGroupNameIdx++;
+                index++;
             }
+            if (classGroup != null)
+            {
+                ClassGroups.Add(classGroup);
+            }
+        }
+
+
+        public static bool IsSchoolClass(HtmlNode trNode)
+        {
+            if (trNode == null) return false;
+
+            // Kiểm tra thẻ tr có class="lop"
+            var classAttr = trNode.GetAttributeValue("class", string.Empty);
+            if (!classAttr.Contains("lop"))
+                return false;
+
+            // Kiểm tra td đầu tiên có class="hit"
+            var firstTd = trNode.SelectSingleNode("./td[1]");
+            if (firstTd == null) return false;
+
+            var tdClass = firstTd.GetAttributeValue("class", string.Empty);
+            return tdClass.Contains("hit");
+        }
+
+        public static bool IsHeadingRow(HtmlNode trNode, out string classGroupName)
+        {
+            if (trNode == null || trNode.Name != "tr")
+            {
+                classGroupName = string.Empty;
+                return false;
+            }
+
+            // Dùng XPath để tìm trực tiếp td có class="nhom-lop"
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(trNode.InnerHtml);
+
+            var tdNode = htmlDocument.DocumentNode.SelectSingleNode(".//td[contains(@class,'nhom-lop')]");
+            var divNode = htmlDocument.DocumentNode.SelectSingleNode(".//td[@class='nhom-lop']//div");
+
+            if (divNode != null)
+            {
+                classGroupName = divNode.InnerText.Trim();
+                return tdNode != null;
+            }
+            classGroupName = string.Empty;
+            return false;
         }
 
         /// <summary>

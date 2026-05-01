@@ -5,12 +5,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE903FCF-286A-4BD3-860D-F45FDCC7D5CC}</ProjectGuid>
+    <ProjectGuid>{A349FE78-704B-4F4F-8655-F1DA969AB480}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Test</RootNamespace>
-    <AssemblyName>Test</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <RootNamespace>UnitTestProject</RootNamespace>
+    <AssemblyName>UnitTestProject</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -20,9 +20,6 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-    <RunSettingsFilePath>
-    </RunSettingsFilePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,8 +60,8 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.20.70.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.20.70\lib\net462\Moq.dll</HintPath>
+    <Reference Include="NSubstitute, Version=5.3.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSubstitute.5.3.0\lib\net462\NSubstitute.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -90,8 +87,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CourseCrawler_20231112.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="CourseCrawler\CourseCrawler_20231112.cs" />
+    <Compile Include="SubjectCrawler\SubjectCrawler_20231110.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,23 +96,42 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\20231112_78.htm">
+    <Content Include="CourseCrawler\Resources\20231112_78.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\20231112_82.htm">
+    <Content Include="CourseCrawler\Resources\20231112_82.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\20231112_year78.htm">
+    <Content Include="CourseCrawler\Resources\20231112_year78.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\20231112_year82.htm">
+    <Content Include="CourseCrawler\Resources\20231112_year82.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SubjectCrawler\Resources\20231110_NULL_99999.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SubjectCrawler\Resources\20231110_CS_252.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SubjectCrawler\Resources\20231110_CS_211.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SubjectCrawler\Resources\20231110_ACC_349.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SubjectCrawler\Resources\20231110_ACC_201.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
-      <Project>{82462320-ee93-4afa-bcb0-b32c8cc81ab4}</Project>
+      <Project>{82462320-EE93-4AFA-BCB0-B32C8CC81AB4}</Project>
       <Name>Cs4rsa.Service.CourseCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
+      <Project>{995CC365-28E3-4525-8B0A-960A4F894C15}</Project>
+      <Name>Cs4rsa.Service.SubjectCrawler</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
