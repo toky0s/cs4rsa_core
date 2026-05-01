@@ -5,7 +5,7 @@ using Cs4rsa.Infrastructure.Common;
 
 namespace Cs4rsa.Service.DisciplineCrawler
 {
-    public class DisciplineCrawler
+    public class DisciplineCrawler: IDisciplineCrawler
     {
         private readonly IDisciplineHtmlGetter _htmlGetter;
         public DisciplineCrawler(IDisciplineHtmlGetter htmlGetter)

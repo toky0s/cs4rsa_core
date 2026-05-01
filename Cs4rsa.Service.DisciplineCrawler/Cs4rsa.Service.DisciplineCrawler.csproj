@@ -53,6 +53,7 @@
     <Compile Include="Discipline.cs" />
     <Compile Include="DisciplineCrawler.cs" />
     <Compile Include="DisciplineHtmlGetter.cs" />
+    <Compile Include="IDisciplineCrawler.cs" />
     <Compile Include="IDisciplineHtmlGetter.cs" />
     <Compile Include="Keyword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CourseCrawler\CourseCrawler_20231112.cs" />
+    <Compile Include="DisciplineCrawler_Test\DisciplineCrawler_20260501.cs" />
     <Compile Include="SubjectCrawler\SubjectCrawler_20231110.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -106,6 +107,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="CourseCrawler\Resources\20231112_year82.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DisciplineCrawler_Test\Resources\CourseResultSearch.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SubjectCrawler\Resources\20231110_NULL_99999.html">
@@ -128,6 +132,10 @@
     <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
       <Project>{82462320-EE93-4AFA-BCB0-B32C8CC81AB4}</Project>
       <Name>Cs4rsa.Service.CourseCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.DisciplineCrawler\Cs4rsa.Service.DisciplineCrawler.csproj">
+      <Project>{14541AC5-7358-4B89-A188-1BBB66BCE24B}</Project>
+      <Name>Cs4rsa.Service.DisciplineCrawler</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
       <Project>{995CC365-28E3-4525-8B0A-960A4F894C15}</Project>

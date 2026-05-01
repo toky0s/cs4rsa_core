@@ -24,7 +24,6 @@ namespace Test_SubjectCrawler
         private string _baseDir;
 
         [TestInitialize]
-        
         public void SetUp()
         {
             _baseDir = AppDomain.CurrentDomain.BaseDirectory; 
