@@ -127,10 +127,6 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
-
-            containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
-            containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();
-            containerRegistry.RegisterDialog<SaveSessionUC, SaveSessionUCViewModel>();
         }
 
         protected override Window CreateShell()

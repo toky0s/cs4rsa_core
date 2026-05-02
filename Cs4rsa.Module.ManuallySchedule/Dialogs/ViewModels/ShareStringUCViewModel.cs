@@ -1,54 +1,79 @@
-﻿using System.Windows;
-using Cs4rsa.Service.Dialog.Interfaces;
-using MaterialDesignThemes.Wpf;
+﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
+using Cs4rsa.Module.ManuallySchedule.Utils;
+
+using Microsoft.Extensions.Logging;
+
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
+
+using System;
+using System.Windows;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public class ShareStringUCViewModel : BindableBase
+    public class ShareStringUCViewModel : BindableBase, IDialogAware
     {
-        private const string DefaultShareString = "Không có Share String nào ở đây cả.";
-
-        #region Bindings
         private string _shareString;
         public string ShareString
         {
-            get => _shareString == string.Empty ? DefaultShareString : _shareString;
+            get => _shareString;
             set => SetProperty(ref _shareString, value);
         }
-        #endregion
 
         #region Commands
         public DelegateCommand CopyCommand { get; set; }
-        public DelegateCommand CloseDialogCommand { get; set; }
+
+        public string Title => "Share Your Schedule";
         #endregion
 
-        #region Service
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
-        #endregion
+        public event Action<IDialogResult> RequestClose;
+        private readonly IShareStringService _shareStringService;
+        private readonly ILogger<ShareStringUCViewModel> _logger;
 
         public ShareStringUCViewModel(
-            ISnackbarMessageQueue snackbarMessageQueue,
-            IDialogService dialogService
+            IShareStringService shareStringService,
+            ILogger<ShareStringUCViewModel> logger
         )
         {
-            _snackbarMessageQueue = snackbarMessageQueue;
-
+            _logger = logger;
+            _shareStringService = shareStringService;
             CopyCommand = new DelegateCommand(OnCopy, CanCopy);
-            CloseDialogCommand = new DelegateCommand(dialogService.CloseDialog);
         }
 
         private bool CanCopy()
         {
-            return _shareString != "Không có Share String nào ở đây cả.";
+            return !string.IsNullOrWhiteSpace(ShareString);
         }
 
         private void OnCopy()
         {
             if (_shareString == null) return;
             Clipboard.SetData(DataFormats.Text, _shareString);
-            _snackbarMessageQueue.Enqueue("Đã sao chép ShareString vào Clipboard");
+            _logger.LogInformation("User copied share string successfully");
+        }
+
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+            _logger.LogInformation("Dialog share string closed");
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            var userSubjects = parameters.GetValue<UserSubject[]>("UserSubjects");
+            if (userSubjects.Length == 0)
+            {
+                _logger.LogWarning("No user subject found to generate share string");
+                ShareString = string.Empty;
+                return;
+            }
+            ShareString = _shareStringService.GetShareString(userSubjects);
+            CopyCommand.RaiseCanExecuteChanged();
         }
     }
 }

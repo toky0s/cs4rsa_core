@@ -2,6 +2,8 @@
 using Cs4rsa.Common.Interfaces;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
+using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.ManuallySchedule.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Views;
@@ -26,12 +28,17 @@ namespace Cs4rsa.Module.ManuallySchedule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<ShareString>();
+            containerRegistry.RegisterSingleton<IShareStringService, ShareString>();
             containerRegistry.RegisterSingleton<INotificationService, NotificationService>();
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+
+            containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
+            containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();
+            containerRegistry.RegisterDialog<SaveSessionUC, SaveSessionUCViewModel>();
+            containerRegistry.RegisterDialog<ShareStringUC, ShareStringUCViewModel>();
         }
     }
 }

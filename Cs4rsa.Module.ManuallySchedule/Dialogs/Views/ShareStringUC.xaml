@@ -3,48 +3,36 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
+    MinWidth="100"
+    MinHeight="100"
     d:DesignHeight="200"
     d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance Type=vm:ShareStringUCViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <materialDesign:Card Width="415" Padding="10">
-        <StackPanel HorizontalAlignment="Left">
-            <TextBlock
-                Margin="0,0,0,10"
-                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                TextAlignment="Left">
-                Chia sẻ
-            </TextBlock>
-            <TextBlock
-                Name="Description"
-                Margin="0,0,0,5"
-                Foreground="{StaticResource Grey400}"
-                Style="{StaticResource MaterialDesignCaptionTextBlock}"
-                TextAlignment="Justify"
-                TextWrapping="Wrap">
-                Chia sẻ ShareString này cho bạn bè của
-                mình hiện tại đang chạy CS4RSA trên một thiết bị khác, giúp họ
-                thấy được lịch mà bạn đã sắp xếp.
-            </TextBlock>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox
-                    Grid.Column="0"
-                    Background="#f5f5f5"
-                    IsReadOnly="True"
-                    Text="{Binding ShareString}" />
-                <Button
-                    Grid.Column="1"
-                    Margin="5,0,0,0"
-                    Command="{Binding CopyCommand}"
-                    Content="{materialDesign:PackIcon ContentCopy}" />
-            </Grid>
-        </StackPanel>
-    </materialDesign:Card>
+    <Border Padding="4">
+        <Grid  HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBox
+                Margin="0 0 0 4"
+                VerticalScrollBarVisibility="Auto"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                Grid.Row="0"
+                Background="#f5f5f5"
+                IsReadOnly="True"
+                Text="{Binding ShareString}" />
+            <Button
+                Grid.Row="1"
+                FontFamily="Segoe UI Emoji"
+                Command="{Binding CopyCommand}"
+                Content="📋" />
+        </Grid>
+    </Border>
 </UserControl>

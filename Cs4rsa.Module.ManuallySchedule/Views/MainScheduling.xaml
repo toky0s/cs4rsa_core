@@ -14,6 +14,8 @@
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
     Name="root"
+    d:Width="800"
+    d:Height="670"
     d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -205,13 +207,10 @@
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource IconButtonStyle}"
                                                         ToolTip="Delete"
+                                                        Foreground="DimGray"
+                                                        Content="🗑️"
                                                         Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
-                                                        <TextBlock
-                                                            HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center"
-                                                            FontFamily="Segoe MDL2 Assets"
-                                                            FontSize="16"
-                                                            Text="" />
+                                                        
                                                     </Button>
                                                 </Grid>
                                             </DataTemplate>
@@ -235,13 +234,37 @@
                                         <RowDefinition></RowDefinition>
                                         <RowDefinition></RowDefinition>
                                     </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="13" FontWeight="DemiBold"></TextBlock>
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="13" FontWeight="DemiBold"></TextBlock>
                                     <TextBlock Grid.Row="1" Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" FontSize="10"></TextBlock>
-                                    <StackPanel HorizontalAlignment="Right" Grid.Row="2" Orientation="Horizontal">
-                                        <Button Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}" CommandParameter="{Binding}"
-                                                Content="Delete" Margin="0 0 4 0"></Button>
-                                        <Button Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}" CommandParameter="{Binding}" Content="Load..."></Button>
-                                    </StackPanel>
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0"
+                                                Style="{StaticResource IconButtonStyle}"
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}" 
+                                                CommandParameter="{Binding}"
+                                                ToolTip="Delete"
+                                                Foreground="DimGray"
+                                                Content="🗑️"
+                                                Margin="0 0 4 0">
+                                        </Button>
+                                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="0 0 4 0"
+                                                ToolTip="Share"
+                                                Foreground="Green"
+                                                BorderThickness="0"
+                                                Content="🔗"
+                                                Style="{StaticResource IconButtonStyle}">
+                                            </Button>
+                                            <Button Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}" CommandParameter="{Binding}" Content="Load..."></Button>
+                                        </StackPanel>
+                                    </Grid>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

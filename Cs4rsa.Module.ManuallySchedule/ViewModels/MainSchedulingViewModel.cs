@@ -57,6 +57,48 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         #region Commands
 
+        #region Commands in Store tab in search box
+        private DelegateCommand<UserSchedule> _shareCommand;
+        public DelegateCommand<UserSchedule> ShareCommand =>
+            _shareCommand ?? (_shareCommand = new DelegateCommand<UserSchedule>(ExecuteShareCommand, CanExecuteShareCommand));
+
+        void ExecuteShareCommand(UserSchedule userSchedule)
+        {
+            var userSubjects = _unitOfWork.UserSchedules
+                    .GetSessionDetails(userSchedule.UserScheduleId)
+                    .Select(
+                        sd => new UserSubject()
+                        {
+                            SubjectCode = sd.SubjectCode,
+                            SubjectName = sd.SubjectName,
+                            ClassGroup = sd.ClassGroup,
+                            SchoolClass = sd.SelectedSchoolClass,
+                            RegisterCode = sd.RegisterCode
+                        }
+                    ).ToArray();
+
+            _dialogService.ShowDialog(nameof(ShareStringUC), new DialogParameters()
+            {
+                {"UserSubjects", userSubjects }
+            }, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    _logger.LogInformation("ShareStringUC closed with OK");
+                }
+                else
+                {
+                    _logger.LogInformation("ShareStringUC closed");
+                }
+            });
+        }
+
+        bool CanExecuteShareCommand(UserSchedule userSchedule)
+        {
+            return true;
+        }
+        #endregion
+
         #region Context menu commands when user right-click on Subject in search box
         private DelegateCommand<UserSchedule> _deleteUserScheduleCommand;
         public DelegateCommand<UserSchedule> DeleteUserScheduleCommand =>

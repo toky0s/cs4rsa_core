@@ -12,7 +12,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
     public class Subject
     {
-        private readonly string _rawSoup;
         public List<string> TeacherUrls { get; }
         public List<string> TeacherNames { get; }
         public List<ClassGroup> ClassGroups { get; }
@@ -53,8 +52,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             TeacherUrls = new List<string>();
             ClassGroups = new List<ClassGroup>();
 
-            _rawSoup = rawSoup;
-
             StudyUnitType = studyUnitType;
             StudyType = studyType;
             Semester = semester;
@@ -69,7 +66,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             ParallelSubject = SubjectSplit(parallelSubject);
             IsSpecialSubject = GetIsSpecialSubject();
 
-            GetClassGroups_Optimize();
+            GetClassGroups_Optimize(rawSoup);
         }
 
         /// <summary>
@@ -88,11 +85,10 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 .Any(registerCodeCount => registerCodeCount > 1);
         }
 
-        private void GetClassGroups_Optimize()
+        private void GetClassGroups_Optimize(string html)
         {
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(_rawSoup);
-
+            htmlDocument.LoadHtml(html);
             if (htmlDocument.DocumentNode.Descendants("table").Count() < 4)
             {
                 throw new IndexOutOfRangeException("Không tồn tại bảng lịch");
@@ -171,20 +167,24 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 return false;
             }
 
-            // Dùng XPath để tìm trực tiếp td có class="nhom-lop"
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(trNode.InnerHtml);
+            var innerHtml = trNode.InnerHtml;
+            // Kiểm tra nếu có class="nhom-lop" trong innerHtml thì mới tiếp tục regex để lấy tên nhóm lớp.
+            var isHasNhomLop = innerHtml.Contains("class=\"nhom-lop\"");
+            // Lấy tên class group có trong thẻ div
+            var pattern = @"<div[^>]*>(.*?)<\/div>";
 
-            var tdNode = htmlDocument.DocumentNode.SelectSingleNode(".//td[contains(@class,'nhom-lop')]");
-            var divNode = htmlDocument.DocumentNode.SelectSingleNode(".//td[@class='nhom-lop']//div");
+            Match match = Regex.Match(innerHtml, pattern, RegexOptions.Singleline);
 
-            if (divNode != null)
+            if (match.Success)
             {
-                classGroupName = divNode.InnerText.Trim();
-                return tdNode != null;
+                classGroupName = match.Groups[1].Value.Trim();
+                return isHasNhomLop;
             }
-            classGroupName = string.Empty;
-            return false;
+            else
+            {
+                classGroupName = string.Empty;
+                return false;
+            }
         }
 
         /// <summary>

@@ -103,16 +103,12 @@
     <Compile Include="Dialogs\Models\ScheduleBagItemModel.cs" />
     <Compile Include="Dialogs\Models\ScheduleBagModel.cs" />
     <Compile Include="Dialogs\Models\UserSubject.cs" />
-    <Compile Include="Dialogs\ViewModels\ImportSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleDetailUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
-    <Compile Include="Dialogs\Views\ImportSessionUC.xaml.cs">
-      <DependentUpon>ImportSessionUC.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">
       <DependentUpon>SaveSessionUC.xaml</DependentUpon>
     </Compile>
@@ -153,10 +149,10 @@
     <Compile Include="Models\SchoolClassModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\IShareStringService.cs" />
     <Compile Include="Utils\ShareString.cs" />
     <Compile Include="Utils\SubjectCodeParser.cs" />
     <Compile Include="Utils\ValidateUserSchedule.cs" />
-    <Compile Include="Validations\ShareStringRule.cs" />
     <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
     <Compile Include="ViewModels\ChooseViewModel.cs" />
     <Compile Include="ViewModels\ClgViewModel.cs" />
@@ -188,10 +184,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Dialogs\Views\ImportSessionUC.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\Views\SaveSessionUC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -312,6 +304,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LoadingGif_v2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\shareicon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

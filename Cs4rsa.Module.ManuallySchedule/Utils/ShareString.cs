@@ -19,7 +19,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
     /// các phương tiện truyền thông, giúp giảm thời gian lựa chọn
     /// môn học cũng như nhóm lớp.
     /// </summary>
-    public class ShareString
+    public class ShareString: IShareStringService
     {
         #region DI
         private readonly IUnitOfWork _unitOfWork;
@@ -37,9 +37,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
                 return string.Empty;
             }
 
-            //var userSubjects = ConvertToUserSubjects(classGroupModels);
-            //return GetShareString(userSubjects);
-
             var scheduleBagModel = ToScheduleBagModel(classGroupModels);
             return GetShareString(scheduleBagModel);
         }
@@ -56,12 +53,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
             return StringHelper.EncodeTo64(json);
         }
 
-        public static IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
+        public IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
         {
             try
             {
                 var json = StringHelper.DecodeFrom64(shareString);
-                return JsonConvert.DeserializeObject<IEnumerable<UserSubject>>(json);
+                return JsonConvert.DeserializeObject<UserSubject[]>(json);
             }
             catch
             {
@@ -152,7 +149,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
                 };
                 userSubjects.Add(userSubject);
             }
-            return userSubjects;
+            return userSubjects.ToArray();
         }
     }
 }

@@ -8,10 +8,5 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
         {
             InitializeComponent();
         }
-
-        public bool IsCloseOnClickAway()
-        {
-            return true;
-        }
     }
 }
