@@ -23,9 +23,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         {
             InitializeComponent();
 
-            regionManager.RegisterViewWithRegion(RegionInfo.Manual_ClassGroup, typeof(Clg));
-            regionManager.RegisterViewWithRegion(RegionInfo.Manual_Choose, typeof(Choose));
-            regionManager.RegisterViewWithRegion(RegionInfo.Manual_Scheduler, typeof(Scheduler));
+            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_ClassGroup, typeof(Clg));
+            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_Choose, typeof(Choose));
+            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_Scheduler, typeof(Scheduler));
         }
 
         private void DataGrid_KeyDown(object sender, KeyEventArgs e)
@@ -41,6 +41,19 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
                     e.Handled = true; // Ngăn DataGrid tự xử lý mặc định
                 }
             }
+        }
+
+        private void DataGrid_SelectedClassGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.AddedItems.Cast<ClassGroupModel>().ToList().ForEach(item =>
+            {
+                ((MainSchedulingViewModel)DataContext).RemoveSelectedCommand.RaiseCanExecuteChanged();
+            });
+        }
+
+        private void DataGrid_SelectedClassGroups_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+
         }
     }
 }

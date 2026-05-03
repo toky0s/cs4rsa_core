@@ -8,27 +8,34 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;assembly=Cs4rsa.Module.ManuallySchedule"
     x:Name="DetailsSubjectUC"
-    MaxWidth="500"
-    Padding="10"
+    Padding="4"
     d:DataContext="{d:DesignInstance Type=vm:ShowDetailsSubjectUCViewModel,
                                      IsDesignTimeCreatable=True}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Height" Value="245"></Setter>
+            <Setter Property="MaxWidth" Value="500"></Setter>
+            <Setter Property="MaxHeight" Value="500"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="True"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <UserControl.Resources>
         <converters:EmptyStringPlaceholderConverter x:Key="EmptyStringPlaceholderConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition  Height="Auto" />
+            <RowDefinition Height="Auto"  />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <StackPanel
             Grid.Row="0"
-            Grid.ColumnSpan="2"
+            
             Margin="0,0,0,10"
             Orientation="Vertical">
             <TextBlock Text="Thông tin môn học" TextAlignment="Left" />
@@ -50,7 +57,7 @@
                 </Hyperlink>
             </TextBlock>
         </StackPanel>
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition />
@@ -110,5 +117,8 @@
                 TextAlignment="Justify"
                 TextWrapping="WrapWithOverflow" />
         </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Content="Delete" ></Button>
+        </StackPanel>
     </Grid>
 </UserControl>

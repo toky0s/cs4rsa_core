@@ -191,7 +191,10 @@
                                                                         Height="8"
                                                                         Margin="0,0,4,0"
                                                                         Fill="{Binding Color}" />
-                                                                    <TextBlock FontSize="10" Text="{Binding SubjectCode}" />
+                                                                    <TextBlock FontSize="10">
+                                                                        <Run Text="{Binding SubjectCode}"></Run>
+                                                                        <Run Text="→"></Run>
+                                                                    </TextBlock>
                                                                 </StackPanel>
                                                             </Border>
                                                             <Border Grid.Row="1">
@@ -210,14 +213,14 @@
                                                         Foreground="DimGray"
                                                         Content="🗑️"
                                                         Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
-                                                        
+
                                                     </Button>
                                                 </Grid>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <StackPanel Grid.Row="1" HorizontalAlignment="Right">
-                                        <Button Command="{Binding DeleteAllCommand}" Content="Delete All" />
+                                        <Button Command="{Binding DeleteAllCommand}" Content="_Delete All" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -270,7 +273,23 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </TabItem>
-                <TabItem Header="Quick import" />
+                <TabItem Header="Quick import">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="From shared code" Grid.Row="0"></TextBlock>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Margin="0 0 4 0" uihelper:TextBoxHelper.Placeholder="Enter your shared code..."></TextBox>
+                            <Button Grid.Column="1" Content="Load..."></Button>
+                        </Grid>
+                    </Grid>
+                </TabItem>
             </TabControl>
             <GridSplitter
                 Grid.Row="1"
@@ -388,27 +407,28 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <DataGrid
+                                Name="DataGrid_SelectedClassGroups"
                                 PreviewKeyDown="DataGrid_KeyDown"
                                 Grid.Row="0"
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="True"
-                                ItemsSource="{Binding SelectedClassGroupModels}">
+                                ItemsSource="{Binding SelectedClassGroupModels}" VerticalGridLinesBrush="{x:Null}" SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged" SelectedCellsChanged="DataGrid_SelectedClassGroups_SelectedCellsChanged">
                                 <DataGrid.Columns>
-                                    <DataGridTemplateColumn> 
+                                    <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.Header>
                                             <TextBlock Text="Color" />
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Rectangle Fill="{Binding Color}" />
+                                                <Rectangle Fill="{Binding Color, Mode=OneWay}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn Binding="{Binding Name}" Header="Subject code" />
-                                    <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName}" Header="Subject name" />
+                                    <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Subject code" />
+                                    <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName, Mode=OneWay}" Header="Subject name" />
                                     <DataGridTextColumn
-                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-', TargetNullValue='-'}"
+                                        Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-', TargetNullValue='-', Mode=OneWay}"
                                         Header="Register codes"
                                         IsReadOnly="True" />
                                 </DataGrid.Columns>
@@ -421,7 +441,9 @@
                                     <Button 
                                         Content="_Remove selected" 
                                         Margin="0 0 5 0"
-                                        Command="{Binding RemoveSelectedCommand}"></Button>
+                                        Command="{Binding RemoveSelectedCommand}"
+                                        CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
+                                        ></Button>
                                     <Button 
                                         Command="{Binding DeleteAllChooseCommand}" 
                                         Content="_Unselect All" 

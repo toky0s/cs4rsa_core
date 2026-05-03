@@ -154,30 +154,11 @@
     <Compile Include="Utils\SubjectCodeParser.cs" />
     <Compile Include="Utils\ValidateUserSchedule.cs" />
     <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
-    <Compile Include="ViewModels\ChooseViewModel.cs" />
-    <Compile Include="ViewModels\ClgViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleBagViewModel.cs" />
     <Compile Include="ViewModels\NotificationItemViewModel.cs" />
-    <Compile Include="ViewModels\SchedulerViewModel.cs" />
-    <Compile Include="ViewModels\SearchViewModel.cs" />
-    <Compile Include="Views\Choose.xaml.cs">
-      <DependentUpon>Choose.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Chose_DEPRECATED.xaml.cs">
-      <DependentUpon>Chose_DEPRECATED.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Clg.xaml.cs">
-      <DependentUpon>Clg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\MainScheduling.xaml.cs">
       <DependentUpon>MainScheduling.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Scheduler.xaml.cs">
-      <DependentUpon>Scheduler.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Search.xaml.cs">
-      <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -217,27 +198,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Choose.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Chose_DEPRECATED.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Clg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\MainScheduling.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Scheduler.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Search.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

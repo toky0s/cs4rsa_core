@@ -12,11 +12,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Events
     internal class SearchVmMsgs
     {
         /// <summary>
-        /// Xoá một môn học
-        /// </summary>
-        internal class DelSubjectMsg : PubSubEvent<SubjectModel>{ }
-
-        /// <summary>
         /// Xoá hết tất cả các môn đã tải
         /// </summary>
         internal class DelAllSubjectMsg : PubSubEvent { }

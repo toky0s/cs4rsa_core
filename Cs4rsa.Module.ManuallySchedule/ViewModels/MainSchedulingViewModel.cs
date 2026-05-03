@@ -24,8 +24,6 @@ using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json.Linq;
-
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -149,8 +147,24 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             return userSchedule.UserScheduleId != 0;
         }
 
-        public DelegateCommand<SubjectModel> DeleteCommand { get; set; }
+        private DelegateCommand<SubjectModel> _deleteCommand;
+        public DelegateCommand<SubjectModel> DeleteCommand => _deleteCommand ?? (_deleteCommand = new DelegateCommand<SubjectModel>(ExecuteDeleteCommand));
+        
+        /// <summary>
+        /// Xoá môn học đã tải.
+        /// </summary>
+        /// <param name="sm">SubjectModel.</param>
+        private void ExecuteDeleteCommand(SubjectModel sm)
+        {
+            ClassGroupModels.Clear();
+            SubjectModels.Remove(sm);
+            SelectedSubject = null;
+            SelectedSubjectModel = null;
+            _notificationService.SendNotification("Notification", "Đã xoá môn " + sm.SubjectName, fromAction: "Delete subject from search box");
+        }
+
         public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
+        
         private DelegateCommand<SubjectModel> _detailCommand;
         public DelegateCommand<SubjectModel> DetailCommand =>
              _detailCommand ?? (_detailCommand = new DelegateCommand<SubjectModel>(ExecuteDetailCommand, CanExecuteDetailCommand));
@@ -172,7 +186,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _dialogService.ShowDialog(nameof(ShowDetailsSubjectUC), dialogParameter, r => { _logger.LogInformation("ShowDetailsSubjectUC closed"); });
         }
 
-        public DelegateCommand<SubjectModel> CopyErrorCommand { get; set; }
+        private DelegateCommand<SubjectModel> _copyErrorCommand;
+        public DelegateCommand<SubjectModel> CopyErrorCommand => 
+            _copyErrorCommand ?? (_copyErrorCommand = new DelegateCommand<SubjectModel>(ExecuteCopyErrorCommand, CanExecuteCopyErrorCommand));
+        private bool CanExecuteCopyErrorCommand(SubjectModel subjectModel)
+        {
+            return subjectModel != null && subjectModel.IsError;
+        }
+
+        private void ExecuteCopyErrorCommand(SubjectModel subjectModel)
+        {
+            Clipboard.SetText(subjectModel.ErrorMessage);
+            _logger.LogInformation("User copy error message of subject model: {name}", subjectModel.SubjectName);
+        }
 
         private DelegateCommand<UserSchedule> _loadUserScheduleCommand;
         public DelegateCommand<UserSchedule> LoadUserScheduleCommand =>
@@ -213,25 +239,33 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Command for buttons are under selected classes table
-        private DelegateCommand<IEnumerable<ClassGroupModel>> _removeSelectedCommand;
-        public DelegateCommand<IEnumerable<ClassGroupModel>> RemoveSelectedCommand =>
-            _removeSelectedCommand ?? (_removeSelectedCommand = new DelegateCommand<IEnumerable<ClassGroupModel>>(ExecuteRemoveSelectedCommand, CanExecuteRemoveSelectedCommand));
+        private DelegateCommand<object> _removeSelectedCommand;
+        public DelegateCommand<object> RemoveSelectedCommand =>
+            _removeSelectedCommand ?? (_removeSelectedCommand = new DelegateCommand<object>(ExecuteRemoveSelectedCommand, CanExecuteRemoveSelectedCommand));
 
-        void ExecuteRemoveSelectedCommand(IEnumerable<ClassGroupModel> classGroupModels)
+        void ExecuteRemoveSelectedCommand(object parameter)
         {
-            classGroupModels.ToList().ForEach(item =>
+            if (!(parameter is System.Collections.IList selectedItems)) return;
+
+            for (int i = 0; i < selectedItems.Count; i++)
             {
-                SelectedClassGroupModels.Remove(item);
-            });
-            UpdateConflicts();
+                if (selectedItems[i] is ClassGroupModel cg)
+                {
+                    SelectedClassGroupModels.Remove(cg);
+                }
+            }
+
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             _logger.LogInformation("User remove selected class groups successfully.");
         }
 
-        bool CanExecuteRemoveSelectedCommand(IEnumerable<ClassGroupModel> classGroupModels)
+        bool CanExecuteRemoveSelectedCommand(object parameter)
         {
-            return SelectedClassGroupModels.Count > 0;
+            if (!(parameter is System.Collections.IList selectedItems)) return false;
+
+            return SelectedClassGroupModels.Count > 0 && selectedItems.Count > 0;
         }
+
 
         /// <summary>
         /// Nút xoá tất cả các lớp đã chọn, không xoá môn đã chọn
@@ -447,20 +481,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Subscribe Events
-
-            //eventAggregator.GetEvent<AutoVmMsgs.ShowOnSimuMsg>().Subscribe().Register<AutoVmMsgs.ShowOnSimuMsg>(this, (r, m) =>
-            //{
-            //    ImportSubjects(m.Value);
-            //});
-
-            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe().Register<UpdateVmMsgs.UpdateSuccessMsg>(this, (r, m) =>
-            //{
-            //    DisciplineKeywordModels.Clear();
-            //    Disciplines.Clear();
-            //    SubjectModels.Clear();
-            //    ReloadDisciplineAndKeyWord();
-            //});
-
             _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(value =>
             {
                 if (value is SchoolClassBlock schoolClassBlock)
@@ -469,30 +489,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
             });
 
-            //eventAggregator.GetEvent<AutoVmMsgs.SaveStoreMsg>().Subscribe().Register<AutoVmMsgs.SaveStoreMsg>(this, (r, m) =>
-            //{
-            //    SubjectModels.Clear();
-            //    ComModels.Clear();
-
-            //    Messenger.Send(new SearchVmMsgs.DelAllSubjectMsg());
-
-            //    AddCommand.NotifyCanExecuteChanged();
-            //    DeleteAllCommand.NotifyCanExecuteChanged();
-
-            //    UpdateCreditTotal();
-            //    UpdateSubjectAmount();
-
-            //    foreach (CombinationModel item in m.Value)
-            //    {
-            //        ComModels.Add(item);
-            //    }
-            //});
-
             #endregion
 
             #region Pros
             DisciplineKeywordModels = new ObservableCollection<Keyword>();
             SubjectModels = new ObservableCollection<SubjectModel>();
+            SubjectModels.CollectionChanged += SubjectModels_CollectionChanged;
+
             Disciplines = new ObservableCollection<Discipline>();
             FullMatchSearchingKeywords = new ObservableCollection<FullMatchSearchingKeyword>();
             SavedSchedules = new ObservableCollection<UserSchedule>();
@@ -505,19 +508,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             #region Commands
             AddCommand = new DelegateCommand(async () => await OnAdd(), () => !IsAlreadyDownloaded(SelectedKeyword));
-            DeleteCommand = new DelegateCommand<SubjectModel>(OnDelete);
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
 
-            CopyErrorCommand = new DelegateCommand<SubjectModel>(subjectModel =>
-            {
-                if (subjectModel.IsError)
-                {
-                    Clipboard.SetText(subjectModel.ErrorMessage);
-                    _snackbarMessageQueue.Enqueue("Đã sao chép lỗi vào clipboard");
-                }
-            });
+            
             ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
 
             #endregion
@@ -525,12 +520,47 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             LoadDiscipline();
             LoadSavedSchedules();
 
-            InitClgViewModel();
-            #region Messengers
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(HandlerDelAllSubjectMsg);
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(cgm =>
             {
-                DelSubjectMsgHandler(payload);
+                SelectedClassGroup = null;
             });
+
+            //_eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(this, (r, m) =>
+            //{
+            //    ClassGroupModels.Clear();
+            //    Teachers.Clear();
+            //});
+
+            // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
+            _eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
+            {
+                var classGroupModel = payload.ClassGroupModel;
+                var schoolClassName = payload.SelectedSchoolClassModel.SchoolClassName;
+                classGroupModel.ReRenderSchedule(schoolClassName);
+                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
+            });
+
+            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
+            _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
+            _classGroupModelsView.Filter = ClassGroupFilter;
+
+            TeacherCount = 0;
+            AnyTeacherName = true;
+            TeacherNames = new ObservableCollection<string>();
+            GotoCourseClassCommand = new DelegateCommand(OnGotoCourse);
+            ShowDetailsSchoolClassesCommand = new DelegateCommand(OnShowDetailsSchoolClasses);
+            FilterCommand = new DelegateCommand(OnFilter);
+            ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
+
+            InitFilter();
+
+            #region Messengers
+            //_eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
+            //{
+            //    DelSubjectMsgHandler(payload);
+            //});
 
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(DelAllSubjectMsgHandler);
 
@@ -539,13 +569,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 //_dialogService.CloseDialog();
                 RemoveChoosedClassMsgHandler(payload);
             });
-
-            //eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(payload =>
-            //{
-            //    ClassGroupModels.Clear();
-            //    ConflictModels.Clear();
-            //    PlaceConflictFinderModels.Clear();
-            //});
 
             // Click vào block thì đồng thời select class group model tương ứng.
             _eventAggregator.GetEvent<ScheduleBlockMsgs.SelectedMsg>().Subscribe(payload =>
@@ -577,7 +600,124 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
 
-            InitSchedulerViewModel();
+            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
+            {
+                foreach (var c in payload)
+                {
+                    RemoveScheduleItem(c.SubjectCode);
+                    AddScheduleItems(c);
+                }
+            });
+
+            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(CleanDays);
+
+            //_eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.ConflictCollChangedMsg>().Subscribe(payload =>
+            {
+                var conflictIds = payload.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Time);
+                AddNewConflicts(payload);
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.PlaceConflictCollChangedMsg>().Subscribe(payload =>
+            {
+                var conflictIds = payload.Select(cm => cm.GetId());
+                RemoveConflictNotInContains(conflictIds, ConflictType.Place);
+                AddNewConflicts(payload);
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(payload =>
+            {
+                foreach (var scm in payload.CurrentSchoolClassModels)
+                {
+                    RemoveScheduleItem(scm.SubjectCode);
+                }
+            });
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
+
+            _eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddScheduleItems);
+
+            IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
+
+            #region Weeks and Timelines
+            Phase1_Monday = new ObservableCollection<TimeBlock>();
+            Phase1_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase1_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase1_Thursday = new ObservableCollection<TimeBlock>();
+            Phase1_Friday = new ObservableCollection<TimeBlock>();
+            Phase1_Saturday = new ObservableCollection<TimeBlock>();
+            Phase1_Sunday = new ObservableCollection<TimeBlock>();
+
+            Phase2_Monday = new ObservableCollection<TimeBlock>();
+            Phase2_Tuesday = new ObservableCollection<TimeBlock>();
+            Phase2_Wednesday = new ObservableCollection<TimeBlock>();
+            Phase2_Thursday = new ObservableCollection<TimeBlock>();
+            Phase2_Friday = new ObservableCollection<TimeBlock>();
+            Phase2_Saturday = new ObservableCollection<TimeBlock>();
+            Phase2_Sunday = new ObservableCollection<TimeBlock>();
+
+            Week1 = new ObservableCollection<ObservableCollection<TimeBlock>>()
+            {
+                Phase1_Monday,
+                Phase1_Tuesday,
+                Phase1_Wednesday,
+                Phase1_Thursday,
+                Phase1_Friday,
+                Phase1_Saturday,
+                Phase1_Sunday
+            };
+
+            Week2 = new ObservableCollection<ObservableCollection<TimeBlock>>()
+            {
+                Phase2_Monday,
+                Phase2_Tuesday,
+                Phase2_Wednesday,
+                Phase2_Thursday,
+                Phase2_Friday,
+                Phase2_Saturday,
+                Phase2_Sunday
+            };
+
+            _schedules = new List<ObservableCollection<ObservableCollection<TimeBlock>>>() { Week1, Week2 };
+
+            Timelines = new ObservableCollection<string>();
+            foreach (var timeline in Cs4rsa.UI.ScheduleTable.Utils.Utils.TimeLines)
+            {
+                Timelines.Add(timeline);
+            }
+            #endregion
+        }
+
+        private void SubjectModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                
+            }
+            else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+            {
+                e.OldItems.Cast<SubjectModel>().ToList().ForEach(sm => {
+                    // Remove class group model which is belong to subject model that is removed
+                    var classGroup = SelectedClassGroupModels.First(classGroupModel => classGroupModel.SubjectCode.Equals(sm.SubjectCode));
+                    if (classGroup != null)
+                    {
+                        SelectedClassGroupModels.Remove(classGroup);
+                    }
+                    _logger.LogInformation("Removed subject with name {subjectName}", sm.SubjectName);
+                });
+            }
+            else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
+            {
+                
+            }
+            else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            {
+                CleanDays();
+            }
+            AddCommand.RaiseCanExecuteChanged();
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
 
         private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -652,8 +792,37 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnSelectedSubjectModelChanged(SubjectModel value)
         {
+            SelectedSubject = value;
             DeleteCommand.RaiseCanExecuteChanged();
-            _eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Publish(value);
+            AnyTeacherName = value.TeacherNames.Count > 0;
+            ClassGroupModels.Clear();
+            TeacherNames.Clear();
+
+            if (SelectedSubject != null
+                && SelectedSubject.ClassGroupModels != null)
+            {
+                foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
+                {
+                    // Thêm danh sách các lớp học của môn đã chọn
+                    ClassGroupModels.Add(classGroupModel);
+                }
+
+                TeacherNames.Add("TẤT CẢ");
+                foreach (var teacherName in SelectedSubject.TeacherNames)
+                {
+                    if (teacherName != null && !TeacherNames.Contains(teacherName))
+                    {
+                        // Thêm danh sách giảng viên hiện tại
+                        TeacherNames.Add(teacherName);
+                    }
+                }
+
+                SelectedTeacherName = TeacherNames[0];
+
+                // Count teacher exclude ALL option
+                TeacherCount = TeacherNames.Count - 1;
+                _classGroupModelsView.Refresh();
+            }
         }
 
         private void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
@@ -827,19 +996,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 );
                 SubjectModels.Insert(0, pseudoSubjectModel);
             }
-        }
-
-        /// <summary>
-        /// Xoá môn học đã tải.
-        /// </summary>
-        /// <param name="sm">SubjectModel.</param>
-        private void OnDelete(SubjectModel sm)
-        {
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Publish(sm);
-            SubjectModels.Remove(sm);
-            SelectedSubjectModel = null;
-            AddCommand.RaiseCanExecuteChanged();
-            _notificationService.SendNotification("Notification", "Đã xoá môn " + sm.SubjectName, fromAction: "Delete subject from search box");
         }
 
         /// <summary>
@@ -1030,26 +1186,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             return true;
         }
 
-        private void ImportSubjects(CombinationModel combinationModel)
-        {
-            foreach (var subject in SubjectModels)
-            {
-                _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Publish(subject);
-            }
-            SubjectModels.Clear();
-
-            foreach (var subject in combinationModel.SubjectModels)
-            {
-                SubjectModels.Add(subject);
-            }
-            AddCommand.RaiseCanExecuteChanged();
-            DeleteAllCommand.RaiseCanExecuteChanged();
-            foreach (var classGroupModel in combinationModel.ClassGroupModels)
-            {
-                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
-            }
-        }
-
         /// <summary>
         /// Thay thế Pseudo Subject bằng Subject được tải xuống.
         /// </summary>
@@ -1195,59 +1331,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand ResetFilterCommand { get; set; }
         #endregion
 
-        void InitClgViewModel()
-        {
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(sujectModel =>
-            {
-                ClassGroupModels.Clear();
-                SelectedSubject = null;
-            });
-
-            //_eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(n =>
-            //{
-            //    ClassGroupModels.Clear();
-            //    TeacherCount = 0;
-            //    SelectedSubject = null;
-            //});
-
-            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(HandlerDelAllSubjectMsg);
-
-            _eventAggregator.GetEvent<SearchVmMsgs.SelectedSubjectChangedMsg>().Subscribe(SelectedSubjectChangedHandler);
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(cgm =>
-            {
-                SelectedClassGroup = null;
-            });
-
-            //_eventAggregator.GetEvent<UpdateVmMsgs.UpdateSuccessMsg>().Subscribe(this, (r, m) =>
-            //{
-            //    ClassGroupModels.Clear();
-            //    Teachers.Clear();
-            //});
-
-            // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
-            _eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
-            {
-                var classGroupModel = payload.ClassGroupModel;
-                var schoolClassName = payload.SelectedSchoolClassModel.SchoolClassName;
-                classGroupModel.ReRenderSchedule(schoolClassName);
-                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
-            });
-
-            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
-            _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
-            _classGroupModelsView.Filter = ClassGroupFilter;
-
-            TeacherCount = 0;
-            AnyTeacherName = true;
-            TeacherNames = new ObservableCollection<string>();
-            GotoCourseClassCommand = new DelegateCommand(OnGotoCourse);
-            ShowDetailsSchoolClassesCommand = new DelegateCommand(OnShowDetailsSchoolClasses);
-            FilterCommand = new DelegateCommand(OnFilter);
-            ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
-
-            InitFilter();
-        }
 
         private void HandlerDelAllSubjectMsg()
         {
@@ -1516,39 +1599,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _openInBrowser.Open(url);
         }
 
-        private void SelectedSubjectChangedHandler(SubjectModel subjectModel)
-        {
-            AnyTeacherName = subjectModel.TeacherNames.Count > 0;
-            SelectedSubject = subjectModel;
-            ClassGroupModels.Clear();
-            TeacherNames.Clear();
-
-            if (SelectedSubject != null
-                && SelectedSubject.ClassGroupModels != null)
-            {
-                foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
-                {
-                    // Thêm danh sách các lớp học của môn đã chọn
-                    ClassGroupModels.Add(classGroupModel);
-                }
-
-                TeacherNames.Add("TẤT CẢ");
-                foreach (var teacherName in SelectedSubject.TeacherNames)
-                {
-                    if (teacherName != null && !TeacherNames.Contains(teacherName))
-                    {
-                        // Thêm danh sách giảng viên hiện tại
-                        TeacherNames.Add(teacherName);
-                    }
-                }
-
-                SelectedTeacherName = TeacherNames[0];
-
-                // Count teacher exclude ALL option
-                TeacherCount = TeacherNames.Count - 1;
-                _classGroupModelsView.Refresh();
-            }
-        }
         #endregion
 
         #region Properties
@@ -1588,11 +1638,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand SolveConflictCommand { get; set; }
         #endregion
 
-        private void InitChooseViewModel()
-        {
-
-        }
-
         /// <summary>
         /// Giải quyết xung đột
         /// </summary>
@@ -1621,8 +1666,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-
-
         private void OnDelete()
         {
             var actionData = _selectedClassGroupModel.DeepClone();
@@ -1639,18 +1682,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             DeleteChooseCommand.RaiseCanExecuteChanged();
             UpdateConflicts();
-        }
-
-        /// <summary>
-        /// Mở Dialog lưu session
-        /// </summary>
-        /// <returns>Task</returns>
-        private void OpenSaveDialog()
-        {
-            var saveSessionUc = new SaveSessionUC();
-            var vm = (SaveSessionUCViewModel)saveSessionUc.DataContext;
-            vm.ClassGroupModels = SelectedClassGroupModels;
-            //_dialogService.OpenDialog(saveSessionUc);
         }
 
         private void OnOpenShareStringWindow()
@@ -1788,16 +1819,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private void AddClassGroupModelsAndReload(IEnumerable<ClassGroupModel> classGroupModels)
-        {
-            foreach (var classGroupModel in classGroupModels)
-            {
-                SelectedClassGroupModels.Add(classGroupModel);
-            }
-            UpdateConflicts();
-            DeleteAllChooseCommand.RaiseCanExecuteChanged();
-        }
-
         private void UpdateConflicts()
         {
             var schoolClasses = SelectedClassGroupModels.SelectMany(classGroupModel => classGroupModel.CurrentSchoolClassModels).ToList();
@@ -1838,24 +1859,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Xử lý sự kiện xoá môn học
-        /// </summary>
-        /// <param name="message">Thông tin sự kiện môn học đã xoá</param>
-        private void DelSubjectMsgHandler(SubjectModel subjectModel)
-        {
-            foreach (var classGroupModel in SelectedClassGroupModels)
-            {
-                if (classGroupModel.SubjectCode.Equals(subjectModel.SubjectCode))
-                {
-                    SelectedClassGroupModels.Remove(classGroupModel);
-                    break;
-                }
-            }
-            UpdateConflicts();
-            DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -1905,100 +1908,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<string> Timelines { get; set; }
 
         #endregion
-
-        public void InitSchedulerViewModel()
-        {
-            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
-            {
-                foreach (var c in payload)
-                {
-                    RemoveScheduleItem(c.SubjectCode);
-                    AddScheduleItems(c);
-                }
-            });
-
-            _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(CleanDays);
-
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
-
-            _eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.ConflictCollChangedMsg>().Subscribe(payload =>
-            {
-                var conflictIds = payload.Select(cm => cm.GetId());
-                RemoveConflictNotInContains(conflictIds, ConflictType.Time);
-                AddNewConflicts(payload);
-            });
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.PlaceConflictCollChangedMsg>().Subscribe(payload =>
-            {
-                var conflictIds = payload.Select(cm => cm.GetId());
-                RemoveConflictNotInContains(conflictIds, ConflictType.Place);
-                AddNewConflicts(payload);
-            });
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.DelClassGroupChoiceMsg>().Subscribe(payload =>
-            {
-                foreach (var scm in payload.CurrentSchoolClassModels)
-                {
-                    RemoveScheduleItem(scm.SubjectCode);
-                }
-            });
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddScheduleItems);
-
-            IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
-
-            #region Weeks and Timelines
-            Phase1_Monday = new ObservableCollection<TimeBlock>();
-            Phase1_Tuesday = new ObservableCollection<TimeBlock>();
-            Phase1_Wednesday = new ObservableCollection<TimeBlock>();
-            Phase1_Thursday = new ObservableCollection<TimeBlock>();
-            Phase1_Friday = new ObservableCollection<TimeBlock>();
-            Phase1_Saturday = new ObservableCollection<TimeBlock>();
-            Phase1_Sunday = new ObservableCollection<TimeBlock>();
-
-            Phase2_Monday = new ObservableCollection<TimeBlock>();
-            Phase2_Tuesday = new ObservableCollection<TimeBlock>();
-            Phase2_Wednesday = new ObservableCollection<TimeBlock>();
-            Phase2_Thursday = new ObservableCollection<TimeBlock>();
-            Phase2_Friday = new ObservableCollection<TimeBlock>();
-            Phase2_Saturday = new ObservableCollection<TimeBlock>();
-            Phase2_Sunday = new ObservableCollection<TimeBlock>();
-
-            Week1 = new ObservableCollection<ObservableCollection<TimeBlock>>()
-            {
-                Phase1_Monday,
-                Phase1_Tuesday,
-                Phase1_Wednesday,
-                Phase1_Thursday,
-                Phase1_Friday,
-                Phase1_Saturday,
-                Phase1_Sunday
-            };
-
-            Week2 = new ObservableCollection<ObservableCollection<TimeBlock>>()
-            {
-                Phase2_Monday,
-                Phase2_Tuesday,
-                Phase2_Wednesday,
-                Phase2_Thursday,
-                Phase2_Friday,
-                Phase2_Saturday,
-                Phase2_Sunday
-            };
-
-            _schedules = new List<ObservableCollection<ObservableCollection<TimeBlock>>>() { Week1, Week2 };
-
-            Timelines = new ObservableCollection<string>();
-            foreach (var timeline in Cs4rsa.UI.ScheduleTable.Utils.Utils.TimeLines)
-            {
-                Timelines.Add(timeline);
-            }
-            #endregion
-        }
 
         private void AddNewConflicts(IEnumerable<IScheduleTableItem> scheduleTableItems)
         {
