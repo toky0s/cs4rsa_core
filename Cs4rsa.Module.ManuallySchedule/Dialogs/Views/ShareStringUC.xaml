@@ -6,13 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
-    MinWidth="100"
-    MinHeight="100"
     d:DesignHeight="200"
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance Type=vm:ShareStringUCViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Height" Value="240"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Border Padding="4">
         <Grid  HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>

@@ -79,26 +79,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             //    AddClassGroup(payload);
             //});
 
-            eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelAllMsg>().Subscribe(payload =>
-            {
-                var classGroupModels = payload.Item1;
-                var conflictModels = payload.Item2;
-                var placeConflicts = payload.Item3;
-
-                foreach (var cgm in classGroupModels)
-                {
-                    AddClassGroup(cgm);
-                }
-                foreach (var conflictModel in conflictModels)
-                {
-                    AddScheduleItem(conflictModel);
-                }
-                foreach (var placeConflict in placeConflicts)
-                {
-                    AddScheduleItem(placeConflict);
-                }
-            });
-
             eventAggregator.GetEvent<ChoosedVmMsgs.ConflictCollChangedMsg>().Subscribe(payload =>
             {
                 var conflictIds = payload.Select(cm => cm.GetId());

@@ -196,7 +196,7 @@
                                                             </Border>
                                                             <Border Grid.Row="1">
                                                                 <Grid>
-                                                                    <TextBlock Text="{Binding SubjectName}" />
+                                                                    <TextBlock Text="{Binding SubjectName}"/>
                                                                 </Grid>
                                                             </Border>
                                                         </Grid>
@@ -388,13 +388,14 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <DataGrid
+                                PreviewKeyDown="DataGrid_KeyDown"
                                 Grid.Row="0"
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="False"
+                                CanUserDeleteRows="True"
                                 ItemsSource="{Binding SelectedClassGroupModels}">
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn />
-                                    <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn> 
                                         <DataGridTemplateColumn.Header>
                                             <TextBlock Text="Color" />
                                         </DataGridTemplateColumn.Header>
@@ -417,8 +418,15 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                                    <Button Command="{Binding DeleteAllChooseCommand}" Content="Unselect All" />
-                                    <Button Content="Save" Command="{Binding SaveCommand}"/>
+                                    <Button 
+                                        Content="_Remove selected" 
+                                        Margin="0 0 5 0"
+                                        Command="{Binding RemoveSelectedCommand}"></Button>
+                                    <Button 
+                                        Command="{Binding DeleteAllChooseCommand}" 
+                                        Content="_Unselect All" 
+                                        Margin="0 0 5 0"/>
+                                    <Button Content="_Save" Command="{Binding SaveCommand}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>

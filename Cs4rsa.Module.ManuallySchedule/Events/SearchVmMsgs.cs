@@ -29,12 +29,5 @@ namespace Cs4rsa.Module.ManuallySchedule.Events
         /// Select danh sách các ClassGroupModel
         /// </summary>
         internal class SelectCgmsMsg : PubSubEvent<IEnumerable<ClassGroupModel>> { }
-
-        /// <summary>
-        /// Hoàn tác một Subject đã xoá.
-        /// </summary>
-        internal class UndoDelMsg : PubSubEvent<SearchValues.UndoDelValue> { }
-
-        internal class UndoDeleteAllMsg : PubSubEvent<SearchValues.UndoDelAllValue> { }
     }
 }

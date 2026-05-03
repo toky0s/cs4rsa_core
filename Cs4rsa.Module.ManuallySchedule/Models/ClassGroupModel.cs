@@ -18,7 +18,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
     /// - Thêm Color cho các thành phần phân cấp của ClassGroupModel
     /// bao gồm SchoolClassModel và các thành phần khác.
     /// </summary>
-    public class ClassGroupModel
+    public class ClassGroupModel: IEquatable<ClassGroupModel>
     {
         /// <summary>
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
@@ -233,6 +233,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             CurrentSchoolClassModels.Add(CompulsoryClass);
             CurrentSchoolClassModels.Add(UserSelectedSchoolClass);
             Schedule = ClassGroup.GetSchedule(CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
+        }
+
+        public bool Equals(ClassGroupModel other)
+        {
+            return other != null 
+                && ClassGroup.Name.Equals(other.ClassGroup.Name) 
+                && SubjectCode.Equals(other.SubjectCode);
         }
     }
 }

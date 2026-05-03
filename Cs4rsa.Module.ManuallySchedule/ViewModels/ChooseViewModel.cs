@@ -203,21 +203,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllCommand.RaiseCanExecuteChanged();
             _eventAggregator.GetEvent<DelAllClassGroupChoiceMsg>().Publish();
-            _snackbarMessageQueue.Enqueue("Đã bỏ chọn tất cả", "HOÀN TÁC", OnRestore);
-        }
-
-        /// <summary>
-        /// Hoàn tác
-        /// </summary>
-        /// <param name="classGroupModels">Danh sách lớp hoàn tác</param>
-        private void OnRestore()
-        {
-            foreach (var classGroupModel in _undoClassGroupModels)
-            {
-                AddClassGroupModel(classGroupModel);
-            }
-            var payload = Tuple.Create(_undoClassGroupModels, ConflictModels, PlaceConflictFinderModels);
-            _eventAggregator.GetEvent<UndoDelAllMsg>().Publish(payload);
         }
 
         private void OnDelete()

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.Shared
 {
+    /// <summary>
+    /// TODO: Nếu có view mới thì hãy đăng ký chúng ở đây trước.
+    /// </summary>
     public class RegionInfo
     {
         public const string TopMenu = "TopMenu";

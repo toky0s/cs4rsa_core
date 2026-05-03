@@ -35,15 +35,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Events
         /// </summary>
         internal sealed class DelAllClassGroupChoiceMsg : PubSubEvent { }
 
-        internal sealed class UndoDelAllMsg : PubSubEvent<
-            Tuple<
-                List<ClassGroupModel>, 
-                ObservableCollection<ConflictModel>, 
-                ObservableCollection<PlaceConflictFinderModel>
-            >> { }
-
         internal sealed class UndoDelMsg : PubSubEvent<ClassGroupModel> { }
-
-        internal sealed class ClassGroupAddedMsg : PubSubEvent<ClassGroupModel> { }
     }
 }
