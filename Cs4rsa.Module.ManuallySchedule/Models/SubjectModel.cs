@@ -85,6 +85,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             set { SetProperty(ref _color, value); }
         }
 
+        private string _selectedClassGroupName;
+        public string SelectedClassGroupName
+        {
+            get { return _selectedClassGroupName; }
+            set { SetProperty(ref _selectedClassGroupName, value); }
+        }
+
         public SubjectModel() { }
 
         public SubjectModel(Subject subject, string color)

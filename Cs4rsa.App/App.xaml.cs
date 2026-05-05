@@ -1,4 +1,6 @@
-﻿using Cs4rsa.App.Views;
+﻿using Cs4rsa.App.ViewModels;
+using Cs4rsa.App.Views;
+using Cs4rsa.App.Views.UserControls;
 using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
 using Cs4rsa.Database.DataProviders;
@@ -38,6 +40,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
+using Velopack;
+
 namespace Cs4rsa.App
 {
     /// <summary>
@@ -45,6 +49,15 @@ namespace Cs4rsa.App
     /// </summary>
     public partial class App : PrismApplication
     {
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            VelopackApp.Build().Run();
+            App app = new App();
+            app.InitializeComponent();
+            app.Run();
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -127,6 +140,8 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+            containerRegistry.RegisterDialog<DownloadUpdatesDialog, DownloadUpdatesDialogViewModel>();
         }
 
         protected override Window CreateShell()

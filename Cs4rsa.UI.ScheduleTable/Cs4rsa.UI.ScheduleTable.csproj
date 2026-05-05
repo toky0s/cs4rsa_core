@@ -63,9 +63,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomControls\STable.xaml.cs">
-      <DependentUpon>STable.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CustomControls\ScheduleView.xaml.cs">
       <DependentUpon>ScheduleView.xaml</DependentUpon>
     </Compile>
@@ -83,19 +80,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControls\ScheduleTable.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CustomControls\STable.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="CustomControls\ScheduleView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CustomControls\UserControl1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -103,14 +88,7 @@
     <Compile Include="CustomControls\ScheduleBlock.xaml.cs">
       <DependentUpon>ScheduleBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ScheduleTable.xaml.cs">
-      <DependentUpon>ScheduleTable.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Panels\TimeLinePanel.cs" />
-    <Compile Include="CustomControls\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

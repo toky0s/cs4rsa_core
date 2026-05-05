@@ -31,10 +31,7 @@ namespace Cs4rsa.App.Views
     {
         public MainWindow(IRegionManager regionManager)
         {
-
             InitializeComponent();
-            regionManager.RegisterViewWithRegion(RegionInfo.TopMenu, typeof(TopMenu));
-            regionManager.RegisterViewWithRegion(RegionInfo.Home, typeof(Home));
         }
     }
 }

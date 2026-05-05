@@ -94,6 +94,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             return true;
         }
+
+        private DelegateCommand _addCommand;
+        public DelegateCommand AddCommand => _addCommand 
+            ?? (_addCommand = new DelegateCommand(async () => await ExecuteAddCommand(), () => !IsAlreadyDownloaded(SelectedKeyword)));
+        private async Task ExecuteAddCommand()
+        {
+            InsertPseudoSubject(SelectedKeyword);
+            await OnAddSubjectAsync(SelectedKeyword);
+        }
         #endregion
 
         #region Context menu commands when user right-click on Subject in search box
@@ -285,7 +294,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             CleanDays();
         }
         #endregion
-        public DelegateCommand AddCommand { get; set; }
+        
         public DelegateCommand ImportDialogCommand { get; set; }
         public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
         /// <summary>
@@ -507,7 +516,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Commands
-            AddCommand = new DelegateCommand(async () => await OnAdd(), () => !IsAlreadyDownloaded(SelectedKeyword));
+            
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
@@ -600,15 +609,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
 
-            _eventAggregator.GetEvent<SearchVmMsgs.SelectCgmsMsg>().Subscribe(payload =>
-            {
-                foreach (var c in payload)
-                {
-                    RemoveScheduleItem(c.SubjectCode);
-                    AddScheduleItems(c);
-                }
-            });
-
             _eventAggregator.GetEvent<SearchVmMsgs.DelAllSubjectMsg>().Subscribe(CleanDays);
 
             //_eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload => RemoveScheduleItem(payload.SubjectCode));
@@ -636,8 +636,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             });
 
             _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
-
-            _eventAggregator.GetEvent<ChoosedVmMsgs.UndoDelMsg>().Subscribe(AddScheduleItems);
 
             IsSummerSemester = "Học Kỳ Hè".Equals(_unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterInfo));
 
@@ -694,15 +692,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                
+                _logger.LogInformation("Added subject with name {subjectName}", e.NewItems.Cast<SubjectModel>().First().SubjectName);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
                 e.OldItems.Cast<SubjectModel>().ToList().ForEach(sm => {
                     // Remove class group model which is belong to subject model that is removed
-                    var classGroup = SelectedClassGroupModels.First(classGroupModel => classGroupModel.SubjectCode.Equals(sm.SubjectCode));
+                    var classGroup = SelectedClassGroupModels.FirstOrDefault(classGroupModel => classGroupModel.SubjectCode.Equals(sm.SubjectCode));
                     if (classGroup != null)
                     {
+                        _logger.LogInformation("Remove the selected class group before remove the subject");
                         SelectedClassGroupModels.Remove(classGroup);
                     }
                     _logger.LogInformation("Removed subject with name {subjectName}", sm.SubjectName);
@@ -722,14 +721,24 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            Action<ClassGroupModel[]> fillClassGroupNameToSubjectModel = (newItems) =>
+            {
+                // Fill selected class group name to subjects.
+                foreach (var classGroupModel in newItems)
+                {
+                    var subjectModel = SubjectModels.First(sjm => sjm.SubjectName == classGroupModel.ClassGroup.SubjectName);
+                    subjectModel.SelectedClassGroupName = classGroupModel.Name;
+                }
+            };
+
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 var classGroups = e.NewItems.Cast<ClassGroupModel>().ToArray();
                 for (int i = 0; i < classGroups.Length; i++)
                 {
-                    //RemoveScheduleItem(classGroups[i].SubjectCode);
                     AddScheduleItems(classGroups[i]);
                 }
+                fillClassGroupNameToSubjectModel(classGroups);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
@@ -748,6 +757,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 {
                     AddScheduleItems(newClassGroups[i]);
                 }
+                fillClassGroupNameToSubjectModel(newClassGroups);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
@@ -755,6 +765,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
 
             UpdateConflicts();
+
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             RemoveSelectedCommand.RaiseCanExecuteChanged();
@@ -1011,12 +1022,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedKeyword = DisciplineKeywordModels[0];
         }
 
-        private async Task OnAdd()
-        {
-            InsertPseudoSubject(SelectedKeyword);
-            await OnAddSubjectAsync(SelectedKeyword);
-        }
-
         /// <summary>
         /// Thêm một task tải Subject.
         /// </summary>
@@ -1035,6 +1040,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <returns>Task</returns>
         private async Task<SubjectModel> OnAddSubjectAsync(Keyword keyword)
         {
+            _logger.LogInformation("User add subject {subjectName}", keyword.SubjectName);
             try
             {
                 // 1. Thực hiện tải Subject. 
@@ -1043,11 +1049,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // 2. Thông báo nếu Subject không tồn tại, ngược lại thay thế Pseudo Subject bằng Subject đã tải được. 
                 if (subjectModel == null)
                 {
-                    _snackbarMessageQueue.Enqueue($"Không tìm thấy môn {keyword.SubjectName} trong học kỳ này");
+                    _logger.LogError("Không tìm thấy môn {SubjectName} trong học kỳ này", keyword.SubjectName);
                     return null;
                 }
 
-                ReplacePseudoSubject(subjectModel);
+                //ReplacePseudoSubject(subjectModel);
+                var pseudoSubject = SubjectModels.First(sm => sm.CourseId.Equals(subjectModel.CourseId));
+                pseudoSubject.AssignData(subjectModel);
 
                 // 3. Nếu không có Subject nào đang được tải, thực hiện select Subject đầu tiên trong danh sách. 
                 if (!SubjectModels.Any(sm => sm.IsDownloading))
@@ -1061,13 +1069,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             catch (Exception e)
             {
                 // 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
-                AddErrorToPseudoSubject(e.Message, keyword.CourseId);
+                for (var i = 0; i < SubjectModels.Count; i++)
+                {
+                    if (SubjectModels[i].CourseId.Equals(keyword.CourseId))
+                    {
+                        var subjectMd = SubjectModels[i];
+                        subjectMd.IsError = true;
+                        subjectMd.IsDownloading = false;
+                        subjectMd.ErrorMessage = e.Message;
+                    }
+                }
                 return null;
-            }
-            finally
-            {
-                AddCommand.RaiseCanExecuteChanged();
-                DeleteAllCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -1184,16 +1196,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 return courseIds.Contains(keyword.CourseId);
             }
             return true;
-        }
-
-        /// <summary>
-        /// Thay thế Pseudo Subject bằng Subject được tải xuống.
-        /// </summary>
-        /// <param name="subjectModel">SubjectModel</param>
-        private void ReplacePseudoSubject(SubjectModel subjectModel)
-        {
-            var pseudoSubject = SubjectModels.First(sm => sm.CourseId.Equals(subjectModel.CourseId));
-            pseudoSubject.AssignData(subjectModel);
         }
 
         /// <summary>

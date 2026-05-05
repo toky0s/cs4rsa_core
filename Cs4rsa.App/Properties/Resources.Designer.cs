@@ -59,5 +59,14 @@ namespace Cs4rsa.App.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/toky0s/cs4rsa_core.
+        /// </summary>
+        internal static string GithubSource {
+            get {
+                return ResourceManager.GetString("GithubSource", resourceCulture);
+            }
+        }
     }
 }

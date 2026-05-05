@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Cs4rsa.App.Views.UserControls.DownloadUpdatesDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cs4rsa.App.Views.UserControls"
+             mc:Ignorable="d" 
+             xmlns:vm="clr-namespace:Cs4rsa.App.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             d:DataContext="{d:DesignInstance Type=vm:DownloadUpdatesDialogViewModel}"
+             d:DesignHeight="385" d:DesignWidth="360">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Height" Value="240"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Downloading updates..." Grid.Row="0"></TextBlock>
+        <Image
+            Grid.Row="1"
+            gif:ImageBehavior.AnimatedSource="/Resources/CatDownloadingUpdate.gif" 
+            gif:ImageBehavior.AutoStart="True"
+            gif:ImageBehavior.AnimateInDesignMode="True"   
+            Width="300"/>
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding UpdateProgress}" Grid.Row="2" Height="20">
+            
+        </ProgressBar>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
+            <Button Content="Exit downloading updates" Padding="4 6"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

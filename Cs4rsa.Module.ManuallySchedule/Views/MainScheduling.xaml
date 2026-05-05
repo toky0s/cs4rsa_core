@@ -191,9 +191,13 @@
                                                                         Height="8"
                                                                         Margin="0,0,4,0"
                                                                         Fill="{Binding Color}" />
-                                                                    <TextBlock FontSize="10">
-                                                                        <Run Text="{Binding SubjectCode}"></Run>
-                                                                        <Run Text="→"></Run>
+                                                                    <TextBlock>
+                                                                        <Run Text="{Binding SubjectCode}" FontSize="13"></Run>
+                                                                        <Run Text="→" FontSize="13" Foreground="Gray"></Run>
+                                                                        <Run Text="{Binding SelectedClassGroupName, TargetNullValue=No selection}" 
+                                                                             FontSize="10"
+                                                                             FontStyle="Italic"
+                                                                             Foreground="Gray"></Run>
                                                                     </TextBlock>
                                                                 </StackPanel>
                                                             </Border>

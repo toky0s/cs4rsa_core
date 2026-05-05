@@ -24,18 +24,27 @@
     <DockPanel>
         <!--  Toolbar đặt ở trên cùng  -->
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
-                <Button Content="Xếp lịch" />
-                <Button Content="Open" />
-                <Button Content="Save" />
+            <ToolBar >
+                <Button Content="File" IsEnabled="False"/>
+                <Button Content="Edit" IsEnabled="False"/>
+                <Button Content="View" IsEnabled="False"/>
                 <Separator />
-                <Button Content="Cut" />
-                <Button Content="Copy" />
-                <Button Content="Paste" />
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="_Help">
+                        <MenuItem Header="Check for Updates" Command="{Binding CheckForUpdatesCommand}"/>
+                        <!--<Separator />-->
+                        <!--<MenuItem Header="_Exit" />-->
+                    </MenuItem>
+                </Menu>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock Text="Trạng thái: Sẵn sàng" />
+            <StatusBarItem>
+                <TextBlock Text="Trạng thái: Sẵn sàng" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="Trạng thái: Sẵn sàng" />
+            </StatusBarItem>
         </StatusBar>
         <Grid >
             <Grid.ColumnDefinitions>

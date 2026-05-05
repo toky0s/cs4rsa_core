@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Cs4rsa.UI.Helper
+namespace Cs4rsa.App.Views.UserControls
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for DownloadUpdatesDialog.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class DownloadUpdatesDialog : UserControl
     {
-        public UserControl1()
+        public DownloadUpdatesDialog()
         {
             InitializeComponent();
         }

@@ -15,14 +15,5 @@ namespace Cs4rsa.Module.ManuallySchedule.Events
         /// Xoá hết tất cả các môn đã tải
         /// </summary>
         internal class DelAllSubjectMsg : PubSubEvent { }
-
-        /// <summary>
-        /// Thay đổi môn học đã lựa chọn hiện tại
-        /// </summary>
-        internal class SelectedSubjectChangedMsg : PubSubEvent<SubjectModel> { }
-        /// <summary>
-        /// Select danh sách các ClassGroupModel
-        /// </summary>
-        internal class SelectCgmsMsg : PubSubEvent<IEnumerable<ClassGroupModel>> { }
     }
 }
