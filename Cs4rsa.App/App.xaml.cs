@@ -1,4 +1,5 @@
-﻿using Cs4rsa.App.ViewModels;
+﻿using Cs4rsa.App.Services;
+using Cs4rsa.App.ViewModels;
 using Cs4rsa.App.Views;
 using Cs4rsa.App.Views.UserControls;
 using Cs4rsa.Common;
@@ -142,6 +143,12 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             containerRegistry.RegisterDialog<DownloadUpdatesDialog, DownloadUpdatesDialogViewModel>();
+
+#if DEBUG
+            containerRegistry.RegisterSingleton<IUpdateService, DummyUpdateService>();
+#else
+            containerRegistry.RegisterSingleton<IUpdateService, GithubUpdateService>();
+#endif
         }
 
         protected override Window CreateShell()

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Cs4rsa.App.Services;
+
+using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
@@ -21,8 +23,25 @@ namespace Cs4rsa.App.ViewModels
     public class DownloadUpdatesDialogViewModel : BindableBase, IDialogAware
     {
         private readonly ILogger<DownloadUpdatesDialogViewModel> _logger;
+        private readonly IUpdateService _updateService;
         private UpdateInfo _updateInfo;
-        private UpdateManager _manager;
+
+        private DelegateCommand _exitDownloadingUpdate;
+        public DelegateCommand ExitDownloadingUpdate =>
+            _exitDownloadingUpdate ?? (_exitDownloadingUpdate = new DelegateCommand(ExecuteExitDownloadingUpdate, CanExecuteExitDownloadingUpdate));
+
+        void ExecuteExitDownloadingUpdate()
+        {
+            _logger.LogInformation("User request exit downloading update");
+            CancellationTokenSource.Cancel();
+            RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+        }
+
+        bool CanExecuteExitDownloadingUpdate()
+        {
+            return true;
+        }
+
         private DelegateCommand _updateCommand;
         public DelegateCommand UpdateCommand =>
             _updateCommand ?? (_updateCommand = new DelegateCommand(async () => await ExecuteUpdateCommand(), CanExecuteUpdateCommand));
@@ -39,20 +58,15 @@ namespace Cs4rsa.App.ViewModels
 
         async Task ExecuteUpdateCommand()
         {
-            
             var token = CancellationTokenSource.Token;
             try
             {
-                // Tải bản cập nhật
-                await _manager.DownloadUpdatesAsync(_updateInfo, updateProgress =>
+                await _updateService.UpdateNewVersion(_updateInfo, updateProgress =>
                 {
                     // Cập nhật tiến trình tải xuống (nếu cần)
                     _logger.LogInformation($"Downloading update: {updateProgress}%");
                     UpdateProgress = updateProgress;
                 }, token);
-                // Thông báo cho người dùng và restart để áp dụng
-                _logger.LogInformation("Download completed. Applying updates and restarting application...");
-                _manager.ApplyUpdatesAndRestart(_updateInfo);
             }
             catch (OperationCanceledException ex)
             {
@@ -64,9 +78,12 @@ namespace Cs4rsa.App.ViewModels
         {
             return true;
         }
-        public DownloadUpdatesDialogViewModel(ILogger<DownloadUpdatesDialogViewModel> logger)
+        public DownloadUpdatesDialogViewModel(
+            ILogger<DownloadUpdatesDialogViewModel> logger,
+            IUpdateService updateService)
         {
             _logger = logger;
+            _updateService = updateService;
         }
 
         public string Title => "Download Updates";
@@ -75,7 +92,7 @@ namespace Cs4rsa.App.ViewModels
 
         public bool CanCloseDialog()
         {
-            return false;
+            return true;
         }
 
         public void OnDialogClosed()
@@ -86,7 +103,6 @@ namespace Cs4rsa.App.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             _updateInfo = parameters.GetValue<Velopack.UpdateInfo>("NewVersion");
-            _manager = parameters.GetValue<Velopack.UpdateManager>("Manager");
             UpdateCommand.Execute();
         }
     }

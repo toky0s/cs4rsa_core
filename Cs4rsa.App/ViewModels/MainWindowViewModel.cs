@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.App.Events.TopMenuEvents;
+using Cs4rsa.App.Services;
 using Cs4rsa.App.Views.UserControls;
 using Cs4rsa.Infrastructure.Events;
 using Cs4rsa.Service.Dialog.Events;
@@ -32,6 +33,7 @@ namespace Cs4rsa.App.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainWindowViewModel> _logger;
         private readonly IDialogService _dialogService;
+        private readonly IUpdateService _updateService;
 
         private DelegateCommand _checkForUpdatesCommand;
         public DelegateCommand CheckForUpdatesCommand =>
@@ -39,28 +41,14 @@ namespace Cs4rsa.App.ViewModels
 
         async Task ExecuteCheckForUpdatesCommand()
         {
-            var source = Properties.Resources.GithubSource;
-            var mgr = new UpdateManager(new GithubSource(source, null, false));
-
-            UpdateInfo newVersion = null;
-            try
-            {
-                // Kiểm tra xem có bản mới không
-                newVersion = await mgr.CheckForUpdatesAsync();
-            }
-            catch (Velopack.Exceptions.NotInstalledException)
-            {
-                _logger.LogTrace("No previous version installed or you haven't installed the app yet, treating as new version available.");
-                MessageBox.Show("You are in latest version", "Check for Updates", MessageBoxButton.OK);
-                return;
-            }
+            var newVersion = await _updateService.HasNewVersion();
             if (newVersion == null)
             {
                 MessageBox.Show("You are in latest version", "Check for Updates", MessageBoxButton.OK);
             }
             else
             {
-                var message = $"New version available: {newVersion.BaseRelease.Version}, this will exit your app immediately, apply updates. Do you want to update?";
+                var message = $"New version available: {newVersion.TargetFullRelease.Version}, this will exit your app immediately, apply updates. Do you want to update?";
                 var result = MessageBox.Show(message, "Check for Updates", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
@@ -68,7 +56,6 @@ namespace Cs4rsa.App.ViewModels
                     var parameters = new DialogParameters
                     {
                         { "NewVersion", newVersion },
-                        { "Manager", mgr }
                     };
                     _dialogService.ShowDialog(nameof(DownloadUpdatesDialog), parameters, null);
                 }
@@ -87,12 +74,14 @@ namespace Cs4rsa.App.ViewModels
         public MainWindowViewModel(
             IEventAggregator eventAggregator,
             ILogger<MainWindowViewModel> logger,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IUpdateService updateService)
         {
             NotificationItems = new ObservableCollection<Notification>();
             _eventAggregator = eventAggregator;
             _logger = logger;
             _dialogService = dialogService;
+            _updateService = updateService;
 
             _eventAggregator.GetEvent<NotificationEvent>().Subscribe(args =>
             {

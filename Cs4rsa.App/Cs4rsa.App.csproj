@@ -281,6 +281,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Events\TopMenuEvents\ScreenChangedEvent.cs" />
+    <Compile Include="Services\DummyUpdateService.cs" />
+    <Compile Include="Services\GithubUpdateService.cs" />
+    <Compile Include="Services\IUpdateService.cs" />
     <Compile Include="ViewModels\DownloadUpdatesDialogViewModel.cs" />
     <Compile Include="Views\UserControls\DownloadUpdatesDialog.xaml.cs">
       <DependentUpon>DownloadUpdatesDialog.xaml</DependentUpon>

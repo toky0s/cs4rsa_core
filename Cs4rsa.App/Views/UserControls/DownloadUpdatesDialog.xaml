@@ -17,6 +17,7 @@
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             <Setter Property="ShowInTaskbar" Value="False"/>
+            <Setter Property="WindowStyle" Value="SingleBorderWindow"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>
@@ -37,7 +38,7 @@
             
         </ProgressBar>
         <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
-            <Button Content="Exit downloading updates" Padding="4 6"></Button>
+            <Button Content="Exit downloading updates" Padding="4 6" Command="{Binding ExitDownloadingUpdate}"></Button>
         </StackPanel>
     </Grid>
 </UserControl>
