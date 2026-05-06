@@ -42,9 +42,6 @@
             <StatusBarItem>
                 <TextBlock Text="Trạng thái: Sẵn sàng" />
             </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="Trạng thái: Sẵn sàng" />
-            </StatusBarItem>
         </StatusBar>
         <Grid >
             <Grid.ColumnDefinitions>
