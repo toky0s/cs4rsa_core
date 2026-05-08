@@ -23,6 +23,7 @@ namespace Cs4rsa.App.Views.UserControls
         public DownloadUpdatesDialog()
         {
             InitializeComponent();
+            Cursor = Cursors.Wait;
         }
     }
 }

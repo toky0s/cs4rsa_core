@@ -66,6 +66,9 @@
     <Compile Include="CustomControls\ScheduleView.xaml.cs">
       <DependentUpon>ScheduleView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\ScheduleView_v2.xaml.cs">
+      <DependentUpon>ScheduleView_v2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Events\ScheduleBlockMsgs.cs" />
     <Compile Include="Interfaces\IScheduleTableItem.cs" />
     <Compile Include="Models\CfBlock.cs" />
@@ -89,6 +92,10 @@
       <DependentUpon>ScheduleBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="Panels\TimeLinePanel.cs" />
+    <Page Include="CustomControls\ScheduleView_v2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

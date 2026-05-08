@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Cs4rsa.App.Views.UserControls.DownloadUpdatesDialog"
+﻿ <UserControl x:Class="Cs4rsa.App.Views.UserControls.DownloadUpdatesDialog"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,28 +17,29 @@
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             <Setter Property="ShowInTaskbar" Value="False"/>
-            <Setter Property="WindowStyle" Value="SingleBorderWindow"></Setter>
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="Downloading updates..." Grid.Row="0"></TextBlock>
         <Image
-            Grid.Row="1"
+            Grid.Row="0"
             gif:ImageBehavior.AnimatedSource="/Resources/CatDownloadingUpdate.gif" 
             gif:ImageBehavior.AutoStart="True"
             gif:ImageBehavior.AnimateInDesignMode="True"   
             Width="300"/>
-        <ProgressBar Minimum="0" Maximum="100" Value="{Binding UpdateProgress}" Grid.Row="2" Height="20">
-            
+        <ProgressBar Grid.Row="1" 
+                     Minimum="0" 
+                     Maximum="100" 
+                     Value="{Binding UpdateProgress}" 
+                     Height="20"
+                     Margin="0 0 0 4">
         </ProgressBar>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right">
-            <Button Content="Exit downloading updates" Padding="4 6" Command="{Binding ExitDownloadingUpdate}"></Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Cursor="Arrow" Content="Exit downloading updates" Padding="4 6" Command="{Binding ExitDownloadingUpdate}"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

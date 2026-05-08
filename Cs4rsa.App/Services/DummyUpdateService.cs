@@ -36,8 +36,6 @@ namespace Cs4rsa.App.Services
                 updateProgress?.Invoke(i);
                 await Task.Delay(delayPerStep, token);
             }
-
-            Environment.Exit(0);
         }
     }
 }

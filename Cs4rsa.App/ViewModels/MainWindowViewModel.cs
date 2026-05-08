@@ -1,12 +1,7 @@
-﻿using Cs4rsa.App.Events.TopMenuEvents;
-using Cs4rsa.App.Services;
+﻿using Cs4rsa.App.Services;
 using Cs4rsa.App.Views.UserControls;
-using Cs4rsa.Infrastructure.Events;
-using Cs4rsa.Service.Dialog.Events;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.Notification.Models;
-
-using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Logging;
 
@@ -15,16 +10,9 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
-using Velopack;
-using Velopack.Sources;
 
 namespace Cs4rsa.App.ViewModels
 {

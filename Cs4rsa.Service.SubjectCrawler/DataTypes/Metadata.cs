@@ -7,13 +7,13 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     /// Một Mapping giữa Schedule và DayPlaceMetaData
     /// cho phép lấy ra được vị trí học của các StudyTime trong một DayOfWeek nào đó.
     /// </summary>
-    public class Cs4rsaMetaData
+    public class Metadata
     {
         private readonly Schedule _schedule;
         private readonly DayPlaceMetaData _dayPlaceMetaData;
         private readonly SchoolClass _schoolClass;
 
-        public Cs4rsaMetaData(
+        public Metadata(
             Schedule schedule,
             DayPlaceMetaData dayPlaceMetaData,
             SchoolClass schoolClass)

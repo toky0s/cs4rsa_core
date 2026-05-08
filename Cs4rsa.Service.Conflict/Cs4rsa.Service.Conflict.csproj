@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="DataTypes\BaseConflict.cs" />
     <Compile Include="DataTypes\Conflict.cs" />
     <Compile Include="DataTypes\ConflictPlace.cs" />

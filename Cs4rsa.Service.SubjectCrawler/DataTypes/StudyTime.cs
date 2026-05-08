@@ -3,14 +3,14 @@ using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
-    public class StudyTime
+    public class StudyTime: IEquatable<StudyTime>
     {
         public DateTime Start { get; }
         public DateTime End { get; }
         public string StartAsString { get; }
         public string EndAsString { get; }
         public Session Session { get; }
-
+        
         public StudyTime(string start, string end)
         {
             StartAsString = start;
@@ -50,6 +50,16 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 DateTime.ParseExact("17:15", "HH:mm", System.Globalization.CultureInfo.InvariantCulture)
             };
             return Start >= afternoonTime[0] && Start <= afternoonTime[1];
+        }
+
+        public bool Equals(StudyTime other)
+        {
+            return other != null
+                && Start.Equals(other.Start)
+                && End.Equals(other.End)
+                && StartAsString.Equals(other.StartAsString)
+                && EndAsString.Equals(other.EndAsString)
+                && Session == other.Session;
         }
     }
 }

@@ -17,19 +17,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
         const string Background = "#e74c3c";
         private Lesson _lessonA;
         private Lesson _lessonB;
-        private ConflictTime _conflictTime;
-
-        public ConflictTime ConflictTime
-        {
-            get
-            {
-                return _conflictTime;
-            }
-            set
-            {
-                _conflictTime = value;
-            }
-        }
+        private readonly ConflictTime _conflictTime;
 
         public Lesson LessonA { get => _lessonA; set => _lessonA = value; }
         public Lesson LessonB { get => _lessonB; set => _lessonB = value; }
@@ -62,29 +50,6 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return string.Join("\n", resultTimes);
         }
 
-        /// <summary>
-        /// Lấy ra đầy đủ thông tin của xung đột.
-        /// </summary>
-        public string GetFullConflictInfo()
-        {
-            List<string> resultTimes = new List<string>();
-            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
-            {
-                string day = item.Key.ToCs4rsaVietnamese();
-                List<string> times = new List<string>();
-                foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
-                {
-                    string time = $"Từ {studyTimeIntersect.StartString} đến {studyTimeIntersect.EndString}";
-                    times.Add(time);
-                }
-                string timeString = string.Join("\n", times);
-                resultTimes.Add(day + "\n" + timeString);
-            }
-            string schoolClassesInfo = _lessonA.SchoolClassName + " x " + _lessonB.SchoolClassName;
-            string timesInfo = string.Join("\n", resultTimes);
-            return "Trùng lịch\n" + schoolClassesInfo + "\n" + timesInfo;
-        }
-
         public ConflictType GetConflictType()
         {
             return ConflictType.Time;
@@ -105,7 +70,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
 
         public TimeBlock[] GetBlocks()
         {
-            return ConflictTime.ConflictTimes
+            return _conflictTime.ConflictTimes
                 .SelectMany(item => item.Value
                     .Select(sti => new CfBlock(
                         sti,

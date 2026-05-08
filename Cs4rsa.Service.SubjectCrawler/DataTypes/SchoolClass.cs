@@ -74,13 +74,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// <summary>
         /// Tính toán lại Phase của một SchoolClass. 
         /// </summary>
-        /// <remarks>
-        /// Phase sẽ có thể thay đổi dựa theo BetweenPoint của PhaseStore do người dùng quyết định.
-        /// Để lấy Phase hiện tại của SchoolClass hãy sử dụng <see cref="CurrentPhase"/>. Việc tính
-        /// toán lại này cũng sẽ gán lại <see cref="CurrentPhase"/>. Chỉ sử dụng phương thức này
-        /// khi biết rõ rằng BetweenPoint đã thay đổi. Sử dụng <see cref="CurrentPhase"/> sẽ đạt hiệu
-        /// quả cao hơn về hiệu suất.
-        /// </remarks>
         /// <returns>Phase</returns>
         public Phase GetPhase()
         {
@@ -88,9 +81,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             return CurrentPhase;
         }
 
-        public Cs4rsaMetaData GetMetaDataMap()
+        public Metadata GetMetaDataMap()
         {
-            return new Cs4rsaMetaData(Schedule, DayPlaceMetaData, this);
+            return new Metadata(Schedule, DayPlaceMetaData, this);
         }
 
         /// <summary>

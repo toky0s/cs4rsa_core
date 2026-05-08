@@ -4,8 +4,8 @@ using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.Utils;
-using Cs4rsa.Module.ManuallySchedule.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Notification;
@@ -34,6 +34,7 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterSingleton<ICourseHtmlGetter, CourseHtmlGetter>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            containerRegistry.RegisterSingleton<IScheduleValidator, ScheduleValidator>();
 
             containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
             containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();

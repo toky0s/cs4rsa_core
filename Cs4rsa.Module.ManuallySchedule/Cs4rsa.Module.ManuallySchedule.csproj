@@ -140,6 +140,7 @@
     <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
     <Compile Include="Events\SolveConflictVmMsgs.cs" />
     <Compile Include="Events\UpdateVmMsgs.cs" />
+    <Compile Include="Models\WarningModel.cs" />
     <Compile Include="Models\SearchValues.cs" />
     <Compile Include="Interfaces\IPreParSubjectCrawler.cs" />
     <Compile Include="ManuallyScheduleModule.cs" />
@@ -149,11 +150,14 @@
     <Compile Include="Models\SchoolClassModel.cs" />
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IScheduleValidator.cs" />
+    <Compile Include="Services\ScheduleValidator.cs" />
+    <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\IShareStringService.cs" />
     <Compile Include="Utils\ShareString.cs" />
     <Compile Include="Utils\SubjectCodeParser.cs" />
     <Compile Include="Utils\ValidateUserSchedule.cs" />
-    <Compile Include="ViewModelFunctions\UpdateConflict.cs" />
+    <Compile Include="Services\UpdateConflict.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleBagViewModel.cs" />
     <Compile Include="ViewModels\NotificationItemViewModel.cs" />

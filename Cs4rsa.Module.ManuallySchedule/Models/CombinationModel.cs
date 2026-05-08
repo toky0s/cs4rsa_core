@@ -6,7 +6,7 @@ using Cs4rsa.UI.ScheduleTable.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Cs4rsa.Module.ManuallySchedule.ViewModelFunctions;
+using Cs4rsa.Module.ManuallySchedule.Services;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {

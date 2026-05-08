@@ -24,7 +24,9 @@ namespace Cs4rsa.App.ViewModels
     {
         private readonly ILogger<DownloadUpdatesDialogViewModel> _logger;
         private readonly IUpdateService _updateService;
+
         private UpdateInfo _updateInfo;
+        private bool _isDowloading;
 
         private DelegateCommand _exitDownloadingUpdate;
         public DelegateCommand ExitDownloadingUpdate =>
@@ -33,13 +35,12 @@ namespace Cs4rsa.App.ViewModels
         void ExecuteExitDownloadingUpdate()
         {
             _logger.LogInformation("User request exit downloading update");
-            CancellationTokenSource.Cancel();
-            RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+            CancellationTokenSource.Cancel();   
         }
 
         bool CanExecuteExitDownloadingUpdate()
         {
-            return true;
+            return _isDowloading; ;
         }
 
         private DelegateCommand _updateCommand;
@@ -61,6 +62,8 @@ namespace Cs4rsa.App.ViewModels
             var token = CancellationTokenSource.Token;
             try
             {
+                _isDowloading = true;
+                ExitDownloadingUpdate.RaiseCanExecuteChanged();
                 await _updateService.UpdateNewVersion(_updateInfo, updateProgress =>
                 {
                     // Cập nhật tiến trình tải xuống (nếu cần)
@@ -68,9 +71,11 @@ namespace Cs4rsa.App.ViewModels
                     UpdateProgress = updateProgress;
                 }, token);
             }
-            catch (OperationCanceledException ex)
+            catch (TaskCanceledException ex)
             {
                 _logger.LogWarning("Update cancelled by user.", ex.Message);
+                _isDowloading = false;
+                RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
             }
         }
 
@@ -78,6 +83,7 @@ namespace Cs4rsa.App.ViewModels
         {
             return true;
         }
+
         public DownloadUpdatesDialogViewModel(
             ILogger<DownloadUpdatesDialogViewModel> logger,
             IUpdateService updateService)
@@ -92,7 +98,7 @@ namespace Cs4rsa.App.ViewModels
 
         public bool CanCloseDialog()
         {
-            return true;
+            return !_isDowloading;
         }
 
         public void OnDialogClosed()
@@ -102,7 +108,8 @@ namespace Cs4rsa.App.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            _updateInfo = parameters.GetValue<Velopack.UpdateInfo>("NewVersion");
+            _isDowloading = false;
+            _updateInfo = parameters.GetValue<UpdateInfo>("NewVersion");
             UpdateCommand.Execute();
         }
     }

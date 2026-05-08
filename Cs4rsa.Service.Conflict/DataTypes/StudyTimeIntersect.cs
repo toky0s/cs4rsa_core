@@ -8,24 +8,18 @@ namespace Cs4rsa.Service.Conflict.DataTypes
     /// <summary>
     /// Đại điện cho một khoảng giao về thời gian giữa hai StudyTime. Phục vụ cho việc phát hiện xung đột.
     /// </summary>
-    public class StudyTimeIntersect
+    public class StudyTimeIntersect : IEquatable<StudyTimeIntersect>
     {
-        public static readonly StudyTimeIntersect Instance = new StudyTimeIntersect();
+        public DateTime Start { get; }
+        public DateTime End { get; }
 
-        public readonly DateTime Start;
-        public readonly DateTime End;
-
-        public readonly string StartString;
-        public readonly string EndString;
+        public string StartString { get; }
+        public string EndString { get; }
 
         public StudyTime FScStudyTime { get; }
         public StudyTime SScStudyTime { get; }
 
-        public StudyTimeIntersect(
-              DateTime start
-            , DateTime end
-            , StudyTime fScStudyTime
-            , StudyTime sScStudyTime)
+        public StudyTimeIntersect(DateTime start, DateTime end, StudyTime fScStudyTime, StudyTime sScStudyTime)
         {
             FScStudyTime = fScStudyTime;
             SScStudyTime = sScStudyTime;
@@ -36,5 +30,16 @@ namespace Cs4rsa.Service.Conflict.DataTypes
         }
 
         public StudyTimeIntersect() { }
+
+        public bool Equals(StudyTimeIntersect other)
+        {
+            return other != null
+                && Start.Equals(other.Start)
+                && End.Equals(other.End)
+                && StartString.Equals(other.StartString)
+                && EndString.Equals(other.EndString)
+                && FScStudyTime.Equals(other.FScStudyTime)
+                && SScStudyTime.Equals(other.SScStudyTime);
+        }
     }
 }

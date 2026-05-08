@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Cs4rsa.Service.Conflict.Models;
 
-namespace Cs4rsa.Module.ManuallySchedule.ViewModelFunctions
+namespace Cs4rsa.Module.ManuallySchedule.Services
 {
     /// <summary>
     /// Mục đích của class này được tạo ra là để các phần xếp lịch thủ công và xếp lịch tự động

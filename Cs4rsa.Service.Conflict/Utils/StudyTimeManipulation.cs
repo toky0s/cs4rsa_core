@@ -22,7 +22,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
         /// khoảng giao về thời gian giữa hai StudyTime.
         /// Phục vụ cho việc phát hiện xung đột.
         /// </returns>
-        public static StudyTimeIntersect GetStudyTimeIntersect(StudyTime studyTime1, StudyTime studyTime2)
+        private static StudyTimeIntersect GetStudyTimeIntersect(StudyTime studyTime1, StudyTime studyTime2)
         {
             List<DateTime> studyTimes = new List<DateTime>()
             {
@@ -64,7 +64,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
             {
                 return new StudyTimeIntersect(studyTime1.Start, studyTime1.End, studyTime1, studyTime2);
             }
-            return StudyTimeIntersect.Instance;
+            return null;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
             foreach (Tuple<StudyTime, StudyTime> item in studyTimeTuples)
             {
                 StudyTimeIntersect studyTimeIntersect = GetStudyTimeIntersect(item.Item1, item.Item2);
-                if (!studyTimeIntersect.Equals(StudyTimeIntersect.Instance))
+                if (!(studyTimeIntersect == null))
                 {
                     yield return studyTimeIntersect;
                 }

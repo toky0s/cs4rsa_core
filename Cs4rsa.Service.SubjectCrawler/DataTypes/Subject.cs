@@ -17,6 +17,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public List<ClassGroup> ClassGroups { get; }
         public bool IsSpecialSubject { get; }
 
+        /// <summary>
+        /// Tên môn học. Ví dụ: "Cơ sở dữ liệu", "Lập trình hướng đối tượng", "Kỹ thuật lập trình".
+        /// </summary>
         public string Name { get; }
         public string SubjectCode { get; }
         public int StudyUnit { get; }
@@ -115,7 +118,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                     {
                         ClassGroups.Add(classGroup);
                         registerCodes.Clear();
-                        classGroup = null;
                     }
                     classGroupName = outClassGroupName;
                     classGroup = new ClassGroup(classGroupName, SubjectCode, Name);

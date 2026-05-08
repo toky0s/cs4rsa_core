@@ -57,7 +57,7 @@
     <Compile Include="Crawlers\ScheduleParser.cs" />
     <Compile Include="Crawlers\SubjectCrawler.cs" />
     <Compile Include="DataTypes\ClassGroup.cs" />
-    <Compile Include="DataTypes\Cs4rsaMetaData.cs" />
+    <Compile Include="DataTypes\Metadata.cs" />
     <Compile Include="DataTypes\DayPlaceMetaData.cs" />
     <Compile Include="DataTypes\DayRoomPlace.cs" />
     <Compile Include="DataTypes\Enums\ClassForm.cs" />

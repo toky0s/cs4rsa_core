@@ -417,7 +417,10 @@
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="True"
-                                ItemsSource="{Binding SelectedClassGroupModels}" VerticalGridLinesBrush="{x:Null}" SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged" SelectedCellsChanged="DataGrid_SelectedClassGroups_SelectedCellsChanged">
+                                ItemsSource="{Binding SelectedClassGroupModels}" 
+                                VerticalGridLinesBrush="{x:Null}" 
+                                SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged" 
+                                SelectedCellsChanged="DataGrid_SelectedClassGroups_SelectedCellsChanged">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.Header>
@@ -457,7 +460,20 @@
                             </Border>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Warning" />
+                    <TabItem Header="Warnings">
+                        <DataGrid 
+                            ItemsSource="{Binding WarningModels}"
+                            AutoGenerateColumns="False"
+                            CanUserDeleteRows="False"
+                            CanUserAddRows="False"
+                            VerticalGridLinesBrush="{x:Null}" 
+                            >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Warning" Binding="{Binding WarningTitle}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
                 </TabControl>
             </Border>
         </Grid>

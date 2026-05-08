@@ -83,6 +83,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExamListExcelReader\ExamListExcelReader.csproj">
+      <Project>{3c0fef6d-4985-41de-b313-736668255a36}</Project>
+      <Name>ExamListExcelReader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
