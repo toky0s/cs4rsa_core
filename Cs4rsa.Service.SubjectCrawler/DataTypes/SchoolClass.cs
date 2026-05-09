@@ -32,7 +32,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
         public string Url { get; set; }
-        public DayPlaceMetaData DayPlaceMetaData { get; set; }
+        public DayPlaceMetadata DayPlaceMetaData { get; set; }
 
         public SchoolClass(
             string schoolClassName,
@@ -49,7 +49,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             string registrationStatus,
             string implementationStatus,
             string url,
-            DayPlaceMetaData dayPlaceMetaData,
+            DayPlaceMetadata dayPlaceMetaData,
             string subjectCode)
         {
             CurrentPhase = Phase.Unknown;

@@ -21,9 +21,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
         public ClassForm Type { get; set; }
-        public DayPlaceMetaData DayPlaceMetaData { get; set; }
+        public DayPlaceMetadata DayPlaceMetaData { get; set; }
         public Schedule Schedule { get; set; }
         public SchoolClass SchoolClass { get; }
+        public ClassGroupModel ClassGroupModel { get; set; }
         public StudyWeek StudyWeek { get; set; }
         public IEnumerable<string> Rooms { get; set; }
         public IEnumerable<string> TempTeachers { get; set; }
@@ -35,7 +36,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// </summary>
         public Phase Phase { get => SchoolClass.CurrentPhase; }
 
-        public SchoolClassModel(SchoolClass schoolClass, string color)
+        public SchoolClassModel(SchoolClass schoolClass, ClassGroupModel classGroupModel)
         {
             SchoolClass           = schoolClass;
             SchoolClassName       = schoolClass.SchoolClassName;
@@ -54,7 +55,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             ImplementationStatus  = schoolClass.ImplementationStatus;
             DayPlaceMetaData      = schoolClass.DayPlaceMetaData; 
             SubjectName           = schoolClass.SubjectName;
-            Color                 = color;
+            ClassGroupModel       = classGroupModel;
         }
 
         public TimeBlock[] GetBlocks()
@@ -63,7 +64,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 (
                     unit,
                     GetId(),
-                    Color,
+                    ClassGroupModel.Color,
                     content: SchoolClassName,
                     unit.DayOfWeek,
                     ScheduleTableItemType.SchoolClass,

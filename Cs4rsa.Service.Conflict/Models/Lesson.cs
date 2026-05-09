@@ -7,8 +7,8 @@ namespace Cs4rsa.Service.Conflict.Models
     {
         public Schedule Schedule { get; }
         public StudyWeek StudyWeek { get; }
-        public DayPlaceMetaData MetaData { get; }
-        public Metadata Cs4rsaMetaData { get; }
+        public DayPlaceMetadata DayPlaceMetadata { get; }
+        public Metadata Metadata { get; }
         public Phase Phase { get; }
         public string SchoolClassName { get; }
         public string ClassGroupName { get; }
@@ -17,7 +17,7 @@ namespace Cs4rsa.Service.Conflict.Models
         public Lesson(
             StudyWeek studyWeek, 
             Schedule schedule, 
-            DayPlaceMetaData metaData, 
+            DayPlaceMetadata dayPlaceMetadata, 
             Metadata cs4rsaMetaData, 
             Phase phase,
             string schoolClassName,
@@ -28,8 +28,8 @@ namespace Cs4rsa.Service.Conflict.Models
             Schedule = schedule;
             SchoolClassName = schoolClassName;
             ClassGroupName = classGroupName;
-            MetaData = metaData;
-            Cs4rsaMetaData = cs4rsaMetaData;
+            DayPlaceMetadata = dayPlaceMetadata;
+            Metadata = cs4rsaMetaData;
             Phase = phase;
             SubjectCode = subjectCode;
         }

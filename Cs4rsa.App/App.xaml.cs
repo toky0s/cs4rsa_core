@@ -29,7 +29,6 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
-using Prism.Services.Dialogs;
 
 using Serilog;
 

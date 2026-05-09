@@ -40,6 +40,7 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();
             containerRegistry.RegisterDialog<SaveSessionUC, SaveSessionUCViewModel>();
             containerRegistry.RegisterDialog<ShareStringUC, ShareStringUCViewModel>();
+            containerRegistry.RegisterDialog<SolveConflictUC, SolveConflictViewModel>();
         }
     }
 }

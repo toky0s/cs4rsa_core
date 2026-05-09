@@ -49,7 +49,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
                     if (conflictTime != null)
                     {
                         var message = $"Phát hiện trùng lịch giữa hai nhóm lớp {schoolClassModel_i.SchoolClass.ClassGroupName} và {schoolClassModel_k.SchoolClass.ClassGroupName}";
-                        var warningModel = new WarningModel(WarningType.TimeConflict, message);
+                        var context = new TimeConflictContext(schoolClassModel_i.ClassGroupModel, schoolClassModel_k.ClassGroupModel);
+                        var warningModel = new WarningModel(WarningType.TimeConflict, message, context);
                         warningModels.Add(warningModel);
                     }
                 }

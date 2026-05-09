@@ -294,7 +294,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             var locationsForMetaData = locations.Select(item => item.Trim());
             var placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
 
-            var metaData = new DayPlaceMetaData();
+            var metaData = new DayPlaceMetadata();
             for (var i = 0; i < metaCount; i++)
             {
                 // Set Place cho Room ở đây.

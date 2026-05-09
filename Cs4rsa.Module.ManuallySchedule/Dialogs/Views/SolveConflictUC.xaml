@@ -2,29 +2,40 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.SolveConflictUC"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Padding="10"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
+    d:DataContext="{d:DesignInstance Type=vm:SolveConflictViewModel}"
+    mc:Ignorable="d"
+    Background="White"
+    Padding="4"
     prism:ViewModelLocator.AutoWireViewModel="True">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Height" Value="245"></Setter>
+            <Setter Property="MaxWidth" Value="500"></Setter>
+            <Setter Property="MaxHeight" Value="500"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="True"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <StackPanel>
-        <TextBlock
-            Margin="0,0,0,16"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-            TextAlignment="Left">
-            Giải quyết xung đột
-        </TextBlock>
-        <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-            Xung đột này có thể được giải quyết
-            bằng cách bỏ chọn một trong hai lớp
+        <TextBlock HorizontalAlignment="Center" Text="This conflict can be solve by removing one of two classes">
         </TextBlock>
         <TextBlock
             Grid.Row="1"
             Margin="0,0,0,16"
-            HorizontalAlignment="Center"
-            Style="{StaticResource MaterialDesignSubtitle1TextBlock}">
-            <Run FontWeight="Bold" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
-            <Run Text="hoặc" />
-            <Run FontWeight="Bold" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
+            HorizontalAlignment="Center">
+            <Run FontWeight="Bold" 
+                 Text="{Binding ClassGroupModel_A.Name, Mode=OneTime}" 
+                 d:Text="CS 301 A"/>
+            <Run Text="OR" />
+            <Run FontWeight="Bold" 
+                 Text="{Binding ClassGroupModel_B.Name, Mode=OneTime}" 
+                 d:Text="MAG 302 C"/>
             <Run Text="?" />
         </TextBlock>
         <Grid>
@@ -32,12 +43,12 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <md:Card
+            <Border
+                Background="#ecf0f1"
                 Grid.Column="0"
                 Margin="0,0,8,0"
                 Padding="5"
-                Style="{StaticResource MaterialDesignOutlinedCard}"
-                UniformCornerRadius="12">
+                >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -48,25 +59,27 @@
                         Grid.Column="0"
                         Width="10"
                         Margin="0,0,5,0"
-                        Background="{Binding FColor}"
+                        Background="{Binding ClassGroupModel_A.Color}"
+                        d:Background="#e056fd"
                         CornerRadius="4" />
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="{Binding FirstSc.SubjectName}" />
-                        <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding FirstSc.SchoolClass.ClassGroupName}" />
+                        <TextBlock Text="{Binding ClassGroupModel_A.ClassGroup.SubjectName}" 
+                                   d:Text="Lập trình hướng đối tượng"/>
+                        <TextBlock Text="{Binding ClassGroupModel_A.Name, Mode=OneTime}" 
+                                   d:Text="CS 301"/>
                     </StackPanel>
                     <Button
                         Grid.Column="2"
                         Command="{Binding RemoveCgFirstCmd}"
-                        Content="{md:PackIcon Kind=Close}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Loại bỏ" />
+                        Content="Remove"
+                        />
                 </Grid>
-            </md:Card>
-            <md:Card
+            </Border>
+            <Border
                 Grid.Column="1"
                 Padding="5"
-                Style="{StaticResource MaterialDesignOutlinedCard}"
-                UniformCornerRadius="12">
+                Background="#ecf0f1"
+                >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -77,20 +90,23 @@
                         Grid.Column="0"
                         Width="10"
                         Margin="0,0,5,0"
-                        Background="{Binding SColor}"
-                        CornerRadius="4" />
+                        Background="{Binding ClassGroupModel_B.Color}"
+                        CornerRadius="4" 
+                        d:Background="#7ed6df"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="{Binding SecondSc.SubjectName}" />
-                        <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="{Binding SecondSc.SchoolClass.ClassGroupName}" />
+                        <TextBlock 
+                            Text="{Binding ClassGroupModel_B.ClassGroup.SubjectName}" 
+                            d:Text="Pháp thuật đại cương"/>
+                        <TextBlock 
+                            Text="{Binding ClassGroupModel_B.Name, Mode=OneTime}" 
+                            d:Text="MAG 302"/>
                     </StackPanel>
                     <Button
                         Grid.Column="2"
                         Command="{Binding RemoveCgSecondCmd}"
-                        Content="{md:PackIcon Kind=Close}"
-                        Style="{StaticResource MaterialDesignIconButton}"
-                        ToolTip="Loại bỏ" />
+                        Content="Remove" />
                 </Grid>
-            </md:Card>
+            </Border>
         </Grid>
     </StackPanel>
 </UserControl>

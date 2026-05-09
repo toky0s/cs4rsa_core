@@ -404,7 +404,13 @@
                 VerticalAlignment="Center" />
             <Border Grid.Row="2">
                 <TabControl>
-                    <TabItem Header="Selected classes">
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock>
+                                <Run Text="Selected classes"></Run>
+                                <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}"></Run>
+                            </TextBlock>
+                        </TabItem.Header>
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -433,7 +439,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Subject code" />
-                                    <DataGridTextColumn Binding="{Binding ClassGroup.SubjectName, Mode=OneWay}" Header="Subject name" />
+                                    <DataGridTextColumn Width="*" Binding="{Binding ClassGroup.SubjectName, Mode=OneWay}" Header="Subject name" />
                                     <DataGridTextColumn
                                         Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-', TargetNullValue='-', Mode=OneWay}"
                                         Header="Register codes"
@@ -460,17 +466,53 @@
                             </Border>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Warnings">
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock>
+                                <Run Text="Warnings"></Run>
+                                <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}"></Run>
+                            </TextBlock>
+                        </TabItem.Header>
                         <DataGrid 
                             ItemsSource="{Binding WarningModels}"
                             AutoGenerateColumns="False"
                             CanUserDeleteRows="False"
                             CanUserAddRows="False"
+                            IsReadOnly="True"
                             VerticalGridLinesBrush="{x:Null}" 
                             >
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Warning" Binding="{Binding WarningTitle}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Description" Binding="{Binding Description}"></DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Warning" >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                                                <Image 
+                                                    Margin="0 0 4 0"
+                                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                                    Height="16" 
+                                                    Width="16" 
+                                                    Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/error-icon.png" />
+                                                <TextBlock Text="{Binding WarningTitle}"></TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}"></DataGridTextColumn>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.Header>
+                                        <TextBlock Text="Actions"></TextBlock>
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button 
+                                                    Content="Solve..." 
+                                                    Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
+                                                    CommandParameter="{Binding}"></Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>

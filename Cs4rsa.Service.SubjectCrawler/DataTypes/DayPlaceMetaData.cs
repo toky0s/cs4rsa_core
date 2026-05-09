@@ -8,11 +8,11 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     /// Theo thiết kế, một SchoolClass sẽ có thể có nhiều tiết học
     /// tương ứng với đó là SchoolClassUnit.
     /// </summary>
-    public class DayPlaceMetaData
+    public class DayPlaceMetadata
     {
         private readonly Dictionary<DayOfWeek, DayRoomPlace> _dayPlacePairs;
 
-        public DayPlaceMetaData()
+        public DayPlaceMetadata()
         {
             _dayPlacePairs = new Dictionary<DayOfWeek, DayRoomPlace>();
         }

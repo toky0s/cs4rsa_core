@@ -1,28 +1,32 @@
 ﻿using Cs4rsa.Database.Interfaces;
-using Cs4rsa.Module.ManuallySchedule.Events;
+using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
 
+using Microsoft.Extensions.Logging;
+
 using Prism.Commands;
-using Prism.Events;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
+
+using System;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
-    public partial class SolveConflictViewModel : BindableBase
+    public partial class SolveConflictViewModel : BindableBase, IDialogAware
     {
-        private Lesson _lessonA;
-        public Lesson LessonA
+        private ClassGroupModel _classGroupModel_A;
+        public ClassGroupModel ClassGroupModel_A
         {
-            get { return _lessonA; }
-            set { SetProperty(ref _lessonA, value); }
+            get { return _classGroupModel_A; }
+            set { SetProperty(ref _classGroupModel_A, value); }
         }
 
-        private Lesson _lessonB;
-        public Lesson LessonB
+        private ClassGroupModel _classGroupModel_B;
+        public ClassGroupModel ClassGroupModel_B
         {
-            get { return _lessonB; }
-            set { SetProperty(ref _lessonB, value); }
+            get { return _classGroupModel_B; }
+            set { SetProperty(ref _classGroupModel_B, value); }
         }
 
         private string _fColor;
@@ -32,28 +36,74 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             set { SetProperty(ref _fColor, value); }
         }
 
-        private string _sColor;
-        public string SColor
+
+        public event Action<IDialogResult> RequestClose;
+
+
+        private void CloseDialogWithRemovedLesson(ClassGroupModel classGroupModel)
         {
-            get { return _sColor; }
-            set { SetProperty(ref _sColor, value); }
+            var parameter = new DialogParameters
+            {
+                { "RemovedClassGroupModel", classGroupModel }
+            };
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameter));
         }
 
-        public DelegateCommand RemoveCgFirstCmd { get; set; }
-        public DelegateCommand RemoveCgSecondCmd { get; set; }
+        private DelegateCommand _removeCgFirstCmd;
+        public DelegateCommand RemoveCgFirstCmd =>
+            _removeCgFirstCmd ?? (_removeCgFirstCmd = new DelegateCommand(ExecuteRemoveCgFirstCmd, CanExecuteRemoveCgFirstCmd));
 
-        public SolveConflictViewModel(
-            IConflictModel conflictModel,
-            IUnitOfWork unitOfWork,
-            IEventAggregator eventAggregator
-        )
+        void ExecuteRemoveCgFirstCmd()
         {
-            LessonA = conflictModel.LessonA;
-            LessonB = conflictModel.LessonB;
-            RemoveCgFirstCmd = new DelegateCommand(() => eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Publish(_lessonA.ClassGroupName));
-            RemoveCgSecondCmd = new DelegateCommand(() => eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Publish(_lessonB.ClassGroupName));
-            FColor = unitOfWork.Keywords.GetColorWithSubjectCode(_lessonA.SubjectCode);
-            SColor = unitOfWork.Keywords.GetColorWithSubjectCode(_lessonB.SubjectCode);
+            //_eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Publish(_lessonA.ClassGroupName);
+            CloseDialogWithRemovedLesson(_classGroupModel_A);
+        }
+
+        bool CanExecuteRemoveCgFirstCmd()
+        {
+            return true;
+        }
+
+        private DelegateCommand _removeCgSecondCmd;
+        private readonly ILogger<SolveConflictViewModel> _logger;
+
+        public DelegateCommand RemoveCgSecondCmd =>
+            _removeCgSecondCmd ?? (_removeCgSecondCmd = new DelegateCommand(ExecuteRemoveCgSecondCmd, CanExecuteRemoveCgSecondCmd));
+
+        void ExecuteRemoveCgSecondCmd()
+        {
+            //_eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Publish(_lessonB.ClassGroupName);
+            CloseDialogWithRemovedLesson(_classGroupModel_B);
+        }
+
+        bool CanExecuteRemoveCgSecondCmd()
+        {
+            return true;
+        }
+
+
+        public string Title => "Solve Conflicts";
+
+
+        public SolveConflictViewModel(ILogger<SolveConflictViewModel> logger)
+        {
+            _logger = logger;
+        }
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+            _logger.LogTrace("SolveConflict dialog closed");
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            var conflictModel = parameters.GetValue<IConflictModel[]>("ConflictModels");
+            ClassGroupModel_A = parameters.GetValue<ClassGroupModel>("ClassGroupModelA");
+            ClassGroupModel_B = parameters.GetValue<ClassGroupModel>("ClassGroupModelB");
         }
     }
 }

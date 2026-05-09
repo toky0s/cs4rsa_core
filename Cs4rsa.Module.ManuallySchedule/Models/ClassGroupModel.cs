@@ -88,7 +88,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             HaveSchedule = IsHaveSchedule();
             Color = color;
             IsBelongSpecialSubject = isBelongSpecialSubject;
-            NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, Color)).ToArray();
+            NormalSchoolClassModels = ClassGroup.SchoolClasses.Select(sc => new SchoolClassModel(sc, this)).ToArray();
 
             if (classGroup.SchoolClasses.Count > 0)
             {
@@ -121,7 +121,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         .FirstOrDefault(sc => !sc.SchoolClassName.Equals(CompulsoryClass.SchoolClassName));
                     if (schoolClass != null)
                     {
-                        CodeSchoolClass = new SchoolClassModel(schoolClass, color);
+                        CodeSchoolClass = new SchoolClassModel(schoolClass, this);
                         CurrentSchoolClassModels.Add(CompulsoryClass);
                         CurrentSchoolClassModels.Add(CodeSchoolClass);
                     }
@@ -201,14 +201,14 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             if (ClassGroup.SchoolClasses[0].SchoolClassName.Equals(ClassGroup.Name)
                 || ClassGroup.SchoolClasses.Count == 1)
             {
-                return new SchoolClassModel(ClassGroup.SchoolClasses[0], Color);
+                return new SchoolClassModel(ClassGroup.SchoolClasses[0], this);
             }
 
             // Trường hợp có nhiều hơn 1 school class,
             // chọn school class nào không có mã đăng ký.
             foreach (var schoolClass in ClassGroup.SchoolClasses.Where(schoolClass => schoolClass.RegisterCode.Equals(string.Empty)))
             {
-                return new SchoolClassModel(schoolClass, Color);
+                return new SchoolClassModel(schoolClass, this);
             }
 
             MessageBox.Show("Base school class model cound not be found");
@@ -226,7 +226,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         {
             UserSelectedSchoolClass = ClassGroup.SchoolClasses
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
-                .Select(schoolClass => new SchoolClassModel(schoolClass, Color))
+                .Select(schoolClass => new SchoolClassModel(schoolClass, this))
                 .FirstOrDefault();
 
             CurrentSchoolClassModels.Clear();

@@ -43,8 +43,8 @@ namespace Cs4rsa.Service.Conflict.DataTypes
 
             // Kiểm tra hai school class có cùng một nơi học hay không. Nếu cùng thì chắc chắn không
             // có xung đột. Nhưng nếu lớn hơn 1 nơi thì có khả năng gây ra xung đột.
-            IEnumerable<Place> schoolClass1Places = LessonA.MetaData.GetPlaces();
-            IEnumerable<Place> schoolClass2Places = LessonB.MetaData.GetPlaces();
+            IEnumerable<Place> schoolClass1Places = LessonA.DayPlaceMetadata.GetPlaces();
+            IEnumerable<Place> schoolClass2Places = LessonB.DayPlaceMetadata.GetPlaces();
             IEnumerable<Place> dinstictPlaces = schoolClass1Places.Concat(schoolClass2Places).Distinct();
             if (dinstictPlaces.Count() < 2)
             {
@@ -55,8 +55,8 @@ namespace Cs4rsa.Service.Conflict.DataTypes
             // Duyệt qua các thứ học để lấy ra các nơi học. Mỗi nơi học
             foreach (DayOfWeek dayOfWeek in intersectDayOfWeeks)
             {
-                IEnumerable<PlaceMap> placeMap1 = LessonA.Cs4rsaMetaData.GetPlaceMapsAtDay(dayOfWeek);
-                IEnumerable<PlaceMap> placeMap2 = LessonB.Cs4rsaMetaData.GetPlaceMapsAtDay(dayOfWeek);
+                IEnumerable<PlaceMap> placeMap1 = LessonA.Metadata.GetPlaceMapsAtDay(dayOfWeek);
+                IEnumerable<PlaceMap> placeMap2 = LessonB.Metadata.GetPlaceMapsAtDay(dayOfWeek);
                 List<PlaceMap> placeMapsJoin = placeMap1.Concat(placeMap2).ToList();
 
                 IEnumerable<Tuple<PlaceMap, PlaceMap>> placeMapPairs = PlaceMapManipulation.PairPlaceMaps(placeMapsJoin);

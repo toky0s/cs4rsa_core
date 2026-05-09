@@ -14,6 +14,7 @@ using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.DataTypes.Enums;
+using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
@@ -39,6 +40,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Data;
 
@@ -632,7 +634,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
 
             CopyCodeCommand = new DelegateCommand(OnCopyCode);
-            SolveConflictCommand = new DelegateCommand(OnSolve);
             OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
@@ -695,7 +696,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void ConflictModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            
+
         }
 
         private void ConflictInfos_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -782,8 +783,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 CleanDays();
             }
 
-            RunScheduleValidator();
             UpdateConflicts();
+            RunScheduleValidator();
 
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
@@ -1651,19 +1652,51 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public DelegateCommand DeleteChooseCommand { get; set; }
 
         public DelegateCommand CopyCodeCommand { get; set; }
-        public DelegateCommand SolveConflictCommand { get; set; }
-        #endregion
 
-        /// <summary>
-        /// Giải quyết xung đột
-        /// </summary>
-        private void OnSolve()
+        private DelegateCommand<WarningModel> _solveConflictCommand;
+        public DelegateCommand<WarningModel> SolveConflictCommand =>
+            _solveConflictCommand ?? (_solveConflictCommand = new DelegateCommand<WarningModel>(ExecuteSolveConflictCommand, CanExecuteSolveConflictCommand));
+
+        void ExecuteSolveConflictCommand(WarningModel warningModel)
         {
-            var solveConflictUc = new SolveConflictUC();
-            var vm = new SolveConflictViewModel(SelectedConflictModel, _unitOfWork, _eventAggregator);
-            solveConflictUc.DataContext = vm;
-            //_dialogService.OpenDialog(solveConflictUc);
+            if (warningModel.WarningType.Equals(WarningType.TimeConflict))
+            {
+                if (warningModel.TryGetContext(out TimeConflictContext context))
+                {
+                    IConflictModel[] conflictModels = ConflictModels.ToArray<IConflictModel>();
+                    ClassGroupModel classGroupModel_A = context.ClassGroupModel_A;
+                    ClassGroupModel classGroupModel_B = context.ClassGroupModel_B;
+                    var parameter = new DialogParameters()
+                    {
+                        {"ConflictModels", conflictModels},
+                        {"ClassGroupModelA", classGroupModel_A},
+                        {"ClassGroupModelB", classGroupModel_B},
+                    };
+                    _dialogService.ShowDialog(nameof(SolveConflictUC), parameter, callback =>
+                    {
+                        if (callback.Result == ButtonResult.Cancel)
+                        {
+                            _logger.LogInformation("User cancelled solve conflict dialog");
+                        }
+                        else if (callback.Result == ButtonResult.OK)
+                        {
+                            bool valid = callback.Parameters.TryGetValue("ConflictModels", out ClassGroupModel removedClassGroupModel);
+                            if (valid)
+                            {
+                                _logger.LogInformation("User solved conflict by removing {0}", removedClassGroupModel.Name);
+                                // TODO: Remove the class group model that user choose to remove and update conflict.
+                            }
+                        }
+                    });
+                }
+            }
         }
+
+        bool CanExecuteSolveConflictCommand(WarningModel warningModel)
+        {
+            return true;
+        }
+        #endregion
 
         /// <summary>
         /// Sao chép mã môn
@@ -1741,7 +1774,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     {
                         continue;
                     }
-                    
+
                     var lessonA = schoolClassModel_i.ConvertToLesson();
                     var lessonB = schoolClassModel_k.ConvertToLesson();
 
@@ -1820,7 +1853,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void UpdateConflicts()
         {
-            var schoolClasses = SelectedClassGroupModels.SelectMany(classGroupModel => classGroupModel.CurrentSchoolClassModels).ToList();
+            var schoolClasses = SelectedClassGroupModels
+                .SelectMany(classGroupModel => classGroupModel.CurrentSchoolClassModels)
+                .ToList();
             UpdateConflictModelCollection(schoolClasses);
             UpdatePlaceConflictCollection(schoolClasses);
         }

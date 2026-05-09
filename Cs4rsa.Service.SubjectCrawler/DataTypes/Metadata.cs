@@ -10,12 +10,12 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     public class Metadata
     {
         private readonly Schedule _schedule;
-        private readonly DayPlaceMetaData _dayPlaceMetaData;
+        private readonly DayPlaceMetadata _dayPlaceMetaData;
         private readonly SchoolClass _schoolClass;
 
         public Metadata(
             Schedule schedule,
-            DayPlaceMetaData dayPlaceMetaData,
+            DayPlaceMetadata dayPlaceMetaData,
             SchoolClass schoolClass)
         {
             _schedule = schedule;

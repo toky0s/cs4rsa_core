@@ -120,7 +120,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             return _schoolClasses.Select(item => item.SchoolClassName).Distinct();
         }
 
-        public DayPlaceMetaData GetDayPlaceMetaData()
+        public DayPlaceMetadata GetDayPlaceMetaData()
         {
             return _schoolClasses[0].DayPlaceMetaData;
         }
