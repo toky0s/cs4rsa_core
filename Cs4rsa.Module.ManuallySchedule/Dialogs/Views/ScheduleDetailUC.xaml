@@ -11,6 +11,15 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              d:DataContext="{d:DesignInstance Type=vm:ScheduleDetailUCViewModel}">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="500"></Setter>
+            <Setter Property="Height" Value="500"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="True"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <UserControl.Resources>
         <cvt:BooleanToVisibilityConverter x:Key="BoolToVis"></cvt:BooleanToVisibilityConverter>
     </UserControl.Resources>
@@ -27,10 +36,10 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-            <TextBlock HorizontalAlignment="Left" Grid.Column="0">
-                <Run>Name: </Run>
-                <Run Text="{Binding UserSchedule.Name}" FontWeight="DemiBold"></Run>
-            </TextBlock>
+                <TextBlock HorizontalAlignment="Left" Grid.Column="0">
+                    <Run>Name: </Run>
+                    <Run Text="{Binding UserSchedule.Name}" FontWeight="DemiBold"></Run>
+                </TextBlock>
                 <TextBlock 
                     Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVis}}" 
                     Foreground="#27ae60" 

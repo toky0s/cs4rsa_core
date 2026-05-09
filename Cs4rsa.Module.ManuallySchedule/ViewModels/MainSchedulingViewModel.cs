@@ -249,6 +249,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         }
                         await Task.WhenAll(downloadTasks);
                         SelectedSubjectModel = SubjectModels[0];
+
+                        RunScheduleValidator();
                     }
                     else
                     {
@@ -740,13 +742,26 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             // Để tránh việc lặp lại code khi thêm hoặc thay thế nhiều class group model,
             // tạo một hàm riêng để điền tên lớp học đã chọn vào SubjectModel tương ứng.
-            void fillClassGroupNameToSubjectModel(ClassGroupModel[] newItems)
+            void FillClassGroupNameToSubjectModel(ClassGroupModel[] newItems)
             {
                 // Fill selected class group name to subjects.
                 foreach (var classGroupModel in newItems)
                 {
                     var subjectModel = SubjectModels.First(sjm => sjm.SubjectName == classGroupModel.ClassGroup.SubjectName);
                     subjectModel.SelectedClassGroupName = classGroupModel.Name;
+                }
+            }
+
+            // Loại bỏ selected class group name được chọn tương ứng trên mỗi subject.
+            void CleanSelectedClassGroupNameFromSubjectModel(ClassGroupModel[] oldItems)
+            {
+                foreach (var classGroupModel in oldItems)
+                {
+                    var subjectModel = SubjectModels.FirstOrDefault(sjm => sjm.SubjectName == classGroupModel.ClassGroup.SubjectName);
+                    if (subjectModel != null)
+                    {
+                        subjectModel.SelectedClassGroupName = null;
+                    }
                 }
             }
 
@@ -757,17 +772,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 {
                     AddScheduleItems(classGroups[i]);
                 }
-                fillClassGroupNameToSubjectModel(classGroups);
+                FillClassGroupNameToSubjectModel(classGroups);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
                 var classGroups = e.OldItems.Cast<ClassGroupModel>().ToArray();
+                CleanSelectedClassGroupNameFromSubjectModel(classGroups);
                 RemoveScheduleItem(classGroups[0].SubjectCode);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
             {
                 var oldClassGroups = e.OldItems.Cast<ClassGroupModel>().ToArray();
                 var newClassGroups = e.NewItems.Cast<ClassGroupModel>().ToArray();
+                CleanSelectedClassGroupNameFromSubjectModel(oldClassGroups);
                 for (int i = 0; i < oldClassGroups.Length; i++)
                 {
                     RemoveScheduleItem(oldClassGroups[i].SubjectCode);
@@ -776,21 +793,29 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 {
                     AddScheduleItems(newClassGroups[i]);
                 }
-                fillClassGroupNameToSubjectModel(newClassGroups);
+                FillClassGroupNameToSubjectModel(newClassGroups);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
+                foreach (var item in SubjectModels)
+                {
+                    item.SelectedClassGroupName = null;
+                }
                 CleanDays();
             }
 
             UpdateConflicts();
-            RunScheduleValidator();
-
+            
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             RemoveSelectedCommand.RaiseCanExecuteChanged();
         }
 
+        /// <summary>
+        /// Chạy lại validator để cảnh báo cho user.
+        /// 
+        /// Chạy method này sau mỗi User action.
+        /// </summary>
         private void RunScheduleValidator()
         {
             WarningModels.Clear();

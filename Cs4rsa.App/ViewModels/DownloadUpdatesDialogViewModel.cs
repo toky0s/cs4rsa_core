@@ -2,8 +2,6 @@
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json.Linq;
-
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -35,12 +33,20 @@ namespace Cs4rsa.App.ViewModels
         void ExecuteExitDownloadingUpdate()
         {
             _logger.LogInformation("User request exit downloading update");
-            CancellationTokenSource.Cancel();   
+            CancellationTokenSource.Cancel();
+#if DEBUG
+            _isDowloading = false;
+            RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+#endif
         }
 
         bool CanExecuteExitDownloadingUpdate()
         {
-            return _isDowloading; ;
+#if DEBUG
+            return true;
+#else
+            return _isDowloading;
+#endif
         }
 
         private DelegateCommand _updateCommand;
@@ -75,8 +81,16 @@ namespace Cs4rsa.App.ViewModels
             {
                 _logger.LogWarning("Update cancelled by user.", ex.Message);
                 _isDowloading = false;
-                RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+#if DEBUG
+                RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+#endif
             }
+#if DEBUG
+            catch (OperationCanceledException ex)
+            {
+                _logger.LogDebug("Request canceled.", ex);
+            }
+#endif
         }
 
         bool CanExecuteUpdateCommand()
@@ -98,12 +112,20 @@ namespace Cs4rsa.App.ViewModels
 
         public bool CanCloseDialog()
         {
+#if DEBUG
+            return true;
+#else
             return !_isDowloading;
+#endif
         }
 
         public void OnDialogClosed()
         {
+#if DEBUG
+            CancellationTokenSource.Cancel();
+#else
             _logger.LogInformation("Download updates dialog closed");
+#endif
         }
 
         public void OnDialogOpened(IDialogParameters parameters)

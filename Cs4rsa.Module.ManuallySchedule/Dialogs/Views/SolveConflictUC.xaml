@@ -13,10 +13,8 @@
     prism:ViewModelLocator.AutoWireViewModel="True">
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Width" Value="360"></Setter>
-            <Setter Property="Height" Value="245"></Setter>
-            <Setter Property="MaxWidth" Value="500"></Setter>
-            <Setter Property="MaxHeight" Value="500"></Setter>
+            <Setter Property="Width" Value="500"></Setter>
+            <Setter Property="Height" Value="500"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             <Setter Property="ShowInTaskbar" Value="True"/>
@@ -30,11 +28,11 @@
             Margin="0,0,0,16"
             HorizontalAlignment="Center">
             <Run FontWeight="Bold" 
-                 Text="{Binding ClassGroupModel_A.Name, Mode=OneTime}" 
+                 Text="{Binding ClassGroupModel_A.Name, Mode=OneWay}" 
                  d:Text="CS 301 A"/>
             <Run Text="OR" />
             <Run FontWeight="Bold" 
-                 Text="{Binding ClassGroupModel_B.Name, Mode=OneTime}" 
+                 Text="{Binding ClassGroupModel_B.Name, Mode=OneWay}" 
                  d:Text="MAG 302 C"/>
             <Run Text="?" />
         </TextBlock>
@@ -63,7 +61,7 @@
                         d:Background="#e056fd"
                         CornerRadius="4" />
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="{Binding ClassGroupModel_A.ClassGroup.SubjectName}" 
+                        <TextBlock TextWrapping="Wrap" Text="{Binding ClassGroupModel_A.ClassGroup.SubjectName}" 
                                    d:Text="Lập trình hướng đối tượng"/>
                         <TextBlock Text="{Binding ClassGroupModel_A.Name, Mode=OneTime}" 
                                    d:Text="CS 301"/>
@@ -95,6 +93,7 @@
                         d:Background="#7ed6df"/>
                     <StackPanel Grid.Column="1">
                         <TextBlock 
+                            TextWrapping="Wrap"
                             Text="{Binding ClassGroupModel_B.ClassGroup.SubjectName}" 
                             d:Text="Pháp thuật đại cương"/>
                         <TextBlock 
