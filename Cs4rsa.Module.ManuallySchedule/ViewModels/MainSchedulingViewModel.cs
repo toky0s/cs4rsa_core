@@ -805,7 +805,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
 
             UpdateConflicts();
-            
+
             SaveCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
             RemoveSelectedCommand.RaiseCanExecuteChanged();
@@ -1401,6 +1401,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     _logger.LogInformation("Add block to schedule with class group {classGroupName}", value.Name);
                 }
             }
+            RunScheduleValidator();
         }
 
         private bool CanResetFilter()
@@ -1684,16 +1685,51 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         void ExecuteSolveConflictCommand(WarningModel warningModel)
         {
+            _logger.LogDebug("User click on solve conflict button with warning {warningTitle} and type {warningType}", warningModel.WarningTitle, warningModel.WarningType);
+
+            switch(warningModel.WarningType)
+            {
+                case WarningType.TimeConflict:
+                    
+                    break;
+                case WarningType.PlaceConflict:
+                    _logger.LogDebug("This is a place conflict warning");
+                    break;
+                default:
+                    _logger.LogWarning("This is an unknown type of warning");
+                    break;
+            }
+
             if (warningModel.WarningType.Equals(WarningType.TimeConflict))
             {
                 if (warningModel.TryGetContext(out TimeConflictContext context))
                 {
-                    IConflictModel[] conflictModels = ConflictModels.ToArray<IConflictModel>();
+                    string classGroupName_A = null;
+                    string classGroupName_B = null;
+
+                    _logger.LogDebug("This is a time conflict warning");
+                    var ctx = (TimeConflictContext)warningModel.Context;
+                    classGroupName_A = ctx.ClassGroupModel_A.ClassGroup.Name;
+                    classGroupName_B = ctx.ClassGroupModel_B.ClassGroup.Name;
+                    _logger.LogDebug("Conflict between class group {classGroupA} and class group {classGroupB}", classGroupName_A, classGroupName_B);
+
+                    ConflictModel conflictModel = ConflictModels
+                        .Where(conflict => 
+                            conflict.LessonA.ClassGroupName.Equals(classGroupName_A) 
+                            && conflict.LessonB.ClassGroupName.Equals(classGroupName_B))
+                        .FirstOrDefault();
+
+                    if (conflictModel == null)
+                    {
+                        _logger.LogError("Cannot find conflict model with class group {classGroupA} and class group {classGroupB}", classGroupName_A, classGroupName_B);
+                        throw new Exception($"Cannot find conflict model with class group {classGroupName_A} and class group {classGroupName_B}");
+                    }
+
                     ClassGroupModel classGroupModel_A = context.ClassGroupModel_A;
                     ClassGroupModel classGroupModel_B = context.ClassGroupModel_B;
                     var parameter = new DialogParameters()
                     {
-                        {"ConflictModels", conflictModels},
+                        {"ConflictModel", conflictModel},
                         {"ClassGroupModelA", classGroupModel_A},
                         {"ClassGroupModelB", classGroupModel_B},
                     };

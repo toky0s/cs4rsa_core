@@ -8,21 +8,31 @@
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
     d:DataContext="{d:DesignInstance Type=vm:SolveConflictViewModel}"
     mc:Ignorable="d"
-    Background="White"
     Padding="4"
+    Name="Root"
+    xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
+    </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Width" Value="500"></Setter>
-            <Setter Property="Height" Value="500"></Setter>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+            <Setter Property="MaxWidth" Value="1000"></Setter>
+            <Setter Property="MaxHeight" Value="1000"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             <Setter Property="ShowInTaskbar" Value="True"/>
         </Style>
     </prism:Dialog.WindowStyle>
-    <StackPanel>
-        <TextBlock HorizontalAlignment="Center" Text="This conflict can be solve by removing one of two classes">
-        </TextBlock>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="This conflict can be solve by removing one of two classes"/>
         <TextBlock
             Grid.Row="1"
             Margin="0,0,0,16"
@@ -36,7 +46,7 @@
                  d:Text="MAG 302 C"/>
             <Run Text="?" />
         </TextBlock>
-        <Grid>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -107,5 +117,40 @@
                 </Grid>
             </Border>
         </Grid>
-    </StackPanel>
+        <DataGrid
+            MaxHeight="300"
+            Grid.Row="3"
+            ItemsSource="{Binding ConflictInfos}" 
+            AutoGenerateColumns="False"
+            CanUserDeleteRows="False"
+            CanUserAddRows="False"
+            IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Days" Binding="{Binding Day}"></DataGridTextColumn>
+                <DataGridTextColumn d:Header="CS 301 Times">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock 
+                                d:Text="CS 301 Times"
+                                Text="{Binding Data.ClassGroupModel_A.Name, 
+                                Source={StaticResource Proxy},
+                                StringFormat={}{0} Times}"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn>
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock 
+                                d:Text="MAG 302 Times"
+                                Text="{Binding Data.ClassGroupModel_B.Name, 
+                             Source={StaticResource Proxy},
+                             StringFormat={}{0} Times}"/>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Conflict Durations" Binding="{Binding ConflictDurian}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

@@ -130,8 +130,8 @@
             </Style>
         </Border.Style>
         <TextBlock
-            FontSize="10"
-            Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
-            TextWrapping="Wrap" />
+             FontSize="10"
+             Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
+             TextWrapping="Wrap" />
     </Border>
 </UserControl>

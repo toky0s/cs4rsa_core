@@ -1,10 +1,12 @@
 ﻿using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Cs4rsa.Services.ConflictSvc.Utils
+namespace Cs4rsa.Service.Conflict.Utils
 {
     /// <summary>
     /// Bao gồm các phương thức thao tác với StudyTime.
@@ -93,14 +95,10 @@ namespace Cs4rsa.Services.ConflictSvc.Utils
         /// <returns>Danh sách các StudyTimeIntersect.</returns>
         public static IEnumerable<StudyTimeIntersect> GetStudyTimeIntersects(IEnumerable<Tuple<StudyTime, StudyTime>> studyTimeTuples)
         {
-            foreach (Tuple<StudyTime, StudyTime> item in studyTimeTuples)
-            {
-                StudyTimeIntersect studyTimeIntersect = GetStudyTimeIntersect(item.Item1, item.Item2);
-                if (!(studyTimeIntersect == null))
-                {
-                    yield return studyTimeIntersect;
-                }
-            }
+            return studyTimeTuples
+                .Select(item => GetStudyTimeIntersect(item.Item1, item.Item2))
+                .Where(studyTimeIntersect => studyTimeIntersect != null)
+                .ToList();
         }
     }
 }

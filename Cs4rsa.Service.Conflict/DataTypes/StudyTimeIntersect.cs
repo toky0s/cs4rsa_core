@@ -1,4 +1,5 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System;
 using System.Globalization;
@@ -6,7 +7,7 @@ using System.Globalization;
 namespace Cs4rsa.Service.Conflict.DataTypes
 {
     /// <summary>
-    /// Đại điện cho một khoảng giao về thời gian giữa hai StudyTime. Phục vụ cho việc phát hiện xung đột.
+    /// Đại điện cho một khoảng giao về thời gian giữa hai StudyTime.
     /// </summary>
     public class StudyTimeIntersect : IEquatable<StudyTimeIntersect>
     {
@@ -19,7 +20,9 @@ namespace Cs4rsa.Service.Conflict.DataTypes
         public StudyTime FScStudyTime { get; }
         public StudyTime SScStudyTime { get; }
 
-        public StudyTimeIntersect(DateTime start, DateTime end, StudyTime fScStudyTime, StudyTime sScStudyTime)
+        public StudyTimeIntersect(
+            DateTime start, DateTime end, 
+            StudyTime fScStudyTime, StudyTime sScStudyTime)
         {
             FScStudyTime = fScStudyTime;
             SScStudyTime = sScStudyTime;

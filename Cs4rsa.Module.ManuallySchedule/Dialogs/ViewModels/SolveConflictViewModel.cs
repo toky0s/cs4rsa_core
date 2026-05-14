@@ -1,7 +1,12 @@
 ﻿using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Service.Conflict.DataTypes;
+using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
+using Cs4rsa.Service.SubjectCrawler.Utils;
+using Cs4rsa.UI.ScheduleTable.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -10,11 +15,28 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Documents;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
+    public class ConflictInfo
+    {
+        public string Day { get; set; }
+        public string ClassGroupModel_A_TimeRange { get; set; }
+        public string ClassGroupModel_B_TimeRange { get; set; }
+        public string ConflictDurian { get; set; }
+    }
+
     public partial class SolveConflictViewModel : BindableBase, IDialogAware
     {
+        private ObservableCollection<ConflictInfo> _conflictInfos;
+        public ObservableCollection<ConflictInfo> ConflictInfos
+        {
+            get { return _conflictInfos; }
+            set { SetProperty(ref _conflictInfos, value); }
+        }
         private ClassGroupModel _classGroupModel_A;
         public ClassGroupModel ClassGroupModel_A
         {
@@ -36,9 +58,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             set { SetProperty(ref _fColor, value); }
         }
 
-
         public event Action<IDialogResult> RequestClose;
-
 
         private void CloseDialogWithRemovedLesson(ClassGroupModel classGroupModel)
         {
@@ -88,6 +108,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public SolveConflictViewModel(ILogger<SolveConflictViewModel> logger)
         {
             _logger = logger;
+            ConflictInfos = new ObservableCollection<ConflictInfo>();
         }
         public bool CanCloseDialog()
         {
@@ -101,9 +122,24 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            var conflictModel = parameters.GetValue<IConflictModel[]>("ConflictModels");
+            var conflictModel = parameters.GetValue<ConflictModel>("ConflictModel");
             ClassGroupModel_A = parameters.GetValue<ClassGroupModel>("ClassGroupModelA");
             ClassGroupModel_B = parameters.GetValue<ClassGroupModel>("ClassGroupModelB");
+
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in conflictModel.ConflictTime.ConflictTimes)
+            {
+                var day = item.Key;
+                foreach (var studyTimeIntersect in item.Value)
+                {
+                    ConflictInfos.Add(new ConflictInfo
+                    {
+                        Day = day.ToCs4rsaVietnamese(),
+                        //ClassGroupModel_A_TimeRange = conflictModel.LessonA.,
+                        //ClassGroupModel_B_TimeRange = conflictModel.LessonB.Schedule.GetStudyTimesAtDay(day),
+                        ConflictDurian = $"{studyTimeIntersect.StartString} - {studyTimeIntersect.EndString}"
+                    });
+                }      
+            }           
         }
     }
 }

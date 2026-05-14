@@ -9,8 +9,8 @@ namespace Cs4rsa.Service.Conflict.Interfaces
     /// </summary>
     public interface IConflictModel
     {
-        Lesson LessonA { get; set; }
-        Lesson LessonB { get; set; }
+        Lesson LessonA { get; }
+        Lesson LessonB { get; }
         string GetConflictInfo();
         ConflictType GetConflictType();
         Phase GetPhase();

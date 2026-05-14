@@ -15,18 +15,15 @@ namespace Cs4rsa.UI.ScheduleTable.Models
     public class ConflictModel : IConflictModel, IScheduleTableItem
     {
         const string Background = "#e74c3c";
-        private Lesson _lessonA;
-        private Lesson _lessonB;
-        private readonly ConflictTime _conflictTime;
-
-        public Lesson LessonA { get => _lessonA; set => _lessonA = value; }
-        public Lesson LessonB { get => _lessonB; set => _lessonB = value; }
+        public ConflictTime ConflictTime { get; }
+        public Lesson LessonA { get; }
+        public Lesson LessonB { get; }
 
         public ConflictModel(Conflict conflict)
         {
-            _lessonA = conflict.LessonA;
-            _lessonB = conflict.LessonB;
-            _conflictTime = conflict.GetConflictTime();
+            LessonA = conflict.LessonA;
+            LessonB = conflict.LessonB;
+            ConflictTime = conflict.GetConflictTime();
         }
 
         /// <summary>
@@ -35,7 +32,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
         public string GetConflictInfo()
         {
             List<string> resultTimes = new List<string>();
-            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in _conflictTime.ConflictTimes)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
             {
                 string day = item.Key.ToCs4rsaVietnamese();
                 List<string> times = new List<string>();
@@ -57,30 +54,30 @@ namespace Cs4rsa.UI.ScheduleTable.Models
 
         public Phase GetPhase()
         {
-            if (_lessonA.Phase == Phase.First && _lessonB.Phase == Phase.First ||
-                    _lessonA.Phase == Phase.First && _lessonB.Phase == Phase.All ||
-                    _lessonA.Phase == Phase.All && _lessonB.Phase == Phase.First)
+            if (LessonA.Phase == Phase.First && LessonB.Phase == Phase.First ||
+                    LessonA.Phase == Phase.First && LessonB.Phase == Phase.All ||
+                    LessonA.Phase == Phase.All && LessonB.Phase == Phase.First)
                 return Phase.First;
-            if (_lessonA.Phase == Phase.Second && _lessonB.Phase == Phase.Second ||
-                    _lessonA.Phase == Phase.Second && _lessonB.Phase == Phase.All ||
-                    _lessonA.Phase == Phase.All && _lessonB.Phase == Phase.Second)
+            if (LessonA.Phase == Phase.Second && LessonB.Phase == Phase.Second ||
+                    LessonA.Phase == Phase.Second && LessonB.Phase == Phase.All ||
+                    LessonA.Phase == Phase.All && LessonB.Phase == Phase.Second)
                 return Phase.Second;
             return Phase.All;
         }
 
         public TimeBlock[] GetBlocks()
         {
-            return _conflictTime.ConflictTimes
+            return ConflictTime.ConflictTimes
                 .SelectMany(item => item.Value
                     .Select(sti => new CfBlock(
                         sti,
                         GetId(),
                         Background,
-                        _lessonA.SchoolClassName + " x " + _lessonB.SchoolClassName,
+                        LessonA.SchoolClassName + " x " + LessonB.SchoolClassName,
                         item.Key,
                         ScheduleTableItemType.TimeConflict,
-                        _lessonA,
-                        _lessonB
+                        LessonA,
+                        LessonB
                 ))).ToArray();
         }
 
