@@ -33,7 +33,7 @@ namespace Cs4rsa.UI.ScheduleTable.Interfaces
         ///     <item>Phase.All: Khối thời gian sẽ được vẽ trên cả hai bảng.</item>
         /// </list>
         /// </returns>
-        Phase GetPhase();
+        Phase Phase { get; }
 
         string GetId();
     }

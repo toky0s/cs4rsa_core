@@ -127,7 +127,10 @@
             IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Days" Binding="{Binding Day}"></DataGridTextColumn>
-                <DataGridTextColumn d:Header="CS 301 Times">
+
+                <DataGridTextColumn Header="Conflict Durations" Binding="{Binding ConflictDurian}"></DataGridTextColumn>
+                
+                <DataGridTextColumn Width="*" Binding="{Binding ClassGroupModel_A_TimeRange}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock 
@@ -137,8 +140,19 @@
                                 StringFormat={}{0} Times}"/>
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn>
+
+                <DataGridTextColumn Width="*" Binding="{Binding ClassGroupModel_B_TimeRange}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock 
@@ -149,7 +163,7 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Conflict Durations" Binding="{Binding ConflictDurian}"></DataGridTextColumn>
+                
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

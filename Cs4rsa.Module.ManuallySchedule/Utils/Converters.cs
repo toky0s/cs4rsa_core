@@ -17,7 +17,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
                 schoolClassModel.StudyWeek,
                 schoolClassModel.Schedule,
                 schoolClassModel.DayPlaceMetaData,
-                schoolClassModel.SchoolClass.GetMetaDataMap(),
+                schoolClassModel.SchoolClass.Metadata,
                 schoolClassModel.Phase,
                 schoolClassModel.SchoolClassName,
                 schoolClassModel.SchoolClass.ClassGroupName,

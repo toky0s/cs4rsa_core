@@ -22,14 +22,22 @@ namespace Cs4rsa.UI.ScheduleTable.Models
         public Lesson LessonA { get; set; }
         public Lesson LessonB { get; set; }
 
+        public string ConflictInfo { get; }
+
+        public ConflictType ConflictType => ConflictType.Place;
+
+        public Phase Phase { get; }
+
         public PlaceConflictFinderModel(PlaceConflictFinder placeConflictFinder)
         {
             ConflictPlace = placeConflictFinder.GetPlaceConflict();
             LessonA = placeConflictFinder.LessonA;
             LessonB = placeConflictFinder.LessonB;
+            ConflictInfo = GetConflictInfo();
+            Phase = GetPhase();
         }
 
-        public string GetConflictInfo()
+        private string GetConflictInfo()
         {
             List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in ConflictPlace.PlaceAdjacents)
@@ -48,12 +56,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return string.Join("\n", resultTimes);
         }
 
-        public ConflictType GetConflictType()
-        {
-            return ConflictType.Place;
-        }
-
-        public Phase GetPhase()
+        private Phase GetPhase()
         {
             Phase phaseA = LessonA.Phase;
             Phase phaseB = LessonB.Phase;
@@ -73,13 +76,13 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return ConflictPlace.PlaceAdjacents
                 .SelectMany(pa => pa.Value
                     .Select(item => new PlaceCfBlock(
-                        item, 
-                        GetId(), 
-                        Background, 
-                        LessonA.SchoolClassName + " x " + LessonB.SchoolClassName, 
-                        pa.Key, 
-                        item.Start, 
-                        item.End, 
+                        item,
+                        GetId(),
+                        Background,
+                        LessonA.SchoolClassName + " x " + LessonB.SchoolClassName,
+                        pa.Key,
+                        item.Start,
+                        item.End,
                         ScheduleTableItemType.PlaceConflict
                     ))
                 ).ToArray();

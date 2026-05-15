@@ -11,13 +11,13 @@ namespace Cs4rsa.UI.ScheduleTable.Models
     {
         public string Name { get; set; }
         public TimeBlock(
-            string id
-            , string background
-            , string content
-            , DayOfWeek dayOfWeek
-            , DateTime start
-            , DateTime end
-            , ScheduleTableItemType scheduleTableItemType)
+            string id,
+            string background,
+            string content,
+            DayOfWeek dayOfWeek,
+            DateTime start,
+            DateTime end,
+            ScheduleTableItemType scheduleTableItemType)
         {
             Id = id;
             Background = background;

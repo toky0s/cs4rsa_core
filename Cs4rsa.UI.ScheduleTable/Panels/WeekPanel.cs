@@ -14,6 +14,18 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
     {
         private static readonly SolidColorBrush DefaultGridLineBrush;
 
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+            this.Children.Add(new DayPanel());
+        }
+
         static WeekPanel()
         {
             DefaultGridLineBrush = new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0));

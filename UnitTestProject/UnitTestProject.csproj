@@ -91,6 +91,7 @@
     <Compile Include="DisciplineCrawler_Test\DisciplineCrawler_20260501.cs" />
     <Compile Include="SubjectCrawler\SubjectCrawler_20231110.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared_Utils\Utils_20260515.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -129,6 +130,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Module.Shared\Cs4rsa.Module.Shared.csproj">
+      <Project>{877566d3-74d6-467c-b0fd-5dc9fcd29e12}</Project>
+      <Name>Cs4rsa.Module.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
       <Project>{82462320-EE93-4AFA-BCB0-B32C8CC81AB4}</Project>
       <Name>Cs4rsa.Service.CourseCrawler</Name>

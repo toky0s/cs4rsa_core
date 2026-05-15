@@ -47,7 +47,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             RegistrationTermStart = schoolClass.RegistrationTermStart;
             StudyWeek             = schoolClass.StudyWeek;
             Schedule              = schoolClass.Schedule;
-            SubjectCode           = schoolClass.SubjectCode;
+            SubjectCode           = schoolClass.Subject.SubjectCode;
             Rooms                 = schoolClass.Rooms;
             Places                = schoolClass.Places;
             TempTeachers          = schoolClass.TeacherNames;
@@ -60,7 +60,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public TimeBlock[] GetBlocks()
         {
-            return SchoolClass.GetSchoolClassUnits().Select(unit => new SchoolClassBlock
+            return SchoolClass.SchoolClassUnits.Select(unit => new SchoolClassBlock
                 (
                     unit,
                     GetId(),
@@ -72,7 +72,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 )).ToArray();
         }
 
-        public Phase GetPhase() => SchoolClass.GetPhase();
+        public Phase GetPhase() => SchoolClass.CurrentPhase;
 
         public string GetId() => SubjectCode;
     }

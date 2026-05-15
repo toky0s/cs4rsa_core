@@ -1,4 +1,5 @@
 using Cs4rsa.UI.ScheduleTable.Models;
+using Cs4rsa.UI.ScheduleTable.Panels;
 
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -38,16 +39,16 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public ObservableCollection<ObservableCollection<TimeBlock>> Week
+        public ObservableCollection<TimeBlock> Week
         {
-            get => (ObservableCollection<ObservableCollection<TimeBlock>>)GetValue(WeekProperty);
+            get => (ObservableCollection<TimeBlock>)GetValue(WeekProperty);
             set => SetValue(WeekProperty, value);
         }
 
         public static readonly DependencyProperty WeekProperty =
             DependencyProperty.Register(
                 nameof(Week),
-                typeof(ObservableCollection<ObservableCollection<TimeBlock>>),
+                typeof(ObservableCollection<TimeBlock>),
                 typeof(ScheduleView),
                 new FrameworkPropertyMetadata(
                     null,
@@ -113,18 +114,5 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
                 typeof(double),
                 typeof(ScheduleView),
                 new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-
-        public bool ShowScrollNavigation
-        {
-            get => (bool)GetValue(ShowScrollNavigationProperty);
-            set => SetValue(ShowScrollNavigationProperty, value);
-        }
-
-        public static readonly DependencyProperty ShowScrollNavigationProperty =
-            DependencyProperty.Register(
-                nameof(ShowScrollNavigation),
-                typeof(bool),
-                typeof(ScheduleView),
-                new PropertyMetadata(true));
     }
 }

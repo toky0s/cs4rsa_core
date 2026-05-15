@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
     public class SchoolClass
     {
-        private Phase _currentPhase;
+        private Phase _currPhase;
         public Phase CurrentPhase
         {
-            get => _currentPhase == Phase.Unknown ? GetPhase() : _currentPhase;
-            private set
+            get
             {
-                _currentPhase = value;
+                if (_currPhase == Phase.Unknown)
+                {
+                    _currPhase = StudyWeek.GetPhase();
+                }
+                return _currPhase;
             }
         }
         public string SubjectName { get; set; }
-        public string SubjectCode { get; set; }
         public string ClassGroupName { get; set; }
         public string SchoolClassName { get; set; }
         public string RegisterCode { get; set; }
@@ -33,7 +37,11 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public string ImplementationStatus { get; set; }
         public string Url { get; set; }
         public DayPlaceMetadata DayPlaceMetaData { get; set; }
+        
+        public Subject Subject { get; }
 
+        public Metadata Metadata { get; }
+        public ImmutableArray<SchoolClassUnit> SchoolClassUnits { get; set; }
         public SchoolClass(
             string schoolClassName,
             string registerCode,
@@ -50,9 +58,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             string implementationStatus,
             string url,
             DayPlaceMetadata dayPlaceMetaData,
-            string subjectCode)
+            Subject subject)
         {
-            CurrentPhase = Phase.Unknown;
             SchoolClassName = schoolClassName;
             RegisterCode = registerCode;
             Type = ClassForm.Find(type);
@@ -68,22 +75,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             ImplementationStatus = implementationStatus;
             Url = url;
             DayPlaceMetaData = dayPlaceMetaData;
-            SubjectCode = subjectCode;
-        }
-
-        /// <summary>
-        /// Tính toán lại Phase của một SchoolClass. 
-        /// </summary>
-        /// <returns>Phase</returns>
-        public Phase GetPhase()
-        {
-            CurrentPhase = StudyWeek.GetPhase();
-            return CurrentPhase;
-        }
-
-        public Metadata GetMetaDataMap()
-        {
-            return new Metadata(Schedule, DayPlaceMetaData, this);
+            Subject = subject;
+            Metadata = new Metadata(Schedule, DayPlaceMetaData, this);
+            SchoolClassUnits = GetSchoolClassUnits().ToImmutableArray();
         }
 
         /// <summary>
@@ -105,7 +99,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// vẫn là một tập hợp.
         /// </remarks>
         /// <returns>IEnumerable SchoolClassUnit</returns>
-        public IEnumerable<SchoolClassUnit> GetSchoolClassUnits()
+        private IEnumerable<SchoolClassUnit> GetSchoolClassUnits()
         {
             foreach (DayOfWeek dayOfWeek in Schedule.GetSchoolDays())
             {

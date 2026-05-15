@@ -11,46 +11,16 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ScheduleView_GridLineBrush" Color="#E0E0E0" />
+        <Style TargetType="Border" x:Key="Border_DayOfWeek">
+            <Setter Property="BorderBrush" Value="#E0E0E0"></Setter>
+            <Setter Property="BorderThickness" Value="0,0,0.5,0"></Setter>
+            <Setter Property="SnapsToDevicePixels" Value="True"></Setter>
+        </Style>
         <Style x:Key="ScheduleView_TextBlock_Day" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="10" />
             <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
-        </Style>
-        <Style x:Key="ScheduleView_ScrollNavButton" TargetType="Button">
-            <Setter Property="Width" Value="36" />
-            <Setter Property="Height" Value="36" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="#F5F5F5" />
-            <Setter Property="BorderBrush" Value="#E0E0E0" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="Chrome"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="18"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Chrome" Property="Background" Value="#EEEEEE" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Chrome" Property="Background" Value="#E0E0E0" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Chrome" Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
         <DataTemplate x:Key="ScheduleView_DefaultBlockTemplate">
             <local:ScheduleBlock
@@ -85,7 +55,7 @@
             <!--  Ô góc (cột mốc giờ) — căn với cột timeline bên dưới  -->
             <Border
                 Grid.Row="0"
-                Grid.Column="0"
+                Grid.Column="1"
                 Padding="0,0,0,5"
                 BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
                 BorderThickness="0,0,0.5,0.5"
@@ -99,23 +69,30 @@
                 BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
                 BorderThickness="0,0,0,0.5"
                 SnapsToDevicePixels="True">
-                <ItemsControl ItemsSource="{Binding DayHeaders, ElementName=root}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="7" Rows="1" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border
-                                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
-                                BorderThickness="0,0,0.5,0"
-                                SnapsToDevicePixels="True">
-                                <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="{Binding}" />
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <UniformGrid Columns="7" Rows="1" >
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T2" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T3" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T4" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T5" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T6" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T7" />
+                    </Border>
+                    <Border Style="{StaticResource Border_DayOfWeek}">
+                        <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="CN" />
+                    </Border>
+                </UniformGrid>
+
             </Border>
 
             <ScrollViewer
@@ -131,6 +108,10 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--  Timeline: kẻ ngang full width (mốc giờ + vùng lưới)  -->
+                    <panels:TimeLinePanel Grid.Column="0" Grid.ColumnSpan="2" SnapsToDevicePixels="True">
+
+                       
+                    </panels:TimeLinePanel>
                     <ItemsControl
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
@@ -165,13 +146,84 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <StackPanel 
+                        Grid.Column="1"
+                        Orientation="Vertical"
+                        d:Visibility="Visible"
+                        Visibility="Collapsed">
+                        <TextBlock Text="07:00"/>
+                        <TextBlock Text="08:00"/>
+                        <TextBlock Text="09:00"/>
+                        <!-- ... -->
+                    </StackPanel>
+
                     <Border
                         Grid.Column="1"
                         BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
                         BorderThickness="0.5"
                         CornerRadius="12"
+                        d:Visibility="Collapsed"
                         SnapsToDevicePixels="True">
-                        <ItemsControl Name="IC_WeekPanelContainer" ItemsSource="{Binding Week, ElementName=root}">
+                        
+                        <panels:WeekPanel
+                            x:Name="Weekpanel"
+                            Height="{Binding ElementName=IC_WeekPanelContainer, Path=Height}"
+                            GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
+                            ShowGridLines="True">
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="07:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="08:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="09:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="09:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="10:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="11:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="12:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="13:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="14:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="15:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="15:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="16:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="17:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="17:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="18:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="19:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="21:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                            </Border>
+                        </panels:WeekPanel>
+
+                        <!--<ItemsControl Name="IC_WeekPanelContainer" ItemsSource="{Binding Week, ElementName=root}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <panels:WeekPanel
@@ -198,7 +250,7 @@
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        </ItemsControl>-->
                     </Border>
                 </Grid>
             </ScrollViewer>

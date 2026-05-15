@@ -6,6 +6,7 @@ using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Utils;
+using Cs4rsa.Module.Shared;
 using Cs4rsa.UI.ScheduleTable.Models;
 
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Documents;
 
 namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
@@ -126,17 +128,48 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             ClassGroupModel_A = parameters.GetValue<ClassGroupModel>("ClassGroupModelA");
             ClassGroupModel_B = parameters.GetValue<ClassGroupModel>("ClassGroupModelB");
 
+            ClassGroupModel_A.CurrentSchoolClassModels.ForEach(item =>
+            {
+                foreach (var u in item.SchoolClass.SchoolClassUnits)
+                {
+                    _logger.LogInformation("ClassGroupModel_A Start: {Start}, End: {End}, Day: {day}",
+                        u.Start, u.End, u.DayOfWeek.ToCs4rsaVietnamese());
+                }
+            });
+
+            ClassGroupModel_B.CurrentSchoolClassModels.ForEach(item =>
+            {
+                foreach (var u in item.SchoolClass.SchoolClassUnits)
+                {
+                    _logger.LogInformation("ClassGroupModel_B Start: {Start}, End: {End}, Day: {day}",
+                        u.Start, u.End, u.DayOfWeek.ToCs4rsaVietnamese());
+                }
+            });
+
+
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in conflictModel.ConflictTime.ConflictTimes)
             {
                 var day = item.Key;
-                foreach (var studyTimeIntersect in item.Value)
+                foreach (var intersect in item.Value)
                 {
+                    var unitA = ClassGroupModel_A.CurrentSchoolClassModels
+                        .SelectMany(schClassModel => schClassModel.SchoolClass.SchoolClassUnits)
+                        .Where(unit => unit.DayOfWeek == day 
+                            && Shared.Utils.IsOverlap(unit.Start, unit.End, intersect.Start, intersect.End))
+                        .First();
+
+                    var unitB = ClassGroupModel_B.CurrentSchoolClassModels
+                        .SelectMany(schClassModel => schClassModel.SchoolClass.SchoolClassUnits)
+                        .Where(unit => unit.DayOfWeek == day
+                            && Shared.Utils.IsOverlap(unit.Start, unit.End, intersect.Start, intersect.End))
+                        .First();
+
                     ConflictInfos.Add(new ConflictInfo
                     {
                         Day = day.ToCs4rsaVietnamese(),
-                        //ClassGroupModel_A_TimeRange = conflictModel.LessonA.,
-                        //ClassGroupModel_B_TimeRange = conflictModel.LessonB.Schedule.GetStudyTimesAtDay(day),
-                        ConflictDurian = $"{studyTimeIntersect.StartString} - {studyTimeIntersect.EndString}"
+                        ClassGroupModel_A_TimeRange = $"{unitA.Start:HH:mm} - {unitA.End:HH:mm}",
+                        ClassGroupModel_B_TimeRange = $"{unitB.Start:HH:mm} - {unitB.End:HH:mm}",
+                        ConflictDurian = $"{intersect.StartString} - {intersect.EndString}"
                     });
                 }      
             }           

@@ -18,18 +18,24 @@ namespace Cs4rsa.UI.ScheduleTable.Models
         public ConflictTime ConflictTime { get; }
         public Lesson LessonA { get; }
         public Lesson LessonB { get; }
+        public string ConflictInfo { get; }
+
+        public ConflictType ConflictType => ConflictType.Time;
+
+        public Phase Phase => GetPhase();
 
         public ConflictModel(Conflict conflict)
         {
             LessonA = conflict.LessonA;
             LessonB = conflict.LessonB;
             ConflictTime = conflict.GetConflictTime();
+            ConflictInfo = GetConflictInfo();
         }
 
         /// <summary>
         /// Lấy ra thông tin dạng chuỗi để hiển thị lên giao diện của một xung đột về thời gian.
         /// </summary>
-        public string GetConflictInfo()
+        private string GetConflictInfo()
         {
             List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
@@ -47,12 +53,7 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             return string.Join("\n", resultTimes);
         }
 
-        public ConflictType GetConflictType()
-        {
-            return ConflictType.Time;
-        }
-
-        public Phase GetPhase()
+        private Phase GetPhase()
         {
             if (LessonA.Phase == Phase.First && LessonB.Phase == Phase.First ||
                     LessonA.Phase == Phase.First && LessonB.Phase == Phase.All ||

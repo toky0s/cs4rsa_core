@@ -16,7 +16,7 @@ namespace Cs4rsa.WPF.Converter
             if (value != null)
             {
                 IConflictModel conflict = (IConflictModel)value;
-                return conflict.GetConflictInfo();
+                return conflict.ConflictInfo;
             }
             return null;
         }

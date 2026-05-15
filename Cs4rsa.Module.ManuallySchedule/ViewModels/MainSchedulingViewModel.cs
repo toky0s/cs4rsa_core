@@ -1868,7 +1868,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         schoolClassModels[i].StudyWeek,
                         schoolClassModels[i].Schedule,
                         schoolClassModels[i].DayPlaceMetaData,
-                        schoolClassModels[i].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[i].SchoolClass.Metadata,
                         schoolClassModels[i].Phase,
                         schoolClassModels[i].SchoolClassName,
                         schoolClassModels[i].SchoolClass.ClassGroupName,
@@ -1879,7 +1879,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         schoolClassModels[k].StudyWeek,
                         schoolClassModels[k].Schedule,
                         schoolClassModels[k].DayPlaceMetaData,
-                        schoolClassModels[k].SchoolClass.GetMetaDataMap(),
+                        schoolClassModels[k].SchoolClass.Metadata,
                         schoolClassModels[k].Phase,
                         schoolClassModels[k].SchoolClassName,
                         schoolClassModels[k].SchoolClass.ClassGroupName,
@@ -2031,7 +2031,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void AddScheduleItem(IScheduleTableItem scheduleItem)
         {
             var timeBlocks = scheduleItem.GetBlocks();
-            var phase = scheduleItem.GetPhase();
+            var phase = scheduleItem.Phase;
             foreach (var timeBlock in timeBlocks)
             {
                 var dayIndex = timeBlock.DayOfWeek.ToIndex();

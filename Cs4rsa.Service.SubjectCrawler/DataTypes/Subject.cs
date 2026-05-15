@@ -311,7 +311,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 registrationTermEnd, registrationTermStart, studyWeek, schedule,
                 rooms, places, teacherNames,
                 registrationStatus, implementationStatus,
-                urlToSubjectDetailPage, metaData, SubjectCode);
+                urlToSubjectDetailPage, metaData, this);
             return schoolClass;
         }
 

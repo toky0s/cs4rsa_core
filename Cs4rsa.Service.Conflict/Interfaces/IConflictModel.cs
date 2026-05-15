@@ -11,8 +11,8 @@ namespace Cs4rsa.Service.Conflict.Interfaces
     {
         Lesson LessonA { get; }
         Lesson LessonB { get; }
-        string GetConflictInfo();
-        ConflictType GetConflictType();
-        Phase GetPhase();
+        string ConflictInfo { get; }
+        ConflictType ConflictType { get; }
+        Phase Phase { get; }
     }
 }

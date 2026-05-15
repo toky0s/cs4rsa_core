@@ -1,5 +1,4 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using System;
 using System.Globalization;
@@ -31,8 +30,6 @@ namespace Cs4rsa.Service.Conflict.DataTypes
             StartString = start.ToString("HH:mm", CultureInfo.CurrentCulture);
             EndString = end.ToString("HH:mm", CultureInfo.CurrentCulture);
         }
-
-        public StudyTimeIntersect() { }
 
         public bool Equals(StudyTimeIntersect other)
         {
