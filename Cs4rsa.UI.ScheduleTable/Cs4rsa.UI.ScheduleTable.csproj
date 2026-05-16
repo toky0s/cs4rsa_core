@@ -63,9 +63,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomControls\ScheduleView.xaml.cs">
-      <DependentUpon>ScheduleView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CustomControls\ScheduleView_v2.xaml.cs">
       <DependentUpon>ScheduleView_v2.xaml</DependentUpon>
     </Compile>
@@ -83,15 +80,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="CustomControls\ScheduleView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Panels\DayPanel.cs" />
     <Compile Include="CustomControls\ScheduleBlock.xaml.cs">
       <DependentUpon>ScheduleBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Panels\TimeLinePanel.cs" />
+    <Compile Include="Panels\TimelinePanel.cs" />
     <Page Include="CustomControls\ScheduleView_v2.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>

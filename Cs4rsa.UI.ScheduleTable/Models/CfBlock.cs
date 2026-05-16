@@ -6,7 +6,7 @@ using System;
 
 namespace Cs4rsa.UI.ScheduleTable.Models
 {
-    internal class CfBlock : TimeBlock
+    internal class CfBlock : TimeBlock, IEquatable<CfBlock>
     {
         public Lesson FirstCfClass { get; }
         public Lesson SecondCfClass { get; }
@@ -35,6 +35,11 @@ namespace Cs4rsa.UI.ScheduleTable.Models
             SecondCfClass = secondCfClass;
             StudyTimeIntersect = studyTimeIntersect;
             Name = "CfBlock";
+        }
+
+        public bool Equals(CfBlock other)
+        {
+            return other != null && other.Id == Id;
         }
     }
 }

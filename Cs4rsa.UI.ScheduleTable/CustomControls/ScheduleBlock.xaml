@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    mc:Ignorable="d" d:DesignHeight="170" d:DesignWidth="255">
+    xmlns:models="clr-namespace:Cs4rsa.UI.ScheduleTable.Models"
+    mc:Ignorable="d" d:DesignHeight="170" d:DesignWidth="255" Name="root">
     <UserControl.Resources>
         <baseConverter:PhaseCvt x:Key="PhaseCvt" />
         <baseConverter:DayCvt x:Key="DayCvt" />
@@ -36,7 +37,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <ToolTip x:Key="SchoolClassBlock_ToolTip" Style="{StaticResource ToolTip_TimeBlock}">
+        <ToolTip x:Key="SchoolClassBlock_ToolTip" 
+                 Style="{StaticResource ToolTip_TimeBlock}" 
+                 d:DataContext="{d:DesignInstance Type=models:SchoolClassBlock}">
             <Border Width="400">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -117,13 +120,13 @@
     <Border
         x:Name="Border_ScheduleBlock"
         Padding="2"
-        Background="{Binding Path=BlockColor, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}"
+        Background="{Binding TimeBlock.Background,ElementName=root}"
         CornerRadius="6">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
                     <!--  School Class Block  -->
-                    <DataTrigger Binding="{Binding Path=DataContext.Name, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="SchoolClassBlock">
+                    <DataTrigger Binding="{Binding TimeBlock.Name, ElementName=root}" Value="SchoolClassBlock">
                         <Setter Property="ToolTip" Value="{StaticResource SchoolClassBlock_ToolTip}" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -131,7 +134,7 @@
         </Border.Style>
         <TextBlock
              FontSize="10"
-             Text="{Binding BlockName, RelativeSource={RelativeSource AncestorType=UserControl}}"
+             Text="{Binding TimeBlock.Content, ElementName=root}"
              TextWrapping="Wrap" />
     </Border>
 </UserControl>

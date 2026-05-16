@@ -646,45 +646,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
 
             #region Weeks and Timelines
-            Phase1_Monday = new ObservableCollection<TimeBlock>();
-            Phase1_Tuesday = new ObservableCollection<TimeBlock>();
-            Phase1_Wednesday = new ObservableCollection<TimeBlock>();
-            Phase1_Thursday = new ObservableCollection<TimeBlock>();
-            Phase1_Friday = new ObservableCollection<TimeBlock>();
-            Phase1_Saturday = new ObservableCollection<TimeBlock>();
-            Phase1_Sunday = new ObservableCollection<TimeBlock>();
+            Week1 = new ObservableCollection<TimeBlock>();
 
-            Phase2_Monday = new ObservableCollection<TimeBlock>();
-            Phase2_Tuesday = new ObservableCollection<TimeBlock>();
-            Phase2_Wednesday = new ObservableCollection<TimeBlock>();
-            Phase2_Thursday = new ObservableCollection<TimeBlock>();
-            Phase2_Friday = new ObservableCollection<TimeBlock>();
-            Phase2_Saturday = new ObservableCollection<TimeBlock>();
-            Phase2_Sunday = new ObservableCollection<TimeBlock>();
+            Week2 = new ObservableCollection<TimeBlock>();
 
-            Week1 = new ObservableCollection<ObservableCollection<TimeBlock>>()
-            {
-                Phase1_Monday,
-                Phase1_Tuesday,
-                Phase1_Wednesday,
-                Phase1_Thursday,
-                Phase1_Friday,
-                Phase1_Saturday,
-                Phase1_Sunday
-            };
-
-            Week2 = new ObservableCollection<ObservableCollection<TimeBlock>>()
-            {
-                Phase2_Monday,
-                Phase2_Tuesday,
-                Phase2_Wednesday,
-                Phase2_Thursday,
-                Phase2_Friday,
-                Phase2_Saturday,
-                Phase2_Sunday
-            };
-
-            _schedules = new List<ObservableCollection<ObservableCollection<TimeBlock>>>() { Week1, Week2 };
+            _schedules = new List<ObservableCollection<TimeBlock>>() { Week1, Week2 };
 
             Timelines = new ObservableCollection<string>();
             foreach (var timeline in Cs4rsa.UI.ScheduleTable.Utils.Utils.TimeLines)
@@ -1687,10 +1653,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             _logger.LogDebug("User click on solve conflict button with warning {warningTitle} and type {warningType}", warningModel.WarningTitle, warningModel.WarningType);
 
-            switch(warningModel.WarningType)
+            switch (warningModel.WarningType)
             {
                 case WarningType.TimeConflict:
-                    
+
                     break;
                 case WarningType.PlaceConflict:
                     _logger.LogDebug("This is a place conflict warning");
@@ -1714,8 +1680,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     _logger.LogDebug("Conflict between class group {classGroupA} and class group {classGroupB}", classGroupName_A, classGroupName_B);
 
                     ConflictModel conflictModel = ConflictModels
-                        .Where(conflict => 
-                            conflict.LessonA.ClassGroupName.Equals(classGroupName_A) 
+                        .Where(conflict =>
+                            conflict.LessonA.ClassGroupName.Equals(classGroupName_A)
                             && conflict.LessonB.ClassGroupName.Equals(classGroupName_B))
                         .FirstOrDefault();
 
@@ -1848,8 +1814,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                 }
             }
-            var conflictIds = ConflictModels.Select(cm => cm.GetId());
-            RemoveConflictNotInContains(conflictIds, ConflictType.Time);
+            var newConflictIds = ConflictModels.Select(cm => cm.GetId());
+            RemoveConflictNotInContains(newConflictIds, ConflictType.Time);
             AddNewConflicts(ConflictModels);
         }
 
@@ -1922,26 +1888,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         #region Scheduler View Model
-        private List<ObservableCollection<ObservableCollection<TimeBlock>>> _schedules;
+        private List<ObservableCollection<TimeBlock>> _schedules;
 
         #region Properties
-        public ObservableCollection<TimeBlock> Phase1_Monday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Tuesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Wednesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Thursday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Friday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Saturday { get; set; }
-        public ObservableCollection<TimeBlock> Phase1_Sunday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Monday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Tuesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Wednesday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Thursday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Friday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Saturday { get; set; }
-        public ObservableCollection<TimeBlock> Phase2_Sunday { get; set; }
-
-        public ObservableCollection<ObservableCollection<TimeBlock>> Week1 { get; set; }
-        public ObservableCollection<ObservableCollection<TimeBlock>> Week2 { get; set; }
+        public ObservableCollection<TimeBlock> Week1 { get; set; }
+        public ObservableCollection<TimeBlock> Week2 { get; set; }
 
         public ObservableCollection<string> Timelines { get; set; }
 
@@ -1960,12 +1911,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             foreach (var week in _schedules)
             {
-                foreach (var day in week)
+                foreach (var block in week)
                 {
-                    foreach (var timeBlock in day)
-                    {
-                        if (timeBlock.Id == item.GetId()) return true;
-                    }
+                    if (block.Id == item.GetId()) return true;
                 }
             }
             return false;
@@ -1983,17 +1931,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             foreach (var week in _schedules)
             {
-                foreach (var day in week)
+                foreach (var block in week)
                 {
-                    var currentIndex = 0;
-                    while (currentIndex < day.Count)
+                    if (id == block.Id)
                     {
-                        if (id == day[currentIndex].Id)
-                        {
-                            day.RemoveAt(currentIndex);
-                            continue;
-                        }
-                        currentIndex++;
+                        week.Remove(block);
+                        continue;
                     }
                 }
             }
@@ -2034,64 +1977,57 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var phase = scheduleItem.Phase;
             foreach (var timeBlock in timeBlocks)
             {
-                var dayIndex = timeBlock.DayOfWeek.ToIndex();
                 if (phase == Phase.First || phase == Phase.Second)
                 {
                     var week = phase == Phase.First ? Week1 : Week2;
-                    week[dayIndex].Add(timeBlock);
+                    week.Add(timeBlock);
                 }
                 else if (phase == Phase.All)
                 {
-                    Week1[dayIndex].Add(timeBlock);
-                    Week2[dayIndex].Add(timeBlock);
+                    Week1.Add(timeBlock);
+                    Week2.Add(timeBlock);
                 }
                 else
                 {
-                    Week2[dayIndex].Add(timeBlock);
+                    Week2.Add(timeBlock);
                 }
             }
         }
 
         private void CleanDays()
         {
-            Phase1_Monday.Clear();
-            Phase1_Tuesday.Clear();
-            Phase1_Wednesday.Clear();
-            Phase1_Thursday.Clear();
-            Phase1_Friday.Clear();
-            Phase1_Saturday.Clear();
-            Phase1_Sunday.Clear();
-
-            Phase2_Monday.Clear();
-            Phase2_Tuesday.Clear();
-            Phase2_Wednesday.Clear();
-            Phase2_Thursday.Clear();
-            Phase2_Friday.Clear();
-            Phase2_Saturday.Clear();
-            Phase2_Sunday.Clear();
+            Week1.Clear();
+            Week2.Clear();
         }
 
         private void RemoveConflictNotInContains(IEnumerable<string> conflictIds, ConflictType conflictType)
         {
-            foreach (var week in _schedules)
+            var removeBlocks = new List<TimeBlock>();
+            foreach (var id in conflictIds)
             {
-                foreach (var day in week)
+                var removeBlocks_A = Week1.Where(block =>
                 {
-                    var currentIndex = 0;
-                    while (currentIndex < day.Count)
-                    {
-                        if (!conflictIds.Contains(day[currentIndex].Id)
-                            && (day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.TimeConflict
-                            || day[currentIndex].ScheduleTableItemType == ScheduleTableItemType.PlaceConflict)
-                            && day[currentIndex].Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc"))
-                        {
-                            day.RemoveAt(currentIndex);
-                            continue;
-                        }
-                        currentIndex++;
-                    }
-                }
+                    return !(id == block.Id)
+                            && (block.ScheduleTableItemType == ScheduleTableItemType.TimeConflict || block.ScheduleTableItemType == ScheduleTableItemType.PlaceConflict)
+                            && block.Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc");
+                });
+
+                var removeBlocks_B = Week2.Where(block =>
+                {
+                    return !(id == block.Id)
+                            && (block.ScheduleTableItemType == ScheduleTableItemType.TimeConflict || block.ScheduleTableItemType == ScheduleTableItemType.PlaceConflict)
+                            && block.Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc");
+                });
+
+                removeBlocks.AddRange(removeBlocks_A);
+                removeBlocks.AddRange(removeBlocks_B);
             }
+
+            removeBlocks.ForEach(block =>
+            {
+                Week1.Remove(block);
+                Week2.Remove(block);
+            });
         }
         #endregion
     }

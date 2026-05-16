@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:panels="clr-namespace:Cs4rsa.UI.ScheduleTable.Panels"
     x:Name="root"
+    d:Width="200"
+    d:Height="160"
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -16,19 +18,11 @@
             <Setter Property="BorderThickness" Value="0,0,0.5,0"></Setter>
             <Setter Property="SnapsToDevicePixels" Value="True"></Setter>
         </Style>
-        <Style x:Key="ScheduleView_TextBlock_Day" TargetType="TextBlock">
+        <Style TargetType="TextBlock" x:Key="ScheduleView_TextBlock_Day" >
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="10" />
-            <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         </Style>
-        <DataTemplate x:Key="ScheduleView_DefaultBlockTemplate">
-            <local:ScheduleBlock
-                BlockColor="{Binding Background}"
-                BlockName="{Binding Content}"
-                ScheduleTableItemType="{Binding ScheduleTableItemType}"
-                TimeBlock="{Binding}" />
-        </DataTemplate>
     </UserControl.Resources>
     <Border
         Padding="{Binding Padding, ElementName=root}"
@@ -108,149 +102,24 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--  Timeline: kẻ ngang full width (mốc giờ + vùng lưới)  -->
-                    <panels:TimeLinePanel Grid.Column="0" Grid.ColumnSpan="2" SnapsToDevicePixels="True">
-
-                       
-                    </panels:TimeLinePanel>
-                    <ItemsControl
+                    <!--  Timeline tự render: labels + grid lines, không cần ItemsControl  -->
+                    <panels:TimelinePanel
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
-                        ItemsSource="{Binding ItemsSource, ElementName=root}"
-                        SnapsToDevicePixels="True">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <panels:TimeLinePanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
-                                    BorderThickness="0,0,0,1"
-                                    SnapsToDevicePixels="True">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="28" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Margin="0,0,2,0"
-                                            VerticalAlignment="Center"
-                                            FontSize="10"
-                                            Text="{Binding}"
-                                            TextOptions.TextFormattingMode="Display" />
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <StackPanel 
-                        Grid.Column="1"
-                        Orientation="Vertical"
-                        d:Visibility="Visible"
-                        Visibility="Collapsed">
-                        <TextBlock Text="07:00"/>
-                        <TextBlock Text="08:00"/>
-                        <TextBlock Text="09:00"/>
-                        <!-- ... -->
-                    </StackPanel>
-
+                        LabelWidth="28"
+                        GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
+                        SnapsToDevicePixels="True" />
                     <Border
                         Grid.Column="1"
                         BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
                         BorderThickness="0.5"
                         CornerRadius="12"
-                        d:Visibility="Collapsed"
                         SnapsToDevicePixels="True">
-                        
                         <panels:WeekPanel
-                            x:Name="Weekpanel"
-                            Height="{Binding ElementName=IC_WeekPanelContainer, Path=Height}"
                             GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
-                            ShowGridLines="True">
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="07:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="08:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="09:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="09:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="10:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="11:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="12:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="13:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="14:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="15:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="15:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="16:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="17:15" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="17:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="18:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="19:45" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                            <Border BorderBrush="{StaticResource ScheduleView_GridLineBrush}" BorderThickness="0,0,0,1">
-                                <TextBlock Text="21:00" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                            </Border>
-                        </panels:WeekPanel>
-
-                        <!--<ItemsControl Name="IC_WeekPanelContainer" ItemsSource="{Binding Week, ElementName=root}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <panels:WeekPanel
-                                        Height="{Binding ElementName=IC_WeekPanelContainer, Path=Height}"
-                                        GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
-                                        ShowGridLines="True" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border SnapsToDevicePixels="True">
-                                        <ItemsControl ItemsSource="{Binding}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <panels:DayPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <ContentPresenter Content="{Binding}" ContentTemplate="{Binding BlockItemTemplate, ElementName=root, TargetNullValue={StaticResource ScheduleView_DefaultBlockTemplate}}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>-->
+                            ShowGridLines="True"
+                            Week="{Binding Week, ElementName=root}"
+                            BlockItemTemplate="{Binding BlockItemTemplate, ElementName=root}" />
                     </Border>
                 </Grid>
             </ScrollViewer>

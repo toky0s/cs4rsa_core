@@ -46,7 +46,7 @@
                  d:Text="MAG 302 C"/>
             <Run Text="?" />
         </TextBlock>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="0 0 0 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -55,8 +55,7 @@
                 Background="#ecf0f1"
                 Grid.Column="0"
                 Margin="0,0,8,0"
-                Padding="5"
-                >
+                Padding="5">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -71,10 +70,14 @@
                         d:Background="#e056fd"
                         CornerRadius="4" />
                     <StackPanel Grid.Column="1">
-                        <TextBlock TextWrapping="Wrap" Text="{Binding ClassGroupModel_A.ClassGroup.SubjectName}" 
-                                   d:Text="Lập trình hướng đối tượng"/>
-                        <TextBlock Text="{Binding ClassGroupModel_A.Name, Mode=OneTime}" 
-                                   d:Text="CS 301"/>
+                        <TextBlock 
+                            TextWrapping="Wrap" 
+                            Text="{Binding ClassGroupModel_A.ClassGroup.SubjectName, Mode=OneWay}"
+                            d:Text="Lập trình hướng đối tượng"/>
+                        <TextBlock 
+                            TextWrapping="Wrap" 
+                            Text="{Binding ClassGroupModel_A.Name, Mode=OneWay}" 
+                            d:Text="CS 301"/>
                     </StackPanel>
                     <Button
                         Grid.Column="2"
@@ -107,7 +110,7 @@
                             Text="{Binding ClassGroupModel_B.ClassGroup.SubjectName}" 
                             d:Text="Pháp thuật đại cương"/>
                         <TextBlock 
-                            Text="{Binding ClassGroupModel_B.Name, Mode=OneTime}" 
+                            Text="{Binding ClassGroupModel_B.Name, Mode=OneWay}" 
                             d:Text="MAG 302"/>
                     </StackPanel>
                     <Button

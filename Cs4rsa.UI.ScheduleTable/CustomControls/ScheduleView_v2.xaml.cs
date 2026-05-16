@@ -34,7 +34,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(ItemsSource),
                 typeof(ObservableCollection<string>),
-                typeof(ScheduleView),
+                typeof(ScheduleView_v2),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
@@ -49,10 +49,8 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(Week),
                 typeof(ObservableCollection<TimeBlock>),
-                typeof(ScheduleView),
-                new FrameworkPropertyMetadata(
-                    null,
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public ObservableCollection<string> DayHeaders
         {
@@ -64,7 +62,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(DayHeaders),
                 typeof(ObservableCollection<string>),
-                typeof(ScheduleView),
+                typeof(ScheduleView_v2),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(BlockItemTemplate),
                 typeof(DataTemplate),
-                typeof(ScheduleView),
+                typeof(ScheduleView_v2),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(ScheduleBodyHeight),
                 typeof(double),
-                typeof(ScheduleView),
+                typeof(ScheduleView_v2),
                 new FrameworkPropertyMetadata(400d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             DependencyProperty.Register(
                 nameof(ScheduleBodyMinHeight),
                 typeof(double),
-                typeof(ScheduleView),
+                typeof(ScheduleView_v2),
                 new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
     }
 }
