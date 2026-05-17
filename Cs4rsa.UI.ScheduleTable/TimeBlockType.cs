@@ -11,4 +11,11 @@ namespace Cs4rsa.UI.ScheduleTable
         TimeConflict,
         PlaceConflict,
     }
+
+    public class TimeBlockName
+    {
+        public const string SchoolClass = "SchoolClassBlock";
+        public const string TimeConflict = "TimeConflictBlock";
+        public const string PlaceConflict = "PlaceConflictBlock"; 
+    }
 }

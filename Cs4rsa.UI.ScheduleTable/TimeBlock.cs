@@ -43,7 +43,7 @@ namespace Cs4rsa.UI.ScheduleTable
                     FirstCfClass = firstCfClass;
                     SecondCfClass = secondCfClass;
                     StudyTimeIntersect = studyTimeIntersect;
-                    Name = "CfBlock";
+                    Name = TimeBlockName.TimeConflict;
                     break;
                 case TimeBlockType.SchoolClass:
                     if (schoolClassUnit == null)
@@ -52,13 +52,13 @@ namespace Cs4rsa.UI.ScheduleTable
                     End = schoolClassUnit.End;
                     SchoolClassUnit = schoolClassUnit;
                     Phase = phase;
-                    Name = "SchoolClassBlock";
+                    Name = TimeBlockName.SchoolClass;
                     break;
                 case TimeBlockType.PlaceConflict:
                     PlaceAdjacent = placeAdjacent;
                     Start = placeAdjacent.Start;
                     End = placeAdjacent.End;
-                    Name = "PlaceCfBlock";
+                    Name = TimeBlockName.PlaceConflict;
                     break;
                 default:
                     throw new ArgumentException("scheduleTableItemType không hợp lệ.");

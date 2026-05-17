@@ -7,7 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable"
-    mc:Ignorable="d" d:DesignHeight="170" d:DesignWidth="255" Name="root">
+    d:DataContext="{d:DesignInstance Type=schedule:TimeBlock}"
+    mc:Ignorable="d" 
+    d:DesignHeight="170" 
+    d:DesignWidth="255" 
+    Name="root">
     <UserControl.Resources>
         <baseConverter:PhaseCvt x:Key="PhaseCvt" />
         <baseConverter:DayCvt x:Key="DayCvt" />
@@ -25,13 +29,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ToolTip">
                         <Border
+                            Background="#EAE8D9"
                             Name="Border"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}"
-                            Background="White"
-                            BorderBrush="Black"
+                            BorderBrush="#dbe5c2"
                             BorderThickness="1">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ContentPresenter 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="HasDropShadow" Value="true">
@@ -42,10 +48,12 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <ToolTip x:Key="SchoolClassBlock_ToolTip" 
-                 Style="{StaticResource ToolTip_TimeBlock}" 
-                 d:DataContext="{d:DesignInstance Type=schedule:TimeBlock}">
-            <Border Width="400">
+        <ToolTip 
+            x:Key="SchoolClassBlock_ToolTip_Key" 
+            Style="{StaticResource ToolTip_TimeBlock}" 
+            d:DataContext="{d:DesignInstance Type=schedule:TimeBlock}">
+            <Border Width="400" 
+                    Name="Border">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -64,7 +72,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Tooltip_Header}">
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="Tiết học - {0}:  {1}">
+                                    <MultiBinding StringFormat="{}{0}:  {1}">
                                         <Binding Path="SchoolClassUnit.ClassName" />
                                         <Binding Path="SchoolClassUnit.SchoolClass.SubjectName" />
                                     </MultiBinding>
@@ -72,66 +80,22 @@
                             </TextBlock>
                         </Grid>
                     </Border>
-                    <!--<Border Padding="20" Background="#ecf0f1" Grid.Row="0">
+                    <Border Grid.Row="1" Padding="4">
                         <StackPanel>
-                            <TextBlock
-                                Grid.Row="0"
-                                Margin="0,0,0,20"
-                                Text="{Binding Phase, Converter={StaticResource PhaseCvt}}" />
-                            <TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow">
+                            <TextBlock 
+                                Margin="0 0 0 4"  
+                                Text="{Binding SchoolClassUnit.Teachers, ConverterParameter=Không thể xác định}" />
+                            <TextBlock Margin="0 0 0 4">
                                 <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0}:  {1}">
-                                        <Binding Path="SchoolClassUnit.ClassName" />
-                                        <Binding Path="SchoolClassUnit.SchoolClass.SubjectName" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                            <TextBlock Grid.Row="2">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1:HH:mm} đến {2:HH:mm} ">
+                                    <MultiBinding StringFormat="{}{0} - {1:HH:mm} đến {2:HH:mm} | {3}, phòng {4}">
                                         <Binding Converter="{StaticResource DayCvt}" Path="DayOfWeek" />
                                         <Binding Path="Start" />
                                         <Binding Path="End" />
+                                        <Binding Converter="{StaticResource PlaceCvt}" Path="SchoolClassUnit.Room.Place" />
+                                        <Binding Path="SchoolClassUnit.Room.Name" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <TextBlock Text="{Binding Id, StringFormat=ID: {0}}"></TextBlock>
-                        </StackPanel>
-                    </Border>-->
-                    <Border Grid.Row="1" Padding="4">
-                        <StackPanel>
-                            <Grid Grid.Row="3" Margin="0,0,0,7">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <md:PackIcon
-                                    Grid.Column="0"
-                                    Margin="0,0,5,0"
-                                    Kind="LocationOutline" />
-                                <TextBlock Grid.Column="1">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Nơi học {0}, phòng {1}">
-                                            <Binding Converter="{StaticResource PlaceCvt}" Path="SchoolClassUnit.Room.Place" />
-                                            <Binding Path="SchoolClassUnit.Room.Name" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </Grid>
-
-                            <Separator Grid.Row="4" Height="0.5" />
-
-                            <Grid Grid.Row="5" Margin="0,7,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <md:PackIcon
-                                    Grid.Column="0"
-                                    Margin="0,0,5,0"
-                                    Kind="PeopleOutline" />
-                                <TextBlock Grid.Column="1" Text="{Binding SchoolClassUnit.Teachers, ConverterParameter=Không thể xác định}" />
-                            </Grid>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -141,14 +105,18 @@
     <Border
         x:Name="Border_ScheduleBlock"
         Padding="2"
+        ToolTipService.IsEnabled="False"
         Background="{Binding TimeBlock.Background,ElementName=root}"
-        CornerRadius="6">
+        CornerRadius="6"
+        MouseLeftButtonDown="Border_ScheduleBlock_MouseLeftButtonDown">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
                     <!--  School Class Block  -->
-                    <DataTrigger Binding="{Binding TimeBlock.Name, ElementName=root}" Value="SchoolClassBlock">
-                        <Setter Property="ToolTip" Value="{StaticResource SchoolClassBlock_ToolTip}" />
+                    <DataTrigger 
+                        Binding="{Binding TimeBlock.Name, ElementName=root}" 
+                        Value="{x:Static schedule:TimeBlockName.SchoolClass}">
+                        <Setter Property="ToolTip" Value="{StaticResource SchoolClassBlock_ToolTip_Key}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
