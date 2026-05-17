@@ -154,7 +154,9 @@
     <Compile Include="Models\SubjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IScheduleValidator.cs" />
+    <Compile Include="Services\ITimeBlockGenerator.cs" />
     <Compile Include="Services\ScheduleValidator.cs" />
+    <Compile Include="Services\TimeBlockGenerator.cs" />
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\IShareStringService.cs" />
     <Compile Include="Utils\ShareString.cs" />

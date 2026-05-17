@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Cs4rsa.UI.ScheduleTable.Utils
+namespace Cs4rsa.UI.ScheduleTable
 {
     public class Utils
     {

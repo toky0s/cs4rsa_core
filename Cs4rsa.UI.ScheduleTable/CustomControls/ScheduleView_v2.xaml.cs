@@ -1,6 +1,3 @@
-using Cs4rsa.UI.ScheduleTable.Models;
-using Cs4rsa.UI.ScheduleTable.Panels;
-
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +15,7 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
             InitializeComponent();
             SetCurrentValue(
                 ItemsSourceProperty,
-                new ObservableCollection<string>(Utils.Utils.TimeLines));
+                new ObservableCollection<string>(Utils.TimeLines));
             SetCurrentValue(
                 DayHeadersProperty,
                 new ObservableCollection<string>(new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" }));

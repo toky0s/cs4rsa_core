@@ -1,6 +1,4 @@
-﻿using Cs4rsa.UI.ScheduleTable.Models;
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Cs4rsa.UI.ScheduleTable.Panels
@@ -12,7 +10,7 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            int lineCount = Utils.Utils.TimeLines.Length;
+            int lineCount = Utils.TimeLines.Length;
 
             // Clamp Infinity về giá trị tính toán được
             double minRowHeight = 20d; // chiều cao tối thiểu mỗi slot giờ
@@ -30,8 +28,8 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
             foreach (ContentPresenter child in Children)
             {
                 TimeBlock block = (TimeBlock)child.Content;
-                int start = Utils.Utils.GetTimeIndex(block.Start);
-                int end = Utils.Utils.GetTimeIndex(block.End);
+                int start = Utils.GetTimeIndex(block.Start);
+                int end = Utils.GetTimeIndex(block.End);
 
                 double blockHeight = (end - start) * _unitHeight;
                 child.Measure(new Size(resolvedWidth, blockHeight));
@@ -45,8 +43,8 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
             foreach (ContentPresenter child in Children)
             {
                 TimeBlock block = (TimeBlock)child.Content;
-                int start = Utils.Utils.GetTimeIndex(block.Start);
-                int end = Utils.Utils.GetTimeIndex(block.End);
+                int start = Utils.GetTimeIndex(block.Start);
+                int end = Utils.GetTimeIndex(block.End);
                 double y = start * _unitHeight + _startPoint;
                 double height = (end - start) * _unitHeight;
                 child.Arrange(new Rect(0, y, finalSize.Width - 2, height));

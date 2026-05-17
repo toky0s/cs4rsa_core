@@ -12,9 +12,8 @@ using System.Linq;
 
 namespace Cs4rsa.UI.ScheduleTable.Models
 {
-    public class ConflictModel : IConflictModel, IScheduleTableItem
+    public class ConflictModel : IConflictModel
     {
-        const string Background = "#e74c3c";
         public ConflictTime ConflictTime { get; }
         public Lesson LessonA { get; }
         public Lesson LessonB { get; }
@@ -22,20 +21,21 @@ namespace Cs4rsa.UI.ScheduleTable.Models
 
         public ConflictType ConflictType => ConflictType.Time;
 
-        public Phase Phase => GetPhase();
+        public Phase Phase { get; }
 
         public ConflictModel(Conflict conflict)
         {
             LessonA = conflict.LessonA;
             LessonB = conflict.LessonB;
             ConflictTime = conflict.GetConflictTime();
-            ConflictInfo = GetConflictInfo();
+            ConflictInfo = ToString();
+            Phase = GetPhase();
         }
 
         /// <summary>
         /// Lấy ra thông tin dạng chuỗi để hiển thị lên giao diện của một xung đột về thời gian.
         /// </summary>
-        private string GetConflictInfo()
+        public override string ToString()
         {
             List<string> resultTimes = new List<string>();
             foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
@@ -64,27 +64,6 @@ namespace Cs4rsa.UI.ScheduleTable.Models
                     LessonA.Phase == Phase.All && LessonB.Phase == Phase.Second)
                 return Phase.Second;
             return Phase.All;
-        }
-
-        public TimeBlock[] GetBlocks()
-        {
-            return ConflictTime.ConflictTimes
-                .SelectMany(item => item.Value
-                    .Select(sti => new CfBlock(
-                        sti,
-                        GetId(),
-                        Background,
-                        LessonA.SchoolClassName + " x " + LessonB.SchoolClassName,
-                        item.Key,
-                        ScheduleTableItemType.TimeConflict,
-                        LessonA,
-                        LessonB
-                ))).ToArray();
-        }
-
-        public string GetId()
-        {
-            return "tc" + ' ' + LessonA.SubjectCode + ' ' + LessonB.SubjectCode;
         }
     }
 }

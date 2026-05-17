@@ -1,5 +1,3 @@
-using Cs4rsa.UI.ScheduleTable.Models;
-
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -131,7 +129,7 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
 
         private static void OnBlockItemTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // Template thay đổi → rebuild để áp dụng template mới
+            // Template thay đổi => rebuild để áp dụng template mới
             ((WeekPanel)d).RebuildDayPanels();
         }
 

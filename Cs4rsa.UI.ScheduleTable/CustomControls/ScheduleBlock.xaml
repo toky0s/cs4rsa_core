@@ -6,13 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:models="clr-namespace:Cs4rsa.UI.ScheduleTable.Models"
+    xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable"
     mc:Ignorable="d" d:DesignHeight="170" d:DesignWidth="255" Name="root">
     <UserControl.Resources>
         <baseConverter:PhaseCvt x:Key="PhaseCvt" />
         <baseConverter:DayCvt x:Key="DayCvt" />
         <baseConverter:PlaceCvt x:Key="PlaceCvt" />
         <baseConverter:GetTeacherNameConverter x:Key="TeacherCvt" />
+        <Style x:Key="Tooltip_Header" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+        </Style>
         <Style x:Key="ToolTip_TimeBlock" TargetType="ToolTip">
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="HasDropShadow" Value="True" />
@@ -39,19 +44,35 @@
         </Style>
         <ToolTip x:Key="SchoolClassBlock_ToolTip" 
                  Style="{StaticResource ToolTip_TimeBlock}" 
-                 d:DataContext="{d:DesignInstance Type=models:SchoolClassBlock}">
+                 d:DataContext="{d:DesignInstance Type=schedule:TimeBlock}">
             <Border Width="400">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Border Padding="20" Background="#ecf0f1">
+                    <Border Grid.Row="0" Padding="4">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#90BA50" Offset="0"/>
+                                <GradientStop Color="#75A130" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource Tooltip_Header}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="Tiết học - {0}:  {1}">
+                                        <Binding Path="SchoolClassUnit.ClassName" />
+                                        <Binding Path="SchoolClassUnit.SchoolClass.SubjectName" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                    <!--<Border Padding="20" Background="#ecf0f1" Grid.Row="0">
                         <StackPanel>
                             <TextBlock
                                 Grid.Row="0"
@@ -74,10 +95,10 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
+                            <TextBlock Text="{Binding Id, StringFormat=ID: {0}}"></TextBlock>
                         </StackPanel>
-                    </Border>
-
-                    <Border Grid.Row="3" Padding="20">
+                    </Border>-->
+                    <Border Grid.Row="1" Padding="4">
                         <StackPanel>
                             <Grid Grid.Row="3" Margin="0,0,0,7">
                                 <Grid.ColumnDefinitions>

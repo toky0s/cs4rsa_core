@@ -1,6 +1,5 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Conflict.DataTypes;
-using Cs4rsa.UI.ScheduleTable.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +18,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
         /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
         public static void UpdateConflictModelCollection(
-            ObservableCollection<ConflictModel> conflictModels,
+            ObservableCollection<Conflict> conflictModels,
             IEnumerable<ClassGroupModel> classGroupModels)
         {
             conflictModels.Clear();
@@ -59,16 +58,15 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
                     );
                     
                     var conflict = new Conflict(lessonA, lessonB);
-                    var conflictTime = conflict.GetConflictTime();
+                    var conflictTime = conflict.ConflictTime;
                     if (conflictTime == null) continue;
-                    var conflictModel = new ConflictModel(conflict);
-                    conflictModels.Add(conflictModel);
+                    conflictModels.Add(conflict);
                 }
             }
         }
 
         public static void UpdatePlaceConflictCollection(
-            ObservableCollection<PlaceConflictFinderModel> placeConflictFinderModels
+            ObservableCollection<PlaceConflict> placeConflictFinderModels
             , IEnumerable<ClassGroupModel> classGroupModels)
         {
             placeConflictFinderModels.Clear();
@@ -104,11 +102,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
                         schoolClasses[k].SubjectCode
                     );
                     
-                    var placeConflict = new PlaceConflictFinder(lessonA, lessonB);
-                    var conflictPlace = placeConflict.GetPlaceConflict();
+                    var placeConflict = new PlaceConflict(lessonA, lessonB);
+                    var conflictPlace = placeConflict.ConflictPlace;
                     if (conflictPlace == null) continue;
-                    var placeConflictModel = new PlaceConflictFinderModel(placeConflict);
-                    placeConflictFinderModels.Add(placeConflictModel);
+                    placeConflictFinderModels.Add(placeConflict);
                 }
             }
         }

@@ -35,6 +35,7 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
             containerRegistry.RegisterSingleton<IScheduleValidator, ScheduleValidator>();
+            containerRegistry.RegisterSingleton<ITimeBlockGenerator, TimeBlockGenerator>();
 
             containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
             containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();

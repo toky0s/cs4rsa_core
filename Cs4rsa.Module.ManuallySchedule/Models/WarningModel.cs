@@ -1,11 +1,4 @@
-﻿using Cs4rsa.Service.Conflict.Interfaces;
-using Cs4rsa.UI.ScheduleTable.Models;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Cs4rsa.Module.ManuallySchedule.Models
 {

@@ -48,7 +48,7 @@
     <Compile Include="DataTypes\ConflictTime.cs" />
     <Compile Include="DataTypes\Enums\ConflictType.cs" />
     <Compile Include="DataTypes\PlaceAdjacent.cs" />
-    <Compile Include="DataTypes\PlaceConflictFinder.cs" />
+    <Compile Include="DataTypes\PlaceConflict.cs" />
     <Compile Include="DataTypes\StudyTimeIntersect.cs" />
     <Compile Include="Interfaces\IConflictModel.cs" />
     <Compile Include="Models\Lesson.cs" />

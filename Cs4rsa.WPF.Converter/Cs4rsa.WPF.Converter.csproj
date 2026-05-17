@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base64ImageConverter.cs" />
-    <Compile Include="ConflictModelConverter.cs" />
     <Compile Include="ConflictTypeConverter.cs" />
     <Compile Include="DayCvt.cs" />
     <Compile Include="DtuTimeBlockContentCvt.cs" />

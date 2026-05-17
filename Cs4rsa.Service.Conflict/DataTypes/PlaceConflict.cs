@@ -1,6 +1,8 @@
-﻿using Cs4rsa.Service.Conflict.Models;
+﻿using Cs4rsa.Service.Conflict.DataTypes.Enums;
+using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.SubjectCrawler.Utils;
 using Cs4rsa.Services.ConflictSvc.Utils;
 
 using System;
@@ -13,15 +15,17 @@ namespace Cs4rsa.Service.Conflict.DataTypes
     /// <summary>
     /// Trình tìm kiếm xung đột hai giờ đầu và hai giờ cuối của hai ClassGroup
     /// </summary>
-    public class PlaceConflictFinder : BaseConflict
+    public class PlaceConflict : BaseConflict
     {
         private static readonly TimeSpan _timeDelta = new TimeSpan(0, 15, 0); // 15 minutes
-
-        public PlaceConflictFinder(Lesson lessonA, Lesson lessonB) : base(lessonA, lessonB)
+        public ConflictPlace ConflictPlace { get; }
+        public ConflictType ConflictType => ConflictType.Place;
+        public PlaceConflict(Lesson lessonA, Lesson lessonB) : base(lessonA, lessonB)
         {
+            ConflictPlace = GetPlaceConflict();
         }
 
-        public ConflictPlace GetPlaceConflict()
+        private ConflictPlace GetPlaceConflict()
         {
             // Hai school class không có giao nhau về giai đoạn chắc chắn không xung đột.
             // Check phase
@@ -75,6 +79,25 @@ namespace Cs4rsa.Service.Conflict.DataTypes
             {
                 return null;
             }
+        }
+
+        public override string ToString()
+        {
+            List<string> resultTimes = new List<string>();
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<PlaceAdjacent>> item in ConflictPlace.PlaceAdjacents)
+            {
+                string day = item.Key.ToCs4rsaVietnamese();
+                List<string> info = new List<string>();
+                foreach (PlaceAdjacent placeAdjacent in item.Value)
+                {
+                    string from = $"Từ {placeAdjacent.StartAsString} ở {placeAdjacent.PlaceStart.ToActualPlace()}";
+                    string to = $"đến {placeAdjacent.EndAsString} ở {placeAdjacent.PlaceEnd.ToActualPlace()}";
+                    info.Add($"{from} {to}");
+                }
+                string placeString = string.Join("\n", info);
+                resultTimes.Add(day + "\n" + placeString);
+            }
+            return string.Join("\n", resultTimes);
         }
     }
 }

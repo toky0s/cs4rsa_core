@@ -1,17 +1,11 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Service.Conflict.DataTypes;
-using Cs4rsa.UI.ScheduleTable.Models;
 
 using Microsoft.Extensions.Logging;
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Cs4rsa.Module.ManuallySchedule.Services
 {
@@ -45,7 +39,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
                     var lessonB = schoolClassModel_k.ConvertToLesson();
 
                     var conflict = new Conflict(lessonA, lessonB);
-                    var conflictTime = conflict.GetConflictTime();
+                    var conflictTime = conflict.ConflictTime;
                     if (conflictTime != null)
                     {
                         var message = $"Phát hiện trùng lịch giữa hai nhóm lớp {schoolClassModel_i.SchoolClass.ClassGroupName} và {schoolClassModel_k.SchoolClass.ClassGroupName}";

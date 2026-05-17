@@ -7,7 +7,7 @@ using Cs4rsa.Service.Conflict.Interfaces;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Utils;
 using Cs4rsa.Module.Shared;
-using Cs4rsa.UI.ScheduleTable.Models;
+using Cs4rsa.UI.ScheduleTable;
 
 using Microsoft.Extensions.Logging;
 
@@ -124,7 +124,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            var conflictModel = parameters.GetValue<ConflictModel>("ConflictModel");
+            var conflict = parameters.GetValue<Conflict>("ConflictModel");
             ClassGroupModel_A = parameters.GetValue<ClassGroupModel>("ClassGroupModelA");
             ClassGroupModel_B = parameters.GetValue<ClassGroupModel>("ClassGroupModelB");
 
@@ -147,7 +147,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             });
 
 
-            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in conflictModel.ConflictTime.ConflictTimes)
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in conflict.ConflictTime.ConflictTimes)
             {
                 var day = item.Key;
                 foreach (var intersect in item.Value)

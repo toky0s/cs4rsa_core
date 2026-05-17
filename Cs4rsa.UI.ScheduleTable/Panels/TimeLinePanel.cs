@@ -55,7 +55,7 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var lines = Utils.Utils.TimeLines;
+            var lines = Utils.TimeLines;
             int count = lines.Length;
 
             // Chiều cao tối thiểu: mỗi dòng ít nhất FontSize + 4px padding
@@ -79,7 +79,7 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
         {
             base.OnRender(dc);
 
-            var lines = Utils.Utils.TimeLines;
+            var lines = Utils.TimeLines;
             int count = lines.Length;
             double h = RenderSize.Height;
             double w = RenderSize.Width;
@@ -95,10 +95,12 @@ namespace Cs4rsa.UI.ScheduleTable.Panels
                 FontWeights.Normal,
                 FontStretches.Normal);
 
+            // Kẻ đường dọc
+            dc.DrawLine(pen, new Point(SnapToPixel(LabelWidth), 0), new Point(SnapToPixel(LabelWidth), h));
+
             for (int i = 0; i < count; i++)
             {
-                double y = SnapToPixel(i * unit);
-
+                double y = SnapToPixel(i * unit);    
                 // Kẻ đường ngang
                 dc.DrawLine(pen, new Point(0, y), new Point(w, y));
 

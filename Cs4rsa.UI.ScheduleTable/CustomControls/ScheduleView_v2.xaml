@@ -7,21 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:panels="clr-namespace:Cs4rsa.UI.ScheduleTable.Panels"
     x:Name="root"
-    d:Width="200"
-    d:Height="160"
+    d:DesignWidth="300"
+    d:DesignHeight="300"
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ScheduleView_GridLineBrush" Color="#E0E0E0" />
-        <Style TargetType="Border" x:Key="Border_DayOfWeek">
-            <Setter Property="BorderBrush" Value="#E0E0E0"></Setter>
-            <Setter Property="BorderThickness" Value="0,0,0.5,0"></Setter>
-            <Setter Property="SnapsToDevicePixels" Value="True"></Setter>
-        </Style>
+        
         <Style TargetType="TextBlock" x:Key="ScheduleView_TextBlock_Day" >
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontSize" Value="13" />
         </Style>
     </UserControl.Resources>
     <Border
@@ -40,89 +36,56 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" MinHeight="48" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="28" />
-                <ColumnDefinition Width="*" MinWidth="120" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <!--  Ô góc (cột mốc giờ) — căn với cột timeline bên dưới  -->
-            <Border
-                Grid.Row="0"
-                Grid.Column="1"
-                Padding="0,0,0,5"
-                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
-                BorderThickness="0,0,0.5,0.5"
-                SnapsToDevicePixels="True" />
-
             <!--  Hàng thứ: kẻ dọc giữa các thứ  -->
+            <!--BorderThickness="0,0,0,0.5"-->
             <Border
                 Grid.Row="0"
                 Grid.Column="1"
-                Padding="0,0,0,5"
-                BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
-                BorderThickness="0,0,0,0.5"
-                SnapsToDevicePixels="True">
+                Padding="33,0,0,0"
+                Margin="0 0 0 10">
                 <UniformGrid Columns="7" Rows="1" >
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T2" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T3" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T4" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T5" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T6" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="T7" />
-                    </Border>
-                    <Border Style="{StaticResource Border_DayOfWeek}">
                         <TextBlock Style="{StaticResource ScheduleView_TextBlock_Day}" Text="CN" />
-                    </Border>
                 </UniformGrid>
-
             </Border>
 
-            <ScrollViewer
-                x:Name="PART_ScrollViewer"
+            <Grid 
                 Grid.Row="1"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-                <Grid Height="{Binding ScheduleBodyHeight, ElementName=root}" MinHeight="{Binding ScheduleBodyMinHeight, ElementName=root}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="28" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <!--  Timeline: kẻ ngang full width (mốc giờ + vùng lưới)  -->
-                    <!--  Timeline tự render: labels + grid lines, không cần ItemsControl  -->
-                    <panels:TimelinePanel
+                Grid.ColumnSpan="2" 
+                Height="{Binding ScheduleBodyHeight, ElementName=root}" 
+                MinHeight="{Binding ScheduleBodyMinHeight, ElementName=root}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="33" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!--  Timeline: kẻ ngang full width (mốc giờ + vùng lưới)  -->
+                <!--  Timeline tự render: labels + grid lines, không cần ItemsControl  -->
+                <panels:TimelinePanel
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
-                        LabelWidth="28"
+                        LabelWidth="33"
+                        FontSize="13"
                         GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
                         SnapsToDevicePixels="True" />
-                    <Border
+                <Border
                         Grid.Column="1"
                         BorderBrush="{StaticResource ScheduleView_GridLineBrush}"
-                        BorderThickness="0.5"
+                        BorderThickness="0"
                         CornerRadius="12"
                         SnapsToDevicePixels="True">
-                        <panels:WeekPanel
+                    <panels:WeekPanel
                             GridLineBrush="{StaticResource ScheduleView_GridLineBrush}"
                             ShowGridLines="True"
                             Week="{Binding Week, ElementName=root}"
                             BlockItemTemplate="{Binding BlockItemTemplate, ElementName=root}" />
-                    </Border>
-                </Grid>
-            </ScrollViewer>
+                </Border>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

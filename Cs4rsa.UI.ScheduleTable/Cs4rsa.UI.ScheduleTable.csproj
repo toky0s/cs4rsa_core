@@ -66,15 +66,9 @@
     <Compile Include="CustomControls\ScheduleView_v2.xaml.cs">
       <DependentUpon>ScheduleView_v2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Events\ScheduleBlockMsgs.cs" />
-    <Compile Include="Interfaces\IScheduleTableItem.cs" />
-    <Compile Include="Models\CfBlock.cs" />
-    <Compile Include="Models\ConflictModel.cs" />
-    <Compile Include="Models\PlaceCfBlock.cs" />
-    <Compile Include="Models\PlaceConflictFinderModel.cs" />
-    <Compile Include="Models\SchoolClassBlock.cs" />
-    <Compile Include="Models\TimeBlock.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="TimeBlockType.cs" />
+    <Compile Include="TimeBlock.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Panels\WeekPanel.cs" />
     <Page Include="CustomControls\ScheduleBlock.xaml">
       <Generator>MSBuild:Compile</Generator>

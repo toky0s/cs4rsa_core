@@ -1,7 +1,6 @@
 ﻿using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.UI.ScheduleTable.Models;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,9 +22,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
         public bool HaveAClassGroupHaveZeroEmptySeat { get; set; }
 
-        public ObservableCollection<ConflictModel> ConflictModels { get; set; }
+        public ObservableCollection<Conflict> ConflictModels { get; set; }
 
-        public ObservableCollection<PlaceConflictFinderModel> PlaceConflictFinderModels { get; set; }
+        public ObservableCollection<PlaceConflict> PlaceConflictFinderModels { get; set; }
 
         public bool IsCanShow { get; set; }
         public bool IsConflict { get; set; }
@@ -35,8 +34,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             IEnumerable<ClassGroupModel> classGroupModels
         )
         {
-            ConflictModels = new ObservableCollection<ConflictModel>();
-            PlaceConflictFinderModels = new ObservableCollection<PlaceConflictFinderModel>();
+            ConflictModels = new ObservableCollection<Conflict>();
+            PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
             SubjectModels = subjectModels;
             ClassGroupModels = classGroupModels;
             IsCanShow = !IsHaveAClassGroupHaveNotSchedule() && !IsHaveAClassGroupHaveZeroEmptySeat();
@@ -120,7 +119,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                     );
 
                     var conflict = new Conflict(lessonA, lessonB);
-                    var conflictTime = conflict.GetConflictTime();
+                    var conflictTime = conflict.ConflictTime;
                     if (conflictTime != null)
                     {
                         return true;
@@ -163,8 +162,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         schoolClasses[k].SubjectCode
                     );
 
-                    var conflict = new PlaceConflictFinder(lessonA, lessonB);
-                    var conflictPlace = conflict.GetPlaceConflict();
+                    var conflict = new PlaceConflict(lessonA, lessonB);
+                    var conflictPlace = conflict.ConflictPlace;
                     if (conflictPlace != null)
                     {
                         return true;

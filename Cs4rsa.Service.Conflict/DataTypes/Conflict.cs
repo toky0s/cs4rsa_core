@@ -1,6 +1,9 @@
-﻿using Cs4rsa.Service.Conflict.Models;
+﻿using Cs4rsa.Service.Conflict.DataTypes.Enums;
+using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.Conflict.Utils;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.SubjectCrawler.Utils;
 using Cs4rsa.Services.ConflictSvc.Utils;
 
 using System;
@@ -11,11 +14,16 @@ namespace Cs4rsa.Service.Conflict.DataTypes
 {
     public class Conflict : BaseConflict
     {
+        public ConflictType ConflictType => ConflictType.Time;
+        private ConflictTime _conflictTime;
+
+        public ConflictTime ConflictTime => _conflictTime ?? (_conflictTime = GetConflictTime());
+
         public Conflict(Lesson lessonA, Lesson lessonB) : base(lessonA, lessonB)
         {
         }
 
-        public ConflictTime GetConflictTime()
+        private ConflictTime GetConflictTime()
         {
             // Check phase
             PhaseIntersect phaseIntersect = PhaseManipulation.GetPhaseIntersect(LessonA.StudyWeek, LessonB.StudyWeek);
@@ -52,6 +60,24 @@ namespace Cs4rsa.Service.Conflict.DataTypes
             return conflictTimes.Count != 0
                 ? new ConflictTime(conflictTimes)
                 : null;
+        }
+
+        public override string ToString()
+        {
+            List<string> resultTimes = new List<string>();
+            foreach (KeyValuePair<DayOfWeek, IEnumerable<StudyTimeIntersect>> item in ConflictTime.ConflictTimes)
+            {
+                string day = item.Key.ToCs4rsaVietnamese();
+                List<string> times = new List<string>();
+                foreach (StudyTimeIntersect studyTimeIntersect in item.Value)
+                {
+                    string time = $"Từ {studyTimeIntersect.StartString} đến {studyTimeIntersect.EndString}";
+                    times.Add(time);
+                }
+                string timeString = string.Join("\n", times);
+                resultTimes.Add(day + "\n" + timeString);
+            }
+            return string.Join("\n", resultTimes);
         }
     }
 }

@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     Padding="4"
     Name="Root"
+    d:Width="700"
     xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
@@ -19,6 +20,7 @@
         <Style TargetType="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight"/>
             <Setter Property="MaxWidth" Value="1000"></Setter>
+            <Setter Property="Width" Value="800"></Setter>
             <Setter Property="MaxHeight" Value="1000"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
@@ -129,11 +131,11 @@
             CanUserAddRows="False"
             IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Days" Binding="{Binding Day}"></DataGridTextColumn>
+                <DataGridTextColumn d:Width="50" Header="Days" Binding="{Binding Day}"></DataGridTextColumn>
 
-                <DataGridTextColumn Header="Conflict Durations" Binding="{Binding ConflictDurian}"></DataGridTextColumn>
+                <DataGridTextColumn d:Width="120" Header="Conflict Durations" Binding="{Binding ConflictDurian}"></DataGridTextColumn>
                 
-                <DataGridTextColumn Width="*" Binding="{Binding ClassGroupModel_A_TimeRange}">
+                <DataGridTextColumn Width="*" Binding="{Binding ClassGroupModel_A_TimeRange}" d:Width="100">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock 
@@ -155,7 +157,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Width="*" Binding="{Binding ClassGroupModel_B_TimeRange}">
+                <DataGridTextColumn d:Width="100" Width="*" Binding="{Binding ClassGroupModel_B_TimeRange}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock 

@@ -1,6 +1,4 @@
-﻿using Cs4rsa.UI.ScheduleTable.Interfaces;
-using Cs4rsa.UI.ScheduleTable.Models;
-
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,10 +21,10 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
         // Using a DependencyProperty as the backing store for TimeBlock.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TimeBlockProperty =
             DependencyProperty.Register(
-                "TimeBlock"
-                , typeof(TimeBlock)
-                , typeof(ScheduleBlock)
-                , new FrameworkPropertyMetadata(null)
+                "TimeBlock",
+                typeof(TimeBlock),
+                typeof(ScheduleBlock),
+                new FrameworkPropertyMetadata(null)
             );
     }
 }
