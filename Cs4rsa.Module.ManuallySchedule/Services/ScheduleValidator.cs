@@ -35,8 +35,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
                     }
 
                     _logger.LogInformation($"Checking conflict between school class {schoolClassModel_i.SchoolClass.ClassGroupName} and {schoolClassModel_k.SchoolClass.ClassGroupName}");
-                    var lessonA = schoolClassModel_i.ConvertToLesson();
-                    var lessonB = schoolClassModel_k.ConvertToLesson();
+                    var lessonA = schoolClassModel_i.SchoolClass.ConvertToLesson();
+                    var lessonB = schoolClassModel_k.SchoolClass.ConvertToLesson();
 
                     var conflict = new Conflict(lessonA, lessonB);
                     var conflictTime = conflict.ConflictTime;

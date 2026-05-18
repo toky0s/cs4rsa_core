@@ -1783,8 +1783,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         continue;
                     }
 
-                    var lessonA = schoolClassModel_i.ConvertToLesson();
-                    var lessonB = schoolClassModel_k.ConvertToLesson();
+                    var lessonA = schoolClassModel_i.SchoolClass.ConvertToLesson();
+                    var lessonB = schoolClassModel_k.SchoolClass.ConvertToLesson();
 
                     var conflict = new Conflict(lessonA, lessonB);
                     var conflictTime = conflict.ConflictTime;
@@ -1818,7 +1818,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         schoolClassModels[i].Phase,
                         schoolClassModels[i].SchoolClassName,
                         schoolClassModels[i].SchoolClass.ClassGroupName,
-                        schoolClassModels[i].SubjectCode
+                        schoolClassModels[i].SubjectCode,
+                        schoolClassModels[i].SchoolClass.SubjectName
                     );
 
                     var lessonB = new Lesson(
@@ -1829,7 +1830,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         schoolClassModels[k].Phase,
                         schoolClassModels[k].SchoolClassName,
                         schoolClassModels[k].SchoolClass.ClassGroupName,
-                        schoolClassModels[k].SubjectCode
+                        schoolClassModels[k].SubjectCode,
+                        schoolClassModels[i].SchoolClass.SubjectName
                     );
 
                     var placeConflict = new PlaceConflict(lessonA, lessonB);

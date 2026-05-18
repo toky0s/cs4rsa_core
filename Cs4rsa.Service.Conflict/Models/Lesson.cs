@@ -13,6 +13,7 @@ namespace Cs4rsa.Service.Conflict.Models
         public string SchoolClassName { get; }
         public string ClassGroupName { get; }
         public string SubjectCode { get; }
+        public string SubjectName { get; }
 
         public Lesson(
             StudyWeek studyWeek, 
@@ -22,7 +23,8 @@ namespace Cs4rsa.Service.Conflict.Models
             Phase phase,
             string schoolClassName,
             string classGroupName,
-            string subjectCode)
+            string subjectCode,
+            string subjectName)
         {
             StudyWeek = studyWeek;
             Schedule = schedule;
@@ -32,6 +34,7 @@ namespace Cs4rsa.Service.Conflict.Models
             Metadata = cs4rsaMetaData;
             Phase = phase;
             SubjectCode = subjectCode;
+            SubjectName = subjectName;
         }
     }
 }

@@ -104,7 +104,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         schoolClasseModels[i].Phase,
                         schoolClasseModels[i].SchoolClassName,
                         schoolClasseModels[i].SchoolClass.ClassGroupName,
-                        schoolClasseModels[i].SubjectCode
+                        schoolClasseModels[i].SubjectCode,
+                        schoolClasseModels[i].SchoolClass.SubjectName
                     );
 
                     var lessonB = new Lesson(
@@ -115,7 +116,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         schoolClasseModels[k].Phase,
                         schoolClasseModels[k].SchoolClassName,
                         schoolClasseModels[k].SchoolClass.ClassGroupName,
-                        schoolClasseModels[k].SubjectCode
+                        schoolClasseModels[k].SubjectCode,
+                        schoolClasseModels[i].SchoolClass.SubjectName
                     );
 
                     var conflict = new Conflict(lessonA, lessonB);
@@ -148,7 +150,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         schoolClasses[i].Phase, 
                         schoolClasses[i].SchoolClassName, 
                         schoolClasses[i].SchoolClass.ClassGroupName,
-                        schoolClasses[i].SubjectCode
+                        schoolClasses[i].SubjectCode,
+                        schoolClasses[i].SchoolClass.SubjectName
                     );
 
                     var lessonB = new Lesson(
@@ -159,7 +162,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                         schoolClasses[k].Phase, 
                         schoolClasses[k].SchoolClassName, 
                         schoolClasses[k].SchoolClass.ClassGroupName,
-                        schoolClasses[k].SubjectCode
+                        schoolClasses[k].SubjectCode,
+                        schoolClasses[i].SchoolClass.SubjectName
                     );
 
                     var conflict = new PlaceConflict(lessonA, lessonB);

@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="TimeBlockType.cs" />
     <Compile Include="TimeBlock.cs" />
+    <Compile Include="TimeConflictInfoConverter.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Panels\WeekPanel.cs" />
     <Page Include="CustomControls\ScheduleBlock.xaml">
