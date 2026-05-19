@@ -1,39 +1,19 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Service.Conflict.DataTypes;
-using Cs4rsa.Service.Conflict.Models;
-using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Cs4rsa.UI.ScheduleTable;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.ManuallySchedule.Services
 {
     public class TimeBlockGenerator : ITimeBlockGenerator
     {
-        public static string GenerateId(PlaceConflict conflict)
-        {
-            return $"pc {conflict.LessonA.SubjectCode} {conflict.LessonB.SubjectCode}";
-        }
-        public static string GenerateId(Conflict conflict)
-        {
-            return $"pc {conflict.LessonA.SubjectCode} {conflict.LessonB.SubjectCode}";
-        }
-        public static string GenerateId(SchoolClassModel schoolClassModel)
-        {
-            return schoolClassModel.SchoolClass.Subject.SubjectCode;
-        }
-
         public TimeBlock[] Generate(Conflict conflict)
         {
             return conflict.ConflictTime.ConflictTimes
                 .SelectMany(item => item.Value
                     .Select(sti => new TimeBlock(
-                        id: GenerateId(conflict),
+                        id: TimeBlockGroupID.GenerateId(conflict.LessonA.SubjectCode, conflict.LessonB.SubjectCode, TimeBlockType.TimeConflict),
                         background: "#e74c3c",
                         content: conflict.LessonA.SchoolClassName + " x " + conflict.LessonB.SchoolClassName,
                         dayOfWeek: item.Key,
@@ -52,7 +32,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
             return schoolClassModel.SchoolClass.SchoolClassUnits
                 .Select(unit => new TimeBlock
                 (
-                    id: GenerateId(schoolClassModel),
+                    id: TimeBlockGroupID.GenerateId(schoolClassModel.SubjectCode),
                     background: schoolClassModel.ClassGroupModel.Color,
                     content: schoolClassModel.SchoolClassName,
                     unit.DayOfWeek,
@@ -71,7 +51,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Services
             return conflict.ConflictPlace.PlaceAdjacents
                 .SelectMany(pa => pa.Value
                     .Select(item => new TimeBlock(
-                        id: GenerateId(conflict),
+                        id: TimeBlockGroupID.GenerateId(conflict.LessonA.SubjectCode, conflict.LessonB.SubjectCode, TimeBlockType.PlaceConflict),
                         background: "#f1f2f6",
                         content: conflict.LessonA.SchoolClassName + " x " + conflict.LessonB.SchoolClassName,
                         dayOfWeek: pa.Key,

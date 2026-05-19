@@ -13,7 +13,7 @@ namespace Cs4rsa.UI.ScheduleTable
     public class TimeBlock: IEquatable<TimeBlock>
     {
         public TimeBlock(
-            string id,
+            TimeBlockGroupID id,
             string background,
             string content,
             DayOfWeek dayOfWeek,
@@ -74,7 +74,7 @@ namespace Cs4rsa.UI.ScheduleTable
         public PlaceAdjacent PlaceAdjacent { get; }
         public string Name { get; set; }
 
-        public string Id { get; }
+        public TimeBlockGroupID Id { get; }
         /// <summary>
         /// Màu nền
         /// </summary>

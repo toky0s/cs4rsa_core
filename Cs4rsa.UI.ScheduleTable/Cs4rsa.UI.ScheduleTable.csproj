@@ -66,6 +66,7 @@
     <Compile Include="CustomControls\ScheduleView_v2.xaml.cs">
       <DependentUpon>ScheduleView_v2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TimeBlockGroupID.cs" />
     <Compile Include="TimeBlockType.cs" />
     <Compile Include="TimeBlock.cs" />
     <Compile Include="TimeConflictInfoConverter.cs" />

@@ -2,7 +2,6 @@
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.Conflict.Utils;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
-using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Cs4rsa.Service.SubjectCrawler.Utils;
 using Cs4rsa.Services.ConflictSvc.Utils;
 

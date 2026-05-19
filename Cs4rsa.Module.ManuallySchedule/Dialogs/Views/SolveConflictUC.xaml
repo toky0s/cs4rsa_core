@@ -18,13 +18,13 @@
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+            <Setter Property="Width" Value="700"></Setter>
+            <Setter Property="Height" Value="340"></Setter>
             <Setter Property="MaxWidth" Value="1000"></Setter>
-            <Setter Property="Width" Value="800"></Setter>
             <Setter Property="MaxHeight" Value="1000"></Setter>
-            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
-            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
-            <Setter Property="ShowInTaskbar" Value="True"/>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ResizeMode" Value="CanResize"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>
@@ -84,7 +84,7 @@
                     <Button
                         Grid.Column="2"
                         Command="{Binding RemoveCgFirstCmd}"
-                        Content="Remove"
+                        Content="Unselect"
                         />
                 </Grid>
             </Border>
@@ -118,12 +118,11 @@
                     <Button
                         Grid.Column="2"
                         Command="{Binding RemoveCgSecondCmd}"
-                        Content="Remove" />
+                        Content="Unselect" />
                 </Grid>
             </Border>
         </Grid>
         <DataGrid
-            MaxHeight="300"
             Grid.Row="3"
             ItemsSource="{Binding ConflictInfos}" 
             AutoGenerateColumns="False"

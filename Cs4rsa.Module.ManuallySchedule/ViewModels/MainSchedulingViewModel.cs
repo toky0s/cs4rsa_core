@@ -592,7 +592,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         SelectedClassGroup = null;
                         foreach (var scm in SelectedClassGroupModels[i].CurrentSchoolClassModels)
                         {
-                            RemoveScheduleItem(scm.SubjectCode);
+                            RemoveScheduleItem(TimeBlockGroupID.GenerateId(scm.SubjectCode));
                         }
 
                         SelectedClassGroupModels.RemoveAt(i);
@@ -638,7 +638,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void Conflicts_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-
+            var timeConflictsToRemove = Week1
+                .Concat(Week2)
+                .Where(block => block.ScheduleTableItemType == TimeBlockType.TimeConflict)
+                .ToList();
+            foreach (var item in timeConflictsToRemove)
+            {
+                Week1.Remove(item);
+                Week2.Remove(item);
+            }
+            var timeBlocks = ConflictCollection.SelectMany(conflict => _timeBlockGenerator.Generate(conflict));
+            AddTimeBlockToSchedule(timeBlocks);
         }
 
         private void ConflictInfos_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -718,7 +728,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 var classGroups = e.OldItems.Cast<ClassGroupModel>().ToArray();
                 CleanSelectedClassGroupNameFromSubjectModel(classGroups);
-                RemoveScheduleItem(classGroups[0].SubjectCode);
+                var id = TimeBlockGroupID.GenerateId(classGroups[0].SubjectCode);
+                RemoveScheduleItem(id);
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
             {
@@ -727,7 +738,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 CleanSelectedClassGroupNameFromSubjectModel(oldClassGroups);
                 for (int i = 0; i < oldClassGroups.Length; i++)
                 {
-                    RemoveScheduleItem(oldClassGroups[i].SubjectCode);
+                    var id = TimeBlockGroupID.GenerateId(oldClassGroups[i].SubjectCode);
+                    RemoveScheduleItem(TimeBlockGroupID.GenerateId(oldClassGroups[i].SubjectCode));
                 }
                 for (int i = 0; i < newClassGroups.Length; i++)
                 {
@@ -1688,11 +1700,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         }
                         else if (callback.Result == ButtonResult.OK)
                         {
-                            bool valid = callback.Parameters.TryGetValue("Conflicts", out ClassGroupModel removedClassGroupModel);
+                            bool valid = callback.Parameters.TryGetValue("RemovedClassGroupModel", out ClassGroupModel removedClassGroupModel);
                             if (valid)
                             {
                                 _logger.LogInformation("User solved conflict by removing {0}", removedClassGroupModel.Name);
-                                // TODO: Remove the class group model that user choose to remove and update conflict.
+                                SelectedClassGroupModels.Remove(removedClassGroupModel);
+                                RunScheduleValidator();
                             }
                         }
                     });
@@ -1728,7 +1741,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroup = null;
             foreach (var scm in _selectedClassGroupModel.CurrentSchoolClassModels)
             {
-                RemoveScheduleItem(scm.SubjectCode);
+                RemoveScheduleItem(TimeBlockGroupID.GenerateId(scm.SubjectCode));
             }
 
             SelectedClassGroupModels.Remove(_selectedClassGroupModel);
@@ -1794,9 +1807,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                 }
             }
-            var newConflictIds = ConflictCollection.Select(c => TimeBlockGenerator.GenerateId(c));
-            RemoveConflictNotInContains(newConflictIds, ConflictType.Time);
-            AddTimeBlockToSchedule(ConflictCollection);
         }
 
         /// <summary>
@@ -1842,9 +1852,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                 }
             }
-            var conflictIds = PlaceConflictFinderModels.Select(cm => TimeBlockGenerator.GenerateId(cm));
-            RemoveConflictNotInContains(conflictIds, ConflictType.Place);
-            AddTimeBlockToSchedule(PlaceConflictFinderModels);
         }
 
         private void AddOrReplaceClassGroupModel(ClassGroupModel classGroupModel)
@@ -1888,12 +1895,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// ID với SchoolClassModel sẽ là Subject Code của nó.
         /// ID của các Conflict sẽ là sự kết hợp giữa hai tên SchoolClassModel.
         /// </param>
-        private void RemoveScheduleItem(string id)
+        private void RemoveScheduleItem(TimeBlockGroupID id)
         {
             foreach (var week in _schedules)
             {
-                var toRemove = week.Where(block => block.Id == id).ToList();
-                foreach (var block in toRemove)
+                var toRemove = week.Where(block => block.Id.Equals(id)).ToList();
+                foreach (TimeBlock block in toRemove)
                 {
                     week.Remove(block);
                 }
@@ -1949,51 +1956,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private void AddTimeBlockToSchedule(IEnumerable<Conflict> conflicts)
-        {
-            var timeBlocks = conflicts.SelectMany(conflict => _timeBlockGenerator.Generate(conflict));
-            AddTimeBlockToSchedule(timeBlocks);
-        }
-        private void AddTimeBlockToSchedule(IEnumerable<PlaceConflict> conflicts)
-        {
-            var timeBlocks = conflicts.SelectMany(conflict => _timeBlockGenerator.Generate(conflict));
-            AddTimeBlockToSchedule(timeBlocks);
-        }
-
         private void CleanDays()
         {
             Week1.Clear();
             Week2.Clear();
-        }
-
-        private void RemoveConflictNotInContains(IEnumerable<string> conflictIds, ConflictType conflictType)
-        {
-            var removeBlocks = new List<TimeBlock>();
-            foreach (var id in conflictIds)
-            {
-                var removeBlocks_A = Week1.Where(block =>
-                {
-                    return !(id == block.Id)
-                            && (block.ScheduleTableItemType == TimeBlockType.TimeConflict || block.ScheduleTableItemType == TimeBlockType.PlaceConflict)
-                            && block.Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc");
-                });
-
-                var removeBlocks_B = Week2.Where(block =>
-                {
-                    return !(id == block.Id)
-                            && (block.ScheduleTableItemType == TimeBlockType.TimeConflict || block.ScheduleTableItemType == TimeBlockType.PlaceConflict)
-                            && block.Id.StartsWith(conflictType == ConflictType.Time ? "tc" : "pc");
-                });
-
-                removeBlocks.AddRange(removeBlocks_A);
-                removeBlocks.AddRange(removeBlocks_B);
-            }
-
-            removeBlocks.ForEach(block =>
-            {
-                Week1.Remove(block);
-                Week2.Remove(block);
-            });
         }
         #endregion
     }
