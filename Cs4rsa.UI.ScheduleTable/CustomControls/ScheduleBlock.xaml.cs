@@ -58,21 +58,90 @@ namespace Cs4rsa.UI.ScheduleTable.CustomControls
 
             // Kiểm tra nếu click nằm trong tooltip → không đóng
             var hitResult = VisualTreeHelper.HitTest(tooltip, e.GetPosition(tooltip));
-            if (hitResult != null) return;
+            if (hitResult != null)
+            {
+                // Nếu click vào Button thì release capture để Button nhận được Click event
+                var clickedButton = FindVisualParent<Button>(hitResult.VisualHit);
+                if (clickedButton != null)
+                {
+                    Mouse.Capture(clickedButton);
+                    Mouse.RemovePreviewMouseDownOutsideCapturedElementHandler(tooltip, OnClickOutsideTooltip);
+                    tooltip.IsOpen = false;
+                }
+                return;
+            }
 
             tooltip.IsOpen = false;
             Mouse.Capture(null);
             Mouse.RemovePreviewMouseDownOutsideCapturedElementHandler(tooltip, OnClickOutsideTooltip);
 
             // Kiểm tra nếu click nằm trên chính Border chủ sở hữu
-            var border = tooltip.PlacementTarget as Border;
-            if (border != null)
+            if (tooltip.PlacementTarget is Border border)
             {
                 var hitOnBorder = VisualTreeHelper.HitTest(border, e.GetPosition(border));
                 if (hitOnBorder != null)
                 {
                     _suppressNextOpen = true;
                 }
+            }
+        }
+
+        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            var current = child;
+            while (current != null)
+            {
+                if (current is T target) return target;
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return null;
+        }
+
+        private void Unselect_First(object sender, RoutedEventArgs e)
+        {
+            var classGroupName = this.TimeBlock.FirstCfClass.ClassGroupName;
+            OnUnselectClassGroup(classGroupName);
+        }
+
+        private void Unselect_Second(object sender, RoutedEventArgs e)
+        {
+            var classGroupName = this.TimeBlock.SecondCfClass.ClassGroupName;
+            OnUnselectClassGroup(classGroupName);
+        }
+
+        // Routed Event
+        /// <summary>
+        /// Event này được raise mỗi khi người dùng unselect một class group 
+        /// (bằng cách click vào nút "Unselect" trong tooltip của ScheduleBlock).
+        /// </summary>
+        public static readonly RoutedEvent UnselectClassGroupEvent =
+            EventManager.RegisterRoutedEvent(
+                nameof(UnselectClassGroup),
+                RoutingStrategy.Bubble,
+                typeof(RoutedEventHandler),
+                typeof(ScheduleView_v2));
+
+        public event RoutedEventHandler UnselectClassGroup
+        {
+            add => AddHandler(UnselectClassGroupEvent, value);
+            remove => RemoveHandler(UnselectClassGroupEvent, value);
+        }
+
+        // Raise helper
+        protected virtual void OnUnselectClassGroup(string classGroupName)
+        {
+            var args = new UnselectClassGroupEventArgs(UnselectClassGroupEvent, classGroupName);
+            RaiseEvent(args);
+        }
+
+        public class UnselectClassGroupEventArgs : RoutedEventArgs
+        {
+            public string ClassGroupName { get; }
+
+            public UnselectClassGroupEventArgs(RoutedEvent routedEvent, string classGroupName)
+                : base(routedEvent)
+            {
+                ClassGroupName = classGroupName;
             }
         }
     }

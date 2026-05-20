@@ -1,6 +1,8 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+
+using static Cs4rsa.UI.ScheduleTable.CustomControls.ScheduleBlock;
 
 namespace Cs4rsa.UI.ScheduleTable.CustomControls
 {

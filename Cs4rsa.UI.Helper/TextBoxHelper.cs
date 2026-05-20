@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Cs4rsa.UI.Helper
 {
@@ -26,46 +28,86 @@ namespace Cs4rsa.UI.Helper
 
         private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is TextBox textBoxControl)
+            if (!(d is TextBox textBox)) return;
+
+            textBox.TextChanged -= TextBoxControl_TextChanged;
+            textBox.TextChanged += TextBoxControl_TextChanged;
+
+            textBox.Loaded -= TextBoxControl_Loaded;
+            textBox.Loaded += TextBoxControl_Loaded;
+            textBox.Unloaded -= TextBoxControl_Unloaded;
+            textBox.Unloaded += TextBoxControl_Unloaded;
+
+            textBox.IsVisibleChanged -= TextBoxControl_IsVisibleChanged;
+            textBox.IsVisibleChanged += TextBoxControl_IsVisibleChanged;
+
+            RefreshAdorner(textBox);
+        }
+
+        private static void TextBoxControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is TextBox textBox)) return;
+
+            AdornerLayer layer = AdornerLayer.GetAdornerLayer(textBox);
+
+            if (layer == null)
+                return;
+
+            var adorners = layer.GetAdorners(textBox);
+
+            if (adorners == null)
+                return;
+
+            foreach (var adorner in adorners.OfType<PlaceholderAdorner>())
             {
-                if (!textBoxControl.IsLoaded)
-                {
-                    // Ensure that the events are not added multiple times
-                    textBoxControl.Loaded -= TextBoxControl_Loaded;
-                    textBoxControl.Loaded += TextBoxControl_Loaded;
-                }
-
-                textBoxControl.TextChanged -= TextBoxControl_TextChanged;
-                textBoxControl.TextChanged += TextBoxControl_TextChanged;
-
-                // If the adorner exists, invalidate it to draw the current text
-                if (GetOrCreateAdorner(textBoxControl, out PlaceholderAdorner adorner))
-                    adorner.InvalidateVisual();
+                layer.Remove(adorner);
             }
+        }
+
+        private static void TextBoxControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(sender is TextBox textBox)) return;
+
+            if (textBox.IsVisible)
+            {
+                RefreshAdorner(textBox);
+            }
+        }
+
+        // Helper mới: tạo adorner và set visibility đúng ngay từ đầu
+        private static void RefreshAdorner(TextBox textBox)
+        {
+            if (!textBox.IsLoaded)
+                return;
+
+            textBox.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!GetOrCreateAdorner(textBox, out PlaceholderAdorner adorner))
+                    return;
+
+                adorner.Visibility = string.IsNullOrEmpty(textBox.Text)
+                    ? Visibility.Visible
+                    : Visibility.Hidden;
+
+                adorner.InvalidateVisual();
+            }),
+            DispatcherPriority.Render);
         }
 
         private static void TextBoxControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBox textBoxControl)
-            {
-                textBoxControl.Loaded -= TextBoxControl_Loaded;
-                GetOrCreateAdorner(textBoxControl, out _);
-            }
+            if (!(sender is TextBox textBox)) return;
+            RefreshAdorner(textBox);
         }
 
         private static void TextBoxControl_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (sender is TextBox textBoxControl
-                && GetOrCreateAdorner(textBoxControl, out PlaceholderAdorner adorner))
-            {
-                // Control has text. Hide the adorner.
-                if (textBoxControl.Text.Length > 0)
-                    adorner.Visibility = Visibility.Hidden;
+            if (!(sender is TextBox textBox)) return;
+            if (!GetOrCreateAdorner(textBox, out PlaceholderAdorner adorner)) return;
 
-                // Control has no text. Show the adorner.
-                else
-                    adorner.Visibility = Visibility.Visible;
-            }
+            adorner.Visibility = textBox.Text.Length > 0
+                ? Visibility.Hidden
+                : Visibility.Visible;
         }
 
         private static bool GetOrCreateAdorner(TextBox textBoxControl, out PlaceholderAdorner adorner)

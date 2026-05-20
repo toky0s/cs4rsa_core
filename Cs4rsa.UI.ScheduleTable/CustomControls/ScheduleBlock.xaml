@@ -10,7 +10,7 @@
     d:DataContext="{d:DesignInstance Type=schedule:TimeBlock}"
     mc:Ignorable="d" 
     d:DesignHeight="170" 
-    d:DesignWidth="255" 
+    d:DesignWidth="120" 
     Name="root">
     <UserControl.Resources>
         <baseConverter:PhaseCvt x:Key="PhaseCvt" />
@@ -159,7 +159,7 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <Button Grid.Row="0" Grid.Column="1" Content="Unselect"></Button>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Unselect" Click="Unselect_First"></Button>
 <!--Row 1-->
                             <Border Padding="2" Grid.Row="1"></Border>
 <!--Row 2-->
@@ -173,7 +173,7 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <Button Grid.Row="2" Grid.Column="1" Content="Unselect"></Button>
+                            <Button Grid.Row="2" Grid.Column="1" Content="Unselect" Click="Unselect_Second"></Button>
                         </Grid>
                     </Border>
                 </Grid>
@@ -181,6 +181,7 @@
         </ToolTip>
     </UserControl.Resources>
     <Border
+        d:Background="#2ecc71"
         x:Name="Border_ScheduleBlock"
         Padding="2"
         ToolTipService.IsEnabled="False"
@@ -205,8 +206,9 @@
             </Style>
         </Border.Style>
         <TextBlock
-             FontSize="10"
-             Text="{Binding TimeBlock.Content, ElementName=root}"
-             TextWrapping="Wrap" />
+            d:Text="CS 401"
+            FontSize="10"
+            Text="{Binding TimeBlock.Content, ElementName=root}"
+            TextWrapping="Wrap" />
     </Border>
 </UserControl>

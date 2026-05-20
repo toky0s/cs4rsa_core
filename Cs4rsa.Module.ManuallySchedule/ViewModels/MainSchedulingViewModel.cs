@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 
 using System;
@@ -342,6 +343,23 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         bool CanExecuteSaveCommand()
         {
             return SelectedClassGroupModels.Count > 0;
+        }
+
+        private DelegateCommand<string> _unSelectClassGroupCommand;
+        public DelegateCommand<string> UnSelectClassGroupCommand =>
+            _unSelectClassGroupCommand ?? (_unSelectClassGroupCommand = new DelegateCommand<string>(ExecuteUnSelectClassGroupCommand, CanExecuteUnSelectClassGroupCommand));
+
+        void ExecuteUnSelectClassGroupCommand(string classGroupName)
+        {
+            _logger.LogInformation("User unselect a class group with name {ClassGroupName}", classGroupName);
+            var removedClassGroupModel = SelectedClassGroupModels.FirstOrDefault(cg => cg.Name == classGroupName);
+            SelectedClassGroupModels.Remove(removedClassGroupModel);
+            RunScheduleValidator();
+        }
+
+        bool CanExecuteUnSelectClassGroupCommand(string classGroupName)
+        {
+            return true;
         }
         #endregion
 

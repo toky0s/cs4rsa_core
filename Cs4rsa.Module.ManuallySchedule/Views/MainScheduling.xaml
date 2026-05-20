@@ -355,7 +355,6 @@
                         </Grid>
                     </Border>
                 </TabItem>
-                <TabItem Header="Security" />
                 <TabItem Header="Details" />
             </TabControl>
         </Grid>
@@ -437,8 +436,7 @@
                                 CanUserDeleteRows="True"
                                 ItemsSource="{Binding SelectedClassGroupModels}" 
                                 VerticalGridLinesBrush="{x:Null}" 
-                                SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged" 
-                                SelectedCellsChanged="DataGrid_SelectedClassGroups_SelectedCellsChanged">
+                                SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.Header>
