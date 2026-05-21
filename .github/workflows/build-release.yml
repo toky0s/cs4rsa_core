@@ -28,12 +28,13 @@ jobs:
 
       # 4. Restore Nuget Packages cho toàn bộ Solution
       - name: Restore NuGet Packages
-        run: nuget restore cs4rsa_core.sln # Thay bằng tên file .sln thực tế của bạn nếu khác
+        run: nuget restore cs4rsa_core.sln
 
-      # 5. Chạy Unit Test (Sử dụng VSTest cho .NET Framework)
-      - name: Setup VSTest (For MSTest Framework)
-        uses: microsoft/setup-vstest@v3
+      # 5. Build toàn bộ Solution ở chế độ Release trước để sinh ra file DLL
+      - name: Build Solution for Testing
+        run: msbuild cs4rsa_core.sln /p:Configuration=Release /p:Platform=AnyCPU
 
+      # 6. Chạy Unit Test trực tiếp bằng vstest.console.exe có sẵn trên máy ảo Windows
       - name: Run Unit Tests
         run: vstest.console.exe UnitTestProject\bin\Release\UnitTestProject.dll
 
