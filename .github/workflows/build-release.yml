@@ -1,54 +1,76 @@
-name: Build & Release
+name: Build, Test & Velopack Release
+
 on:
   push:
+    branches: [ "cs4rsa-prism-new-ui" ]
     tags:
-      - 'v*' # Chạy khi bạn push tag ví dụ v1.0.1
+      - 'v*' # Chạy quy trình đóng gói khi bạn push tag ví dụ v1.0.3
+  pull_request:
+    branches: [ "cs4rsa-prism-new-ui" ]
+
+env:
+  Solution_Name: cs4rsa.sln
+  Test_Project_Path: UnitTestProject\UnitTestProject.csproj
 
 jobs:
-  release:
-    runs-on: windows-latest # Bắt buộc phải là windows để chạy được .NET FW 4.8.1
+  # JOB 1: CHẠY TEST TỰ ĐỘNG (Luôn chạy khi push code hoặc tạo PR)
+  test:
+    name: Run Unit Tests
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }}
+
+  # JOB 2: ĐÓNG GÓI & RELEASE (Chỉ chạy KHI VÀ CHỈ KHI push TAG 'v*')
+  release:
+    name: Package & Deploy to GitHub Releases
+    needs: test # Bắt buộc JOB test ở trên phải PASS hoàn toàn mới chạy job này
+    if: startsWith(github.ref, 'refs/tags/v') # Chỉ kích hoạt nếu là push tag
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # 1. Cắt chữ 'v' ở đầu tag (v1.0.3 -> 1.0.3) cho đúng chuẩn Velopack
+    - name: Extract Version
+      id: get_version
+      shell: bash
+      run: |
+        VERSION=${GITHUB_REF_NAME#v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install Velopack
+      run: dotnet tool install -g vpk
       
-      # 1. Cắt chữ 'v' ở đầu tag (v1.0.1 -> 1.0.1)
-      - name: Extract Version
-        id: get_version
-        shell: bash
-        run: |
-          VERSION=${GITHUB_REF_NAME#v}
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+    # 2. Publish App chính ra thư mục tạm (Dùng .NET 8 CLI siêu nhanh)
+    # Tham số /p:AssemblyName=Xeplich sẽ ép tên file đầu ra thành Xeplich.exe
+    - name: Publish App
+      run: |
+        dotnet publish Cs4rsa.App/Cs4rsa.App.csproj -c Release --runtime win-x64 --self-contained true -o ./publish /p:AssemblyName=Xeplich
 
-      # 2. Thêm MSBuild vào môi trường (Thay thế cho setup-dotnet)
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      # 3. Thêm NuGet vào môi trường để Restore các gói Nuget cũ
-      - name: Setup NuGet
-        uses: nuget/setup-nuget@v1
-
-      # 4. Restore Nuget Packages cho toàn bộ Solution
-      - name: Restore NuGet Packages
-        run: nuget restore cs4rsa.sln
-
-      # 5. Build toàn bộ Solution ở chế độ Release trước để sinh ra file DLL
-      - name: Build Solution for Testing
-        run: msbuild cs4rsa.sln /p:Configuration=Release /p:Platform=AnyCPU
-
-      # 6. Chạy Unit Test trực tiếp bằng vstest.console.exe có sẵn trên máy ảo Windows
-      - name: Run Unit Tests
-        run: vstest.console.exe UnitTestProject\bin\Release\UnitTestProject.dll
-
-      # 6. Cài đặt Velopack
-      - name: Install Velopack
-        run: dotnet tool install -g vpk
-        
-      # 7. Build và Publish App bằng MSBuild (Thay cho dotnet publish)
-      - name: Build App with MSBuild
-        run: |
-          msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=..\publish
-
-      # 8. Đóng gói và Upload lên GitHub Releases
-      - name: Velopack Pack & Upload
-        run: |
-          vpk pack --packId Cs4rsa --packVersion ${{ steps.get_version.outputs.VERSION }} --packDir .\publish --mainExe Xeplich.exe
-          vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
+    # 3. Tiến hành dùng Velopack đóng gói và upload lên GitHub Releases
+    - name: Velopack Pack & Upload
+      run: |
+        vpk pack --packId Cs4rsa --packVersion ${{ steps.get_version.outputs.VERSION }} --packDir ./publish --mainExe Xeplich.exe
+        vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
