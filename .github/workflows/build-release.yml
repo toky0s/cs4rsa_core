@@ -1,4 +1,4 @@
-name: Build, Test & Velopack Release
+name: Build, Test & Velopack Release (.NET FW 4.8.1)
 
 on:
   push:
@@ -13,7 +13,7 @@ env:
   Test_Project_Path: UnitTestProject\UnitTestProject.csproj
 
 jobs:
-  # JOB 1: CHẠY TEST TỰ ĐỘNG (Luôn chạy khi push code hoặc tạo PR)
+  # JOB 1: CHẠY TEST TỰ ĐỘNG
   test:
     name: Run Unit Tests
     runs-on: windows-latest
@@ -26,19 +26,31 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET Core
+    # Cần cài .NET SDK để có thể dùng lệnh 'dotnet test' thần thánh cho cấu trúc mới
+    - name: Install .NET Core SDK (For dotnet test tool)
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    - name: Execute unit tests
-      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }}
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
 
-  # JOB 2: ĐÓNG GÓI & RELEASE (Chỉ chạy KHI VÀ CHỈ KHI push TAG 'v*')
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    # Khôi phục các package từ file packages.config cũ
+    - name: Restore NuGet Packages
+      run: nuget restore ${{ env.Solution_Name }}
+
+    # Chạy test bằng lệnh 'dotnet test' (Nền tảng Microsoft.Testing.Platform hỗ trợ lệnh này rất tốt)
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }} --no-restore
+
+  # JOB 2: ĐÓNG GÓI & RELEASE (Chỉ chạy khi push TAG 'v*')
   release:
     name: Package & Deploy to GitHub Releases
-    needs: test # Bắt buộc JOB test ở trên phải PASS hoàn toàn mới chạy job này
-    if: startsWith(github.ref, 'refs/tags/v') # Chỉ kích hoạt nếu là push tag
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
     
     steps:
@@ -47,7 +59,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    # 1. Cắt chữ 'v' ở đầu tag (v1.0.3 -> 1.0.3) cho đúng chuẩn Velopack
     - name: Extract Version
       id: get_version
       shell: bash
@@ -55,22 +66,25 @@ jobs:
         VERSION=${GITHUB_REF_NAME#v}
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore NuGet Packages
+      run: nuget restore ${{ env.Solution_Name }}
 
     - name: Install Velopack
       run: dotnet tool install -g vpk
-      
-    # 2. Publish App chính ra thư mục tạm (Dùng .NET 8 CLI siêu nhanh)
-    # Tham số /p:AssemblyName=Xeplich sẽ ép tên file đầu ra thành Xeplich.exe
-    - name: Publish App
-      run: |
-        dotnet publish Cs4rsa.App/Cs4rsa.App.csproj -c Release --runtime win-x64 --self-contained true -o ./publish /p:AssemblyName=Xeplich
 
-    # 3. Tiến hành dùng Velopack đóng gói và upload lên GitHub Releases
+    # Build dự án WPF bằng MSBuild, ép tên file đầu ra thành Xeplich.exe và xuất ra thư mục .\publish
+    - name: Build & Publish App with MSBuild
+      run: |
+        msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:AssemblyName=Xeplich /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=..\publish
+
+    # Dùng Velopack đóng gói thư mục .\publish và đẩy lên GitHub Releases
     - name: Velopack Pack & Upload
       run: |
-        vpk pack --packId Cs4rsa --packVersion ${{ steps.get_version.outputs.VERSION }} --packDir ./publish --mainExe Xeplich.exe
+        vpk pack --packId Cs4rsa --packVersion ${{  steps.get_version.outputs.VERSION  }} --packDir .\publish --mainExe Xeplich.exe --title "Xếp Lịch"
         vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
