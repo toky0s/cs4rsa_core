@@ -1,0 +1,53 @@
+name: Build & Release
+on:
+  push:
+    tags:
+      - 'v*' # Chạy khi bạn push tag ví dụ v1.0.1
+
+jobs:
+  release:
+    runs-on: windows-latest # Bắt buộc phải là windows để chạy được .NET FW 4.8.1
+    steps:
+      - uses: actions/checkout@v4
+      
+      # 1. Cắt chữ 'v' ở đầu tag (v1.0.1 -> 1.0.1)
+      - name: Extract Version
+        id: get_version
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      # 2. Thêm MSBuild vào môi trường (Thay thế cho setup-dotnet)
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # 3. Thêm NuGet vào môi trường để Restore các gói Nuget cũ
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
+
+      # 4. Restore Nuget Packages cho toàn bộ Solution
+      - name: Restore NuGet Packages
+        run: nuget restore cs4rsa_core.sln # Thay bằng tên file .sln thực tế của bạn nếu khác
+
+      # 5. Chạy Unit Test (Sử dụng VSTest cho .NET Framework)
+      - name: Setup VSTest (For MSTest Framework)
+        uses: microsoft/setup-vstest@v3
+
+      - name: Run Unit Tests
+        run: vstest.console.exe UnitTestProject\bin\Release\UnitTestProject.dll
+
+      # 6. Cài đặt Velopack
+      - name: Install Velopack
+        run: dotnet tool install -g vpk
+        
+      # 7. Build và Publish App bằng MSBuild (Thay cho dotnet publish)
+      - name: Build App with MSBuild
+        run: |
+          msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=..\publish
+
+      # 8. Đóng gói và Upload lên GitHub Releases
+      - name: Velopack Pack & Upload
+        run: |
+          vpk pack --packId Cs4rsa --packVersion ${{ steps.get_version.outputs.VERSION }} --packDir .\publish --mainExe Xeplich.exe
+          vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
