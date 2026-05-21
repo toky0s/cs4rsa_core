@@ -81,10 +81,10 @@ jobs:
     # Build dự án WPF bằng MSBuild, ép tên file đầu ra thành Xeplich.exe và xuất ra thư mục .\publish
     - name: Build & Publish App with MSBuild
       run: |
-        msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:AssemblyName=Xeplich /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=..\publish
+        msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:AssemblyName=Xeplich /t:Build /p:OutDir=..\publish\
 
     # Dùng Velopack đóng gói thư mục .\publish và đẩy lên GitHub Releases
     - name: Velopack Pack & Upload
       run: |
-        vpk pack --packId Cs4rsa --packVersion ${{  steps.get_version.outputs.VERSION  }} --packDir .\publish --mainExe Xeplich.exe --title "Xếp Lịch"
+        vpk pack --packId Cs4rsa --packVersion ${{  steps.get_version.outputs.VERSION  }} --packDir .\publish --mainExe Xeplich.exe --title "Xeplich"
         vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
