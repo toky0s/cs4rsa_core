@@ -128,6 +128,9 @@
     <Content Include="SubjectCrawler\Resources\20231110_ACC_201.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SubjectCrawler\Resources\20260522_ART_161.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cs4rsa.Module.Shared\Cs4rsa.Module.Shared.csproj">

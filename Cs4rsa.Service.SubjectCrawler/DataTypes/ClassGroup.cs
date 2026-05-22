@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Cs4rsa.Service.SubjectCrawler.Utils;
 
@@ -8,7 +9,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
     public class ClassGroup
     {
-        private readonly List<SchoolClass> _schoolClasses;
+        private readonly List<SchoolClass> _schoolClasses = new List<SchoolClass>();
         private readonly HashSet<string> _registerCodes;
 
         public readonly string Name;
@@ -23,21 +24,20 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         }
 
         private List<SchoolClass> _mergedSchoolClasses;
-        public List<SchoolClass> SchoolClasses
-        {
-            get
-            {
-                if (_mergedSchoolClasses != null || !_mergedSchoolClasses.Any())
-                {
-                    _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
-                }
-                return _mergedSchoolClasses;
-            }
-        }
+        public List<SchoolClass> SchoolClasses => _mergedSchoolClasses;
+        //{
+        //    get
+        //    {
+        //        if (_mergedSchoolClasses != null || !_mergedSchoolClasses.Any())
+        //        {
+        //            _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
+        //        }
+        //        return _mergedSchoolClasses;
+        //    }
+        //}
 
         public ClassGroup(string name, string subjectCode, string subjectName)
         {
-            _schoolClasses = new List<SchoolClass>();
             _registerCodes = new HashSet<string>();
             _mergedSchoolClasses = new List<SchoolClass>();
             Name = name;
@@ -67,6 +67,15 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             }
         }
 
+        public void CommitChanges()
+        {
+            if (_schoolClasses.Count == 0)
+            {
+                throw new Exception("Cannot commit this class group change because there are no school classes.");
+            }
+            _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
+        }
+
         /// <summary>
         /// Vì sẽ có một số lớp có nhiều school class trùng tên, nhưng chỉ khác ở tên giáo viên dạy
         /// điển hình là môn Machine Learning with Large Datasets (DS 423) lần phát hiện gần nhất 9/8/2021
@@ -76,48 +85,32 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// <returns></returns>
         private List<SchoolClass> MergeTeacherInfoInSchoolClasses()
         {
-            var newSchoolClasses = new List<SchoolClass>();
-            var schoolClassNames = GetSchoolClassNames();
-            foreach (var schoolClassName in schoolClassNames)
-            {
-                var schoolClassesWithName = GetSchoolClassesWithName(schoolClassName);
-                // List<TeacherModel> teachers = GetTeachersOfSchoolClasses(schoolClassesWithName);
-                // schoolClassesWithName[0].Teachers = teachers;
-                schoolClassesWithName[0].TeacherNames = GetTempTeachersOfSchoolClasses(schoolClassesWithName).ToList();
-                schoolClassesWithName[0].SubjectName = SubjectName;
-                newSchoolClasses.Add(schoolClassesWithName[0]);
-            }
-
-            return newSchoolClasses;
+            return _schoolClasses
+                .GroupBy(sc => sc.SchoolClassName)
+                .Select(group =>
+                {
+                    var primary = group.First();
+                    primary.TeacherNames = group
+                        .SelectMany(sc => sc.TeacherNames)
+                        .Distinct()
+                        .ToList();
+                    primary.SubjectName = SubjectName;
+                    return primary;
+                })
+                .ToList();
         }
 
-        /// <summary>
-        /// Lấy ra tất cả các TempTeacher có trong các SchoolClass, nhằm thực hiện 
-        /// gộp các SchoolClass cùng tên lại với nhau, nhưng chỉ khác mỗi TempTeacher. 
-        /// Tương tự GetTeachersOfSchoolClasses.
-        /// </summary>
-        /// <param name="schoolClasses">Danh sách các SchoolClass cùng tên.</param>
-        /// <returns>Danh sách các TempTeacher của các SchoolClass trên.</returns>
-        private static IEnumerable<string> GetTempTeachersOfSchoolClasses(IEnumerable<SchoolClass> schoolClasses)
-        {
-            return schoolClasses
-                .SelectMany(schoolClass => schoolClass.TeacherNames);
-        }
 
-        private List<SchoolClass> GetSchoolClassesWithName(string schoolClassName)
+        private SchoolClass GetSchoolClassesWithName(string schoolClassName)
         {
             var schoolClasses = new List<SchoolClass>();
             foreach (var schoolClass in _schoolClasses)
             {
                 if (schoolClass.SchoolClassName.Equals(schoolClassName))
-                    schoolClasses.Add(schoolClass);
+                    return schoolClass;
+                schoolClasses.Add(schoolClass);
             }
-            return schoolClasses;
-        }
-
-        private IEnumerable<string> GetSchoolClassNames()
-        {
-            return _schoolClasses.Select(item => item.SchoolClassName).Distinct();
+            return null;
         }
 
         public DayPlaceMetadata GetDayPlaceMetaData()

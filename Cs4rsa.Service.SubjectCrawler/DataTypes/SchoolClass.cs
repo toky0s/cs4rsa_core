@@ -31,7 +31,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public Schedule Schedule { get; set; }
         public IEnumerable<string> Rooms { get; set; }
         public StudyWeek StudyWeek { get; set; }
-        public List<string> TeacherNames { get; set; }
+        public List<string> TeacherNames { get; set; } = new List<string>();
         public IEnumerable<Place> Places { get; set; }
         public string RegistrationStatus { get; set; }
         public string ImplementationStatus { get; set; }
@@ -70,7 +70,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             Schedule = schedule;
             Rooms = rooms;
             Places = places;
-            TeacherNames = teacherNames;
+            TeacherNames.AddRange(teacherNames);
             RegistrationStatus = registrationStatus;
             ImplementationStatus = implementationStatus;
             Url = url;

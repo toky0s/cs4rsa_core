@@ -51,8 +51,14 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             var table = htmlDocument.DocumentNode.Descendants("table").ToArray()[2];
             var trTags = table.Descendants("tr").ToArray();
 
+            var xpathNames = new string[2]
+            {
+                "//div[1]/table/tr/td/span",
+                "//div[1]/table/tbody/tr/td/span"
+            };
+            var xpathName = xpathNames.Where(item => htmlDocument.DocumentNode.SelectSingleNode(item) != null).First();
             var name = htmlDocument.DocumentNode
-                .SelectSingleNode("//div[1]/table/tr/td/span").InnerText.SuperCleanString();
+                .SelectSingleNode(xpathName).InnerText.SuperCleanString();
             var subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
             var studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
             var studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();

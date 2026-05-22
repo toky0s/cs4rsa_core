@@ -19,12 +19,12 @@ namespace Test_SubjectCrawler
     
     public class SubjectCrawler_20231110
     {
-        private ICourseHtmlGetter _mockCourseHtmlGetter; 
-        private ISubjectCrawler _subjectCrawler;
-        private string _baseDir;
+        private static ICourseHtmlGetter _mockCourseHtmlGetter; 
+        private static ISubjectCrawler _subjectCrawler;
+        private static string _baseDir;
 
-        [TestInitialize]
-        public void SetUp()
+        [ClassInitialize]
+        public static void SetUp(TestContext context)
         {
             _baseDir = AppDomain.CurrentDomain.BaseDirectory; 
             _mockCourseHtmlGetter = Substitute.For<ICourseHtmlGetter>(); 
@@ -48,17 +48,33 @@ namespace Test_SubjectCrawler
             
             // CS 252: Mạng Máy Tính
             _mockCourseHtmlGetter.GetHtmlDocument("65", "75")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_CS_252.html"))); 
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_CS_252.html")));
+
+            // ART 161:  Định Luật Xa Gần trong Đồ Họa
+            _mockCourseHtmlGetter.GetHtmlDocument("1114", "93")
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260522_ART_161.html"))); 
 
             _subjectCrawler = new SubjectCrawler(_mockCourseHtmlGetter); 
         }
 
-        private HtmlDocument LoadHtmlFromResource(string folder, string fileName)
+        private static HtmlDocument LoadHtmlFromResource(string folder, string fileName)
         {
             var text = File.ReadAllText(Path.Combine(_baseDir, folder, fileName)); 
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(text);
             return htmlDoc;
+        }
+
+        [TestMethod]
+        public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreSpecialSubject()
+        {
+            var subject = await _subjectCrawler.Crawl("1114", "93");
+
+            Assert.IsTrue(subject.Item1.IsSpecialSubject);
+            Assert.AreEqual("Định Luật Xa Gần trong Đồ Họa", subject.Item1.Name);
+            Assert.AreEqual("ART 161", subject.Item1.SubjectCode);
+            Assert.AreEqual(1, subject.Item1.ClassGroups.Count);
+            Assert.AreEqual(3, subject.Item1.ClassGroups.First().SchoolClasses.Count);
         }
 
         [TestMethod]
@@ -250,7 +266,28 @@ namespace Test_SubjectCrawler
                 .First(sc => sc.SchoolClassName == "CS 211 CIS1")
                 .TeacherNames
                 .Count;
-            Assert.AreEqual(2, tempTeachersCount); 
+
+            var teachers = subject.Item1
+                .ClassGroups
+                .First(clg => clg.Name == "CS 211 CIS")
+                .SchoolClasses
+                .First(sc => sc.SchoolClassName == "CS 211 CIS1")
+                .TeacherNames;
+
+            var teachers_2 = subject.Item1
+                .ClassGroups
+                .First(clg => clg.Name == "CS 211 CIS")
+                .SchoolClasses
+                .First(sc => sc.SchoolClassName == "CS 211 CIS1")
+                .TeacherNames;
+
+            //var teacherName = subject.Item1
+            //    .ClassGroups
+            //    .First(clg => clg.Name == "CS 211 CIS")
+            //    .SchoolClasses
+            //    .First(sc => sc.SchoolClassName == "CS 211 CIS1")
+            //    .TeacherNames.ToArray();
+            Assert.AreEqual(2, tempTeachersCount);
         }
     }
 }

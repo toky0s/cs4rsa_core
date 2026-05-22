@@ -13,7 +13,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     public class Subject
     {
         public List<string> TeacherUrls { get; }
-        public List<string> TeacherNames { get; }
+        public HashSet<string> TeacherNames { get; }
         public List<ClassGroup> ClassGroups { get; }
         public bool IsSpecialSubject { get; }
 
@@ -51,7 +51,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                         string mustStudySubject, string parallelSubject,
                         string description, string rawSoup, string courseId)
         {
-            TeacherNames = new List<string>();
+            TeacherNames = new HashSet<string>();
             TeacherUrls = new List<string>();
             ClassGroups = new List<ClassGroup>();
 
@@ -67,9 +67,9 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
             MustStudySubject = SubjectSplit(mustStudySubject);
             ParallelSubject = SubjectSplit(parallelSubject);
-            IsSpecialSubject = GetIsSpecialSubject();
-
+            
             GetClassGroups_Optimize(rawSoup);
+            IsSpecialSubject = GetIsSpecialSubject();
         }
 
         /// <summary>
@@ -80,12 +80,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// <returns></returns>
         private bool GetIsSpecialSubject()
         {
-            return ClassGroups
-                .Select(classGroup => classGroup
-                    .SchoolClasses
-                    .Select(schoolClass => schoolClass.RegisterCode)
-                    .Count(registerCode => registerCode != string.Empty))
-                .Any(registerCodeCount => registerCodeCount > 1);
+            return ClassGroups.Any(classGroup => classGroup.RegisterCodes.Count > 1);
         }
 
         private void GetClassGroups_Optimize(string html)
@@ -116,6 +111,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 {
                     if (!string.IsNullOrWhiteSpace(classGroupName) && !classGroupName.Equals(outClassGroupName))
                     {
+                        // Commit previous changes.
+                        classGroup.CommitChanges();
                         ClassGroups.Add(classGroup);
                         registerCodes.Clear();
                     }
@@ -139,6 +136,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             }
             if (classGroup != null)
             {
+                classGroup.CommitChanges();
                 ClassGroups.Add(classGroup);
             }
         }
@@ -343,11 +341,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 return string.Empty;
             }
 
-            if (!TeacherNames.Contains(teacherName))
-            {
-                TeacherNames.Add(teacherName);
-            }
-
+            TeacherNames.Add(teacherName);
             return teacherName;
         }
 
