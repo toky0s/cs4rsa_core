@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.App.Services;
 using Cs4rsa.App.Views.UserControls;
+using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.Notification.Models;
 
@@ -22,6 +23,7 @@ namespace Cs4rsa.App.ViewModels
         private readonly ILogger<MainWindowViewModel> _logger;
         private readonly IDialogService _dialogService;
         private readonly IUpdateService _updateService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private DelegateCommand _checkForUpdatesCommand;
         public DelegateCommand CheckForUpdatesCommand =>
@@ -55,6 +57,22 @@ namespace Cs4rsa.App.ViewModels
             return true;
         }
 
+        private DelegateCommand _resetCacheCommand;
+        public DelegateCommand ResetCacheCommand =>
+            _resetCacheCommand ?? (_resetCacheCommand = new DelegateCommand(ExecuteResetCacheCommand, CanExecuteResetCacheCommand));
+
+        void ExecuteResetCacheCommand()
+        {
+            _logger.LogInformation("User reset cache");
+            var n = _unitOfWork.Keywords.ResetCache();
+            _logger.LogInformation("Number of keywords reset: {Count}", n);
+        }
+
+        bool CanExecuteResetCacheCommand()
+        {
+            return true;
+        }
+
         #region Notification Service Region
         public ObservableCollection<Notification> NotificationItems { get; set; }
         #endregion
@@ -63,13 +81,15 @@ namespace Cs4rsa.App.ViewModels
             IEventAggregator eventAggregator,
             ILogger<MainWindowViewModel> logger,
             IDialogService dialogService,
-            IUpdateService updateService)
+            IUpdateService updateService,
+            IUnitOfWork unitOfWork)
         {
             NotificationItems = new ObservableCollection<Notification>();
             _eventAggregator = eventAggregator;
             _logger = logger;
             _dialogService = dialogService;
             _updateService = updateService;
+            _unitOfWork = unitOfWork;
 
             _eventAggregator.GetEvent<NotificationEvent>().Subscribe(args =>
             {

@@ -32,7 +32,8 @@
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="_Help">
                         <MenuItem Header="Check for Updates" Command="{Binding CheckForUpdatesCommand}"/>
-                        <!--<Separator />-->
+                        <Separator />
+                        <MenuItem Header="Reset Cache" Command="{Binding ResetCacheCommand}"/>
                         <!--<MenuItem Header="_Exit" />-->
                     </MenuItem>
                 </Menu>
