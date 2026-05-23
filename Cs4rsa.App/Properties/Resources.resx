@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DbConn" xml:space="preserve">
+    <value>Data Source=cs4rsa.db</value>
+    <comment>Db connection string</comment>
+  </data>
+  <data name="DbPath" xml:space="preserve">
+    <value>cs4rsa.db</value>
+    <comment>This db contains data for the app</comment>
+  </data>
   <data name="GithubSource" xml:space="preserve">
     <value>https://github.com/toky0s/cs4rsa_core</value>
     <comment>Contain publish versions to update via Velopack</comment>
+  </data>
+  <data name="MigratePath" xml:space="preserve">
+    <value>DataProviders/cs4rsa.db.sql</value>
+    <comment>Path to migrate file</comment>
   </data>
 </root>

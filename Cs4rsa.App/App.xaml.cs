@@ -35,7 +35,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -86,27 +85,28 @@ namespace Cs4rsa.App
             DisciplineCrawler disciplineCrawler = Container.Resolve<DisciplineCrawler>();
             IFolderManager folderManager = Container.Resolve<IFolderManager>();
             ICourseCrawler courseCrawler = Container.Resolve<ICourseCrawler>();
+            var logger = Container.Resolve<ILogger<App>>();
 
             courseCrawler.GetInfo(out string yearInfo, out string yearValue, out string semesterInfo, out string semesterValue);
             folderManager.CreateFoldersAtStartUp();
             List<Discipline> disciplines = disciplineCrawler.GetDisciplineAndKeyword(semesterValue);
 
-            if (!File.Exists("cs4rsa.db"))
+            var dbPath = Cs4rsa.App.Properties.Resources.DbPath;
+            var migratePath = Cs4rsa.App.Properties.Resources.MigratePath;
+            if (!File.Exists(dbPath))
             {
-                rawSql.CreateDbIfNotExist("cs4rsa.db", "DataProviders/cs4rsa.db.sql");
+                rawSql.CreateDbIfNotExist(dbPath, migratePath);
 
                 // Seed Settings
                 unitOfWork.Settings.InsertSemesterSetting(yearInfo, yearValue, semesterInfo, semesterValue);
                 string sql = BulkInsertDisciplines.GetBulkInsertSql(disciplines);
+                logger.LogInformation("Executing bulk insert for disciplines and keywords.\n{Sql}", sql);
                 rawSql.ExecNonQuery(sql);
             }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            string cnnStr = ConfigurationManager.AppSettings["cnnStr"];
-            containerRegistry.Register<RawSql>(provider => new RawSql(cnnStr));
-
             // Register logging
             const string LogFolderPath = "logs";
             if (!Directory.Exists(LogFolderPath))
@@ -129,6 +129,9 @@ namespace Cs4rsa.App
 
             containerRegistry.RegisterInstance(loggerFactory);
             containerRegistry.Register(typeof(ILogger<>), typeof(Logger<>));
+
+            string cnnStr = Cs4rsa.App.Properties.Resources.DbConn;
+            containerRegistry.Register<RawSql>(provider => new RawSql(cnnStr, provider.Resolve<ILogger<RawSql>>()));
 
             containerRegistry.RegisterSingleton<ISemesterHtmlGetter, SemesterHtmlGetter>();
             containerRegistry.RegisterSingleton<IDisciplineHtmlGetter, DisciplineHtmlGetter>();
@@ -162,9 +165,11 @@ namespace Cs4rsa.App
             folderManager.CreateFoldersAtStartUp();
             List<Discipline> disciplines = disciplineCrawler.GetDisciplineAndKeyword(semesterValue);
 
-            if (!File.Exists("cs4rsa.db"))
+            var dbPath = Cs4rsa.App.Properties.Resources.DbPath;
+            if (!File.Exists(dbPath))
             {
-                rawSql.CreateDbIfNotExist("cs4rsa.db", "DataProviders/cs4rsa.db.sql");
+               
+                rawSql.CreateDbIfNotExist(dbPath, Cs4rsa.App.Properties.Resources.MigratePath);
 
                 // Seed Settings
                 unitOfWork.Settings.InsertSemesterSetting(yearInfo, yearValue, semesterInfo, semesterValue);

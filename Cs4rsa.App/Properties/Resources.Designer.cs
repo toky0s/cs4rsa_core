@@ -61,11 +61,38 @@ namespace Cs4rsa.App.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data Source=cs4rsa.db.
+        /// </summary>
+        internal static string DbConn {
+            get {
+                return ResourceManager.GetString("DbConn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cs4rsa.db.
+        /// </summary>
+        internal static string DbPath {
+            get {
+                return ResourceManager.GetString("DbPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://github.com/toky0s/cs4rsa_core.
         /// </summary>
         internal static string GithubSource {
             get {
                 return ResourceManager.GetString("GithubSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DataProviders/cs4rsa.db.sql.
+        /// </summary>
+        internal static string MigratePath {
+            get {
+                return ResourceManager.GetString("MigratePath", resourceCulture);
             }
         }
     }
