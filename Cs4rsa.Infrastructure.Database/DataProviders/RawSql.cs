@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -14,9 +16,11 @@ namespace Cs4rsa.Database.DataProviders
         /// Connection string
         /// </summary>
         public string CnnStr { get; }
-        public RawSql(string cnnStr)
+        private readonly ILogger<RawSql> _logger;
+        public RawSql(string cnnStr, ILogger<RawSql> logger)
         {
             CnnStr = cnnStr;
+            _logger = logger;
         }
 
         public void CreateDbIfNotExist(string dbFilePath, string sqlInitDbFilePath)
@@ -199,6 +203,7 @@ namespace Cs4rsa.Database.DataProviders
                 {
                     cmd.CommandText = sql;
                     AddParams(cmd, sqlParams);
+                    _logger.LogDebug("Executing SQL command: {Sql}\n{Params}", sql, BeautifyParams(sqlParams));
                     var result = cmd.ExecuteNonQuery();
                     return result;
                 }

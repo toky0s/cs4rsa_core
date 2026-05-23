@@ -11,5 +11,6 @@
 
         public int DisciplineId { get; set; }
         public Discipline Discipline { get; set; }
+        public string SemesterId { get; set; }
     }
 }

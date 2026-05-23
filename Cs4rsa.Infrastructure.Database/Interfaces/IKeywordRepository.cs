@@ -11,7 +11,7 @@ namespace Cs4rsa.Database.Interfaces
         /// <param name="keywordId">Keyword Id</param>
         /// <param name="htmlCache">HTML</param>
         /// <returns>Số lượng record đã cập nhật. Nếu trả về 1 cập nhật thành công, ngược lại trả về 0.</returns>
-        int UpdateCacheByKeywordId(int keywordId, string htmlCache);
+        int UpdateCacheByKeywordId(int keywordId, string semesterId, string htmlCache);
         Keyword GetKeyword(string discipline, string keyword1);
 
         /// <summary>
@@ -45,7 +45,6 @@ namespace Cs4rsa.Database.Interfaces
         /// <param name="courseId">Course ID</param>
         /// <returns>Cache</returns>
         string GetCache(string courseId);
-        string GetCache(string discipline, string keyword1);
         /// <summary>
         /// Lấy ra danh sách các Keyword dựa theo Discipline ID.
         /// </summary>
@@ -57,5 +56,6 @@ namespace Cs4rsa.Database.Interfaces
         int DeleteAll();
         Keyword GetByCourseId(string courseId);
         long Count();
+        int ResetCache();
     }
 }

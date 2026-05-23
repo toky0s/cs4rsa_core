@@ -84,13 +84,14 @@ CREATE TABLE IF NOT EXISTS "DbProgramSubjects" (
 );
 DROP TABLE IF EXISTS "Keywords";
 CREATE TABLE IF NOT EXISTS "Keywords" ( 
-	"KeywordId"	INTEGER NOT NULL,
-	"Keyword1"	TEXT,
-	"CourseId"	TEXT,
+	"KeywordId"		INTEGER NOT NULL,
+	"Keyword1"		TEXT,
+	"CourseId"		TEXT,
 	"SubjectName"	TEXT,
-	"Color"	TEXT,
-	"Cache"	TEXT,
+	"Color"			TEXT,
+	"Cache"			TEXT,
 	"DisciplineId"	INTEGER NOT NULL,
+	"SemesterId"	TEXT,
 	CONSTRAINT "PK_Keywords" PRIMARY KEY("KeywordId" AUTOINCREMENT),
 	CONSTRAINT "FK_Keywords_Disciplines_DisciplineId" FOREIGN KEY("DisciplineId") REFERENCES "Disciplines"("DisciplineId") ON DELETE CASCADE
 );

@@ -54,6 +54,7 @@ namespace Cs4rsa.Database.Implements
             sb.AppendLine(", kw.SubjectName");
             sb.AppendLine(", kw.Color");
             sb.AppendLine(", kw.Cache");
+            sb.AppendLine(", kw.SemesterId");
             sb.AppendLine(", kw.DisciplineId");
             sb.AppendLine("FROM Disciplines AS ds");
             sb.AppendLine("	  , Keywords    AS kw");
@@ -75,7 +76,8 @@ namespace Cs4rsa.Database.Implements
                     SubjectName = record.GetString(3),
                     Color = record.GetString(4),
                     Cache = record.IsDBNull(5) ? null : record.GetString(5),
-                    DisciplineId = record.GetInt32(6)
+                    SemesterId = record.IsDBNull(6) ? null : record.GetString(6),
+                    DisciplineId = record.GetInt32(7)
                 }
             );
         }
@@ -90,6 +92,7 @@ namespace Cs4rsa.Database.Implements
             sb.AppendLine(", SubjectName");
             sb.AppendLine(", Color");
             sb.AppendLine(", Cache");
+            sb.AppendLine(", SemesterId");
             sb.AppendLine(", DisciplineId");
             sb.AppendLine("FROM Keywords");
             sb.AppendLine("WHERE CourseId = @courseId");
@@ -108,7 +111,8 @@ namespace Cs4rsa.Database.Implements
                     , SubjectName = r.GetString(3)
                     , Color = r.GetString(4)
                     , Cache = r.IsDBNull(5) ? null : r.GetString(5)
-                    , DisciplineId = r.GetInt32(6)
+                    , SemesterId = r.IsDBNull(6) ? null : r.GetString(6)
+                    , DisciplineId = r.GetInt32(7)
                 }
             );
         }
@@ -167,7 +171,7 @@ namespace Cs4rsa.Database.Implements
         public List<Keyword> GetKeywordsByDisciplineId(int disciplineId)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache");
+            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache, SemesterId");
             sb.AppendLine("FROM Keywords");
             sb.AppendLine("WHERE DisciplineId = @DisciplineId");
             var param = new Dictionary<string, object>()
@@ -183,20 +187,22 @@ namespace Cs4rsa.Database.Implements
                     , SubjectName = record.GetString(3)
                     , Color = record.GetString(4)
                     , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
+                    , SemesterId = record.IsDBNull(6) ? string.Empty : record.GetString(6)
                 }
             );
         }
 
-        public int UpdateCacheByKeywordId(int keywordId, string cache)
+        public int UpdateCacheByKeywordId(int keywordId, string semesterId, string cache)
         {
             try
             {
                 return _rawSql.ExecNonQuery(
-                "UPDATE Keywords SET Cache = @cache WHERE KeywordId = @keywordID"
+                "UPDATE Keywords SET Cache = @cache, SemesterId = @semesterId WHERE KeywordId = @keywordID"
                 , new Dictionary<string, object>
                 {
                     {"@cache", cache },
                     {"@keywordID", keywordId },
+                    {"@semesterId", semesterId },
                 }
             );
             }
@@ -209,9 +215,9 @@ namespace Cs4rsa.Database.Implements
         public int Insert(Keyword keyword)
         {
             var sb = new StringBuilder()
-                .AppendLine("INSERT INTO Keywords")
+                .AppendLine("INSERT INTO Keywords(KeywordId, Keyword1, CourseId, SubjectName, Color, Cache, DisciplineId, SemesterId)")
                 .AppendLine("VALUES")
-                .AppendLine("(@KeywordId, @Keyword1, @CourseId, @SubjectName, @Color, @Cache, @DisciplineId)");
+                .AppendLine("(@KeywordId, @Keyword1, @CourseId, @SubjectName, @Color, @Cache, @DisciplineId, @SemesterId)");
             return _rawSql.ExecNonQuery(
                 sb.ToString()
                 , new Dictionary<string, object>
@@ -241,6 +247,7 @@ namespace Cs4rsa.Database.Implements
                 .AppendLine(", kw.SubjectName")
                 .AppendLine(", kw.Color")
                 .AppendLine(", kw.Cache")
+                .AppendLine(", kw.SemesterId")
                 .AppendLine(", ds.DisciplineId")
                 .AppendLine(", ds.Name")
                 .AppendLine("FROM")
@@ -265,12 +272,13 @@ namespace Cs4rsa.Database.Implements
                     , SubjectName = record.GetString(3)
                     , Color = record.GetString(4)
                     , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
-                    , DisciplineId = record.GetInt32(6)
+                    , SemesterId = record.IsDBNull(6) ? string.Empty : record.GetString(6)
+                    , DisciplineId = record.GetInt32(7)
                     , Discipline = 
                     new Discipline() 
                     { 
-                          DisciplineId = record.GetInt32(6)
-                        , Name = record.GetString(7)
+                          DisciplineId = record.GetInt32(7)
+                        , Name = record.GetString(8)
                     }
                 }
             );
@@ -281,9 +289,9 @@ namespace Cs4rsa.Database.Implements
             return _rawSql.ExecScalar("SELECT COUNT(*) FROM Keywords", 0L);
         }
 
-        public string GetCache(string discipline, string keyword1)
+        public int ResetCache()
         {
-            throw new System.NotImplementedException();
+            return _rawSql.ExecNonQuery("UPDATE Keywords SET Cache = NULL");
         }
     }
 }
