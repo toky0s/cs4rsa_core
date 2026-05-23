@@ -23,7 +23,10 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
         public async Task<(Subject, string)> Crawl(string courseId, string semesterId)
         {
             var htmlDocument = await _courseHtmlGetter.GetHtmlDocument(courseId, semesterId);
-            return (InternalCrawl(htmlDocument, courseId), htmlDocument.DocumentNode.InnerHtml);
+            return (
+                InternalCrawl(htmlDocument, courseId, semesterId), 
+                htmlDocument.DocumentNode.InnerHtml
+            );
         }
 
         /// <summary>
@@ -37,14 +40,14 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             return tables.Any();
         }
 
-        public Subject CrawlFromCache(string cache, string courseId)
+        public Subject CrawlFromCache(string cache, string courseId, string semesterId)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(cache);
-            return InternalCrawl(htmlDocument, courseId);
+            return InternalCrawl(htmlDocument, courseId, semesterId);
         }
 
-        private Subject InternalCrawl(HtmlDocument htmlDocument, string courseId)
+        private Subject InternalCrawl(HtmlDocument htmlDocument, string courseId, string semesterId)
         {
             if (!IsSubjectExists(htmlDocument)) return null;
 
@@ -81,7 +84,8 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
                 parallelSubject,
                 description,
                 rawSoup,
-                courseId
+                courseId,
+                semesterId
             );
         }
     }

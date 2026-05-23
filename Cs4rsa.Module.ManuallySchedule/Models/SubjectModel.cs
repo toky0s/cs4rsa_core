@@ -106,7 +106,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             ParallelSubjects = GetParallelSubjects();
             IsSpecialSubject = Subject.IsSpecialSubject;
             ClassGroupModels = Subject.ClassGroups.Select(item => new ClassGroupModel(item, IsSpecialSubject, Color)).ToList();
-            TeacherNames = subject.TeacherNames;
+            TeacherNames = subject.TeacherNames.ToList();
             StudyUnitType = subject.StudyUnitType;
             StudyType = subject.StudyType;
             Semester = subject.Semester;

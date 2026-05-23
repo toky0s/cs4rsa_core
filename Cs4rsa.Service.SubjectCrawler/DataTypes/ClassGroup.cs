@@ -15,6 +15,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public readonly string Name;
         public readonly string SubjectCode;
         public string SubjectName { get; }
+        public Subject Subject { get; }
         public HashSet<string> RegisterCodes
         {
             get
@@ -25,24 +26,15 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 
         private List<SchoolClass> _mergedSchoolClasses;
         public List<SchoolClass> SchoolClasses => _mergedSchoolClasses;
-        //{
-        //    get
-        //    {
-        //        if (_mergedSchoolClasses != null || !_mergedSchoolClasses.Any())
-        //        {
-        //            _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
-        //        }
-        //        return _mergedSchoolClasses;
-        //    }
-        //}
 
-        public ClassGroup(string name, string subjectCode, string subjectName)
+        public ClassGroup(string name, Subject subject)
         {
             _registerCodes = new HashSet<string>();
             _mergedSchoolClasses = new List<SchoolClass>();
             Name = name;
-            SubjectCode = subjectCode;
-            SubjectName = subjectName;
+            Subject = subject;
+            SubjectCode = subject.SubjectCode;
+            SubjectName = subject.Name;
         }
 
         public void AddRangeSchoolClass(IEnumerable<SchoolClass> schoolClasses)

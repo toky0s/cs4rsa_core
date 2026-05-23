@@ -26,11 +26,11 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Services.Dialogs;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -592,11 +592,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             InitFilter();
 
             #region Messengers
-            //_eventAggregator.GetEvent<SearchVmMsgs.DelSubjectMsg>().Subscribe(payload =>
-            //{
-            //    DelSubjectMsgHandler(payload);
-            //});
-
             _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(className =>
             {
                 if (className == string.Empty || className == null)
@@ -798,10 +793,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void ExecuteGotoCourseCommand(SubjectModel model)
         {
-            string semesterValue = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
-            string url = $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={model.CourseId}&timespan={semesterValue}&t=s";
+            string url = model.Subject.GetLink();
             _openInBrowser.Open(url);
-            _notificationService.SendNotification("Notification", $"Đang mở {model.SubjectName} trên trình duyệt", fromAction: "Goto course from search box");
         }
 
         private void OnSltCombiChanged(CombinationModel value)
@@ -1113,18 +1106,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // 1. Sử dụng cache và có sẵn cache trong DB.
                 if (isUseCache && !string.IsNullOrWhiteSpace(keyword.Cache))
                 {
-                    subject = _subjectCrawler.CrawlFromCache(keyword.Cache, keyword.CourseId);
+                    subject = _subjectCrawler.CrawlFromCache(keyword.Cache, keyword.CourseId, keyword.SemesterId);
                 }
                 // 2. Không sử dụng cache
                 else
                 {
                     string cache;
-                    var semester = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
-                    (subject, cache) = await _subjectCrawler.Crawl(keyword.CourseId, semester);
+                    var semesterId = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
+                    (subject, cache) = await _subjectCrawler.Crawl(keyword.CourseId, semesterId);
                     // 2.2. Cập nhật lại cache
-                    _unitOfWork.Keywords.UpdateCacheByKeywordId(keyword.KeywordId, cache);
+                    _unitOfWork.Keywords.UpdateCacheByKeywordId(keyword.KeywordId, semesterId, cache);
                     // 2.3. Cập nhật lên local
                     keyword.Cache = cache;
+                    keyword.SemesterId = semesterId;
                 }
                 if (subject is null)
                 {
@@ -1232,8 +1226,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ClassGroupModel SelectedClassGroup
         {
             get { return _selectedClassGroup; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _selectedClassGroup, value);
                 Application.Current.Dispatcher.BeginInvoke(
                     System.Windows.Threading.DispatcherPriority.Background,
@@ -1599,18 +1593,30 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public void OnShowDetailsSchoolClasses()
         {
-            var showDetailsSchoolClassesUC = new ShowDetailsSchoolClassesUC();
-            var vm = (ShowDetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
-            vm.ClassGroupModel = SelectedClassGroup;
+            //var showDetailsSchoolClassesUC = new ShowDetailsSchoolClassesUC();
+            //var vm = (DetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
+            //vm.ClassGroupModel = SelectedClassGroup;
 
-            foreach (var scm in SelectedClassGroup.NormalSchoolClassModels)
+            var SchoolClassModels = SelectedClassGroup.NormalSchoolClassModels
+                .Where(item => item.Type != SelectedClassGroup.CompulsoryClass.Type)
+                .ToImmutableArray();
+
+            _dialogService.ShowDialog(nameof(ShowDetailsSchoolClassesUC), new DialogParameters()
             {
-                if (scm.Type != SelectedClassGroup.CompulsoryClass.Type)
-                {
-                    vm.SchoolClassModels.Add(scm);
-                }
-            }
-            //_dialogService.OpenDialog(showDetailsSchoolClassesUC);
+                {"SelectedClassGroup", SelectedClassGroup},
+                {"SchoolClassModels", SchoolClassModels},
+            }, OnSelectSpecialClassPopupClosed);
+        }
+
+        private void OnSelectSpecialClassPopupClosed(IDialogResult result)
+        {
+            if (result.Result == ButtonResult.None) return;
+
+            var classGroupModel = result.Parameters.GetValue<ClassGroupModel>("ClassGroupModel");
+            var selectedSchoolClassModel = result.Parameters.GetValue<SchoolClassModel>("SelectedSchoolClassModel");
+            var schoolClassName = selectedSchoolClassModel.SchoolClassName;
+            classGroupModel.ReRenderSchedule(schoolClassName);
+            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
         }
 
         private void OnGotoCourse()

@@ -21,11 +21,12 @@ namespace Cs4rsa.Service.DisciplineCrawler
             var kwId = 1;
             for (var i = 0; i < disciplineCount; i++)
             {
-                sbDiscipline.AppendLine($"({i + 1}, '{disciplines[i].Name}'),");
+                var disciplineId = i + 1;
+                sbDiscipline.AppendLine($"({disciplineId}, '{disciplines[i].Name}'),");
                 foreach (var keyword in disciplines[i].Keywords)
                 {
                     var color = ColorGenerator.GenerateColor();
-                    sbKeyword.AppendLine($"({kwId}, '{keyword.Keyword1}', {keyword.CourseId}, '{keyword.SubjectName}', '{color}', NULL, {i + 1}),");
+                    sbKeyword.AppendLine($"({kwId}, '{keyword.Keyword1}', {keyword.CourseId}, '{keyword.SubjectName}', '{color}', NULL, {disciplineId}, '{keyword.SemesterId}'),");
                     kwId++;
                 }
             }

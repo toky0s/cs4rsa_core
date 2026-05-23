@@ -4,31 +4,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Padding="10"
-    prism:ViewModelLocator.AutoWireViewModel="True"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
+    Padding="4"
+    d:DataContext="{d:DesignInstance Type=vm:DetailsSchoolClassesViewModel }"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IsNotNullConverter x:Key="IsNotNullConverter" />
         <converter:GetTeacherNameConverter x:Key="GetTeacherNameConverter" />
     </UserControl.Resources>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Height" Value="245"></Setter>
+            <Setter Property="MaxWidth" Value="500"></Setter>
+            <Setter Property="MaxHeight" Value="500"></Setter>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ShowInTaskbar" Value="True"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock
             Grid.Row="0"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
             Text="{Binding ClassGroupModel.Name}" />
         <TextBlock
             Grid.Row="1"
-            Style="{StaticResource MaterialDesignBody2TextBlock}"
             Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="{Binding ClassGroupModel.Name, StringFormat='{}{0} '}" />
@@ -39,29 +48,42 @@
         <ListView
             Grid.Row="3"
             Margin="0,0,0,5"
+            SelectionMode="Single"
             ItemsSource="{Binding SchoolClassModels}"
             SelectedItem="{Binding SelectedSchoolClassModel}">
             <ListView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource MaterialDesignGridViewItem}" TargetType="ListViewItem">
+                <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding SchoolClassName}" Header="Tên" />
-                    <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Mã đăng ký" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Loại hình" />
-                    <GridViewColumn DisplayMemberBinding="{Binding EmptySeat}" Header="Số chỗ còn lại" />
-                    <GridViewColumn DisplayMemberBinding="{Binding Teachers, Converter={StaticResource GetTeacherNameConverter}, ConverterParameter=Không có giá trị}" Header="Tên giảng viên" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SchoolClassName}" Header="Class name" />
+                    <GridViewColumn DisplayMemberBinding="{Binding RegisterCode}" Header="Register Code" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Type}" Header="Type" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SchoolClass.EmptySeat}" Header="Remaning Seat" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SchoolClass.TeacherNames, Converter={StaticResource GetTeacherNameConverter}, ConverterParameter=-}" Header="Lecture" />
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button
-            Grid.Row="4"
-            HorizontalAlignment="Right"
-            Command="{Binding PickCommand}"
-            Content="CHỌN LỚP NÀY"
-            IsEnabled="{Binding SelectedSchoolClassModel, Converter={StaticResource IsNotNullConverter}}"
-            Style="{StaticResource MaterialDesignFlatButton}" />
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Command="{Binding OpenLinkCommand}"
+                Content="Open link"
+            />  
+            <Button
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                Command="{Binding PickCommand}"
+                Content="Select"
+                IsEnabled="{Binding SelectedSchoolClassModel, Converter={StaticResource IsNotNullConverter}}"
+            />
+        </Grid>
     </Grid>
 </UserControl>

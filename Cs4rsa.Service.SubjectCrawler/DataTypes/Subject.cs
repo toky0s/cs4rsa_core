@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-using Cs4rsa.Infrastructure.Common;
+﻿using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.Utils;
 
 using HtmlAgilityPack;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Cs4rsa.Service.SubjectCrawler.DataTypes
 {
@@ -30,6 +30,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public List<string> ParallelSubject { get; }
         public string Description { get; }
         public string CourseId { get; }
+        public string SemesterId { get; }
 
         /// <summary>
         /// Khởi tạo một Subject thông qua một Async Factory method.
@@ -49,7 +50,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         public Subject(string name, string subjectCode, string studyUnit,
                         string studyUnitType, string studyType, string semester,
                         string mustStudySubject, string parallelSubject,
-                        string description, string rawSoup, string courseId)
+                        string description, string rawSoup, string courseId,
+                        string semesterId)
         {
             TeacherNames = new HashSet<string>();
             TeacherUrls = new List<string>();
@@ -70,6 +72,8 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
             
             GetClassGroups_Optimize(rawSoup);
             IsSpecialSubject = GetIsSpecialSubject();
+            
+            SemesterId = semesterId;
         }
 
         /// <summary>
@@ -117,7 +121,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                         registerCodes.Clear();
                     }
                     classGroupName = outClassGroupName;
-                    classGroup = new ClassGroup(classGroupName, SubjectCode, Name);
+                    classGroup = new ClassGroup(classGroupName, this);
                 }
                 else if (IsSchoolClass(currNode))
                 {
@@ -370,6 +374,12 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 result.Add(matchSubject[i].Value);
             }
             return result;
+        }
+
+        public string GetLink()
+        {
+            if (string.IsNullOrWhiteSpace(SemesterId)) throw new Exception("SemesterId is null or empty.");
+            return $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={CourseId}&timespan={SemesterId}&t=s";
         }
     }
 }

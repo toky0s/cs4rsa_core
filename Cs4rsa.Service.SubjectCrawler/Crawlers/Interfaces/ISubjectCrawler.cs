@@ -12,6 +12,6 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces
         /// <param name="semesterId">Semester ID</param>
         /// <returns>Trả về thông tin môn học và HTML</returns>
         Task<(Subject, string)> Crawl(string courseId, string semesterId);
-        Subject CrawlFromCache(string cache, string courseId);
+        Subject CrawlFromCache(string cache, string courseId, string semesterId);
     }
 }

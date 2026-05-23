@@ -106,10 +106,10 @@
     <Compile Include="Dialogs\Models\ScheduleBagItemModel.cs" />
     <Compile Include="Dialogs\Models\ScheduleBagModel.cs" />
     <Compile Include="Dialogs\Models\UserSubject.cs" />
+    <Compile Include="Dialogs\ViewModels\DetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleDetailUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
-    <Compile Include="Dialogs\ViewModels\ShowDetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
     <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">

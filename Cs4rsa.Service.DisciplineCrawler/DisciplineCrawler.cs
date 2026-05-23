@@ -59,6 +59,7 @@ namespace Cs4rsa.Service.DisciplineCrawler
                         Keyword1 = keyword1,
                         CourseId = courseId,
                         SubjectName = subjectName,
+                        SemesterId = currSemesterValue
                     };
                     objDiscipline.Keywords.Add(keyword);
                 }

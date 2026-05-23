@@ -12,11 +12,11 @@ namespace Cs4rsa.WPF.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return parameter;
-            List<TeacherModel> teachers = (List<TeacherModel>)value;
+            List<string> teachers = (List<string>)value;
             return teachers.Count == 0
                     ? parameter // (1)
                     : teachers.Count == 1
-                        ? teachers[0].Name // (2)
+                        ? teachers[0] // (2)
                         : string.Join(", ", teachers); // (3)
         }
 
