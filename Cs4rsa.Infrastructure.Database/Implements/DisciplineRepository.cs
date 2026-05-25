@@ -45,7 +45,7 @@ namespace Cs4rsa.Database.Implements
             );
 
             var sb = new StringBuilder();
-            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache");
+            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache, SemesterId");
             sb.AppendLine("FROM Keywords");
             sb.AppendLine("WHERE DisciplineId = @DisciplineId");
 
@@ -66,6 +66,7 @@ namespace Cs4rsa.Database.Implements
                          SubjectName = record.GetString(3),
                          Color = record.GetString(4),
                          Cache = record.IsDBNull(5) ? null : record.GetString(5),
+                         SemesterId = record.IsDBNull(6) ? null : record.GetString(6),
                          Discipline = discipline,
                          DisciplineId = discipline.DisciplineId
                     }

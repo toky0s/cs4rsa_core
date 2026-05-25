@@ -11,7 +11,6 @@ using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Service.Conflict.DataTypes;
-using Cs4rsa.Service.Conflict.DataTypes.Enums;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
@@ -353,8 +352,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             _logger.LogInformation("User unselect a class group with name {ClassGroupName}", classGroupName);
             var removedClassGroupModel = SelectedClassGroupModels.FirstOrDefault(cg => cg.Name == classGroupName);
-            SelectedClassGroupModels.Remove(removedClassGroupModel);
-            RunScheduleValidator();
+            if (removedClassGroupModel != null)
+            {
+                removedClassGroupModel.CurrentSchoolClassModels.Clear();
+                SelectedClassGroupModels.Remove(removedClassGroupModel);
+                RunScheduleValidator();
+            }
         }
 
         bool CanExecuteUnSelectClassGroupCommand(string classGroupName)
@@ -567,15 +570,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             LoadDiscipline();
             LoadSavedSchedules();
-
-            // Xử lý sự kiện chọn SchoolClass trong một ClassGroup thuộc Special Subject
-            _eventAggregator.GetEvent<ShowDetailsSchoolClassesVmMsgs.ExitChooseMsg>().Subscribe(payload =>
-            {
-                var classGroupModel = payload.ClassGroupModel;
-                var schoolClassName = payload.SelectedSchoolClassModel.SchoolClassName;
-                classGroupModel.ReRenderSchedule(schoolClassName);
-                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
-            });
 
             ClassGroupModels = new ObservableCollection<ClassGroupModel>();
             _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
@@ -1063,6 +1057,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             catch (Exception e)
             {
+                _logger.LogError("There is an error when downloading subject {SubjectName}. Error message: {ErrorMessage}", keyword.SubjectName, e.Message);
                 // 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
                 for (var i = 0; i < SubjectModels.Count; i++)
                 {
@@ -1122,7 +1117,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
                 if (subject is null)
                 {
-                    return null;
+                    throw new ArgumentException("Subject is null");
                 }
                 else
                 {
@@ -1362,9 +1357,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 if (value.IsBelongSpecialSubject)
                 {
-                    // TODO: Haven't test yet, need to test before publish.
-                    _logger.LogInformation("User select class group {classGroupName} which belong to special subject, open details school class window", value.Name);
-                    OnShowDetailsSchoolClasses();
+                    if (value.CurrentSchoolClassModels.Count == 0)
+                    {
+                        _logger.LogInformation("User select class group {classGroupName} which belong to special subject, open details school class window", value.Name);
+                        OnShowDetailsSchoolClasses();
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User has selected school class for this class group already");
+                    }
                 }
                 else
                 {
@@ -1593,10 +1594,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public void OnShowDetailsSchoolClasses()
         {
-            //var showDetailsSchoolClassesUC = new ShowDetailsSchoolClassesUC();
-            //var vm = (DetailsSchoolClassesViewModel)showDetailsSchoolClassesUC.DataContext;
-            //vm.ClassGroupModel = SelectedClassGroup;
-
             var SchoolClassModels = SelectedClassGroup.NormalSchoolClassModels
                 .Where(item => item.Type != SelectedClassGroup.CompulsoryClass.Type)
                 .ToImmutableArray();
@@ -1616,7 +1613,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var selectedSchoolClassModel = result.Parameters.GetValue<SchoolClassModel>("SelectedSchoolClassModel");
             var schoolClassName = selectedSchoolClassModel.SchoolClassName;
             classGroupModel.ReRenderSchedule(schoolClassName);
-            _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(classGroupModel);
+            AddOrReplaceClassGroupModel(classGroupModel);
         }
 
         private void OnGotoCourse()

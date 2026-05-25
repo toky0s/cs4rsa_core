@@ -184,6 +184,8 @@
         d:Background="#2ecc71"
         x:Name="Border_ScheduleBlock"
         Padding="2"
+        BorderThickness="1"
+        BorderBrush="Black"
         ToolTipService.IsEnabled="False"
         Background="{Binding TimeBlock.Background,ElementName=root}"
         CornerRadius="6"

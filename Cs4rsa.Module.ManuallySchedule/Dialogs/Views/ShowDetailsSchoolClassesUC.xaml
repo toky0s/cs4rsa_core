@@ -16,9 +16,8 @@
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Width" Value="360"></Setter>
+            <Setter Property="Width" Value="590"></Setter>
             <Setter Property="Height" Value="245"></Setter>
-            <Setter Property="MaxWidth" Value="500"></Setter>
             <Setter Property="MaxHeight" Value="500"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>

@@ -1,9 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Cs4rsa.Infrastructure.Common;
+﻿using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
+
 using HtmlAgilityPack;
+
+using System;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Cs4rsa.Service.SubjectCrawler.Crawlers
 {
@@ -19,14 +24,60 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
         {
             _courseHtmlGetter = courseHtmlGetter;
         }
-        
+
         public async Task<(Subject, string)> Crawl(string courseId, string semesterId)
         {
             var htmlDocument = await _courseHtmlGetter.GetHtmlDocument(courseId, semesterId);
             return (
-                InternalCrawl(htmlDocument, courseId, semesterId), 
-                htmlDocument.DocumentNode.InnerHtml
+                InternalCrawl(htmlDocument, courseId, semesterId),
+                OptimizeHTMLCache(htmlDocument.DocumentNode.InnerHtml)
             );
+        }
+
+        private string OptimizeHTMLCache(string innerHtml)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml(innerHtml);
+            var styleNodes = doc.DocumentNode.SelectNodes("//style");
+            if (styleNodes != null)
+            {
+                foreach (var node in styleNodes)
+                {
+                    node.Remove(); // Xóa thẻ <style>
+                }
+            }
+            return MinifyHtml(doc.DocumentNode.OuterHtml);
+        }
+
+        public static string MinifyHtml(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html))
+                return string.Empty;
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            // Remove comment nodes
+            var comments = doc.DocumentNode.SelectNodes("//comment()");
+            if (comments != null)
+                foreach (var comment in comments.ToList())
+                    comment.Remove();
+
+            // Remove all style= attributes from every element
+            var nodesWithStyle = doc.DocumentNode.SelectNodes("//*[@style]");
+            if (nodesWithStyle != null)
+                foreach (var node in nodesWithStyle)
+                    node.Attributes["style"].Remove();
+
+            var sb = new StringBuilder();
+            using (var writer = new System.IO.StringWriter(sb))
+                doc.Save(writer);
+
+            string result = sb.ToString();
+            result = Regex.Replace(result, @">\s+<", "><");
+            result = result.Trim();
+
+            return result;
         }
 
         /// <summary>
@@ -63,7 +114,7 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             var name = htmlDocument.DocumentNode
                 .SelectSingleNode(xpathName).InnerText.SuperCleanString();
             var subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
-            var studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Split(' ')[24];
+            var studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Trim();
             var studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();
             var studyType = trTags[3].Elements("td").ToArray()[1].InnerText.Trim();
             var semester = trTags[4].Elements("td").ToArray()[1].InnerText.Trim();
