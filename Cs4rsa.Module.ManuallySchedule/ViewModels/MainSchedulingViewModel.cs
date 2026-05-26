@@ -1057,7 +1057,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             catch (Exception e)
             {
-                _logger.LogError("There is an error when downloading subject {SubjectName}. Error message: {ErrorMessage}", keyword.SubjectName, e.Message);
+                _logger.LogError("There is an error when downloading subject {SubjectName}, course id {CourseId}, semester id {SemesterID}. Error message: {ErrorMessage}", 
+                    keyword.SubjectName, 
+                    keyword.CourseId,
+                    keyword.SemesterId,
+                    e.Message
+                );
+
                 // 5. Bất kỳ lỗi nào xuất hiện trong quá trình này, thêm message lỗi vào pseudo subject và trả về null.
                 for (var i = 0; i < SubjectModels.Count; i++)
                 {
