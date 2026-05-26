@@ -69,15 +69,16 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
                 foreach (var node in nodesWithStyle)
                     node.Attributes["style"].Remove();
 
+            // Normalize text nodes: collapse all whitespace sequences to a single space
+            var textNodes = doc.DocumentNode.SelectNodes("//text()");
+            if (textNodes != null)
+                foreach (var textNode in textNodes)
+                    textNode.InnerHtml = Regex.Replace(textNode.InnerText, @"[\r\n\t]+", " ");
+
             var sb = new StringBuilder();
             using (var writer = new System.IO.StringWriter(sb))
                 doc.Save(writer);
-
-            string result = sb.ToString();
-            result = Regex.Replace(result, @">\s+<", "><");
-            result = result.Trim();
-
-            return result;
+            return sb.ToString(); 
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace Cs4rsa.Service.SubjectCrawler.Crawlers
             };
             var xpathName = xpathNames.Where(item => htmlDocument.DocumentNode.SelectSingleNode(item) != null).First();
             var name = htmlDocument.DocumentNode
-                .SelectSingleNode(xpathName).InnerText.SuperCleanString();
+                .SelectSingleNode(xpathName).InnerText.Trim();
             var subjectCode = trTags[0].Elements("td").ToArray()[1].InnerText.Trim();
             var studyUnit = trTags[1].Elements("td").ToArray()[1].GetDirectInnerText().Trim();
             var studyUnitType = trTags[2].Elements("td").ToArray()[1].InnerText.Trim();

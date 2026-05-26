@@ -21,9 +21,19 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
         /// Tên môn học. Ví dụ: "Cơ sở dữ liệu", "Lập trình hướng đối tượng", "Kỹ thuật lập trình".
         /// </summary>
         public string Name { get; }
+        /// <summary>
+        /// Mã môn
+        /// </summary>
         public string SubjectCode { get; }
         public int StudyUnit { get; }
+
+        /// <summary>
+        /// Loại ĐVHT. Ví dụ: "Tín Chỉ".
+        /// </summary>
         public string StudyUnitType { get; }
+        /// <summary>
+        /// Loại hình
+        /// </summary>
         public string StudyType { get; }
         public string Semester { get; }
         public List<string> MustStudySubject { get; }
@@ -278,10 +288,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 .Distinct();
 
             var regexSpace = new Regex(@"^ *$");
-            var locations = StringHelper
-                .SplitAndRemoveNewLine(tdTags[8].InnerText)
-                .Where(item => regexSpace.IsMatch(item) == false)
-                .ToList();
+            var locations = ExtractValuesFromHtml(tdTags[8].InnerHtml);
 
             var places = locations
                 .Distinct()
@@ -315,6 +322,33 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 registrationStatus, implementationStatus,
                 urlToSubjectDetailPage, metaData, this);
             return schoolClass;
+        }
+
+        /// <summary>
+        /// Làm sạch HTML để lấy chính xác locations
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public static List<string> ExtractValuesFromHtml(string html)
+        {
+            // Replace all HTML tag with comma
+            string stripped = Regex.Replace(html, @"<[^>]+>", ",");
+
+            // Trim leading and trailing whitespace and commas
+            string trimmed = stripped.Trim();
+
+            // Thay thế chuỗi gồm nhiều \n hoặc \t ở giữa bằng dấu phẩy
+            // (2+ ký tự newline/tab liên tiếp, có thể xen lẫn space)
+            string normalized = Regex.Replace(trimmed, @"(\s*[\n\t]\s*){2,}", ",");
+
+            // Tách theo dấu phẩy, trim từng phần, lọc rỗng
+            var values = normalized
+                .Split(',')
+                .Select(v => v.Trim())
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .ToList();
+
+            return values;
         }
 
         private string GetTeacherInfoPageUrl(string urlSubjectDetailPage)

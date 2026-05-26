@@ -16,50 +16,50 @@ using System.Threading.Tasks;
 namespace Test_SubjectCrawler
 {
     [TestClass]
-    
+
     public class SubjectCrawler_20231110
     {
-        private static ICourseHtmlGetter _mockCourseHtmlGetter; 
+        private static ICourseHtmlGetter _mockCourseHtmlGetter;
         private static ISubjectCrawler _subjectCrawler;
         private static string _baseDir;
 
         [ClassInitialize]
         public static void SetUp(TestContext context)
         {
-            _baseDir = AppDomain.CurrentDomain.BaseDirectory; 
-            _mockCourseHtmlGetter = Substitute.For<ICourseHtmlGetter>(); 
-            
+            _baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            _mockCourseHtmlGetter = Substitute.For<ICourseHtmlGetter>();
+
             var folder = "SubjectCrawler/Resources";
             // ACC 201: Nguyên Lý Kế Toán 1
             _mockCourseHtmlGetter.GetHtmlDocument("301", "83")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_ACC_201.html"))); 
-            
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_ACC_201.html")));
+
             // ACC 349: Thi Tốt Nghiệp
             _mockCourseHtmlGetter.GetHtmlDocument("999", "999")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_ACC_349.html"))); 
-            
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_ACC_349.html")));
+
             // CS 211: Lập Trình Cơ Sở
             _mockCourseHtmlGetter.GetHtmlDocument("56", "83")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_CS_211.html"))); 
-            
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_CS_211.html")));
+
             // NULL 99999
             _mockCourseHtmlGetter.GetHtmlDocument("99999", "99999")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_NULL_99999.html"))); 
-            
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_NULL_99999.html")));
+
             // CS 252: Mạng Máy Tính
             _mockCourseHtmlGetter.GetHtmlDocument("65", "75")
                 .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20231110_CS_252.html")));
 
             // ART 161:  Định Luật Xa Gần trong Đồ Họa
             _mockCourseHtmlGetter.GetHtmlDocument("1114", "93")
-                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260522_ART_161.html"))); 
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260522_ART_161.html")));
 
-            _subjectCrawler = new SubjectCrawler(_mockCourseHtmlGetter); 
+            _subjectCrawler = new SubjectCrawler(_mockCourseHtmlGetter);
         }
 
         private static HtmlDocument LoadHtmlFromResource(string folder, string fileName)
         {
-            var text = File.ReadAllText(Path.Combine(_baseDir, folder, fileName)); 
+            var text = File.ReadAllText(Path.Combine(_baseDir, folder, fileName));
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(text);
             return htmlDoc;
@@ -78,171 +78,151 @@ namespace Test_SubjectCrawler
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualSubjectName()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("Nguyên Lý Kế Toán 1", subject.Item1.Name); 
+            Assert.AreEqual("Nguyên Lý Kế Toán 1", subject.Item1.Name);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualSubjectCode()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("ACC 201", subject.Item1.SubjectCode); 
+            Assert.AreEqual("ACC 201", subject.Item1.SubjectCode);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualStudyUnit()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual(3, subject.Item1.StudyUnit); 
+            Assert.AreEqual(3, subject.Item1.StudyUnit);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualStudyUnitType()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("Tín Chỉ", subject.Item1.StudyUnitType); 
+            Assert.AreEqual("Tín Chỉ", subject.Item1.StudyUnitType);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualStudyType()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("LEC", subject.Item1.StudyType); 
+            Assert.AreEqual("LEC", subject.Item1.StudyType);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCrawl_ThenAreEqualSemester()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("Học Kỳ I", subject.Item1.Semester); 
+            Assert.AreEqual("Học Kỳ I", subject.Item1.Semester);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenMustStudySubject_ThenIsEmpty()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.IsFalse(subject.Item1.MustStudySubject.Any()); 
+            Assert.IsFalse(subject.Item1.MustStudySubject.Any());
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenParallelSubject_ThenIsEmpty()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.IsFalse(subject.Item1.ParallelSubject.Any()); 
+            Assert.IsFalse(subject.Item1.ParallelSubject.Any());
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenDescription_ThenIsEmpty()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.IsFalse(subject.Item1.Description.Any()); 
+            Assert.IsFalse(subject.Item1.Description.Any());
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenCountClassGroup_ThenEquals()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual(31, subject.Item1.ClassGroups.Count); 
+            Assert.AreEqual(31, subject.Item1.ClassGroups.Count);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenNotExists_ThenTrue()
         {
             var subject = await _subjectCrawler.Crawl("99999", "99999");
-            Assert.IsNull(subject.Item1); 
+            Assert.IsNull(subject.Item1);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenClassGroupName()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("ACC 201 A", subject.Item1.ClassGroups.First().Name); 
+            Assert.AreEqual("ACC 201 A", subject.Item1.ClassGroups.First().Name);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenSubjectName()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("Nguyên Lý Kế Toán 1", subject.Item1.ClassGroups.First().SubjectName); 
+            Assert.AreEqual("Nguyên Lý Kế Toán 1", subject.Item1.ClassGroups.First().SubjectName);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenRegisterCodeCount()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual(1, subject.Item1.ClassGroups.First().RegisterCodes.Count); 
+            Assert.AreEqual(1, subject.Item1.ClassGroups.First().RegisterCodes.Count);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenRegisterCode()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("ACC201202301001", subject.Item1.ClassGroups.First().RegisterCodes.First()); 
+            Assert.AreEqual("ACC201202301001", subject.Item1.ClassGroups.First().RegisterCodes.First());
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenStudyTimeStart()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
             var firstSchedule = subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First();
-            Assert.AreEqual(9, firstSchedule.Start.Hour); 
-            Assert.AreEqual(15, firstSchedule.Start.Minute); 
+            Assert.AreEqual(9, firstSchedule.Start.Hour);
+            Assert.AreEqual(15, firstSchedule.Start.Minute);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenStudyTimeEnd()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
             var firstSchedule = subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First();
-            Assert.AreEqual(11, firstSchedule.End.Hour); 
-            Assert.AreEqual(15, firstSchedule.End.Minute); 
+            Assert.AreEqual(11, firstSchedule.End.Hour);
+            Assert.AreEqual(15, firstSchedule.End.Minute);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenStudyTimeStartAsString()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("09:15", subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().StartAsString); 
+            Assert.AreEqual("09:15", subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().StartAsString);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenStudyTimeEndAsString()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual("11:15", subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().EndAsString); 
+            Assert.AreEqual("11:15", subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().EndAsString);
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenFirstClassGroup_ThenSession()
         {
             var subject = await _subjectCrawler.Crawl("301", "83");
-            Assert.AreEqual(Session.Morning, subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().Session); 
+            Assert.AreEqual(Session.Morning, subject.Item1.ClassGroups.First().SchoolClasses.First().Schedule.ScheduleTime[DayOfWeek.Monday].First().Session);
         }
 
         [TestMethod]
-        
+
         public async Task GivenCourseIdAndSemesterId_WhenClassGroups_ThenEmpty()
         {
             var ex = await Assert.ThrowsExceptionAsync<IndexOutOfRangeException>(async () =>
@@ -255,7 +235,6 @@ namespace Test_SubjectCrawler
         }
 
         [TestMethod]
-        
         public async Task GivenCourseIdAndSemesterId_WhenTempTeachers_ThenEmpty()
         {
             var subject = await _subjectCrawler.Crawl("56", "83");
@@ -267,27 +246,37 @@ namespace Test_SubjectCrawler
                 .TeacherNames
                 .Count;
 
-            var teachers = subject.Item1
-                .ClassGroups
-                .First(clg => clg.Name == "CS 211 CIS")
-                .SchoolClasses
-                .First(sc => sc.SchoolClassName == "CS 211 CIS1")
-                .TeacherNames;
-
-            var teachers_2 = subject.Item1
-                .ClassGroups
-                .First(clg => clg.Name == "CS 211 CIS")
-                .SchoolClasses
-                .First(sc => sc.SchoolClassName == "CS 211 CIS1")
-                .TeacherNames;
-
-            //var teacherName = subject.Item1
-            //    .ClassGroups
-            //    .First(clg => clg.Name == "CS 211 CIS")
-            //    .SchoolClasses
-            //    .First(sc => sc.SchoolClassName == "CS 211 CIS1")
-            //    .TeacherNames.ToArray();
             Assert.AreEqual(2, tempTeachersCount);
+        }
+
+        [TestMethod]
+        public async Task GivenCache_WhenCrawlFromCache_ThenAreEqualSubjectName()
+        {
+            var output = await _subjectCrawler.Crawl("1114", "93");
+            var cache = output.Item2;
+            var subject = _subjectCrawler.CrawlFromCache(cache, "1114", "93");
+            Assert.IsTrue(subject.IsSpecialSubject);
+            Assert.AreEqual("Định Luật Xa Gần trong Đồ Họa", subject.Name);
+            // Số đơn vị học tập
+            Assert.AreEqual(2, subject.StudyUnit);
+            // Loại ĐVHT
+            Assert.AreEqual("Tín Chỉ", subject.StudyUnitType);
+            // Loại hình
+            Assert.AreEqual("Studio/ LEC", subject.StudyType);
+            // Học kỳ
+            Assert.AreEqual("Học Kỳ Hè", subject.Semester);
+            // Mã môn
+            Assert.AreEqual("ART 161", subject.SubjectCode);
+            // Môn học tiên quyết
+            Assert.IsFalse(subject.MustStudySubject.Any());
+            // Môn học song hành
+            Assert.IsFalse(subject.ParallelSubject.Any());
+            // Mô tả môn học
+            Assert.IsTrue(string.IsNullOrWhiteSpace(subject.Description));
+
+            // Class group
+            Assert.AreEqual(1, subject.ClassGroups.Count);
+            Assert.AreEqual(3, subject.ClassGroups.First().SchoolClasses.Count);
         }
     }
 }

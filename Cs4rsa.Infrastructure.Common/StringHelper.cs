@@ -26,24 +26,11 @@ namespace Cs4rsa.Infrastructure.Common
             return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static IEnumerable<string> SplitAndRemoveNewLine(string text)
-        {
-            char[] separatingStrings = { '\n', '\r' };
-            return text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(item => item.Trim());
-        }
-
         public static string SuperCleanString(this string text)
         {
             char[] separatingStrings = { ' ', '\n', '\r' };
             var sliceStrings = text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
             return string.Join(" ", sliceStrings);
-        }
-
-        public static string ParseDateTime(string text)
-        {
-            text = text.Replace("\r\n", string.Empty);
-            return text.Trim();
         }
 
         public static string EncodeTo64(string toEncode)
