@@ -92,24 +92,6 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
                 .ToList();
         }
 
-
-        private SchoolClass GetSchoolClassesWithName(string schoolClassName)
-        {
-            var schoolClasses = new List<SchoolClass>();
-            foreach (var schoolClass in _schoolClasses)
-            {
-                if (schoolClass.SchoolClassName.Equals(schoolClassName))
-                    return schoolClass;
-                schoolClasses.Add(schoolClass);
-            }
-            return null;
-        }
-
-        public DayPlaceMetadata GetDayPlaceMetaData()
-        {
-            return _schoolClasses[0].DayPlaceMetaData;
-        }
-
         /// <summary>
         /// Hợp nhất Schedule của các SchoolClass trong ClassGroup này thành một.
         /// </summary>

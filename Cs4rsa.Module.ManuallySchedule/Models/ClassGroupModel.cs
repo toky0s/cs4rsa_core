@@ -25,6 +25,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
         /// </summary>
         public List<SchoolClassModel> CurrentSchoolClassModels { get; }
+
+        /// <summary>
+        /// Lưu ý: Với một số môn có nhiều mã đăng ký, sẽ có một SchoolClass chứa mã đăng ký và một SchoolClass không chứa mã đăng ký.
+        /// Thuộc tính này lưu trữ tên của SchoolClass chứa mã đăng ký.
+        /// </summary>
+        public string HasCodeSchoolClassName { get; set; }
+        
         public SchoolClassModel[] NormalSchoolClassModels;
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
@@ -129,18 +136,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             }
         }
 
-        //private string GetClassSuffix()
-        //{
-        //    return 
-        //}
-
-        //private bool EvaluateIsSpecialClassGroup(IEnumerable<SchoolClass> schoolClasses)
-        //{
-        //    return schoolClasses.Where(sc => sc.SchoolClassName != ClassGroup.Name)
-        //        .Distinct()
-        //        .Count() >= 2;
-        //}
-
         /// <summary>
         /// Kiểm tra xem nhóm lớp này có Lịch hay không. Đôi khi sau giai đoạn đăng ký tín
         /// chỉ một số class group sẽ không còn lịch hiển thị hoặc chỉ hiển thị lịch bổ sung
@@ -228,6 +223,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 .Where(schoolClass => schoolClass.SchoolClassName == schoolClassName)
                 .Select(schoolClass => new SchoolClassModel(schoolClass, this))
                 .FirstOrDefault();
+
+            HasCodeSchoolClassName = UserSelectedSchoolClass.SchoolClass.SchoolClassName;
 
             CurrentSchoolClassModels.Clear();
             CurrentSchoolClassModels.Add(CompulsoryClass);

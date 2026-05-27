@@ -311,7 +311,42 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         public DelegateCommand ImportDialogCommand { get; set; }
-        public DelegateCommand<SubjectModel> ReloadCommand { get; set; }
+        private DelegateCommand<SubjectModel> _reloadCommand;
+        public DelegateCommand<SubjectModel> ReloadCommand => _reloadCommand ?? (_reloadCommand = new DelegateCommand<SubjectModel>(ExecuteReloadCommand, CanExecuteReloadCommand));
+
+        /// <summary>
+        /// Chỉ có thể thực hiện reload nếu Subject Model bị lỗi.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private bool CanExecuteReloadCommand(SubjectModel model)
+        {
+            return model.IsError;
+        }
+
+        /// <summary>
+        /// Tải lại môn học bị lỗi.
+        /// </summary>
+        /// <param name="subjectModel">SubjectModel</param>
+        private async void ExecuteReloadCommand(SubjectModel subjectModel)
+        {
+            subjectModel.IsDownloading = true;
+            subjectModel.IsError = false;
+            subjectModel.ErrorMessage = string.Empty;
+
+            var kw = _unitOfWork.Keywords.GetKeywordBySubjectCode(subjectModel.SubjectCode);
+            var ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
+            kw.Discipline = ds;
+            if (subjectModel.UserSubject == null)
+            {
+                await OnAddSubjectAsync(kw);
+            }
+            else
+            {
+                await OnAddSubjectAsync(kw, subjectModel.UserSubject);
+            }
+        }
+
         /// <summary>
         /// Nút xoá tất cả các môn đã chọn bao gồm cả các lớp đã chọn
         /// </summary>
@@ -560,12 +595,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Commands
-
             ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
-            ReloadCommand = new DelegateCommand<SubjectModel>(OnReload);
-
             #endregion
 
             LoadDiscipline();
@@ -893,29 +925,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedDiscipline = Disciplines[0];
         }
 
-        /// <summary>
-        /// Tải lại môn học bị lỗi.
-        /// </summary>
-        /// <param name="subjectModel">SubjectModel</param>
-        private async void OnReload(SubjectModel subjectModel)
-        {
-            subjectModel.IsDownloading = true;
-            subjectModel.IsError = false;
-            subjectModel.ErrorMessage = string.Empty;
-
-            var kw = _unitOfWork.Keywords.GetKeywordBySubjectCode(subjectModel.CourseId);
-            var ds = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
-            kw.Discipline = ds;
-            if (subjectModel.UserSubject == null)
-            {
-                await OnAddSubjectAsync(kw);
-            }
-            else
-            {
-                await OnAddSubjectAsync(kw, subjectModel.UserSubject);
-            }
-        }
-
         private void LoadSearchItemSource(string text)
         {
             const int Maximum = 5;
@@ -1032,6 +1041,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _logger.LogInformation("User add subject {subjectName}", keyword.SubjectName);
             try
             {
+                //throw new Exception("Dummy Exception");
+                
                 // 1. Thực hiện tải Subject. 
                 var subjectModel = await DownloadSubject(keyword, IsUseCache);
 
@@ -1194,27 +1205,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             return true;
         }
-
-        /// <summary>
-        /// Thêm message lỗi khi quá trình tải Subject bị lỗi.
-        /// </summary>
-        /// <param name="errMsg">Error Message</param>
-        /// <param name="courseId">Course ID</param>
-        private void AddErrorToPseudoSubject(string errMsg, string courseId)
-        {
-            for (var i = 0; i < SubjectModels.Count; i++)
-            {
-                if (SubjectModels[i].CourseId.Equals(courseId))
-                {
-                    var subjectMd = SubjectModels[i];
-                    subjectMd.IsError = true;
-                    subjectMd.IsDownloading = false;
-                    subjectMd.ErrorMessage = errMsg;
-                    return;
-                }
-            }
-        }
-
 
         #region Class group view model
         #region Properties

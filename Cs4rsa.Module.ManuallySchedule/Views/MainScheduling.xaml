@@ -250,7 +250,11 @@
                                                                 Grid.Column="1" 
                                                                 FontSize="10"
                                                                 ToolTip="Re-download this subject"
-                                                                Content="Reload"></Button>
+                                                                Content="Reload"
+                                                                Command="{Binding Data.ReloadCommand, Source={StaticResource Proxy}}"
+                                                                CommandParameter="{Binding}"
+                                                                >
+                                                            </Button>
                                                         </Grid>
                                                     </Border>
                                                 </Grid>
@@ -373,11 +377,44 @@
                                 ItemsSource="{Binding ClassGroupModels}"
                                 SelectedItem="{Binding SelectedClassGroup}"
                                 SelectionMode="Single">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="ContextMenu">
+                                            <Setter.Value>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem
+                                                        CommandParameter="{Binding}"
+                                                        Header="Select class..." />
+                                                </ContextMenu>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border>
                                             <Grid>
-                                                <TextBlock Text="{Binding Name}" />
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                    <ColumnDefinition IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
+                                                    <ColumnDefinition IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock 
+                                                    Text="{Binding Name}" 
+                                                    Grid.Column="0"/>
+                                                <TextBlock 
+                                                    Visibility="{Binding IsSpecialClassGroup, Converter={StaticResource BoolToVis}}"
+                                                    Text=" → " 
+                                                    FontSize="13" 
+                                                    Foreground="Gray"
+                                                    Grid.Column="1"></TextBlock>
+                                                <TextBlock 
+                                                    Visibility="{Binding IsSpecialClassGroup, Converter={StaticResource BoolToVis}}"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="11" 
+                                                    Foreground="Gray"
+                                                    Text="{Binding HasCodeSchoolClassName, Mode=OneWay}" 
+                                                    Grid.Column="2"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
