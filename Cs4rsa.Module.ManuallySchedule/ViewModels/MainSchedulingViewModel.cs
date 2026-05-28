@@ -18,8 +18,6 @@ using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 using Cs4rsa.UI.ScheduleTable;
 
-using MaterialDesignThemes.Wpf;
-
 using Microsoft.Extensions.Logging;
 
 using Prism.Commands;
@@ -47,8 +45,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private List<Discipline> _searchDisciplines;
         private List<Keyword> _searchKeywords;
         #endregion
-
-        #region Commands
 
         #region Commands in Store tab in search box
         private DelegateCommand<UserSchedule> _shareCommand;
@@ -310,7 +306,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
-        public DelegateCommand ImportDialogCommand { get; set; }
         private DelegateCommand<SubjectModel> _reloadCommand;
         public DelegateCommand<SubjectModel> ReloadCommand => _reloadCommand ?? (_reloadCommand = new DelegateCommand<SubjectModel>(ExecuteReloadCommand, CanExecuteReloadCommand));
 
@@ -321,7 +316,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <returns></returns>
         private bool CanExecuteReloadCommand(SubjectModel model)
         {
-            return model.IsError;
+            return true;
         }
 
         /// <summary>
@@ -399,7 +394,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             return true;
         }
-        #endregion
 
         #region Properties
         public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; }
@@ -408,12 +402,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
         public ObservableCollection<WarningModel> WarningModels { get; set; }
-        private string fieldName;
-        public string PropertyName
-        {
-            get { return fieldName; }
-            set { SetProperty(ref fieldName, value); }
-        }
 
         /// <summary>
         /// Combination Models which was saved in the Store.
@@ -528,7 +516,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
-        private readonly ISnackbarMessageQueue _snackbarMessageQueue;
         private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
         private readonly INotificationService _notificationService;
@@ -552,7 +539,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IUnitOfWork unitOfWork,
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
-            ISnackbarMessageQueue snackbarMessageQueue,
             ILogger<MainSchedulingViewModel> logger,
             INotificationService notificationsService,
             IDialogService dialogService,
@@ -564,7 +550,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _subjectCrawler = subjectCrawler;
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
-            _snackbarMessageQueue = snackbarMessageQueue;
             _dialogService = dialogService;
             _eventAggregator = eventAggregator;
             _logger = logger;
@@ -595,7 +580,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Commands
-            ImportDialogCommand = new DelegateCommand(OpenScheduleBagDialog);
             DeleteAllCommand = new DelegateCommand(OnDeleteAll, () => SubjectModels.Any());
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             #endregion
@@ -646,9 +630,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             #endregion
 
-            DeleteChooseCommand = new DelegateCommand(OnDelete, () => _selectedClassGroupModel != null);
-
-            CopyCodeCommand = new DelegateCommand(OnCopyCode);
             OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
@@ -791,8 +772,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 foreach (var item in SubjectModels)
                 {
                     item.SelectedClassGroupName = null;
+                    item.ClassGroupModels.ForEach(c => c.ClearSelectedSchoolClass());
                 }
-                CleanDays();
+                CleanDays();    
+                SelectedClassGroup = null;
             }
 
             UpdateConflicts();
@@ -969,14 +952,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             );
         }
 
-        private async void OpenScheduleBagDialog()
-        {
-            var scheduleBag = new ScheduleBag();
-            var vm = (ScheduleBagViewModel)scheduleBag.DataContext;
-            //_dialogService.OpenDialog(scheduleBag);
-            //await vm.LoadScheduleSession();
-        }
-
         private void InsertPseudoSubject(Keyword keyword)
         {
             var pseudoSubjectModel = new SubjectModel(
@@ -1086,6 +1061,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         subjectMd.ErrorMessage = e.Message;
                     }
                 }
+
                 return null;
             }
         }
@@ -1165,14 +1141,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 if (IsAlreadyDownloaded(courseId))
                 {
-                    _snackbarMessageQueue.Enqueue("Môn này đã được tải");
+                    //_snackbarMessageQueue.Enqueue("Môn này đã được tải");
                     return;
                 }
 
                 var keyword = _unitOfWork.Keywords.GetByCourseId(courseId);
                 if (keyword == null)
                 {
-                    _snackbarMessageQueue.Enqueue($"Không tồn tại {courseId}");
+                    //_snackbarMessageQueue.Enqueue($"Không tồn tại {courseId}");
                     return;
                 }
 
@@ -1181,7 +1157,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             else
             {
-                _snackbarMessageQueue.Enqueue("Sai đường dẫn");
+                //_snackbarMessageQueue.Enqueue("Sai đường dẫn");
             }
         }
 
@@ -1626,17 +1602,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public ObservableCollection<ClassGroupModel> SelectedClassGroupModels { get; set; }
 
-        private ClassGroupModel _selectedClassGroupModel;
-        public ClassGroupModel SelectedClassGroupModel
-        {
-            get => _selectedClassGroupModel;
-            set
-            {
-                SetProperty(ref _selectedClassGroupModel, value);
-                DeleteChooseCommand.RaiseCanExecuteChanged();
-            }
-        }
-
         public ObservableCollection<Conflict> ConflictCollection { get; set; }
 
         private Conflict _selectedConflict;
@@ -1652,8 +1617,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #region Commands
         public DelegateCommand OpenShareStringWindowCommand { get; set; }
         public DelegateCommand DeleteChooseCommand { get; set; }
-
-        public DelegateCommand CopyCodeCommand { get; set; }
 
         private DelegateCommand<WarningModel> _solveConflictCommand;
         public DelegateCommand<WarningModel> SolveConflictCommand =>
@@ -1735,37 +1698,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             return true;
         }
         #endregion
-
-        /// <summary>
-        /// Sao chép mã môn
-        /// </summary>
-        private void OnCopyCode()
-        {
-            if (SelectedClassGroupModel.RegisterCodes.Count > 0)
-            {
-                var registerCode = SelectedClassGroupModel.RegisterCodes.First();
-                Clipboard.SetData(DataFormats.Text, registerCode);
-                _notificationService.SendNotification("Sao chép mã đăng ký", $"Đã sao chép mã đăng ký {registerCode} vào clipboard", "CopyRegisterCode");
-            }
-            else
-            {
-                _notificationService.SendNotification("Sao chép mã đăng ký", $"Lớp {SelectedClassGroupModel.Name} không có mã đăng ký để sao chép", "CopyRegisterCode");
-            }
-        }
-
-        private void OnDelete()
-        {
-            SelectedClassGroup = null;
-            foreach (var scm in _selectedClassGroupModel.CurrentSchoolClassModels)
-            {
-                RemoveScheduleItem(TimeBlockGroupID.GenerateId(scm.SubjectCode));
-            }
-
-            SelectedClassGroupModels.Remove(_selectedClassGroupModel);
-            DeleteAllChooseCommand.RaiseCanExecuteChanged();
-            DeleteChooseCommand.RaiseCanExecuteChanged();
-            UpdateConflicts();
-        }
 
         private void OnOpenShareStringWindow()
         {

@@ -20,7 +20,7 @@
             <Setter Property="Height" Value="245"></Setter>
             <Setter Property="MaxHeight" Value="500"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
-            <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
+            <Setter Property="ResizeMode" Value="CanResize"/>
             <Setter Property="ShowInTaskbar" Value="True"/>
         </Style>
     </prism:Dialog.WindowStyle>

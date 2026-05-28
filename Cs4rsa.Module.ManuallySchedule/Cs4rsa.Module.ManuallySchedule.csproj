@@ -34,12 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MaterialDesignColors, Version=2.1.4.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.2.1.4\lib\net462\MaterialDesignColors.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=4.9.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.4.9.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.7\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -115,9 +109,6 @@
     <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">
       <DependentUpon>SaveSessionUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Views\ScheduleBag.xaml.cs">
-      <DependentUpon>ScheduleBag.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Views\ScheduleDetailUC.xaml.cs">
       <DependentUpon>ScheduleDetailUC.xaml</DependentUpon>
     </Compile>
@@ -132,9 +123,6 @@
     </Compile>
     <Compile Include="Dialogs\Views\SolveConflictUC.xaml.cs">
       <DependentUpon>SolveConflictUC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Views\YesNoUc.xaml.cs">
-      <DependentUpon>YesNoUc.xaml</DependentUpon>
     </Compile>
     <Compile Include="Events\ChoosedVmMsgs.cs" />
     <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
@@ -164,7 +152,6 @@
     <Compile Include="Utils\ValidateUserSchedule.cs" />
     <Compile Include="Services\UpdateConflict.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
-    <Compile Include="Dialogs\ViewModels\ScheduleBagViewModel.cs" />
     <Compile Include="ViewModels\NotificationItemViewModel.cs" />
     <Compile Include="Views\MainScheduling.xaml.cs">
       <DependentUpon>MainScheduling.xaml</DependentUpon>
@@ -177,10 +164,6 @@
     <Page Include="Dialogs\Views\SaveSessionUC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Views\ScheduleBag.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Views\ScheduleDetailUC.xaml">
       <SubType>Designer</SubType>
@@ -202,10 +185,6 @@
     <Page Include="Dialogs\Views\SolveConflictUC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\Views\YesNoUc.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainScheduling.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -293,11 +272,4 @@
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets'))" />
-  </Target>
 </Project>

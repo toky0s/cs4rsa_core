@@ -1,6 +1,8 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
+using Prism.Mvvm;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +20,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
     /// - Thêm Color cho các thành phần phân cấp của ClassGroupModel
     /// bao gồm SchoolClassModel và các thành phần khác.
     /// </summary>
-    public class ClassGroupModel: IEquatable<ClassGroupModel>
+    public class ClassGroupModel: BindableBase, IEquatable<ClassGroupModel>
     {
         /// <summary>
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
@@ -30,8 +32,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
         /// Lưu ý: Với một số môn có nhiều mã đăng ký, sẽ có một SchoolClass chứa mã đăng ký và một SchoolClass không chứa mã đăng ký.
         /// Thuộc tính này lưu trữ tên của SchoolClass chứa mã đăng ký.
         /// </summary>
-        public string HasCodeSchoolClassName { get; set; }
-        
+        private string _hasCodeSchoolClassName;
+        public string HasCodeSchoolClassName
+        {
+            get { return _hasCodeSchoolClassName; }
+            set { SetProperty(ref _hasCodeSchoolClassName, value); }
+        }
+
         public SchoolClassModel[] NormalSchoolClassModels;
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
@@ -230,6 +237,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             CurrentSchoolClassModels.Add(CompulsoryClass);
             CurrentSchoolClassModels.Add(UserSelectedSchoolClass);
             Schedule = ClassGroup.GetSchedule(CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
+        }
+
+        public void ClearSelectedSchoolClass()
+        {
+            HasCodeSchoolClassName = null;
+            CurrentSchoolClassModels.Clear();
         }
 
         public bool Equals(ClassGroupModel other)

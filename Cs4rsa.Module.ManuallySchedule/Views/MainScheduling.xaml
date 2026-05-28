@@ -18,9 +18,10 @@
     d:Height="670"
     d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    >
     <UserControl.Resources>
-
         <ResourceDictionary>
             <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
             <cvt:GreaterThanZeroConverter x:Key="GreaterZero"></cvt:GreaterThanZeroConverter>
@@ -31,7 +32,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -370,7 +370,6 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <ListBox
                                 Grid.Row="0"
@@ -383,7 +382,7 @@
                                             <Setter.Value>
                                                 <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                                     <MenuItem
-                                                        CommandParameter="{Binding}"
+                                                        Command="{Binding Data.ShowDetailsSchoolClassesCommand, Source={StaticResource Proxy}}"
                                                         Header="Select class..." />
                                                 </ContextMenu>
                                             </Setter.Value>
@@ -396,33 +395,50 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition></ColumnDefinition>
-                                                    <ColumnDefinition IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
-                                                    <ColumnDefinition IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
+                                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                    <ColumnDefinition Width="Auto" IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock 
                                                     Text="{Binding Name}" 
                                                     Grid.Column="0"/>
                                                 <TextBlock 
-                                                    Visibility="{Binding IsSpecialClassGroup, Converter={StaticResource BoolToVis}}"
-                                                    Text=" → " 
-                                                    FontSize="13" 
+                                                    VerticalAlignment="Center"
+                                                    FontSize="11" 
                                                     Foreground="Gray"
-                                                    Grid.Column="1"></TextBlock>
+                                                    Grid.Column="1" Text=" → ">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding HasCodeSchoolClassName}" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
                                                 <TextBlock 
-                                                    Visibility="{Binding IsSpecialClassGroup, Converter={StaticResource BoolToVis}}"
                                                     VerticalAlignment="Center"
                                                     FontSize="11" 
                                                     Foreground="Gray"
                                                     Text="{Binding HasCodeSchoolClassName, Mode=OneWay}" 
-                                                    Grid.Column="2"/>
+                                                    Grid.Column="2">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding HasCodeSchoolClassName}" Value="{x:Null}">
+                                                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                            <StackPanel Grid.Row="1" HorizontalAlignment="Right">
-                                <!--<Button Command="{Binding DeleteAllChooseCommand}" Content="Delete All" />-->
-                            </StackPanel>
                         </Grid>
                     </Border>
                 </TabItem>

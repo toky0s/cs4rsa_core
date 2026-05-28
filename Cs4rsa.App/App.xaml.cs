@@ -75,7 +75,7 @@ namespace Cs4rsa.App
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            
+
         }
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -137,7 +137,7 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<IDisciplineHtmlGetter, DisciplineHtmlGetter>();
             containerRegistry.RegisterSingleton<ICourseCrawler, CourseCrawler>();
             containerRegistry.RegisterSingleton<DisciplineCrawler>();
-            
+
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
@@ -155,22 +155,20 @@ namespace Cs4rsa.App
 
         protected override Window CreateShell()
         {
-            RawSql rawSql = Container.Resolve<RawSql>();
-            IUnitOfWork unitOfWork = Container.Resolve<IUnitOfWork>();
-            DisciplineCrawler disciplineCrawler = Container.Resolve<DisciplineCrawler>();
             IFolderManager folderManager = Container.Resolve<IFolderManager>();
-            ICourseCrawler courseCrawler = Container.Resolve<ICourseCrawler>();
-
-            courseCrawler.GetInfo(out string yearInfo, out string yearValue, out string semesterInfo, out string semesterValue);
             folderManager.CreateFoldersAtStartUp();
-            List<Discipline> disciplines = disciplineCrawler.GetDisciplineAndKeyword(semesterValue);
 
             var dbPath = Cs4rsa.App.Properties.Resources.DbPath;
             if (!File.Exists(dbPath))
             {
-               
-                rawSql.CreateDbIfNotExist(dbPath, Cs4rsa.App.Properties.Resources.MigratePath);
+                RawSql rawSql = Container.Resolve<RawSql>();
+                IUnitOfWork unitOfWork = Container.Resolve<IUnitOfWork>();
+                ICourseCrawler courseCrawler = Container.Resolve<ICourseCrawler>();
+                DisciplineCrawler disciplineCrawler = Container.Resolve<DisciplineCrawler>();
 
+                rawSql.CreateDbIfNotExist(dbPath, Cs4rsa.App.Properties.Resources.MigratePath);
+                courseCrawler.GetInfo(out string yearInfo, out string yearValue, out string semesterInfo, out string semesterValue);
+                List<Discipline> disciplines = disciplineCrawler.GetDisciplineAndKeyword(semesterValue);
                 // Seed Settings
                 unitOfWork.Settings.InsertSemesterSetting(yearInfo, yearValue, semesterInfo, semesterValue);
                 string sql = BulkInsertDisciplines.GetBulkInsertSql(disciplines);
