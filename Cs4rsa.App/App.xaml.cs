@@ -175,12 +175,16 @@ namespace Cs4rsa.App
                 rawSql.ExecNonQuery(sql);
             }
 
-            /**
+             /**
              * Don't forget to remove the StartupUri property from the PrismApplication tag. 
              * Otherwise, you will end up with two window instances.
              */
             var w = Container.Resolve<MainWindow>();
             // https://prismlibrary.github.io/docs/wpf/dialog-service.html
+
+            // Đăng ký MainWindow làm owner để toast bám vào cửa sổ
+            w.Loaded += (a, b) =>
+                Cs4rsa.Module.Shared.ToastService.Instance.SetOwner(Application.Current.MainWindow);
 
             return w;
         }

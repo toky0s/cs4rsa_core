@@ -152,7 +152,6 @@
     <Compile Include="Utils\ValidateUserSchedule.cs" />
     <Compile Include="Services\UpdateConflict.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
-    <Compile Include="ViewModels\NotificationItemViewModel.cs" />
     <Compile Include="Views\MainScheduling.xaml.cs">
       <DependentUpon>MainScheduling.xaml</DependentUpon>
     </Compile>

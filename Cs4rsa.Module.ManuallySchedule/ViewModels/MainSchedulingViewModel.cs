@@ -10,9 +10,9 @@ using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
-using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
@@ -127,7 +127,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     else
                     {
                         UserSchedules.Remove(userSchedule);
-                        _notificationService.SendNotification("Delete schedule", $"Schedule {userSchedule.Name} has been deleted", fromAction: "Delete user schedule");
+                        ToastService.Instance.Info("Delete schedule", $"Schedule {userSchedule.Name} has been deleted");
 
                     }
                 }
@@ -161,7 +161,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SubjectModels.Remove(sm);
             SelectedSubject = null;
             SelectedSubjectModel = null;
-            _notificationService.SendNotification("Notification", "Đã xoá môn " + sm.SubjectName, fromAction: "Delete subject from search box");
+            ToastService.Instance.Info("Notification", "Đã xoá môn " + sm.SubjectName);
         }
 
         public DelegateCommand<SubjectModel> GotoCourseCommand { get; set; }
@@ -518,7 +518,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly IOpenInBrowser _openInBrowser;
         private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
-        private readonly INotificationService _notificationService;
         private readonly IScheduleValidator _scheduleValidator;
         private readonly IDialogService _dialogService;
         private readonly ITimeBlockGenerator _timeBlockGenerator;
@@ -540,7 +539,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ISubjectCrawler subjectCrawler,
             IOpenInBrowser openInBrowser,
             ILogger<MainSchedulingViewModel> logger,
-            INotificationService notificationsService,
             IDialogService dialogService,
             IScheduleValidator scheduleValidator,
             ITimeBlockGenerator timeBlockGenerator
@@ -553,7 +551,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _dialogService = dialogService;
             _eventAggregator = eventAggregator;
             _logger = logger;
-            _notificationService = notificationsService;
             _scheduleValidator = scheduleValidator;
             _timeBlockGenerator = timeBlockGenerator;
             #endregion
@@ -945,10 +942,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             DeleteAllCommand.RaiseCanExecuteChanged();
             AddCommand.RaiseCanExecuteChanged();
-            _notificationService.SendNotification(
+            ToastService.Instance.Info(
                 "Notification",
-                "Đã xoá tất cả môn học",
-                fromAction: "Delete all subject from search box"
+                "Đã xoá tất cả môn học"
             );
         }
 

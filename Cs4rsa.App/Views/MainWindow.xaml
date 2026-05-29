@@ -48,29 +48,10 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <!--  Nội dung chính  -->
             <Border Grid.Column="0">
                 <ContentControl prism:RegionManager.RegionName="{x:Static info:RegionInfo.Manual}" />
-            </Border>
-            <GridSplitter
-                Grid.Column="1"
-                Width="4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Stretch" />
-            <Border Grid.Column="2">
-                <TabControl>
-                    <TabItem Header="Notifications">
-                        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding NotificationItems}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <uc:NotificationItem Notification="{Binding}" />
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </TabItem>
-                </TabControl>
             </Border>
         </Grid>
     </DockPanel>
