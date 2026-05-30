@@ -19,11 +19,12 @@ namespace Cs4rsa.Module.Shared
         private ToastService() { }
 
         // ── Config ───────────────────────────────────────────────────────────
-        private const int DisplayMs = 1000;
+        private const int DisplayMs = 2000;
         private const double ToastGap = 8;
         private const double MarginRight = 16;
-        private const double MarginBottom = 48;
+        private const double MarginBottom = 32;
         private const double ToastWidth = 320; // Khớp với MaxWidth trong XAML
+        private const double ToastHeight = 75; // Khớp với MaxWidth trong XAML
 
         // ── State ────────────────────────────────────────────────────────────
         private readonly List<ToastNotification> _visible = new List<ToastNotification>();
@@ -112,10 +113,9 @@ namespace Cs4rsa.Module.Shared
 
             // Dùng ToastWidth cố định thay vì DesiredSize.Width (chưa render = 0)
             // ToastHeight ước tính cho lần đầu, sau Show() ActualHeight sẽ đúng
-            double estimatedHeight = 60;
 
             toast.Left = baseRight - ToastWidth - MarginRight;
-            toast.Top = baseBottom - MarginBottom - usedHeight - estimatedHeight;
+            toast.Top = baseBottom - MarginBottom - usedHeight - ToastHeight;
         }
 
         private void ReflowToasts()
@@ -130,8 +130,8 @@ namespace Cs4rsa.Module.Shared
             {
                 var t = _visible[i];
                 t.Left = baseRight - ToastWidth - MarginRight;
-                t.Top = baseBottom - MarginBottom - usedHeight - t.ActualHeight;
-                usedHeight += t.ActualHeight + ToastGap;
+                t.Top = baseBottom - MarginBottom - usedHeight - ToastHeight;
+                usedHeight += ToastHeight + ToastGap;
             }
         }
     }
