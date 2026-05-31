@@ -10,23 +10,23 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
     xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     Name="root"
-    d:Width="800"
-    d:Height="670"
     d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel}"
+    d:Height="670"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    >
+    mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
-            <cvt:GreaterThanZeroConverter x:Key="GreaterZero"></cvt:GreaterThanZeroConverter>
+            <cvt:GreaterThanZeroConverter x:Key="GreaterZero" />
             <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
             <cvt:StringListJoinConverter x:Key="JoinString" />
+            <cvt:HalfHourTimeConverter x:Key="HalfHourTime" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -37,9 +37,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*" />
+            <ColumnDefinition Width="30*" d:Width="400" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="100*" />
+            <ColumnDefinition Width="100*" d:Width="800" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="30*" d:Width="400" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
@@ -129,7 +131,8 @@
                                         Grid.Row="0"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding SubjectModels}"
-                                        SelectedItem="{Binding SelectedSubjectModel}">
+                                        SelectedItem="{Binding SelectedSubjectModel}"
+                                        SelectionChanged="ListBox_SelectionChanged">
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="ListBoxItem">
                                                 <Style.Triggers>
@@ -169,92 +172,92 @@
                                                         </ContextMenu>
                                                     </Setter.Value>
                                                 </Setter>
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="*"/>
-                                                        <RowDefinition Height="Auto" IsEnabled="{Binding IsError}"/>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="Auto" IsEnabled="{Binding IsError}" />
                                                     </Grid.RowDefinitions>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!--Subject UI-->
-                                                    <Border Grid.Column="0" Grid.Row="0">
-                                                        <Grid>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto"/>
-                                                                <RowDefinition Height="*"/>
-                                                                <RowDefinition Height="Auto" IsEnabled="{Binding IsError}"/>
-                                                            </Grid.RowDefinitions>
-                                                            <Border Grid.Row="0">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <Ellipse
-                                                                        Width="8"
-                                                                        Height="8"
-                                                                        Margin="0,0,4,0"
-                                                                        Fill="{Binding Color}" />
-                                                                    <TextBlock>
-                                                                        <Run Text="{Binding SubjectCode}" FontSize="13"></Run>
-                                                                        <Run Text="→" FontSize="13" Foreground="Gray"></Run>
-                                                                        <Run Text="{Binding SelectedClassGroupName, TargetNullValue=Unselected, FallbackValue=Unselected}" 
-                                                                             FontSize="10"
-                                                                             FontStyle="Italic"
-                                                                             Foreground="Gray"></Run>
-                                                                    </TextBlock>
-                                                                </StackPanel>
-                                                            </Border>
-                                                            <Border Grid.Row="1">
-                                                                <Grid>
-                                                                    <TextBlock Text="{Binding SubjectName}"/>
-                                                                </Grid>
-                                                            </Border>
-                                                            
+                                                    <!--  Subject UI  -->
+                                                    <Grid Grid.Row="0" Grid.Column="0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Ellipse
+                                                                Grid.Column="0"
+                                                                Width="8"
+                                                                Height="8"
+                                                                Margin="0,0,4,0"
+                                                                Fill="{Binding Color}" />
+                                                            <TextBlock Grid.Column="1" TextWrapping="WrapWithOverflow">
+                                                                <Run FontSize="13" Text="{Binding SubjectCode}" />
+                                                                <Run
+                                                                    FontSize="13"
+                                                                    Foreground="Gray"
+                                                                    Text="→" />
+                                                                <Run
+                                                                    FontSize="10"
+                                                                    FontStyle="Italic"
+                                                                    Foreground="Gray"
+                                                                    Text="{Binding SelectedClassGroupName, TargetNullValue=Unselected, FallbackValue=Unselected}" />
+                                                            </TextBlock>
                                                         </Grid>
-                                                    </Border>
+                                                        <Grid Grid.Row="1">
+                                                            <TextBlock Text="{Binding SubjectName}" TextWrapping="WrapWithOverflow" />
+                                                        </Grid>
 
-                                                    <!--Xoá subject-->
+                                                    </Grid>
+
+                                                    <!--  Xoá subject  -->
                                                     <Button
                                                         Grid.Column="1"
                                                         Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                                         CommandParameter="{Binding}"
+                                                        Content="🗑️"
+                                                        Foreground="DimGray"
                                                         Style="{StaticResource IconButtonStyle}"
                                                         ToolTip="Delete"
-                                                        Foreground="DimGray"
-                                                        Content="🗑️"
-                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
-                                                    </Button>
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}" />
 
                                                     <Border
-                                                        Margin="0 4 0 0"
-                                                        Grid.ColumnSpan="2" 
-                                                        Grid.Row="1" 
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="2"
+                                                        Margin="0,4,0,0"
                                                         Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition></ColumnDefinition>
-                                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                                <ColumnDefinition />
+                                                                <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock 
+                                                            <TextBlock
                                                                 Grid.Column="0"
-                                                                Text="There is an error!"
-                                                                ToolTip="{Binding ErrorMessage}"
-                                                                FontSize="10" 
-                                                                Foreground="Red"/>
-
-                                                            <Button 
-                                                                Grid.Column="1" 
                                                                 FontSize="10"
-                                                                ToolTip="Re-download this subject"
-                                                                Content="Reload"
+                                                                Foreground="Red"
+                                                                Text="There is an error!"
+                                                                ToolTip="{Binding ErrorMessage}" />
+
+                                                            <Button
+                                                                Grid.Column="1"
                                                                 Command="{Binding Data.ReloadCommand, Source={StaticResource Proxy}}"
                                                                 CommandParameter="{Binding}"
-                                                                >
-                                                            </Button>
+                                                                Content="Reload"
+                                                                FontSize="10"
+                                                                ToolTip="Re-download this subject" />
                                                         </Grid>
                                                     </Border>
                                                 </Grid>
@@ -270,44 +273,56 @@
                     </Border>
                 </TabItem>
                 <TabItem Header="Store">
-                    <ListBox ItemsSource="{Binding UserSchedules}" HorizontalContentAlignment="Stretch">
+                    <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding UserSchedules}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition></RowDefinition>
-                                        <RowDefinition></RowDefinition>
-                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="{Binding Name}" FontSize="13" FontWeight="DemiBold"></TextBlock>
-                                    <TextBlock Grid.Row="1" Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" FontSize="10"></TextBlock>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        FontSize="13"
+                                        FontWeight="DemiBold"
+                                        Text="{Binding Name}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        FontSize="10"
+                                        Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
                                     <Grid Grid.Row="2">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0"
-                                                Style="{StaticResource IconButtonStyle}"
-                                                HorizontalAlignment="Left"
-                                                Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}" 
-                                                CommandParameter="{Binding}"
-                                                ToolTip="Delete"
-                                                Foreground="DimGray"
-                                                Content="🗑️"
-                                                Margin="0 0 4 0">
-                                        </Button>
-                                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                                        <Button
+                                            Grid.Column="0"
+                                            Margin="0,0,4,0"
+                                            HorizontalAlignment="Left"
+                                            Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
+                                            CommandParameter="{Binding}"
+                                            Content="🗑️"
+                                            Foreground="DimGray"
+                                            Style="{StaticResource IconButtonStyle}"
+                                            ToolTip="Delete" />
+                                        <StackPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal">
                                             <Button
+                                                Margin="0,0,4,0"
+                                                BorderThickness="0"
                                                 Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
-                                                Margin="0 0 4 0"
-                                                ToolTip="Share"
-                                                Foreground="Green"
-                                                BorderThickness="0"
                                                 Content="🔗"
-                                                Style="{StaticResource IconButtonStyle}">
-                                            </Button>
-                                            <Button Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}" CommandParameter="{Binding}" Content="Load..."></Button>
+                                                Foreground="Green"
+                                                Style="{StaticResource IconButtonStyle}"
+                                                ToolTip="Share" />
+                                            <Button
+                                                Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Load..." />
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
@@ -318,17 +333,20 @@
                 <TabItem Header="Quick import">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="From shared code" Grid.Row="0"></TextBlock>
+                        <TextBlock Grid.Row="0" Text="From shared code" />
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Margin="0 0 4 0" uihelper:TextBoxHelper.Placeholder="Enter your shared code..."></TextBox>
-                            <Button Grid.Column="1" Content="Load..."></Button>
+                            <TextBox
+                                Grid.Column="0"
+                                Margin="0,0,4,0"
+                                uihelper:TextBoxHelper.Placeholder="Enter your shared code..." />
+                            <Button Grid.Column="1" Content="Load..." />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -369,73 +387,94 @@
                     <Border>
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
+                            <ToolBarTray Grid.Row="0">
+                                <ToolBar>
+                                    <Menu>
+                                        <MenuItem Header="Sort">
+                                            <MenuItem Header="Default" />
+                                            <MenuItem Header="Name" />
+                                            <MenuItem Header="Seat" />
+                                        </MenuItem>
+                                    </Menu>
+                                </ToolBar>
+                            </ToolBarTray>
                             <ListBox
-                                Grid.Row="0"
+                                x:Name="ListBox_SelectedClassGroupModels"
+                                Grid.Row="1"
                                 ItemsSource="{Binding ClassGroupModels}"
                                 SelectedItem="{Binding SelectedClassGroup}"
                                 SelectionMode="Single">
                                 <ListBox.ItemContainerStyle>
                                     <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                         <Setter Property="ContextMenu">
                                             <Setter.Value>
                                                 <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                                    <MenuItem
-                                                        Command="{Binding Data.ShowDetailsSchoolClassesCommand, Source={StaticResource Proxy}}"
-                                                        Header="Select class..." />
+                                                    <MenuItem Command="{Binding Data.ShowDetailsSchoolClassesCommand, Source={StaticResource Proxy}}" Header="Select class..." />
                                                 </ContextMenu>
                                             </Setter.Value>
                                         </Setter>
                                     </Style>
                                 </ListBox.ItemContainerStyle>
+
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Border>
-                                            <Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                                    <ColumnDefinition Width="Auto" IsEnabled="{Binding IsSpecialClassGroup}"></ColumnDefinition>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" IsEnabled="{Binding IsSpecialClassGroup}" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock 
-                                                    Text="{Binding Name}" 
-                                                    Grid.Column="0"/>
-                                                <TextBlock 
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                                                <TextBlock
+                                                    Grid.Column="1"
                                                     VerticalAlignment="Center"
-                                                    FontSize="11" 
+                                                    FontSize="11"
                                                     Foreground="Gray"
-                                                    Grid.Column="1" Text=" → ">
+                                                    Text=" → ">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                            <Setter Property="Visibility" Value="Visible" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding HasCodeSchoolClassName}" Value="{x:Null}">
-                                                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
-                                                <TextBlock 
+                                                <TextBlock
+                                                    Grid.Column="2"
                                                     VerticalAlignment="Center"
-                                                    FontSize="11" 
+                                                    FontSize="11"
                                                     Foreground="Gray"
-                                                    Text="{Binding HasCodeSchoolClassName, Mode=OneWay}" 
-                                                    Grid.Column="2">
+                                                    Text="{Binding HasCodeSchoolClassName, Mode=OneWay}">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                                            <Setter Property="Visibility" Value="Visible" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding HasCodeSchoolClassName}" Value="{x:Null}">
-                                                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </TextBlock.Style>
                                                 </TextBlock>
                                             </Grid>
-                                        </Border>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                FontSize="10"
+                                                Text="{Binding EmptySeat, StringFormat={}{0} Seats}" />
+                                        </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
@@ -505,8 +544,8 @@
                     <TabItem>
                         <TabItem.Header>
                             <TextBlock>
-                                <Run Text="Selected classes"></Run>
-                                <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}"></Run>
+                                <Run Text="Selected classes" />
+                                <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}" />
                             </TextBlock>
                         </TabItem.Header>
                         <Grid>
@@ -516,14 +555,14 @@
                             </Grid.RowDefinitions>
                             <DataGrid
                                 Name="DataGrid_SelectedClassGroups"
-                                PreviewKeyDown="DataGrid_KeyDown"
                                 Grid.Row="0"
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 CanUserDeleteRows="True"
-                                ItemsSource="{Binding SelectedClassGroupModels}" 
-                                VerticalGridLinesBrush="{x:Null}" 
-                                SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged">
+                                ItemsSource="{Binding SelectedClassGroupModels}"
+                                PreviewKeyDown="DataGrid_KeyDown"
+                                SelectionChanged="DataGrid_SelectedClassGroups_SelectionChanged"
+                                VerticalGridLinesBrush="{x:Null}">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.Header>
@@ -536,7 +575,10 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="Subject code" />
-                                    <DataGridTextColumn Width="*" Binding="{Binding ClassGroup.SubjectName, Mode=OneWay}" Header="Subject name" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding ClassGroup.SubjectName, Mode=OneWay}"
+                                        Header="Subject name" />
                                     <DataGridTextColumn
                                         Binding="{Binding ClassGroup.RegisterCodes, Converter={StaticResource JoinString}, ConverterParameter=',', FallbackValue='-', TargetNullValue='-', Mode=OneWay}"
                                         Header="Register codes"
@@ -548,17 +590,16 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                                    <Button 
-                                        Content="_Remove selected" 
-                                        Margin="0 0 5 0"
+                                    <Button
+                                        Margin="0,0,5,0"
                                         Command="{Binding RemoveSelectedCommand}"
                                         CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
-                                        ></Button>
-                                    <Button 
-                                        Command="{Binding DeleteAllChooseCommand}" 
-                                        Content="_Unselect All" 
-                                        Margin="0 0 5 0"/>
-                                    <Button Content="_Save" Command="{Binding SaveCommand}"/>
+                                        Content="_Remove selected" />
+                                    <Button
+                                        Margin="0,0,5,0"
+                                        Command="{Binding DeleteAllChooseCommand}"
+                                        Content="_Unselect All" />
+                                    <Button Command="{Binding SaveCommand}" Content="_Save" />
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -566,52 +607,54 @@
                     <TabItem>
                         <TabItem.Header>
                             <TextBlock>
-                                <Run Text="Warnings"></Run>
-                                <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}"></Run>
+                                <Run Text="Warnings" />
+                                <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}" />
                             </TextBlock>
                         </TabItem.Header>
-                        <DataGrid 
-                            ItemsSource="{Binding WarningModels}"
+                        <DataGrid
                             AutoGenerateColumns="False"
-                            CanUserDeleteRows="False"
                             CanUserAddRows="False"
+                            CanUserDeleteRows="False"
                             IsReadOnly="True"
-                            VerticalGridLinesBrush="{x:Null}" 
-                            >
+                            ItemsSource="{Binding WarningModels}"
+                            VerticalGridLinesBrush="{x:Null}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Warning" >
+                                <DataGridTemplateColumn Header="Warning">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                                                <Image 
-                                                    Margin="4 0 4 0"
+                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                <Image
+                                                    Width="16"
+                                                    Height="16"
+                                                    Margin="4,0,4,0"
                                                     RenderOptions.BitmapScalingMode="HighQuality"
-                                                    Height="16" 
-                                                    Width="16" 
                                                     Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/error-icon.png" />
-                                                <TextBlock Text="{Binding WarningTitle}"></TextBlock>
+                                                <TextBlock Text="{Binding WarningTitle}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Width="*" Header="Description" Binding="{Binding Description}">
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Description}"
+                                    Header="Description">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
-                                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                                            <Setter Property="VerticalContentAlignment" Value="Center" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.Header>
-                                        <TextBlock Text="Actions"></TextBlock>
+                                        <TextBlock Text="Actions" />
                                     </DataGridTemplateColumn.Header>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button 
-                                                    Content="Solve..." 
+                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Button
                                                     Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}"></Button>
+                                                    CommandParameter="{Binding}"
+                                                    Content="Solve..." />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -621,6 +664,143 @@
                     </TabItem>
                 </TabControl>
             </Border>
+        </Grid>
+        <GridSplitter
+            Grid.Column="3"
+            Width="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="White" />
+        <Grid Grid.Column="4">
+            <TabControl>
+                <TabItem Header="Filters">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+                            <Expander Header="General" IsExpanded="True">
+                                <Border Padding="10">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="0">
+                                            <CheckBox.Content>
+                                                <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
+                                            </CheckBox.Content>
+                                        </CheckBox>
+                                        <Border Grid.Row="1">
+                                            <StackPanel>
+                                                <TextBlock FontWeight="Bold" Text="Time range" />
+                                                <xctk:RangeSlider
+                                                    Name="RangeSlider"
+                                                    AutoToolTipPlacement="None"
+                                                    AutoToolTipPrecision="0"
+                                                    HigherValue="28"
+                                                    IsSnapToTickEnabled="True"
+                                                    LowerValue="0"
+                                                    Maximum="28"
+                                                    Minimum="0"
+                                                    Orientation="Horizontal"
+                                                    TickFrequency="1" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock
+                                                        Grid.Column="0"
+                                                        HorizontalAlignment="Left"
+                                                        Text="{Binding ElementName=RangeSlider, Path=LowerValue, Converter={StaticResource HalfHourTime}}" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        HorizontalAlignment="Center"
+                                                        Text="--" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        HorizontalAlignment="Right"
+                                                        Text="{Binding ElementName=RangeSlider, Path=HigherValue, Converter={StaticResource HalfHourTime}}" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </Expander>
+                            <ItemsControl ItemsSource="{Binding SubjectModels}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Expander Padding="0,0,1,15" BorderThickness="1">
+                                            <Expander.Template>
+                                                <ControlTemplate TargetType="Expander">
+                                                    <StackPanel>
+                                                        <!--  Header  -->
+                                                        <ToggleButton
+                                                            x:Name="HeaderToggle"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            Background="{Binding Color}"
+                                                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                                            <ContentPresenter ContentSource="Header" />
+                                                        </ToggleButton>
+
+                                                        <!--  Content  -->
+                                                        <ContentPresenter x:Name="Content" Visibility="Collapsed" />
+                                                    </StackPanel>
+
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsExpanded" Value="True">
+                                                            <Setter TargetName="Content" Property="Visibility" Value="Visible" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Expander.Template>
+                                            <Expander.Header>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="1" TextWrapping="Wrap">
+                                                        <Run Text="{Binding SubjectCode}" />
+                                                        <Run Text=" - " />
+                                                        <Run Text="{Binding SubjectName}" />
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Expander.Header>
+                                            <StackPanel>
+                                                <TextBlock Text="Day of week" />
+                                                <xctk:WrapPanel Orientation="Horizontal">
+                                                    <CheckBox Margin="0,0,4,0" Content="Mon" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Tue" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Wed" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Thu" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Fri" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Sat" />
+                                                    <CheckBox Margin="0,0,4,0" Content="Sun" />
+                                                </xctk:WrapPanel>
+                                            </StackPanel>
+                                        </Expander>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button Content="Reset" />
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
         </Grid>
     </Grid>
 </UserControl>

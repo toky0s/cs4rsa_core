@@ -384,7 +384,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var removedClassGroupModel = SelectedClassGroupModels.FirstOrDefault(cg => cg.Name == classGroupName);
             if (removedClassGroupModel != null)
             {
-                removedClassGroupModel.CurrentSchoolClassModels.Clear();
+                removedClassGroupModel.SpecialSchoolClassModels.Clear();
                 SelectedClassGroupModels.Remove(removedClassGroupModel);
                 RunScheduleValidator();
             }
@@ -610,7 +610,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     if (SelectedClassGroupModels[i].Name == className)
                     {
                         SelectedClassGroup = null;
-                        foreach (var scm in SelectedClassGroupModels[i].CurrentSchoolClassModels)
+                        foreach (var scm in SelectedClassGroupModels[i].SpecialSchoolClassModels)
                         {
                             RemoveScheduleItem(TimeBlockGroupID.GenerateId(scm.SubjectCode));
                         }
@@ -1325,7 +1325,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 if (value.IsBelongSpecialSubject)
                 {
-                    if (value.CurrentSchoolClassModels.Count == 0)
+                    if (value.SpecialSchoolClassModels.Count == 0)
                     {
                         _logger.LogInformation("User select class group {classGroupName} which belong to special subject, open details school class window", value.Name);
                         OnShowDetailsSchoolClasses();
@@ -1562,14 +1562,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         public void OnShowDetailsSchoolClasses()
         {
-            var SchoolClassModels = SelectedClassGroup.NormalSchoolClassModels
+            var schoolClassModels = SelectedClassGroup.NormalSchoolClassModels
                 .Where(item => item.Type != SelectedClassGroup.CompulsoryClass.Type)
                 .ToImmutableArray();
 
             _dialogService.ShowDialog(nameof(ShowDetailsSchoolClassesUC), new DialogParameters()
             {
                 {"SelectedClassGroup", SelectedClassGroup},
-                {"SchoolClassModels", SchoolClassModels},
+                {"SchoolClassModels", schoolClassModels},
             }, OnSelectSpecialClassPopupClosed);
         }
 
@@ -1726,7 +1726,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Time.
         /// </summary>
-        private void UpdateConflictCollection(List<SchoolClassModel> schoolClassModels)
+        private void UpdateConflictCollection(IList<SchoolClassModel> schoolClassModels)
         {
             ConflictCollection.Clear();
             for (var i = 0; i < schoolClassModels.Count; ++i)
@@ -1758,7 +1758,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Thực hiện bắt cặp tất cả các ClassGroupModel có 
         /// trong Collection để phát hiện các Conflict Place.
         /// </summary>
-        private void UpdatePlaceConflictCollection(List<SchoolClassModel> schoolClassModels)
+        private void UpdatePlaceConflictCollection(IList<SchoolClassModel> schoolClassModels)
         {
             PlaceConflictFinderModels.Clear();
             for (var i = 0; i < schoolClassModels.Count; ++i)
@@ -1813,10 +1813,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void UpdateConflicts()
         {
-            var snapshot = SelectedClassGroupModels.ToList(); // snapshot
-            var schoolClasses = snapshot
+            var schoolClasses = SelectedClassGroupModels
                 .SelectMany(cgm => cgm.CurrentSchoolClassModels)
-                .ToList();
+                .ToArray();
             UpdateConflictCollection(schoolClasses);
             UpdatePlaceConflictCollection(schoolClasses);
         }
@@ -1859,16 +1858,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="classGroupModel">ClassGroupModel</param>
         private void AddScheduleItems(ClassGroupModel classGroupModel)
         {
-            IEnumerable<SchoolClassModel> schoolClassModels;
-            if (classGroupModel.IsSpecialClassGroup)
-            {
-                schoolClassModels = classGroupModel.CurrentSchoolClassModels;
-            }
-            else
-            {
-                schoolClassModels = classGroupModel.NormalSchoolClassModels;
-            }
-
+            IEnumerable<SchoolClassModel> schoolClassModels = classGroupModel.CurrentSchoolClassModels;
             var timeBlocks = schoolClassModels.SelectMany(scm => _timeBlockGenerator.Generate(scm));
 
             AddTimeBlockToSchedule(timeBlocks);

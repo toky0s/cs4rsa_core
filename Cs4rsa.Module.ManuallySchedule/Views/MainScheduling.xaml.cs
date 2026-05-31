@@ -63,5 +63,32 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
                 ((MainSchedulingViewModel)DataContext).RemoveSelectedCommand.RaiseCanExecuteChanged();
             });
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listbox = (ListBox)sender;
+            var subjectModel = (SubjectModel)listbox.SelectedItem;
+
+            var item = ListBox_SelectedClassGroupModels
+                .Items
+                .Cast<ClassGroupModel>()
+                .FirstOrDefault(cgm => cgm.Name == subjectModel.SelectedClassGroupName);
+
+            if (item != null)
+            {
+                ListBox_SelectedClassGroupModels.ScrollIntoView(item);
+
+                // Dispatcher đảm bảo layout pass hoàn tất trước khi lấy container
+                ListBox_SelectedClassGroupModels.Dispatcher.InvokeAsync(() =>
+                {
+                    if (ListBox_SelectedClassGroupModels
+                            .ItemContainerGenerator
+                            .ContainerFromItem(item) is ListBoxItem container)
+                    {
+                        container.IsSelected = true;
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Loaded);
+            }
+        }
     }
 }

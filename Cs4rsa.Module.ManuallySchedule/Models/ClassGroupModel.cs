@@ -23,10 +23,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
     public class ClassGroupModel: BindableBase, IEquatable<ClassGroupModel>
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public SchoolClassModel[] CurrentSchoolClassModels { get => IsSpecialClassGroup ? SpecialSchoolClassModels.ToArray() : NormalSchoolClassModels; }
+        /// <summary>
         /// Vì một ClassGroup có thể chứa nhiều SchoolClass với nhiều mã đăng ký
         /// Khi đó ClassGroupModel buộc phải chứa duy nhất một mã đăng ký.
+        /// 
+        /// WARNING: Truy cập thông qua <see cref="CurrentSchoolClassModels"/> để đảm bảo tính đúng đắn.
         /// </summary>
-        public List<SchoolClassModel> CurrentSchoolClassModels { get; }
+        public List<SchoolClassModel> SpecialSchoolClassModels { get; }
 
         /// <summary>
         /// Lưu ý: Với một số môn có nhiều mã đăng ký, sẽ có một SchoolClass chứa mã đăng ký và một SchoolClass không chứa mã đăng ký.
@@ -39,6 +45,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             set { SetProperty(ref _hasCodeSchoolClassName, value); }
         }
 
+        /// <summary>
+        /// Một normal school class model chứa các class của một class group không có nhiều mã đăng ký.
+        /// 
+        /// WARNING: Truy cập thông qua <see cref="CurrentSchoolClassModels"/> để đảm bảo tính đúng đắn.
+        /// </summary>
         public SchoolClassModel[] NormalSchoolClassModels;
         public ClassGroup ClassGroup { get; }
         public int EmptySeat { get; }
@@ -107,7 +118,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             if (classGroup.SchoolClasses.Count > 0)
             {
                 Schedule = classGroup.GetSchedule();
-                CurrentSchoolClassModels = new List<SchoolClassModel>();
+                SpecialSchoolClassModels = new List<SchoolClassModel>();
 
                 Places = new ObservableCollection<Place>(ClassGroup.GetPlaces());
                 EmptySeat = classGroup.GetEmptySeat();
@@ -126,7 +137,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 if (classGroup.SchoolClasses.Count == 1)
                 {
                     CodeSchoolClass = CompulsoryClass;
-                    CurrentSchoolClassModels.Add(CompulsoryClass);
+                    SpecialSchoolClassModels.Add(CompulsoryClass);
                 }
                 // ClassGroup thường với một SchoolClass bắt buộc và một SchoolClass chứa mã (hoặc không)
                 else if (classGroup.SchoolClasses.Count >= 2 && !IsSpecialClassGroup)
@@ -136,8 +147,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                     if (schoolClass != null)
                     {
                         CodeSchoolClass = new SchoolClassModel(schoolClass, this);
-                        CurrentSchoolClassModels.Add(CompulsoryClass);
-                        CurrentSchoolClassModels.Add(CodeSchoolClass);
+                        SpecialSchoolClassModels.Add(CompulsoryClass);
+                        SpecialSchoolClassModels.Add(CodeSchoolClass);
                     }
                 }
             }
@@ -233,16 +244,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
 
             HasCodeSchoolClassName = UserSelectedSchoolClass.SchoolClass.SchoolClassName;
 
-            CurrentSchoolClassModels.Clear();
-            CurrentSchoolClassModels.Add(CompulsoryClass);
-            CurrentSchoolClassModels.Add(UserSelectedSchoolClass);
-            Schedule = ClassGroup.GetSchedule(CurrentSchoolClassModels.Select(scm => scm.SchoolClass));
+            SpecialSchoolClassModels.Clear();
+            SpecialSchoolClassModels.Add(CompulsoryClass);
+            SpecialSchoolClassModels.Add(UserSelectedSchoolClass);
+            Schedule = ClassGroup.GetSchedule(SpecialSchoolClassModels.Select(scm => scm.SchoolClass));
         }
 
         public void ClearSelectedSchoolClass()
         {
             HasCodeSchoolClassName = null;
-            CurrentSchoolClassModels.Clear();
+            SpecialSchoolClassModels.Clear();
         }
 
         public bool Equals(ClassGroupModel other)

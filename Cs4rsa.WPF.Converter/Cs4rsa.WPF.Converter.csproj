@@ -56,6 +56,7 @@
     <Compile Include="IsNotNullConverter.cs" />
     <Compile Include="IsTypeOfCvt.cs" />
     <Compile Include="IsZeroCvt.cs" />
+    <Compile Include="HalfHourTimeConverter.cs" />
     <Compile Include="PhaseCvt.cs" />
     <Compile Include="BooleanToVisibility.cs" />
     <Compile Include="PlaceCvt.cs" />

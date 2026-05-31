@@ -29,7 +29,7 @@
                 <Button Content="Edit" IsEnabled="False"/>
                 <Button Content="View" IsEnabled="False"/>
                 <Separator />
-                <Menu DockPanel.Dock="Top">
+                <Menu>
                     <MenuItem Header="_Help">
                         <MenuItem Header="Check for Updates" Command="{Binding CheckForUpdatesCommand}"/>
                         <Separator />

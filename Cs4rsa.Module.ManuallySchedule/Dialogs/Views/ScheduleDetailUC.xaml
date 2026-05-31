@@ -13,11 +13,10 @@
              d:DataContext="{d:DesignInstance Type=vm:ScheduleDetailUCViewModel}">
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Width" Value="800"></Setter>
-            <Setter Property="Height" Value="190"></Setter>
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="ResizeMode" Value="CanResizeWithGrip"/>
             <Setter Property="ShowInTaskbar" Value="True"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>

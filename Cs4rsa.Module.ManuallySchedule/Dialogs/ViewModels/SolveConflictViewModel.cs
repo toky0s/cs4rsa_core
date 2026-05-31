@@ -128,7 +128,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             ClassGroupModel_A = parameters.GetValue<ClassGroupModel>("ClassGroupModelA");
             ClassGroupModel_B = parameters.GetValue<ClassGroupModel>("ClassGroupModelB");
 
-            ClassGroupModel_A.CurrentSchoolClassModels.ForEach(item =>
+            ClassGroupModel_A.SpecialSchoolClassModels.ForEach(item =>
             {
                 foreach (var u in item.SchoolClass.SchoolClassUnits)
                 {
@@ -137,7 +137,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                 }
             });
 
-            ClassGroupModel_B.CurrentSchoolClassModels.ForEach(item =>
+            ClassGroupModel_B.SpecialSchoolClassModels.ForEach(item =>
             {
                 foreach (var u in item.SchoolClass.SchoolClassUnits)
                 {
@@ -152,13 +152,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                 var day = item.Key;
                 foreach (var intersect in item.Value)
                 {
-                    var unitA = ClassGroupModel_A.CurrentSchoolClassModels
+                    var unitA = ClassGroupModel_A.SpecialSchoolClassModels
                         .SelectMany(schClassModel => schClassModel.SchoolClass.SchoolClassUnits)
                         .Where(unit => unit.DayOfWeek == day 
                             && Shared.Utils.IsOverlap(unit.Start, unit.End, intersect.Start, intersect.End))
                         .First();
 
-                    var unitB = ClassGroupModel_B.CurrentSchoolClassModels
+                    var unitB = ClassGroupModel_B.SpecialSchoolClassModels
                         .SelectMany(schClassModel => schClassModel.SchoolClass.SchoolClassUnits)
                         .Where(unit => unit.DayOfWeek == day
                             && Shared.Utils.IsOverlap(unit.Start, unit.End, intersect.Start, intersect.End))
