@@ -51,7 +51,7 @@ jobs:
     - name: Build Solution
       run: |
         msbuild ${{ env.Solution_Name }} `
-          /p:Configuration=${{ matrix.configuration }} `
+          /p:Configuration=Release `
           /p:Platform=AnyCPU `
           /m
 
