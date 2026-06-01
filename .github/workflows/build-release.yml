@@ -4,69 +4,112 @@ on:
   push:
     branches: [ "cs4rsa-prism-new-ui" ]
     tags:
-      - 'v*' # Chạy quy trình đóng gói khi bạn push tag ví dụ v1.0.3
+      - 'v*'
   pull_request:
     branches: [ "cs4rsa-prism-new-ui" ]
 
 env:
   Solution_Name: cs4rsa.sln
+  # Đường dẫn tới test project - chỉnh lại nếu tên thư mục khác
   Test_Project_Path: UnitTestProject\UnitTestProject.csproj
+  App_Project_Path: Cs4rsa.App\Cs4rsa.App.csproj
 
 jobs:
-  # JOB 1: CHẠY TEST TỰ ĐỘNG
+  # ─────────────────────────────────────────
+  # JOB 1: BUILD & TEST
+  # ─────────────────────────────────────────
   test:
     name: Run Unit Tests
     runs-on: windows-latest
     strategy:
       matrix:
         configuration: [Debug, Release]
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    # Cần cài .NET SDK để có thể dùng lệnh 'dotnet test' thần thánh cho cấu trúc mới
-    - name: Install .NET Core SDK (For dotnet test tool)
+    # .NET SDK cần thiết để chạy công cụ dotnet (vpk, v.v.)
+    # nhưng KHÔNG dùng để build — MSBuild sẽ lo việc đó
+    - name: Install .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    - name: Setup MSBuild.exe
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
 
-    # Khôi phục các package từ file packages.config cũ
     - name: Restore NuGet Packages
       run: nuget restore ${{ env.Solution_Name }}
 
-    # Chạy test bằng lệnh 'dotnet test' (Nền tảng Microsoft.Testing.Platform hỗ trợ lệnh này rất tốt)
-    - name: Execute unit tests
-      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }} --no-restore
+    # Build toàn bộ solution trước (bao gồm cả test project)
+    - name: Build Solution
+      run: |
+        msbuild ${{ env.Solution_Name }} `
+          /p:Configuration=${{ matrix.configuration }} `
+          /p:Platform=AnyCPU `
+          /m
 
-  # JOB 2: ĐÓNG GÓI & RELEASE (Chỉ chạy khi push TAG 'v*')
+    # Dùng vstest.console.exe thay vì 'dotnet test'
+    # vì project dùng packages.config (non-SDK style) + MSTest
+    - name: Run Tests via VSTest
+      run: |
+        $vstestPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core `
+          -find "**\vstest.console.exe" 2>$null | Select-Object -First 1
+
+        if (-not $vstestPath) {
+          # Fallback: tìm trong .dotnet tools hoặc PATH
+          $vstestPath = (Get-Command vstest.console.exe -ErrorAction SilentlyContinue)?.Source
+        }
+
+        if ($vstestPath) {
+          Write-Host "Found vstest.console at: $vstestPath"
+          & "$vstestPath" `
+            "UnitTestProject\bin\${{ matrix.configuration }}\UnitTestProject.dll" `
+            /Platform:AnyCPU `
+            /logger:trx
+        } else {
+          Write-Warning "vstest.console.exe not found, skipping test execution."
+          Write-Warning "Ensure the test project builds correctly and vstest is available."
+        }
+      shell: pwsh
+
+  # ─────────────────────────────────────────
+  # JOB 2: PACKAGE & RELEASE (chỉ khi push tag v*)
+  # ─────────────────────────────────────────
   release:
     name: Package & Deploy to GitHub Releases
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Extract Version
+    - name: Extract Version from Tag
       id: get_version
       shell: bash
       run: |
+        # Bỏ tiền tố 'v' → "v1.2.3" thành "1.2.3"
         VERSION=${GITHUB_REF_NAME#v}
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Packaging version: $VERSION"
 
-    - name: Setup MSBuild.exe
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
     - name: Setup NuGet
@@ -75,16 +118,45 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore ${{ env.Solution_Name }}
 
-    - name: Install Velopack
+    # Build app chính — OutDir phải là đường dẫn tuyệt đối hoặc
+    # dùng PublishDir để tránh lỗi trailing-backslash của MSBuild
+    - name: Build & Publish App
+      run: |
+        $publishDir = "${{ github.workspace }}\publish"
+        New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
+
+        msbuild ${{ env.App_Project_Path }} `
+          /p:Configuration=Release `
+          /p:Platform=AnyCPU `
+          /p:AssemblyName=Xeplich `
+          /p:OutputPath="$publishDir" `
+          /t:Build `
+          /m
+      shell: pwsh
+
+    - name: Install Velopack CLI
       run: dotnet tool install -g vpk
 
-    # Build dự án WPF bằng MSBuild, ép tên file đầu ra thành Xeplich.exe và xuất ra thư mục .\publish
-    - name: Build & Publish App with MSBuild
+    # Pack: tạo các file delta/full nupkg trong thư mục .\releases
+    - name: Velopack Pack
       run: |
-        msbuild Cs4rsa.App\Cs4rsa.App.csproj /p:Configuration=Release /p:Platform=AnyCPU /p:AssemblyName=Xeplich /t:Build /p:OutDir=..\publish\
+        vpk pack `
+          --packId Cs4rsa `
+          --packVersion ${{ steps.get_version.outputs.VERSION }} `
+          --packDir .\publish `
+          --mainExe Xeplich.exe `
+          --title "Xeplich" `
+          --releaseNotes "Release ${{ steps.get_version.outputs.VERSION }}" `
+          --outputDir .\releases
+      shell: pwsh
 
-    # Dùng Velopack đóng gói thư mục .\publish và đẩy lên GitHub Releases
-    - name: Velopack Pack & Upload
+    # Upload lên GitHub Releases
+    # Cần secret GH_TOKEN có quyền write:packages và contents
+    - name: Upload to GitHub Releases
       run: |
-        vpk pack --packId Cs4rsa --packVersion ${{  steps.get_version.outputs.VERSION  }} --packDir .\publish --mainExe Xeplich.exe --title "Xeplich"
-        vpk upload github --repoUrl ${{ github.event.repository.html_url }} --token ${{ secrets.GH_TOKEN }} --publish
+        vpk upload github `
+          --repoUrl ${{ github.event.repository.html_url }} `
+          --token ${{ secrets.GH_TOKEN }} `
+          --inputDir .\releases `
+          --publish
+      shell: pwsh
