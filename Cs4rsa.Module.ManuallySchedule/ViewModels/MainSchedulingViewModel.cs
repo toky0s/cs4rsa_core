@@ -46,6 +46,61 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private List<Keyword> _searchKeywords;
         #endregion
 
+        #region Sort class groups
+
+        // Fields
+        private ICollectionView _selectedClassGroupModelsView;
+
+        // Property - expose ra để View binding
+        public ICollectionView SelectedClassGroupModelsView => _selectedClassGroupModelsView;
+
+        public enum ClassGroupSortField { Name, EmptySeat }
+        private ClassGroupSortField _currentSortField = ClassGroupSortField.Name;
+        private ListSortDirection _currentSortDirection = ListSortDirection.Ascending;
+
+        private DelegateCommand<string> _sortCommand;
+        public DelegateCommand<string> SortCommand =>
+            _sortCommand ?? (_sortCommand = new DelegateCommand<string>(ExecuteSortCommand));
+
+        private void ExecuteSortCommand(string fieldName)
+        {
+            // Toggle direction nếu click cùng column
+            //if (Enum.TryParse(fieldName, out ClassGroupSortField field) && field == _currentSortField)
+            //{
+            //    _currentSortDirection = _currentSortDirection == ListSortDirection.Ascending
+            //        ? ListSortDirection.Descending
+            //        : ListSortDirection.Ascending;
+            //}
+            //else
+            //{
+            //    _currentSortField = field;
+            //    _currentSortDirection = ListSortDirection.Ascending;
+            //}
+
+            Enum.TryParse(fieldName, out ClassGroupSortField field);
+            _currentSortField = field;
+            ApplySort();
+        }
+
+        private void ApplySort()
+        {
+            _selectedClassGroupModelsView.SortDescriptions.Clear();
+            _selectedClassGroupModelsView.SortDescriptions.Add(
+                new SortDescription(_currentSortField.ToString(), _currentSortDirection)
+            );
+        }
+
+        private DelegateCommand<string> _changeDirectionCommand;
+        public DelegateCommand<string> ChangeDirectionCommand =>
+            _changeDirectionCommand ?? (_changeDirectionCommand = new DelegateCommand<string>(ExecuteChangeDirectionCommand));
+
+        void ExecuteChangeDirectionCommand(string parameter)
+        {
+
+        }
+         
+        #endregion
+
         #region Commands in Store tab in search box
         private DelegateCommand<UserSchedule> _shareCommand;
         public DelegateCommand<UserSchedule> ShareCommand =>
@@ -157,9 +212,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="sm">SubjectModel.</param>
         private void ExecuteDeleteCommand(SubjectModel sm)
         {
-            ClassGroupModels.Clear();
             SubjectModels.Remove(sm);
-            SelectedSubject = null;
             SelectedSubjectModel = null;
             ToastService.Instance.Info("Notification", "Đã xoá môn " + sm.SubjectName);
         }
@@ -402,6 +455,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
         public ObservableCollection<WarningModel> WarningModels { get; set; }
+        private ObservableCollection<ClassGroupModel> _currentClassGroupModels;
+        public ObservableCollection<ClassGroupModel> CurrentClassGroupModels => _currentClassGroupModels ?? (_currentClassGroupModels = new ObservableCollection<ClassGroupModel>());
 
         /// <summary>
         /// Combination Models which was saved in the Store.
@@ -584,10 +639,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             LoadDiscipline();
             LoadSavedSchedules();
 
-            ClassGroupModels = new ObservableCollection<ClassGroupModel>();
-            _classGroupModelsView = CollectionViewSource.GetDefaultView(ClassGroupModels);
-            _classGroupModelsView.Filter = ClassGroupFilter;
-
             TeacherCount = 0;
             AnyTeacherName = true;
             TeacherNames = new ObservableCollection<string>();
@@ -598,41 +649,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             InitFilter();
 
-            #region Messengers
-            _eventAggregator.GetEvent<SolveConflictVmMsgs.RemoveChoicedClassMsg>().Subscribe(className =>
-            {
-                if (className == string.Empty || className == null)
-                {
-                    return;
-                }
-                for (var i = 0; i < SelectedClassGroupModels.Count; i++)
-                {
-                    if (SelectedClassGroupModels[i].Name == className)
-                    {
-                        SelectedClassGroup = null;
-                        foreach (var scm in SelectedClassGroupModels[i].SpecialSchoolClassModels)
-                        {
-                            RemoveScheduleItem(TimeBlockGroupID.GenerateId(scm.SubjectCode));
-                        }
-
-                        SelectedClassGroupModels.RemoveAt(i);
-
-                        DeleteAllChooseCommand.RaiseCanExecuteChanged();
-                        DeleteChooseCommand.RaiseCanExecuteChanged();
-                        UpdateConflicts();
-                        break;
-                    }
-                }
-            });
-
-            #endregion
-
             OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
             ConflictCollection = new ObservableCollection<Conflict>();
+            
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
+            _selectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
 
             _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
 
@@ -771,7 +795,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     item.SelectedClassGroupName = null;
                     item.ClassGroupModels.ForEach(c => c.ClearSelectedSchoolClass());
                 }
-                CleanDays();    
+                CleanDays();
                 SelectedClassGroup = null;
             }
 
@@ -805,59 +829,31 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void OnSltCombiChanged(CombinationModel value)
         {
-            if (value == null) return;
-            var subjectModels = value.SubjectModels;
-            SubjectModels.Clear();
-            foreach (var sjm in subjectModels)
-            {
-                SubjectModels.Add(sjm);
-            }
+            //if (value == null) return;
+            //var subjectModels = value.SubjectModels;
+            //SubjectModels.Clear();
+            //foreach (var sjm in subjectModels)
+            //{
+            //    SubjectModels.Add(sjm);
+            //}
 
-            // Đánh giá Phase Store xác định tuần ngăn cách
-            foreach (var cgm in value.ClassGroupModels)
-            {
-                _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(cgm);
-            }
+            //// Đánh giá Phase Store xác định tuần ngăn cách
+            //foreach (var cgm in value.ClassGroupModels)
+            //{
+            //    _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(cgm);
+            //}
 
-            SelectedSubjectModel = SubjectModels.FirstOrDefault();
+            //SelectedSubjectModel = SubjectModels.FirstOrDefault();
 
-            AddCommand.RaiseCanExecuteChanged();
-            DeleteAllCommand.RaiseCanExecuteChanged();
+            //AddCommand.RaiseCanExecuteChanged();
+            //DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         private void OnSelectedSubjectModelChanged(SubjectModel value)
         {
-            SelectedSubject = value;
             DeleteCommand.RaiseCanExecuteChanged();
-            AnyTeacherName = value.TeacherNames.Count > 0;
-            ClassGroupModels.Clear();
-            TeacherNames.Clear();
-
-            if (SelectedSubject != null
-                && SelectedSubject.ClassGroupModels != null)
-            {
-                foreach (var classGroupModel in SelectedSubject.ClassGroupModels)
-                {
-                    // Thêm danh sách các lớp học của môn đã chọn
-                    ClassGroupModels.Add(classGroupModel);
-                }
-
-                TeacherNames.Add("TẤT CẢ");
-                foreach (var teacherName in SelectedSubject.TeacherNames)
-                {
-                    if (teacherName != null && !TeacherNames.Contains(teacherName))
-                    {
-                        // Thêm danh sách giảng viên hiện tại
-                        TeacherNames.Add(teacherName);
-                    }
-                }
-
-                SelectedTeacherName = TeacherNames[0];
-
-                // Count teacher exclude ALL option
-                TeacherCount = TeacherNames.Count - 1;
-                _classGroupModelsView.Refresh();
-            }
+            CurrentClassGroupModels.Clear();
+            CurrentClassGroupModels.AddRange(SelectedSubjectModel.ClassGroupModels);
         }
 
         private void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
@@ -1013,7 +1009,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             try
             {
                 //throw new Exception("Dummy Exception");
-                
+
                 // 1. Thực hiện tải Subject. 
                 var subjectModel = await DownloadSubject(keyword, IsUseCache);
 
@@ -1039,8 +1035,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             catch (Exception e)
             {
-                _logger.LogError("There is an error when downloading subject {SubjectName}, course id {CourseId}, semester id {SemesterID}. Error message: {ErrorMessage}", 
-                    keyword.SubjectName, 
+                _logger.LogError("There is an error when downloading subject {SubjectName}, course id {CourseId}, semester id {SemesterID}. Error message: {ErrorMessage}",
+                    keyword.SubjectName,
                     keyword.CourseId,
                     keyword.SemesterId,
                     e.Message
@@ -1180,10 +1176,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         #region Class group view model
         #region Properties
-        public ObservableCollection<ClassGroupModel> ClassGroupModels { get; set; }
         public ObservableCollection<string> TeacherNames { get; set; }
-
-        private ICollectionView _classGroupModelsView;
 
         private ClassGroupModel _selectedClassGroup;
         public ClassGroupModel SelectedClassGroup
@@ -1191,11 +1184,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _selectedClassGroup; }
             set
             {
-                SetProperty(ref _selectedClassGroup, value);
-                Application.Current.Dispatcher.BeginInvoke(
-                    System.Windows.Threading.DispatcherPriority.Background,
-                    new Action(() => OnSelectedClassGroupChanged(value))
-                );
+                // Chỉ select được class group nếu nó là class group mới, chưa có trong SelectedClassGroupModels
+                if (!SelectedClassGroupModels.Contains(value))
+                {
+                    SetProperty(ref _selectedClassGroup, value);
+                    Application.Current.Dispatcher.BeginInvoke(
+                        System.Windows.Threading.DispatcherPriority.Background,
+                        new Action(() => OnSelectedClassGroupChanged(value))
+                    );
+                }
             }
         }
 
@@ -1211,13 +1208,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             get { return _selectedTeacherName; }
             set { SetProperty(ref _selectedTeacherName, value); OnFilter(); }
-        }
-
-        private SubjectModel _selectedSubject;
-        public SubjectModel SelectedSubject
-        {
-            get { return _selectedSubject; }
-            set { SetProperty(ref _selectedSubject, value); }
         }
 
         private bool _anyTeacherName;
@@ -1302,9 +1292,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void HandlerDelAllSubjectMsg()
         {
-            ClassGroupModels.Clear();
             TeacherCount = 0;
-            SelectedSubject = null;
 
             // 2. Xoá hết class group model đã chọn
             SelectedClassGroupModels.Clear();
@@ -1340,8 +1328,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     AddOrReplaceClassGroupModel(value);
                     _logger.LogInformation("Add block to schedule with class group {classGroupName}", value.Name);
                 }
+                RunScheduleValidator();
             }
-            RunScheduleValidator();
         }
 
         private bool CanResetFilter()
@@ -1374,18 +1362,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             || Night;
         }
 
-        private bool ClassGroupFilter(object obj)
-        {
-            var classGroupModel = obj as ClassGroupModel;
-            return CheckDayOfWeek(classGroupModel)
-                && CheckSession(classGroupModel)
-                && CheckSeat(classGroupModel)
-                && CheckSchedule(classGroupModel)
-                && CheckPhase(classGroupModel)
-                && CheckTeacher(classGroupModel)
-                && CheckPlace(classGroupModel);
-        }
-
         /// <summary>
         /// Khởi tạo bộ lọc mặc định.
         /// </summary>
@@ -1415,146 +1391,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// </summary>
         private void OnFilter()
         {
-            _classGroupModelsView.Refresh();
             ResetFilterCommand.RaiseCanExecuteChanged();
-        }
-
-        private bool CheckSeat(ClassGroupModel classGroupModel)
-        {
-            if (HasSeat)
-            {
-                return classGroupModel.EmptySeat > 0;
-            }
-            return true;
-        }
-
-        private bool CheckSchedule(ClassGroupModel classGroupModel)
-        {
-            if (HasSchedule)
-            {
-                return classGroupModel.HaveSchedule;
-            }
-            return true;
-        }
-
-        private bool CheckTeacher(ClassGroupModel classGroupModel)
-        {
-            try
-            {
-                return SelectedTeacherName == "TẤT CẢ"
-                || classGroupModel.TeacherNames.Contains(SelectedTeacherName);
-            }
-            catch
-            {
-                return true;
-            }
-        }
-
-        private bool CheckDayOfWeek(ClassGroupModel classGroupModel)
-        {
-            if (Monday == false &&
-                Tuesday == false &&
-                Wednesday == false &&
-                Thursday == false &&
-                Friday == false &&
-                Saturday == false &&
-                Sunday == false)
-            {
-                return true;
-            }
-
-            var checkedDates = new Dictionary<DayOfWeek, bool>()
-            {
-                { DayOfWeek.Monday, Monday },
-                { DayOfWeek.Tuesday, Tuesday },
-                { DayOfWeek.Wednesday, Wednesday },
-                { DayOfWeek.Thursday, Thursday },
-                { DayOfWeek.Friday, Friday },
-                { DayOfWeek.Saturday, Saturday },
-                { DayOfWeek.Sunday, Sunday }
-            };
-
-            checkedDates = checkedDates
-                .Where(pair => pair.Value)
-                .ToDictionary(p => p.Key, p => p.Value);
-
-            foreach (var day in checkedDates.Keys)
-            {
-                if (!classGroupModel.Schedule.GetSchoolDays().Contains(day))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool CheckSession(ClassGroupModel classGroupModel)
-        {
-            if (Afternoon == false &&
-                Morning == false &&
-                Night == false)
-                return true;
-
-            var checkSessions = new Dictionary<Session, bool>()
-            {
-                { Session.Morning, Morning },
-                { Session.Afternoon, Afternoon },
-                { Session.Night, Night }
-            };
-
-            checkSessions = checkSessions
-                .Where(pair => pair.Value == true)
-                .ToDictionary(p => p.Key, p => p.Value);
-
-            foreach (var session in checkSessions.Keys)
-            {
-                if (!classGroupModel.Schedule.GetSessions().Contains(session))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool CheckPhase(ClassGroupModel classGroupModel)
-        {
-            if (PhaseBoth == false && PhaseFirst == false && PhaseSecond == false)
-            {
-                return true;
-            }
-            if (_onlyPhaseFirst)
-                return classGroupModel.Phase == Phase.First;
-            else if (_onlyPhaseSecond)
-                return classGroupModel.Phase == Phase.Second;
-            else
-                return classGroupModel.Phase == Phase.All;
-        }
-
-        private bool CheckPlace(ClassGroupModel classGroupModel)
-        {
-            if (_placeQuangTrung == false
-                && _placeVietTin == false
-                && _placePhanThanh == false
-                && _placeHoaKhanh == false
-                && _place137NVL == false
-                && _place254NVL == false
-                && _placeOnline == false)
-                return true;
-            var checkboxAndPlace = new Dictionary<Place, bool>()
-            {
-                { Place.QuangTrung, _placeQuangTrung },
-                { Place.VietTin, _placeVietTin },
-                { Place.PhanThanh, _placePhanThanh },
-                { Place.HoaKhanh, _placeHoaKhanh },
-                { Place.Nvl137, _place137NVL },
-                { Place.Nvl254, _place254NVL },
-                { Place.Online, _placeOnline }
-            };
-            checkboxAndPlace = checkboxAndPlace
-                .Where(pair => pair.Value)
-                .ToDictionary(p => p.Key, p => p.Value);
-            foreach (var place in checkboxAndPlace.Keys)
-            {
-                if (!classGroupModel.Places.Contains(place))
-                    return false;
-            }
-            return true;
         }
 
         /// <summary>
@@ -1729,6 +1566,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void UpdateConflictCollection(IList<SchoolClassModel> schoolClassModels)
         {
             ConflictCollection.Clear();
+            var conflicts = new List<Conflict>();
             for (var i = 0; i < schoolClassModels.Count; ++i)
             {
                 var schoolClassModel_i = schoolClassModels[i];
@@ -1748,10 +1586,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     var conflictTime = conflict.ConflictTime;
                     if (conflictTime != null)
                     {
-                        ConflictCollection.Add(conflict);
+                        conflicts.Add(conflict);
                     }
                 }
             }
+            ConflictCollection.AddRange(conflicts);
         }
 
         /// <summary>

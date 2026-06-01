@@ -144,7 +144,6 @@
     <Compile Include="Events\ExitImportSubjectMsg.cs" />
     <Compile Include="Events\SearchVmMsgs.cs" />
     <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
-    <Compile Include="Events\SolveConflictVmMsgs.cs" />
     <Compile Include="Events\UpdateVmMsgs.cs" />
     <Compile Include="Models\WarningModel.cs" />
     <Compile Include="Models\SearchValues.cs" />

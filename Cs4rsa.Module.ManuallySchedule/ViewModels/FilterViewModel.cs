@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 {
-    internal class FilterViewModel
+    public class FilterViewModel
     {
+
     }
 }

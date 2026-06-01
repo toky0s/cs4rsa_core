@@ -390,21 +390,47 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <ToolBarTray Grid.Row="0">
-                                <ToolBar>
-                                    <Menu>
-                                        <MenuItem Header="Sort">
-                                            <MenuItem Header="Default" />
-                                            <MenuItem Header="Name" />
-                                            <MenuItem Header="Seat" />
-                                        </MenuItem>
-                                    </Menu>
-                                </ToolBar>
-                            </ToolBarTray>
+                            <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+                                <Button
+                                    x:Name="SortButton"
+                                    Click="SortButton_Click"
+                                    Content="Sort">
+                                    <Button.ContextMenu>
+                                        <ContextMenu x:Name="SortContextMenu">
+                                            <MenuItem
+                                                x:Name="SortByName"
+                                                Click="SortField_Click"
+                                                Command="{Binding SortCommand}"
+                                                CommandParameter="Name"
+                                                Header="Name"
+                                                IsCheckable="True" />
+                                            <MenuItem
+                                                x:Name="SortBySlot"
+                                                Click="SortField_Click"
+                                                Command="{Binding SortCommand}"
+                                                CommandParameter="EmptySeat"
+                                                Header="Slot"
+                                                IsCheckable="True" />
+                                            <Separator />
+                                            <MenuItem
+                                                x:Name="SortAscending"
+                                                Click="SortOrder_Click"
+                                                Header="Ascending"
+                                                IsCheckable="True" />
+                                            <MenuItem
+                                                x:Name="SortDescending"
+                                                Click="SortOrder_Click"
+                                                Header="Descending"
+                                                IsCheckable="True" />
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </StackPanel>
+                            <!--  /===============================Selected Class Groups===============================/  -->
                             <ListBox
                                 x:Name="ListBox_SelectedClassGroupModels"
                                 Grid.Row="1"
-                                ItemsSource="{Binding ClassGroupModels}"
+                                ItemsSource="{Binding SelectedClassGroupModelsView}"
                                 SelectedItem="{Binding SelectedClassGroup}"
                                 SelectionMode="Single">
                                 <ListBox.ItemContainerStyle>

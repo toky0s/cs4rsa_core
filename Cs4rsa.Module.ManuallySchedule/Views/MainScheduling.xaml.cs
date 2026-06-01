@@ -27,12 +27,12 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         {
             InitializeComponent();
 
-            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_ClassGroup, typeof(Clg));
-            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_Choose, typeof(Choose));
-            //regionManager.RegisterViewWithRegion(RegionInfo.Manual_Scheduler, typeof(Scheduler));
-
             // Xử lý sự kiện người dùng unselect một class group từ Schedule View
-            AddHandler(ScheduleBlock.UnselectClassGroupEvent, new RoutedEventHandler(OnUnselectClassGroup));
+            AddHandler(UnselectClassGroupEvent, new RoutedEventHandler(OnUnselectClassGroup));
+
+            // Init sort
+            SortByName.IsChecked = true;
+            SortAscending.IsChecked = true;
         }
 
         private void OnUnselectClassGroup(object sender, RoutedEventArgs e)
@@ -89,6 +89,36 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
                     }
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
             }
+        }
+
+        // ================================ Sort classes ================================ //
+        private void SortButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Hiển thị context menu khi click trái
+            SortButton.ContextMenu.PlacementTarget = SortButton;
+            SortButton.ContextMenu.IsOpen = true;
+        }
+
+        private void SortField_Click(object sender, RoutedEventArgs e)
+        {
+            // Bỏ chọn các field khác
+            foreach (var item in new[] { SortByName, SortBySlot })
+                item.IsChecked = false;
+
+            // Đánh dấu item được chọn
+            var clicked = sender as MenuItem;
+            clicked.IsChecked = true;
+        }
+
+        private void SortOrder_Click(object sender, RoutedEventArgs e)
+        {
+            // Bỏ chọn các order khác
+            foreach (var item in new[] { SortAscending, SortDescending })
+                item.IsChecked = false;
+
+            // Đánh dấu item được chọn
+            var clicked = sender as MenuItem;
+            clicked.IsChecked = true; 
         }
     }
 }
