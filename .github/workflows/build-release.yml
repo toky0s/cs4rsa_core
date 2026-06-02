@@ -60,23 +60,18 @@ jobs:
     - name: Run Tests via VSTest
       run: |
         $vstestPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
-          -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core `
+          -latest -products * `
           -find "**\vstest.console.exe" 2>$null | Select-Object -First 1
-
-        if (-not $vstestPath) {
-          # Fallback: tìm trong .dotnet tools hoặc PATH
-          $vstestPath = (Get-Command vstest.console.exe -ErrorAction SilentlyContinue)?.Source
-        }
 
         if ($vstestPath) {
           Write-Host "Found vstest.console at: $vstestPath"
           & "$vstestPath" `
             "UnitTestProject\bin\${{ matrix.configuration }}\UnitTestProject.dll" `
-            /Platform:"Any CPU" `
+            /Platform:x64 `
             /logger:trx
         } else {
-          Write-Warning "vstest.console.exe not found, skipping test execution."
-          Write-Warning "Ensure the test project builds correctly and vstest is available."
+          Write-Error "vstest.console.exe not found."
+          exit 1
         }
       shell: pwsh
 
