@@ -72,7 +72,7 @@ jobs:
           Write-Host "Found vstest.console at: $vstestPath"
           & "$vstestPath" `
             "UnitTestProject\bin\${{ matrix.configuration }}\UnitTestProject.dll" `
-            /Platform:AnyCPU `
+            /Platform:"Any CPU" `
             /logger:trx
         } else {
           Write-Warning "vstest.console.exe not found, skipping test execution."
@@ -127,7 +127,7 @@ jobs:
 
         msbuild ${{ env.App_Project_Path }} `
           /p:Configuration=Release `
-          /p:Platform=AnyCPU `
+          /p:Platform="Any CPU" `
           /p:AssemblyName=Xeplich `
           /p:OutputPath="$publishDir" `
           /t:Build `
