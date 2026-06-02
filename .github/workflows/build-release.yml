@@ -51,8 +51,8 @@ jobs:
     - name: Build Solution
       run: |
         msbuild ${{ env.Solution_Name }} `
-          /p:Configuration=Release `
-          /p:Platform='"Any CPU"' `
+          /p:Configuration=Debug `
+          /p:Platform="Any CPU" `
           /m
 
     # Dùng vstest.console.exe thay vì 'dotnet test'
