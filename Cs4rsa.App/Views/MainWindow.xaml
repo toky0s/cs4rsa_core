@@ -2,6 +2,7 @@
     x:Class="Cs4rsa.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:info="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     xmlns:local="clr-namespace:Cs4rsa.App"
@@ -21,30 +22,64 @@
     TextOptions.TextRenderingMode="Auto"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.Resources>
+        <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <cvt:BooleanToVisibilityRevert x:Key="BoolToVisRevert" />
+    </Window.Resources>
     <DockPanel>
         <!--  Toolbar đặt ở trên cùng  -->
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar >
-                <Button Content="File" IsEnabled="False"/>
-                <Button Content="Edit" IsEnabled="False"/>
-                <Button Content="View" IsEnabled="False"/>
+            <ToolBar>
+                <Button Content="File" IsEnabled="False" />
+                <Button Content="Edit" IsEnabled="False" />
+                <Button Content="View" IsEnabled="False" />
                 <Separator />
                 <Menu>
                     <MenuItem Header="_Help">
-                        <MenuItem Header="Check for Updates" Command="{Binding CheckForUpdatesCommand}"/>
+                        <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Check for Updates" />
                         <Separator />
-                        <MenuItem Header="Reset Cache" Command="{Binding ResetCacheCommand}"/>
+                        <MenuItem Command="{Binding ResetCacheCommand}" Header="Reset Cache" />
                         <!--<MenuItem Header="_Exit" />-->
                     </MenuItem>
                 </Menu>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <TextBlock Text="Trạng thái: Sẵn sàng" />
+            <StatusBarItem HorizontalAlignment="Right">
+                <Button Name="ShowNetworkStatusButton" Click="Button_ShowNetworkStatus_Click">
+
+                    <Button.Content>
+                        <StackPanel>
+                            <TextBlock Text="Network Checking..." Visibility="{Binding IsNetworkChecking, Converter={StaticResource BoolToVis}}" />
+                            <Grid Visibility="{Binding IsNetworkChecking, Converter={StaticResource BoolToVisRevert}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Margin="0,0,4,0"
+                                    VerticalAlignment="Center">
+                                    <Image
+                                        Height="14"
+                                        Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/cross.png"
+                                        Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisRevert}}" />
+                                    <Image
+                                        Height="14"
+                                        Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/check.png"
+                                        Visibility="{Binding IsConnected, Converter={StaticResource BoolToVis}}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Disconnected" Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisRevert}}" />
+                                    <TextBlock Text="Connected" Visibility="{Binding IsConnected, Converter={StaticResource BoolToVis}}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
             </StatusBarItem>
         </StatusBar>
-        <Grid >
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="Auto" />

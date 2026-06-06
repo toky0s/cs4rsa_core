@@ -8,6 +8,10 @@ namespace Cs4rsa.WPF.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is string sValue)
+            {
+                return !string.IsNullOrWhiteSpace(sValue);
+            }
             return value is object;
         }
 

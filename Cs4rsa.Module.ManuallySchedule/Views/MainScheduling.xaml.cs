@@ -64,33 +64,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
             });
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var listbox = (ListBox)sender;
-            var subjectModel = (SubjectModel)listbox.SelectedItem;
-
-            var item = ListBox_SelectedClassGroupModels
-                .Items
-                .Cast<ClassGroupModel>()
-                .FirstOrDefault(cgm => cgm.Name == subjectModel.SelectedClassGroupName);
-
-            if (item != null)
-            {
-                ListBox_SelectedClassGroupModels.ScrollIntoView(item);
-
-                // Dispatcher đảm bảo layout pass hoàn tất trước khi lấy container
-                ListBox_SelectedClassGroupModels.Dispatcher.InvokeAsync(() =>
-                {
-                    if (ListBox_SelectedClassGroupModels
-                            .ItemContainerGenerator
-                            .ContainerFromItem(item) is ListBoxItem container)
-                    {
-                        container.IsSelected = true;
-                    }
-                }, System.Windows.Threading.DispatcherPriority.Loaded);
-            }
-        }
-
         // ================================ Sort classes ================================ //
         private void SortButton_Click(object sender, RoutedEventArgs e)
         {
@@ -119,6 +92,15 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
             // Đánh dấu item được chọn
             var clicked = sender as MenuItem;
             clicked.IsChecked = true; 
+        }
+
+        private void ListBox_ClassGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lb = (ListBox)sender;
+            if (lb.SelectedItem != null)
+            {
+                lb.ScrollIntoView(lb.SelectedItem);
+            }
         }
     }
 }

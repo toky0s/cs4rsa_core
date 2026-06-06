@@ -1,6 +1,7 @@
 ﻿using Cs4rsa.App.Services;
 using Cs4rsa.App.Views.UserControls;
 using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.Notification.Models;
 
@@ -73,6 +74,20 @@ namespace Cs4rsa.App.ViewModels
             return true;
         }
 
+        private bool _isConnected;
+        public bool IsConnected
+        {
+            get { return _isConnected; }
+            set { SetProperty(ref _isConnected, value); }
+        }
+
+        private bool _isNetworkChecking;
+        public bool IsNetworkChecking
+        {
+            get { return _isNetworkChecking; }
+            set { SetProperty(ref _isNetworkChecking, value); }
+        }
+
         #region Notification Service Region
         public ObservableCollection<Notification> NotificationItems { get; set; }
         #endregion
@@ -82,7 +97,8 @@ namespace Cs4rsa.App.ViewModels
             ILogger<MainWindowViewModel> logger,
             IDialogService dialogService,
             IUpdateService updateService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            NetworkMonitor networkMonitor)
         {
             NotificationItems = new ObservableCollection<Notification>();
             _eventAggregator = eventAggregator;
@@ -90,6 +106,21 @@ namespace Cs4rsa.App.ViewModels
             _dialogService = dialogService;
             _updateService = updateService;
             _unitOfWork = unitOfWork;
+
+            IsNetworkChecking = true;
+            networkMonitor.ConnectivityChanged += isConnected =>
+            {
+                // Event raise từ background thread → phải marshal về UI thread
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    IsConnected = isConnected;
+                    IsNetworkChecking = false;
+                    if (isConnected)
+                        OnNetworkRestored();
+                    else
+                        OnNetworkLost();
+                });
+            };
 
             _eventAggregator.GetEvent<NotificationEvent>().Subscribe(args =>
             {
@@ -101,6 +132,16 @@ namespace Cs4rsa.App.ViewModels
                     FromAction = args.FromAction,
                 });
             });
+        }
+
+        private void OnNetworkLost()
+        {
+            _logger.LogTrace("Network Lost");
+        }
+
+        private void OnNetworkRestored()
+        {
+            _logger.LogTrace("Network Restored");
         }
     }
 }

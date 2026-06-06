@@ -300,6 +300,10 @@
     <Compile Include="Services\GithubUpdateService.cs" />
     <Compile Include="Services\IUpdateService.cs" />
     <Compile Include="ViewModels\DownloadUpdatesDialogViewModel.cs" />
+    <Compile Include="ViewModels\StatusWindowViewModel.cs" />
+    <Compile Include="Views\StatusWindow.xaml.cs">
+      <DependentUpon>StatusWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\DownloadUpdatesDialog.xaml.cs">
       <DependentUpon>DownloadUpdatesDialog.xaml</DependentUpon>
     </Compile>
@@ -319,6 +323,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\StatusWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\UserControls\DownloadUpdatesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -406,15 +414,6 @@
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
       <Name>Cs4rsa.WPF.Converter</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\avatar.png" />
-    <Resource Include="Images\background.png" />
-    <Resource Include="Images\donate.png" />
-    <Resource Include="Images\donate_viettel.png" />
-    <Resource Include="Images\github.png" />
-    <Resource Include="Images\myimage.jpg" />
-    <Resource Include="Images\student-avatar.jpg" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

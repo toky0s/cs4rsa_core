@@ -27,6 +27,7 @@
             <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
             <cvt:StringListJoinConverter x:Key="JoinString" />
             <cvt:HalfHourTimeConverter x:Key="HalfHourTime" />
+            <cvt:IsNotNullConverter x:Key="IsNotNull" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -106,6 +107,23 @@
                                                 </Border>
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Cache, Converter={StaticResource IsNotNull}}" Value="{x:Static sys:Boolean.TrueString}" />
+                                                            <Condition Binding="{Binding Data.IsConnected, Source={StaticResource Proxy}}" Value="{x:Static sys:Boolean.FalseString}" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </MultiDataTrigger>
+                                                    <DataTrigger Binding="{Binding Data.IsConnected, Source={StaticResource Proxy}}" Value="{x:Static sys:Boolean.TrueString}">
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
                                     </ComboBox>
                                     <Border Grid.Column="3" Margin="4,0,0,0">
                                         <Button
@@ -131,8 +149,7 @@
                                         Grid.Row="0"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding SubjectModels}"
-                                        SelectedItem="{Binding SelectedSubjectModel}"
-                                        SelectionChanged="ListBox_SelectionChanged">
+                                        SelectedItem="{Binding SelectedSubjectModel}">
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="ListBoxItem">
                                                 <Style.Triggers>
@@ -432,6 +449,7 @@
                                 Grid.Row="1"
                                 ItemsSource="{Binding SelectedClassGroupModelsView}"
                                 SelectedItem="{Binding SelectedClassGroup}"
+                                SelectionChanged="ListBox_ClassGroups_SelectionChanged"
                                 SelectionMode="Single">
                                 <ListBox.ItemContainerStyle>
                                     <Style TargetType="ListBoxItem">
