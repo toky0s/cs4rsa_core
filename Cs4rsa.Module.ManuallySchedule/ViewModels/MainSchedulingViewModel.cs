@@ -34,6 +34,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 using System.Windows;
 using System.Windows.Data;
 
@@ -98,7 +99,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
 
         }
-         
+
         #endregion
 
         #region Commands in Store tab in search box
@@ -293,6 +294,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         }
                         await Task.WhenAll(downloadTasks);
                         SelectedSubjectModel = SubjectModels[0];
+
+                        var classToSelect = SelectedClassGroupModels.FirstOrDefault(item => item.Name == SubjectModels[0].SelectedClassGroupName);
+                        if (classToSelect != null)
+                        {
+                            SelectedClassGroup = classToSelect;
+                        }
 
                         RunScheduleValidator();
                     }
@@ -523,8 +530,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 {
                     SetProperty(ref _selectedSubjectModel, value);
                     OnSelectedSubjectModelChanged(value);
+                    SyncSelectedClassGroup();
                 }
             }
+        }
+
+        private void SyncSelectedClassGroup()
+        {
+            if (_selectedSubjectModel == null) return;
+
+            SelectedClassGroup = SelectedClassGroupModelsView
+                .Cast<ClassGroupModel>()
+                .FirstOrDefault(x => x.Name == _selectedSubjectModel.SelectedClassGroupName);
         }
 
         private CancellationTokenSource _timeout;
@@ -565,6 +582,20 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 LoadScheduleSession();
             }
         }
+
+        private List<ObservableCollection<TimeBlock>> _schedules;
+
+        public ObservableCollection<TimeBlock> Week1 { get; set; }
+        public ObservableCollection<TimeBlock> Week2 { get; set; }
+
+        public ObservableCollection<string> Timelines { get; set; }
+
+        private bool _isConnected;
+        public bool IsConnected
+        {
+            get { return _isConnected; }
+            set { SetProperty(ref _isConnected, value); }
+        }
         #endregion
 
         #region Services
@@ -596,7 +627,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ILogger<MainSchedulingViewModel> logger,
             IDialogService dialogService,
             IScheduleValidator scheduleValidator,
-            ITimeBlockGenerator timeBlockGenerator
+            ITimeBlockGenerator timeBlockGenerator,
+            NetworkMonitor networkMonitor
         )
         {
             #region Services
@@ -636,8 +668,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             #endregion
 
-            LoadDiscipline();
-            LoadSavedSchedules();
 
             TeacherCount = 0;
             AnyTeacherName = true;
@@ -647,13 +677,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             FilterCommand = new DelegateCommand(OnFilter);
             ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
 
-            InitFilter();
 
             OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
             ConflictCollection = new ObservableCollection<Conflict>();
-            
+
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
             _selectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
@@ -674,7 +703,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             #endregion
 
+            InitFilter();
+            LoadDiscipline();
             ConflictCollection.CollectionChanged += Conflicts_CollectionChanged;
+
+            networkMonitor.ConnectivityChanged += NetworkMonitor_ConnectivityChanged;
+        }
+
+        private void NetworkMonitor_ConnectivityChanged(bool obj)
+        {
+            IsConnected = obj;
         }
 
         private void Conflicts_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -876,19 +914,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        /// <summary>
-        /// Load danh sách các bộ lịch đã lưu
-        /// </summary>
-        private void LoadSavedSchedules()
-        {
-            SavedSchedules.Clear();
-            var sessions = _unitOfWork.UserSchedules.GetAll();
-            foreach (var session in sessions)
-            {
-                SavedSchedules.Add(session);
-            }
-        }
-
         private void LoadDiscipline()
         {
             _searchDisciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
@@ -1011,7 +1036,18 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 //throw new Exception("Dummy Exception");
 
                 // 1. Thực hiện tải Subject. 
-                var subjectModel = await DownloadSubject(keyword, IsUseCache);
+                var (subjectModel, cache) = await DownloadSubject(keyword, IsUseCache);
+
+                // 2.3. Cập nhật lên local
+                var index = DisciplineKeywordModels.IndexOf(keyword);
+                if (index >= 0)
+                {
+                    var colKeyword = DisciplineKeywordModels[index];
+                    colKeyword.Cache = cache;
+                    DisciplineKeywordModels.RemoveAt(index);
+                    DisciplineKeywordModels.Insert(index, colKeyword);
+                    SelectedKeyword = colKeyword;
+                }
 
                 // 2. Thông báo nếu Subject không tồn tại, ngược lại thay thế Pseudo Subject bằng Subject đã tải được. 
                 if (subjectModel == null)
@@ -1020,7 +1056,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     return null;
                 }
 
-                //ReplacePseudoSubject(subjectModel);
                 var pseudoSubject = SubjectModels.First(sm => sm.CourseId.Equals(subjectModel.CourseId));
                 pseudoSubject.AssignData(subjectModel);
 
@@ -1078,27 +1113,25 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels.Add(classGroupModel);
         }
 
-        private async Task<SubjectModel> DownloadSubject(Keyword keyword, bool isUseCache)
+        private async Task<(SubjectModel, string)> DownloadSubject(Keyword keyword, bool isUseCache)
         {
             return await Task.Run(async () =>
             {
                 Subject subject;
+                string cache;
                 // 1. Sử dụng cache và có sẵn cache trong DB.
                 if (isUseCache && !string.IsNullOrWhiteSpace(keyword.Cache))
                 {
+                    cache = keyword.Cache;
                     subject = _subjectCrawler.CrawlFromCache(keyword.Cache, keyword.CourseId, keyword.SemesterId);
                 }
                 // 2. Không sử dụng cache
                 else
                 {
-                    string cache;
                     var semesterId = _unitOfWork.Settings.GetByKey(DbConsts.StCurrentSemesterValue);
                     (subject, cache) = await _subjectCrawler.Crawl(keyword.CourseId, semesterId);
                     // 2.2. Cập nhật lại cache
                     _unitOfWork.Keywords.UpdateCacheByKeywordId(keyword.KeywordId, semesterId, cache);
-                    // 2.3. Cập nhật lên local
-                    keyword.Cache = cache;
-                    keyword.SemesterId = semesterId;
                 }
                 if (subject is null)
                 {
@@ -1106,7 +1139,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 }
                 else
                 {
-                    return new SubjectModel(subject, keyword.Color);
+                    return (new SubjectModel(subject, keyword.Color), cache);
                 }
             });
         }
@@ -1184,7 +1217,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _selectedClassGroup; }
             set
             {
-                // Chỉ select được class group nếu nó là class group mới, chưa có trong SelectedClassGroupModels
                 if (!SelectedClassGroupModels.Contains(value))
                 {
                     SetProperty(ref _selectedClassGroup, value);
@@ -1192,6 +1224,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         System.Windows.Threading.DispatcherPriority.Background,
                         new Action(() => OnSelectedClassGroupChanged(value))
                     );
+                }
+                else
+                {
+                    // Chỉ highlight, không trigger OnSelectedClassGroupChanged
+                    SetProperty(ref _selectedClassGroup, value);
                 }
             }
         }
@@ -1659,17 +1696,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             UpdatePlaceConflictCollection(schoolClasses);
         }
 
-        #region Scheduler View Model
-        private List<ObservableCollection<TimeBlock>> _schedules;
-
-        #region Properties
-        public ObservableCollection<TimeBlock> Week1 { get; set; }
-        public ObservableCollection<TimeBlock> Week2 { get; set; }
-
-        public ObservableCollection<string> Timelines { get; set; }
-
-        #endregion
-
         /// <summary>
         /// Loại bỏ ScheduleItem khỏi mô phỏng.
         /// 
@@ -1735,6 +1761,5 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             Week1.Clear();
             Week2.Clear();
         }
-        #endregion
     }
 }
