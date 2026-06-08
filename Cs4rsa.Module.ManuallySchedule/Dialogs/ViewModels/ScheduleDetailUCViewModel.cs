@@ -23,6 +23,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
     public class ScheduleDetailUCViewModel : BindableBase, IDialogAware
     {
+        private bool _isShareString;
+        /// <summary>
+        /// Thông báo rằng popup được mở bằng Share string.
+        /// </summary>
+        public bool IsShareString
+        {
+            get { return _isShareString; }
+            set { SetProperty(ref _isShareString, value); }
+        }
+
         private UserSchedule _userSchedule;
         public UserSchedule UserSchedule
         {
@@ -73,17 +83,29 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         void ExecuteLoadCommand()
         {
-            _logger.LogInformation("Load schedule detail for schedule {UserScheduleId} - {UserScheduleName}", UserSchedule.UserScheduleId, UserSchedule.Name);
-            var parameters = new DialogParameters
+            if (IsShareString)
             {
-                { "UserSubjects", UserSubjects }
-            };
-            RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
+                _logger.LogInformation("Load schedule detail for share string");
+                var parameters = new DialogParameters
+                {
+                    { "UserSubjects", UserSubjects }
+                };
+                RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
+            }
+            else
+            {
+                _logger.LogInformation("Load schedule detail for schedule {UserScheduleId} - {UserScheduleName}", UserSchedule.UserScheduleId, UserSchedule.Name);
+                var parameters = new DialogParameters
+                {
+                    { "UserSubjects", UserSubjects }
+                };
+                RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
+            }
         }
 
         bool CanExecuteLoadCommand()
         {
-            return IsAvailable;
+            return IsAvailable || IsShareString;
         }
 
         public bool CanCloseDialog()
@@ -93,12 +115,25 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public void OnDialogClosed()
         {
-            
+
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
             UserSchedule = parameters.GetValue<UserSchedule>("UserSchedule");
+            var arrUserSubjects = parameters.GetValue<UserSubject[]>("UserSubjects");
+            if (arrUserSubjects != null)
+            {
+                IsShareString = true;
+                UserSubjects.Clear();
+                UserSubjects.AddRange(arrUserSubjects);
+            }
+            else
+            {
+                IsShareString = false;
+            }
+
+            LoadCommand.RaiseCanExecuteChanged();
         }
         #endregion
 

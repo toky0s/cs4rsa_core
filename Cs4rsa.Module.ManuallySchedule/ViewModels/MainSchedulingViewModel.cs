@@ -20,6 +20,8 @@ using Cs4rsa.UI.ScheduleTable;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -90,7 +92,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 new SortDescription(_currentSortField.ToString(), _currentSortDirection)
             );
         }
-
         private DelegateCommand<string> _changeDirectionCommand;
         public DelegateCommand<string> ChangeDirectionCommand =>
             _changeDirectionCommand ?? (_changeDirectionCommand = new DelegateCommand<string>(ExecuteChangeDirectionCommand));
@@ -100,6 +101,82 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         }
 
+        #endregion
+
+        #region Commands in Quick import tab in search box
+
+        private string _shareString;
+        public string ShareString
+        {
+            get { return _shareString; }
+            set
+            {
+                SetProperty(ref _shareString, value);
+                LoadShareStringCommand.RaiseCanExecuteChanged();
+            }
+        }
+        private DelegateCommand _loadShareStringCommand;
+        public DelegateCommand LoadShareStringCommand =>
+            _loadShareStringCommand ?? (_loadShareStringCommand = new DelegateCommand(ExecuteLoadShareStringCommand, CanExecuteLoadShareStringCommand));
+
+        void ExecuteLoadShareStringCommand()
+        {
+            var output = _shareStringService.GetSubjectFromShareString(ShareString);
+            var serialize = JsonConvert.SerializeObject(output);
+            _logger.LogTrace("Load share string: {output}", serialize);
+
+            _dialogService.ShowDialog(nameof(ScheduleDetailUC), new DialogParameters()
+            {
+                { "UserSchedule",  null },
+                { "UserSubjects", output }
+            }, async r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    _logger.LogInformation("ScheduleDetailUC closed with OK");
+                    // Go to Search tab
+                    SearchBoxSelectedIndex = 0;
+
+                    var parameters = r.Parameters;
+                    var userSubjects = parameters.GetValue<ObservableCollection<UserSubject>>("UserSubjects");
+
+                    if (userSubjects == null) return;
+                    SubjectModels.Clear();
+
+                    // Get keywords from subjects then add pseudo subjects to SubjectModels before downloading real subjects,
+                    // to make sure the order of subjects is the same as userSubjects order.
+                    var keywords = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeywordBySubjectCode(userSubject.SubjectCode)).ToList();
+                    InsertPseudoSubjects(keywords, userSubjects);
+
+                    // Download real subjects in parallel, after all subjects are downloaded,
+                    // set SelectedSubjectModel to the first subject to show details of that subject.
+                    var downloadTasks = new List<Task>();
+                    for (var i = 0; i < keywords.Count; i++)
+                    {
+                        downloadTasks.Add(OnAddSubjectAsync(keywords[i], userSubjects[i]));
+                    }
+                    await Task.WhenAll(downloadTasks);
+                    SelectedSubjectModel = SubjectModels[0];
+
+                    var classToSelect = SelectedClassGroupModels.FirstOrDefault(item => item.Name == SubjectModels[0].SelectedClassGroupName);
+                    if (classToSelect != null)
+                    {
+                        SelectedClassGroup = classToSelect;
+                    }
+
+                    RunScheduleValidator();
+                }
+                else
+                {
+                    _logger.LogInformation("ScheduleDetailUC closed");
+                }
+            });
+        }
+
+        bool CanExecuteLoadShareStringCommand()
+        {
+            return !string.IsNullOrEmpty(ShareString);
+        }
         #endregion
 
         #region Commands in Store tab in search box
@@ -607,6 +684,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly IScheduleValidator _scheduleValidator;
         private readonly IDialogService _dialogService;
         private readonly ITimeBlockGenerator _timeBlockGenerator;
+        private readonly IShareStringService _shareStringService;
         #endregion
 
         public void LoadScheduleSession()
@@ -628,7 +706,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             IDialogService dialogService,
             IScheduleValidator scheduleValidator,
             ITimeBlockGenerator timeBlockGenerator,
-            NetworkMonitor networkMonitor
+            NetworkMonitor networkMonitor,
+            IShareStringService shareStringService
         )
         {
             #region Services
@@ -640,6 +719,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _logger = logger;
             _scheduleValidator = scheduleValidator;
             _timeBlockGenerator = timeBlockGenerator;
+            _shareStringService = shareStringService;
             #endregion
 
             #region Subscribe Events
@@ -676,9 +756,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ShowDetailsSchoolClassesCommand = new DelegateCommand(OnShowDetailsSchoolClasses);
             FilterCommand = new DelegateCommand(OnFilter);
             ResetFilterCommand = new DelegateCommand(OnResetFilter, CanResetFilter);
-
-
-            OpenShareStringWindowCommand = new DelegateCommand(OnOpenShareStringWindow);
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
             ConflictCollection = new ObservableCollection<Conflict>();
@@ -1485,8 +1562,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Commands
-        public DelegateCommand OpenShareStringWindowCommand { get; set; }
-        public DelegateCommand DeleteChooseCommand { get; set; }
 
         private DelegateCommand<WarningModel> _solveConflictCommand;
         public DelegateCommand<WarningModel> SolveConflictCommand =>
@@ -1568,14 +1643,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             return true;
         }
         #endregion
-
-        private void OnOpenShareStringWindow()
-        {
-            //var shareStringUc = new ShareStringUC(); // TODO: Chưa set view model
-            //var vm = shareStringUc.DataContext as ShareStringUCViewModel;
-            //vm.ShareString = _shareStringGenerator.GetShareString(SelectedClassGroupModels); ;
-            //_dialogService.OpenDialog(shareStringUc);
-        }
 
         /// <summary>
         /// Kiểm tra xem một Class Group Model nào đó có tồn tại một

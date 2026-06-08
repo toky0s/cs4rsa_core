@@ -362,8 +362,13 @@
                             <TextBox
                                 Grid.Column="0"
                                 Margin="0,0,4,0"
-                                uihelper:TextBoxHelper.Placeholder="Enter your shared code..." />
-                            <Button Grid.Column="1" Content="Load..." />
+                                uihelper:TextBoxHelper.Placeholder="Enter your shared code..."
+                                Text="{Binding ShareString, UpdateSourceTrigger=PropertyChanged}"
+                                TextInput="TextBox_TextInput" />
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding LoadShareStringCommand}"
+                                Content="Load..." />
                         </Grid>
                     </Grid>
                 </TabItem>
