@@ -13,6 +13,7 @@ using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
+using Cs4rsa.Service.CourseCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
@@ -129,24 +130,116 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 { "UserSchedule",  null },
                 { "UserSubjects", output }
-            }, async r =>
+            }, async r => await LoadUserScheduleOnClose(r));
+        }
+
+        private async Task LoadUserScheduleOnClose(IDialogResult r)
+        {
+            if (r.Result == ButtonResult.OK)
             {
-                if (r.Result == ButtonResult.OK)
+                _logger.LogInformation("ScheduleDetailUC closed with OK");
+
+                var parameters = r.Parameters;
+                var isMergeAction = parameters.GetValue<string>("Action") == "Merge";
+                var userSubjects = parameters.GetValue<ObservableCollection<UserSubject>>("UserSubjects");
+
+                if (userSubjects == null) return;
+
+                // Go to Search tab
+                SearchBoxSelectedIndex = 0;
+
+                if (isMergeAction)
                 {
-                    _logger.LogInformation("ScheduleDetailUC closed with OK");
-                    // Go to Search tab
-                    SearchBoxSelectedIndex = 0;
+                    // Chỉ tải những môn chưa có sẵn.
+                    var currSubjectCodes = SubjectModels.Select(sm => sm.SubjectCode).ToHashSet();
+                    var downloadTasks = new List<Task>();
+                    userSubjects
+                        // Trong lịch đã lưu, lấy ra các môn học có trạng thái OK và chưa tồn tại trong SubjectModels để tải,
+                        // còn những môn đã tồn tại thì chỉ cần set selected class group là được, ko cần tải lại.
+                        .Where(us => us.Status == "OK" && !currSubjectCodes.Contains(us.SubjectCode))
+                        .Select(us =>
+                        {
+                            var kw = _unitOfWork.Keywords.GetKeywordBySubjectCode(us.SubjectCode);
+                            kw.Discipline = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
+                            // Add task to download
+                            downloadTasks.Add(OnAddSubjectAsync(kw, us));
+                            // Add pseudo subject
+                            return new SubjectModel(
+                                kw.SubjectName,
+                                kw.Discipline.Name + " " + kw.Keyword1,
+                                kw.Color,
+                                kw.CourseId,
+                                us
+                            );
+                        })
+                        .ToList()
+                        .ForEach(sm => SubjectModels.Insert(0, sm));
 
-                    var parameters = r.Parameters;
-                    var userSubjects = parameters.GetValue<ObservableCollection<UserSubject>>("UserSubjects");
+                    await Task.WhenAll(downloadTasks);
 
-                    if (userSubjects == null) return;
+                    // Nếu subject đã có sẵn, không cần download lại, chỉ cần đổi selected.
+                    var dicClassGroups = userSubjects
+                        .Where(us => currSubjectCodes.Contains(us.SubjectCode))
+                        .ToDictionary(us => us.SubjectCode, us => us.ClassGroup);
+
+                    // Lấy ra ClassGroupModel có tên bằng với tên đã lưu.
+                    SubjectModels
+                        .Where(sm => dicClassGroups.ContainsKey(sm.SubjectCode))
+                        .ToList()
+                        .ForEach(sm =>
+                        {
+                            // Set selected class group name to find the ClassGroupModel which has the same name as the saved one.
+                            sm.SelectedClassGroupName = dicClassGroups[sm.SubjectCode];
+
+                            // Lấy ra Class Group Model ứng với class group đã lưu của môn học đó.
+                            var tempCgm = sm
+                                .ClassGroupModels
+                                .First(cgm => dicClassGroups.ContainsKey(sm.SubjectCode) && dicClassGroups[sm.SubjectCode] == cgm.Name);
+
+                            // Nếu là môn đặc biệt, sẽ không có class group, mà sẽ lưu trực tiếp
+                            // tên lớp học đã chọn vào UserSubject.SchoolClass, nên sẽ lấy tên
+                            // lớp học đó để điền vào ClassGroupModel.PickSchoolClass.
+                            if (sm.IsSpecialSubject)
+                            {
+                                var selectedSchoolClass = userSubjects.First(us => us.ClassGroup == tempCgm.Name).SchoolClass;
+                                tempCgm.PickSchoolClass(selectedSchoolClass);
+                            }
+
+                            // Tìm class group cũ đã chọn của Subject và remove
+                            var oldSelectedClassGroup = SelectedClassGroupModels.FirstOrDefault(cgm => cgm.SubjectCode == sm.SubjectCode);
+                            if (oldSelectedClassGroup != null)
+                            {
+                                SelectedClassGroupModels.Remove(oldSelectedClassGroup);
+                            }
+
+                            SelectedClassGroupModels.Add(tempCgm);
+                        });
+
+                    SelectedSubjectModel = SubjectModels[0];
+                }
+                else
+                {
                     SubjectModels.Clear();
 
                     // Get keywords from subjects then add pseudo subjects to SubjectModels before downloading real subjects,
                     // to make sure the order of subjects is the same as userSubjects order.
                     var keywords = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeywordBySubjectCode(userSubject.SubjectCode)).ToList();
-                    InsertPseudoSubjects(keywords, userSubjects);
+
+                    //InsertPseudoSubjects(keywords, userSubjects);
+                    var userSubjectArr = userSubjects.ToArray();
+                    for (var i = 0; i < keywords.Count; i++)
+                    {
+                        var kw = keywords[i];
+                        kw.Discipline = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
+                        var pseudoSubjectModel = new SubjectModel(
+                            kw.SubjectName,
+                            kw.Discipline.Name + " " + kw.Keyword1,
+                            kw.Color,
+                            kw.CourseId,
+                            userSubjectArr[i]
+                        );
+                        SubjectModels.Insert(0, pseudoSubjectModel);
+                    }
 
                     // Download real subjects in parallel, after all subjects are downloaded,
                     // set SelectedSubjectModel to the first subject to show details of that subject.
@@ -163,14 +256,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     {
                         SelectedClassGroup = classToSelect;
                     }
+                }
 
-                    RunScheduleValidator();
-                }
-                else
-                {
-                    _logger.LogInformation("ScheduleDetailUC closed");
-                }
-            });
+                RunScheduleValidator();
+            }
+            else
+            {
+                _logger.LogInformation("ScheduleDetailUC closed");
+            }
         }
 
         bool CanExecuteLoadShareStringCommand()
@@ -225,6 +318,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             ?? (_addCommand = new DelegateCommand(async () => await ExecuteAddCommand(), () => !IsAlreadyDownloaded(SelectedKeyword)));
         private async Task ExecuteAddCommand()
         {
+            var url = $"https://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={SelectedKeyword.CourseId}&timespan={SelectedKeyword.SemesterId}&t=s";
+            _logger.LogInformation("Add command executed - Load subject={url}", url);
             InsertPseudoSubject(SelectedKeyword);
             await OnAddSubjectAsync(SelectedKeyword);
         }
@@ -290,8 +385,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// <param name="sm">SubjectModel.</param>
         private void ExecuteDeleteCommand(SubjectModel sm)
         {
+            var subjectCode = sm.SubjectCode;
             SubjectModels.Remove(sm);
             SelectedSubjectModel = null;
+            var isBelongToDeletedSubject = CurrentClassGroupModels.All(cgm => cgm.SubjectCode == subjectCode);
+            // Fix bug: Ko remove luôn các class đã chọn nếu subject của nó bị remove.
+            if (isBelongToDeletedSubject)
+            {
+                CurrentClassGroupModels.Clear();
+            }
             ToastService.Instance.Info("Notification", "Đã xoá môn " + sm.SubjectName);
         }
 
@@ -343,48 +445,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 _dialogService.ShowDialog(nameof(ScheduleDetailUC), new DialogParameters()
                 {
                     {"UserSchedule", userSchedule }
-                }, async r =>
-                {
-                    if (r.Result == ButtonResult.OK)
-                    {
-                        _logger.LogInformation("ScheduleDetailUC closed with OK");
-                        // Go to Search tab
-                        SearchBoxSelectedIndex = 0;
-
-                        var parameters = r.Parameters;
-                        var userSubjects = parameters.GetValue<ObservableCollection<UserSubject>>("UserSubjects");
-
-                        if (userSubjects == null) return;
-                        SubjectModels.Clear();
-
-                        // Get keywords from subjects then add pseudo subjects to SubjectModels before downloading real subjects,
-                        // to make sure the order of subjects is the same as userSubjects order.
-                        var keywords = userSubjects.Select(userSubject => _unitOfWork.Keywords.GetKeywordBySubjectCode(userSubject.SubjectCode)).ToList();
-                        InsertPseudoSubjects(keywords, userSubjects);
-
-                        // Download real subjects in parallel, after all subjects are downloaded,
-                        // set SelectedSubjectModel to the first subject to show details of that subject.
-                        var downloadTasks = new List<Task>();
-                        for (var i = 0; i < keywords.Count; i++)
-                        {
-                            downloadTasks.Add(OnAddSubjectAsync(keywords[i], userSubjects[i]));
-                        }
-                        await Task.WhenAll(downloadTasks);
-                        SelectedSubjectModel = SubjectModels[0];
-
-                        var classToSelect = SelectedClassGroupModels.FirstOrDefault(item => item.Name == SubjectModels[0].SelectedClassGroupName);
-                        if (classToSelect != null)
-                        {
-                            SelectedClassGroup = classToSelect;
-                        }
-
-                        RunScheduleValidator();
-                    }
-                    else
-                    {
-                        _logger.LogInformation("ScheduleDetailUC closed");
-                    }
-                });
+                }, async r => await LoadUserScheduleOnClose(r));
             }
         }
 
@@ -1179,6 +1240,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var subjectModel = await OnAddSubjectAsync(keyword);
             if (subjectModel == null) return;
+
             // Lấy ra ClassGroupModel có tên bằng với tên đã lưu.
             var classGroupModel = subjectModel
                 .ClassGroupModels

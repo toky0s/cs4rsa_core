@@ -329,13 +329,9 @@
                                             Orientation="Horizontal">
                                             <Button
                                                 Margin="0,0,4,0"
-                                                BorderThickness="0"
                                                 Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
-                                                Content="🔗"
-                                                Foreground="Green"
-                                                Style="{StaticResource IconButtonStyle}"
-                                                ToolTip="Share" />
+                                                Content="Share..." />
                                             <Button
                                                 Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
@@ -473,14 +469,14 @@
                                     <DataTemplate>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" IsEnabled="{Binding IsSpecialClassGroup}" />
+                                                    <ColumnDefinition Width="*" IsEnabled="{Binding IsSpecialClassGroup}" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Text="{Binding Name}" />
                                                 <TextBlock
@@ -522,7 +518,8 @@
                                                 Grid.Column="1"
                                                 VerticalAlignment="Center"
                                                 FontSize="10"
-                                                Text="{Binding EmptySeat, StringFormat={}{0} Seats}" />
+                                                Text="{Binding EmptySeat, StringFormat={}{0} Seats}"
+                                                TextAlignment="Right" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

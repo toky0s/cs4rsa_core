@@ -48,9 +48,17 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         private void OnCopy()
         {
-            if (_shareString == null) return;
-            Clipboard.SetData(DataFormats.Text, _shareString);
-            _logger.LogInformation("User copied share string successfully");
+            try
+            {
+                if (_shareString == null) return;
+                Clipboard.SetData(DataFormats.Text, _shareString);
+                _logger.LogInformation("User copied share string successfully");
+                Clipboard.Flush();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to copy share string to clipboard");
+            }
         }
 
         public bool CanCloseDialog()

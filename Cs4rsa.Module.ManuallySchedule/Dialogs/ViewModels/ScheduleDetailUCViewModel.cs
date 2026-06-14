@@ -40,16 +40,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             set { SetProperty(ref _userSchedule, value); LoadScheduleDetail(value); }
         }
 
-        private bool _isAvailable;
-        public bool IsAvailable
-        {
-            get { return _isAvailable; }
-            set { SetProperty(ref _isAvailable, value); }
-        }
-
         private void LoadScheduleDetail(UserSchedule value)
         {
-            IsAvailable = ValidateUserSchedule.CheckIsAvailableSession(_courseCrawler, value);
             LoadCommand.RaiseCanExecuteChanged();
             LoadUserSubject(value);
         }
@@ -62,21 +54,52 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                 var userSubjects = _unitOfWork.UserSchedules
                     .GetSessionDetails(userSchedule.UserScheduleId)
                     .Select(
-                        sd => new UserSubject()
+                        sd =>
                         {
-                            SubjectCode = sd.SubjectCode,
-                            SubjectName = sd.SubjectName,
-                            ClassGroup = sd.ClassGroup,
-                            SchoolClass = sd.SelectedSchoolClass,
-                            RegisterCode = sd.RegisterCode
+                            var us = new UserSubject()
+                            {
+                                SubjectCode = sd.SubjectCode,
+                                SubjectName = sd.SubjectName,
+                                ClassGroup = sd.ClassGroup,
+                                SchoolClass = sd.SelectedSchoolClass,
+                                RegisterCode = sd.RegisterCode,
+                            };
+                            CheckStatus(us);
+                            return us;
                         }
-                    );
-
+                    ).ToList();
                 UserSubjects.AddRange(userSubjects);
             }
         }
 
         #region Commands
+        private DelegateCommand _loadMergeCommand;
+        public DelegateCommand LoadMergeCommand =>
+            _loadMergeCommand ?? (_loadMergeCommand = new DelegateCommand(ExecuteLoadMergeCommand, CanExecuteLoadMergeCommand));
+
+        void ExecuteLoadMergeCommand()
+        {
+            if (IsShareString)
+            {
+                _logger.LogInformation("Load and merge schedule detail for share string");
+            }
+            else
+            {
+                _logger.LogInformation("Load and merge schedule detail for schedule {UserScheduleId} - {UserScheduleName}", UserSchedule.UserScheduleId, UserSchedule.Name);
+            }
+            var parameters = new DialogParameters
+                {
+                    { "UserSubjects", UserSubjects },
+                    { "Action", "Merge" },
+                };
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
+        }
+
+        bool CanExecuteLoadMergeCommand()
+        {
+            return true;
+        }
+
         private DelegateCommand _loadCommand;
         public DelegateCommand LoadCommand =>
             _loadCommand ?? (_loadCommand = new DelegateCommand(ExecuteLoadCommand, CanExecuteLoadCommand));
@@ -86,26 +109,22 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             if (IsShareString)
             {
                 _logger.LogInformation("Load schedule detail for share string");
-                var parameters = new DialogParameters
-                {
-                    { "UserSubjects", UserSubjects }
-                };
-                RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
             }
             else
             {
                 _logger.LogInformation("Load schedule detail for schedule {UserScheduleId} - {UserScheduleName}", UserSchedule.UserScheduleId, UserSchedule.Name);
-                var parameters = new DialogParameters
-                {
-                    { "UserSubjects", UserSubjects }
-                };
-                RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
             }
+            var parameters = new DialogParameters
+                {
+                    { "UserSubjects", UserSubjects },
+                    { "Action", "Overwrite" },
+                };
+            RequestClose.Invoke(new DialogResult(ButtonResult.OK, parameters));
         }
 
         bool CanExecuteLoadCommand()
         {
-            return IsAvailable || IsShareString;
+            return true;
         }
 
         public bool CanCloseDialog()
@@ -126,7 +145,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             {
                 IsShareString = true;
                 UserSubjects.Clear();
-                UserSubjects.AddRange(arrUserSubjects);
+                var updatedUserSubjects = arrUserSubjects.Select(CheckStatus).ToList();
+                UserSubjects.AddRange(updatedUserSubjects);
             }
             else
             {
@@ -135,6 +155,20 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
             LoadCommand.RaiseCanExecuteChanged();
         }
+
+        private UserSubject CheckStatus(UserSubject userSubject)
+        {
+            var subject = _unitOfWork.Keywords.GetKeywordBySubjectCode(userSubject.SubjectCode);
+            if (subject != null)
+            {
+                userSubject.Status = "OK";
+            }
+            else
+            {
+                userSubject.Status = "NOT OK";
+            }
+            return userSubject;
+        }
         #endregion
 
         public ObservableCollection<UserSubject> UserSubjects { get; set; }
@@ -142,17 +176,14 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public string Title => "View Schedule Details";
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICourseCrawler _courseCrawler;
         private readonly ILogger<ScheduleDetailUCViewModel> _logger;
 
         public event Action<IDialogResult> RequestClose;
 
         public ScheduleDetailUCViewModel(
             ILogger<ScheduleDetailUCViewModel> logger,
-            ICourseCrawler courseCrawler,
             IUnitOfWork unitOfWork)
         {
-            _courseCrawler = courseCrawler;
             _unitOfWork = unitOfWork;
             _logger = logger;
 
