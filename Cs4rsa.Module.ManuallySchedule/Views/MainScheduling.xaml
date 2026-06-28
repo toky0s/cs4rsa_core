@@ -14,6 +14,7 @@
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
+    xmlns:vr="clr-namespace:Cs4rsa.Module.ManuallySchedule.ValidationRules"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     Name="root"
     d:DataContext="{d:DesignInstance Type=vm:MainSchedulingViewModel}"
@@ -28,6 +29,7 @@
             <cvt:StringListJoinConverter x:Key="JoinString" />
             <cvt:HalfHourTimeConverter x:Key="HalfHourTime" />
             <cvt:IsNotNullConverter x:Key="IsNotNull" />
+            <vr:VR_SharedCode x:Key="vrSharedCode" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -290,66 +292,67 @@
                     </Border>
                 </TabItem>
                 <TabItem Header="Store">
-                    <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding UserSchedules}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        FontSize="13"
-                                        FontWeight="DemiBold"
-                                        Text="{Binding Name}" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        FontSize="10"
-                                        Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
-                                    <Grid Grid.Row="2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Button
-                                            Grid.Column="0"
-                                            Margin="0,0,4,0"
-                                            HorizontalAlignment="Left"
-                                            Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
-                                            CommandParameter="{Binding}"
-                                            Content="🗑️"
-                                            Foreground="DimGray"
-                                            Style="{StaticResource IconButtonStyle}"
-                                            ToolTip="Delete" />
-                                        <StackPanel
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Right"
-                                            Orientation="Horizontal">
-                                            <Button
-                                                Margin="0,0,4,0"
-                                                Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
-                                                CommandParameter="{Binding}"
-                                                Content="Share..." />
-                                            <Button
-                                                Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
-                                                CommandParameter="{Binding}"
-                                                Content="Load..." />
-                                        </StackPanel>
-                                    </Grid>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </TabItem>
-                <TabItem Header="Quick import">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="From shared code" />
+                        <ListBox
+                            Grid.Row="0"
+                            Margin="0,0,0,4"
+                            HorizontalContentAlignment="Stretch"
+                            ItemsSource="{Binding UserSchedules}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            FontSize="13"
+                                            FontWeight="DemiBold"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            FontSize="10"
+                                            Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Button
+                                                Grid.Column="0"
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
+                                                CommandParameter="{Binding}"
+                                                Content="🗑️"
+                                                Foreground="DimGray"
+                                                Style="{StaticResource IconButtonStyle}"
+                                                ToolTip="Delete" />
+                                            <StackPanel
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <Button
+                                                    Margin="0,0,4,0"
+                                                    Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="Share..." />
+                                                <Button
+                                                    Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="Load..." />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -359,8 +362,31 @@
                                 Grid.Column="0"
                                 Margin="0,0,4,0"
                                 uihelper:TextBoxHelper.Placeholder="Enter your shared code..."
-                                Text="{Binding ShareString, UpdateSourceTrigger=PropertyChanged}"
-                                TextInput="TextBox_TextInput" />
+                                TextInput="TextBox_TextInput">
+                                <TextBox.Text>
+                                    <Binding Path="ShareString" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <vr:VR_SharedCode />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Validation.ErrorTemplate">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <StackPanel>
+                                                        <Border BorderBrush="Red" BorderThickness="1">
+                                                            <AdornedElementPlaceholder />
+                                                        </Border>
+                                                        <TextBlock Foreground="Red" Text="{Binding [0].ErrorContent}" />
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                             <Button
                                 Grid.Column="1"
                                 Command="{Binding LoadShareStringCommand}"

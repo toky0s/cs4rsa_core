@@ -148,6 +148,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // Go to Search tab
                 SearchBoxSelectedIndex = 0;
 
+                // NGƯỜI DÙNG CHỌN MERGE OPTION
                 if (isMergeAction)
                 {
                     // Chỉ tải những môn chưa có sẵn.
@@ -217,6 +218,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                     SelectedSubjectModel = SubjectModels[0];
                 }
+                // NGƯỜI DÙNG CHỌN OVERWRITE
                 else
                 {
                     SubjectModels.Clear();
@@ -258,6 +260,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                 }
 
+                ShareString = string.Empty;
                 RunScheduleValidator();
             }
             else
