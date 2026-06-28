@@ -14,7 +14,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
         string GetShareString(IEnumerable<ClassGroupModel> classGroupModels);
         string GetShareString(IEnumerable<UserSubject> userSubjects);
         string GetShareString(ScheduleBagModel scheduleBagModel);
-        IEnumerable<UserSubject> GetSubjectFromShareString(string shareString);
+        UserSubject[] GetSubjectFromShareString(string shareString);
         ScheduleBagModel ToScheduleBagModel(IEnumerable<ClassGroupModel> classGroupModels);
         IEnumerable<UserSubject> ConvertToUserSubjects(IEnumerable<ClassGroupModel> classGroupModels);
     }

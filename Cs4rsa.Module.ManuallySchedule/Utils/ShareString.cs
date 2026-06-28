@@ -53,16 +53,16 @@ namespace Cs4rsa.Module.ManuallySchedule.Utils
             return StringHelper.EncodeTo64(json);
         }
 
-        public IEnumerable<UserSubject> GetSubjectFromShareString(string shareString)
+        public UserSubject[] GetSubjectFromShareString(string shareString)
         {
             try
             {
                 var json = StringHelper.DecodeFrom64(shareString);
                 return JsonConvert.DeserializeObject<UserSubject[]>(json);
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                throw new Exception("Invalid share string", ex.InnerException);
             }
         }
 

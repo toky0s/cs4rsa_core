@@ -102,5 +102,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
                 lb.ScrollIntoView(lb.SelectedItem);
             }
         }
+
+        private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
+        {
+
+        }
     }
 }
