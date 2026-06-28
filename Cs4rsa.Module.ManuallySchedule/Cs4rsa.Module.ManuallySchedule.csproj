@@ -165,6 +165,7 @@
     <Compile Include="Utils\SubjectCodeParser.cs" />
     <Compile Include="Utils\ValidateUserSchedule.cs" />
     <Compile Include="Services\UpdateConflict.cs" />
+    <Compile Include="ValidationRules\VR_SharedCode.cs" />
     <Compile Include="ViewModels\FilterViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Views\MainScheduling.xaml.cs">

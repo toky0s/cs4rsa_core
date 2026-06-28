@@ -9,6 +9,7 @@ namespace Cs4rsa.Service.SubjectCrawler.DataTypes
     public class Schedule
     {
         public Dictionary<DayOfWeek, List<StudyTime>> ScheduleTime { get; }
+        public List<SupplementaryClassSchedule> SupplementaryClassSchedules { get; } =  new List<SupplementaryClassSchedule>();
 
         public Schedule(Dictionary<DayOfWeek, List<StudyTime>> scheduleTime)
         {

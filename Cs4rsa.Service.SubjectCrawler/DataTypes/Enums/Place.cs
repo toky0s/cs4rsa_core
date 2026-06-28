@@ -5,7 +5,9 @@
         QuangTrung,
         VietTin,
         PhanThanh,
+        PhanThanh_209,
         HoaKhanh,
+        HoaKhanhNam_ToaNhaG,
         Nvl254,
         Nvl137,
         Online
@@ -23,12 +25,16 @@
                     return "VietTin";
                 case Place.HoaKhanh:
                     return "120 Hoàng Minh Thảo";
+                case Place.HoaKhanhNam_ToaNhaG:
+                    return "Hoà Khánh Nam - Toà Nhà G";
                 case Place.Nvl137:
                     return "137 Nguyễn Văn Linh";
                 case Place.Nvl254:
                     return "254 Nguyễn Văn Linh";
                 case Place.PhanThanh:
                     return "Phan Thanh";
+                case Place.PhanThanh_209:
+                    return "209 Phan Thanh";
                 case Place.Online:
                 default:
                     return "Online";

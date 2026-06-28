@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.UI;
+
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
+
 using HtmlAgilityPack;
 
 namespace Cs4rsa.Service.SubjectCrawler.Utils
@@ -16,7 +19,6 @@ namespace Cs4rsa.Service.SubjectCrawler.Utils
         public ScheduleParser(HtmlNode tdTag)
         {
             _tdTag = tdTag;
-            CleanTdTag();
         }
 
         /// <summary>
@@ -24,10 +26,37 @@ namespace Cs4rsa.Service.SubjectCrawler.Utils
         /// </summary>
         /// <param name="tdTag">tdTag chứa thông tin thời gian học.</param>
         /// <returns></returns>
-        private void CleanTdTag()
+        private SupplementaryClassSchedule[] GetSupplementaryClassSchedules()
         {
+            // TODO: https://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid=1449&timespan=93&t=s
+            // Supplementary Class Schedule
             var needRemoveNode = _tdTag.SelectSingleNode("//div[contains(@style, 'color: red; padding-top: 2px; text-align: center; position: relative')]");
-            needRemoveNode?.Remove();
+            if (needRemoveNode != null)
+            {
+                var span = _tdTag.SelectSingleNode(@"//span[@class='content']");
+                return span.InnerHtml
+                    .Split(new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(GetSupplementaryClassSchedule)
+                    .ToArray();
+            }
+            return null;
+        }
+
+        private SupplementaryClassSchedule GetSupplementaryClassSchedule(string txt)
+        {
+            string pattern = @"(\d{2}/\d{2}/\d{4}):\s*(\d{2}:\d{2})-(\d{2}:\d{2}),\s*([^,]+),\s*(.+)";
+
+            var match = Regex.Match(txt, pattern);
+            string date = match.Groups[1].Value;       // Ngày/tháng/năm
+            string fromStr = match.Groups[2].Value;    // Giờ bắt đầu
+            string toStr = match.Groups[3].Value;      // Giờ kết thúc
+            string room = match.Groups[4].Value;    // Ví dụ: "P.301"
+            string location = match.Groups[5].Value;   // Vị trí
+
+            // Chuyển đổi sang DateTime
+            DateTime from = DateTime.ParseExact($"{date} {fromStr}", "dd/MM/yyyy HH:mm", null);
+            DateTime to = DateTime.ParseExact($"{date} {toStr}", "dd/MM/yyyy HH:mm", null);
+            return new SupplementaryClassSchedule(from, to, room, location);
         }
 
         public Schedule ToSchedule()
@@ -62,7 +91,19 @@ namespace Cs4rsa.Service.SubjectCrawler.Utils
                 var studyTimes = TimeStringsToListStudyTime(timeStrings);
                 scheduleTime[item.Key] = studyTimes;
             }
-            return new Schedule(scheduleTime);
+            var schedule = new Schedule(scheduleTime);
+
+            IEnumerable<SupplementaryClassSchedule> supplementaryClassSchedules;
+            var hasSupplementary = _tdTag.SelectSingleNode("//div[contains(@style, 'color: red; padding-top: 2px; text-align: center; position: relative')]");
+            if (hasSupplementary != null)
+            {
+                var span = _tdTag.SelectSingleNode(@"//span[@class='content']");
+                supplementaryClassSchedules = span.InnerHtml
+                    .Split(new string[] { "<br>" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(GetSupplementaryClassSchedule);
+                schedule.SupplementaryClassSchedules.AddRange(supplementaryClassSchedules);
+            }
+            return schedule;
         }
 
         /// <summary>
@@ -95,7 +136,9 @@ namespace Cs4rsa.Service.SubjectCrawler.Utils
         /// <returns></returns>
         private static List<StudyTime> TimeStringsToListStudyTime(List<string> timeStrings)
         {
-            timeStrings = timeStrings.Distinct().ToList();
+            if (timeStrings.Count % 2 == 1) throw new ArgumentException("Number of timeStrings must be even");
+
+            //timeStrings = timeStrings.Distinct().ToList();
             var studyTimes = new List<StudyTime>();
             var i = 0;
             while (i < timeStrings.Count)

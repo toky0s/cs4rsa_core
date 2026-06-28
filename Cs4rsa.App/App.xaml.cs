@@ -22,7 +22,6 @@ using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 
 using DryIoc;
 
-using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Logging;
 
@@ -143,7 +142,6 @@ namespace Cs4rsa.App
             containerRegistry.RegisterSingleton<ISubjectCrawler, SubjectCrawler>();
             containerRegistry.RegisterSingleton<IOpenInBrowser, OpenInBrowser>();
             containerRegistry.RegisterSingleton<IFolderManager, FolderManager>();
-            containerRegistry.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
             containerRegistry.RegisterSingleton<NetworkMonitor>();
 
             containerRegistry.RegisterDialog<DownloadUpdatesDialog, DownloadUpdatesDialogViewModel>();

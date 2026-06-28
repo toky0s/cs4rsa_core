@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Service.SubjectCrawler.Crawlers;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
+using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
 
 using HtmlAgilityPack;
@@ -53,6 +54,14 @@ namespace Test_SubjectCrawler
             // ART 161:  Định Luật Xa Gần trong Đồ Họa
             _mockCourseHtmlGetter.GetHtmlDocument("1114", "93")
                 .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260522_ART_161.html")));
+
+            // SE 347:  Đồ Án CDIO
+            _mockCourseHtmlGetter.GetHtmlDocument("1966", "93")
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260613_SE_347.htm")));
+
+            // ACC 382:  Kế Toán Thuế
+            _mockCourseHtmlGetter.GetHtmlDocument("1449", "93")
+                .Returns(x => Task.FromResult(LoadHtmlFromResource(folder, "20260614_ACC382.htm")));
 
             _subjectCrawler = new SubjectCrawler(_mockCourseHtmlGetter);
         }
@@ -277,6 +286,36 @@ namespace Test_SubjectCrawler
             // Class group
             Assert.AreEqual(1, subject.ClassGroups.Count);
             Assert.AreEqual(3, subject.ClassGroups.First().SchoolClasses.Count);
+        }
+
+        [TestMethod]
+        public async Task Craw_SE_347()
+        {
+            var subject = await _subjectCrawler.Crawl("1966", "93");
+            Assert.AreEqual(4, subject.Item1.ClassGroups.Count);
+            Assert.AreEqual("SE 347 SA", subject.Item1.ClassGroups[0].Name);
+            Assert.AreEqual("SE 347 SC", subject.Item1.ClassGroups[1].Name);
+            Assert.AreEqual("SE 347 SE", subject.Item1.ClassGroups[2].Name);
+            Assert.AreEqual("SE 347 SG", subject.Item1.ClassGroups[3].Name);
+        }
+        
+        [TestMethod]
+        public async Task Craw_ACC_382()
+        {
+            var output = await _subjectCrawler.Crawl("1449", "93");
+            var subject = output.Item1;
+            Assert.AreEqual("Kế Toán Thuế", subject.Name);
+            Assert.AreEqual("ACC 382", subject.SubjectCode);
+            Assert.IsFalse(subject.IsSpecialSubject);
+            Assert.AreEqual(2, subject.StudyUnit);
+            Assert.AreEqual("Tín Chỉ", subject.StudyUnitType);
+            Assert.AreEqual("LEC", subject.StudyType);
+            Assert.AreEqual(2, subject.ClassGroups.Count);
+            Assert.AreEqual(0, subject.MustStudySubject.Count);
+            Assert.AreEqual(0, subject.ParallelSubject.Count);
+
+            // Lịch học bổ sung
+            Assert.AreEqual(4, subject.ClassGroups[0].SchoolClasses[0].Schedule.SupplementaryClassSchedules.Count);
         }
     }
 }

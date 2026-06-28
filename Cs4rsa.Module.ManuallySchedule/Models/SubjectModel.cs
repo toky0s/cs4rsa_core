@@ -18,7 +18,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
             set { SetProperty(ref _subject, value); }
         }
 
-        public readonly UserSubject UserSubject;
+        public UserSubject UserSubject { get; set; }
         public List<string> TeacherNames { get; set; }
         public List<ClassGroupModel> ClassGroupModels { get; set; }
         public string SubjectName { get; set; }
