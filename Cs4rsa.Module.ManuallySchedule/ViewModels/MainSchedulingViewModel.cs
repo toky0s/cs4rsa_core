@@ -13,7 +13,6 @@ using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
-using Cs4rsa.Service.CourseCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
@@ -37,7 +36,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Caching;
 using System.Windows;
 using System.Windows.Data;
 
@@ -62,6 +60,33 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private ClassGroupSortField _currentSortField = ClassGroupSortField.Name;
         private ListSortDirection _currentSortDirection = ListSortDirection.Ascending;
 
+        private DelegateCommand<string> _changeSortDirectionCommand;
+        public DelegateCommand<string> ChangeSortDirectionCommand =>
+            _changeSortDirectionCommand ?? (_changeSortDirectionCommand = new DelegateCommand<string>(ExecuteChangeSortDirectionCommand, CanExecuteChangeSortDirectionCommand));
+
+        /// <summary>
+        /// Change sort direction
+        /// </summary>
+        /// <param name="direction">ASC/DESC</param>
+        void ExecuteChangeSortDirectionCommand(string direction)
+        {
+            if (direction != "ASC" && direction != "DESC") throw new ArgumentException("Invalid sort direction");
+            if (direction == "ASC")
+            {
+                _currentSortDirection = ListSortDirection.Ascending;
+            } 
+            else
+            {
+                _currentSortDirection = ListSortDirection.Descending;
+            }
+            ApplySort();
+        }
+
+        bool CanExecuteChangeSortDirectionCommand(string direction)
+        {
+            return true;
+        }
+
         private DelegateCommand<string> _sortCommand;
         public DelegateCommand<string> SortCommand =>
             _sortCommand ?? (_sortCommand = new DelegateCommand<string>(ExecuteSortCommand));
@@ -69,18 +94,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void ExecuteSortCommand(string fieldName)
         {
             // Toggle direction nếu click cùng column
-            //if (Enum.TryParse(fieldName, out ClassGroupSortField field) && field == _currentSortField)
-            //{
-            //    _currentSortDirection = _currentSortDirection == ListSortDirection.Ascending
-            //        ? ListSortDirection.Descending
-            //        : ListSortDirection.Ascending;
-            //}
-            //else
-            //{
-            //    _currentSortField = field;
-            //    _currentSortDirection = ListSortDirection.Ascending;
-            //}
-
             Enum.TryParse(fieldName, out ClassGroupSortField field);
             _currentSortField = field;
             ApplySort();

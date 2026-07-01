@@ -459,11 +459,15 @@
                                             <MenuItem
                                                 x:Name="SortAscending"
                                                 Click="SortOrder_Click"
+                                                Command="{Binding ChangeSortDirectionCommand}"
+                                                CommandParameter="ASC"
                                                 Header="Ascending"
                                                 IsCheckable="True" />
                                             <MenuItem
                                                 x:Name="SortDescending"
                                                 Click="SortOrder_Click"
+                                                Command="{Binding ChangeSortDirectionCommand}"
+                                                CommandParameter="DESC"
                                                 Header="Descending"
                                                 IsCheckable="True" />
                                         </ContextMenu>
