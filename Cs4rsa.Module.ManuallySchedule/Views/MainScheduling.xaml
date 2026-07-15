@@ -11,6 +11,7 @@
     xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
     xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:uc="clr-namespace:Cs4rsa.Module.ManuallySchedule.UC"
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
@@ -806,7 +807,16 @@
                                     </Grid>
                                 </Border>
                             </Expander>
-                            <ItemsControl ItemsSource="{Binding SubjectModels}">
+
+
+                            <!--  ====================== FILTER TRÊN TỪNG SUBJECT - START ======================  -->
+                            <ItemsControl
+                                d:Background="#ecf0f1"
+                                d:Height="30"
+                                ItemsSource="{Binding VisibleFilters}">
+                                <d:ItemsControl>
+                                    <d:TextBlock d:FontSize="20" d:Foreground="#2980b9">Subject Filters will be here</d:TextBlock>
+                                </d:ItemsControl>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Vertical" />
@@ -814,19 +824,25 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Expander Padding="0,0,1,15" BorderThickness="1">
+                                        <Expander
+                                            Padding="0,0,1,15"
+                                            d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
+                                            BorderThickness="1">
                                             <Expander.Template>
                                                 <ControlTemplate TargetType="Expander">
                                                     <StackPanel>
                                                         <!--  Header  -->
-                                                        <ToggleButton
-                                                            x:Name="HeaderToggle"
-                                                            HorizontalContentAlignment="Stretch"
-                                                            Background="{Binding Color}"
-                                                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-                                                            <ContentPresenter ContentSource="Header" />
-                                                        </ToggleButton>
-
+                                                        <Border>
+                                                            <ToggleButton
+                                                                x:Name="HeaderToggle"
+                                                                Padding="8,4"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                Background="#ecf0f1"
+                                                                BorderThickness="0"
+                                                                IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                <ContentPresenter ContentSource="Header" />
+                                                            </ToggleButton>
+                                                        </Border>
                                                         <!--  Content  -->
                                                         <ContentPresenter x:Name="Content" Visibility="Collapsed" />
                                                     </StackPanel>
@@ -838,12 +854,21 @@
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>
                                             </Expander.Template>
+
+
+                                            <!--  =========================== Header của từng filter ================================  -->
                                             <Expander.Header>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
+                                                    <Ellipse
+                                                        Grid.Column="0"
+                                                        Width="8"
+                                                        Height="8"
+                                                        Margin="0,0,4,0"
+                                                        Fill="{Binding Color}" />
                                                     <TextBlock Grid.Column="1" TextWrapping="Wrap">
                                                         <Run Text="{Binding SubjectCode}" />
                                                         <Run Text=" - " />
@@ -851,22 +876,54 @@
                                                     </TextBlock>
                                                 </Grid>
                                             </Expander.Header>
+                                            <!--  =========================== Header của từng filter ================================  -->
+
+
                                             <StackPanel>
+
+                                                <!--  =========================== START - Body của từng filter ================================  -->
                                                 <TextBlock Text="Day of week" />
                                                 <xctk:WrapPanel Orientation="Horizontal">
-                                                    <CheckBox Margin="0,0,4,0" Content="Mon" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Tue" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Wed" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Thu" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Fri" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Sat" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Sun" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Mon"
+                                                        IsChecked="{Binding Mon}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Tue"
+                                                        IsChecked="{Binding Tue}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Wed"
+                                                        IsChecked="{Binding Wed}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Thu"
+                                                        IsChecked="{Binding Thu}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Fri"
+                                                        IsChecked="{Binding Fri}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Sat"
+                                                        IsChecked="{Binding Sat}" />
+                                                    <CheckBox
+                                                        Margin="0,0,4,0"
+                                                        Content="Sun"
+                                                        IsChecked="{Binding Sun}" />
                                                 </xctk:WrapPanel>
+                                                <TextBlock Text="Lectures" />
+                                                <uc:MultiSelection ItemsSource="{Binding Lectures}" />
+                                                <!--  =========================== END - Body của từng filter ================================  -->
+
                                             </StackPanel>
                                         </Expander>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            <!--  ====================== FILTER TRÊN TỪNG SUBJECT - END ======================  -->
+
                         </StackPanel>
                         <StackPanel
                             Grid.Row="1"

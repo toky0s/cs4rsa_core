@@ -174,7 +174,6 @@ namespace Cs4rsa.Module.ManuallySchedule.Models
                 throw new Exception("Can not assign SubjectModel because this instance is not a pseudo subject model.");
             }
 
-            IsDownloading = false;
             IsError = false;
             ErrorMessage = null;
 
