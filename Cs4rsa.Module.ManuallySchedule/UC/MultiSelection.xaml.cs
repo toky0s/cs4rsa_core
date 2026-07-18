@@ -82,8 +82,7 @@ namespace Cs4rsa.Module.ManuallySchedule.UC
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var listBox = sender as ListBox;
-            if (listBox == null) return;
+            if (!(sender is ListBox)) return;
 
             // Nếu SelectedItems chưa được khởi tạo thì tạo mới
             if (SelectedItems == null)
@@ -106,5 +105,17 @@ namespace Cs4rsa.Module.ManuallySchedule.UC
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is MultiSelectionItem mulItem)
+            {
+                int index = (int)button.Tag;
+                // Xóa item khỏi SelectedItems
+                SelectedItems.Remove(mulItem);
+                ListBox_Items.SelectedItems.RemoveAt(index);
+            }
+        }
+
     }
 }

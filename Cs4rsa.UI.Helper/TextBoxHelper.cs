@@ -72,6 +72,20 @@ namespace Cs4rsa.UI.Helper
             {
                 RefreshAdorner(textBox);
             }
+            else
+            {
+                // TextBox vừa bị ẩn (ví dụ do Expander cha bị collapse) -> ẩn luôn placeholder adorner
+                AdornerLayer layer = AdornerLayer.GetAdornerLayer(textBox);
+                if (layer == null) return;
+
+                var adorners = layer.GetAdorners(textBox);
+                if (adorners == null) return;
+
+                foreach (var adorner in adorners.OfType<PlaceholderAdorner>())
+                {
+                    adorner.Visibility = Visibility.Hidden;
+                }
+            }
         }
 
         // Helper mới: tạo adorner và set visibility đúng ngay từ đầu

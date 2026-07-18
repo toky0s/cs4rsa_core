@@ -756,175 +756,191 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0">
-                            <Expander Header="General" IsExpanded="True">
-                                <Border Padding="10">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="0">
-                                            <CheckBox.Content>
-                                                <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
-                                            </CheckBox.Content>
-                                        </CheckBox>
-                                        <Border Grid.Row="1">
-                                            <StackPanel>
-                                                <TextBlock FontWeight="Bold" Text="Time range" />
-                                                <xctk:RangeSlider
-                                                    Name="RangeSlider"
-                                                    AutoToolTipPlacement="None"
-                                                    AutoToolTipPrecision="0"
-                                                    HigherValue="28"
-                                                    IsSnapToTickEnabled="True"
-                                                    LowerValue="0"
-                                                    Maximum="28"
-                                                    Minimum="0"
-                                                    Orientation="Horizontal"
-                                                    TickFrequency="1" />
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock
-                                                        Grid.Column="0"
-                                                        HorizontalAlignment="Left"
-                                                        Text="{Binding ElementName=RangeSlider, Path=LowerValue, Converter={StaticResource HalfHourTime}}" />
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        HorizontalAlignment="Center"
-                                                        Text="--" />
-                                                    <TextBlock
-                                                        Grid.Column="2"
-                                                        HorizontalAlignment="Right"
-                                                        Text="{Binding ElementName=RangeSlider, Path=HigherValue, Converter={StaticResource HalfHourTime}}" />
-                                                </Grid>
-                                            </StackPanel>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </Expander>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Grid.Row="0">
+                                <Expander Header="General" IsExpanded="True">
+                                    <Border Padding="10">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <CheckBox Grid.Row="0">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                            <Border Grid.Row="1">
+                                                <StackPanel>
+                                                    <TextBlock FontWeight="Bold" Text="Time range" />
+                                                    <xctk:RangeSlider
+                                                        Name="RangeSlider"
+                                                        AutoToolTipPlacement="None"
+                                                        AutoToolTipPrecision="0"
+                                                        HigherValue="28"
+                                                        IsSnapToTickEnabled="True"
+                                                        LowerValue="0"
+                                                        Maximum="28"
+                                                        Minimum="0"
+                                                        Orientation="Horizontal"
+                                                        TickFrequency="1" />
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            HorizontalAlignment="Left"
+                                                            Text="{Binding ElementName=RangeSlider, Path=LowerValue, Converter={StaticResource HalfHourTime}}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            HorizontalAlignment="Center"
+                                                            Text="--" />
+                                                        <TextBlock
+                                                            Grid.Column="2"
+                                                            HorizontalAlignment="Right"
+                                                            Text="{Binding ElementName=RangeSlider, Path=HigherValue, Converter={StaticResource HalfHourTime}}" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Expander>
 
 
-                            <!--  ====================== FILTER TRÊN TỪNG SUBJECT - START ======================  -->
-                            <ItemsControl
-                                d:Background="#ecf0f1"
-                                d:Height="30"
-                                ItemsSource="{Binding VisibleFilters}">
-                                <d:ItemsControl>
-                                    <d:TextBlock d:FontSize="20" d:Foreground="#2980b9">Subject Filters will be here</d:TextBlock>
-                                </d:ItemsControl>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Expander
-                                            Padding="0,0,1,15"
-                                            d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
-                                            BorderThickness="1">
-                                            <Expander.Template>
-                                                <ControlTemplate TargetType="Expander">
-                                                    <StackPanel>
-                                                        <!--  Header  -->
-                                                        <Border>
-                                                            <ToggleButton
-                                                                x:Name="HeaderToggle"
-                                                                Padding="8,4"
-                                                                HorizontalContentAlignment="Stretch"
-                                                                Background="#ecf0f1"
-                                                                BorderThickness="0"
-                                                                IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-                                                                <ContentPresenter ContentSource="Header" />
-                                                            </ToggleButton>
-                                                        </Border>
-                                                        <!--  Content  -->
-                                                        <ContentPresenter x:Name="Content" Visibility="Collapsed" />
-                                                    </StackPanel>
+                                <!--  ====================== FILTER TRÊN TỪNG SUBJECT - START ======================  -->
+                                <ItemsControl
+                                    d:Background="#ecf0f1"
+                                    d:Height="30"
+                                    ItemsSource="{Binding VisibleFilters}">
+                                    <d:ItemsControl>
+                                        <d:TextBlock d:FontSize="20" d:Foreground="#2980b9">Subject Filters will be here</d:TextBlock>
+                                    </d:ItemsControl>
 
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsExpanded" Value="True">
-                                                            <Setter TargetName="Content" Property="Visibility" Value="Visible" />
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Expander.Template>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
 
+                                    <!--<ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter"></Style>
+                                    </ItemsControl.ItemContainerStyle>-->
 
-                                            <!--  =========================== Header của từng filter ================================  -->
-                                            <Expander.Header>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Ellipse
-                                                        Grid.Column="0"
-                                                        Width="8"
-                                                        Height="8"
-                                                        Margin="0,0,4,0"
-                                                        Fill="{Binding Color}" />
-                                                    <TextBlock Grid.Column="1" TextWrapping="Wrap">
-                                                        <Run Text="{Binding SubjectCode}" />
-                                                        <Run Text=" - " />
-                                                        <Run Text="{Binding SubjectName}" />
-                                                    </TextBlock>
-                                                </Grid>
-                                            </Expander.Header>
-                                            <!--  =========================== Header của từng filter ================================  -->
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Expander
+                                                Padding="0,0,1,15"
+                                                d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
+                                                BorderThickness="1">
+                                                <Expander.Template>
+                                                    <ControlTemplate TargetType="Expander">
+                                                        <StackPanel>
+                                                            <!--  Header  -->
+                                                            <Border>
+                                                                <ToggleButton
+                                                                    x:Name="HeaderToggle"
+                                                                    Padding="8,4"
+                                                                    HorizontalContentAlignment="Stretch"
+                                                                    Background="#ecf0f1"
+                                                                    BorderThickness="0"
+                                                                    IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ContentPresenter ContentSource="Header" />
+                                                                </ToggleButton>
+                                                            </Border>
+                                                            <!--  Content  -->
+                                                            <ContentPresenter x:Name="Content" Visibility="Collapsed" />
+                                                        </StackPanel>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsExpanded" Value="True">
+                                                                <Setter TargetName="Content" Property="Visibility" Value="Visible" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Expander.Template>
 
 
-                                            <StackPanel>
+                                                <!--  =========================== Header của từng filter ================================  -->
+                                                <Expander.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse
+                                                            Grid.Column="0"
+                                                            Width="8"
+                                                            Height="8"
+                                                            Margin="0,0,4,0"
+                                                            Fill="{Binding Color}" />
+                                                        <TextBlock Grid.Column="1" TextWrapping="Wrap">
+                                                            <Run Text="{Binding SubjectCode}" />
+                                                            <Run Text=" - " />
+                                                            <Run Text="{Binding SubjectName}" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Expander.Header>
+                                                <!--  =========================== Header của từng filter ================================  -->
 
-                                                <!--  =========================== START - Body của từng filter ================================  -->
-                                                <TextBlock Text="Day of week" />
-                                                <xctk:WrapPanel Orientation="Horizontal">
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Mon"
-                                                        IsChecked="{Binding Mon}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Tue"
-                                                        IsChecked="{Binding Tue}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Wed"
-                                                        IsChecked="{Binding Wed}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Thu"
-                                                        IsChecked="{Binding Thu}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Fri"
-                                                        IsChecked="{Binding Fri}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Sat"
-                                                        IsChecked="{Binding Sat}" />
-                                                    <CheckBox
-                                                        Margin="0,0,4,0"
-                                                        Content="Sun"
-                                                        IsChecked="{Binding Sun}" />
-                                                </xctk:WrapPanel>
-                                                <TextBlock Text="Lectures" />
-                                                <uc:MultiSelection ItemsSource="{Binding Lectures}" />
-                                                <!--  =========================== END - Body của từng filter ================================  -->
 
-                                            </StackPanel>
-                                        </Expander>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                            <!--  ====================== FILTER TRÊN TỪNG SUBJECT - END ======================  -->
+                                                <StackPanel>
+                                                    <StackPanel.Resources>
+                                                        <Style x:Key="Filter_Header" TargetType="TextBlock">
+                                                            <Setter Property="FontSize" Value="15" />
+                                                            <Setter Property="FontWeight" Value="Medium" />
+                                                            <Setter Property="Margin" Value="0,0,0,2" />
+                                                        </Style>
+                                                    </StackPanel.Resources>
+                                                    <!--  =========================== START - Body của từng filter ================================  -->
+                                                    <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
+                                                    <xctk:WrapPanel Orientation="Horizontal">
+                                                        <CheckBox Margin="0,0,4,0" Content="All" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Mon"
+                                                            IsChecked="{Binding Mon}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Tue"
+                                                            IsChecked="{Binding Tue}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Wed"
+                                                            IsChecked="{Binding Wed}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Thu"
+                                                            IsChecked="{Binding Thu}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Fri"
+                                                            IsChecked="{Binding Fri}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Sat"
+                                                            IsChecked="{Binding Sat}" />
+                                                        <CheckBox
+                                                            Margin="0,0,4,0"
+                                                            Content="Sun"
+                                                            IsChecked="{Binding Sun}" />
+                                                    </xctk:WrapPanel>
 
-                        </StackPanel>
+                                                    <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
+                                                    <uc:MultiSelection ItemsSource="{Binding Lectures}" />
+                                                    <!--  =========================== END - Body của từng filter ================================  -->
+
+                                                </StackPanel>
+                                            </Expander>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <!--  ====================== FILTER TRÊN TỪNG SUBJECT - END ======================  -->
+
+                            </StackPanel>
+                        </ScrollViewer>
                         <StackPanel
                             Grid.Row="1"
                             HorizontalAlignment="Right"
