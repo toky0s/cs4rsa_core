@@ -850,6 +850,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
             SelectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
+            SelectedClassGroupModelsView.Filter += SelectedClassGroupModelsView_DoFilter;
 
             VisibleFilters = CollectionViewSource.GetDefaultView(FilterSubjectViewModels);
             VisibleFilters.Filter = VisibleFilter_DoFilter;
@@ -873,6 +874,33 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             networkMonitor.ConnectivityChanged += NetworkMonitor_ConnectivityChanged;
         }
 
+        private bool SelectedClassGroupModelsView_DoFilter(object obj)
+        {
+            var subjectCode = SelectedSubjectModel.SubjectCode;
+
+            // Lấy filter info dựa trên subject code hiện tại đang chọn.
+            var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
+            
+            if (filter != null)
+            {
+                var classGroupModel = obj as ClassGroupModel;
+                var filterInfo = filter.AskRequestFilter();
+
+                // Do filter
+                var isMatchDayOfWeek = classGroupModel.Schedule.GetSchoolDays().Intersect(filterInfo.SelectedDayOfWeeks).Any();
+                var isMatchLectures = classGroupModel.TeacherNames.Intersect(filterInfo.LectureNames).Any();
+
+                return isMatchDayOfWeek && isMatchLectures;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Filter này quyết định subject filter nào sẽ hiển thị
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private bool VisibleFilter_DoFilter(object obj)
         {
             if (obj is FilterSubjectViewModel filter)
@@ -917,7 +945,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                 // Create filter for new subject if it doesn't exist.
                 addedSubject.PropertyChanged += Item_PropertyChanged;
-                
+
             }
             // REMOVE
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
@@ -1005,9 +1033,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     SubjectName = subjectModel.SubjectName,
                     Color = subjectModel.Color,
                     IsDisplayed = true,
-
+                    Lectures = new ObservableCollection<MultiSelectionItem>()
                 };
-                filterVm.Lectures = new ObservableCollection<MultiSelectionItem>();
+
+                filterVm.Filter += FilterVm_RequestFilter;
 
                 var teacherNames = subjectModel.Subject.ClassGroups.SelectMany(
                     classGroup => classGroup.SchoolClasses.SelectMany(
@@ -1025,6 +1054,11 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // Show existing filter
                 filter.IsDisplayed = true;
             }
+        }
+
+        private void FilterVm_RequestFilter()
+        {
+            SelectedClassGroupModelsView.Refresh();
         }
 
         private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

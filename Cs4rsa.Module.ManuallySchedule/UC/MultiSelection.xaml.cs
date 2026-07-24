@@ -87,7 +87,8 @@ namespace Cs4rsa.Module.ManuallySchedule.UC
             // Nếu SelectedItems chưa được khởi tạo thì tạo mới
             if (SelectedItems == null)
             {
-                SelectedItems = new ObservableCollection<MultiSelectionItem>();
+                throw new NullReferenceException("SelectedItems of MultiSelection is null, please initialize before bind");
+                //SelectedItems = new ObservableCollection<MultiSelectionItem>();
             }
 
             // Xóa các item bị bỏ chọn
