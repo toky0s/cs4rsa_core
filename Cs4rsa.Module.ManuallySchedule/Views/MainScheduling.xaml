@@ -765,7 +765,7 @@
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="0">
+                                            <CheckBox Grid.Row="0" IsChecked="{Binding SeatAvailable}">
                                                 <CheckBox.Content>
                                                     <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
                                                 </CheckBox.Content>
@@ -775,11 +775,12 @@
                                                     <TextBlock FontWeight="Bold" Text="Time range" />
                                                     <xctk:RangeSlider
                                                         Name="RangeSlider"
+                                                        d:HigherValue="28"
                                                         AutoToolTipPlacement="None"
                                                         AutoToolTipPrecision="0"
-                                                        HigherValue="28"
+                                                        HigherValue="{Binding HighValue}"
                                                         IsSnapToTickEnabled="True"
-                                                        LowerValue="0"
+                                                        LowerValue="{Binding LowValue}"
                                                         Maximum="28"
                                                         Minimum="0"
                                                         Orientation="Horizontal"
@@ -889,51 +890,53 @@
                                                 <StackPanel>
                                                     <StackPanel.Resources>
                                                         <Style x:Key="Filter_Header" TargetType="TextBlock">
-                                                            <Setter Property="FontSize" Value="15" />
-                                                            <Setter Property="FontWeight" Value="Medium" />
-                                                            <Setter Property="Margin" Value="0,0,0,2" />
+                                                            <Setter Property="Margin" Value="0,0,0,5" />
                                                         </Style>
                                                     </StackPanel.Resources>
                                                     <!--  =========================== START - Body của từng filter ================================  -->
-                                                    <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
-                                                    <xctk:WrapPanel Orientation="Horizontal">
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="All"
-                                                            IsChecked="{Binding All}"
-                                                            IsThreeState="True" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Mon"
-                                                            IsChecked="{Binding Mon}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Tue"
-                                                            IsChecked="{Binding Tue}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Wed"
-                                                            IsChecked="{Binding Wed}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Thu"
-                                                            IsChecked="{Binding Thu}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Fri"
-                                                            IsChecked="{Binding Fri}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Sat"
-                                                            IsChecked="{Binding Sat}" />
-                                                        <CheckBox
-                                                            Margin="0,0,4,0"
-                                                            Content="Sun"
-                                                            IsChecked="{Binding Sun}" />
-                                                    </xctk:WrapPanel>
+                                                    <StackPanel Margin="0,0,0,10">
+                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
+                                                        <xctk:WrapPanel Orientation="Horizontal">
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="All"
+                                                                IsChecked="{Binding All}"
+                                                                IsThreeState="True" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Mon"
+                                                                IsChecked="{Binding Mon}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Tue"
+                                                                IsChecked="{Binding Tue}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Wed"
+                                                                IsChecked="{Binding Wed}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Thu"
+                                                                IsChecked="{Binding Thu}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Fri"
+                                                                IsChecked="{Binding Fri}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Sat"
+                                                                IsChecked="{Binding Sat}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Sun"
+                                                                IsChecked="{Binding Sun}" />
+                                                        </xctk:WrapPanel>
+                                                    </StackPanel>
 
-                                                    <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
-                                                    <uc:MultiSelection ItemsSource="{Binding Lectures}" SelectedItems="{Binding SelectedLectures}" />
+                                                    <StackPanel>
+                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
+                                                        <uc:MultiSelection ItemsSource="{Binding Lectures}" SelectedItems="{Binding SelectedLectures}" />
+                                                    </StackPanel>
                                                     <!--  =========================== END - Body của từng filter ================================  -->
 
                                                 </StackPanel>

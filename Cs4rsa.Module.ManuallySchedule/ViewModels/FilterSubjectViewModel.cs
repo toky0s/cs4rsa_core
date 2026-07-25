@@ -3,6 +3,7 @@ using Cs4rsa.Module.ManuallySchedule.UC;
 using Cs4rsa.UI.Helper;
 
 using Prism.Mvvm;
+using Prism.Regions;
 
 using System;
 using System.Collections;
@@ -23,6 +24,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
     public class FilterSubjectViewModel : BindableBase
     {
+        #region Config
         private string _subjectCode;
         public string SubjectCode
         {
@@ -54,7 +56,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             get { return _isDisplayed; }
             set { SetProperty(ref _isDisplayed, value); }
         }
+        #endregion
 
+        #region Day of Week
+        // ========================= START DAY OF WEEKS ==========================================
         private bool _isBulkUpdating = false;
         private bool _inCodeUpdate = false;
         private bool? _all = true;
@@ -136,43 +141,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             set { SetProperty(ref _sun, value); EvaluateAllCheck(); RequestRefresh(); }
         }
 
-        private ObservableCollection<MultiSelectionItem> _lectures;
-        public ObservableCollection<MultiSelectionItem> Lectures
-        {
-            get { return _lectures; }
-            set { SetProperty(ref _lectures, value); }
-        }
-
-        private ObservableCollection<MultiSelectionItem> _selectedLectures = new ObservableCollection<MultiSelectionItem>();
-        public ObservableCollection<MultiSelectionItem> SelectedLectures
-        {
-            get { return _selectedLectures; }
-            set { SetProperty(ref _selectedLectures, value); }
-        }
-
-        public FilterSubjectViewModel()
-        {
-            _isBulkUpdating = true;
-            Mon = Tue = Wed = Thu = Fri = Sat = Sun = true;
-            _isBulkUpdating = false;
-            EvaluateAllCheck();
-            _selectedLectures.CollectionChanged += SelectedLectures_CollectionChanged;
-        }
-
-        private void SelectedLectures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Console.WriteLine("Selected Lectures Count: " + SelectedLectures.Count);
-            RequestRefresh();
-        }
-
-        private void RequestRefresh()
-        {
-            if (!_isBulkUpdating)
-            {
-                Filter?.Invoke();
-            }
-        }
-
         private void EvaluateAllCheck()
         {
             var dayOfWeeks = new bool[7] { Mon, Tue, Wed, Thu, Fri, Sat, Sun };
@@ -221,6 +189,50 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             };
 
             return filterInfo;
+        }
+        // ========================= END DAY OF WEEKS ==========================================
+        #endregion
+
+        #region Lectures
+
+        private ObservableCollection<MultiSelectionItem> _lectures;
+        public ObservableCollection<MultiSelectionItem> Lectures
+        {
+            get { return _lectures; }
+            set { SetProperty(ref _lectures, value); }
+        }
+
+        private ObservableCollection<MultiSelectionItem> _selectedLectures = new ObservableCollection<MultiSelectionItem>();
+        public ObservableCollection<MultiSelectionItem> SelectedLectures
+        {
+            get { return _selectedLectures; }
+            set { SetProperty(ref _selectedLectures, value); }
+        }
+        private void SelectedLectures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Console.WriteLine("Selected Lectures Count: " + SelectedLectures.Count);
+            RequestRefresh();
+        }
+        #endregion
+
+        
+
+        public FilterSubjectViewModel()
+        {
+            _isBulkUpdating = true;
+            Mon = Tue = Wed = Thu = Fri = Sat = Sun = true;
+            _isBulkUpdating = false;
+            EvaluateAllCheck();
+
+            _selectedLectures.CollectionChanged += SelectedLectures_CollectionChanged;
+        }
+
+        private void RequestRefresh()
+        {
+            if (!_isBulkUpdating)
+            {
+                Filter?.Invoke();
+            }
         }
 
         public event Action Filter;

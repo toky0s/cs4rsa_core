@@ -16,6 +16,7 @@ using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.Helper;
 using Cs4rsa.UI.ScheduleTable;
 
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Data;
 
@@ -49,6 +51,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Filter class groups
+        private Debouncer _debouncer;
+
         private ObservableCollection<FilterSubjectViewModel> _filterSubjectViewModels = new ObservableCollection<FilterSubjectViewModel>();
         public ObservableCollection<FilterSubjectViewModel> FilterSubjectViewModels
         {
@@ -60,6 +64,30 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         ///Just show filters which it's IsDisplay = True
         /// </summary>
         public ICollectionView VisibleFilters { get; set; }
+
+        #region Time Range
+        private int _minRange = 0;
+        public int LowValue
+        {
+            get { return _minRange; }
+            set { SetProperty(ref _minRange, value); _debouncer.Debounce(); }
+        }
+
+        private int _maxRange = 28;
+        public int HighValue
+        {
+            get { return _maxRange; }
+            set { SetProperty(ref _maxRange, value); _debouncer.Debounce(); }
+        }
+        #endregion
+
+        private bool _seatAvailable;
+        public bool SeatAvailable
+        {
+            get { return _seatAvailable; }
+            set { SetProperty(ref _seatAvailable, value); _debouncer.Debounce(); }
+        }
+
         #endregion
 
         #region Sort class groups
@@ -834,7 +862,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             #endregion
 
-
             TeacherCount = 0;
             AnyTeacherName = true;
             TeacherNames = new ObservableCollection<string>();
@@ -851,6 +878,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
             SelectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
             SelectedClassGroupModelsView.Filter += SelectedClassGroupModelsView_DoFilter;
+            #region Filter class group Config
+            _debouncer = new Debouncer(500, () => SelectedClassGroupModelsView.Refresh());
+            #endregion
 
             VisibleFilters = CollectionViewSource.GetDefaultView(FilterSubjectViewModels);
             VisibleFilters.Filter = VisibleFilter_DoFilter;
@@ -869,6 +899,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             #endregion
 
+
             InitFilter();
             LoadDiscipline();
             networkMonitor.ConnectivityChanged += NetworkMonitor_ConnectivityChanged;
@@ -880,7 +911,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             // Lấy filter info dựa trên subject code hiện tại đang chọn.
             var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
-            
+
             if (filter != null)
             {
                 var classGroupModel = obj as ClassGroupModel;
@@ -890,10 +921,42 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 var isMatchDayOfWeek = classGroupModel.Schedule.GetSchoolDays().Intersect(filterInfo.SelectedDayOfWeeks).Any();
                 var isMatchLectures = classGroupModel.TeacherNames.Intersect(filterInfo.LectureNames).Any();
 
-                return isMatchDayOfWeek && isMatchLectures;
+#pragma warning disable IDE0075
+                // Nếu checkbox seat được check, thì phải kiểm tra xem class group có empty seat hay không, nếu không check thì bỏ qua.
+                var hasEmptySeat = SeatAvailable ? classGroupModel.EmptySeat > 0 : true;
+#pragma warning restore IDE0075
+
+                var lowValue = ConvertUnitToDateTime(LowValue);
+                var highValue = ConvertUnitToDateTime(HighValue);
+                var isMatchTime = classGroupModel.Schedule.ScheduleTime
+                    .SelectMany(item => item.Value)
+                    .Any(item => item.End >= lowValue && item.Start <= highValue);
+                return isMatchDayOfWeek 
+                    && isMatchLectures 
+                    && hasEmptySeat 
+                    && isMatchTime;
             }
 
             return false;
+        }
+
+        private DateTime ConvertUnitToDateTime(int unit)
+        {
+            // Mỗi đơn vị = 30 phút
+            int totalMinutes = unit * 30;
+
+            // Bắt đầu từ 7:00
+            int startHour = 7;
+            int hour = startHour + (totalMinutes / 60);
+            int minute = totalMinutes % 60;
+            var now = DateTime.Now;
+            DateTime dateTime = new DateTime(
+                now.Year,
+                now.Month,
+                now.Day,
+                hour, minute, 0
+            );
+            return dateTime;
         }
 
         /// <summary>
@@ -1036,8 +1099,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     Lectures = new ObservableCollection<MultiSelectionItem>()
                 };
 
-                filterVm.Filter += FilterVm_RequestFilter;
-
                 var teacherNames = subjectModel.Subject.ClassGroups.SelectMany(
                     classGroup => classGroup.SchoolClasses.SelectMany(
                         schoolClass => schoolClass.TeacherNames))
@@ -1047,6 +1108,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     .ToList();
 
                 filterVm.Lectures.AddRange(teacherNames);
+                filterVm.Filter += _debouncer.Debounce;
                 FilterSubjectViewModels.Add(filterVm);
             }
             else
@@ -1054,11 +1116,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // Show existing filter
                 filter.IsDisplayed = true;
             }
-        }
-
-        private void FilterVm_RequestFilter()
-        {
-            SelectedClassGroupModelsView.Refresh();
         }
 
         private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

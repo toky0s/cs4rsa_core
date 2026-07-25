@@ -48,6 +48,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debouncer.cs" />
     <Compile Include="MulSelection.xaml.cs">
       <DependentUpon>MulSelection.xaml</DependentUpon>
     </Compile>
