@@ -37,7 +37,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Data;
 
@@ -51,7 +50,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         #endregion
 
         #region Filter class groups
-        private Debouncer _debouncer;
+        private readonly Debouncer _debouncer;
 
         private ObservableCollection<FilterSubjectViewModel> _filterSubjectViewModels = new ObservableCollection<FilterSubjectViewModel>();
         public ObservableCollection<FilterSubjectViewModel> FilterSubjectViewModels
@@ -774,7 +773,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private List<ObservableCollection<TimeBlock>> _schedules;
+        private readonly List<ObservableCollection<TimeBlock>> _schedules;
 
         public ObservableCollection<TimeBlock> Week1 { get; set; }
         public ObservableCollection<TimeBlock> Week2 { get; set; }
@@ -878,6 +877,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
             SelectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
             SelectedClassGroupModelsView.Filter += SelectedClassGroupModelsView_DoFilter;
+
             #region Filter class group Config
             _debouncer = new Debouncer(500, () => SelectedClassGroupModelsView.Refresh());
             #endregion
@@ -931,9 +931,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 var isMatchTime = classGroupModel.Schedule.ScheduleTime
                     .SelectMany(item => item.Value)
                     .Any(item => item.End >= lowValue && item.Start <= highValue);
-                return isMatchDayOfWeek 
-                    && isMatchLectures 
-                    && hasEmptySeat 
+                return isMatchDayOfWeek
+                    && isMatchLectures
+                    && hasEmptySeat
                     && isMatchTime;
             }
 
@@ -1080,7 +1080,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             if (e.PropertyName == nameof(SubjectModel.IsDownloading))
             {
                 var addedSubject = (SubjectModel)sender;
-                if (!addedSubject.IsDownloading) CreateOrShowFilterForSubject(addedSubject);
+                if (!addedSubject.IsDownloading) { CreateOrShowFilterForSubject(addedSubject); }
             }
         }
 
@@ -1108,6 +1108,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     .ToList();
 
                 filterVm.Lectures.AddRange(teacherNames);
+                filterVm.SelectedLectures.AddRange(teacherNames);
                 filterVm.Filter += _debouncer.Debounce;
                 FilterSubjectViewModels.Add(filterVm);
             }

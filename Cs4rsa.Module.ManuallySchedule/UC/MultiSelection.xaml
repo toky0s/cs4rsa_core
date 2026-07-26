@@ -84,7 +84,6 @@
             <Style x:Key="Style_TagContent" TargetType="TextBlock">
                 <Setter Property="Margin" Value="0,0,5,0" />
                 <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="10" />
             </Style>
             <Style x:Key="Style_Tag" TargetType="Border">
                 <Setter Property="Padding" Value="6,4" />

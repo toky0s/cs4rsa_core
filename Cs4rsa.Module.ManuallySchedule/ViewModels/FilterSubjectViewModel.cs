@@ -215,8 +215,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
-        
-
         public FilterSubjectViewModel()
         {
             _isBulkUpdating = true;

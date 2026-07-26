@@ -193,6 +193,7 @@
                                                     </Setter.Value>
                                                 </Setter>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Cursor" Value="Arrow" />
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
@@ -759,20 +760,23 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Grid.Row="0">
                                 <Expander Header="General" IsExpanded="True">
-                                    <Border Padding="10">
+                                    <Border Padding="4,10">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="0" IsChecked="{Binding SeatAvailable}">
+                                            <CheckBox
+                                                Grid.Row="0"
+                                                Margin="0,0,0,4"
+                                                IsChecked="{Binding SeatAvailable}">
                                                 <CheckBox.Content>
                                                     <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
                                                 </CheckBox.Content>
                                             </CheckBox>
                                             <Border Grid.Row="1">
                                                 <StackPanel>
-                                                    <TextBlock FontWeight="Bold" Text="Time range" />
+                                                    <TextBlock Text="Time range" />
                                                     <xctk:RangeSlider
                                                         Name="RangeSlider"
                                                         d:HigherValue="28"
