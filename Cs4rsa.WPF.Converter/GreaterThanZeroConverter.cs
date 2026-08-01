@@ -15,6 +15,10 @@ namespace Cs4rsa.WPF.Converter
             {
                 return intValue > 0;
             }
+            else if (value is float fValue)
+            {
+                return fValue > 0;
+            }
             return false;
         }
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) { return null; }

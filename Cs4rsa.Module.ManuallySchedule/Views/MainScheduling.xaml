@@ -2,7 +2,6 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Views.MainScheduling"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:btnstyle="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:info="clr-namespace:Cs4rsa.Module.ManuallySchedule"
@@ -32,6 +31,7 @@
             <cvt:IsNotNullConverter x:Key="IsNotNull" />
             <vr:VR_SharedCode x:Key="vrSharedCode" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -41,11 +41,17 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*" d:Width="400" />
+            <ColumnDefinition
+                Width="350"
+                MinWidth="350"
+                d:Width="400" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="100*" d:Width="800" />
+            <ColumnDefinition Width="1*" d:Width="800" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="30*" d:Width="400" />
+            <ColumnDefinition
+                Width="350"
+                MinWidth="350"
+                d:Width="400" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
@@ -130,9 +136,10 @@
                                     </ComboBox>
                                     <Border Grid.Column="3" Margin="4,0,0,0">
                                         <Button
-                                            Width="30"
+                                            Width="50"
                                             Command="{Binding AddCommand}"
-                                            Content="+" />
+                                            Content="Add"
+                                            Style="{StaticResource ActionButton}" />
                                     </Border>
                                 </Grid>
                             </Border>
@@ -249,11 +256,26 @@
                                                         Grid.Column="1"
                                                         Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                                         CommandParameter="{Binding}"
-                                                        Content="🗑️"
                                                         Foreground="DimGray"
                                                         Style="{StaticResource IconButtonStyle}"
                                                         ToolTip="Delete"
-                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}" />
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
+                                                        <Button.Content>
+                                                            <Image
+                                                                Width="20"
+                                                                Height="20"
+                                                                Source="{StaticResource IconTrash}" />
+                                                        </Button.Content>
+                                                    </Button>
+
+                                                    <!--  ================================= Loading icon =================================  -->
+                                                    <Image
+                                                        Grid.Column="1"
+                                                        Width="20"
+                                                        Height="20"
+                                                        Style="{StaticResource SpinningLoadingIconStyle}"
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=False}" />
+                                                    <!--  ================================= Loading icon =================================  -->
 
                                                     <Border
                                                         Grid.Row="1"
@@ -286,7 +308,10 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <StackPanel Grid.Row="1" HorizontalAlignment="Right">
-                                        <Button Command="{Binding DeleteAllCommand}" Content="_Delete All" />
+                                        <Button
+                                            Command="{Binding DeleteAllCommand}"
+                                            Content="_Delete All"
+                                            Style="{StaticResource ActionButton}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -314,11 +339,12 @@
                                         </Grid.RowDefinitions>
                                         <TextBlock
                                             Grid.Row="0"
-                                            FontSize="13"
-                                            FontWeight="DemiBold"
+                                            FontSize="16"
+                                            FontWeight="Medium"
                                             Text="{Binding Name}" />
                                         <TextBlock
                                             Grid.Row="1"
+                                            Margin="0,0,0,8"
                                             FontSize="10"
                                             Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
                                         <Grid Grid.Row="2">
@@ -332,10 +358,17 @@
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
-                                                Content="🗑️"
-                                                Foreground="DimGray"
-                                                Style="{StaticResource IconButtonStyle}"
-                                                ToolTip="Delete" />
+                                                ToolTip="Delete">
+                                                <Button.Content>
+                                                    <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                                        <Image
+                                                            Width="20"
+                                                            Height="20"
+                                                            Source="{StaticResource IconTrash}" />
+                                                        <TextBlock Text="Delete" />
+                                                    </uihelper:GapStackPanel>
+                                                </Button.Content>
+                                            </Button>
                                             <StackPanel
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
@@ -343,8 +376,17 @@
                                                 <Button
                                                     Margin="0,0,4,0"
                                                     Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Share..." />
+                                                    CommandParameter="{Binding}">
+                                                    <Button.Content>
+                                                        <uihelper:GapStackPanel Gap="2" Orientation="Horizontal">
+                                                            <Image
+                                                                Width="20"
+                                                                Height="20"
+                                                                Source="{StaticResource IconShare}" />
+                                                            <TextBlock Text="Share" />
+                                                        </uihelper:GapStackPanel>
+                                                    </Button.Content>
+                                                </Button>
                                                 <Button
                                                     Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
                                                     CommandParameter="{Binding}"
@@ -419,14 +461,6 @@
                         <Border>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding SelectedSubjectModel.SubjectCode}" />
-                                <Button Style="{StaticResource IconButtonStyle}">
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="10"
-                                        Text="&#xE16E;" />
-                                </Button>
                             </StackPanel>
                         </Border>
                     </TabItem.Header>
@@ -436,11 +470,12 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+                            <StackPanel Grid.Row="0" HorizontalAlignment="Right">
                                 <Button
                                     x:Name="SortButton"
                                     Click="SortButton_Click"
-                                    Content="Sort">
+                                    Content="Sort"
+                                    Style="{StaticResource ActionButton}">
                                     <Button.ContextMenu>
                                         <ContextMenu x:Name="SortContextMenu">
                                             <MenuItem
@@ -621,10 +656,34 @@
                 <TabControl>
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock>
-                                <Run Text="Selected classes" />
-                                <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}" />
-                            </TextBlock>
+                            <StackPanel>
+                                <TextBlock Text="Classes">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                    <Run Text="Classes" />
+                                    <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
                         </TabItem.Header>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -664,81 +723,181 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Border Grid.Row="1">
-                                <StackPanel
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
                                     <Button
-                                        Margin="0,0,5,0"
-                                        Command="{Binding RemoveSelectedCommand}"
-                                        CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
-                                        Content="_Remove selected" />
-                                    <Button
-                                        Margin="0,0,5,0"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
                                         Command="{Binding DeleteAllChooseCommand}"
-                                        Content="_Unselect All" />
-                                    <Button Command="{Binding SaveCommand}" Content="_Save" />
-                                </StackPanel>
+                                        Content="_Unselect All"
+                                        Style="{StaticResource ActionButton}" />
+                                    <uihelper:GapStackPanel
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        Gap="5"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            HorizontalAlignment="Right"
+                                            Command="{Binding RemoveSelectedCommand}"
+                                            CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
+                                            Content="_Remove Selection"
+                                            Style="{StaticResource ActionButton}" />
+                                        <Button
+                                            HorizontalAlignment="Right"
+                                            Command="{Binding SaveCommand}"
+                                            Content="_Save"
+                                            Style="{StaticResource ActionButton}" />
+                                    </uihelper:GapStackPanel>
+                                </Grid>
                             </Border>
                         </Grid>
                     </TabItem>
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock>
-                                <Run Text="Warnings" />
-                                <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}" />
-                            </TextBlock>
-                        </TabItem.Header>
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding WarningModels}"
-                            VerticalGridLinesBrush="{x:Null}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Warning">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                                <Image
-                                                    Width="16"
-                                                    Height="16"
-                                                    Margin="4,0,4,0"
-                                                    RenderOptions.BitmapScalingMode="HighQuality"
-                                                    Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/error-icon.png" />
-                                                <TextBlock Text="{Binding WarningTitle}" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Description}"
-                                    Header="Description">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <StackPanel VerticalAlignment="Center" uihelper:StackPanelExtensions.Gap="5">
+                                <!--  ========================= Show warning =========================  -->
+                                <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                    <uihelper:GapStackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WarningModels.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.Header>
-                                        <TextBlock Text="Actions" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                                <Button
-                                                    Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Solve..." />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    </uihelper:GapStackPanel.Style>
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconWarning}" />
+                                    <TextBlock VerticalAlignment="Center">
+                                        <Run Text="Warnings" />
+                                        <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}" />
+                                    </TextBlock>
+                                </uihelper:GapStackPanel>
+
+                                <!--  ========================= Show True Change =========================  -->
+                                <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                    <uihelper:GapStackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </uihelper:GapStackPanel.Style>
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconCheck}" />
+                                    <TextBlock Text="True Change" />
+                                </uihelper:GapStackPanel>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid>
+                            <!--  =============================== Has warning ===============================  -->
+                            <DataGrid
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False"
+                                CanUserDeleteRows="False"
+                                HorizontalScrollBarVisibility="Auto"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding WarningModels}"
+                                VerticalGridLinesBrush="{x:Null}">
+                                <DataGrid.Style>
+                                    <Style TargetType="DataGrid">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Warning">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <uihelper:GapStackPanel
+                                                    VerticalAlignment="Center"
+                                                    Gap="4"
+                                                    Orientation="Horizontal">
+                                                    <Image
+                                                        Width="14"
+                                                        Height="14"
+                                                        Source="{StaticResource IconError}" />
+                                                    <TextBlock Text="{Binding WarningTitle}" />
+                                                </uihelper:GapStackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="Description">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Actions" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                                    <Button
+                                                        Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Solve..." />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <!--  =============================== Has warning ===============================  -->
+
+                            <!--  =============================== True Change ===============================  -->
+                            <ScrollViewer
+                                VerticalAlignment="Stretch"
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Style>
+                                    <Style TargetType="ScrollViewer">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ScrollViewer.Style>
+                                <uihelper:GapStackPanel
+                                    VerticalAlignment="Top"
+                                    Gap="5"
+                                    Orientation="Horizontal">
+
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconCheck}" />
+                                    <TextBlock
+                                        FontStyle="Italic"
+                                        Foreground="#95a5a6"
+                                        Text="Your changes do not cause any scheduling conflicts or locations that are too far apart." />
+                                </uihelper:GapStackPanel>
+                            </ScrollViewer>
+                            <!--  =============================== True Change ===============================  -->
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </Border>
@@ -956,7 +1115,7 @@
                             Grid.Row="1"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                            <Button Content="Reset" />
+                            <Button Content="Reset" Style="{StaticResource ActionButton}" />
                         </StackPanel>
                     </Grid>
                 </TabItem>

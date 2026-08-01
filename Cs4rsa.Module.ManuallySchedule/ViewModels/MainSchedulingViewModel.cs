@@ -550,9 +550,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void ExecuteDeleteAllChooseCommand()
         {
             SelectedClassGroupModels.Clear();
+            
             UpdateConflicts();
-            DeleteAllChooseCommand.RaiseCanExecuteChanged();
             CleanDays();
+            RunScheduleValidator();
+
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
         #endregion
 
