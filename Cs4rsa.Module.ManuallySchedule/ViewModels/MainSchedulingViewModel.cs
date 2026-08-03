@@ -37,6 +37,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI;
 using System.Windows;
 using System.Windows.Data;
 
@@ -374,6 +375,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _logger.LogInformation("Add command executed - Load subject={url}", url);
             InsertPseudoSubject(SelectedKeyword);
             await OnAddSubjectAsync(SelectedKeyword);
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
         #endregion
 
@@ -724,7 +726,22 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     SetProperty(ref _selectedSubjectModel, value);
                     OnSelectedSubjectModelChanged(value);
                     SyncSelectedClassGroup();
+                    OpenSubjectFilter(value.SubjectCode);
                 }
+            }
+        }
+
+        private void OpenSubjectFilter(string subjectCode)
+        {
+            foreach (var filter in FilterSubjectViewModels)
+            {
+                filter.IsDisplayed = false;
+            }
+
+            var openFilter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
+            if (openFilter != null)
+            {
+                openFilter.IsDisplayed = true;
             }
         }
 
@@ -1468,6 +1485,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 classGroupModel.PickSchoolClass(userSubject.SchoolClass);
             }
             SelectedClassGroupModels.Add(classGroupModel);
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         private async Task<(SubjectModel, string)> DownloadSubject(Keyword keyword, bool isUseCache)

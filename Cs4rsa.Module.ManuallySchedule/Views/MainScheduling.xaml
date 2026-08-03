@@ -68,7 +68,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0">
+                            <Border Grid.Row="0" Margin="0,0,0,2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="60" />
@@ -145,7 +145,7 @@
                             </Border>
                             <Border Grid.Row="1">
                                 <Grid>
-                                    <TextBox Height="20" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
+                                    <TextBox Height="24" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
@@ -154,7 +154,6 @@
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-
                                     <ListBox
                                         Grid.Row="0"
                                         HorizontalContentAlignment="Stretch"
@@ -996,9 +995,11 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Expander
+                                                x:Name="Expander_Filter"
                                                 Padding="0,0,1,15"
                                                 d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
-                                                BorderThickness="1">
+                                                BorderThickness="1"
+                                                IsExpanded="{Binding IsDisplayed}">
                                                 <Expander.Template>
                                                     <ControlTemplate TargetType="Expander">
                                                         <StackPanel>
