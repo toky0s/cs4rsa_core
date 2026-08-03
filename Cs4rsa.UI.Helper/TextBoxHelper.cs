@@ -72,6 +72,20 @@ namespace Cs4rsa.UI.Helper
             {
                 RefreshAdorner(textBox);
             }
+            else
+            {
+                // TextBox vừa bị ẩn (ví dụ do Expander cha bị collapse) -> ẩn luôn placeholder adorner
+                AdornerLayer layer = AdornerLayer.GetAdornerLayer(textBox);
+                if (layer == null) return;
+
+                var adorners = layer.GetAdorners(textBox);
+                if (adorners == null) return;
+
+                foreach (var adorner in adorners.OfType<PlaceholderAdorner>())
+                {
+                    adorner.Visibility = Visibility.Hidden;
+                }
+            }
         }
 
         // Helper mới: tạo adorner và set visibility đúng ngay từ đầu
@@ -152,7 +166,6 @@ namespace Cs4rsa.UI.Helper
                 if (string.IsNullOrEmpty(placeholderValue))
                     return;
 
-                // Create the formatted text object
                 FormattedText text = new FormattedText(
                                             placeholderValue,
                                             System.Globalization.CultureInfo.CurrentCulture,
@@ -168,21 +181,21 @@ namespace Cs4rsa.UI.Helper
                 text.MaxTextWidth = System.Math.Max(textBoxControl.ActualWidth - textBoxControl.Padding.Left - textBoxControl.Padding.Right, 10);
                 text.MaxTextHeight = System.Math.Max(textBoxControl.ActualHeight, 10);
 
-                // Render based on padding of the control, to try and match where the textbox places text
+                // Mặc định: dùng Padding của control làm offset (fallback khi không tìm thấy PART_ContentHost)
                 Point renderingOffset = new Point(textBoxControl.Padding.Left, textBoxControl.Padding.Top);
 
-                // Template contains the content part; adjust sizes to try and align the text
+                // Nếu tìm thấy PART_ContentHost, vị trí của nó so với TextBox đã bao gồm Padding rồi
+                // (Padding được TemplateBinding lên Border bao quanh PART_ContentHost trong template mặc định),
+                // nên dùng thẳng vị trí + kích thước này thay vì cộng dồn thêm Padding, tránh bị lệch gấp đôi.
                 if (textBoxControl.Template.FindName("PART_ContentHost", textBoxControl) is FrameworkElement part)
                 {
                     Point partPosition = part.TransformToAncestor(textBoxControl).Transform(new Point(0, 0));
-                    renderingOffset.X += partPosition.X;
-                    renderingOffset.Y += partPosition.Y;
+                    renderingOffset = partPosition;
 
-                    text.MaxTextWidth = System.Math.Max(part.ActualWidth - renderingOffset.X, 10);
+                    text.MaxTextWidth = System.Math.Max(part.ActualWidth, 10);
                     text.MaxTextHeight = System.Math.Max(part.ActualHeight, 10);
                 }
 
-                // Draw the text
                 drawingContext.DrawText(text, renderingOffset);
             }
         }

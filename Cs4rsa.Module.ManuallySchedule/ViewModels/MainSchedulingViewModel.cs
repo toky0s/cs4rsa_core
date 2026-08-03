@@ -6,9 +6,9 @@ using Cs4rsa.Infrastructure.Common;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Models;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
-using Cs4rsa.Module.ManuallySchedule.Events;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.Services;
+using Cs4rsa.Module.ManuallySchedule.UC;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.Shared;
 using Cs4rsa.Service.Conflict.DataTypes;
@@ -16,6 +16,7 @@ using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Cs4rsa.Service.SubjectCrawler.DataTypes;
 using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.UI.Helper;
 using Cs4rsa.UI.ScheduleTable;
 
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.UI;
 using System.Windows;
 using System.Windows.Data;
 
@@ -48,13 +50,48 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private List<Keyword> _searchKeywords;
         #endregion
 
+        #region Filter class groups
+        private readonly Debouncer _debouncer;
+
+        private ObservableCollection<FilterSubjectViewModel> _filterSubjectViewModels = new ObservableCollection<FilterSubjectViewModel>();
+        public ObservableCollection<FilterSubjectViewModel> FilterSubjectViewModels
+        {
+            get { return _filterSubjectViewModels; }
+            set { SetProperty(ref _filterSubjectViewModels, value); }
+        }
+
+        /// <summary>
+        ///Just show filters which it's IsDisplay = True
+        /// </summary>
+        public ICollectionView VisibleFilters { get; set; }
+
+        #region Time Range
+        private int _minRange = 0;
+        public int LowValue
+        {
+            get { return _minRange; }
+            set { SetProperty(ref _minRange, value); _debouncer.Debounce(); }
+        }
+
+        private int _maxRange = 28;
+        public int HighValue
+        {
+            get { return _maxRange; }
+            set { SetProperty(ref _maxRange, value); _debouncer.Debounce(); }
+        }
+        #endregion
+
+        private bool _seatAvailable;
+        public bool SeatAvailable
+        {
+            get { return _seatAvailable; }
+            set { SetProperty(ref _seatAvailable, value); _debouncer.Debounce(); }
+        }
+
+        #endregion
+
         #region Sort class groups
-
-        // Fields
-        private ICollectionView _selectedClassGroupModelsView;
-
-        // Property - expose ra để View binding
-        public ICollectionView SelectedClassGroupModelsView => _selectedClassGroupModelsView;
+        public ICollectionView SelectedClassGroupModelsView { get; set; }
 
         public enum ClassGroupSortField { Name, EmptySeat }
         private ClassGroupSortField _currentSortField = ClassGroupSortField.Name;
@@ -74,7 +111,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             if (direction == "ASC")
             {
                 _currentSortDirection = ListSortDirection.Ascending;
-            } 
+            }
             else
             {
                 _currentSortDirection = ListSortDirection.Descending;
@@ -101,8 +138,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void ApplySort()
         {
-            _selectedClassGroupModelsView.SortDescriptions.Clear();
-            _selectedClassGroupModelsView.SortDescriptions.Add(
+            SelectedClassGroupModelsView.SortDescriptions.Clear();
+            SelectedClassGroupModelsView.SortDescriptions.Add(
                 new SortDescription(_currentSortField.ToString(), _currentSortDirection)
             );
         }
@@ -338,6 +375,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _logger.LogInformation("Add command executed - Load subject={url}", url);
             InsertPseudoSubject(SelectedKeyword);
             await OnAddSubjectAsync(SelectedKeyword);
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
         #endregion
 
@@ -514,9 +552,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void ExecuteDeleteAllChooseCommand()
         {
             SelectedClassGroupModels.Clear();
+            
             UpdateConflicts();
-            DeleteAllChooseCommand.RaiseCanExecuteChanged();
             CleanDays();
+            RunScheduleValidator();
+
+            DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
         #endregion
 
@@ -685,7 +726,22 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     SetProperty(ref _selectedSubjectModel, value);
                     OnSelectedSubjectModelChanged(value);
                     SyncSelectedClassGroup();
+                    OpenSubjectFilter(value.SubjectCode);
                 }
+            }
+        }
+
+        private void OpenSubjectFilter(string subjectCode)
+        {
+            foreach (var filter in FilterSubjectViewModels)
+            {
+                filter.IsDisplayed = false;
+            }
+
+            var openFilter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
+            if (openFilter != null)
+            {
+                openFilter.IsDisplayed = true;
             }
         }
 
@@ -737,7 +793,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private List<ObservableCollection<TimeBlock>> _schedules;
+        private readonly List<ObservableCollection<TimeBlock>> _schedules;
 
         public ObservableCollection<TimeBlock> Week1 { get; set; }
         public ObservableCollection<TimeBlock> Week2 { get; set; }
@@ -825,7 +881,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             GotoCourseCommand = new DelegateCommand<SubjectModel>(ExecuteGotoCourseCommand);
             #endregion
 
-
             TeacherCount = 0;
             AnyTeacherName = true;
             TeacherNames = new ObservableCollection<string>();
@@ -836,12 +891,19 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             PlaceConflictFinderModels = new ObservableCollection<PlaceConflict>();
             ConflictCollection = new ObservableCollection<Conflict>();
+            ConflictCollection.CollectionChanged += Conflicts_CollectionChanged;
 
             SelectedClassGroupModels = new ObservableCollection<ClassGroupModel>();
             SelectedClassGroupModels.CollectionChanged += SelectedClassGroupModels_CollectionChanged;
-            _selectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
+            SelectedClassGroupModelsView = CollectionViewSource.GetDefaultView(CurrentClassGroupModels);
+            SelectedClassGroupModelsView.Filter += SelectedClassGroupModelsView_DoFilter;
 
-            _eventAggregator.GetEvent<ChoosedVmMsgs.DelAllClassGroupChoiceMsg>().Subscribe(CleanDays);
+            #region Filter class group Config
+            _debouncer = new Debouncer(500, () => SelectedClassGroupModelsView.Refresh());
+            #endregion
+
+            VisibleFilters = CollectionViewSource.GetDefaultView(FilterSubjectViewModels);
+            VisibleFilters.Filter = VisibleFilter_DoFilter;
 
             #region Weeks and Timelines
             Week1 = new ObservableCollection<TimeBlock>();
@@ -857,11 +919,78 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             #endregion
 
+
             InitFilter();
             LoadDiscipline();
-            ConflictCollection.CollectionChanged += Conflicts_CollectionChanged;
-
             networkMonitor.ConnectivityChanged += NetworkMonitor_ConnectivityChanged;
+        }
+
+        private bool SelectedClassGroupModelsView_DoFilter(object obj)
+        {
+            var subjectCode = SelectedSubjectModel.SubjectCode;
+
+            // Lấy filter info dựa trên subject code hiện tại đang chọn.
+            var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
+
+            if (filter != null)
+            {
+                var classGroupModel = obj as ClassGroupModel;
+                var filterInfo = filter.AskRequestFilter();
+
+                // Do filter
+                var isMatchDayOfWeek = classGroupModel.Schedule.GetSchoolDays().Intersect(filterInfo.SelectedDayOfWeeks).Any();
+                var isMatchLectures = classGroupModel.TeacherNames.Intersect(filterInfo.LectureNames).Any();
+
+#pragma warning disable IDE0075
+                // Nếu checkbox seat được check, thì phải kiểm tra xem class group có empty seat hay không, nếu không check thì bỏ qua.
+                var hasEmptySeat = SeatAvailable ? classGroupModel.EmptySeat > 0 : true;
+#pragma warning restore IDE0075
+
+                var lowValue = ConvertUnitToDateTime(LowValue);
+                var highValue = ConvertUnitToDateTime(HighValue);
+                var isMatchTime = classGroupModel.Schedule.ScheduleTime
+                    .SelectMany(item => item.Value)
+                    .Any(item => item.End >= lowValue && item.Start <= highValue);
+                return isMatchDayOfWeek
+                    && isMatchLectures
+                    && hasEmptySeat
+                    && isMatchTime;
+            }
+
+            return false;
+        }
+
+        private DateTime ConvertUnitToDateTime(int unit)
+        {
+            // Mỗi đơn vị = 30 phút
+            int totalMinutes = unit * 30;
+
+            // Bắt đầu từ 7:00
+            int startHour = 7;
+            int hour = startHour + (totalMinutes / 60);
+            int minute = totalMinutes % 60;
+            var now = DateTime.Now;
+            DateTime dateTime = new DateTime(
+                now.Year,
+                now.Month,
+                now.Day,
+                hour, minute, 0
+            );
+            return dateTime;
+        }
+
+        /// <summary>
+        /// Filter này quyết định subject filter nào sẽ hiển thị
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool VisibleFilter_DoFilter(object obj)
+        {
+            if (obj is FilterSubjectViewModel filter)
+            {
+                return filter.IsDisplayed;
+            }
+            return false;
         }
 
         private void NetworkMonitor_ConnectivityChanged(bool obj)
@@ -891,10 +1020,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void SubjectModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            // ADD
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                _logger.LogInformation("Added subject with name {subjectName}", e.NewItems.Cast<SubjectModel>().First().SubjectName);
+                var addedSubject = e.NewItems.Cast<SubjectModel>().First();
+                _logger.LogInformation("Added subject with name {subjectName}", addedSubject.SubjectName);
+
+                // Create filter for new subject if it doesn't exist.
+                addedSubject.PropertyChanged += Item_PropertyChanged;
+
             }
+            // REMOVE
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
                 e.OldItems.Cast<SubjectModel>().ToList().ForEach(sm =>
@@ -907,18 +1043,100 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         SelectedClassGroupModels.Remove(classGroup);
                     }
                     _logger.LogInformation("Removed subject with name {subjectName}", sm.SubjectName);
+
+                    // Don't remove filters, just hide.
+                    var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(sm.SubjectCode));
+                    if (filter != null)
+                    {
+                        // Hide filter from UI
+                        filter.IsDisplayed = false;
+                    }
+
+                    sm.PropertyChanged -= Item_PropertyChanged;
                 });
             }
+            // REPLACE
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
             {
+                // Hide old
+                e.OldItems.Cast<SubjectModel>().ToList().ForEach(sm =>
+                {
+                    var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(sm.SubjectCode));
+                    if (filter != null)
+                    {
+                        filter.IsDisplayed = false;
+                    }
 
+                    sm.PropertyChanged -= Item_PropertyChanged;
+                });
+
+                // Create or show new
+                e.NewItems.Cast<SubjectModel>().ToList().ForEach(sm =>
+                {
+                    CreateOrShowFilterForSubject(sm);
+                    sm.PropertyChanged += Item_PropertyChanged;
+                });
             }
+            // RESET
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
                 HandlerDelAllSubjectMsg();
+
+                // Hide all filters
+                foreach (var filter in FilterSubjectViewModels)
+                {
+                    filter.IsDisplayed = false;
+                }
             }
+
+            VisibleFilters.Refresh();
             AddCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Ví dụ: refresh lại FilteredItems khi Label thay đổi
+            if (e.PropertyName == nameof(SubjectModel.IsDownloading))
+            {
+                var addedSubject = (SubjectModel)sender;
+                if (!addedSubject.IsDownloading) { CreateOrShowFilterForSubject(addedSubject); }
+            }
+        }
+
+        private void CreateOrShowFilterForSubject(SubjectModel subjectModel)
+        {
+            var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode == subjectModel.SubjectCode);
+            if (filter == null)
+            {
+                // Create new filter
+                var filterVm = new FilterSubjectViewModel
+                {
+                    SubjectCode = subjectModel.SubjectCode,
+                    SubjectName = subjectModel.SubjectName,
+                    Color = subjectModel.Color,
+                    IsDisplayed = true,
+                    Lectures = new ObservableCollection<MultiSelectionItem>()
+                };
+
+                var teacherNames = subjectModel.Subject.ClassGroups.SelectMany(
+                    classGroup => classGroup.SchoolClasses.SelectMany(
+                        schoolClass => schoolClass.TeacherNames))
+                    .Distinct() // Lấy danh sách tên giảng viên duy nhất
+                    .OrderBy(value => value) // Sắp xếp tên giảng viên tăng dần
+                    .Select(teacherName => new MultiSelectionItem { Label = teacherName, ID = teacherName })
+                    .ToList();
+
+                filterVm.Lectures.AddRange(teacherNames);
+                filterVm.SelectedLectures.AddRange(teacherNames);
+                filterVm.Filter += _debouncer.Debounce;
+                FilterSubjectViewModels.Add(filterVm);
+            }
+            else
+            {
+                // Show existing filter
+                filter.IsDisplayed = true;
+            }
         }
 
         private void SelectedClassGroupModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -1212,6 +1430,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                 var pseudoSubject = SubjectModels.First(sm => sm.CourseId.Equals(subjectModel.CourseId));
                 pseudoSubject.AssignData(subjectModel);
+                pseudoSubject.IsDownloading = false;
 
                 // 3. Nếu không có Subject nào đang được tải, thực hiện select Subject đầu tiên trong danh sách. 
                 if (!SubjectModels.Any(sm => sm.IsDownloading))
@@ -1266,6 +1485,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 classGroupModel.PickSchoolClass(userSubject.SchoolClass);
             }
             SelectedClassGroupModels.Add(classGroupModel);
+            DeleteAllCommand.RaiseCanExecuteChanged();
         }
 
         private async Task<(SubjectModel, string)> DownloadSubject(Keyword keyword, bool isUseCache)

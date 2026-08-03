@@ -48,11 +48,21 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debouncer.cs" />
+    <Compile Include="GapStackPanel.cs" />
+    <Compile Include="MulSelection.xaml.cs">
+      <DependentUpon>MulSelection.xaml</DependentUpon>
+    </Compile>
     <Page Include="ButtonStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="StackPanelExtensions.cs" />
     <Compile Include="TextBoxHelper.cs" />
+    <Page Include="MulSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -139,12 +139,12 @@
     <Compile Include="Dialogs\Views\SolveConflictUC.xaml.cs">
       <DependentUpon>SolveConflictUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Events\ChoosedVmMsgs.cs" />
     <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
     <Compile Include="Events\ExitImportSubjectMsg.cs" />
     <Compile Include="Events\SearchVmMsgs.cs" />
     <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
     <Compile Include="Events\UpdateVmMsgs.cs" />
+    <Compile Include="UC\MultiSelectionItem.cs" />
     <Compile Include="Models\WarningModel.cs" />
     <Compile Include="Models\SearchValues.cs" />
     <Compile Include="Interfaces\IPreParSubjectCrawler.cs" />
@@ -159,6 +159,9 @@
     <Compile Include="Services\ITimeBlockGenerator.cs" />
     <Compile Include="Services\ScheduleValidator.cs" />
     <Compile Include="Services\TimeBlockGenerator.cs" />
+    <Compile Include="UC\MultiSelection.xaml.cs">
+      <DependentUpon>MultiSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\IShareStringService.cs" />
     <Compile Include="Utils\ShareString.cs" />
@@ -166,7 +169,7 @@
     <Compile Include="Utils\ValidateUserSchedule.cs" />
     <Compile Include="Services\UpdateConflict.cs" />
     <Compile Include="ValidationRules\VR_SharedCode.cs" />
-    <Compile Include="ViewModels\FilterViewModel.cs" />
+    <Compile Include="ViewModels\FilterSubjectViewModel.cs" />
     <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
     <Compile Include="Views\MainScheduling.xaml.cs">
       <DependentUpon>MainScheduling.xaml</DependentUpon>
@@ -200,6 +203,14 @@
     <Page Include="Dialogs\Views\SolveConflictUC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UC\MultiSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainScheduling.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -258,7 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\emptybox.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +302,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\cross.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\warning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

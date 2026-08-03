@@ -2,7 +2,6 @@
     x:Class="Cs4rsa.Module.ManuallySchedule.Views.MainScheduling"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:btnstyle="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:info="clr-namespace:Cs4rsa.Module.ManuallySchedule"
@@ -11,6 +10,7 @@
     xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
     xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:uc="clr-namespace:Cs4rsa.Module.ManuallySchedule.UC"
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
@@ -31,6 +31,7 @@
             <cvt:IsNotNullConverter x:Key="IsNotNull" />
             <vr:VR_SharedCode x:Key="vrSharedCode" />
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -40,11 +41,17 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*" d:Width="400" />
+            <ColumnDefinition
+                Width="350"
+                MinWidth="350"
+                d:Width="400" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="100*" d:Width="800" />
+            <ColumnDefinition Width="1*" d:Width="800" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="30*" d:Width="400" />
+            <ColumnDefinition
+                Width="350"
+                MinWidth="350"
+                d:Width="400" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
@@ -61,7 +68,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0">
+                            <Border Grid.Row="0" Margin="0,0,0,2">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="60" />
@@ -129,15 +136,16 @@
                                     </ComboBox>
                                     <Border Grid.Column="3" Margin="4,0,0,0">
                                         <Button
-                                            Width="30"
+                                            Width="50"
                                             Command="{Binding AddCommand}"
-                                            Content="+" />
+                                            Content="Add"
+                                            Style="{StaticResource ActionButton}" />
                                     </Border>
                                 </Grid>
                             </Border>
                             <Border Grid.Row="1">
                                 <Grid>
-                                    <TextBox Height="20" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
+                                    <TextBox Height="24" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
@@ -146,7 +154,6 @@
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-
                                     <ListBox
                                         Grid.Row="0"
                                         HorizontalContentAlignment="Stretch"
@@ -192,6 +199,7 @@
                                                     </Setter.Value>
                                                 </Setter>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Cursor" Value="Arrow" />
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
@@ -247,11 +255,26 @@
                                                         Grid.Column="1"
                                                         Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                                         CommandParameter="{Binding}"
-                                                        Content="🗑️"
                                                         Foreground="DimGray"
                                                         Style="{StaticResource IconButtonStyle}"
                                                         ToolTip="Delete"
-                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}" />
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=True}">
+                                                        <Button.Content>
+                                                            <Image
+                                                                Width="20"
+                                                                Height="20"
+                                                                Source="{StaticResource IconTrash}" />
+                                                        </Button.Content>
+                                                    </Button>
+
+                                                    <!--  ================================= Loading icon =================================  -->
+                                                    <Image
+                                                        Grid.Column="1"
+                                                        Width="20"
+                                                        Height="20"
+                                                        Style="{StaticResource SpinningLoadingIconStyle}"
+                                                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVis}, ConverterParameter=False}" />
+                                                    <!--  ================================= Loading icon =================================  -->
 
                                                     <Border
                                                         Grid.Row="1"
@@ -284,7 +307,10 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <StackPanel Grid.Row="1" HorizontalAlignment="Right">
-                                        <Button Command="{Binding DeleteAllCommand}" Content="_Delete All" />
+                                        <Button
+                                            Command="{Binding DeleteAllCommand}"
+                                            Content="_Delete All"
+                                            Style="{StaticResource ActionButton}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -312,11 +338,12 @@
                                         </Grid.RowDefinitions>
                                         <TextBlock
                                             Grid.Row="0"
-                                            FontSize="13"
-                                            FontWeight="DemiBold"
+                                            FontSize="16"
+                                            FontWeight="Medium"
                                             Text="{Binding Name}" />
                                         <TextBlock
                                             Grid.Row="1"
+                                            Margin="0,0,0,8"
                                             FontSize="10"
                                             Text="{Binding SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
                                         <Grid Grid.Row="2">
@@ -330,10 +357,17 @@
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
-                                                Content="🗑️"
-                                                Foreground="DimGray"
-                                                Style="{StaticResource IconButtonStyle}"
-                                                ToolTip="Delete" />
+                                                ToolTip="Delete">
+                                                <Button.Content>
+                                                    <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                                        <Image
+                                                            Width="20"
+                                                            Height="20"
+                                                            Source="{StaticResource IconTrash}" />
+                                                        <TextBlock Text="Delete" />
+                                                    </uihelper:GapStackPanel>
+                                                </Button.Content>
+                                            </Button>
                                             <StackPanel
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
@@ -341,8 +375,17 @@
                                                 <Button
                                                     Margin="0,0,4,0"
                                                     Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Share..." />
+                                                    CommandParameter="{Binding}">
+                                                    <Button.Content>
+                                                        <uihelper:GapStackPanel Gap="2" Orientation="Horizontal">
+                                                            <Image
+                                                                Width="20"
+                                                                Height="20"
+                                                                Source="{StaticResource IconShare}" />
+                                                            <TextBlock Text="Share" />
+                                                        </uihelper:GapStackPanel>
+                                                    </Button.Content>
+                                                </Button>
                                                 <Button
                                                     Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
                                                     CommandParameter="{Binding}"
@@ -417,14 +460,6 @@
                         <Border>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding SelectedSubjectModel.SubjectCode}" />
-                                <Button Style="{StaticResource IconButtonStyle}">
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="10"
-                                        Text="&#xE16E;" />
-                                </Button>
                             </StackPanel>
                         </Border>
                     </TabItem.Header>
@@ -434,11 +469,12 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+                            <StackPanel Grid.Row="0" HorizontalAlignment="Right">
                                 <Button
                                     x:Name="SortButton"
                                     Click="SortButton_Click"
-                                    Content="Sort">
+                                    Content="Sort"
+                                    Style="{StaticResource ActionButton}">
                                     <Button.ContextMenu>
                                         <ContextMenu x:Name="SortContextMenu">
                                             <MenuItem
@@ -619,10 +655,34 @@
                 <TabControl>
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock>
-                                <Run Text="Selected classes" />
-                                <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}" />
-                            </TextBlock>
+                            <StackPanel>
+                                <TextBlock Text="Classes">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedClassGroupModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                    <Run Text="Classes" />
+                                    <Run Text="{Binding SelectedClassGroupModels.Count, StringFormat=({0}), Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
                         </TabItem.Header>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -662,81 +722,181 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                             <Border Grid.Row="1">
-                                <StackPanel
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
                                     <Button
-                                        Margin="0,0,5,0"
-                                        Command="{Binding RemoveSelectedCommand}"
-                                        CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
-                                        Content="_Remove selected" />
-                                    <Button
-                                        Margin="0,0,5,0"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
                                         Command="{Binding DeleteAllChooseCommand}"
-                                        Content="_Unselect All" />
-                                    <Button Command="{Binding SaveCommand}" Content="_Save" />
-                                </StackPanel>
+                                        Content="_Unselect All"
+                                        Style="{StaticResource ActionButton}" />
+                                    <uihelper:GapStackPanel
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        Gap="5"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            HorizontalAlignment="Right"
+                                            Command="{Binding RemoveSelectedCommand}"
+                                            CommandParameter="{Binding SelectedItems, ElementName=DataGrid_SelectedClassGroups}"
+                                            Content="_Remove Selection"
+                                            Style="{StaticResource ActionButton}" />
+                                        <Button
+                                            HorizontalAlignment="Right"
+                                            Command="{Binding SaveCommand}"
+                                            Content="_Save"
+                                            Style="{StaticResource ActionButton}" />
+                                    </uihelper:GapStackPanel>
+                                </Grid>
                             </Border>
                         </Grid>
                     </TabItem>
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock>
-                                <Run Text="Warnings" />
-                                <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}" />
-                            </TextBlock>
-                        </TabItem.Header>
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding WarningModels}"
-                            VerticalGridLinesBrush="{x:Null}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Warning">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                                <Image
-                                                    Width="16"
-                                                    Height="16"
-                                                    Margin="4,0,4,0"
-                                                    RenderOptions.BitmapScalingMode="HighQuality"
-                                                    Source="/Cs4rsa.Module.ManuallySchedule;component/Resources/error-icon.png" />
-                                                <TextBlock Text="{Binding WarningTitle}" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Description}"
-                                    Header="Description">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <StackPanel VerticalAlignment="Center" uihelper:StackPanelExtensions.Gap="5">
+                                <!--  ========================= Show warning =========================  -->
+                                <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                    <uihelper:GapStackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WarningModels.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.Header>
-                                        <TextBlock Text="Actions" />
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                                <Button
-                                                    Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Solve..." />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    </uihelper:GapStackPanel.Style>
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconWarning}" />
+                                    <TextBlock VerticalAlignment="Center">
+                                        <Run Text="Warnings" />
+                                        <Run Text="{Binding WarningModels.Count, StringFormat=({0}), Mode=OneWay}" />
+                                    </TextBlock>
+                                </uihelper:GapStackPanel>
+
+                                <!--  ========================= Show True Change =========================  -->
+                                <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
+                                    <uihelper:GapStackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </uihelper:GapStackPanel.Style>
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconCheck}" />
+                                    <TextBlock Text="True Change" />
+                                </uihelper:GapStackPanel>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid>
+                            <!--  =============================== Has warning ===============================  -->
+                            <DataGrid
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False"
+                                CanUserDeleteRows="False"
+                                HorizontalScrollBarVisibility="Auto"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding WarningModels}"
+                                VerticalGridLinesBrush="{x:Null}">
+                                <DataGrid.Style>
+                                    <Style TargetType="DataGrid">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Warning">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <uihelper:GapStackPanel
+                                                    VerticalAlignment="Center"
+                                                    Gap="4"
+                                                    Orientation="Horizontal">
+                                                    <Image
+                                                        Width="14"
+                                                        Height="14"
+                                                        Source="{StaticResource IconError}" />
+                                                    <TextBlock Text="{Binding WarningTitle}" />
+                                                </uihelper:GapStackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="Description">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Actions" />
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                                    <Button
+                                                        Command="{Binding Data.SolveConflictCommand, Source={StaticResource Proxy}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Solve..." />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <!--  =============================== Has warning ===============================  -->
+
+                            <!--  =============================== True Change ===============================  -->
+                            <ScrollViewer
+                                VerticalAlignment="Stretch"
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Disabled">
+                                <ScrollViewer.Style>
+                                    <Style TargetType="ScrollViewer">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WarningModels.Count, Converter={StaticResource GreaterZero}}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ScrollViewer.Style>
+                                <uihelper:GapStackPanel
+                                    VerticalAlignment="Top"
+                                    Gap="5"
+                                    Orientation="Horizontal">
+
+                                    <Image
+                                        Width="14"
+                                        Height="14"
+                                        Source="{StaticResource IconCheck}" />
+                                    <TextBlock
+                                        FontStyle="Italic"
+                                        Foreground="#95a5a6"
+                                        Text="Your changes do not cause any scheduling conflicts or locations that are too far apart." />
+                                </uihelper:GapStackPanel>
+                            </ScrollViewer>
+                            <!--  =============================== True Change ===============================  -->
+                        </Grid>
                     </TabItem>
                 </TabControl>
             </Border>
@@ -755,124 +915,208 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0">
-                            <Expander Header="General" IsExpanded="True">
-                                <Border Padding="10">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="0">
-                                            <CheckBox.Content>
-                                                <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
-                                            </CheckBox.Content>
-                                        </CheckBox>
-                                        <Border Grid.Row="1">
-                                            <StackPanel>
-                                                <TextBlock FontWeight="Bold" Text="Time range" />
-                                                <xctk:RangeSlider
-                                                    Name="RangeSlider"
-                                                    AutoToolTipPlacement="None"
-                                                    AutoToolTipPrecision="0"
-                                                    HigherValue="28"
-                                                    IsSnapToTickEnabled="True"
-                                                    LowerValue="0"
-                                                    Maximum="28"
-                                                    Minimum="0"
-                                                    Orientation="Horizontal"
-                                                    TickFrequency="1" />
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock
-                                                        Grid.Column="0"
-                                                        HorizontalAlignment="Left"
-                                                        Text="{Binding ElementName=RangeSlider, Path=LowerValue, Converter={StaticResource HalfHourTime}}" />
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        HorizontalAlignment="Center"
-                                                        Text="--" />
-                                                    <TextBlock
-                                                        Grid.Column="2"
-                                                        HorizontalAlignment="Right"
-                                                        Text="{Binding ElementName=RangeSlider, Path=HigherValue, Converter={StaticResource HalfHourTime}}" />
-                                                </Grid>
-                                            </StackPanel>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </Expander>
-                            <ItemsControl ItemsSource="{Binding SubjectModels}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Expander Padding="0,0,1,15" BorderThickness="1">
-                                            <Expander.Template>
-                                                <ControlTemplate TargetType="Expander">
-                                                    <StackPanel>
-                                                        <!--  Header  -->
-                                                        <ToggleButton
-                                                            x:Name="HeaderToggle"
-                                                            HorizontalContentAlignment="Stretch"
-                                                            Background="{Binding Color}"
-                                                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-                                                            <ContentPresenter ContentSource="Header" />
-                                                        </ToggleButton>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Grid.Row="0">
+                                <Expander Header="General" IsExpanded="True">
+                                    <Border Padding="4,10">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <CheckBox
+                                                Grid.Row="0"
+                                                Margin="0,0,0,4"
+                                                IsChecked="{Binding SeatAvailable}">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="Show classes that still have slots" TextWrapping="WrapWithOverflow" />
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                            <Border Grid.Row="1">
+                                                <StackPanel>
+                                                    <TextBlock Text="Time range" />
+                                                    <xctk:RangeSlider
+                                                        Name="RangeSlider"
+                                                        d:HigherValue="28"
+                                                        AutoToolTipPlacement="None"
+                                                        AutoToolTipPrecision="0"
+                                                        HigherValue="{Binding HighValue}"
+                                                        IsSnapToTickEnabled="True"
+                                                        LowerValue="{Binding LowValue}"
+                                                        Maximum="28"
+                                                        Minimum="0"
+                                                        Orientation="Horizontal"
+                                                        TickFrequency="1" />
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            HorizontalAlignment="Left"
+                                                            Text="{Binding ElementName=RangeSlider, Path=LowerValue, Converter={StaticResource HalfHourTime}}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            HorizontalAlignment="Center"
+                                                            Text="--" />
+                                                        <TextBlock
+                                                            Grid.Column="2"
+                                                            HorizontalAlignment="Right"
+                                                            Text="{Binding ElementName=RangeSlider, Path=HigherValue, Converter={StaticResource HalfHourTime}}" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Expander>
 
-                                                        <!--  Content  -->
-                                                        <ContentPresenter x:Name="Content" Visibility="Collapsed" />
+
+                                <!--  ====================== FILTER TRÊN TỪNG SUBJECT - START ======================  -->
+                                <ItemsControl
+                                    d:Background="#ecf0f1"
+                                    d:Height="30"
+                                    ItemsSource="{Binding VisibleFilters}">
+                                    <d:ItemsControl>
+                                        <d:TextBlock d:FontSize="20" d:Foreground="#2980b9">Subject Filters will be here</d:TextBlock>
+                                    </d:ItemsControl>
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <!--<ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter"></Style>
+                                    </ItemsControl.ItemContainerStyle>-->
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Expander
+                                                x:Name="Expander_Filter"
+                                                Padding="0,0,1,15"
+                                                d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
+                                                BorderThickness="1"
+                                                IsExpanded="{Binding IsDisplayed}">
+                                                <Expander.Template>
+                                                    <ControlTemplate TargetType="Expander">
+                                                        <StackPanel>
+                                                            <!--  Header  -->
+                                                            <Border>
+                                                                <ToggleButton
+                                                                    x:Name="HeaderToggle"
+                                                                    Padding="8,4"
+                                                                    HorizontalContentAlignment="Stretch"
+                                                                    Background="#ecf0f1"
+                                                                    BorderThickness="0"
+                                                                    IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ContentPresenter ContentSource="Header" />
+                                                                </ToggleButton>
+                                                            </Border>
+                                                            <!--  Content  -->
+                                                            <ContentPresenter x:Name="Content" Visibility="Collapsed" />
+                                                        </StackPanel>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsExpanded" Value="True">
+                                                                <Setter TargetName="Content" Property="Visibility" Value="Visible" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Expander.Template>
+
+
+                                                <!--  =========================== Header của từng filter ================================  -->
+                                                <Expander.Header>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse
+                                                            Grid.Column="0"
+                                                            Width="8"
+                                                            Height="8"
+                                                            Margin="0,0,4,0"
+                                                            Fill="{Binding Color}" />
+                                                        <TextBlock Grid.Column="1" TextWrapping="Wrap">
+                                                            <Run Text="{Binding SubjectCode}" />
+                                                            <Run Text=" - " />
+                                                            <Run Text="{Binding SubjectName}" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Expander.Header>
+                                                <!--  =========================== Header của từng filter ================================  -->
+
+
+                                                <StackPanel>
+                                                    <StackPanel.Resources>
+                                                        <Style x:Key="Filter_Header" TargetType="TextBlock">
+                                                            <Setter Property="Margin" Value="0,0,0,5" />
+                                                        </Style>
+                                                    </StackPanel.Resources>
+                                                    <!--  =========================== START - Body của từng filter ================================  -->
+                                                    <StackPanel Margin="0,0,0,10">
+                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
+                                                        <xctk:WrapPanel Orientation="Horizontal">
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="All"
+                                                                IsChecked="{Binding All}"
+                                                                IsThreeState="True" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Mon"
+                                                                IsChecked="{Binding Mon}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Tue"
+                                                                IsChecked="{Binding Tue}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Wed"
+                                                                IsChecked="{Binding Wed}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Thu"
+                                                                IsChecked="{Binding Thu}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Fri"
+                                                                IsChecked="{Binding Fri}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Sat"
+                                                                IsChecked="{Binding Sat}" />
+                                                            <CheckBox
+                                                                Margin="0,0,4,0"
+                                                                Content="Sun"
+                                                                IsChecked="{Binding Sun}" />
+                                                        </xctk:WrapPanel>
                                                     </StackPanel>
 
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsExpanded" Value="True">
-                                                            <Setter TargetName="Content" Property="Visibility" Value="Visible" />
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Expander.Template>
-                                            <Expander.Header>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="1" TextWrapping="Wrap">
-                                                        <Run Text="{Binding SubjectCode}" />
-                                                        <Run Text=" - " />
-                                                        <Run Text="{Binding SubjectName}" />
-                                                    </TextBlock>
-                                                </Grid>
-                                            </Expander.Header>
-                                            <StackPanel>
-                                                <TextBlock Text="Day of week" />
-                                                <xctk:WrapPanel Orientation="Horizontal">
-                                                    <CheckBox Margin="0,0,4,0" Content="Mon" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Tue" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Wed" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Thu" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Fri" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Sat" />
-                                                    <CheckBox Margin="0,0,4,0" Content="Sun" />
-                                                </xctk:WrapPanel>
-                                            </StackPanel>
-                                        </Expander>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                                                    <StackPanel>
+                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
+                                                        <uc:MultiSelection ItemsSource="{Binding Lectures}" SelectedItems="{Binding SelectedLectures}" />
+                                                    </StackPanel>
+                                                    <!--  =========================== END - Body của từng filter ================================  -->
+
+                                                </StackPanel>
+                                            </Expander>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <!--  ====================== FILTER TRÊN TỪNG SUBJECT - END ======================  -->
+
+                            </StackPanel>
+                        </ScrollViewer>
                         <StackPanel
                             Grid.Row="1"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
-                            <Button Content="Reset" />
+                            <Button Content="Reset" Style="{StaticResource ActionButton}" />
                         </StackPanel>
                     </Grid>
                 </TabItem>

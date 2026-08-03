@@ -12,7 +12,7 @@
     xmlns:views="clr-namespace:Cs4rsa.App.Views"
     xmlns:vm="clr-namespace:Cs4rsa.App.ViewModels"
     Title="Xếp lịch"
-    Width="1200"
+    Width="1400"
     Height="741.641"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
