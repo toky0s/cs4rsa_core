@@ -115,7 +115,7 @@ namespace Cs4rsa.Database.DataProviders
                 {
                     cmd.CommandText = sql;
                     AddParams(cmd, sqlParams);
-                    _logger.LogDebug("Executing SQL command: {Sql}\n{Params}", sql, BeautifyParams(sqlParams));
+                    _logger?.LogDebug("Executing SQL command: {Sql}\n{Params}", sql, BeautifyParams(sqlParams));
                     using (var reader = cmd.ExecuteReader())
                     {
                         var result = new List<T>();
@@ -204,7 +204,7 @@ namespace Cs4rsa.Database.DataProviders
                 {
                     cmd.CommandText = sql;
                     AddParams(cmd, sqlParams);
-                    _logger.LogDebug("Executing SQL command: {Sql}\n{Params}", sql, BeautifyParams(sqlParams));
+                    _logger?.LogDebug("Executing SQL command: {Sql}\n{Params}", sql, BeautifyParams(sqlParams));
                     var result = cmd.ExecuteNonQuery();
                     return result;
                 }

@@ -145,7 +145,10 @@
                             </Border>
                             <Border Grid.Row="1">
                                 <Grid>
-                                    <TextBox Height="24" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
+                                    <TextBox
+                                        Height="24"
+                                        Padding="8,0,0,0"
+                                        uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
