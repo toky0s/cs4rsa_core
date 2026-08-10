@@ -49,7 +49,7 @@ namespace Xeplich.Service.Search
             // Tạo analyzer và Directory lưu index
             var analyzer = new StandardAnalyzer(AppLuceneVersion);
             var indexDir = FSDirectory.Open(IndexPath);
-            var indexConfig = new Lucene.Net.Index.IndexWriterConfig(AppLuceneVersion, analyzer)
+            var indexConfig = new IndexWriterConfig(AppLuceneVersion, analyzer)
             {
                 OpenMode = OpenMode.CREATE_OR_APPEND
             };
@@ -106,7 +106,16 @@ namespace Xeplich.Service.Search
                     var fields = new[] { "SubjectName", "SubjectCode", "Discipline", "Keyword", "SubjectDescription" };
                     var parser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, fields, analyzer);
 
-                    Query query = parser.Parse(keyword);
+                    Query query;
+                    if (string.IsNullOrWhiteSpace(keyword))
+                    {
+                        // Nếu keyword rỗng thì lấy tất cả document
+                        query = new MatchAllDocsQuery();
+                    }
+                    else
+                    {
+                        query = parser.Parse(keyword);
+                    }
 
                     var hits = searcher.Search(query, maxRecords).ScoreDocs;
                     foreach (var hit in hits)
@@ -126,5 +135,6 @@ namespace Xeplich.Service.Search
                 }
             }
         }
+
     }
 }

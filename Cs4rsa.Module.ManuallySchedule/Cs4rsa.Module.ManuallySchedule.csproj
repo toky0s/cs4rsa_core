@@ -69,6 +69,7 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.7\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
     </Reference>
@@ -83,6 +84,7 @@
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -118,6 +120,7 @@
     <Compile Include="Dialogs\ViewModels\DetailsSchoolClassesViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ScheduleDetailUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SearchSubjectViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
     <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
@@ -126,6 +129,9 @@
     </Compile>
     <Compile Include="Dialogs\Views\ScheduleDetailUC.xaml.cs">
       <DependentUpon>ScheduleDetailUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\SearchSubjectUC.xaml.cs">
+      <DependentUpon>SearchSubjectUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Views\ShareStringUC.xaml.cs">
       <DependentUpon>ShareStringUC.xaml</DependentUpon>
@@ -184,6 +190,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\Views\ScheduleDetailUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Views\SearchSubjectUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -265,6 +275,10 @@
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
       <Name>Cs4rsa.WPF.Converter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xeplich.Service.Search\Xeplich.Service.Search.csproj">
+      <Project>{F92D8E9F-ED40-4279-B1E0-076CB906A83D}</Project>
+      <Name>Xeplich.Service.Search</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

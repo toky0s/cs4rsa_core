@@ -1,0 +1,42 @@
+﻿using Cs4rsa.UI.Helper;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
+{
+    /// <summary>
+    /// Interaction logic for SearchSubjectUC.xaml
+    /// </summary>
+    public partial class SearchSubjectUC : UserControl
+    {
+        private Debouncer _debouncer;
+        public SearchSubjectUC()
+        {
+            InitializeComponent();
+            _debouncer = new Debouncer(500, () =>
+            {
+                var searchText = TextBox_SearchBox.Text;
+                var viewModel = DataContext as ViewModels.SearchSubjectViewModel;
+                viewModel.SearchCommand.Execute(searchText);
+            });
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _debouncer.Debounce();
+        }
+    }
+}

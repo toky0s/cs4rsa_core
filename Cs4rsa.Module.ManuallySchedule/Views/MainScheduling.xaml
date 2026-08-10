@@ -90,7 +90,7 @@
                                     </ComboBox>
                                     <GridSplitter
                                         Grid.Column="1"
-                                        Width="4"
+                                        Width="3"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Stretch" />
                                     <ComboBox
@@ -143,12 +143,13 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <Border Grid.Row="1">
+                            <Border Grid.Row="1" Margin="0,0,0,2">
                                 <Grid>
                                     <TextBox
                                         Height="24"
-                                        Padding="8,0,0,0"
-                                        uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
+                                        Padding="4,2"
+                                        uihelper:TextBoxHelper.Placeholder="Search your subjects..."
+                                        PreviewMouseLeftButtonDown="TextBox_PreviewMouseLeftButtonDown" />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
@@ -159,6 +160,7 @@
                                     </Grid.RowDefinitions>
                                     <ListBox
                                         Grid.Row="0"
+                                        Margin="0,0,0,2"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding SubjectModels}"
                                         SelectedItem="{Binding SelectedSubjectModel}">
@@ -999,14 +1001,15 @@
                                         <DataTemplate>
                                             <Expander
                                                 x:Name="Expander_Filter"
-                                                Padding="0,0,1,15"
                                                 d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
                                                 BorderThickness="1"
                                                 IsExpanded="{Binding IsDisplayed}">
-                                                <Expander.Template>
+                                                <!--<Expander.Template>
                                                     <ControlTemplate TargetType="Expander">
                                                         <StackPanel>
-                                                            <!--  Header  -->
+                                                -->
+                                                <!--  Header  -->
+                                                <!--
                                                             <Border>
                                                                 <ToggleButton
                                                                     x:Name="HeaderToggle"
@@ -1018,7 +1021,9 @@
                                                                     <ContentPresenter ContentSource="Header" />
                                                                 </ToggleButton>
                                                             </Border>
-                                                            <!--  Content  -->
+                                                -->
+                                                <!--  Content  -->
+                                                <!--
                                                             <ContentPresenter x:Name="Content" Visibility="Collapsed" />
                                                         </StackPanel>
 
@@ -1028,7 +1033,7 @@
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
-                                                </Expander.Template>
+                                                </Expander.Template>-->
 
 
                                                 <!--  =========================== Header của từng filter ================================  -->

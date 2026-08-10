@@ -812,7 +812,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
-        private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
         private readonly IScheduleValidator _scheduleValidator;
         private readonly IDialogService _dialogService;
@@ -848,7 +847,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
             _dialogService = dialogService;
-            _eventAggregator = eventAggregator;
             _logger = logger;
             _scheduleValidator = scheduleValidator;
             _timeBlockGenerator = timeBlockGenerator;
