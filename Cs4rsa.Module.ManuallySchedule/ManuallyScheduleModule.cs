@@ -27,8 +27,6 @@ namespace Cs4rsa.Module.ManuallySchedule
         {
             var regionManager = containerProvider.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion(RegionInfo.Manual, typeof(MainScheduling));
-            var indexBuilder = containerProvider.Resolve<IndexBuilder>();
-            indexBuilder.BuildIndex();
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
@@ -41,10 +39,6 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
             containerRegistry.RegisterSingleton<IScheduleValidator, ScheduleValidator>();
             containerRegistry.RegisterSingleton<ITimeBlockGenerator, TimeBlockGenerator>();
-            containerRegistry.Register<IndexBuilder>(provider => {
-                    var rawsql = provider.Resolve<RawSql>();
-                    return new IndexBuilder(rawsql);
-            });
 
             containerRegistry.RegisterDialog<ScheduleDetailUC, ScheduleDetailUCViewModel>();
             containerRegistry.RegisterDialog<ShowDetailsSubjectUC, ShowDetailsSubjectUCViewModel>();

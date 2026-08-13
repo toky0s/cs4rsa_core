@@ -47,11 +47,11 @@ namespace Xeplich.Service.Search
             var IndexPath = Settings.Default.LuceneIndexPath; // Đường dẫn tới thư mục lưu trữ index
 
             // Tạo analyzer và Directory lưu index
-            var analyzer = new StandardAnalyzer(AppLuceneVersion);
+            var analyzer = new VietnameseAnalyzer(AppLuceneVersion);
             var indexDir = FSDirectory.Open(IndexPath);
             var indexConfig = new IndexWriterConfig(AppLuceneVersion, analyzer)
             {
-                OpenMode = OpenMode.CREATE_OR_APPEND
+                OpenMode = OpenMode.CREATE
             };
 
             using (var writer = new IndexWriter(indexDir, indexConfig))
@@ -62,18 +62,54 @@ namespace Xeplich.Service.Search
                 {
                     Console.WriteLine($"Indexing Subject: {data.SubjectName} {data.SubjectCode} {data.Discipline} {data.Keyword} {data.SubjectDescription}");
                     var doc = new Document
-                    {
-                        new TextField("SubjectName", data.SubjectName, Field.Store.YES),
-                        new TextField("SubjectCode", data.SubjectCode, Field.Store.YES),
-                        new TextField("Discipline", data.Discipline, Field.Store.YES),
-                        new TextField("Keyword", data.Keyword, Field.Store.YES),
-                        new TextField("SubjectDescription", data.SubjectDescription, Field.Store.YES)
-                    };
+            {
+                new TextField("SubjectName", data.SubjectName ?? "", Field.Store.YES),
+                new TextField("SubjectCode", data.SubjectCode ?? "", Field.Store.YES),
+                new TextField("Discipline", data.Discipline ?? "", Field.Store.YES),
+
+                // Nếu Keyword là số, dùng Int32Field để tối ưu range query
+                new Int32Field("Keyword", int.TryParse(data.Keyword, out var kw) ? kw : 0, Field.Store.YES),
+
+                new TextField("SubjectDescription", data.SubjectDescription ?? "", Field.Store.YES),
+            };
                     writer.AddDocument(doc);
                 }
                 writer.Commit();
             }
+        }
 
+        private List<string> Tokenize(Analyzer analyzer, string field, string text)
+        {
+            var tokens = new List<string>();
+            using (var tokenStream = analyzer.GetTokenStream(field, text))
+            {
+                var termAttr = tokenStream.AddAttribute<Lucene.Net.Analysis.TokenAttributes.ICharTermAttribute>();
+                tokenStream.Reset();
+                while (tokenStream.IncrementToken())
+                {
+                    tokens.Add(termAttr.ToString());
+                }
+                tokenStream.End();
+            }
+            return tokens;
+        }
+
+        private Query BuildFuzzyQuery(string keyword, string[] fields, Analyzer analyzer)
+        {
+            var boolQuery = new BooleanQuery();
+            //var terms = keyword.ToLowerInvariant().Split(' ');
+            var terms = fields.SelectMany(f => Tokenize(analyzer, f, keyword)).ToArray();
+
+            foreach (var field in fields)
+            {
+                foreach (var term in terms)
+                {
+                    if (string.IsNullOrWhiteSpace(term)) continue;
+                    var fuzzy = new FuzzyQuery(new Term(field, term), 2); // maxEdits = 2
+                    boolQuery.Add(fuzzy, Occur.SHOULD);
+                }
+            }
+            return boolQuery;
         }
         private List<DataModel> GetDataFromDatabase()
         {
@@ -94,7 +130,7 @@ namespace Xeplich.Service.Search
         {
             var IndexPath = Settings.Default.LuceneIndexPath;
             var results = new List<DataModel>();
-            var analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
+            var analyzer = new VietnameseAnalyzer(LuceneVersion.LUCENE_48);
 
             using (var dir = FSDirectory.Open(IndexPath))
             {

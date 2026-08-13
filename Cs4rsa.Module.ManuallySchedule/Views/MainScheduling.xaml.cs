@@ -1,6 +1,4 @@
-﻿using Cs4rsa.Database.Models;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.ViewModels;
 
@@ -112,14 +110,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 
         private void TextBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            _dialogService.ShowDialog(nameof(SearchSubjectUC), new DialogParameters(), r =>
-            {
-                //if (r.Result == ButtonResult.OK)
-                //{
-                //    var selectedSubject = r.Parameters.GetValue<SubjectModel>("SelectedSubject");
-                //    ((MainSchedulingViewModel)DataContext).AddClassGroupsFromSubjectCommand.Execute(selectedSubject);
-                //}
-            });
+            ((MainSchedulingViewModel)DataContext).OpenSearchCommand.Execute();
         }
     }
 }

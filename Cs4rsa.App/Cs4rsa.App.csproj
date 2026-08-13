@@ -294,7 +294,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Events\TopMenuEvents\ScreenChangedEvent.cs" />
     <Compile Include="Services\DummyUpdateService.cs" />
     <Compile Include="Services\GithubUpdateService.cs" />
     <Compile Include="Services\IUpdateService.cs" />
@@ -412,6 +411,10 @@
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
       <Name>Cs4rsa.WPF.Converter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xeplich.Service.Search\Xeplich.Service.Search.csproj">
+      <Project>{F92D8E9F-ED40-4279-B1E0-076CB906A83D}</Project>
+      <Name>Xeplich.Service.Search</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

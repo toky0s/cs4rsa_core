@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Debouncer.cs" />
     <Compile Include="GapStackPanel.cs" />
+    <Compile Include="ListBoxExtensions.cs" />
     <Compile Include="MulSelection.xaml.cs">
       <DependentUpon>MulSelection.xaml</DependentUpon>
     </Compile>

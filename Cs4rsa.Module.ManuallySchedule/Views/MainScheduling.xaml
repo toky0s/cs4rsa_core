@@ -148,7 +148,7 @@
                                     <TextBox
                                         Height="24"
                                         Padding="4,2"
-                                        uihelper:TextBoxHelper.Placeholder="Search your subjects..."
+                                        uihelper:TextBoxHelper.Placeholder="Ctrl + E to Search..."
                                         PreviewMouseLeftButtonDown="TextBox_PreviewMouseLeftButtonDown" />
                                 </Grid>
                             </Border>

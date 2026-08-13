@@ -6,11 +6,12 @@
     xmlns:local="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
     Width="600"
     Height="350"
-    Padding="2"
+    Padding="8"
     d:Background="White"
     d:DataContext="{d:DesignInstance Type=vm:SearchSubjectViewModel}"
     d:DesignHeight="350"
@@ -25,13 +26,23 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>
-        <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
+        <ResourceDictionary>
+            <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Key="Down" Command="{Binding Data.KeyDownCommand, Source={StaticResource Proxy}}" />
+        <KeyBinding Key="Up" Command="{Binding Data.KeyUpCommand, Source={StaticResource Proxy}}" />
+    </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Search" />
@@ -39,42 +50,19 @@
             x:Name="TextBox_SearchBox"
             Grid.Row="1"
             Height="24"
+            Margin="0,0,0,4"
             Padding="4,2"
             uihelper:TextBoxHelper.Placeholder="Search your subjects..."
+            FontSize="13"
+            PreviewKeyDown="TextBox_SearchBox_PreviewKeyDown"
             TextChanged="TextBox_TextChanged" />
         <ListBox
+            xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
             Grid.Row="2"
-            Margin="0,0,0,8"
-            ItemsSource="{Binding SubjectResults}">
-            <d:ListBoxItem>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse
-                            Width="10"
-                            Height="10"
-                            Margin="0,0,4,0"
-                            Fill="Aquamarine" />
-                        <TextBlock Margin="0,0,4,0" Text="CS 101 - Lập trình Cơ sở" />
-                        <TextBlock Text="- Lập trình cơ bản bao gồm C và C++" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" />
-                </StackPanel>
-            </d:ListBoxItem>
-
-            <d:ListBoxItem>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse
-                            Width="10"
-                            Height="10"
-                            Margin="0,0,4,0"
-                            Fill="Aquamarine" />
-                        <TextBlock Margin="0,0,4,0" Text="ACC 201 - Nguyên Lý Kế Toán" />
-                        <TextBlock Text="- Lập kế hoạch và hoạch định chiến lược..." />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" />
-                </StackPanel>
-            </d:ListBoxItem>
+            Margin="0,0,0,4"
+            uihelper:ListBoxExtensions.AutoScrollToSelectedItem="True"
+            ItemsSource="{Binding SubjectResults}"
+            SelectedItem="{Binding SelectedSearchResult}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -84,7 +72,7 @@
                                 Height="10"
                                 Margin="0,0,4,0"
                                 Fill="{Binding Color}" />
-                            <TextBlock Margin="0,0,4,0" Text="{Binding SubjectCode}" />
+                            <TextBlock Text="{Binding SubjectCode}" />
                             <TextBlock Text=" - " />
                             <TextBlock Margin="0,0,4,0" Text="{Binding SubjectName}" />
                             <TextBlock Text="{Binding SubjectDescription}" />
@@ -94,8 +82,22 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <StackPanel Grid.Row="3" Margin="0,0,0,4">
+            <RichTextBox IsReadOnly="True" IsReadOnlyCaretVisible="True">
+                <RichTextBox.Document>
+                    <FlowDocument
+                        FontSize="13"
+                        FontStyle="Italic"
+                        Foreground="#7f8c8d">
+                        <Paragraph>
+                            1. Sử dụng các phím mũi tên lên xuống để điều hướng.<LineBreak />
+                            2. Chọn môn học và nhấn Enter để tải xuống.</Paragraph>
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>
+        </StackPanel>
         <StackPanel
-            Grid.Row="3"
+            Grid.Row="4"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button

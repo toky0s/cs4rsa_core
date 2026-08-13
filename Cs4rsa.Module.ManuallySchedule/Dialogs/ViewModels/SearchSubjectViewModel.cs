@@ -37,6 +37,65 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
+        private DelegateCommand _keyUpCommand;
+        public DelegateCommand KeyUpCommand =>
+            _keyUpCommand ?? (_keyUpCommand = new DelegateCommand(ExecuteKeyUpCommand, CanExecuteKeyUpCommand));
+
+        void ExecuteKeyUpCommand()
+        {
+            InternalMoveSelectedResult(false);
+        }
+
+        bool CanExecuteKeyUpCommand()
+        {
+            return true;
+        }
+
+        private DelegateCommand _keyDownCommand;
+        public DelegateCommand KeyDownCommand =>
+            _keyDownCommand ?? (_keyDownCommand = new DelegateCommand(ExecuteKeyDownCommand, CanExecuteKeyDownCommand));
+
+        void ExecuteKeyDownCommand()
+        {
+            InternalMoveSelectedResult(true);
+        }
+
+        void InternalMoveSelectedResult(bool isNext)
+        {
+            if (SubjectResults.Count == 0)
+                return;
+
+            int currIndex = _selectedSearchResult == null
+                ? (isNext ? -1 : SubjectResults.Count)
+                : SubjectResults.IndexOf(_selectedSearchResult);
+
+            int nextIndex;
+
+            if (isNext)
+            {
+                nextIndex = (currIndex + 1) % SubjectResults.Count;
+            }
+            else
+            {
+                nextIndex = (currIndex - 1 + SubjectResults.Count) % SubjectResults.Count;
+            }
+
+            SelectedSearchResult = SubjectResults[nextIndex];
+        }
+
+
+        bool CanExecuteKeyDownCommand()
+        {
+            return true;
+        }
+
+        private SearchResult _selectedSearchResult;
+        public SearchResult SelectedSearchResult
+        {
+            get { return _selectedSearchResult; }
+            set { SetProperty(ref _selectedSearchResult, value); }
+        }
+
         private DelegateCommand _closePopupCommand;
         public DelegateCommand ClosePopupCommand =>
             _closePopupCommand ?? (_closePopupCommand = new DelegateCommand(ExecuteClosePopupCommand, CanExecuteClosePopupCommand));
@@ -46,6 +105,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             _searchCommand ?? (_searchCommand = new DelegateCommand<string>(ExecuteSearchCommand, CanExecuteSearchCommand));
 
         void ExecuteSearchCommand(string keyword)
+        {
+            InternalSearch(keyword);
+        }
+
+        private void InternalSearch(string keyword)
         {
             SubjectResults.Clear();
 
@@ -103,7 +167,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-
+            // Thực hiện Search với tham số rỗng. Lấy 15 kết quả đầu tiên.
+            InternalSearch("");
         }
 
         private readonly IndexBuilder _indexBuilder;

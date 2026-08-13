@@ -11,6 +11,7 @@ using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.UC;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.Shared;
+using Cs4rsa.Module.Shared.Events;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
@@ -561,6 +562,28 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
+        private DelegateCommand _openSearchCommand;
+        public DelegateCommand OpenSearchCommand =>
+            _openSearchCommand ?? (_openSearchCommand = new DelegateCommand(ExecuteOpenSearchCommand, CanExecuteOpenSearchCommand));
+
+        void ExecuteOpenSearchCommand()
+        {
+            _dialogService.ShowDialog(nameof(SearchSubjectUC), new DialogParameters(), r =>
+            {
+                //if (r.Result == ButtonResult.OK)
+                //{
+                //    var selectedSubject = r.Parameters.GetValue<SubjectModel>("SelectedSubject");
+                //    ((MainSchedulingViewModel)DataContext).AddClassGroupsFromSubjectCommand.Execute(selectedSubject);
+                //}
+            });
+        }
+
+        bool CanExecuteOpenSearchCommand()
+        {
+            return true;
+        }
+
+
         private DelegateCommand<SubjectModel> _reloadCommand;
         public DelegateCommand<SubjectModel> ReloadCommand => _reloadCommand ?? (_reloadCommand = new DelegateCommand<SubjectModel>(ExecuteReloadCommand, CanExecuteReloadCommand));
 
@@ -854,7 +877,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Subscribe Events
-
+            eventAggregator.GetEvent<Event_MainWindow_HotKey_Ctrl_E>().Subscribe(() => OpenSearchCommand.Execute());
             #endregion
 
             #region Pros

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingProxy.cs" />
+    <Compile Include="Events\Event_HotKey.cs" />
     <Compile Include="NetworkMonitor.cs" />
     <Compile Include="RegionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
