@@ -1,11 +1,11 @@
-﻿using Cs4rsa.Database.DataProviders;
-using Cs4rsa.Database.Interfaces;
+﻿using Cs4rsa.Database.Interfaces;
 
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -23,10 +23,13 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         // Color sẽ được fill sau khi có kết quả tìm kiếm
         public string Color { get; set; }
+        // Cờ này True nếu kết quả này đã được tải xuống trong màn hình chính
+        public bool IsDownloaded { get; set; }
     }
 
     public class SearchSubjectViewModel : BindableBase, IDialogAware
     {
+        private HashSet<string> _downloadSubjectCodes = new HashSet<string>();
         private ObservableCollection<SearchResult> _subjectResults = new ObservableCollection<SearchResult>();
         public ObservableCollection<SearchResult> SubjectResults
         {
@@ -49,6 +52,30 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         bool CanExecuteKeyUpCommand()
         {
             return true;
+        }
+
+        private DelegateCommand _returnCommand;
+        public DelegateCommand ReturnCommand =>
+            _returnCommand ?? (_returnCommand = new DelegateCommand(ExecuteReturnCommand, CanExecuteReturnCommand));
+
+        void ExecuteReturnCommand()
+        {
+            if (_selectedSearchResult != null)
+            {
+                var parameter = new DialogParameters
+                {
+                    { "SelectedSearchResult", _selectedSearchResult }
+                };
+                RequestClose?.Invoke(new DialogResult(ButtonResult.OK, parameter));
+            }
+        }
+
+        bool CanExecuteReturnCommand()
+        {
+            // Enter command sẽ execute được khi subject
+            // được chọn chưa được tải ở ngoài màn hình chính.
+            var subjectCode = $"{_selectedSearchResult.Discipline} {_selectedSearchResult.Keyword}";
+            return !_downloadSubjectCodes.Contains(subjectCode);
         }
 
         private DelegateCommand _keyDownCommand;
@@ -81,6 +108,8 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             }
 
             SelectedSearchResult = SubjectResults[nextIndex];
+            // Kiểm tra thực thi của Enter mỗi lần thay đổi Selected Subject Result
+            ReturnCommand.RaiseCanExecuteChanged();
         }
 
 
@@ -122,7 +151,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     SubjectName = item.SubjectName,
                     Discipline = item.Discipline,
                     Keyword = item.Keyword,
-                    SubjectDescription = item.SubjectDescription
+                    SubjectDescription = item.SubjectDescription,
+                    // Nếu đã có sẵn trong danh sách đã tải rồi thì chuyển cờ về True
+                    IsDownloaded = _downloadSubjectCodes.Contains($"{item.Discipline} {item.Keyword}")
                 };
             });
 
@@ -167,8 +198,17 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            // Thực hiện Search với tham số rỗng. Lấy 15 kết quả đầu tiên.
-            InternalSearch("");
+            const string key = "DownloadSubjectCodes";
+            var result = parameters.TryGetValue(key, out _downloadSubjectCodes);
+            if (result)
+            {
+                // Thực hiện Search với tham số rỗng. Lấy 15 kết quả đầu tiên.
+                InternalSearch("");
+            }
+            else
+            {
+                throw new ArgumentException($"Key cannot be found in parameters, key={key}");
+            }
         }
 
         private readonly IndexBuilder _indexBuilder;

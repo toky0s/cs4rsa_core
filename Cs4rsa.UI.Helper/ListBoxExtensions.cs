@@ -31,11 +31,12 @@ namespace Cs4rsa.UI.Helper
                 {
                     if (listBox.SelectedItem != null)
                     {
+                        listBox.ScrollIntoView(listBox.SelectedItem);
                         // Dùng Dispatcher để đảm bảo container đã được generate
-                        listBox.Dispatcher.InvokeAsync(() =>
-                        {
-                            listBox.ScrollIntoView(listBox.SelectedItem);
-                        }, System.Windows.Threading.DispatcherPriority.Background);
+                        //listBox.Dispatcher.InvokeAsync(() =>
+                        //{
+                        //    listBox.ScrollIntoView(listBox.SelectedItem);
+                        //}, System.Windows.Threading.DispatcherPriority.Background);
                     }
                 };
             }
