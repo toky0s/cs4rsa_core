@@ -29,6 +29,18 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
     public class SearchSubjectViewModel : BindableBase, IDialogAware
     {
+        private int _hitCount;
+        public int HitCount
+        {
+            get { return _hitCount; }
+            set { SetProperty(ref _hitCount, value); }
+        }
+        private int _totalHits;
+        public int TotalHits
+        {
+            get { return _totalHits; }
+            set { SetProperty(ref _totalHits, value); }
+        }
         private HashSet<string> _downloadSubjectCodes = new HashSet<string>();
         private ObservableCollection<SearchResult> _subjectResults = new ObservableCollection<SearchResult>();
         public ObservableCollection<SearchResult> SubjectResults
@@ -142,7 +154,10 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         {
             SubjectResults.Clear();
 
-            var result = _indexBuilder.Search(keyword);
+            _indexBuilder.SearchWithBoost(out List<DataModel> result, out int totalHits, keyword);
+            TotalHits = totalHits;
+            HitCount = result.Count;
+            
             var tempSubjectResults = result.Select(item =>
             {
                 return new SearchResult
@@ -156,11 +171,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     IsDownloaded = _downloadSubjectCodes.Contains($"{item.Discipline} {item.Keyword}")
                 };
             });
-
             SubjectResults.AddRange(tempSubjectResults);
 
             var db = _unitOfWork.Keywords.GetKeywordsBySubjectCode(result.Select(r => r.SubjectCode).ToArray());
-
             db.ForEach(k =>
             {
                 var item = SubjectResults.FirstOrDefault(r => r.SubjectCode == k.Item2);

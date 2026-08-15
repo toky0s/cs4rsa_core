@@ -21,7 +21,7 @@
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
-            <Setter Property="ResizeMode" Value="CanResize" />
+            <Setter Property="ResizeMode" Value="NoResize" />
             <Setter Property="ShowInTaskbar" Value="True" />
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
         </Style>
@@ -29,7 +29,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
-            <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converter:BooleanToVisibilityConverter x:Key="BoolToVisCvt" />
+            <converter:HighlightConverter x:Key="HighlightCvt" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -45,6 +46,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -92,27 +94,50 @@
                             Foreground="#16a085"
                             Text="Downloaded"
                             TextAlignment="Right"
-                            Visibility="{Binding IsDownloaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            Visibility="{Binding IsDownloaded, Converter={StaticResource BoolToVisCvt}}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="3" Margin="0,0,0,4">
-            <RichTextBox IsReadOnly="True" IsReadOnlyCaretVisible="True">
+        <StackPanel Grid.Row="3">
+            <TextBlock
+                d:Text="Result: 15/36"
+                FontSize="11"
+                TextAlignment="Right"
+                ToolTip="Number of displayed results over number of total hits">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text">
+                            <Setter.Value>
+                                <MultiBinding StringFormat="{}Result: {0}/{1}">
+                                    <Binding Path="HitCount" />
+                                    <Binding Path="TotalHits" />
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="4" Margin="0,0,0,4">
+            <RichTextBox
+                Padding="4"
+                IsReadOnly="True"
+                IsReadOnlyCaretVisible="True">
                 <RichTextBox.Document>
                     <FlowDocument
-                        FontSize="13"
+                        FontSize="11"
                         FontStyle="Italic"
                         Foreground="#7f8c8d">
                         <Paragraph>
-                            1. Sử dụng các phím mũi tên lên xuống để điều hướng.<LineBreak />
-                            2. Chọn môn học và nhấn Enter để tải xuống.</Paragraph>
+                            1. Use the up and down arrow keys to navigate.<LineBreak />
+                            2. Select a subject and press Enter to download.</Paragraph>
                     </FlowDocument>
                 </RichTextBox.Document>
             </RichTextBox>
         </StackPanel>
         <StackPanel
-            Grid.Row="4"
+            Grid.Row="5"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button

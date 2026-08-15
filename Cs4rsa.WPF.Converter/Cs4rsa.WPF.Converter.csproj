@@ -54,6 +54,7 @@
     <Compile Include="EmptyStringPlaceholderConverter.cs" />
     <Compile Include="GetTeacherNameConverter.cs" />
     <Compile Include="GreaterThanZeroConverter.cs" />
+    <Compile Include="HighlightConverter.cs" />
     <Compile Include="IsNotNullConverter.cs" />
     <Compile Include="IsTypeOfCvt.cs" />
     <Compile Include="IsZeroCvt.cs" />

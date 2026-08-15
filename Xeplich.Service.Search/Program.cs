@@ -20,8 +20,8 @@ namespace Xeplich.Service.Search
                     "Data Source=C:\\Users\\Truong A Xin\\source\\repos\\cs4rsa_core\\Cs4rsa.App\\cs4rsa.db", 
                     null));
 
-            var result = indexBuilder.Search("Lập");
-            result.ForEach(item => Console.WriteLine($"{item.SubjectName} {item.SubjectCode} {item.Discipline} {item.Keyword} {item.SubjectDescription}"));
+            //var result = indexBuilder.Search("Lập");
+            //result.ForEach(item => Console.WriteLine($"{item.SubjectName} {item.SubjectCode} {item.Discipline} {item.Keyword} {item.SubjectDescription}"));
         }
     }
 }
