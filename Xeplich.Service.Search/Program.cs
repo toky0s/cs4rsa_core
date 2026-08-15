@@ -17,11 +17,15 @@ namespace Xeplich.Service.Search
 
             IndexBuilder indexBuilder = new IndexBuilder(
                 new RawSql(
-                    "Data Source=C:\\Users\\Truong A Xin\\source\\repos\\cs4rsa_core\\Cs4rsa.App\\cs4rsa.db", 
+                    "Data Source=C:\\Users\\Truong A Xin\\source\\repos\\cs4rsa_core\\Cs4rsa.App\\cs4rsa.db",
                     null));
 
-            //var result = indexBuilder.Search("Lập");
-            //result.ForEach(item => Console.WriteLine($"{item.SubjectName} {item.SubjectCode} {item.Discipline} {item.Keyword} {item.SubjectDescription}"));
+
+            indexBuilder.BuildIndex();
+            indexBuilder.SearchWithBoost(out List<DataModel> results, out int totalHits, "cs lap trinh");
+            results.ForEach(item =>
+                Console.WriteLine($"{item.DisplayedText}")
+            );
         }
     }
 }

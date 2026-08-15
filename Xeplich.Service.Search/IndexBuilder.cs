@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Xeplich.Service.Search.Properties;
 
 
+
 namespace Xeplich.Service.Search
 {
     public class DataModel
@@ -95,7 +96,7 @@ namespace Xeplich.Service.Search
                 };
             });
         }
-        public void Search(
+        public void Search_DEPRECATED(
             out List<DataModel> dataModels,
             out int totalHits,
             string keyword,
@@ -188,8 +189,6 @@ namespace Xeplich.Service.Search
                         query = parser.Parse(keyword);
                     }
 
-                    AddHighlighter(query);
-
                     var topDocs = searcher.Search(query, maxRecords);
                     var hits = topDocs.ScoreDocs;
                     totalHits = topDocs.TotalHits;
@@ -206,16 +205,49 @@ namespace Xeplich.Service.Search
                         });
                     }
 
+                    AddHighlighter(query, analyzer, results);
                     dataModels = results;
                 }
             }
 
-            void AddHighlighter(Query query)
+        }
+
+        void AddHighlighter(Query query, Analyzer analyzer, List<DataModel> results)
+        {
+            var scorer = new QueryScorer(query);
+            var formatter = new SimpleHTMLFormatter("<b>", "</b>");
+            var highlighter = new Highlighter(formatter, scorer);
+
+            foreach (var model in results)
             {
-                // Thêm Scorer và Highlighter
-                var scorer = new QueryScorer(query);
-                var formatter = new SimpleHTMLFormatter("<b>", "</b>");
-                var highlighter = new Highlighter(formatter, scorer);
+                // Highlight từng field
+                string fnHighlightField(string fieldName, string text)
+                {
+                    if (string.IsNullOrEmpty(text)) return string.Empty;
+
+                    using (var reader = new StringReader(text))
+                    {
+                        var tokenStream = analyzer.GetTokenStream(fieldName, reader);
+                        var highlighted = highlighter.GetBestFragment(tokenStream, text);
+
+                        return highlighted ?? text;
+                    }
+                }
+
+                var highlightedCode = fnHighlightField("SubjectCode", model.SubjectCode);
+                var highlightedName = fnHighlightField("SubjectName", model.SubjectName);
+                string highlightedDesc;
+                if (string.IsNullOrWhiteSpace(model.SubjectDescription))
+                {
+                    highlightedDesc = "N/A";
+                }
+                else
+                {
+                    highlightedDesc = fnHighlightField("SubjectDescription", model.SubjectDescription);
+                }
+
+                // Nối lại thành chuỗi hiển thị
+                model.DisplayedText = $"{highlightedCode} - {highlightedName} - {highlightedDesc}";
             }
         }
     }

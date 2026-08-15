@@ -30,7 +30,6 @@
         <ResourceDictionary>
             <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
             <converter:BooleanToVisibilityConverter x:Key="BoolToVisCvt" />
-            <converter:HighlightConverter x:Key="HighlightCvt" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -82,10 +81,7 @@
                                 Height="10"
                                 Margin="0,0,4,0"
                                 Fill="{Binding Color}" />
-                            <TextBlock Text="{Binding SubjectCode}" />
-                            <TextBlock Text=" - " />
-                            <TextBlock Margin="0,0,4,0" Text="{Binding SubjectName}" />
-                            <TextBlock FontSize="11" Text="{Binding SubjectDescription}" />
+                            <TextBlock uihelper:TextBlockExtensions.HighlightedText="{Binding DisplayedText}" />
                         </StackPanel>
                         <TextBlock
                             Grid.Column="1"

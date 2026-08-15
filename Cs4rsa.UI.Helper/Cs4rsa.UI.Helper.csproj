@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="StackPanelExtensions.cs" />
+    <Compile Include="TextBlockExtensions.cs" />
     <Compile Include="TextBoxHelper.cs" />
     <Page Include="MulSelection.xaml">
       <SubType>Designer</SubType>

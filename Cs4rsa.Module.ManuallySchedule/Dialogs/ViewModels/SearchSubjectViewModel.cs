@@ -25,6 +25,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
         public string Color { get; set; }
         // Cờ này True nếu kết quả này đã được tải xuống trong màn hình chính
         public bool IsDownloaded { get; set; }
+        public string DisplayedText { get; set; }
     }
 
     public class SearchSubjectViewModel : BindableBase, IDialogAware
@@ -167,12 +168,15 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
                     Discipline = item.Discipline,
                     Keyword = item.Keyword,
                     SubjectDescription = item.SubjectDescription,
+                    DisplayedText = item.DisplayedText,
                     // Nếu đã có sẵn trong danh sách đã tải rồi thì chuyển cờ về True
                     IsDownloaded = _downloadSubjectCodes.Contains($"{item.Discipline} {item.Keyword}")
                 };
             });
             SubjectResults.AddRange(tempSubjectResults);
 
+            // TODO: Chuyển sang Early Loading để tránh N+1 Query.
+            // Hiện tại đang load toàn bộ màu sắc của tất cả các subject code trong kết quả tìm kiếm.
             var db = _unitOfWork.Keywords.GetKeywordsBySubjectCode(result.Select(r => r.SubjectCode).ToArray());
             db.ForEach(k =>
             {
