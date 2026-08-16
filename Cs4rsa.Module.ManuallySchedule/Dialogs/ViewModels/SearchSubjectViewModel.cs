@@ -15,12 +15,9 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 {
     public class SearchResult
     {
-        public string SubjectCode { get; set; }
         public string SubjectName { get; set; }
         public string Discipline { get; set; }
         public string Keyword { get; set; }
-        public string SubjectDescription { get; set; }
-
         // Color sẽ được fill sau khi có kết quả tìm kiếm
         public string Color { get; set; }
         // Cờ này True nếu kết quả này đã được tải xuống trong màn hình chính
@@ -158,34 +155,21 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
             _indexBuilder.SearchWithBoost(out List<DataModel> result, out int totalHits, keyword);
             TotalHits = totalHits;
             HitCount = result.Count;
-            
+
             var tempSubjectResults = result.Select(item =>
             {
                 return new SearchResult
                 {
-                    SubjectCode = item.SubjectCode,
                     SubjectName = item.SubjectName,
                     Discipline = item.Discipline,
                     Keyword = item.Keyword,
-                    SubjectDescription = item.SubjectDescription,
                     DisplayedText = item.DisplayedText,
+                    Color = _subjectCodeColorPair.ContainsKey(item.SubjectCode) ? _subjectCodeColorPair[item.SubjectCode] : null,
                     // Nếu đã có sẵn trong danh sách đã tải rồi thì chuyển cờ về True
                     IsDownloaded = _downloadSubjectCodes.Contains($"{item.Discipline} {item.Keyword}")
                 };
             });
             SubjectResults.AddRange(tempSubjectResults);
-
-            // TODO: Chuyển sang Early Loading để tránh N+1 Query.
-            // Hiện tại đang load toàn bộ màu sắc của tất cả các subject code trong kết quả tìm kiếm.
-            var db = _unitOfWork.Keywords.GetKeywordsBySubjectCode(result.Select(r => r.SubjectCode).ToArray());
-            db.ForEach(k =>
-            {
-                var item = SubjectResults.FirstOrDefault(r => r.SubjectCode == k.Item2);
-                if (item != null)
-                {
-                    item.Color = k.Item1;
-                }
-            });
         }
 
         bool CanExecuteSearchCommand(string keyword)
@@ -213,12 +197,15 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
 
         }
 
+        private Dictionary<string, string> _subjectCodeColorPair = new Dictionary<string, string>();
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            _subjectCodeColorPair = _unitOfWork.Keywords.GetKeywordsBySubjectCode().ToDictionary(result => result.Item1, result => result.Item2);
             const string key = "DownloadSubjectCodes";
-            var result = parameters.TryGetValue(key, out _downloadSubjectCodes);
-            if (result)
+            var canGet = parameters.TryGetValue(key, out _downloadSubjectCodes);
+            if (canGet)
             {
+
                 // Thực hiện Search với tham số rỗng. Lấy 15 kết quả đầu tiên.
                 InternalSearch("");
             }

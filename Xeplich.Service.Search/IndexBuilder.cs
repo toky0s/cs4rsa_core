@@ -31,7 +31,6 @@ namespace Xeplich.Service.Search
         public string SubjectCode { get; set; }
         public string Discipline { get; set; }
         public string Keyword { get; set; }
-        public string SubjectDescription { get; set; }
         public string DisplayedText { get; set; }
     }
 
@@ -63,7 +62,7 @@ namespace Xeplich.Service.Search
                 var dataModels = GetDataFromDatabase();
                 foreach (var data in dataModels)
                 {
-                    Console.WriteLine($"Indexing Subject: {data.SubjectName} {data.SubjectCode} {data.Discipline} {data.Keyword} {data.SubjectDescription}");
+                    Console.WriteLine($"Indexing Subject: {data.SubjectName} {data.SubjectCode} {data.Discipline} {data.Keyword}");
                     var doc = new Document
             {
                 new TextField("SubjectName", data.SubjectName ?? "", Field.Store.YES),
@@ -73,7 +72,6 @@ namespace Xeplich.Service.Search
                 // Nếu Keyword là số, dùng Int32Field để tối ưu range query
                 new Int32Field("Keyword", int.TryParse(data.Keyword, out var kw) ? kw : 0, Field.Store.YES),
 
-                new TextField("SubjectDescription", data.SubjectDescription ?? "", Field.Store.YES),
             };
                     writer.AddDocument(doc);
                 }
@@ -83,7 +81,12 @@ namespace Xeplich.Service.Search
 
         private List<DataModel> GetDataFromDatabase()
         {
-            string sql = "SELECT Keywords.SubjectName as SubjectName, Disciplines.Name || ' ' || Keywords.Keyword1 as SubjectCode, Disciplines.name as Discipline, Keywords.Keyword1 as Keyword, '' as SubjectDescription from Disciplines join Keywords on Keywords.DisciplineId = Disciplines.DisciplineId";
+            string sql = "SELECT Keywords.SubjectName AS SubjectName, " +
+                "Disciplines.Name || ' ' || Keywords.Keyword1 AS SubjectCode, " +
+                "Disciplines.name AS Discipline, " +
+                "Keywords.Keyword1 AS Keyword " +
+                "FROM Disciplines " +
+                "JOIN Keywords ON Keywords.DisciplineId = Disciplines.DisciplineId";
             return _rawSql.ExecReader(sql, record =>
             {
                 return new DataModel
@@ -92,7 +95,6 @@ namespace Xeplich.Service.Search
                     SubjectCode = record.GetString(record.GetOrdinal("SubjectCode")),
                     Discipline = record.GetString(record.GetOrdinal("Discipline")),
                     Keyword = record.GetString(record.GetOrdinal("Keyword")),
-                    SubjectDescription = record.GetString(record.GetOrdinal("SubjectDescription"))
                 };
             });
         }
@@ -139,7 +141,6 @@ namespace Xeplich.Service.Search
                             SubjectCode = doc.Get("SubjectCode"),
                             Discipline = doc.Get("Discipline"),
                             Keyword = doc.Get("Keyword"),
-                            SubjectDescription = doc.Get("SubjectDescription")
                         });
                     }
 
@@ -201,7 +202,6 @@ namespace Xeplich.Service.Search
                             SubjectCode = doc.Get("SubjectCode"),
                             Discipline = doc.Get("Discipline"),
                             Keyword = doc.Get("Keyword"),
-                            SubjectDescription = doc.Get("SubjectDescription")
                         });
                     }
 
@@ -236,18 +236,9 @@ namespace Xeplich.Service.Search
 
                 var highlightedCode = fnHighlightField("SubjectCode", model.SubjectCode);
                 var highlightedName = fnHighlightField("SubjectName", model.SubjectName);
-                string highlightedDesc;
-                if (string.IsNullOrWhiteSpace(model.SubjectDescription))
-                {
-                    highlightedDesc = "N/A";
-                }
-                else
-                {
-                    highlightedDesc = fnHighlightField("SubjectDescription", model.SubjectDescription);
-                }
 
                 // Nối lại thành chuỗi hiển thị
-                model.DisplayedText = $"{highlightedCode} - {highlightedName} - {highlightedDesc}";
+                model.DisplayedText = $"{highlightedCode} - {highlightedName}";
             }
         }
     }

@@ -83,5 +83,20 @@ namespace Cs4rsa.Module.ManuallySchedule.Dialogs.Views
                 }
             }
         }
+
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (ListBoxItem)sender;
+            // Đảm bảo item được double-click cũng chính là item đang được chọn
+            // (tránh trường hợp double click nhưng SelectionChanged chưa kịp cập nhật)
+            if (item.IsSelected && DataContext is SearchSubjectViewModel vm)
+            {
+                if (vm.ReturnCommand.CanExecute())
+                {
+                    vm.ReturnCommand.Execute();
+                }
+            }
+            e.Handled = true;
+        }
     }
 }

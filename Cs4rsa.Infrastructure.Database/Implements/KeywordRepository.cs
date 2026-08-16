@@ -296,22 +296,19 @@ namespace Cs4rsa.Database.Implements
             return _rawSql.ExecNonQuery("UPDATE Keywords SET Cache = NULL");
         }
 
-        public List<Tuple<string, string>> GetKeywordsBySubjectCode(string[] subjectCodes)
+        public List<Tuple<string, string>> GetKeywordsBySubjectCode()
         {
-            subjectCodes = subjectCodes.Select(i => "'"+i+"'").ToArray();
-            var joinSubjectCodes = string.Join(",", subjectCodes);
             var sql = new StringBuilder()
-                .AppendLine("SELECT Color, Disciplines.Name || ' ' || Keywords.Keyword1 AS SubjectCode")
+                .AppendLine("SELECT Disciplines.Name || ' ' || Keywords.Keyword1 AS SubjectCode, Color")
                 .AppendLine("FROM Keywords")
                 .AppendLine("JOIN Disciplines ON Disciplines.DisciplineId = Keywords.DisciplineId")
-                .AppendLine("WHERE (Disciplines.Name || ' ' || Keywords.Keyword1) IN ("+ joinSubjectCodes + ")")
                 .ToString();
 
             return _rawSql.ExecReader(sql, record =>
             {
-                var color = record.GetString(0);
-                var subjectCode = record.GetString(1);
-                return new Tuple<string, string>(color, subjectCode);
+                var subjectCode = record.GetString(0);
+                var color = record.GetString(1);
+                return new Tuple<string, string>(subjectCode, color);
             });
         }
     }

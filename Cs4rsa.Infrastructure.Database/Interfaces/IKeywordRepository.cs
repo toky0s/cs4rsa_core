@@ -59,6 +59,10 @@ namespace Cs4rsa.Database.Interfaces
         Keyword GetByCourseId(string courseId);
         long Count();
         int ResetCache();
-        List<Tuple<string, string>> GetKeywordsBySubjectCode(string[] subjectCodes);
+        /// <summary>
+        /// Return all SubjectCode and Color in Keyword table.
+        /// </summary>
+        /// <returns>Tuple Item1(SubjectCode), Item2(Color)</returns>
+        List<Tuple<string, string>> GetKeywordsBySubjectCode();
     }
 }
