@@ -1,0 +1,315 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Cs4rsa.Database.DataProviders;
+using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Database.Models;
+
+namespace Cs4rsa.Database.Implements
+{
+    public class KeywordRepository : IKeywordRepository
+    {
+        private readonly RawSql _rawSql;
+
+        public KeywordRepository(RawSql rawSql)
+        {
+            _rawSql = rawSql;
+        }
+        public string GetColor(string courseId)
+        {
+            return _rawSql.ExecScalar(
+                "SELECT Color FROM Keywords WHERE CourseId = @CourseID"
+                , new Dictionary<string, object>()
+                {
+                    { "@CourseID", courseId }
+                }
+                , string.Empty
+            );
+        }
+
+        public string GetColorWithSubjectCode(string subjectCode)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT Color");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("   , Keywords AS kw");
+            sb.AppendLine("WHERE ds.Name || ' ' || kw.Keyword1 = @subjectCode");
+            sb.AppendLine("AND ds.DisciplineId = kw.DisciplineId");
+            return _rawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    { "@subjectCode", subjectCode }
+                }
+                , string.Empty
+            );
+        }
+
+        public Keyword GetKeyword(string discipline, string keyword1)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  kw.KeywordId");
+            sb.AppendLine(", kw.Keyword1");
+            sb.AppendLine(", kw.CourseId");
+            sb.AppendLine(", kw.SubjectName");
+            sb.AppendLine(", kw.Color");
+            sb.AppendLine(", kw.Cache");
+            sb.AppendLine(", kw.SemesterId");
+            sb.AppendLine(", kw.DisciplineId");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return _rawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString(),
+                new Dictionary<string, object>()
+                {
+                    { "@discipline",  discipline },
+                    { "@keyword1", keyword1 } 
+                },
+                record => new Keyword()
+                {
+                    KeywordId = record.GetInt32(0),
+                    Keyword1 = record.GetString(1),
+                    CourseId = record.GetString(2),
+                    SubjectName = record.GetString(3),
+                    Color = record.GetString(4),
+                    Cache = record.IsDBNull(5) ? null : record.GetString(5),
+                    SemesterId = record.IsDBNull(6) ? null : record.GetString(6),
+                    DisciplineId = record.GetInt32(7)
+                }
+            );
+        }
+
+        public Keyword GetKeyword(string courseId)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT");
+            sb.AppendLine("  KeywordId");
+            sb.AppendLine(", Keyword1");
+            sb.AppendLine(", CourseId");
+            sb.AppendLine(", SubjectName");
+            sb.AppendLine(", Color");
+            sb.AppendLine(", Cache");
+            sb.AppendLine(", SemesterId");
+            sb.AppendLine(", DisciplineId");
+            sb.AppendLine("FROM Keywords");
+            sb.AppendLine("WHERE CourseId = @courseId");
+            var param = new Dictionary<string, object>()
+            {
+                {"@courseId", courseId }
+            };
+            return _rawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString()
+                , param
+                , r => new Keyword()
+                {
+                      KeywordId = r.GetInt32(0)
+                    , Keyword1 = r.GetString(1)
+                    , CourseId = r.GetString(2)
+                    , SubjectName = r.GetString(3)
+                    , Color = r.GetString(4)
+                    , Cache = r.IsDBNull(5) ? null : r.GetString(5)
+                    , SemesterId = r.IsDBNull(6) ? null : r.GetString(6)
+                    , DisciplineId = r.GetInt32(7)
+                }
+            );
+        }
+
+        public Keyword GetKeywordBySubjectCode(string subjectCode)
+        {
+            var slices = subjectCode.Split(' ');
+            return GetKeyword(slices[0], slices[1]);
+        }
+
+        public long Count(string discipline, string keyword1)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT COUNT(*)");
+            sb.AppendLine("FROM Disciplines AS ds");
+            sb.AppendLine("	  , Keywords    AS kw");
+            sb.AppendLine("WHERE ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("	AND ds.Name = @discipline");
+            sb.AppendLine("	AND kw.Keyword1 = @keyword1");
+            return _rawSql.ExecScalar(
+                sb.ToString()
+                , new Dictionary<string, object>()
+                {
+                    {"@discipline", discipline },
+                    {"@keyword1", keyword1 }
+                }
+                , 0L
+            );
+        }
+
+        public string GetCache(string courseId)
+        {
+            var sql = "SELECT Cache FROM Keywords WHERE CourseId = @CourseId";
+            var param = new Dictionary<string, object>()
+            {
+                { "@CourseId", courseId}
+            };
+            return _rawSql.ExecScalar(sql, param, string.Empty);
+        }
+
+        public string GetColorBySubjectCode(string subjectCode)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT Color");
+            sb.AppendLine("FROM Keywords AS kw");
+            sb.AppendLine("INNER JOIN Disciplines AS ds");
+            sb.AppendLine("ON ds.DisciplineId = kw.DisciplineId");
+            sb.AppendLine("WHERE ds.Name || ' ' || kw.Keyword1 = @SubjectCode");
+            var param = new Dictionary<string, object>()
+            {
+                { "@SubjectCode", subjectCode}
+            };
+            return _rawSql.ExecScalar(sb.ToString(), param, string.Empty);
+        }
+
+        public List<Keyword> GetKeywordsByDisciplineId(int disciplineId)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("SELECT KeywordId, Keyword1, CourseId, SubjectName, Color, Cache, SemesterId");
+            sb.AppendLine("FROM Keywords");
+            sb.AppendLine("WHERE DisciplineId = @DisciplineId");
+            var param = new Dictionary<string, object>()
+            {
+                { "@DisciplineId", disciplineId}
+            };
+            return _rawSql.ExecReader(sb.ToString(), param, record =>
+                new Keyword
+                {
+                      KeywordId = record.GetInt32(0)
+                    , Keyword1 = record.GetString(1)
+                    , CourseId = record.GetString(2)
+                    , SubjectName = record.GetString(3)
+                    , Color = record.GetString(4)
+                    , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
+                    , SemesterId = record.IsDBNull(6) ? string.Empty : record.GetString(6)
+                }
+            );
+        }
+
+        public int UpdateCacheByKeywordId(int keywordId, string semesterId, string cache)
+        {
+            try
+            {
+                return _rawSql.ExecNonQuery(
+                "UPDATE Keywords SET Cache = @cache, SemesterId = @semesterId WHERE KeywordId = @keywordID"
+                , new Dictionary<string, object>
+                {
+                    {"@cache", cache },
+                    {"@keywordID", keywordId },
+                    {"@semesterId", semesterId },
+                }
+            );
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public int Insert(Keyword keyword)
+        {
+            var sb = new StringBuilder()
+                .AppendLine("INSERT INTO Keywords(KeywordId, Keyword1, CourseId, SubjectName, Color, Cache, DisciplineId, SemesterId)")
+                .AppendLine("VALUES")
+                .AppendLine("(@KeywordId, @Keyword1, @CourseId, @SubjectName, @Color, @Cache, @DisciplineId, @SemesterId)");
+            return _rawSql.ExecNonQuery(
+                sb.ToString()
+                , new Dictionary<string, object>
+                {
+                    { "@KeywordId", keyword.KeywordId},
+                    { "@Keyword1", keyword.Keyword1},
+                    { "@CourseId", keyword.CourseId},
+                    { "@SubjectName", keyword.SubjectName},
+                    { "@Color", keyword.Color},
+                    { "@Cache", keyword.Cache},
+                    { "@DisciplineId", keyword.DisciplineId},
+                }
+            );
+        }
+
+        public int DeleteAll()
+        {
+            return _rawSql.ExecNonQuery("DELETE FROM Keywords");
+        }
+
+        public Keyword GetByCourseId(string intCourseId)
+        {
+            var sb = new StringBuilder()
+                .AppendLine("SELECT kw.KeywordId")
+                .AppendLine(", kw.Keyword1")
+                .AppendLine(", kw.CourseId")
+                .AppendLine(", kw.SubjectName")
+                .AppendLine(", kw.Color")
+                .AppendLine(", kw.Cache")
+                .AppendLine(", kw.SemesterId")
+                .AppendLine(", ds.DisciplineId")
+                .AppendLine(", ds.Name")
+                .AppendLine("FROM")
+                .AppendLine("  Keywords AS kw")
+                .AppendLine(", Disciplines AS ds")
+                .AppendLine("WHERE")
+                .AppendLine("    CourseId = @CourseId")
+                .AppendLine("AND kw.DisciplineId = ds.DisciplineId");
+            var param = new Dictionary<string, object>()
+            {
+                { "@CourseId", intCourseId}
+            };
+            return _rawSql.ExecReaderGetFirstOrDefault(
+                sb.ToString()
+                , param
+                , record =>
+                new Keyword()
+                {
+                      KeywordId = record.GetInt32(0)
+                    , Keyword1 = record.GetString(1)
+                    , CourseId = record.GetString(2)
+                    , SubjectName = record.GetString(3)
+                    , Color = record.GetString(4)
+                    , Cache = record.IsDBNull(5) ? string.Empty : record.GetString(5)
+                    , SemesterId = record.IsDBNull(6) ? string.Empty : record.GetString(6)
+                    , DisciplineId = record.GetInt32(7)
+                    , Discipline = 
+                    new Discipline() 
+                    { 
+                          DisciplineId = record.GetInt32(7)
+                        , Name = record.GetString(8)
+                    }
+                }
+            );
+        }
+
+        public long Count()
+        {
+            return _rawSql.ExecScalar("SELECT COUNT(*) FROM Keywords", 0L);
+        }
+
+        public int ResetCache()
+        {
+            return _rawSql.ExecNonQuery("UPDATE Keywords SET Cache = NULL");
+        }
+
+        public List<Tuple<string, string>> GetKeywordsBySubjectCode()
+        {
+            var sql = new StringBuilder()
+                .AppendLine("SELECT Disciplines.Name || ' ' || Keywords.Keyword1 AS SubjectCode, Color")
+                .AppendLine("FROM Keywords")
+                .AppendLine("JOIN Disciplines ON Disciplines.DisciplineId = Keywords.DisciplineId")
+                .ToString();
+
+            return _rawSql.ExecReader(sql, record =>
+            {
+                var subjectCode = record.GetString(0);
+                var color = record.GetString(1);
+                return new Tuple<string, string>(subjectCode, color);
+            });
+        }
+    }
+}

@@ -1,0 +1,104 @@
+﻿using Cs4rsa.Database.Interfaces;
+using Cs4rsa.Database.Models;
+using Cs4rsa.Module.ManuallySchedule.Models;
+using Cs4rsa.Module.ManuallySchedule.Utils;
+using Cs4rsa.Service.Dialog;
+using Cs4rsa.Service.Dialog.Interfaces;
+using Cs4rsa.Service.Notification;
+
+using Prism.Commands;
+using Prism.Mvvm;
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Prism.Services.Dialogs;
+
+namespace Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels
+{
+    /// <summary>
+    /// Hộp thoại lưu bộ lịch mà người dùng đã sắp xếp.
+    /// </summary>
+    public class SaveSessionUCViewModel : BindableBase, IDialogAware
+    {
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
+
+        public IEnumerable<ClassGroupModel> ClassGroupModels { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+
+        public string Title => "Save Schedule";
+
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ShareString _shareString;
+        private readonly INotificationService _notificationService;
+
+        public event Action<IDialogResult> RequestClose;
+
+        public SaveSessionUCViewModel(
+            IUnitOfWork unitOfWork,
+            ShareString shareString,
+            INotificationService notificationService)
+        {
+            _unitOfWork = unitOfWork;
+            _shareString = shareString;
+            _notificationService = notificationService;
+            _name = string.Empty;
+
+            SaveCommand = new DelegateCommand(Save, () => _name.Length > 0).ObservesProperty(() => Name);
+        }
+
+        /// <remarks>
+        /// Lưu bộ lịch đã sắp xếp.
+        /// 1. Với các lớp chỉ có một base school class duy nhất, chọn lớp này.
+        /// 2. Với các lớp có LAB, tức sẽ có một base class và một lớp (thường là LAB), sẽ chọn lớp này.
+        /// 3. Với các special class group, chọn lớp khác base class.
+        /// </remarks>
+        private void Save()
+        {
+            var sessionDetails = _shareString
+                .ConvertToUserSubjects(ClassGroupModels)
+                .Select(us => new ScheduleDetail()
+                {
+                    SubjectCode = us.SubjectCode,
+                    SubjectName = us.SubjectName,
+                    ClassGroup = us.ClassGroup,
+                    SelectedSchoolClass = us.SchoolClass,
+                    RegisterCode = us.RegisterCode
+                }).ToList();
+
+            var session = new UserSchedule()
+            {
+                Name = Name.Trim(),
+                SaveDate = DateTime.Now,
+                SemesterValue = _unitOfWork.Settings.GetByKey(Setting.SemesterValue),
+                YearValue = _unitOfWork.Settings.GetByKey(Setting.YearValue),
+                SessionDetails = sessionDetails
+            };
+
+            _unitOfWork.UserSchedules.Add(session);
+            var dialogResult = new DialogResult(ButtonResult.OK);
+            RequestClose?.Invoke(dialogResult);
+        }
+
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+            _notificationService.SendNotification("Lưu phiên thành công", $"Đã lưu phiên hiện tại với tên {Name}", "SaveScheduleAction");
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            ClassGroupModels = parameters.GetValue<IEnumerable< ClassGroupModel>>("SelectedClassGroupModels");
+        }
+    }
+}

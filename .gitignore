@@ -211,3 +211,4 @@ Cs4rsa.csproj.user
 /cs4rsa_core/.vscode/tasks.json
 /Deployment
 /cs4rsa_core/Clowd_Squirrel_Create_Release.bat
+/Cs4rsa.App/PublishApp.ps1

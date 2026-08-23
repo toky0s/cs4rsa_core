@@ -1,0 +1,186 @@
+﻿<UserControl
+    x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.SearchSubjectUC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
+    xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
+    Width="600"
+    Height="350"
+    Padding="8"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance Type=vm:SearchSubjectViewModel}"
+    d:DesignHeight="350"
+    d:DesignWidth="500"
+    mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="ShowInTaskbar" Value="True" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
+            <converter:BooleanToVisibilityConverter x:Key="BoolToVisCvt" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Key="Down" Command="{Binding Data.KeyDownCommand, Source={StaticResource Proxy}}" />
+        <KeyBinding Key="Up" Command="{Binding Data.KeyUpCommand, Source={StaticResource Proxy}}" />
+        <KeyBinding Key="Return" Command="{Binding Data.ReturnCommand, Source={StaticResource Proxy}}" />
+        <KeyBinding Key="Esc" Command="{Binding Data.ClosePopupCommand, Source={StaticResource Proxy}}" />
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Search" />
+        <TextBox
+            x:Name="TextBox_SearchBox"
+            Grid.Row="1"
+            Height="24"
+            Margin="0,0,0,4"
+            Padding="4,2"
+            uihelper:TextBoxHelper.Placeholder="Search your subjects..."
+            FontSize="13"
+            PreviewKeyDown="TextBox_SearchBox_PreviewKeyDown"
+            TextChanged="TextBox_TextChanged" />
+        <ListBox
+            xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
+            Grid.Row="2"
+            Margin="0,0,0,4"
+            HorizontalContentAlignment="Stretch"
+            uihelper:ListBoxExtensions.AutoScrollToSelectedItem="True"
+            ItemsSource="{Binding SubjectResults}"
+            SelectedItem="{Binding SelectedSearchResult}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <Ellipse
+                                Width="10"
+                                Height="10"
+                                Margin="0,0,4,0"
+                                Fill="{Binding Color}" />
+                            <TextBlock uihelper:TextBlockExtensions.HighlightedText="{Binding DisplayedText}" />
+                        </StackPanel>
+
+                        <!--  Hint: nhấn Enter để thêm  -->
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True" />
+                                                <Condition Binding="{Binding IsDownloaded}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Border
+                                Padding="4,1"
+                                Background="#ecf0f1"
+                                BorderBrush="#bdc3c7"
+                                BorderThickness="1"
+                                CornerRadius="3">
+                                <TextBlock
+                                    FontSize="10"
+                                    FontWeight="Medium"
+                                    Foreground="#7f8c8d"
+                                    Text="Enter ↵" />
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            FontSize="11"
+                            FontStyle="Italic"
+                            Foreground="#16a085"
+                            Text="Downloaded"
+                            TextAlignment="Right"
+                            Visibility="{Binding IsDownloaded, Converter={StaticResource BoolToVisCvt}}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="3">
+            <TextBlock
+                d:Text="Result: 15/36"
+                FontSize="11"
+                TextAlignment="Right"
+                ToolTip="Number of displayed results over number of total hits">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text">
+                            <Setter.Value>
+                                <MultiBinding StringFormat="{}Result: {0}/{1}">
+                                    <Binding Path="HitCount" />
+                                    <Binding Path="TotalHits" />
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="4" Margin="0,0,0,4">
+            <RichTextBox
+                BorderThickness="0"
+                IsReadOnly="True"
+                IsReadOnlyCaretVisible="False">
+                <RichTextBox.Document>
+                    <FlowDocument
+                        FontSize="11"
+                        FontStyle="Italic"
+                        Foreground="#7f8c8d">
+                        <Paragraph>
+                            1. Use the up and down arrow keys to navigate.<LineBreak />
+                            2. Select a subject and press Enter or double click to download.</Paragraph>
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="5"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Command="{Binding ClosePopupCommand}"
+                Content="Close"
+                Style="{StaticResource ActionButton}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

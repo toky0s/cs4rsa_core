@@ -1,0 +1,115 @@
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
+
+using static Cs4rsa.UI.ScheduleTable.CustomControls.ScheduleBlock;
+
+namespace Cs4rsa.UI.ScheduleTable.CustomControls
+{
+    /// <summary>
+    /// MVVM-friendly schedule grid with two-way bindable collections and vertical scroll offset.
+    /// Bind <see cref="ItemsSource"/> (timeline labels), <see cref="Week"/> (per-day blocks), and optionally
+    /// </summary>
+    public partial class ScheduleView_v2 : UserControl
+    {
+        public ScheduleView_v2()
+        {
+            InitializeComponent();
+            SetCurrentValue(
+                ItemsSourceProperty,
+                new ObservableCollection<string>(Utils.TimeLines));
+            SetCurrentValue(
+                DayHeadersProperty,
+                new ObservableCollection<string>(new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" }));
+        }
+
+        public ObservableCollection<string> ItemsSource
+        {
+            get => (ObservableCollection<string>)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register(
+                nameof(ItemsSource),
+                typeof(ObservableCollection<string>),
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(
+                    null,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public ObservableCollection<TimeBlock> Week
+        {
+            get => (ObservableCollection<TimeBlock>)GetValue(WeekProperty);
+            set => SetValue(WeekProperty, value);
+        }
+
+        public static readonly DependencyProperty WeekProperty =
+            DependencyProperty.Register(
+                nameof(Week),
+                typeof(ObservableCollection<TimeBlock>),
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public ObservableCollection<string> DayHeaders
+        {
+            get => (ObservableCollection<string>)GetValue(DayHeadersProperty);
+            set => SetValue(DayHeadersProperty, value);
+        }
+
+        public static readonly DependencyProperty DayHeadersProperty =
+            DependencyProperty.Register(
+                nameof(DayHeaders),
+                typeof(ObservableCollection<string>),
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        /// <summary>
+        /// Optional template for each <see cref="TimeBlock"/>; when null, the default <see cref="ScheduleBlock"/> template is used.
+        /// </summary>
+        public DataTemplate BlockItemTemplate
+        {
+            get => (DataTemplate)GetValue(BlockItemTemplateProperty);
+            set => SetValue(BlockItemTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty BlockItemTemplateProperty =
+            DependencyProperty.Register(
+                nameof(BlockItemTemplate),
+                typeof(DataTemplate),
+                typeof(ScheduleView_v2),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Total height of the schedule body (timeline + week columns). Default matches the classic fixed grid height.
+        /// </summary>
+        public double ScheduleBodyHeight
+        {
+            get => (double)GetValue(ScheduleBodyHeightProperty);
+            set => SetValue(ScheduleBodyHeightProperty, value);
+        }
+
+        public static readonly DependencyProperty ScheduleBodyHeightProperty =
+            DependencyProperty.Register(
+                nameof(ScheduleBodyHeight),
+                typeof(double),
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(400d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        /// <summary>
+        /// Minimum height for the schedule body when stretching inside the parent.
+        /// </summary>
+        public double ScheduleBodyMinHeight
+        {
+            get => (double)GetValue(ScheduleBodyMinHeightProperty);
+            set => SetValue(ScheduleBodyMinHeightProperty, value);
+        }
+
+        public static readonly DependencyProperty ScheduleBodyMinHeightProperty =
+            DependencyProperty.Register(
+                nameof(ScheduleBodyMinHeight),
+                typeof(double),
+                typeof(ScheduleView_v2),
+                new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    }
+}

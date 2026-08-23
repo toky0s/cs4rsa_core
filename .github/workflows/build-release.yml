@@ -1,0 +1,168 @@
+name: Build, Test & Velopack Release (.NET FW 4.8.1)
+
+on:
+  push:
+    branches: [ "cs4rsa-prism-new-ui" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "cs4rsa-prism-new-ui" ]
+
+env:
+  Solution_Name: cs4rsa.sln
+  # Đường dẫn tới test project - chỉnh lại nếu tên thư mục khác
+  Test_Project_Path: UnitTestProject\UnitTestProject.csproj
+  App_Project_Path: Cs4rsa.App\Cs4rsa.App.csproj
+
+jobs:
+  # ─────────────────────────────────────────
+  # JOB 1: BUILD & TEST
+  # ─────────────────────────────────────────
+  test:
+    name: Run Unit Tests
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # .NET SDK cần thiết để chạy công cụ dotnet (vpk, v.v.)
+    # nhưng KHÔNG dùng để build — MSBuild sẽ lo việc đó
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore NuGet Packages
+      run: nuget restore ${{ env.Solution_Name }}
+
+    # Build toàn bộ solution trước (bao gồm cả test project)
+    - name: Build Solution
+      run: |
+        msbuild ${{ env.Solution_Name }} `
+          /p:Configuration=${{ matrix.configuration }} `
+          /p:Platform="Any CPU" `
+          /m
+
+    # Dùng vstest.console.exe thay vì 'dotnet test'
+    # vì project dùng packages.config (non-SDK style) + MSTest
+    - name: Run Tests via VSTest
+      run: |
+        $vstestPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+          -latest -products * `
+          -find "**\vstest.console.exe" 2>$null | Select-Object -First 1
+
+        if ($vstestPath) {
+          Write-Host "Found vstest.console at: $vstestPath"
+          & "$vstestPath" `
+            "UnitTestProject\bin\${{ matrix.configuration }}\UnitTestProject.dll" `
+            /Platform:x64 `
+            /logger:trx
+        } else {
+          Write-Error "vstest.console.exe not found."
+          exit 1
+        }
+      shell: pwsh
+
+  # ─────────────────────────────────────────
+  # JOB 2: PACKAGE & RELEASE (chỉ khi push tag v*)
+  # ─────────────────────────────────────────
+  release:
+    name: Package & Deploy to GitHub Releases
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Extract Version from Tag
+      id: get_version
+      shell: bash
+      run: |
+        # Bỏ tiền tố 'v' → "v1.2.3" thành "1.2.3"
+        VERSION=${GITHUB_REF_NAME#v}
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Packaging version: $VERSION"
+
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore NuGet Packages
+      run: nuget restore ${{ env.Solution_Name }}
+
+    - name: Build App
+      run: |
+        msbuild ${{ env.App_Project_Path }} `
+          /p:Configuration=Release `
+          /p:Platform="Any CPU" `
+          /t:Build `
+          /m
+      shell: pwsh
+
+    - name: Prepare publish folder
+      shell: pwsh
+      run: |
+        $appDir = Split-Path "${{ env.App_Project_Path }}" -Parent
+        $exePath = Get-ChildItem -Path $appDir -Recurse -Filter "Xeplich.exe" |
+                   Where-Object { $_.FullName -notmatch '\\obj\\' } |
+                   Select-Object -First 1
+        if (-not $exePath) {
+          Write-Error "Không tìm thấy Xeplich.exe sau khi build."
+          exit 1
+        }
+        $outDir = $exePath.DirectoryName
+        Write-Host "Output thực tế nằm ở: $outDir"
+
+        $publishDir = "${{ github.workspace }}\publish"
+        New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
+        Copy-Item "$outDir\*" -Destination $publishDir -Recurse -Force
+
+    - name: Install Velopack CLI
+      run: dotnet tool install -g vpk
+
+    # Pack: tạo các file delta/full nupkg trong thư mục .\releases
+    - name: Velopack Pack
+      run: |
+        vpk pack `
+          --packId Cs4rsa `
+          --packVersion ${{ steps.get_version.outputs.VERSION }} `
+          --packDir .\publish `
+          --mainExe Xeplich.exe `
+          --title "Xeplich" `
+          --releaseNotes "Release ${{ steps.get_version.outputs.VERSION }}" `
+          --outputDir .\releases
+      shell: pwsh
+
+    # Upload lên GitHub Releases
+    # Cần secret GH_TOKEN có quyền write:packages và contents
+    - name: Upload to GitHub Releases
+      run: |
+        vpk upload github `
+          --repoUrl ${{ github.event.repository.html_url }} `
+          --token ${{ secrets.GH_TOKEN }} `
+          --inputDir .\releases `
+          --publish
+      shell: pwsh

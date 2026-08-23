@@ -1,0 +1,124 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+
+namespace Cs4rsa.Service.SubjectCrawler.DataTypes
+{
+    public class SchoolClass
+    {
+        private Phase _currPhase;
+        public Phase CurrentPhase
+        {
+            get
+            {
+                if (_currPhase == Phase.Unknown)
+                {
+                    _currPhase = StudyWeek.GetPhase();
+                }
+                return _currPhase;
+            }
+        }
+        public string SubjectName { get; set; }
+        public string ClassGroupName { get; set; }
+        public string SchoolClassName { get; set; }
+        public string RegisterCode { get; set; }
+        public ClassForm Type { get; set; }
+        public string RegistrationTermEnd { get; set; }
+        public string RegistrationTermStart { get; set; }
+        public string EmptySeat { get; set; }
+        public Schedule Schedule { get; set; }
+        public IEnumerable<string> Rooms { get; set; }
+        public StudyWeek StudyWeek { get; set; }
+        public List<string> TeacherNames { get; set; } = new List<string>();
+        public IEnumerable<Place> Places { get; set; }
+        public string RegistrationStatus { get; set; }
+        public string ImplementationStatus { get; set; }
+        public string Url { get; set; }
+        public DayPlaceMetadata DayPlaceMetaData { get; set; }
+        
+        public Subject Subject { get; }
+
+        public Metadata Metadata { get; }
+        public ImmutableArray<SchoolClassUnit> SchoolClassUnits { get; set; }
+        public SchoolClass(
+            string schoolClassName,
+            string registerCode,
+            string type,
+            string emptySeat,
+            string registrationTermEnd,
+            string registrationTermStart,
+            StudyWeek studyWeek,
+            Schedule schedule,
+            IEnumerable<string> rooms,
+            IEnumerable<Place> places,
+            List<string> teacherNames,
+            string registrationStatus,
+            string implementationStatus,
+            string url,
+            DayPlaceMetadata dayPlaceMetaData,
+            Subject subject)
+        {
+            SchoolClassName = schoolClassName;
+            RegisterCode = registerCode;
+            Type = ClassForm.Find(type);
+            EmptySeat = emptySeat;
+            RegistrationTermStart = registrationTermStart;
+            RegistrationTermEnd = registrationTermEnd;
+            StudyWeek = studyWeek;
+            Schedule = schedule;
+            Rooms = rooms;
+            Places = places;
+            TeacherNames.AddRange(teacherNames);
+            RegistrationStatus = registrationStatus;
+            ImplementationStatus = implementationStatus;
+            Url = url;
+            DayPlaceMetaData = dayPlaceMetaData;
+            Subject = subject;
+            Metadata = new Metadata(Schedule, DayPlaceMetaData, this);
+            SchoolClassUnits = GetSchoolClassUnits().ToImmutableArray();
+        }
+
+        /// <summary>
+        /// GetByPaging SchoolClass Units.
+        /// </summary>
+        /// <remarks>
+        /// Vì bản thân một SchoolClass bao gồm nhiều tiết học được trải dài trong một Tuần.
+        /// Vì thế để thuận tiện cho việc hiển thị trên mô phỏng - Phương thức này cho phép
+        /// tách SchoolClass ra thành một tập các Unit tương ứng với các tiết học với
+        /// Giảng viên là duy nhất, Giờ học là duy nhất, Thứ học là duy nhất, Phòng học và địa
+        /// điểm học là duy nhất.
+        /// 
+        /// Với các trường hợp đặc biệt, một SchoolClass có thể có nhiều Giảng viên đảm nhiệm
+        /// Điển hình CS 252: Mạng Máy Tính 
+        /// <see href="http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid=65&timespan=66&t=s"/> 
+        /// 
+        /// CS 252 A1 do thầy Nguyễn Kim Tuấn và thầy Nguyễn Hoàng Nhật quản lý chả khác nhau
+        /// cái gì nhưng vẫn bị tách ra. Vì thế trường hợp này khi lấy ra ở mức UNIT thì teacher
+        /// vẫn là một tập hợp.
+        /// </remarks>
+        /// <returns>IEnumerable SchoolClassUnit</returns>
+        private IEnumerable<SchoolClassUnit> GetSchoolClassUnits()
+        {
+            foreach (DayOfWeek dayOfWeek in Schedule.GetSchoolDays())
+            {
+                IEnumerable<StudyTime> studyTimes = Schedule.GetStudyTimesAtDay(dayOfWeek);
+                foreach (StudyTime studyTime in studyTimes)
+                {
+                    SchoolClassUnit schoolClassUnit = new SchoolClassUnit(
+                        this, 
+                        dayOfWeek, 
+                        studyTime.Start, 
+                        studyTime.End, 
+                        DayPlaceMetaData.GetDayPlacePairAtDay(dayOfWeek).Room, 
+                        StudyWeek, 
+                        SchoolClassName,
+                        string.Join(", ", TeacherNames)
+                    );
+                    yield return schoolClassUnit;
+                }
+            }
+        }
+    }
+}

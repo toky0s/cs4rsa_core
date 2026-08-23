@@ -1,0 +1,419 @@
+﻿using Cs4rsa.Infrastructure.Common;
+using Cs4rsa.Service.SubjectCrawler.Utils;
+
+using HtmlAgilityPack;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Cs4rsa.Service.SubjectCrawler.DataTypes
+{
+    public class Subject
+    {
+        public List<string> TeacherUrls { get; }
+        public HashSet<string> TeacherNames { get; }
+        public List<ClassGroup> ClassGroups { get; }
+        public bool IsSpecialSubject { get; }
+
+        /// <summary>
+        /// Tên môn học. Ví dụ: "Cơ sở dữ liệu", "Lập trình hướng đối tượng", "Kỹ thuật lập trình".
+        /// </summary>
+        public string Name { get; }
+        /// <summary>
+        /// Mã môn
+        /// </summary>
+        public string SubjectCode { get; }
+        public int StudyUnit { get; }
+
+        /// <summary>
+        /// Loại ĐVHT. Ví dụ: "Tín Chỉ".
+        /// </summary>
+        public string StudyUnitType { get; }
+        /// <summary>
+        /// Loại hình
+        /// </summary>
+        public string StudyType { get; }
+        public string Semester { get; }
+        public List<string> MustStudySubject { get; }
+        public List<string> ParallelSubject { get; }
+        public string Description { get; }
+        public string CourseId { get; }
+        public string SemesterId { get; }
+
+        /// <summary>
+        /// Khởi tạo một Subject thông qua một Async Factory method.
+        /// </summary>
+        /// <param name="name">Tên môn học</param>
+        /// <param name="subjectCode">Mã môn</param>
+        /// <param name="studyUnit">Số đơn vị học tập</param>
+        /// <param name="studyUnitType">Loại đơn vị học tập</param>
+        /// <param name="studyType"></param>
+        /// <param name="semester">Học kỳ</param>
+        /// <param name="mustStudySubject">Các môn tiên quyết</param>
+        /// <param name="parallelSubject">Các môn song hành</param>
+        /// <param name="description">Mô tả môn học</param>
+        /// <param name="rawSoup">Chuỗi phân tích HTML gốc</param>
+        /// <param name="courseId">Course ID</param>
+        /// <returns>Task Subject</returns>
+        public Subject(string name, string subjectCode, string studyUnit,
+                        string studyUnitType, string studyType, string semester,
+                        string mustStudySubject, string parallelSubject,
+                        string description, string rawSoup, string courseId,
+                        string semesterId)
+        {
+            TeacherNames = new HashSet<string>();
+            TeacherUrls = new List<string>();
+            ClassGroups = new List<ClassGroup>();
+
+            StudyUnitType = studyUnitType;
+            StudyType = studyType;
+            Semester = semester;
+
+            Name = name;
+            SubjectCode = subjectCode;
+            Description = description;
+            CourseId = courseId;
+            StudyUnit = int.Parse(studyUnit);
+
+            MustStudySubject = SubjectSplit(mustStudySubject);
+            ParallelSubject = SubjectSplit(parallelSubject);
+            
+            GetClassGroups_Optimize(rawSoup);
+            IsSpecialSubject = GetIsSpecialSubject();
+            
+            SemesterId = semesterId;
+        }
+
+        /// <summary>
+        /// Một môn được xem là Special Subject khi chúng có nhiều hơn 1 mã đăng ký
+        /// trong một Class Group. Các môn như CHE 101 (Hoá đại cương), BIO 101 (Sinh học đại cương)
+        /// được xem là một Special Subject.
+        /// </summary>
+        /// <returns></returns>
+        private bool GetIsSpecialSubject()
+        {
+            return ClassGroups.Any(classGroup => classGroup.RegisterCodes.Count > 1);
+        }
+
+        private void GetClassGroups_Optimize(string html)
+        {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            if (htmlDocument.DocumentNode.Descendants("table").Count() < 4)
+            {
+                throw new IndexOutOfRangeException("Không tồn tại bảng lịch");
+            }
+            var trTags = htmlDocument.DocumentNode.SelectNodes("//table[@class='tb-calendar']/tbody/tr").ToArray();
+            LoopOptimize(trTags);
+        }
+
+        private void LoopOptimize(HtmlNode[] trTags)
+        {
+            ClassGroup classGroup = null;
+            string classGroupName = string.Empty;
+            var registerCodes = new HashSet<string>();
+
+            int count = trTags.Length;
+            int index = 0;
+
+            while (index < count)
+            {
+                var currNode = trTags[index];
+                if (IsHeadingRow(currNode, out string outClassGroupName))
+                {
+                    if (!string.IsNullOrWhiteSpace(classGroupName) && !classGroupName.Equals(outClassGroupName))
+                    {
+                        // Commit previous changes.
+                        classGroup.CommitChanges();
+                        ClassGroups.Add(classGroup);
+                        registerCodes.Clear();
+                    }
+                    classGroupName = outClassGroupName;
+                    classGroup = new ClassGroup(classGroupName, this);
+                }
+                else if (IsSchoolClass(currNode))
+                {
+                    var schoolClass = GetSchoolClass(currNode);
+
+                    schoolClass.ClassGroupName = classGroupName;
+                    if (!string.IsNullOrWhiteSpace(schoolClass.RegisterCode)
+                        && !registerCodes.Contains(schoolClass.RegisterCode))
+                    {
+                        registerCodes.Add(schoolClass.RegisterCode);
+                    }
+                    classGroup.AddSchoolClass(schoolClass);
+                    classGroup.AddRegisterCodes(registerCodes);
+                }
+                index++;
+            }
+            if (classGroup != null)
+            {
+                classGroup.CommitChanges();
+                ClassGroups.Add(classGroup);
+            }
+        }
+
+
+        public static bool IsSchoolClass(HtmlNode trNode)
+        {
+            if (trNode == null) return false;
+
+            // Kiểm tra thẻ tr có class="lop"
+            var classAttr = trNode.GetAttributeValue("class", string.Empty);
+            if (!classAttr.Contains("lop"))
+                return false;
+
+            // Kiểm tra td đầu tiên có class="hit"
+            var firstTd = trNode.SelectSingleNode("./td[1]");
+            if (firstTd == null) return false;
+
+            var tdClass = firstTd.GetAttributeValue("class", string.Empty);
+            return tdClass.Contains("hit");
+        }
+
+        public static bool IsHeadingRow(HtmlNode trNode, out string classGroupName)
+        {
+            if (trNode == null || trNode.Name != "tr")
+            {
+                classGroupName = string.Empty;
+                return false;
+            }
+
+            var innerHtml = trNode.InnerHtml;
+            // Kiểm tra nếu có class="nhom-lop" trong innerHtml thì mới tiếp tục regex để lấy tên nhóm lớp.
+            var isHasNhomLop = innerHtml.Contains("class=\"nhom-lop\"");
+            // Lấy tên class group có trong thẻ div
+            var pattern = @"<div[^>]*>(.*?)<\/div>";
+
+            Match match = Regex.Match(innerHtml, pattern, RegexOptions.Singleline);
+
+            if (match.Success)
+            {
+                classGroupName = match.Groups[1].Value.Trim();
+                return isHasNhomLop;
+            }
+            else
+            {
+                classGroupName = string.Empty;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Trả về một SchoolClass dựa theo tr tag có class="lop" được truyền vào phương thức này.
+        /// </summary>
+        /// <param name="trTagClassLop">Thẻ tr có class="lop"</param>
+        /// <returns>
+        /// SchoolClass - Lớp thành phần là con của một ClassGroup, 
+        /// sẽ trả về null nếu ClassGroup đấy không chứa bất cứ SchoolClass nào.
+        /// 
+        /// Phát hiện lúc đêm  04/11/2022, TOU 151 Tổng quan du lịch, 
+        /// ClassGroup TOU 151 Q không chứa bất cứ SchoolClass nào.
+        /// 
+        /// <see href="https://github.com/toky0s/cs4rsa_core/issues/79"/> 
+        /// </returns>
+        private SchoolClass GetSchoolClass(HtmlNode trTagClassLop)
+        {
+            if (!trTagClassLop.HasChildNodes)
+            {
+                return null;
+            }
+
+            var tdTags = trTagClassLop.SelectNodes("td");
+            var aTag = tdTags[0].SelectSingleNode("a");
+
+            var urlToSubjectDetailPage = GetSubjectDetailPageUrl(aTag);
+
+            /* 
+             * ACC 448 - Thực Tập Tốt Nghiệp, cái môn củ chuối này nó không có
+             * tên giảng viên (tên giảng viên bằng Rỗng), dẫn đến nó cái Dialog
+             * tìm kiếm nó chạy mãi không dừng. Và tui sẽ fix nó hôm nay.
+             * Ngày Mùng 5 Tết 2022 
+             * 
+             * Thông tin của Teacher sẽ ưu tiên lấy từ DB ra. Các môn đã có cache
+             * hầu hết sẽ có thông tin giảng viên đi kèm.
+             * 
+             * Created Date:
+             *  XinTA - Ngày 19/1/2023
+             *  
+             * Updated Date:
+             *  XinTA - Ngày 29/01/2023 - Cập nhật tài liệu
+             *  XinTA - Ngày 07/03/2023 - Add Debug, update if clause flow.
+             *  XinTA - Ngày 19/07/2023 - Project CWEBIZ - Integrate
+             *  XinTA - Ngày 16/12/2023 - Migrate
+             */
+
+            // TODO: Performance issue
+            string teacherUrl = GetTeacherInfoPageUrl(urlToSubjectDetailPage);
+            TeacherUrls.Add(teacherUrl);
+
+            var teacherNames = new List<string>();
+            var teacherName = GetTeacherName(trTagClassLop);
+
+            // 1. Add teacher name
+            if (!string.IsNullOrEmpty(teacherName))
+            {
+                teacherNames.Add(teacherName);
+            }
+
+            var schoolClassName = aTag.InnerText.Trim();
+            var registerCode = tdTags[1].SelectSingleNode("a").InnerText.Trim();
+            var studyType = tdTags[2].InnerText.Trim();
+            var emptySeat = tdTags[3].InnerText.Trim();
+
+            // Hạn bắt đầu và kết thúc đăng ký (đôi lúc nó sẽ không có nên mình sẽ check null đoạn này)
+            string registrationTermStart;
+            string registrationTermEnd;
+            var registrationTerm = tdTags[4].InnerText.SplitAndRemoveAllSpace();
+            if (registrationTerm.Length == 0)
+            {
+                registrationTermStart = null;
+                registrationTermEnd = null;
+            }
+            else
+            {
+                registrationTermStart = registrationTerm[0];
+                registrationTermEnd = registrationTerm[1];
+            }
+
+            var studyWeekString = tdTags[5].InnerText.Trim();
+            var studyWeek = new StudyWeek(studyWeekString);
+
+            var schedule = new ScheduleParser(tdTags[6]).ToSchedule();
+
+            var rooms = tdTags[7].InnerText
+                .SplitAndRemoveAllSpace()
+                .Distinct();
+
+            var regexSpace = new Regex(@"^ *$");
+            var locations = ExtractValuesFromHtml(tdTags[8].InnerHtml);
+
+            var places = locations
+                .Distinct()
+                .Select(BasicDataConverter.ToPlace);
+
+            // Mỗi SchoolClass đều có một MetaData map giữa Thứ-Giờ-Phòng-Nơi học.
+            var dayOfWeeks = schedule.GetSchoolDays().ToList();
+            var metaCount = dayOfWeeks.Count;
+            IEnumerable<string> roomsText = StringHelper.SplitAndRemoveAllSpace(tdTags[7].InnerText);
+            // Lúc này Room được set Name và chưa được set Place.
+            var roomsForMetaData = roomsText.Select(item => new Room(item)).ToList();
+            var locationsForMetaData = locations.Select(item => item.Trim());
+            var placesForMetaData = locationsForMetaData.Select(item => BasicDataConverter.ToPlace(item)).ToList();
+
+            var metaData = new DayPlaceMetadata();
+            for (var i = 0; i < metaCount; i++)
+            {
+                // Set Place cho Room ở đây.
+                roomsForMetaData[i].Place = placesForMetaData[i];
+                var dayPlacePair = new DayRoomPlace(dayOfWeeks[i], roomsForMetaData[i], placesForMetaData[i]);
+                metaData.AddDayTimePair(dayOfWeeks[i], dayPlacePair);
+            }
+
+            var registrationStatus = tdTags[10].InnerText.Trim();
+            var implementationStatus = tdTags[11].InnerText.Trim();
+
+            var schoolClass = new SchoolClass(
+                schoolClassName, registerCode, studyType, emptySeat,
+                registrationTermEnd, registrationTermStart, studyWeek, schedule,
+                rooms, places, teacherNames,
+                registrationStatus, implementationStatus,
+                urlToSubjectDetailPage, metaData, this);
+            return schoolClass;
+        }
+
+        /// <summary>
+        /// Làm sạch HTML để lấy chính xác locations
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public static List<string> ExtractValuesFromHtml(string html)
+        {
+            // Replace all HTML tag with comma
+            string stripped = Regex.Replace(html, @"<[^>]+>", ",");
+
+            // Trim leading and trailing whitespace and commas
+            string trimmed = stripped.Trim();
+
+            // Thay thế chuỗi gồm nhiều \n hoặc \t ở giữa bằng dấu phẩy
+            // (2+ ký tự newline/tab liên tiếp, có thể xen lẫn space)
+            string normalized = Regex.Replace(trimmed, @"(\s*[\n\t]\s*){2,}", ",");
+
+            // Tách theo dấu phẩy, trim từng phần, lọc rỗng
+            var values = normalized
+                .Split(',')
+                .Select(v => v.Trim())
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .ToList();
+
+            return values;
+        }
+
+        private string GetTeacherInfoPageUrl(string urlSubjectDetailPage)
+        {
+            var htmlWeb = new HtmlWeb();
+            var htmlDocument = htmlWeb.Load(urlSubjectDetailPage);
+            var aTag = htmlDocument.DocumentNode.SelectSingleNode(@"//td[contains(@class, 'no-leftborder')]/a");
+            return aTag == null ? null : "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+        }
+
+        /// <summary>
+        /// Trả về teacherModel Name của một school class. Đồng thời thêm teacherModel Name này vào
+        /// temp teachers nhằm đảm bảo không thất thoát các teacherModel không có detail page.
+        /// Cải thiện độ chính xác của bộ lọc teacherModel.
+        /// </summary>
+        /// <param name="trTagClassLop">HtmlNode với giá trị class="lop".</param>
+        /// <returns>Tên giảng viên</returns>
+        private string GetTeacherName(HtmlNode trTagClassLop)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml(trTagClassLop.InnerHtml);
+            var teacherTdNode = doc.DocumentNode.SelectSingleNode("//td[10]");
+            var slices = teacherTdNode.InnerText.SplitAndRemoveAllSpace();
+            var teacherName = string.Join(" ", slices);
+
+            if (string.IsNullOrWhiteSpace(teacherName))
+            {
+                return string.Empty;
+            }
+
+            TeacherNames.Add(teacherName);
+            return teacherName;
+        }
+
+        private static string GetSubjectDetailPageUrl(HtmlNode aTag)
+        {
+            return "http://courses.duytan.edu.vn/Sites/" + aTag.Attributes["href"].Value;
+        }
+
+        /// <summary>
+        /// Tách mã môn từ một chuỗi.
+        /// </summary>
+        /// <returns>Mã môn (ví dụ CS 414)</returns>
+        private static List<string> SubjectSplit(string text)
+        {
+            var result = new List<string>();
+            if (text.Equals("(Không có Môn học Tiên quyết)") ||
+                text.Equals("(Không có Môn học Song hành)", StringComparison.Ordinal))
+            {
+                return result;
+            }
+
+            var regex = new Regex(@"(?<=\()(.*?)(?=\))");
+            var matchSubject = regex.Matches(text);
+            for (var i = 0; i < matchSubject.Count; ++i)
+            {
+                result.Add(matchSubject[i].Value);
+            }
+            return result;
+        }
+
+        public string GetLink()
+        {
+            if (string.IsNullOrWhiteSpace(SemesterId)) throw new Exception("SemesterId is null or empty.");
+            return $@"http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={CourseId}&timespan={SemesterId}&t=s";
+        }
+    }
+}

@@ -1,0 +1,222 @@
+﻿<UserControl
+    x:Class="Cs4rsa.Module.ManuallySchedule.UC.MultiSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cs4rsa.Module.ManuallySchedule.UC"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
+    d:DataContext="{d:DesignInstance Type=local:MultiSelection}"
+    d:DesignHeight="200"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Cs4rsa.UI.Helper;component/ButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ControlTemplate x:Key="ControlTemplate_RemoveButton" TargetType="Button">
+                <Border
+                    x:Name="Border_Root"
+                    Padding="3"
+                    BorderThickness="0"
+                    CornerRadius="6">
+                    <Border.Background>
+                        <SolidColorBrush Color="Transparent" />
+                    </Border.Background>
+                    <Path
+                        x:Name="Path_Icon"
+                        Data="M5 5L19 19M5 19L19 5"
+                        Stretch="Fill"
+                        Stroke="#7f8c8d"
+                        StrokeEndLineCap="Round"
+                        StrokeLineJoin="Round"
+                        StrokeStartLineCap="Round"
+                        StrokeThickness="2" />
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation
+                                        Storyboard.TargetName="Border_Root"
+                                        Storyboard.TargetProperty="Background.Color"
+                                        To="#ecf0f1"
+                                        Duration="0:0:0.15" />
+                                    <ColorAnimation
+                                        Storyboard.TargetName="Path_Icon"
+                                        Storyboard.TargetProperty="Stroke.Color"
+                                        To="#e74c3c"
+                                        Duration="0:0:0.15" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation
+                                        Storyboard.TargetName="Border_Root"
+                                        Storyboard.TargetProperty="Background.Color"
+                                        To="Transparent"
+                                        Duration="0:0:0.15" />
+                                    <ColorAnimation
+                                        Storyboard.TargetName="Path_Icon"
+                                        Storyboard.TargetProperty="Stroke.Color"
+                                        To="#7f8c8d"
+                                        Duration="0:0:0.15" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter TargetName="Path_Icon" Property="Stroke" Value="#c0392b" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+            <Style x:Key="Style_RemoveButton" TargetType="Button">
+                <Setter Property="Width" Value="14" />
+                <Setter Property="Height" Value="14" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template" Value="{StaticResource ControlTemplate_RemoveButton}" />
+            </Style>
+            <Style x:Key="Style_TagContent" TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,0,5,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="Style_Tag" TargetType="Border">
+                <Setter Property="Padding" Value="6,4" />
+                <Setter Property="Background" Value="#bdc3c7" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Margin" Value="0,0,2,2" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Padding="0,0,0,2">
+
+            <!--  AlternationCount="100" là một số đủ lớn để cover số lượng giảng viên có thể dạy trong một môn học, có thể thay đổi để phù hợp  -->
+            <ItemsControl
+                x:Name="ItemsControl_SelectedTags"
+                AlternationCount="100"
+                ItemsSource="{Binding SelectedItems, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                <!--  ============================= Preview UI =============================  -->
+                <d:Border Style="{StaticResource Style_Tag}">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Style_TagContent}" Text="Phạm Xuân Ẩn" />
+                        <Button Style="{StaticResource Style_RemoveButton}" />
+                    </StackPanel>
+                </d:Border>
+                <d:Border Style="{StaticResource Style_Tag}">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Style_TagContent}" Text="Nguyễn Văn Tàu" />
+                        <Button Style="{StaticResource Style_RemoveButton}" />
+                    </StackPanel>
+                </d:Border>
+                <!--  ============================= Preview UI =============================  -->
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border d:DataContext="{d:DesignInstance Type=local:MultiSelectionItem}" Style="{StaticResource Style_Tag}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Style_TagContent}" Text="{Binding Label}" />
+                                <Button
+                                    Click="Button_Click"
+                                    Style="{StaticResource Style_RemoveButton}"
+                                    Tag="{Binding RelativeSource={RelativeSource AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex)}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+        <TextBox
+            x:Name="TextBlock_Search"
+            Grid.Row="1"
+            Padding="8,4"
+            d:Text="Search..."
+            uihelper:TextBoxHelper.Placeholder="Search..."
+            TextChanged="TextBlock_Search_TextChanged" />
+        <ListBox
+            x:Name="ListBox_Items"
+            Grid.Row="2"
+            d:Height="100"
+            ItemsSource="{Binding FilteredItems, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            SelectionChanged="ListBox_SelectionChanged"
+            SelectionMode="Multiple">
+
+            <!--  ============================= Preview UI =============================  -->
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        IsChecked="True" />
+                    <TextBlock VerticalAlignment="Center" Text="Võ Nguyên Giáp" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Lê Trọng Tấn" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Nguyễn Ái Quốc" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Hoàng Hoa Thám" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Trần Đại Nghĩa" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Nguyễn Văn Trung" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <d:ListBoxItem>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <CheckBox Margin="0,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center" Text="Lê Trọng Tấn" />
+                </StackPanel>
+            </d:ListBoxItem>
+            <!--  ============================= Preview UI =============================  -->
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <CheckBox
+                            Margin="0,0,4,0"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Mode=TwoWay}" />
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Label}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

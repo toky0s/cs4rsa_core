@@ -20,6 +20,12 @@ namespace Cs4rsa.Views
         public MainWindow()
         {
             InitializeComponent();
+            Vm = (MainWindowViewModel)DataContext;
+            RenderScreen();
+            RenderMainMenu();
+            RenderCompactMenu();
+            Vm.LoadInfor();
+            Goto(Vm.StoredScreenIdx);
         }
 
         private void RenderScreen()
@@ -150,16 +156,6 @@ namespace Cs4rsa.Views
             Goto(listView.SelectedIndex);
             // Close Drawer
             DrawerHost.CloseDrawerCommand.Execute(null, null);
-        }
-
-        private void MainWd_Loaded(object sender, RoutedEventArgs e)
-        {
-            Vm = (MainWindowViewModel)DataContext;
-            RenderScreen();
-            RenderMainMenu();
-            RenderCompactMenu();
-            Vm.LoadInfor();
-            Goto(Vm.StoredScreenIdx);
         }
 
         private void MainWd_Closed(object sender, System.EventArgs e)

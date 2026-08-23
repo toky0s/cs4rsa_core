@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{15E1E43A-7866-4E85-9DDB-F7A860F31E0E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cs4rsa.Module.ManuallySchedule</RootNamespace>
+    <AssemblyName>Cs4rsa.Module.ManuallySchedule</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.7\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=10.0.0.7, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.10.0.7\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=10.0.0.7, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.10.0.7\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.77\lib\net462\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.8.1.97\lib\net47\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=8.1.97.5141, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Wpf.8.1.97\lib\net47\Prism.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.7\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.2\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=5.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.5.0.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=5.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.5.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=5.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.5.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=5.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.5.0.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=5.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.5.0.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dialogs\Models\ClassGroupResult.cs" />
+    <Compile Include="Dialogs\Models\ScheduleBagItemModel.cs" />
+    <Compile Include="Dialogs\Models\ScheduleBagModel.cs" />
+    <Compile Include="Dialogs\Models\UserSubject.cs" />
+    <Compile Include="Dialogs\ViewModels\DetailsSchoolClassesViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SaveSessionUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ScheduleDetailUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SearchSubjectViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShareStringUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\ShowDetailsSubjectUCViewModel.cs" />
+    <Compile Include="Dialogs\ViewModels\SolveConflictViewModel.cs" />
+    <Compile Include="Dialogs\Views\SaveSessionUC.xaml.cs">
+      <DependentUpon>SaveSessionUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ScheduleDetailUC.xaml.cs">
+      <DependentUpon>ScheduleDetailUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\SearchSubjectUC.xaml.cs">
+      <DependentUpon>SearchSubjectUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShareStringUC.xaml.cs">
+      <DependentUpon>ShareStringUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShowDetailsSchoolClassesUC.xaml.cs">
+      <DependentUpon>ShowDetailsSchoolClassesUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\ShowDetailsSubjectUC.xaml.cs">
+      <DependentUpon>ShowDetailsSubjectUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Views\SolveConflictUC.xaml.cs">
+      <DependentUpon>SolveConflictUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Events\ClassGroupSessionVmMsgs.cs" />
+    <Compile Include="Events\ExitImportSubjectMsg.cs" />
+    <Compile Include="Events\SearchVmMsgs.cs" />
+    <Compile Include="Events\ShowDetailsSchoolClassesVmMsgs.cs" />
+    <Compile Include="Events\UpdateVmMsgs.cs" />
+    <Compile Include="UC\MultiSelectionItem.cs" />
+    <Compile Include="Models\WarningModel.cs" />
+    <Compile Include="Models\SearchValues.cs" />
+    <Compile Include="Interfaces\IPreParSubjectCrawler.cs" />
+    <Compile Include="ManuallyScheduleModule.cs" />
+    <Compile Include="Models\ClassGroupModel.cs" />
+    <Compile Include="Models\CombinationModel.cs" />
+    <Compile Include="Models\FullMatchSearchingKeyword.cs" />
+    <Compile Include="Models\SchoolClassModel.cs" />
+    <Compile Include="Models\SubjectModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IScheduleValidator.cs" />
+    <Compile Include="Services\ITimeBlockGenerator.cs" />
+    <Compile Include="Services\ScheduleValidator.cs" />
+    <Compile Include="Services\TimeBlockGenerator.cs" />
+    <Compile Include="UC\MultiSelection.xaml.cs">
+      <DependentUpon>MultiSelection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Converters.cs" />
+    <Compile Include="Utils\IShareStringService.cs" />
+    <Compile Include="Utils\ShareString.cs" />
+    <Compile Include="Utils\SubjectCodeParser.cs" />
+    <Compile Include="Utils\ValidateUserSchedule.cs" />
+    <Compile Include="Services\UpdateConflict.cs" />
+    <Compile Include="ValidationRules\VR_SharedCode.cs" />
+    <Compile Include="ViewModels\FilterSubjectViewModel.cs" />
+    <Compile Include="ViewModels\MainSchedulingViewModel.cs" />
+    <Compile Include="Views\MainScheduling.xaml.cs">
+      <DependentUpon>MainScheduling.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Dialogs\Views\SaveSessionUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ScheduleDetailUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Views\SearchSubjectUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Views\ShareStringUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ShowDetailsSchoolClassesUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\ShowDetailsSubjectUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\Views\SolveConflictUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UC\MultiSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainScheduling.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Common\Cs4rsa.Infrastructure.Common.csproj">
+      <Project>{b090dec9-515e-47d1-8eea-b47503ca635f}</Project>
+      <Name>Cs4rsa.Infrastructure.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Database\Cs4rsa.Infrastructure.Database.csproj">
+      <Project>{567f1543-c1d3-48aa-8221-2d6e16b4e09b}</Project>
+      <Name>Cs4rsa.Infrastructure.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Infrastructure.Events\Cs4rsa.Infrastructure.Events.csproj">
+      <Project>{f5ef9a32-bae8-4b0e-9e6d-b2ac0d0eafaf}</Project>
+      <Name>Cs4rsa.Infrastructure.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Module.Shared\Cs4rsa.Module.Shared.csproj">
+      <Project>{877566d3-74d6-467c-b0fd-5dc9fcd29e12}</Project>
+      <Name>Cs4rsa.Module.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Conflict\Cs4rsa.Service.Conflict.csproj">
+      <Project>{25f1347b-1717-4a4e-93af-75be80a5678a}</Project>
+      <Name>Cs4rsa.Service.Conflict</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.CourseCrawler\Cs4rsa.Service.CourseCrawler.csproj">
+      <Project>{82462320-ee93-4afa-bcb0-b32c8cc81ab4}</Project>
+      <Name>Cs4rsa.Service.CourseCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Dialog\Cs4rsa.Service.Dialog.csproj">
+      <Project>{538dfb38-a978-441d-9351-7bd5535be39f}</Project>
+      <Name>Cs4rsa.Service.Dialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.Notification\Cs4rsa.Service.Notification.csproj">
+      <Project>{92885a21-a852-4bff-8a01-03da6de26949}</Project>
+      <Name>Cs4rsa.Service.Notification</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.Service.SubjectCrawler\Cs4rsa.Service.SubjectCrawler.csproj">
+      <Project>{995cc365-28e3-4525-8b0a-960a4f894c15}</Project>
+      <Name>Cs4rsa.Service.SubjectCrawler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.Helper\Cs4rsa.UI.Helper.csproj">
+      <Project>{b835edaf-a21e-427d-bc57-c42851cc9320}</Project>
+      <Name>Cs4rsa.UI.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.UI.ScheduleTable\Cs4rsa.UI.ScheduleTable.csproj">
+      <Project>{e4d5b2ab-45ce-46dc-a23e-0761eede55aa}</Project>
+      <Name>Cs4rsa.UI.ScheduleTable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
+      <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
+      <Name>Cs4rsa.WPF.Converter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xeplich.Service.Search\Xeplich.Service.Search.csproj">
+      <Project>{F92D8E9F-ED40-4279-B1E0-076CB906A83D}</Project>
+      <Name>Xeplich.Service.Search</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\emptybox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LoadingGif.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LoadingGif_v2.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\shareicon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\error-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\crossmarkicon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\check.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\cross.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\warning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

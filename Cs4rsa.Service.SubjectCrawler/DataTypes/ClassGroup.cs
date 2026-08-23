@@ -1,0 +1,213 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Cs4rsa.Service.SubjectCrawler.DataTypes.Enums;
+using Cs4rsa.Service.SubjectCrawler.Utils;
+
+namespace Cs4rsa.Service.SubjectCrawler.DataTypes
+{
+    public class ClassGroup
+    {
+        private readonly List<SchoolClass> _schoolClasses = new List<SchoolClass>();
+        private readonly HashSet<string> _registerCodes;
+
+        public readonly string Name;
+        public readonly string SubjectCode;
+        public string SubjectName { get; }
+        public Subject Subject { get; }
+        public HashSet<string> RegisterCodes
+        {
+            get
+            {
+                return new HashSet<string>(_registerCodes);
+            }
+        }
+
+        private List<SchoolClass> _mergedSchoolClasses;
+        public List<SchoolClass> SchoolClasses => _mergedSchoolClasses;
+
+        public ClassGroup(string name, Subject subject)
+        {
+            _registerCodes = new HashSet<string>();
+            _mergedSchoolClasses = new List<SchoolClass>();
+            Name = name;
+            Subject = subject;
+            SubjectCode = subject.SubjectCode;
+            SubjectName = subject.Name;
+        }
+
+        public void AddRangeSchoolClass(IEnumerable<SchoolClass> schoolClasses)
+        {
+            _schoolClasses.AddRange(schoolClasses);
+            GetRegisterCode();
+        }
+
+        public void AddSchoolClass(SchoolClass schoolClass)
+        {
+            _schoolClasses.Add(schoolClass);
+        }
+
+        public void AddRegisterCodes(IEnumerable<string> registerCodes)
+        {
+            foreach (var code in registerCodes)
+            {
+                if (!_registerCodes.Contains(code))
+                {
+                    _registerCodes.Add(code);
+                }
+            }
+        }
+
+        public void CommitChanges()
+        {
+            if (_schoolClasses.Count == 0)
+            {
+                throw new Exception("Cannot commit this class group change because there are no school classes.");
+            }
+            _mergedSchoolClasses = MergeTeacherInfoInSchoolClasses();
+        }
+
+        /// <summary>
+        /// Vì sẽ có một số lớp có nhiều school class trùng tên, nhưng chỉ khác ở tên giáo viên dạy
+        /// điển hình là môn Machine Learning with Large Datasets (DS 423) lần phát hiện gần nhất 9/8/2021
+        /// đợt đăng ký tín chỉ học kỳ I khiến cho việc xử lý xung đột trở nên phức tạp. Thành ra sẽ phải
+        /// thực hiện gộp tất cả các school class trùng tên thành 1.
+        /// </summary>
+        /// <returns></returns>
+        private List<SchoolClass> MergeTeacherInfoInSchoolClasses()
+        {
+            return _schoolClasses
+                .GroupBy(sc => sc.SchoolClassName)
+                .Select(group =>
+                {
+                    var primary = group.First();
+                    primary.TeacherNames = group
+                        .SelectMany(sc => sc.TeacherNames)
+                        .Distinct()
+                        .ToList();
+                    primary.SubjectName = SubjectName;
+                    return primary;
+                })
+                .ToList();
+        }
+
+        /// <summary>
+        /// Hợp nhất Schedule của các SchoolClass trong ClassGroup này thành một.
+        /// </summary>
+        /// <returns>Trả về một Schedule.</returns>
+        public Schedule GetSchedule()
+        {
+            var DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
+            foreach (var schoolClass in _schoolClasses)
+            {
+                IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
+                foreach (var pair in dayAndStudyTimes)
+                {
+                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                }
+            }
+            var schedule = new Schedule(DayOfWeekStudyTimePairs);
+            return schedule;
+        }
+
+        /// <summary>
+        /// Hợp nhất Schedule của các SchoolClass được truyền vào này thành một.
+        /// </summary>
+        /// <returns>Trả về một Schedule.</returns>
+        public static Schedule GetSchedule(IEnumerable<SchoolClass> schoolClasses)
+        {
+            var DayOfWeekStudyTimePairs = new Dictionary<DayOfWeek, List<StudyTime>>();
+            foreach (var schoolClass in schoolClasses)
+            {
+                IEnumerable<KeyValuePair<DayOfWeek, List<StudyTime>>> dayAndStudyTimes = schoolClass.Schedule.ScheduleTime;
+                foreach (var pair in dayAndStudyTimes)
+                {
+                    if (!DayOfWeekStudyTimePairs.ContainsKey(pair.Key))
+                        DayOfWeekStudyTimePairs.Add(pair.Key, pair.Value);
+                }
+            }
+            var schedule = new Schedule(DayOfWeekStudyTimePairs);
+            return schedule;
+        }
+
+        public string[] GetTempTeachers()
+        {
+            return _schoolClasses.SelectMany(sc => sc.TeacherNames).ToArray();
+        }
+
+        public Phase GetPhase()
+        {
+            var phases = new List<Phase>();
+            foreach (var schoolClass in _schoolClasses)
+            {
+                var phase = schoolClass.StudyWeek.GetPhase();
+                if (!phases.Contains(phase))
+                {
+                    phases.Add(phase);
+                }
+            }
+            return phases.Count == 2 ? Phase.All : phases[0];
+        }
+
+        public IEnumerable<Place> GetPlaces()
+        {
+            var places = new List<Place>();
+            foreach (var schoolClass in _schoolClasses)
+            {
+                places.AddRange(schoolClass.Places);
+            }
+            return places.Distinct();
+        }
+
+        private void GetRegisterCode()
+        {
+            foreach (var schoolClass in _schoolClasses)
+            {
+                // Trường hợp hai mã giống nhau mà khác giảng viên
+                if (schoolClass.RegisterCode.Trim() != string.Empty && !_registerCodes.Contains(schoolClass.RegisterCode))
+                {
+                    _registerCodes.Add(schoolClass.RegisterCode);
+                }
+            }
+        }
+
+        /**
+         * Mô tả:
+         *      Lấy ra số chỗ còn trống.
+         * 
+         * Trả về:
+         *      Trả về 0 nếu "Hết chỗ" hoặc số chỗ cào được âm, 
+         *      ngược lại trả về giá trị parse được.
+         */
+        public int GetEmptySeat()
+        {
+            return _schoolClasses[0].EmptySeat.Equals("Hết chỗ") || int.Parse(_schoolClasses[0].EmptySeat) < 0
+                ? 0
+                : int.Parse(_schoolClasses[0].EmptySeat);
+        }
+
+        public string GetUrl()
+        {
+            foreach (var schoolClass in _schoolClasses)
+            {
+                if (schoolClass.Url.Trim() != string.Empty)
+                {
+                    return schoolClass.Url;
+                }
+            }
+            return string.Empty;
+        }
+
+        public ImplementType GetImplementType()
+        {
+            return BasicDataConverter.ToImplementType(_schoolClasses[0].ImplementationStatus);
+        }
+
+        public RegistrationType GetRegistrationType()
+        {
+            return BasicDataConverter.ToRegistrationType(_schoolClasses[0].RegistrationStatus);
+        }
+    }
+}

@@ -1,0 +1,203 @@
+﻿<UserControl
+    x:Class="Cs4rsa.Module.ManuallySchedule.Dialogs.Views.ScheduleDetailUC"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
+    d:DataContext="{d:DesignInstance Type=vm:ScheduleDetailUCViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="700" />
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
+            <Setter Property="ShowInTaskbar" Value="True" />
+            <Setter Property="SizeToContent" Value="Height" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <UserControl.Resources>
+        <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <cvt:BooleanToVisibilityRevert x:Key="BoolToVisRevert" />
+    </UserControl.Resources>
+    <Border Padding="4">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                Margin="0,0,0,4"
+                Visibility="{Binding IsShareString, Converter={StaticResource BoolToVisRevert}}">
+                <TextBlock Grid.Column="0" HorizontalAlignment="Left">
+                    <Run>Name:</Run>
+                    <Run FontWeight="DemiBold" Text="{Binding UserSchedule.Name}" />
+                </TextBlock>
+                <TextBlock Grid.Row="1" Margin="0,0,0,4">
+                    <Run>Created On:</Run>
+                    <Run Text="{Binding UserSchedule.SaveDate, StringFormat={}{0:ddd dd/MM/yyyy HH:mm}}" />
+                </TextBlock>
+            </StackPanel>
+            <StackPanel
+                Grid.Row="0"
+                Margin="0,0,0,4"
+                Orientation="Vertical"
+                Visibility="{Binding IsShareString, Converter={StaticResource BoolToVis}}">
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    Text="Shared Classes" />
+                <StackPanel Margin="0,0,0,10" Orientation="Vertical">
+                    <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                        <Border
+                            Width="60"
+                            Margin="0,0,4,0"
+                            Padding="4,2"
+                            Background="#2ecc71"
+                            CornerRadius="4">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                Text="OK" />
+                        </Border>
+                        <TextBlock Text="The class is avaiable in this semester" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Border
+                            Width="60"
+                            Margin="0,0,4,0"
+                            Padding="4,2"
+                            Background="#e74c3c"
+                            CornerRadius="4">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                Text="NOT OK" />
+                        </Border>
+                        <TextBlock Text="The class isn't avaiable in this semester" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock FontSize="13" TextWrapping="WrapWithOverflow">
+                        <Run>1. By pressing the</Run>
+                        <Run FontWeight="Bold">Load and Merge Current</Run>
+                        <Run>
+                            button, the application will load the list
+                            of classes displayed in the table below and
+                            then merge them with the list of classes you
+                            are currently selecting.
+                        </Run>
+                    </TextBlock>
+                    <TextBlock FontSize="13" TextWrapping="WrapWithOverflow">
+                        <Run>2. By pressing the</Run>
+                        <Run FontWeight="Bold">Load and Overwrite Current</Run>
+                        <Run>
+                            button, the application will only load and display the classes listed below.
+                        </Run>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <DataGrid
+                Grid.Row="2"
+                Margin="0,0,0,4"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                ItemsSource="{Binding UserSubjects}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding SubjectCode}" Header="Subject Code" />
+                    <DataGridTextColumn Binding="{Binding SubjectName}" Header="Subject Name" />
+                    <DataGridTextColumn Binding="{Binding ClassGroup}" Header="Class Group" />
+                    <DataGridTextColumn Binding="{Binding SchoolClass}" Header="Selected Class" />
+                    <DataGridTextColumn Binding="{Binding RegisterCode}" Header="Register Code" />
+                    <!--<DataGridTextColumn Binding="{Binding Status}" Header="Status" />-->
+                    <DataGridTemplateColumn Header="Status">
+
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Border
+                                        Width="60"
+                                        Margin="0,0,4,0"
+                                        Padding="4,2"
+                                        Background="#2ecc71"
+                                        CornerRadius="4">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="OK">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="Bold"
+                                            Foreground="White"
+                                            Text="OK" />
+                                    </Border>
+                                    <Border
+                                        Width="60"
+                                        Margin="0,0,4,0"
+                                        Padding="4,2"
+                                        Background="#e74c3c"
+                                        CornerRadius="4">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="NOT OK">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="Bold"
+                                            Foreground="White"
+                                            Text="NOT OK" />
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel
+                Grid.Row="3"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="180"
+                    Height="30"
+                    Margin="0,0,4,0"
+                    Command="{Binding LoadMergeCommand}"
+                    Content="Load and Merge Current" />
+                <Button
+                    Width="180"
+                    Height="30"
+                    Command="{Binding LoadCommand}"
+                    Content="Load and Overwrite Current" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
