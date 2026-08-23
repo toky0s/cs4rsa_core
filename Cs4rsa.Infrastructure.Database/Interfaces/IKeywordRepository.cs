@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
-using Cs4rsa.Database.Models;
+﻿using Cs4rsa.Database.Models;
+
+using System;
+using System.Collections.Generic;
 
 namespace Cs4rsa.Database.Interfaces
 {
@@ -57,5 +59,10 @@ namespace Cs4rsa.Database.Interfaces
         Keyword GetByCourseId(string courseId);
         long Count();
         int ResetCache();
+        /// <summary>
+        /// Return all SubjectCode and Color in Keyword table.
+        /// </summary>
+        /// <returns>Tuple Item1(SubjectCode), Item2(Color)</returns>
+        List<Tuple<string, string>> GetKeywordsBySubjectCode();
     }
 }

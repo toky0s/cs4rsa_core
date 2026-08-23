@@ -11,6 +11,7 @@ using Cs4rsa.Module.ManuallySchedule.Services;
 using Cs4rsa.Module.ManuallySchedule.UC;
 using Cs4rsa.Module.ManuallySchedule.Utils;
 using Cs4rsa.Module.Shared;
+using Cs4rsa.Module.Shared.Events;
 using Cs4rsa.Service.Conflict.DataTypes;
 using Cs4rsa.Service.Conflict.Models;
 using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
@@ -579,6 +580,39 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
         #endregion
 
+        private DelegateCommand _openSearchCommand;
+        public DelegateCommand OpenSearchCommand =>
+            _openSearchCommand ?? (_openSearchCommand = new DelegateCommand(ExecuteOpenSearchCommand, CanExecuteOpenSearchCommand));
+
+        void ExecuteOpenSearchCommand()
+        {
+            // Gửi cho Dialog thông tin các Subject đã được tải rồi,
+            // dialog sẽ có thể dễ dàng disable chúng trong tập kết quả.
+            var param = new DialogParameters
+            {
+                { "DownloadSubjectCodes", SubjectModels.Select(subject => subject.SubjectCode).ToHashSet() }
+            };
+            _dialogService.ShowDialog(nameof(SearchSubjectUC), param, async r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    var searchResult = r.Parameters.GetValue<SearchResult>("SelectedSearchResult");
+                    var selectedDiscipline = Disciplines.FirstOrDefault(item => item.Name == searchResult.Discipline)
+                        ?? throw new ArgumentException($"Cannot find discipline with name {searchResult.Discipline}");
+                    var selectedKeyword = selectedDiscipline.Keywords.FirstOrDefault(item => item.Keyword1 == searchResult.Keyword)
+                        ?? throw new ArgumentException($"Cannot find keyword with name {searchResult.Keyword} in discipline {searchResult.Discipline}");
+                    InsertPseudoSubject(selectedKeyword);
+                    await OnAddSubjectAsync(selectedKeyword);
+                }
+            });
+        }
+
+        bool CanExecuteOpenSearchCommand()
+        {
+            return true;
+        }
+
+
         private DelegateCommand<SubjectModel> _reloadCommand;
         public DelegateCommand<SubjectModel> ReloadCommand => _reloadCommand ?? (_reloadCommand = new DelegateCommand<SubjectModel>(ExecuteReloadCommand, CanExecuteReloadCommand));
 
@@ -793,7 +827,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private readonly ISubjectCrawler _subjectCrawler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOpenInBrowser _openInBrowser;
-        private readonly IEventAggregator _eventAggregator;
         private readonly ILogger<MainSchedulingViewModel> _logger;
         private readonly IScheduleValidator _scheduleValidator;
         private readonly IDialogService _dialogService;
@@ -829,7 +862,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _unitOfWork = unitOfWork;
             _openInBrowser = openInBrowser;
             _dialogService = dialogService;
-            _eventAggregator = eventAggregator;
             _logger = logger;
             _scheduleValidator = scheduleValidator;
             _timeBlockGenerator = timeBlockGenerator;
@@ -837,7 +869,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             #endregion
 
             #region Subscribe Events
-
+            eventAggregator.GetEvent<Event_MainWindow_HotKey_Ctrl_E>().Subscribe(() => OpenSearchCommand.Execute());
             #endregion
 
             #region Pros
@@ -1266,32 +1298,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
         private void InsertPseudoSubject(Keyword keyword)
         {
-            var pseudoSubjectModel = new SubjectModel(
+            var pseudoSubjectModel = new SubjectModel (
                 keyword.SubjectName,
                 keyword.Discipline.Name + " " + keyword.Keyword1,
                 keyword.Color,
                 keyword.CourseId
             );
+
             SubjectModels.Insert(0, pseudoSubjectModel);
             AddCommand.RaiseCanExecuteChanged();
-        }
-
-        private void InsertPseudoSubjects(IReadOnlyList<Keyword> keywords, IEnumerable<UserSubject> userSubjects)
-        {
-            var userSubjectArr = userSubjects.ToArray();
-            for (var i = 0; i < keywords.Count; i++)
-            {
-                var kw = keywords[i];
-                kw.Discipline = _unitOfWork.Disciplines.GetDisciplineByID(kw.DisciplineId);
-                var pseudoSubjectModel = new SubjectModel(
-                    kw.SubjectName,
-                    kw.Discipline.Name + " " + kw.Keyword1,
-                    kw.Color,
-                    kw.CourseId,
-                    userSubjectArr[i]
-                );
-                SubjectModels.Insert(0, pseudoSubjectModel);
-            }
         }
 
         /// <summary>
@@ -1468,14 +1483,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 if (IsAlreadyDownloaded(courseId))
                 {
-                    //_snackbarMessageQueue.Enqueue("Môn này đã được tải");
                     return;
                 }
 
                 var keyword = _unitOfWork.Keywords.GetByCourseId(courseId);
                 if (keyword == null)
                 {
-                    //_snackbarMessageQueue.Enqueue($"Không tồn tại {courseId}");
                     return;
                 }
 

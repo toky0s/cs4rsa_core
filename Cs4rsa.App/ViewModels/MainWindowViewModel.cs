@@ -2,6 +2,7 @@
 using Cs4rsa.App.Views.UserControls;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.Shared;
+using Cs4rsa.Module.Shared.Events;
 using Cs4rsa.Service.Notification;
 using Cs4rsa.Service.Notification.Models;
 
@@ -29,6 +30,21 @@ namespace Cs4rsa.App.ViewModels
         private DelegateCommand _checkForUpdatesCommand;
         public DelegateCommand CheckForUpdatesCommand =>
             _checkForUpdatesCommand ?? (_checkForUpdatesCommand = new DelegateCommand(async () => await ExecuteCheckForUpdatesCommand(), CanExecuteCheckForUpdatesCommand));
+
+        private DelegateCommand _ctrlECommand;
+        public DelegateCommand CtrlECommand =>
+            _ctrlECommand ?? (_ctrlECommand = new DelegateCommand(ExecuteCtrlECommand, CanExecuteCtrlECommand));
+
+        void ExecuteCtrlECommand()
+        {
+            _logger.LogInformation("User pressed Ctrl+E");
+            _eventAggregator.GetEvent<Event_MainWindow_HotKey_Ctrl_E>().Publish();
+        }
+
+        bool CanExecuteCtrlECommand()
+        {
+            return true;
+        }
 
         async Task ExecuteCheckForUpdatesCommand()
         {

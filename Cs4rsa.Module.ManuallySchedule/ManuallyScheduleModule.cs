@@ -1,5 +1,6 @@
 ﻿using Cs4rsa.Common;
 using Cs4rsa.Common.Interfaces;
+using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Implements;
 using Cs4rsa.Database.Interfaces;
 using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
@@ -15,6 +16,8 @@ using Cs4rsa.Service.SubjectCrawler.Crawlers.Interfaces;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+
+using Xeplich.Service.Search;
 
 namespace Cs4rsa.Module.ManuallySchedule
 {
@@ -42,6 +45,7 @@ namespace Cs4rsa.Module.ManuallySchedule
             containerRegistry.RegisterDialog<SaveSessionUC, SaveSessionUCViewModel>();
             containerRegistry.RegisterDialog<ShareStringUC, ShareStringUCViewModel>();
             containerRegistry.RegisterDialog<SolveConflictUC, SolveConflictViewModel>();
+            containerRegistry.RegisterDialog<SearchSubjectUC, SearchSubjectViewModel>();
             containerRegistry.RegisterDialog<ShowDetailsSchoolClassesUC, DetailsSchoolClassesViewModel>();
         }
     }

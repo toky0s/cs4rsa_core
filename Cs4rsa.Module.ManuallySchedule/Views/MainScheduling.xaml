@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cvt="clr-namespace:Cs4rsa.WPF.Converter;assembly=Cs4rsa.WPF.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:info="clr-namespace:Cs4rsa.Module.ManuallySchedule"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:schedule="clr-namespace:Cs4rsa.UI.ScheduleTable.CustomControls;assembly=Cs4rsa.UI.ScheduleTable"
@@ -12,7 +11,6 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:uc="clr-namespace:Cs4rsa.Module.ManuallySchedule.UC"
     xmlns:uihelper="clr-namespace:Cs4rsa.UI.Helper;assembly=Cs4rsa.UI.Helper"
-    xmlns:views="clr-namespace:Cs4rsa.Module.ManuallySchedule.Views"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.ViewModels"
     xmlns:vr="clr-namespace:Cs4rsa.Module.ManuallySchedule.ValidationRules"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -90,7 +88,7 @@
                                     </ComboBox>
                                     <GridSplitter
                                         Grid.Column="1"
-                                        Width="4"
+                                        Width="3"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Stretch" />
                                     <ComboBox
@@ -134,7 +132,7 @@
                                             </Style>
                                         </ComboBox.ItemContainerStyle>
                                     </ComboBox>
-                                    <Border Grid.Column="3" Margin="4,0,0,0">
+                                    <Border Grid.Column="3" Margin="2,0,0,0">
                                         <Button
                                             Width="50"
                                             Command="{Binding AddCommand}"
@@ -143,9 +141,13 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <Border Grid.Row="1">
+                            <Border Grid.Row="1" Margin="0,0,0,2">
                                 <Grid>
-                                    <TextBox Height="24" uihelper:TextBoxHelper.Placeholder="Search your subjects..." />
+                                    <TextBox
+                                        Height="24"
+                                        Padding="4,2"
+                                        uihelper:TextBoxHelper.Placeholder="Ctrl + E to Search..."
+                                        PreviewMouseLeftButtonDown="TextBox_PreviewMouseLeftButtonDown" />
                                 </Grid>
                             </Border>
                             <Border Grid.Row="2">
@@ -156,6 +158,7 @@
                                     </Grid.RowDefinitions>
                                     <ListBox
                                         Grid.Row="0"
+                                        Margin="0,0,0,2"
                                         HorizontalContentAlignment="Stretch"
                                         ItemsSource="{Binding SubjectModels}"
                                         SelectedItem="{Binding SelectedSubjectModel}">
@@ -357,17 +360,8 @@
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding Data.DeleteUserScheduleCommand, Source={StaticResource Proxy}}"
                                                 CommandParameter="{Binding}"
-                                                ToolTip="Delete">
-                                                <Button.Content>
-                                                    <uihelper:GapStackPanel Gap="4" Orientation="Horizontal">
-                                                        <Image
-                                                            Width="20"
-                                                            Height="20"
-                                                            Source="{StaticResource IconTrash}" />
-                                                        <TextBlock Text="Delete" />
-                                                    </uihelper:GapStackPanel>
-                                                </Button.Content>
-                                            </Button>
+                                                Content="Delete"
+                                                Style="{StaticResource ActionButton}" />
                                             <StackPanel
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
@@ -375,21 +369,14 @@
                                                 <Button
                                                     Margin="0,0,4,0"
                                                     Command="{Binding Data.ShareCommand, Source={StaticResource Proxy}}"
-                                                    CommandParameter="{Binding}">
-                                                    <Button.Content>
-                                                        <uihelper:GapStackPanel Gap="2" Orientation="Horizontal">
-                                                            <Image
-                                                                Width="20"
-                                                                Height="20"
-                                                                Source="{StaticResource IconShare}" />
-                                                            <TextBlock Text="Share" />
-                                                        </uihelper:GapStackPanel>
-                                                    </Button.Content>
-                                                </Button>
+                                                    CommandParameter="{Binding}"
+                                                    Content="Share"
+                                                    Style="{StaticResource ActionButton}" />
                                                 <Button
                                                     Command="{Binding Data.LoadUserScheduleCommand, Source={StaticResource Proxy}}"
                                                     CommandParameter="{Binding}"
-                                                    Content="Load..." />
+                                                    Content="Load..."
+                                                    Style="{StaticResource ActionButton}" />
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -433,7 +420,8 @@
                             <Button
                                 Grid.Column="1"
                                 Command="{Binding LoadShareStringCommand}"
-                                Content="Load..." />
+                                Content="Load..."
+                                Style="{StaticResource ActionButton}" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -469,7 +457,10 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" HorizontalAlignment="Right">
+                            <StackPanel
+                                Grid.Row="0"
+                                Margin="0,0,0,2"
+                                HorizontalAlignment="Right">
                                 <Button
                                     x:Name="SortButton"
                                     Click="SortButton_Click"
@@ -1003,7 +994,9 @@
                                                 <Expander.Template>
                                                     <ControlTemplate TargetType="Expander">
                                                         <StackPanel>
-                                                            <!--  Header  -->
+                                                -->
+                                                <!--  Header  -->
+                                                <!--
                                                             <Border>
                                                                 <ToggleButton
                                                                     x:Name="HeaderToggle"
@@ -1015,7 +1008,9 @@
                                                                     <ContentPresenter ContentSource="Header" />
                                                                 </ToggleButton>
                                                             </Border>
-                                                            <!--  Content  -->
+                                                -->
+                                                <!--  Content  -->
+                                                <!--
                                                             <ContentPresenter x:Name="Content" Visibility="Collapsed" />
                                                         </StackPanel>
 
@@ -1025,7 +1020,7 @@
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
-                                                </Expander.Template>
+                                                </Expander.Template>-->
 
 
                                                 <!--  =========================== Header của từng filter ================================  -->

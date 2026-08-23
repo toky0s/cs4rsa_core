@@ -1,15 +1,10 @@
-﻿using Cs4rsa.Database.Models;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels;
-using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
+﻿using Cs4rsa.Module.ManuallySchedule.Dialogs.Views;
 using Cs4rsa.Module.ManuallySchedule.Models;
 using Cs4rsa.Module.ManuallySchedule.ViewModels;
-using Cs4rsa.Module.Shared;
-using Cs4rsa.UI.ScheduleTable.CustomControls;
 
 using Prism.Regions;
+using Prism.Services.Dialogs;
 
-using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,10 +16,14 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
 {
     public partial class MainScheduling
     {
+        private readonly IDialogService _dialogService;
+
         public MainScheduling(
-            IRegionManager regionManager
+            IRegionManager regionManager,
+            IDialogService dialogService
         )
         {
+            _dialogService = dialogService;
             InitializeComponent();
 
             // Xử lý sự kiện người dùng unselect một class group từ Schedule View
@@ -93,6 +92,7 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
             var clicked = sender as MenuItem;
             clicked.IsChecked = true; 
         }
+        // ================================ Sort classes ================================ //
 
         private void ListBox_ClassGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -106,6 +106,11 @@ namespace Cs4rsa.Module.ManuallySchedule.Views
         private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
         {
 
+        }
+
+        private void TextBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ((MainSchedulingViewModel)DataContext).OpenSearchCommand.Execute();
         }
     }
 }

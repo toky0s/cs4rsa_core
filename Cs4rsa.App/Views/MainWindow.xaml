@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:Cs4rsa.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:shared="clr-namespace:Cs4rsa.Module.Shared;assembly=Cs4rsa.Module.Shared"
     xmlns:uc="clr-namespace:Cs4rsa.Views.UserControls"
     xmlns:views="clr-namespace:Cs4rsa.App.Views"
     xmlns:vm="clr-namespace:Cs4rsa.App.ViewModels"
@@ -23,9 +24,16 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
+        <shared:BindingProxy x:Key="Proxy" Data="{Binding}" />
         <cvt:BooleanToVisibilityConverter x:Key="BoolToVis" />
         <cvt:BooleanToVisibilityRevert x:Key="BoolToVisRevert" />
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="E"
+            Command="{Binding Data.CtrlECommand, Source={StaticResource Proxy}}"
+            Modifiers="Ctrl" />
+    </Window.InputBindings>
     <DockPanel>
         <!--  Toolbar đặt ở trên cùng  -->
         <ToolBarTray DockPanel.Dock="Top">
@@ -39,7 +47,6 @@
                         <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Check for Updates" />
                         <Separator />
                         <MenuItem Command="{Binding ResetCacheCommand}" Header="Reset Cache" />
-                        <!--<MenuItem Header="_Exit" />-->
                     </MenuItem>
                 </Menu>
             </ToolBar>

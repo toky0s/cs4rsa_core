@@ -8,7 +8,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:Cs4rsa.Module.ManuallySchedule.Dialogs.ViewModels"
     Padding="4"
-    d:DataContext="{d:DesignInstance Type=vm:DetailsSchoolClassesViewModel }"
+    d:DataContext="{d:DesignInstance Type=vm:DetailsSchoolClassesViewModel}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:IsNotNullConverter x:Key="IsNotNullConverter" />
@@ -16,28 +16,24 @@
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Width" Value="590"></Setter>
-            <Setter Property="Height" Value="245"></Setter>
-            <Setter Property="MaxHeight" Value="500"></Setter>
+            <Setter Property="Width" Value="590" />
+            <Setter Property="Height" Value="245" />
+            <Setter Property="MaxHeight" Value="500" />
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
-            <Setter Property="ResizeMode" Value="CanResize"/>
-            <Setter Property="ShowInTaskbar" Value="True"/>
+            <Setter Property="ResizeMode" Value="CanResize" />
+            <Setter Property="ShowInTaskbar" Value="True" />
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Text="{Binding ClassGroupModel.Name}" />
-        <TextBlock
-            Grid.Row="1"
-            Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
+        <TextBlock Grid.Row="0" Text="{Binding ClassGroupModel.Name}" />
+        <TextBlock Grid.Row="1" Text="{Binding ClassGroupModel.ClassGroup.SubjectName}" />
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock Text="{Binding ClassGroupModel.Name, StringFormat='{}{0} '}" />
             <TextBlock FontWeight="Bold" Text="{Binding ClassGroupModel.CompulsoryClass.Type.Code, StringFormat='{}{0} '}" />
@@ -47,9 +43,9 @@
         <ListView
             Grid.Row="3"
             Margin="0,0,0,5"
-            SelectionMode="Single"
             ItemsSource="{Binding SchoolClassModels}"
-            SelectedItem="{Binding SelectedSchoolClassModel}">
+            SelectedItem="{Binding SelectedSchoolClassModel}"
+            SelectionMode="Single">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -67,22 +63,20 @@
         </ListView>
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button
                 Grid.Column="0"
                 Command="{Binding OpenLinkCommand}"
-                Content="Open link"
-            />  
+                Content="Open link" />
             <Button
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 Command="{Binding PickCommand}"
                 Content="Select"
-                IsEnabled="{Binding SelectedSchoolClassModel, Converter={StaticResource IsNotNullConverter}}"
-            />
+                IsEnabled="{Binding SelectedSchoolClassModel, Converter={StaticResource IsNotNullConverter}}" />
         </Grid>
     </Grid>
 </UserControl>
