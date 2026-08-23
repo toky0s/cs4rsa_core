@@ -17,8 +17,6 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
-using Xeplich.Service.Search;
-
 namespace Cs4rsa.Module.ManuallySchedule
 {
     public class ManuallyScheduleModule : IModule
