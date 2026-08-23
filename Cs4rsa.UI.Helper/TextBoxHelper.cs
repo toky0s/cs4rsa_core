@@ -176,24 +176,24 @@ namespace Cs4rsa.UI.Helper
                                                          textBoxControl.FontStretch),
                                             textBoxControl.FontSize,
                                             SystemColors.InactiveCaptionBrush,
-                                            VisualTreeHelper.GetDpi(textBoxControl).PixelsPerDip);
-
-                text.MaxTextWidth = System.Math.Max(textBoxControl.ActualWidth - textBoxControl.Padding.Left - textBoxControl.Padding.Right, 10);
-                text.MaxTextHeight = System.Math.Max(textBoxControl.ActualHeight, 10);
+                                            VisualTreeHelper.GetDpi(textBoxControl).PixelsPerDip)
+                {
+                    MaxTextWidth = Math.Max(textBoxControl.ActualWidth - textBoxControl.Padding.Left - textBoxControl.Padding.Right, 10),
+                    MaxTextHeight = Math.Max(textBoxControl.ActualHeight, 10)
+                };
 
                 // Mặc định: dùng Padding của control làm offset (fallback khi không tìm thấy PART_ContentHost)
-                Point renderingOffset = new Point(textBoxControl.Padding.Left, textBoxControl.Padding.Top);
+                Point renderingOffset = new Point(textBoxControl.Padding.Left+2, textBoxControl.Padding.Top);
 
                 // Nếu tìm thấy PART_ContentHost, vị trí của nó so với TextBox đã bao gồm Padding rồi
                 // (Padding được TemplateBinding lên Border bao quanh PART_ContentHost trong template mặc định),
                 // nên dùng thẳng vị trí + kích thước này thay vì cộng dồn thêm Padding, tránh bị lệch gấp đôi.
                 if (textBoxControl.Template.FindName("PART_ContentHost", textBoxControl) is FrameworkElement part)
                 {
-                    Point partPosition = part.TransformToAncestor(textBoxControl).Transform(new Point(0, 0));
-                    renderingOffset = partPosition;
+                    renderingOffset = part.TransformToAncestor(textBoxControl).Transform(renderingOffset);
 
-                    text.MaxTextWidth = System.Math.Max(part.ActualWidth, 10);
-                    text.MaxTextHeight = System.Math.Max(part.ActualHeight, 10);
+                    text.MaxTextWidth = Math.Max(part.ActualWidth, 10);
+                    text.MaxTextHeight = Math.Max(part.ActualHeight, 10);
                 }
 
                 drawingContext.DrawText(text, renderingOffset);

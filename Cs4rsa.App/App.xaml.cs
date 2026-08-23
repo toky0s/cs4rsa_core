@@ -41,6 +41,8 @@ using System.Windows;
 
 using Velopack;
 
+using Xeplich.Service.Search;
+
 namespace Cs4rsa.App
 {
     /// <summary>
@@ -73,38 +75,6 @@ namespace Cs4rsa.App
             return DefaultRules;
         }
 
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-        }
-
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            RawSql rawSql = Container.Resolve<RawSql>();
-            IUnitOfWork unitOfWork = Container.Resolve<IUnitOfWork>();
-            DisciplineCrawler disciplineCrawler = Container.Resolve<DisciplineCrawler>();
-            IFolderManager folderManager = Container.Resolve<IFolderManager>();
-            ICourseCrawler courseCrawler = Container.Resolve<ICourseCrawler>();
-            var logger = Container.Resolve<ILogger<App>>();
-
-            courseCrawler.GetInfo(out string yearInfo, out string yearValue, out string semesterInfo, out string semesterValue);
-            folderManager.CreateFoldersAtStartUp();
-            List<Discipline> disciplines = disciplineCrawler.GetDisciplineAndKeyword(semesterValue);
-
-            var dbPath = Cs4rsa.App.Properties.Resources.DbPath;
-            var migratePath = Cs4rsa.App.Properties.Resources.MigratePath;
-            if (!File.Exists(dbPath))
-            {
-                rawSql.CreateDbIfNotExist(dbPath, migratePath);
-
-                // Seed Settings
-                unitOfWork.Settings.InsertSemesterSetting(yearInfo, yearValue, semesterInfo, semesterValue);
-                string sql = BulkInsertDisciplines.GetBulkInsertSql(disciplines);
-                logger.LogInformation("Executing bulk insert for disciplines and keywords.\n{Sql}", sql);
-                rawSql.ExecNonQuery(sql);
-            }
-        }
-
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Register logging
@@ -132,6 +102,10 @@ namespace Cs4rsa.App
 
             string cnnStr = Cs4rsa.App.Properties.Resources.DbConn;
             containerRegistry.Register<RawSql>(provider => new RawSql(cnnStr, provider.Resolve<ILogger<RawSql>>()));
+            containerRegistry.Register<IndexBuilder>(provider => {
+                var rawsql = provider.Resolve<RawSql>();
+                return new IndexBuilder(rawsql);
+            });
 
             containerRegistry.RegisterSingleton<ISemesterHtmlGetter, SemesterHtmlGetter>();
             containerRegistry.RegisterSingleton<IDisciplineHtmlGetter, DisciplineHtmlGetter>();
@@ -174,6 +148,10 @@ namespace Cs4rsa.App
                 string sql = BulkInsertDisciplines.GetBulkInsertSql(disciplines);
                 rawSql.ExecNonQuery(sql);
             }
+
+            // Quét db, tạo index để search subject
+            var indexBuilder = Container.Resolve<IndexBuilder>();
+            indexBuilder.BuildIndex();
 
             Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(async () =>
             {

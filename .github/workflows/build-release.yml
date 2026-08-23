@@ -113,21 +113,32 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore ${{ env.Solution_Name }}
 
-    # Build app chính — OutDir phải là đường dẫn tuyệt đối hoặc
-    # dùng PublishDir để tránh lỗi trailing-backslash của MSBuild
-    - name: Build & Publish App
+    - name: Build App
       run: |
-        $publishDir = "${{ github.workspace }}\publish"
-        New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
-
         msbuild ${{ env.App_Project_Path }} `
           /p:Configuration=Release `
           /p:Platform="Any CPU" `
-          /p:AssemblyName=Xeplich `
-          /p:OutputPath="$publishDir" `
           /t:Build `
           /m
       shell: pwsh
+
+    - name: Prepare publish folder
+      shell: pwsh
+      run: |
+        $appDir = Split-Path "${{ env.App_Project_Path }}" -Parent
+        $exePath = Get-ChildItem -Path $appDir -Recurse -Filter "Xeplich.exe" |
+                   Where-Object { $_.FullName -notmatch '\\obj\\' } |
+                   Select-Object -First 1
+        if (-not $exePath) {
+          Write-Error "Không tìm thấy Xeplich.exe sau khi build."
+          exit 1
+        }
+        $outDir = $exePath.DirectoryName
+        Write-Host "Output thực tế nằm ở: $outDir"
+
+        $publishDir = "${{ github.workspace }}\publish"
+        New-Item -ItemType Directory -Force -Path $publishDir | Out-Null
+        Copy-Item "$outDir\*" -Destination $publishDir -Recurse -Force
 
     - name: Install Velopack CLI
       run: dotnet tool install -g vpk

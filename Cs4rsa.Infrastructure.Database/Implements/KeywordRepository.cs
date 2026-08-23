@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Cs4rsa.Database.DataProviders;
 using Cs4rsa.Database.Interfaces;
@@ -292,6 +294,22 @@ namespace Cs4rsa.Database.Implements
         public int ResetCache()
         {
             return _rawSql.ExecNonQuery("UPDATE Keywords SET Cache = NULL");
+        }
+
+        public List<Tuple<string, string>> GetKeywordsBySubjectCode()
+        {
+            var sql = new StringBuilder()
+                .AppendLine("SELECT Disciplines.Name || ' ' || Keywords.Keyword1 AS SubjectCode, Color")
+                .AppendLine("FROM Keywords")
+                .AppendLine("JOIN Disciplines ON Disciplines.DisciplineId = Keywords.DisciplineId")
+                .ToString();
+
+            return _rawSql.ExecReader(sql, record =>
+            {
+                var subjectCode = record.GetString(0);
+                var color = record.GetString(1);
+                return new Tuple<string, string>(subjectCode, color);
+            });
         }
     }
 }

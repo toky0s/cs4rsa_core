@@ -234,6 +234,11 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Text.Encodings.Web, Version=10.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.10.0.6\lib\net462\System.Text.Encodings.Web.dll</HintPath>
@@ -289,7 +294,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Events\TopMenuEvents\ScreenChangedEvent.cs" />
     <Compile Include="Services\DummyUpdateService.cs" />
     <Compile Include="Services\GithubUpdateService.cs" />
     <Compile Include="Services\IUpdateService.cs" />
@@ -407,6 +411,10 @@
     <ProjectReference Include="..\Cs4rsa.WPF.Converter\Cs4rsa.WPF.Converter.csproj">
       <Project>{90f0b45e-0a96-43c0-a59a-10f4d1331022}</Project>
       <Name>Cs4rsa.WPF.Converter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xeplich.Service.Search\Xeplich.Service.Search.csproj">
+      <Project>{F92D8E9F-ED40-4279-B1E0-076CB906A83D}</Project>
+      <Name>Xeplich.Service.Search</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Cs4rsa.App.Events.TopMenuEvents;
-using Cs4rsa.App.ViewModels;
+﻿using Cs4rsa.App.ViewModels;
 using Cs4rsa.Module.ManuallySchedule.Views;
 using Cs4rsa.Module.Shared;
 
