@@ -22,6 +22,7 @@ using Cs4rsa.UI.ScheduleTable;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Prism.Commands;
 using Prism.Events;
@@ -37,7 +38,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.UI;
 using System.Windows;
 using System.Windows.Data;
 
@@ -312,6 +312,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                 ShareString = string.Empty;
                 RunScheduleValidator();
+                VisibleFilters.Refresh();
+
+                // Chọn ra filter đầu tiên của danh sách để mở.
+                if (SubjectModels.Any())
+                {
+                    ExpandSubjectFilter(SubjectModels.First().SubjectCode);
+                }
             }
             else
             {
@@ -374,8 +381,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             var url = $"https://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid={SelectedKeyword.CourseId}&timespan={SelectedKeyword.SemesterId}&t=s";
             _logger.LogInformation("Add command executed - Load subject={url}", url);
             InsertPseudoSubject(SelectedKeyword);
-            await OnAddSubjectAsync(SelectedKeyword);
+            var subjectModel = await OnAddSubjectAsync(SelectedKeyword);
             DeleteAllCommand.RaiseCanExecuteChanged();
+
+            CreateOrShowFilterForSubject(subjectModel);
+            VisibleFilters.Refresh();
+            // Chọn ra filter đầu tiên của danh sách để mở.
+            if (SubjectModels.Any())
+            {
+                ExpandSubjectFilter(SubjectModels.First().SubjectCode);
+            }
         }
         #endregion
 
@@ -441,13 +456,16 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         {
             var subjectCode = sm.SubjectCode;
             SubjectModels.Remove(sm);
+            HideFilterBySubjectCode(subjectCode);
             SelectedSubjectModel = null;
             var isBelongToDeletedSubject = CurrentClassGroupModels.All(cgm => cgm.SubjectCode == subjectCode);
-            // Fix bug: Ko remove luôn các class đã chọn nếu subject của nó bị remove.
+            
             if (isBelongToDeletedSubject)
             {
                 CurrentClassGroupModels.Clear();
             }
+
+            VisibleFilters.Refresh();
             ToastService.Instance.Info("Notification", "Đã xoá môn " + sm.SubjectName);
         }
 
@@ -552,7 +570,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         private void ExecuteDeleteAllChooseCommand()
         {
             SelectedClassGroupModels.Clear();
-            
+
             UpdateConflicts();
             CleanDays();
             RunScheduleValidator();
@@ -595,6 +613,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 await OnAddSubjectAsync(kw, subjectModel.UserSubject);
             }
+            CreateOrShowFilterForSubject(subjectModel);
+            VisibleFilters.Refresh();
         }
 
         /// <summary>
@@ -666,13 +686,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<CombinationModel> ComModels { get; set; }
         public ObservableCollection<UserSchedule> UserSchedules { get; set; }
 
-        private CombinationModel _sltCombi;
-        public CombinationModel SltCombi
-        {
-            get { return _sltCombi; }
-            set { SetProperty(ref _sltCombi, value); OnSltCombiChanged(value); }
-        }
-
         private Discipline _selectedDiscipline;
         public Discipline SelectedDiscipline
         {
@@ -698,17 +711,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
         }
 
-        private FullMatchSearchingKeyword _searchingKeyword;
-        public FullMatchSearchingKeyword SearchingKeyword
-        {
-            get { return _searchingKeyword; }
-            set
-            {
-                SetProperty(ref _searchingKeyword, value);
-                OnSearchingKeywordChanged(value);
-            }
-        }
-
         private SubjectModel _selectedSubjectModel;
         public SubjectModel SelectedSubjectModel
         {
@@ -721,27 +723,34 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     return;
                 }
 
+                // Nếu một Subject khác NULL được chọn, thì phải đảm bảo Subject đó đã tải xong và không bị lỗi.
                 if (value != null && !value.IsDownloading && !value.IsError)
                 {
                     SetProperty(ref _selectedSubjectModel, value);
-                    OnSelectedSubjectModelChanged(value);
+                    DeleteCommand.RaiseCanExecuteChanged();
+                    CurrentClassGroupModels.Clear();
+                    CurrentClassGroupModels.AddRange(value.ClassGroupModels);
                     SyncSelectedClassGroup();
-                    OpenSubjectFilter(value.SubjectCode);
+                    ExpandSubjectFilter(value.SubjectCode);
                 }
             }
         }
 
-        private void OpenSubjectFilter(string subjectCode)
+        /// <summary>
+        /// Mở filter của một subject dựa vào Subject Code và đóng filter của subject khác. Nếu không tìm thấy filter của subject thì không làm gì cả.
+        /// </summary>
+        /// <param name="subjectCode"></param>
+        private void ExpandSubjectFilter(string subjectCode)
         {
             foreach (var filter in FilterSubjectViewModels)
             {
-                filter.IsDisplayed = false;
+                filter.IsExpanded = false;
             }
 
             var openFilter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
             if (openFilter != null)
             {
-                openFilter.IsDisplayed = true;
+                openFilter.IsExpanded = true;
             }
         }
 
@@ -752,34 +761,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SelectedClassGroup = SelectedClassGroupModelsView
                 .Cast<ClassGroupModel>()
                 .FirstOrDefault(x => x.Name == _selectedSubjectModel.SelectedClassGroupName);
-        }
-
-        private CancellationTokenSource _timeout;
-
-        private string _searchText;
-        public string SearchText
-        {
-            get { return _searchText; }
-            set
-            {
-                SetProperty(ref _searchText, value);
-                if (_timeout != null && !_timeout.IsCancellationRequested)
-                {
-                    _timeout.Cancel();
-                    _timeout = null;
-                }
-                _timeout = JSFunctionality.SetTimeout(() =>
-                {
-                    Application.Current.Dispatcher.Invoke(() => LoadSearchItemSource(value));
-                }, 500);
-            }
-        }
-
-        private bool _isUseCache;
-        public bool IsUseCache
-        {
-            get { return _isUseCache; }
-            set { SetProperty(ref _isUseCache, value); }
         }
 
         private int _searchBoxSelectedIndex;
@@ -871,9 +852,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             UserSchedules = new ObservableCollection<UserSchedule>();
             WarningModels = new ObservableCollection<WarningModel>();
             WarningModels.CollectionChanged += ConflictInfos_CollectionChanged;
-
-            SearchText = string.Empty;
-            IsUseCache = true;
             #endregion
 
             #region Commands
@@ -1018,6 +996,17 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _logger.LogInformation("Conflict collection changed");
         }
 
+        private void HideFilterBySubjectCode(string subjectCode)
+        {
+            // Don't remove filters, just hide.
+            var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
+            if (filter != null)
+            {
+                // Hide filter from UI
+                filter.IsDisplayed = false;
+            }
+        }
+
         private void SubjectModels_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // ADD
@@ -1025,10 +1014,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 var addedSubject = e.NewItems.Cast<SubjectModel>().First();
                 _logger.LogInformation("Added subject with name {subjectName}", addedSubject.SubjectName);
-
-                // Create filter for new subject if it doesn't exist.
-                addedSubject.PropertyChanged += Item_PropertyChanged;
-
             }
             // REMOVE
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
@@ -1044,15 +1029,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     }
                     _logger.LogInformation("Removed subject with name {subjectName}", sm.SubjectName);
 
-                    // Don't remove filters, just hide.
-                    var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(sm.SubjectCode));
-                    if (filter != null)
-                    {
-                        // Hide filter from UI
-                        filter.IsDisplayed = false;
-                    }
-
-                    sm.PropertyChanged -= Item_PropertyChanged;
+                    HideFilterBySubjectCode(sm.SubjectCode);
                 });
             }
             // REPLACE
@@ -1061,20 +1038,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 // Hide old
                 e.OldItems.Cast<SubjectModel>().ToList().ForEach(sm =>
                 {
-                    var filter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(sm.SubjectCode));
-                    if (filter != null)
-                    {
-                        filter.IsDisplayed = false;
-                    }
-
-                    sm.PropertyChanged -= Item_PropertyChanged;
-                });
-
-                // Create or show new
-                e.NewItems.Cast<SubjectModel>().ToList().ForEach(sm =>
-                {
-                    CreateOrShowFilterForSubject(sm);
-                    sm.PropertyChanged += Item_PropertyChanged;
+                    HideFilterBySubjectCode(sm.SubjectCode);
                 });
             }
             // RESET
@@ -1082,26 +1046,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 HandlerDelAllSubjectMsg();
 
-                // Hide all filters
+                // Ẩn các filter hiện có trên màn hình, tuy vậy trong bộ nhớ vẫn còn lưu trữ.
                 foreach (var filter in FilterSubjectViewModels)
                 {
                     filter.IsDisplayed = false;
                 }
             }
 
-            VisibleFilters.Refresh();
             AddCommand.RaiseCanExecuteChanged();
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // Ví dụ: refresh lại FilteredItems khi Label thay đổi
-            if (e.PropertyName == nameof(SubjectModel.IsDownloading))
-            {
-                var addedSubject = (SubjectModel)sender;
-                if (!addedSubject.IsDownloading) { CreateOrShowFilterForSubject(addedSubject); }
-            }
         }
 
         private void CreateOrShowFilterForSubject(SubjectModel subjectModel)
@@ -1237,42 +1190,12 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _openInBrowser.Open(url);
         }
 
-        private void OnSltCombiChanged(CombinationModel value)
-        {
-            //if (value == null) return;
-            //var subjectModels = value.SubjectModels;
-            //SubjectModels.Clear();
-            //foreach (var sjm in subjectModels)
-            //{
-            //    SubjectModels.Add(sjm);
-            //}
-
-            //// Đánh giá Phase Store xác định tuần ngăn cách
-            //foreach (var cgm in value.ClassGroupModels)
-            //{
-            //    _eventAggregator.GetEvent<ClassGroupSessionVmMsgs.ClassGroupAddedMsg>().Publish(cgm);
-            //}
-
-            //SelectedSubjectModel = SubjectModels.FirstOrDefault();
-
-            //AddCommand.RaiseCanExecuteChanged();
-            //DeleteAllCommand.RaiseCanExecuteChanged();
-        }
-
-        private void OnSelectedSubjectModelChanged(SubjectModel value)
-        {
-            DeleteCommand.RaiseCanExecuteChanged();
-            CurrentClassGroupModels.Clear();
-            CurrentClassGroupModels.AddRange(SelectedSubjectModel.ClassGroupModels);
-        }
-
         private void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
         {
             if (value == null || value.Keyword == null || value.Discipline.DisciplineId == 0) return;
             var dcl = Disciplines.First(d => d.DisciplineId == value.Discipline.DisciplineId);
             SelectedDiscipline = dcl;
             SelectedKeyword = value.Keyword;
-            SearchText = string.Empty;
             AddCommand.RaiseCanExecuteChanged();
             if (!IsAlreadyDownloaded(value.Keyword.CourseId))
             {
@@ -1408,7 +1331,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 //throw new Exception("Dummy Exception");
 
                 // 1. Thực hiện tải Subject. 
-                var (subjectModel, cache) = await DownloadSubject(keyword, IsUseCache);
+                const bool UseCache = true;
+                var (subjectModel, cache) = await DownloadSubject(keyword, UseCache);
 
                 // 2.3. Cập nhật lên local
                 var index = DisciplineKeywordModels.IndexOf(keyword);
@@ -1486,6 +1410,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             SelectedClassGroupModels.Add(classGroupModel);
             DeleteAllCommand.RaiseCanExecuteChanged();
+
+            // Add filter tương ứng.
+            CreateOrShowFilterForSubject(subjectModel);
         }
 
         private async Task<(SubjectModel, string)> DownloadSubject(Keyword keyword, bool isUseCache)

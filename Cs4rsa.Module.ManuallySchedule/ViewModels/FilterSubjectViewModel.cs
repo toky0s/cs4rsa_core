@@ -46,6 +46,13 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             set { SetProperty(ref _color, value); }
         }
 
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set { SetProperty(ref _isExpanded, value); }
+        }
+
         /// <summary>
         /// Cờ hiển thị Filter trên UI, trong trường hợp một Subject 
         /// không còn trong danh sách đã chọn nhưng Filter của nó vẫn phải được giữ nguyên.

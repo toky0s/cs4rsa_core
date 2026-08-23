@@ -996,10 +996,10 @@
                                         <DataTemplate>
                                             <Expander
                                                 x:Name="Expander_Filter"
-                                                Padding="0,0,1,15"
+                                                Padding="20,0,0,15"
                                                 d:DataContext="{d:DesignInstance Type=vm:FilterSubjectViewModel}"
                                                 BorderThickness="1"
-                                                IsExpanded="{Binding IsDisplayed}">
+                                                IsExpanded="{Binding IsExpanded}">
                                                 <Expander.Template>
                                                     <ControlTemplate TargetType="Expander">
                                                         <StackPanel>
@@ -1050,60 +1050,61 @@
                                                 </Expander.Header>
                                                 <!--  =========================== Header của từng filter ================================  -->
 
-
-                                                <StackPanel>
-                                                    <StackPanel.Resources>
-                                                        <Style x:Key="Filter_Header" TargetType="TextBlock">
-                                                            <Setter Property="Margin" Value="0,0,0,5" />
-                                                        </Style>
-                                                    </StackPanel.Resources>
-                                                    <!--  =========================== START - Body của từng filter ================================  -->
-                                                    <StackPanel Margin="0,0,0,10">
-                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
-                                                        <xctk:WrapPanel Orientation="Horizontal">
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="All"
-                                                                IsChecked="{Binding All}"
-                                                                IsThreeState="True" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Mon"
-                                                                IsChecked="{Binding Mon}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Tue"
-                                                                IsChecked="{Binding Tue}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Wed"
-                                                                IsChecked="{Binding Wed}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Thu"
-                                                                IsChecked="{Binding Thu}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Fri"
-                                                                IsChecked="{Binding Fri}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Sat"
-                                                                IsChecked="{Binding Sat}" />
-                                                            <CheckBox
-                                                                Margin="0,0,4,0"
-                                                                Content="Sun"
-                                                                IsChecked="{Binding Sun}" />
-                                                        </xctk:WrapPanel>
-                                                    </StackPanel>
-
+                                                <Border Padding="20,0,0,0">
                                                     <StackPanel>
-                                                        <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
-                                                        <uc:MultiSelection ItemsSource="{Binding Lectures}" SelectedItems="{Binding SelectedLectures}" />
-                                                    </StackPanel>
-                                                    <!--  =========================== END - Body của từng filter ================================  -->
+                                                        <StackPanel.Resources>
+                                                            <Style x:Key="Filter_Header" TargetType="TextBlock">
+                                                                <Setter Property="Margin" Value="0,0,0,5" />
+                                                            </Style>
+                                                        </StackPanel.Resources>
+                                                        <!--  =========================== START - Body của từng filter ================================  -->
+                                                        <StackPanel Margin="0,0,0,10">
+                                                            <TextBlock Style="{StaticResource Filter_Header}" Text="Day of week" />
+                                                            <xctk:WrapPanel Orientation="Horizontal">
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="All"
+                                                                    IsChecked="{Binding All}"
+                                                                    IsThreeState="True" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Mon"
+                                                                    IsChecked="{Binding Mon}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Tue"
+                                                                    IsChecked="{Binding Tue}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Wed"
+                                                                    IsChecked="{Binding Wed}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Thu"
+                                                                    IsChecked="{Binding Thu}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Fri"
+                                                                    IsChecked="{Binding Fri}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Sat"
+                                                                    IsChecked="{Binding Sat}" />
+                                                                <CheckBox
+                                                                    Margin="0,0,4,0"
+                                                                    Content="Sun"
+                                                                    IsChecked="{Binding Sun}" />
+                                                            </xctk:WrapPanel>
+                                                        </StackPanel>
 
-                                                </StackPanel>
+                                                        <StackPanel>
+                                                            <TextBlock Style="{StaticResource Filter_Header}" Text="Lectures" />
+                                                            <uc:MultiSelection ItemsSource="{Binding Lectures}" SelectedItems="{Binding SelectedLectures}" />
+                                                        </StackPanel>
+                                                        <!--  =========================== END - Body của từng filter ================================  -->
+
+                                                    </StackPanel>
+                                                </Border>
                                             </Expander>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
