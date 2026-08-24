@@ -164,7 +164,7 @@
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.77\lib\net462\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Frameworks, Version=5.11.3.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Frameworks.5.11.3\lib\net472\NuGet.Frameworks.dll</HintPath>
@@ -216,6 +216,7 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.7\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.Pipelines, Version=10.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Pipelines.10.0.6\lib\net462\System.IO.Pipelines.dll</HintPath>
@@ -264,8 +265,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Velopack, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5a523ff9c49fd93d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Velopack.0.0.1298\lib\net462\Velopack.dll</HintPath>
+    <Reference Include="Velopack, Version=1.2.0.0, Culture=neutral, PublicKeyToken=5a523ff9c49fd93d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Velopack.1.2.0\lib\net472\Velopack.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

@@ -150,8 +150,7 @@ jobs:
           --packVersion ${{ steps.get_version.outputs.VERSION }} `
           --packDir .\publish `
           --mainExe Xeplich.exe `
-          --title "Xeplich" `
-          --releaseNotes "Release ${{ steps.get_version.outputs.VERSION }}" `
+          --packTitle "Xeplich" `
           --outputDir .\releases
       shell: pwsh
 
