@@ -65,6 +65,8 @@ namespace Cs4rsa.Service.TeacherCrawler.Crawlers
         private static string GetTeacherImagePath(string teacherId)
         {
             return $"http://hfs1.duytan.edu.vn/Upload/dichvu/gv_{teacherId}_01.jpg";
+            // Cho sinh vien
+            //return $"http://hfs1.duytan.edu.vn/Upload/dichvu/sv_{studentId}_01.jpg";
         }
 
         private static string GetTeacherImageName(string teacherId)
