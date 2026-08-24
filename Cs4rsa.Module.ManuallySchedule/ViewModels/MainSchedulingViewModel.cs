@@ -268,8 +268,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                             SelectedClassGroupModels.Add(tempCgm);
                         });
-
-                    SelectedSubjectModel = SubjectModels[0];
                 }
                 // NGƯỜI DÙNG CHỌN OVERWRITE
                 else
@@ -304,24 +302,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                         downloadTasks.Add(OnAddSubjectAsync(keywords[i], userSubjects[i]));
                     }
                     await Task.WhenAll(downloadTasks);
-                    SelectedSubjectModel = SubjectModels[0];
-
-                    var classToSelect = SelectedClassGroupModels.FirstOrDefault(item => item.Name == SubjectModels[0].SelectedClassGroupName);
-                    if (classToSelect != null)
-                    {
-                        SelectedClassGroup = classToSelect;
-                    }
                 }
+
+                // Sau khi tải xong thì chọn subject đầu tiên.
+                SelectedSubjectModel = SubjectModels[0];
+                SyncSelectedClassGroup();
 
                 ShareString = string.Empty;
                 RunScheduleValidator();
                 VisibleFilters.Refresh();
-
-                // Chọn ra filter đầu tiên của danh sách để mở.
-                if (SubjectModels.Any())
-                {
-                    ExpandSubjectFilter(SubjectModels.First().SubjectCode);
-                }
             }
             else
             {
@@ -725,7 +714,15 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<Discipline> Disciplines { get; set; }
         public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
-        public ObservableCollection<WarningModel> WarningModels { get; set; }
+
+        private ObservableCollection<WarningModel> _warningModels;
+        public ObservableCollection<WarningModel> WarningModels => _warningModels ?? (_warningModels = new ObservableCollection<WarningModel>());
+
+        /// <summary>
+        /// Khi người dùng chọn một Subject từ những Subject đã tải xuống. 
+        /// Danh sách các Class Group có trong Subject đó sẽ được hiển thị 
+        /// trong một list box ngay bên dưới. List đó sẽ được binding tới biến này.
+        /// </summary>
         private ObservableCollection<ClassGroupModel> _currentClassGroupModels;
         public ObservableCollection<ClassGroupModel> CurrentClassGroupModels => _currentClassGroupModels ?? (_currentClassGroupModels = new ObservableCollection<ClassGroupModel>());
 
@@ -790,7 +787,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        ExpandSubjectFilter(value.SubjectCode);
+                        ExpandSubjectFilter(value.SubjectCode, "Set SelectedSubjectModel");
                     }), DispatcherPriority.Loaded);
                 }
             }
@@ -800,8 +797,9 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// Mở filter của một subject dựa vào Subject Code và đóng filter của subject khác. Nếu không tìm thấy filter của subject thì không làm gì cả.
         /// </summary>
         /// <param name="subjectCode"></param>
-        private void ExpandSubjectFilter(string subjectCode)
+        private void ExpandSubjectFilter(string subjectCode, string fromMethod)
         {
+            _logger.LogDebug("Call ExpandSubjectFilter - From method {fromMethod}", fromMethod);
             FilterSubjectViewModels.Where(f => f.SubjectCode != subjectCode).ToList().ForEach(f => f.IsExpanded = false);
             var openFilter = FilterSubjectViewModels.FirstOrDefault(f => f.SubjectCode.Equals(subjectCode));
             if (openFilter != null)
@@ -811,14 +809,14 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         }
 
         /// <summary>
+        /// Trong trường hợp Bulk Load từ Share String, hoặc Load từ Store,
         /// Nếu trước đó trên Subject đã chọn, có class group đã chọn sẵn. Thì chọn Class Group đó và hiển thị trên lịch.
         /// </summary>
         private void SyncSelectedClassGroup()
         {
             if (SelectedSubjectModel == null) return;
 
-            SelectedClassGroup = CurrentClassGroupModelsView
-                .Cast<ClassGroupModel>()
+            SelectedClassGroup = CurrentClassGroupModels
                 .FirstOrDefault(x => x.Name == SelectedSubjectModel.SelectedClassGroupName);
         }
 
@@ -907,7 +905,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SavedSchedules = new ObservableCollection<UserSchedule>();
             ComModels = new ObservableCollection<CombinationModel>();
             UserSchedules = new ObservableCollection<UserSchedule>();
-            WarningModels = new ObservableCollection<WarningModel>();
+            
             WarningModels.CollectionChanged += ConflictInfos_CollectionChanged;
             #endregion
 
@@ -1393,10 +1391,10 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 pseudoSubject.IsDownloading = false;
 
                 // 3. Nếu không có Subject nào đang được tải, thực hiện select Subject đầu tiên trong danh sách. 
-                if (!SubjectModels.Any(sm => sm.IsDownloading))
-                {
-                    SelectedSubjectModel = subjectModel;
-                }
+                //if (!SubjectModels.Any(sm => sm.IsDownloading))
+                //{
+                //    SelectedSubjectModel = subjectModel;
+                //}
 
                 // 4. Trả về Subject Model đã tải được. 
                 return subjectModel;
