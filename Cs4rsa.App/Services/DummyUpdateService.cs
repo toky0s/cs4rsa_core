@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Velopack;
 
+using SemanticVersion = Velopack.SemanticVersion;
+
 namespace Cs4rsa.App.Services
 {
     internal class DummyUpdateService : IUpdateService
@@ -15,7 +17,7 @@ namespace Cs4rsa.App.Services
             var asset = new VelopackAsset
             {
                 PackageId = "Cs4rsa",
-                Version = new NuGetVersion(9, 9, 9),
+                Version = new SemanticVersion(9, 9, 9),
                 Type = VelopackAssetType.Full,
                 FileName = "Cs4rsa-9.9.9-full.nupkg",
                 Size = 1024 * 1024 * 50, // 50MB
