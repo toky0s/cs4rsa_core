@@ -161,6 +161,6 @@ jobs:
         vpk upload github `
           --repoUrl ${{ github.event.repository.html_url }} `
           --token ${{ secrets.GH_TOKEN }} `
-          --inputDir .\releases `
+          --outputDir .\releases `
           --publish
       shell: pwsh
