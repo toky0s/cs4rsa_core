@@ -309,7 +309,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                 SyncSelectedClassGroup();
 
                 ShareString = string.Empty;
-                RunScheduleValidator();
+                RefreshWarningList();
                 VisibleFilters.Refresh();
             }
             else
@@ -377,7 +377,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
 
             SelectedSubjectModel = subjectModel;
-            RunScheduleValidator();
+            RefreshWarningList();
 
             DeleteAllCommand.RaiseCanExecuteChanged();
         }
@@ -453,6 +453,8 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 CurrentClassGroupModels.Clear();
             }
+
+            RefreshWarningList();
             ToastService.Instance.Info("Notification", "Đã xoá môn " + sm.SubjectName);
         }
 
@@ -560,7 +562,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
 
             UpdateConflicts();
             CleanDays();
-            RunScheduleValidator();
+            RefreshWarningList();
 
             DeleteAllChooseCommand.RaiseCanExecuteChanged();
         }
@@ -699,7 +701,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             {
                 removedClassGroupModel.SpecialSchoolClassModels.Clear();
                 SelectedClassGroupModels.Remove(removedClassGroupModel);
-                RunScheduleValidator();
+                RefreshWarningList();
             }
         }
 
@@ -712,7 +714,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         public ObservableCollection<Keyword> DisciplineKeywordModels { get; set; }
         public ObservableCollection<SubjectModel> SubjectModels { get; set; }
         public ObservableCollection<Discipline> Disciplines { get; set; }
-        public ObservableCollection<FullMatchSearchingKeyword> FullMatchSearchingKeywords { get; set; }
         public ObservableCollection<UserSchedule> SavedSchedules { get; set; }
 
         private ObservableCollection<WarningModel> _warningModels;
@@ -901,7 +902,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             SubjectModels.CollectionChanged += SubjectModels_CollectionChanged;
 
             Disciplines = new ObservableCollection<Discipline>();
-            FullMatchSearchingKeywords = new ObservableCollection<FullMatchSearchingKeyword>();
             SavedSchedules = new ObservableCollection<UserSchedule>();
             ComModels = new ObservableCollection<CombinationModel>();
             UserSchedules = new ObservableCollection<UserSchedule>();
@@ -1241,7 +1241,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
         /// 
         /// Chạy method này sau mỗi User action.
         /// </summary>
-        private void RunScheduleValidator()
+        private void RefreshWarningList()
         {
             WarningModels.Clear();
             var schoolClasses = SelectedClassGroupModels
@@ -1257,25 +1257,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             _openInBrowser.Open(url);
         }
 
-        private void OnSearchingKeywordChanged(FullMatchSearchingKeyword value)
-        {
-            if (value == null || value.Keyword == null || value.Discipline.DisciplineId == 0) return;
-            var dcl = Disciplines.First(d => d.DisciplineId == value.Discipline.DisciplineId);
-            SelectedDiscipline = dcl;
-            SelectedKeyword = value.Keyword;
-            AddCommand.RaiseCanExecuteChanged();
-            if (!IsAlreadyDownloaded(value.Keyword.CourseId))
-            {
-                Application.Current.Dispatcher.InvokeAsync(
-                    async () =>
-                    {
-                        InsertPseudoSubject(value.Keyword);
-                        await OnAddSubjectAsync(SelectedKeyword);
-                    }
-                );
-            }
-        }
-
         private void LoadDiscipline()
         {
             _searchDisciplines = _unitOfWork.Disciplines.GetAllIncludeKeyword();
@@ -1287,33 +1268,6 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
             }
             SelectedDiscipline = Disciplines[0];
         }
-
-        private void LoadSearchItemSource(string text)
-        {
-            const int Maximum = 5;
-            text = text.Trim();
-
-            FullMatchSearchingKeywords.Clear();
-            var keywords = _searchKeywords
-                .Where(k =>
-                       StringHelper.ReplaceVietnamese(k.SubjectName).ToLower()
-                        .Contains(StringHelper.ReplaceVietnamese(text).ToLower())
-                    || StringHelper.ReplaceVietnamese(k.Discipline.Name + k.Keyword1).ToLower()
-                        .Contains(StringHelper.ReplaceVietnamese(text.Replace(" ", string.Empty)).ToLower())
-                )
-                .Take(Maximum)
-                .AsParallel();
-            foreach (var kw in keywords)
-            {
-                var fullMatch = new FullMatchSearchingKeyword()
-                {
-                    Keyword = kw,
-                    Discipline = kw.Discipline
-                };
-                FullMatchSearchingKeywords.Add(fullMatch);
-            }
-        }
-
 
         private void InsertPseudoSubject(Keyword keyword)
         {
@@ -1686,7 +1640,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                     AddOrReplaceClassGroupModel(value);
                     _logger.LogInformation("Add block to schedule with class group {classGroupName}", value.Name);
                 }
-                RunScheduleValidator();
+                RefreshWarningList();
             }
         }
 
@@ -1874,7 +1828,7 @@ namespace Cs4rsa.Module.ManuallySchedule.ViewModels
                             {
                                 _logger.LogInformation("User solved conflict by removing {0}", removedClassGroupModel.Name);
                                 SelectedClassGroupModels.Remove(removedClassGroupModel);
-                                RunScheduleValidator();
+                                RefreshWarningList();
                             }
                         }
                     });

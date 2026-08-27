@@ -1,6 +1,4 @@
-﻿using NuGet.Versioning;
-
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
