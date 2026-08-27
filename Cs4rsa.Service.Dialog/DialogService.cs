@@ -26,6 +26,7 @@ namespace Cs4rsa.Service.Dialog
             ILogger<IDialogService> logger)
         {
             _eventAggregator = eventAggregator;
+            _logger = logger;
         }
 
         public void CloseDialog()

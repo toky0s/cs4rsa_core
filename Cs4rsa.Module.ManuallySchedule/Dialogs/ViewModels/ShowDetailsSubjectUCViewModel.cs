@@ -1,5 +1,4 @@
 ﻿using Cs4rsa.Module.ManuallySchedule.Models;
-using Cs4rsa.Service.Dialog;
 
 using Prism.Mvvm;
 using Prism.Services.Dialogs;

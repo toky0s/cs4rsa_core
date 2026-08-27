@@ -7,12 +7,8 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI;
 
 using Velopack;
 
@@ -82,7 +78,7 @@ namespace Cs4rsa.App.ViewModels
                 _logger.LogWarning("Update cancelled by user.", ex.Message);
                 _isDowloading = false;
 #if DEBUG
-                RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+                //RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
 #endif
             }
 #if DEBUG
@@ -133,6 +129,20 @@ namespace Cs4rsa.App.ViewModels
             _isDowloading = false;
             _updateInfo = parameters.GetValue<UpdateInfo>("NewVersion");
             UpdateCommand.Execute();
+        }
+
+        private DelegateCommand _stopDownloadingCommand;
+        public DelegateCommand StopDownloadingCommand =>
+            _stopDownloadingCommand ?? (_stopDownloadingCommand = new DelegateCommand(ExecuteStopDownloadingCommand, CanExecuteStopDownloadingCommand));
+
+        void ExecuteStopDownloadingCommand()
+        {
+            CancellationTokenSource.Cancel();
+        }
+
+        bool CanExecuteStopDownloadingCommand()
+        {
+            return true;
         }
     }
 }
