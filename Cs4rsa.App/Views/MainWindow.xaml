@@ -17,6 +17,7 @@
     Height="741.641"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    Icon="/Resources/appicon.ico"
     TextElement.FontSize="13"
     TextElement.FontWeight="Regular"
     TextOptions.TextFormattingMode="Ideal"
